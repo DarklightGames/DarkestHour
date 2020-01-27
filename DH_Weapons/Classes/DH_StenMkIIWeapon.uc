@@ -24,8 +24,8 @@ defaultproperties
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
-	
-	InitialBarrels=1
+
+    InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 

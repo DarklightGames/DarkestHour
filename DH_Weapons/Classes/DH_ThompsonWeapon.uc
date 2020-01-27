@@ -29,7 +29,7 @@ defaultproperties
     SelectFireAnim="fire_select"
     SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
-	
-	MagEmptyReloadAnim="reload_m1a1"
+
+    MagEmptyReloadAnim="reload_m1a1"
     MagPartialReloadAnim="reload_m1a1"
 }

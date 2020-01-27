@@ -13,6 +13,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
-	
-	Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
 }

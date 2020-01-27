@@ -22,7 +22,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire1'
     FireSounds(1)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire2'
     FireSounds(2)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire3'
-	
+
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)

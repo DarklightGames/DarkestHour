@@ -65,6 +65,6 @@ defaultproperties
     SprintEndEmptyAnim="Sprint_Empty_End"
     SelectEmptyAnim="Draw_Empty"
     PutDownEmptyAnim="Put_Away_empty"
-	
-    FirstSelectAnim="Draw2"  
+
+    FirstSelectAnim="Draw2"
 }

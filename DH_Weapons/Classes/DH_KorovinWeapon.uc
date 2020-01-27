@@ -17,9 +17,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Korovin_1st.korovin_mesh'
 
     bUseHighDetailOverlayIndex=false
-	HandNum=0
+    HandNum=0
     SleeveNum=3
-	HighDetailOverlayIndex=2
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=50.0
 
@@ -41,5 +41,5 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
+
 }

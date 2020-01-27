@@ -44,13 +44,13 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ViS_1st.ViS_Mesh'
 
     bUseHighDetailOverlayIndex=false
-	
-	Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
-	Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
-	sleevenum=3
-	handnum=0
-	
-	FirstSelectAnim="draw2"
+
+    Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
+    Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
+    sleevenum=3
+    handnum=0
+
+    FirstSelectAnim="draw2"
 
     DisplayFOV=70.0
     IronSightDisplayFOV=64.0

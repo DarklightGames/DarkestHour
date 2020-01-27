@@ -40,9 +40,8 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
-	InitialBarrels=1
+
+    InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
-
 }

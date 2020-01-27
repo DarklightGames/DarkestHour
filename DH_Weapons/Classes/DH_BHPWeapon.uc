@@ -45,10 +45,10 @@ defaultproperties
     HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-	
+
     Skins(0)=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
-	
-	HandNum=1
+
+    HandNum=1
     SleeveNum=2
 
     IronSightDisplayFOV=70.0
@@ -70,6 +70,6 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
-	
-	FirstSelectAnim="Draw2"  
+
+    FirstSelectAnim="Draw2"
 }

@@ -52,6 +52,4 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
-	
 }

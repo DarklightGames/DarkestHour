@@ -10,6 +10,6 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.sov_tunic_sergeant_late'
     Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
     Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
-	
-	bReversedSkinsSlots=true
+
+    bReversedSkinsSlots=true
 }

@@ -9,6 +9,6 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPHelmet'
-	
+
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 }

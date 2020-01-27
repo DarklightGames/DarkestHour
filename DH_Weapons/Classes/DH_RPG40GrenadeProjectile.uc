@@ -199,7 +199,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // If so we'll assume HEAT grenade's substantial penetration will defeat top armour of any vehicle's hull or turret, so skip penetration check
             // Top hits or armor are not modelled in this game, but it's a reasonable assumption as even heavy tanks only had 30-40mm top armor
             // Otherwise do normal armour penetration check & exit if it fails to penetrate (with suitable effects)
-			//TO DO: make a more proper method of handling of top armor hit. Ideally it should look at the angle of armor and detect if armor is horizontal or close to horizontal, then consider it a top armor
+            //TO DO: make a more proper method of handling of top armor hit. Ideally it should look at the angle of armor and detect if armor is horizontal or close to horizontal, then consider it a top armor
             if (DHArmoredVehicle(Wall) != none || DHVehicleCannon(Wall) != none)
             {
                 if (((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
@@ -523,7 +523,7 @@ defaultproperties
     // Properties from usual grenade parent classes (DHGrenadeProjectile & DHThrowableExplosiveProjectile)
     Physics=PHYS_Falling
     bBounce=true
-    MaxSpeed=1500.0 
+    MaxSpeed=1500.0
     TossZ=150.0
     DampenFactor=0.05
     DampenFactorParallel=0.8

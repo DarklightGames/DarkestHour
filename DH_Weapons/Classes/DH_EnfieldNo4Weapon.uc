@@ -8,7 +8,7 @@ class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Lee Enfield No.4 Rifle"
-	SwayModifyFactor=0.62 // +0.02 
+    SwayModifyFactor=0.62 // +0.02
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4Fire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'
@@ -26,7 +26,7 @@ defaultproperties
     SleeveNum=4
 
     MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles 
+    InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
     IronSightDisplayFOV=45.0
     IronSightDisplayFOVHigh=45.0

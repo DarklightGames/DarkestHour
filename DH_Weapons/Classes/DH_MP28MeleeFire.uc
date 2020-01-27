@@ -13,6 +13,6 @@ defaultproperties
     //BashBackEmptyAnim="bash_pullback_empty"
    // BashHoldEmptyAnim="bash_hold_empty"
     //BashEmptyAnim="Bash_attack_empty"
-    //BashFinishEmptyAnim="bash_return_empty" 
-	// ^TO DO
+    //BashFinishEmptyAnim="bash_return_empty"
+    // ^TO DO
 }

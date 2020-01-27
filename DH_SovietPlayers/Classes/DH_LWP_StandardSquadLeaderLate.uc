@@ -10,7 +10,6 @@ defaultproperties
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
 
-	
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41_stickWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')

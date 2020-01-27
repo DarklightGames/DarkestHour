@@ -7,8 +7,8 @@ class DH_WSSSquadLeader_Autumn extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="Scharführer"
-	
+    AltName="ScharfÃ¼hrer"
+
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSSPawn',Weight=1.5)

@@ -17,7 +17,6 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 
-
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=50.0
     ZoomOutTime=0.15
@@ -26,13 +25,12 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
-	
-	bHasSelectFire=true
+
+    bHasSelectFire=true
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
 
-
-	// TO DO:
+    // TO DO:
    // IdleEmptyAnim="idle_empty"
    // IronIdleEmptyAnim="Iron_idle_empty"
    // IronBringUpEmpty="Iron_in_empty"
@@ -46,5 +44,4 @@ defaultproperties
    // CrawlEndEmptyAnim="crawl_out_empty"
    // SelectEmptyAnim="Draw_empty"
    // PutDownEmptyAnim="put_away_empty"
-
 }

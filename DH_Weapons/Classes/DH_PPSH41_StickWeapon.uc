@@ -63,7 +63,6 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'
     handnum=2
 
-
     IronSightDisplayFOV=67
 
     bHasSelectFire=true
@@ -77,8 +76,8 @@ defaultproperties
     SprintStartEmptyAnim="sprint_start_empty"
     SprintLoopEmptyAnim="sprint_middle_empty"
     SprintEndEmptyAnim="sprint_end_empty"
-	
-	InitialBarrels=1
+
+    InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
 
@@ -89,6 +88,4 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
-	
 }
