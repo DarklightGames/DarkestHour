@@ -14,4 +14,5 @@ defaultproperties
     FemaleSuicide="%o burned herself to a crisp."
     bLocationalHit=false
     GibModifier=0.0
+    bFlaming=true
 }
