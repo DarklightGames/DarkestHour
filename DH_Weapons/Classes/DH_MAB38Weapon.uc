@@ -17,7 +17,7 @@ defaultproperties
     HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(0)=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
+    Skins(0)=Texture'DH_MN_Weapons1st_tex.SMG.Ber1Tex'
 
     handnum=1
     sleevenum=2
