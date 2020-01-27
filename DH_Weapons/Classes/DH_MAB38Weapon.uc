@@ -17,12 +17,12 @@ defaultproperties
     HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-	Skins(0)=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
-	
-	handnum=1
-	sleevenum=2
+    Skins(0)=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
 
-	DisplayFOV=75
+    handnum=1
+    sleevenum=2
+
+    DisplayFOV=75
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=40.0
     ZoomOutTime=0.1
@@ -30,18 +30,18 @@ defaultproperties
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
-	
-	InitialBarrels=1
+
+    InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle001"
 
     bHasSelectFire=true
     SelectFireAnim="none"
     SelectFireIronAnim="none"
-	
-	MuzzleBone="Muzzle001"
-	
-	IdleEmptyAnim="idle_empty"
+
+    MuzzleBone="Muzzle001"
+
+    IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"
     IronPutDownEmpty="iron_out_empty"
@@ -56,8 +56,4 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
-	
-
-
 }
