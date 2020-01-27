@@ -18,7 +18,7 @@ static function sound GetHitSound(optional class<DamageType> DamageType)
     }
 
     // If they are taking damage because they are burning, return a burning pain sound
-    if (DamageType.Name == 'DHBurningDamageType')
+    if (DamageType.default.bFlaming)
     {
         return default.BurningPainSoundGroup;
     }
