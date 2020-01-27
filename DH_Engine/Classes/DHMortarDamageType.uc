@@ -21,7 +21,6 @@ defaultproperties
     bDelayedDamage=true
     bThrowRagdoll=true
     bExtraMomentumZ=true
-    bFlaming=true
     GibModifier=4.0
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
     DeathOverlayTime=999.0
