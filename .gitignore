@@ -9,10 +9,10 @@
 *.int
 *.u
 
-// local system files:
+# local system files:
 *.DS_Store
 
-// local IDE files:
+# local IDE files:
 .idea
 *.code-workspace
 *.wws
