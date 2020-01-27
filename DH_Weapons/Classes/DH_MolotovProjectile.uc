@@ -9,10 +9,7 @@ defaultproperties
 {
     MyDamageType = class'DHBurningDamageType'
     
-    StaticMesh = StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
-    ExplosionSound(0) = SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode01'
-    ExplosionSound(1) = SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode02'
-    ExplosionSound(2) = SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode03'
+    StaticMesh = StaticMesh'DH_WeaponPickups.Projectile.MolotovCocktail_throw'
     
     Damage = 180.0
     DamageRadius = 639.0
