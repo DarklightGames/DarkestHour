@@ -8,8 +8,15 @@
 *.make
 *.int
 *.u
+
+// local system files:
 *.DS_Store
+
+// local IDE files:
 .idea
+*.code-workspace
+*.wws
+
 Red Orchestra.app
 /Animations/
 /Cache/
