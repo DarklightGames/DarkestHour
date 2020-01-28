@@ -10,6 +10,6 @@ defaultproperties
     ProjectileClass = class'DH_Weapons.DH_MolotovProjectile'
     AmmoClass = class'DH_Weapons.DH_MolotovAmmo'
     
-    bPullAnimCompensation = true
-    AddedFuseTime = 0.38
+    // bPullAnimCompensation = true
+    // AddedFuseTime = 0.38
 }

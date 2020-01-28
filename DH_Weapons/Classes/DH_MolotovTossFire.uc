@@ -9,5 +9,6 @@ defaultproperties
 {
     ProjectileClass = class'DH_Weapons.DH_MolotovProjectile'
     AmmoClass = class'DH_Weapons.DH_MolotovAmmo'
+    
     PreFireAnim = "Underhand_Pull_Pin"
 }
