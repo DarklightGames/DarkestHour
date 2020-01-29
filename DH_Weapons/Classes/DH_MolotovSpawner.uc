@@ -8,11 +8,11 @@ class DH_MolotovSpawner extends DHInventorySpawner;
 defaultproperties
 {
     WeaponClass = class'DH_Weapons.DH_MolotovWeapon'
-    PickupCount = 7
-    PickupsMax = 7
+    PickupCount = 12
+    PickupsMax = 12
 
-    Mesh = Mesh'DH_Construction_anm.GER_grenade_box'
-    Skins(0) = Material'DH_Construction_tex.Ammo.GER_grenade_box'
+    Mesh = Mesh'DH_Construction_anm.RUS_grenade_box'
+    Skins(0) = Material'DH_Construction_tex.Ammo.RUS_grenade_box'
     PickupBoneNames(0) = "grenade.001"
     PickupBoneNames(1) = "grenade.002"
     PickupBoneNames(2) = "grenade.003"
