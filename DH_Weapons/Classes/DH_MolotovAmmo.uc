@@ -7,7 +7,7 @@ class DH_MolotovAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo = 3
+    MaxAmmo = 2
     InitialAmount = 1
     
     IconMaterial = Texture'InterfaceArt_tex.HUD.Needle'
