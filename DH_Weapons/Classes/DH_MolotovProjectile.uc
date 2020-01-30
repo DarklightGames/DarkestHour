@@ -43,7 +43,7 @@ simulated function PostBeginPlay ()
 {
     super.PostBeginPlay();
 
-    Level.Game.Broadcast( self , "PostBeginPlay() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "PostBeginPlay() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
 
     if( Role==ROLE_Authority )
     {
@@ -485,7 +485,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local Sound hitSound;
     local vector hitPoint;
 
-    Level.Game.Broadcast( self , "HitWall() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "HitWall() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
 
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
@@ -553,7 +553,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
 
         if( Level.NetMode==NM_Standalone )
         {
-            Level.Game.Broadcast( self , "dampen from hit angle: " @ FMax( 0.1 , 1.0 - obliquityDotProduct ) );
+            Log( "dampen from hit angle: " @ FMax( 0.1 , 1.0 - obliquityDotProduct ) );
             DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
         }
     }
@@ -653,7 +653,7 @@ simulated function ProcessTouch ( Actor other , vector hitLocation )
 
 simulated function Explode ( vector hitLocation , vector hitNormal )
 {
-    Level.Game.Broadcast( self , "Explode() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "Explode() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
 
     if( !bDud )
     {
@@ -670,7 +670,7 @@ simulated function BlowUp ( vector hitLocation )
     local rotator spread;
     local int i;
 
-    Level.Game.Broadcast( self , "BlowUp() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "BlowUp() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
     
     if( _TrailInstance!=none )
     {
@@ -716,7 +716,7 @@ simulated function BlowUp ( vector hitLocation )
                     Spawn( ExplosionDecal ,,, Location, rotator(Velocity+vect(0,0,-1)) );
                 }
             // }
-            Level.Game.Broadcast( self , "BlowUp(), spawn complete" );
+            Log( "BlowUp(), spawn complete" );
         }
     }
 }
