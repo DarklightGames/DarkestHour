@@ -18,6 +18,6 @@ defaultproperties
     FireModeClass(0) = class'DH_Weapons.DH_MolotovFire'
     FireModeClass(1) = class'DH_Weapons.DH_MolotovTossFire'
     
-    Mesh = SkeletalMesh'DH_Molotov_1st.Soviet'//SkeletalMesh'DH_Molotov_1st.Soviet'
+    Mesh = SkeletalMesh'DH_Molotov_1st.soviet'
     HighDetailOverlay = shader'DH_Weapon_tex.AlliedSmallArms.MolotovCocktail_s'
 }
