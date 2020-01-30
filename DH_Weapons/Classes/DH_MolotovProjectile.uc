@@ -547,9 +547,9 @@ simulated function HitWall ( vector hitNormal , Actor wall )
             DrawDebugSphere( hitPoint , 10 , 3 , 255,0,0 );
         }
 
-        Velocity = class'UCore'.static.VReflect(-Velocity,hitNormal) // lossless kinetic reflection
-            * FMax( 0.1 , 1.0 - obliquityDotProduct ); // dampen from hit angle
-            // * GetReflectionDampenValue( hitSurfaceType );
+        Velocity = class'UCore'.static.VReflect(Velocity,hitNormal) // lossless kinetic reflection
+             * FMax( 0.1 , 1.0 - obliquityDotProduct ); // dampen from hit angle
+            // * GetSurfaceDampenValue( hitSurfaceType );
 
         if( Level.NetMode==NM_Standalone )
         {
@@ -789,7 +789,7 @@ simulated function ESurfaceTypes TraceForHitSurfaceType ( vector dir , optional 
     else return ESurfaceTypes( hitMat.SurfaceType );
 }
 
-simulated static final function float GetReflectionDampenValue ( ESurfaceTypes aSurfaceType )
+simulated static final function float GetSurfaceDampenValue ( ESurfaceTypes aSurfaceType )
 {
     switch( aSurfaceType )
     {
