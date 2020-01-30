@@ -8,7 +8,7 @@ class DH_FJ45SquadLeader extends DHGESergeantRoles;
 defaultproperties
 {
 
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
+    // SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArdennesFJPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'

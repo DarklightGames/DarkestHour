@@ -14,7 +14,7 @@ defaultproperties
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
+    // SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
