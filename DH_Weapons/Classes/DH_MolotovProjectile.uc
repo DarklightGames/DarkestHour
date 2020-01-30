@@ -9,12 +9,14 @@ var     float           MinImpactSpeedToExplode;
 var     float           MaxObliquityAngleToExplode; // [degrees] // https://www.researchgate.net/figure/Definition-of-projectile-notations-including-the-angle-of-attack-AoA-obliquity-angle_fig10_259515946
 var class<WeaponPickup> PickupClass;                // pickup class when thrown but did not explode & lies on ground
 
+var     class<Actor>    FlameEffect;
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeEffectClass;
 
-var     class<Actor>    SplashEffect;   // water splash effect class
-var     sound           WaterHitSound;  // sound of this bullet hitting water
+var private Actor       _TrailInstance;
 
+var     class<Actor>    WaterSplashEffect;
+var     sound           WaterHitSound;
 
 //==============================================================================
 // Variables from deprecated ROThrowableExplosiveProjectile:
@@ -26,24 +28,24 @@ var     sound           ExplosionSound[3];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
 
-
-var private bool        _IsDedicatedServer; // set on PostBeginPlay
-
-
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if( bNetInitial && bNetDirty && Role==ROLE_Authority )
         Bounces, bDud;
+
+    // Functions a client can call on the server
+    // reliable if( Role<ROLE_Authority )
+    //     ServerDoSomething;
 }
 
 simulated function PostBeginPlay ()
 {
-    _IsDedicatedServer = Level.NetMode==NM_DedicatedServer;
-
     super.PostBeginPlay();
 
-    if( Role==ROLE_Authority)
+    Level.Game.Broadcast( self , "PostBeginPlay() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+
+    if( Role==ROLE_Authority )
     {
         Velocity = Speed * vector(Rotation);
 
@@ -59,49 +61,32 @@ simulated function PostBeginPlay ()
         bDud = FRand() < FailureRate;
     }
 
+    if( Level.NetMode!=NM_DedicatedServer )
+    {
+        _TrailInstance = Spawn( FlameEffect ,,, Location , rotator(vect(0,0,1)) );
+        _TrailInstance.SetBase( self , vect(0,100,0) );
+        // instance.SetBase( self , vect(0,10,30) );
+
+        bDynamicLight = true;
+    }
+    else
+    {
+        bDynamicLight = false;
+    }
+
     Acceleration = 0.5 * PhysicsVolume.Gravity;
+
+    RotationRate.Pitch = -( 90000 + Rand(30000) );
+    // RandSpin( 100000.0 );
 
     if( InstigatorController!=none )
     {
         ThrowerTeam = InstigatorController.GetTeamNum();
     }
-
-    RotationRate.Pitch = -( 90000 + Rand(30000) );
-    // RandSpin( 100000.0 );
-
-    bDynamicLight = !_IsDedicatedServer;
 }
 
 simulated function Destroyed ()
 {
-    local ESurfaceTypes hitSurfaceType;
-    local ROPawn        victims;
-    local vector        start, direction;
-    local float         damageScale, distance;
-
-    if( bDud )
-    {
-        return;
-    }
-
-    if( !_IsDedicatedServer )
-    {
-        PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
-    }
-
-    start = Location + vect(0,0,32.0);
-
-    if( EffectIsRelevant(start,false) )
-    {
-        // TODO: chance is probably something server should decide!
-        hitSurfaceType = GetHitSurfaceType( vect(0,0,1) );
-        if( hitSurfaceType!=EST_Snow || FRand()<0.5 )// 50% chance of explosion on snow
-        {
-            Spawn( ExplodeEffectClass ,,, start , rotator(vect(0,0,1.0)) );
-            Spawn( ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)) );
-        }
-    }
-
     if( Fear!=none )
     {
         Fear.Destroy();
@@ -493,12 +478,14 @@ simulated function Landed ( vector hitNormal )
 simulated function HitWall ( vector hitNormal , Actor wall )
 {
     local RODestroyableStaticMesh destroMesh;
-    local vector        vNorm;
     local ESurfaceTypes hitSurfaceType;
     local int           i, numDestroMeshTypesCanDamage;
     local Class<DamageType> nextDamageType;
-    local float impactSpeed, impactObliquityAngle, obliquityDotProduct, dampenValue, dampenValueRelativeToAngle;
+    local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
     local Sound hitSound;
+    local vector hitPoint;
+
+    Level.Game.Broadcast( self , "HitWall() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
 
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
@@ -541,31 +528,47 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         }
     }
 
-    hitSurfaceType = GetHitSurfaceType( hitNormal );
+    hitSurfaceType = TraceForHitSurfaceType(
+        -hitNormal ,
+        /*out*/ hitPoint
+    );
 
     Bounces--;
-    if( Bounces<=0 )
+    if( Bounces <= 0 )
     {
         bBounce = false;
     }
     else
     {
-        // dampenValue = GetReflectionDampenValue( hitSurfaceType );
-        // dampenValueRelativeToAngle = 1.0 - obliquityDotProduct * dampenValue;
-        Velocity = -class'UCore'.static.VReflect(Velocity,hitNormal) * 0.5;//* dampenValueRelativeToAngle;
+        if( Level.NetMode==NM_Standalone )
+        {
+            DrawStayingDebugLine( Location , Location - (Normal(Velocity)*50) , 255,255,0 );
+            DrawStayingDebugLine( Location , Location + (hitNormal*25) , 0,255,255 );
+            DrawDebugSphere( hitPoint , 10 , 3 , 255,0,0 );
+        }
+
+        Velocity = class'UCore'.static.VReflect(-Velocity,hitNormal) // lossless kinetic reflection
+            * FMax( 0.1 , 1.0 - obliquityDotProduct ); // dampen from hit angle
+            // * GetReflectionDampenValue( hitSurfaceType );
+
+        if( Level.NetMode==NM_Standalone )
+        {
+            Level.Game.Broadcast( self , "dampen from hit angle: " @ FMax( 0.1 , 1.0 - obliquityDotProduct ) );
+            DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
+        }
     }
 
     if(
-        impactSpeed>MinImpactSpeedToExplode
-        && impactObliquityAngle<MaxObliquityAngleToExplode
+        impactSpeed > MinImpactSpeedToExplode
+        && impactObliquityAngle < MaxObliquityAngleToExplode
     )
     {
         Explode( Location , hitNormal );
     }
 
     if(
-        !_IsDedicatedServer
-        && impactSpeed>150.0
+        Level.NetMode != NM_DedicatedServer
+        && impactSpeed > 150.0
     )
     {
         hitSound = GetReflectionSound( hitSurfaceType );
@@ -650,22 +653,71 @@ simulated function ProcessTouch ( Actor other , vector hitLocation )
 
 simulated function Explode ( vector hitLocation , vector hitNormal )
 {
-    if( bDud)
+    Level.Game.Broadcast( self , "Explode() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+
+    if( !bDud )
     {
-        Destroy();
-        return;
+        BlowUp( hitLocation );
     }
 
-    BlowUp(hitLocation);
     Destroy();
 }
 
-function BlowUp ( vector hitLocation )
+simulated function BlowUp ( vector hitLocation )
 {
-    if( Role==ROLE_Authority)
+    local ESurfaceTypes hitSurfaceType;
+    local vector hitPos, hitNormal;
+    local rotator spread;
+    local int i;
+
+    Level.Game.Broadcast( self , "BlowUp() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    
+    if( _TrailInstance!=none )
+    {
+        _TrailInstance.SetBase( none );
+        _TrailInstance.LifeSpan = 30;
+    }
+
+    if( Role==ROLE_Authority )
     {
         DelayedHurtRadius( Damage , DamageRadius , MyDamageType , MomentumTransfer , hitLocation );
         MakeNoise( 1.0 );
+
+        if( bDud ) return;
+
+        if( Level.NetMode!=NM_DedicatedServer )
+        {
+            PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
+        }
+        
+        if( EffectIsRelevant(Location,false) )
+        {
+            hitSurfaceType = TraceForHitSurfaceType(
+                vect(0,0,-1) ,
+                /*out*/ hitPos ,
+                /*out*/ hitNormal
+            );
+            // if( hitSurfaceType!=EST_Snow || FRand()<0.5 )// 50% chance of explosion on snow
+            // {
+                Spawn( ExplodeEffectClass ,,, Location , rotator(vect(0,0,1)) );
+
+                for( i=0 ; i<5 ; i++ )
+                {
+                    spread.Yaw = 100 * (FRand() - 0.5);
+                    spread.Pitch = 100 * (FRand() - 0.5);
+                    spread.Roll = 100 * (FRand() - 0.5);
+                    Spawn( FlameEffect , Instigator.Controller ,, Location , rotator(Normal(Velocity) >> spread) );
+
+                    if( Level.NetMode==NM_Standalone ) DrawDebugLine( hitPos , hitPos + ((Normal(Velocity)*50) >> spread) , 255,0,0 );
+                }
+
+                if( Level.NetMode!=NM_DedicatedServer )
+                {
+                    Spawn( ExplosionDecal ,,, Location, rotator(Velocity+vect(0,0,-1)) );
+                }
+            // }
+            Level.Game.Broadcast( self , "BlowUp(), spawn complete" );
+        }
     }
 }
 
@@ -676,7 +728,7 @@ simulated function bool EffectIsRelevant ( vector spawnLocation , bool bForceDed
     local PlayerController playerController;
 
     // Only relevant on a dedicated server if the bForceDedicated option has been passed
-    if( _IsDedicatedServer )
+    if( Level.NetMode==NM_DedicatedServer )
     {
         return bForceDedicated;
     }
@@ -721,27 +773,20 @@ simulated function bool EffectIsRelevant ( vector spawnLocation , bool bForceDed
     return CheckMaxEffectDistance( playerController , spawnLocation );
 }
 
-simulated function ESurfaceTypes GetHitSurfaceType ( vector hitNormal )
+simulated function ESurfaceTypes TraceForHitSurfaceType ( vector dir , optional out vector out_hitLoc , optional out vector out_hitNorm )
 {
-    local vector   hitLoc, hitNorm;
-    local material hitMat;
+    local material  hitMat;
     Trace(
-        /*out*/ hitLoc ,
-        /*out*/ hitNorm ,
-        Location-(hitNormal*16.0) ,
+        /*out*/ out_hitLoc ,
+        /*out*/ out_hitNorm ,
+        Location-(dir*16.0) ,
         Location ,
         false ,,
         /*out*/ hitMat
     );
 
-    if( hitMat==none )
-    {
-        return EST_Default;
-    }
-    else
-    {
-        return ESurfaceTypes( hitMat.SurfaceType );
-    }
+    if( hitMat==none ) return EST_Default;
+    else return ESurfaceTypes( hitMat.SurfaceType );
 }
 
 simulated static final function float GetReflectionDampenValue ( ESurfaceTypes aSurfaceType )
@@ -791,14 +836,14 @@ simulated function PhysicsVolumeChange ( PhysicsVolume newVolume )
     }
 }
 
-simulated function CheckForSplash ( vector splashLocation )
+simulated function CheckForSplash ( vector pos )
 {
     local Actor  hitActor;
     local vector hitLocation, hitNormal;
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if(
-        !_IsDedicatedServer
+        Level.NetMode!=NM_DedicatedServer
         && !Level.bDropDetail
         && Level.DetailMode!=DM_Low
         && !( Instigator!=none && Instigator.PhysicsVolume!=none && Instigator.PhysicsVolume.bWaterVolume )
@@ -808,8 +853,8 @@ simulated function CheckForSplash ( vector splashLocation )
         hitActor = Trace(
             /*out*/ hitLocation ,
             /*out*/ hitNormal ,
-            splashLocation - vect(0,0,50) ,
-            splashLocation + vect(0,0,15) ,
+            pos - vect(0,0,50) ,
+            pos + vect(0,0,15) ,
             true
         );
         bTraceWater = false;
@@ -827,13 +872,14 @@ simulated function CheckForSplash ( vector splashLocation )
                 PlaySound( WaterHitSound );
             }
 
-            if( SplashEffect!=none && EffectIsRelevant(hitLocation,false) )
+            if( WaterSplashEffect!=none && EffectIsRelevant(hitLocation,false) )
             {
-                Spawn( SplashEffect ,,, hitLocation , rot(16384,0,0) );
+                Spawn( WaterSplashEffect ,,, hitLocation , rot(16384,0,0) );
             }
         }
     }
 }
+
 
 defaultproperties
 {
@@ -865,14 +911,15 @@ defaultproperties
     ExplosionSoundRadius = 300.0
     
     // fx
+    FlameEffect = class'DH_Effects.DHBurningPlayerFlame'
+    ExplodeEffectClass = class'DH_Effects.DHBurningPlayerFlame'
     ExplosionDecal = class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow = class'ROEffects.GrenadeMarkSnow'
-    SplashEffect = class'ROEffects.ROBulletHitWaterEffect'
+    WaterSplashEffect = class'ROEffects.ROBulletHitWaterEffect'
 
     // give light
     LightType = LT_Pulse;
-    LightBrightness = 4.0;
-    LightRadius = 100.0;
-    LightHue = 20;
-    LightSaturation = 200;
+    LightBrightness = 2.0;
+    LightRadius = 70.0;
+    LightHue = 10;
+    LightSaturation = 255;
 }
