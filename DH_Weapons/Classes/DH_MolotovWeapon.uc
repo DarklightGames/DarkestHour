@@ -5,11 +5,22 @@
 
 class DH_MolotovWeapon extends DHExplosiveWeapon;
 
-// simulated function PostBeginPlay()
-// {
-//     super.PostBeginPlay();
+var     class<Actor>    FlameEffect;
+var     Actor           FlameInstance;
 
-    //TODO: add fire fx
+simulated function PostBeginPlay()
+{
+    FlameInstance = Spawn( FlameEffect );
+    AttachToBone( FlameInstance , 'Bip01 R Hand' );
+    FlameInstance.SetRelativeLocation( vect(4,0,10) );
+    FlameInstance.SetRelativeRotation( rot(0,0,0) );
+}
+
+// exec function SetFlameOffset ( string x , string y , string z )
+// {
+//     local vector vec;
+//     vec.x = float(x); vec.y = float(y); vec.z = float(z);
+//     FlameInstance.SetRelativeLocation( vec );
 // }
 
 defaultproperties
@@ -24,6 +35,8 @@ defaultproperties
     PickupClass = class'DH_Weapons.DH_MolotovPickup'
     FireModeClass(0) = class'DH_Weapons.DH_MolotovFire'
     FireModeClass(1) = class'DH_Weapons.DH_MolotovTossFire'
+
+    FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
     
     // Mesh = SkeletalMesh'DH_Molotov_1st.soviet'
     // HighDetailOverlay = shader'DH_Weapon_tex.AlliedSmallArms.MolotovCocktail_s'

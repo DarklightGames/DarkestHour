@@ -63,7 +63,7 @@ simulated function PostBeginPlay ()
 
     if( Level.NetMode!=NM_DedicatedServer )
     {
-        _TrailInstance = Spawn( FlameEffect ,,, Location , rotator(vect(0,0,1)) );
+        _TrailInstance = Spawn( FlameEffect );//,,, Location , rotator(vect(0,0,1)) );
         _TrailInstance.SetBase( self );
         _TrailInstance.SetRelativeLocation( vect(0,0,0) );
 
@@ -490,8 +490,6 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
     local Sound hitSound;
     local vector hitPoint;
-
-    super.HitWall();
 
     Log( "HitWall() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
@@ -937,8 +935,8 @@ defaultproperties
     ExplosionSoundRadius = 300.0
     
     // fx
-    FlameEffect = class'DH_Effects.DHBurningPlayerFlame'
-    ExplodeEffectClass = class'DH_Effects.DHBurningPlayerFlame'
+    FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
+    ExplodeEffectClass = class'DH_Effects.DHMolotovCoctailFlame'
     ExplosionDecal = class'ROEffects.GrenadeMark'
     WaterSplashEffect = class'ROEffects.ROBulletHitWaterEffect'
 
