@@ -43,8 +43,6 @@ simulated function PostBeginPlay ()
 {
     super.PostBeginPlay();
 
-    Log( "PostBeginPlay() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
-
     if( Role==ROLE_Authority )
     {
         Velocity = Speed * vector(Rotation);
@@ -491,8 +489,6 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local Sound hitSound;
     local vector hitPoint;
 
-    Log( "HitWall() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
-
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
     obliquityDotProduct = Normal(-Velocity) dot hitNormal;
@@ -668,8 +664,6 @@ simulated function ProcessTouch ( Actor other , vector hitLocation )
 /// <summary> Calls Destroy() </summary>
 simulated function Explode ( vector hitLocation , vector hitNormal )
 {
-    Log( "Explode() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
-
     if( !bDud )
         BlowUp( hitLocation );
 
@@ -684,8 +678,6 @@ simulated function BlowUp ( vector hitLocation )
     local rotator spread;
     local int i;
 
-    Log( "BlowUp() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
-    
     if( _TrailInstance!=none )
     {
         _TrailInstance.SetBase( none );
@@ -728,7 +720,6 @@ simulated function BlowUp ( vector hitLocation )
                 if( Level.NetMode!=NM_DedicatedServer )
                 {
                     Spawn( ExplosionDecal , self ,, Location , rotator(Velocity) );
-                    Log( "    ExplosionDecal spawned" );
                 }
             }
         }
