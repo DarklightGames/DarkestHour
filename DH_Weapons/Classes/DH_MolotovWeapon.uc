@@ -8,8 +8,10 @@ class DH_MolotovWeapon extends DHExplosiveWeapon;
 var     class<Actor>    FlameEffect;
 var     Actor           FlameInstance;
 
-simulated function PostBeginPlay()
+simulated function PostBeginPlay ()
 {
+    super.PostBeginPlay();
+
     FlameInstance = Spawn( FlameEffect );
     AttachToBone( FlameInstance , 'Bip01 R Hand' );
     FlameInstance.SetRelativeLocation( vect(4,0,10) );
