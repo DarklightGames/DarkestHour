@@ -43,7 +43,7 @@ simulated function PostBeginPlay ()
 {
     super.PostBeginPlay();
 
-    Log( "PostBeginPlay() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "PostBeginPlay() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
     if( Role==ROLE_Authority )
     {
@@ -87,10 +87,7 @@ simulated function PostBeginPlay ()
 
 simulated function Destroyed ()
 {
-    if( Fear!=none )
-    {
-        Fear.Destroy();
-    }
+    if( Fear!=none ) Fear.Destroy();
 
     super.Destroyed();
 }
@@ -479,13 +476,13 @@ simulated function HitWall ( vector hitNormal , Actor wall )
 {
     local RODestroyableStaticMesh destroMesh;
     local ESurfaceTypes hitSurfaceType;
-    local int           i, numDestroMeshTypesCanDamage;
+    local int           i, max;
     local Class<DamageType> nextDamageType;
     local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
     local Sound hitSound;
     local vector hitPoint;
 
-    Log( "HitWall() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "HitWall() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
@@ -515,8 +512,8 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         // So as a workaround we'll loop through the meshes TypesCanDamage array & check if the server's weapon bash DamageType will have broken the mesh
         else
         {
-            numDestroMeshTypesCanDamage = destroMesh.TypesCanDamage.Length;
-            for( i=0 ; i<numDestroMeshTypesCanDamage ; ++i )
+            max = destroMesh.TypesCanDamage.Length;
+            for( i=0 ; i<max ; ++i )
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
                 nextDamageType = destroMesh.TypesCanDamage[i];
@@ -553,7 +550,6 @@ simulated function HitWall ( vector hitNormal , Actor wall )
 
         if( Level.NetMode==NM_Standalone )
         {
-            Log( "dampen from hit angle: " @ FMax( 0.1 , 1.0 - obliquityDotProduct ) );
             DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
         }
     }
@@ -567,7 +563,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     }
 
     if(
-        Level.NetMode != NM_DedicatedServer
+        Level.NetMode!=NM_DedicatedServer
         && impactSpeed > 150.0
     )
     {
@@ -600,9 +596,15 @@ simulated singular function Touch ( Actor other )
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
     // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if(
-        Velocity==vect(0,0,0)
-        || other.IsA(class'Mover'.Name)
-        || other.TraceThisActor( /*out*/ hitLocation , /*out*/ hitNormal , Location , Location-(2.0*Velocity) , GetCollisionExtent() )
+            VSizeSquared(Velocity)==0
+        ||  other.IsA(class'Mover'.Name)
+        ||  other.TraceThisActor(
+                /*out*/ hitLocation ,
+                /*out*/ hitNormal ,
+                Location ,
+                Location-(2.0*Velocity) ,
+                GetCollisionExtent()
+            )
     )
     {
         hitLocation = Location;
@@ -651,9 +653,10 @@ simulated function ProcessTouch ( Actor other , vector hitLocation )
     HitWall( hitNormal , other );
 }
 
+/// <summary> Calls Destroy() </summary>
 simulated function Explode ( vector hitLocation , vector hitNormal )
 {
-    Log( "Explode() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "Explode() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
     if( !bDud )
     {
@@ -663,6 +666,7 @@ simulated function Explode ( vector hitLocation , vector hitNormal )
     Destroy();
 }
 
+/// <summary> Deals damage, creates fx & sfx </summary>
 simulated function BlowUp ( vector hitLocation )
 {
     local ESurfaceTypes hitSurfaceType;
@@ -670,7 +674,7 @@ simulated function BlowUp ( vector hitLocation )
     local rotator spread;
     local int i;
 
-    Log( "BlowUp() executed, Role:" @ Role @ ", RemoteRole:" @ RemoteRole @ ", Level.NetMode:" @ Level.NetMode );
+    Log( "BlowUp() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
     
     if( _TrailInstance!=none )
     {
