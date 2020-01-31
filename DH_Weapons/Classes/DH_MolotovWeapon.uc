@@ -5,6 +5,13 @@
 
 class DH_MolotovWeapon extends DHExplosiveWeapon;
 
+// simulated function PostBeginPlay()
+// {
+//     super.PostBeginPlay();
+
+    //TODO: add fire fx
+// }
+
 defaultproperties
 {
     ItemName = "Molotov"

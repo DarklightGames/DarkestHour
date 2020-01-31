@@ -64,8 +64,8 @@ simulated function PostBeginPlay ()
     if( Level.NetMode!=NM_DedicatedServer )
     {
         _TrailInstance = Spawn( FlameEffect ,,, Location , rotator(vect(0,0,1)) );
-        _TrailInstance.SetBase( self , vect(0,100,0) );
-        // instance.SetBase( self , vect(0,10,30) );
+        _TrailInstance.SetBase( self );
+        _TrailInstance.SetRelativeLocation( vect(0,0,0) );
 
         bDynamicLight = true;
     }
@@ -96,12 +96,19 @@ simulated function Destroyed ()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius ( float damageAmount , float damageRadius , class<DamageType> damageType , float momentum , vector hitLocation )
+function HurtRadius
+(
+    float damageAmount ,
+    float damageRadius ,
+    class<DamageType> damageType ,
+    float momentum ,
+    vector hitLocation
+)
 {
     local Actor         victim, traceActor;
-    local DHVehicle     victim_asDHVehicle;
-    local ROVehicle     lastTouched_asROVehicle;
-    local ROPawn        victim_asROPawn;
+    local DHVehicle     victimVehicle;
+    local ROVehicle     lastTouchedVehicle;
+    local ROPawn        victimPawn;
     local array<ROPawn> checkedROPawns;
     local bool          bAlreadyChecked;
     local vector        victimLocation, direction, traceHitLocation, traceHitNormal;
@@ -117,7 +124,11 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
     UpdateInstigator();
 
     // Just return if the player switches teams after throwing the explosive - this prevent people TK exploiting by switching teams
-    if( InstigatorController==none || InstigatorController.GetTeamNum()!=ThrowerTeam || ThrowerTeam==255 )
+    if(
+            InstigatorController==none
+        ||  InstigatorController.GetTeamNum()!=ThrowerTeam
+        ||  ThrowerTeam==255
+    )
     {
         return;
     }
@@ -162,15 +173,15 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
         // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
         victimLocation = victim.Location;
-        victim_asDHVehicle = DHVehicle(victim);
+        victimVehicle = DHVehicle(victim);
 
         if(
-            victim_asDHVehicle!=none
-            && victim_asDHVehicle.Cannon!=none
-            && victim_asDHVehicle.Cannon.AttachmentBone!=''
+            victimVehicle!=none
+            && victimVehicle.Cannon!=none
+            && victimVehicle.Cannon.AttachmentBone!=''
         )
         {
-            victimLocation.Z = victim_asDHVehicle.GetBoneCoords( victim_asDHVehicle.Cannon.AttachmentBone ).Origin.Z;
+            victimLocation.Z = victimVehicle.GetBoneCoords( victimVehicle.Cannon.AttachmentBone ).Origin.Z;
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
@@ -206,13 +217,13 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
         }
 
         // Check for hit on player pawn
-        victim_asROPawn = ROPawn(victim);
-        if( victim_asROPawn!=none )
+        victimPawn = ROPawn(victim);
+        if( victimPawn!=none )
         {
             // If we hit a player pawn, make sure we haven't already registered the hit & add pawn to array of already hit/checked pawns
             for( i=0 ; i<checkedROPawns.Length ; ++i )
             {
-                if( victim_asROPawn==checkedROPawns[i] )
+                if( victimPawn==checkedROPawns[i] )
                 {
                     bAlreadyChecked = true;
                     break;
@@ -225,10 +236,10 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
                 continue;
             }
 
-            checkedROPawns[checkedROPawns.Length] = victim_asROPawn;
+            checkedROPawns[checkedROPawns.Length] = victimPawn;
 
             // If player is partially shielded from the blast, calculate damage reduction scale
-            damageExposure = victim_asROPawn.GetExposureTo( hitLocation + 15.0 * -Normal(PhysicsVolume.Gravity) );
+            damageExposure = victimPawn.GetExposureTo( hitLocation + 15.0 * -Normal(PhysicsVolume.Gravity) );
 
             if( damageExposure<=0.0 )
             {
@@ -242,7 +253,7 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
         direction = direction / distance;
         damageScale = 1.0 - FMax( 0.0 , (distance - victim.CollisionRadius)/damageRadius );
 
-        if( victim_asROPawn!=none )
+        if( victimPawn!=none )
         {
             damageScale *= damageExposure;
         }
@@ -282,11 +293,11 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
             );
 
             // If vehicle's engine is vulnerable to "grenades", then we can cause some damage to the engine!
-            if( victim_asDHVehicle.EngineDamageFromGrenadeModifier>0.0 )
+            if( victimVehicle.EngineDamageFromGrenadeModifier>0.0 )
             {
                 // Cause reduced damage to vehicle's engine
-                victim_asDHVehicle.DamageEngine(
-                    damageScale * damageAmount * victim_asDHVehicle.EngineDamageFromGrenadeModifier ,
+                victimVehicle.DamageEngine(
+                    damageScale * damageAmount * victimVehicle.EngineDamageFromGrenadeModifier ,
                     Instigator ,
                     victimLocation - 0.5 * (victim.CollisionHeight + victim.CollisionRadius) * direction ,
                     damageScale * momentum * direction ,
@@ -325,11 +336,11 @@ function HurtRadius ( float damageAmount , float damageRadius , class<DamageType
             damageType
         );
 
-        lastTouched_asROVehicle = ROVehicle(LastTouched);
-        if( lastTouched_asROVehicle!=none && lastTouched_asROVehicle.Health>0 )
+        lastTouchedVehicle = ROVehicle(LastTouched);
+        if( lastTouchedVehicle!=none && lastTouchedVehicle.Health>0 )
         {
             CheckVehicleOccupantsRadiusDamage(
-                lastTouched_asROVehicle ,
+                lastTouchedVehicle ,
                 damageAmount ,
                 damageRadius ,
                 damageType ,
@@ -398,40 +409,38 @@ function VehicleOccupantBlastDamage
     vector hitLocation
 )
 {
-    local Actor  TraceHitActor;
-    local coords HeadBoneCoords;
-    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
-    local float  Distance, DamageScale;
+    local Actor  traceHitActor;
+    local coords headBoneCoords;
+    local vector headLocation, traceHitLocation, traceHitNormal, direction;
+    local float  dist, damageScale;
 
     if( pawn!=none)
     {
-        HeadBoneCoords = pawn.GetBoneCoords( pawn.HeadBone );
-        HeadLocation = HeadBoneCoords.Origin + ((pawn.HeadHeight + (0.5 * pawn.HeadRadius)) * pawn.HeadScale * HeadBoneCoords.XAxis);
+        headBoneCoords = pawn.GetBoneCoords( pawn.HeadBone );
+        headLocation = headBoneCoords.Origin + ((pawn.HeadHeight + (0.5 * pawn.HeadRadius)) * pawn.HeadScale * headBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors( class'Actor' , TraceHitActor , TraceHitLocation , TraceHitNormal , HeadLocation , hitLocation )
+        foreach TraceActors( class'Actor' , traceHitActor , traceHitLocation , traceHitNormal , headLocation , hitLocation )
         {
-            if( TraceHitActor.bBlockActors)
-            {
+            if( traceHitActor.bBlockActors)
                 return;
-            }
         }
 
         // Calculate damage based on distance from explosion
-        Direction = pawn.Location - hitLocation;
-        Distance = FMax( 1.0 , VSize(Direction) );
-        Direction = Direction / Distance;
-        DamageScale = 1.0 - FMax( 0.0 , (Distance - pawn.CollisionRadius)/damageRadius );
+        direction = pawn.Location - hitLocation;
+        dist = FMax( 1.0 , VSize(direction) );
+        direction = direction / dist;
+        damageScale = 1.0 - FMax( 0.0 , (dist - pawn.CollisionRadius)/damageRadius );
 
         // Damage the vehicle occupant
-        if( DamageScale > 0.0 )
+        if( damageScale > 0.0 )
         {
             pawn.SetDelayedDamageInstigatorController( InstigatorController );
             pawn.TakeDamage(
-                DamageScale * damageAmount ,
+                damageScale * damageAmount ,
                 InstigatorController.Pawn ,
-                pawn.Location - (0.5 * (pawn.CollisionHeight + pawn.CollisionRadius)) * Direction ,
-                DamageScale * momentum * Direction ,
+                pawn.Location - (0.5 * (pawn.CollisionHeight + pawn.CollisionRadius)) * direction ,
+                damageScale * momentum * direction ,
                 damageType
             );
         }
@@ -475,19 +484,21 @@ simulated function Landed ( vector hitNormal )
 simulated function HitWall ( vector hitNormal , Actor wall )
 {
     local RODestroyableStaticMesh destroMesh;
-    local ESurfaceTypes hitSurfaceType;
-    local int           i, max;
     local Class<DamageType> nextDamageType;
+    local ESurfaceTypes hitSurfaceType;
+    local int i, max;
     local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
     local Sound hitSound;
     local vector hitPoint;
+
+    super.HitWall();
 
     Log( "HitWall() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
     obliquityDotProduct = Normal(-Velocity) dot hitNormal;
-    impactObliquityAngle = Acos( obliquityDotProduct ) * 180.0/Pi;
+    impactObliquityAngle = Acos(obliquityDotProduct) * 180.0/Pi;
 
     // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll probably break it instead of bouncing off it
     if( destroMesh!=none && destroMesh.bWontStopBullets )
@@ -517,7 +528,10 @@ simulated function HitWall ( vector hitNormal , Actor wall )
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
                 nextDamageType = destroMesh.TypesCanDamage[i];
-                if( nextDamageType==class'DHWeaponBashDamageType' || ClassIsChildOf( class'DHWeaponBashDamageType' , nextDamageType ) )
+                if(
+                    nextDamageType == class'DHWeaponBashDamageType'
+                    || ClassIsChildOf( class'DHWeaponBashDamageType' , nextDamageType )
+                )
                 {
                     return;
                 }
@@ -570,7 +584,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         hitSound = GetReflectionSound( hitSurfaceType );
         if( hitSound!=none )
         {       
-            PlaySound( hitSound , SLOT_Misc , 1.1 );
+            // PlaySound( hitSound , SLOT_Misc , 1.1 );
         }
     }
 }
@@ -659,9 +673,7 @@ simulated function Explode ( vector hitLocation , vector hitNormal )
     Log( "Explode() executed, Role:"@ Role @", RemoteRole:"@ RemoteRole @", Level.NetMode:"@ Level.NetMode );
 
     if( !bDud )
-    {
         BlowUp( hitLocation );
-    }
 
     Destroy();
 }
@@ -687,22 +699,20 @@ simulated function BlowUp ( vector hitLocation )
         DelayedHurtRadius( Damage , DamageRadius , MyDamageType , MomentumTransfer , hitLocation );
         MakeNoise( 1.0 );
 
-        if( bDud ) return;
-
         if( Level.NetMode!=NM_DedicatedServer )
         {
-            PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
+            // PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
         }
         
         if( EffectIsRelevant(Location,false) )
         {
             hitSurfaceType = TraceForHitSurfaceType(
-                vect(0,0,-1) ,
+                Normal( hitLocation - Location ) ,
                 /*out*/ hitPos ,
                 /*out*/ hitNormal
             );
-            // if( hitSurfaceType!=EST_Snow || FRand()<0.5 )// 50% chance of explosion on snow
-            // {
+            if( hitSurfaceType!=EST_Snow )// || FRand()<0.5 )// 50% chance of explosion on snow
+            {
                 Spawn( ExplodeEffectClass ,,, Location , rotator(vect(0,0,1)) );
 
                 for( i=0 ; i<5 ; i++ )
@@ -710,17 +720,19 @@ simulated function BlowUp ( vector hitLocation )
                     spread.Yaw = 100 * (FRand() - 0.5);
                     spread.Pitch = 100 * (FRand() - 0.5);
                     spread.Roll = 100 * (FRand() - 0.5);
-                    Spawn( FlameEffect , Instigator.Controller ,, Location , rotator(Normal(Velocity) >> spread) );
+                    Spawn( FlameEffect ,,, Location , rotator(Normal(Velocity) >> spread) );
+                    // Spawn( FlameEffect , Instigator.Controller ,, Location , rotator(Normal(Velocity) >> spread) );
+                    Log( "    FlameEffect spawned" );
 
                     if( Level.NetMode==NM_Standalone ) DrawDebugLine( hitPos , hitPos + ((Normal(Velocity)*50) >> spread) , 255,0,0 );
                 }
 
                 if( Level.NetMode!=NM_DedicatedServer )
                 {
-                    Spawn( ExplosionDecal ,,, Location, rotator(Velocity+vect(0,0,-1)) );
+                    Spawn( ExplosionDecal , self ,, Location , rotator(Velocity) );
+                    Log( "    ExplosionDecal spawned" );
                 }
-            // }
-            Log( "BlowUp(), spawn complete" );
+            }
         }
     }
 }
@@ -770,14 +782,19 @@ simulated function bool EffectIsRelevant ( vector spawnLocation , bool bForceDed
         && vector(playerController.CalcViewRotation) dot (spawnLocation-playerController.ViewTarget.Location) < 0.0
     )
     {
-        return VSizeSquared( playerController.ViewTarget.Location-spawnLocation ) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+        return VSizeSquared( playerController.ViewTarget.Location-spawnLocation ) < (1600*1600); // 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
 
     // Effect relevance is based on normal distance check
     return CheckMaxEffectDistance( playerController , spawnLocation );
 }
 
-simulated function ESurfaceTypes TraceForHitSurfaceType ( vector dir , optional out vector out_hitLoc , optional out vector out_hitNorm )
+simulated function ESurfaceTypes TraceForHitSurfaceType
+(
+    vector dir ,
+    optional out vector out_hitLoc ,
+    optional out vector out_hitNorm
+)
 {
     local material  hitMat;
     Trace(
@@ -847,10 +864,14 @@ simulated function CheckForSplash ( vector pos )
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if(
-        Level.NetMode!=NM_DedicatedServer
-        && !Level.bDropDetail
-        && Level.DetailMode!=DM_Low
-        && !( Instigator!=none && Instigator.PhysicsVolume!=none && Instigator.PhysicsVolume.bWaterVolume )
+            Level.NetMode!=NM_DedicatedServer
+        &&  !Level.bDropDetail
+        &&  Level.DetailMode!=DM_Low
+        &&  !(
+                    Instigator!=none
+                &&  Instigator.PhysicsVolume!=none
+                &&  Instigator.PhysicsVolume.bWaterVolume
+            )
     )
     {
         bTraceWater = true;
@@ -869,8 +890,6 @@ simulated function CheckForSplash ( vector pos )
             || FluidSurfaceInfo(hitActor)!=none
         )
         {
-            bDud = true;// fire is out
-
             if( WaterHitSound!=none )
             {
                 PlaySound( WaterHitSound );
@@ -880,6 +899,9 @@ simulated function CheckForSplash ( vector pos )
             {
                 Spawn( WaterSplashEffect ,,, hitLocation , rot(16384,0,0) );
             }
+
+            // fire is out:
+            _TrailInstance.Destroy();
         }
     }
 }
