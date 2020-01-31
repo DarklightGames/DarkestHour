@@ -578,7 +578,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         hitSound = GetReflectionSound( hitSurfaceType );
         if( hitSound!=none )
         {       
-            // PlaySound( hitSound , SLOT_Misc , 1.1 );
+            PlaySound( hitSound , SLOT_Misc , 1.1 );
         }
     }
 }
@@ -664,15 +664,14 @@ simulated function ProcessTouch ( Actor other , vector hitLocation )
 /// <summary> Calls Destroy() </summary>
 simulated function Explode ( vector hitLocation , vector hitNormal )
 {
-    if( !bDud )
-        BlowUp( hitLocation );
-
+    if( !bDud ) BlowUp( hitLocation );
     Destroy();
 }
 
 /// <summary> Deals damage, creates fx & sfx </summary>
 simulated function BlowUp ( vector hitLocation )
 {
+    local Actor instance, actorTraced;
     local ESurfaceTypes hitSurfaceType;
     local vector hitPos, hitNormal;
     local rotator spread;
@@ -691,7 +690,7 @@ simulated function BlowUp ( vector hitLocation )
 
         if( Level.NetMode!=NM_DedicatedServer )
         {
-            // PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
+            PlaySound( ExplosionSound[Rand(3)] ,, 5.0 ,, ExplosionSoundRadius , 1.0 , true );
         }
         
         if( EffectIsRelevant(Location,false) )
@@ -699,22 +698,30 @@ simulated function BlowUp ( vector hitLocation )
             hitSurfaceType = TraceForHitSurfaceType(
                 Normal( hitLocation - Location ) ,
                 /*out*/ hitPos ,
-                /*out*/ hitNormal
+                /*out*/ hitNormal ,
+                /*out*/ actorTraced
             );
             if( hitSurfaceType!=EST_Snow )// || FRand()<0.5 )// 50% chance of explosion on snow
             {
-                Spawn( ExplodeEffectClass ,,, Location , rotator(vect(0,0,1)) );
+                Spawn( ExplodeEffectClass ,,, hitPos , rotator(vect(0,0,1)) );
 
                 for( i=0 ; i<5 ; i++ )
                 {
-                    spread.Yaw = 100 * (FRand() - 0.5);
-                    spread.Pitch = 100 * (FRand() - 0.5);
-                    spread.Roll = 100 * (FRand() - 0.5);
-                    Spawn( FlameEffect ,,, Location , rotator(Normal(Velocity) >> spread) );
-                    // Spawn( FlameEffect , Instigator.Controller ,, Location , rotator(Normal(Velocity) >> spread) );
-                    Log( "    FlameEffect spawned" );
+                    //32768 is 180'
+                    //16384 is 90'
+                    spread.Yaw = 16384 * (FRand() - 0.5);
+                    spread.Pitch = 16384 * (FRand() - 0.5);
+                    spread.Roll = 16384 * (FRand() - 0.5);
+                    
+                    instance = Spawn( FlameEffect , Instigator.Controller );
+                    instance.SetPhysics( PHYS_Falling );
+                    instance.Velocity = ( Normal(Velocity) >> spread ) * ( 2.0 - FRand() );
 
-                    if( Level.NetMode==NM_Standalone ) DrawDebugLine( hitPos , hitPos + ((Normal(Velocity)*50) >> spread) , 255,0,0 );
+                    if( actorTraced!=none )
+                        instance.SetBase( actorTraced );
+
+                    if( Level.NetMode==NM_Standalone )
+                        DrawStayingDebugLine( Location , Location + (Normal(instance.Velocity)*25) , 255,0,0 );
                 }
 
                 if( Level.NetMode!=NM_DedicatedServer )
@@ -782,11 +789,12 @@ simulated function ESurfaceTypes TraceForHitSurfaceType
 (
     vector dir ,
     optional out vector out_hitLoc ,
-    optional out vector out_hitNorm
+    optional out vector out_hitNorm ,
+    optional out Actor actorTraced
 )
 {
     local material  hitMat;
-    Trace(
+    actorTraced = Trace(
         /*out*/ out_hitLoc ,
         /*out*/ out_hitNorm ,
         Location-(dir*16.0) ,

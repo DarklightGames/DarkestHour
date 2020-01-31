@@ -12,10 +12,13 @@ simulated function PostBeginPlay ()
 {
     super.PostBeginPlay();
 
-    FlameInstance = Spawn( FlameEffect );
-    AttachToBone( FlameInstance , 'Bip01 R Hand' );
-    FlameInstance.SetRelativeLocation( vect(4,0,10) );
-    FlameInstance.SetRelativeRotation( rot(0,0,0) );
+    if( Level.NetMode!=NM_DedicatedServer )
+    {
+        FlameInstance = Spawn( FlameEffect ,,, Location );
+        AttachToBone( FlameInstance , 'Bip01 R Hand' );
+        FlameInstance.SetRelativeLocation( vect(4,0,10) );
+        FlameInstance.SetRelativeRotation( rot(0,0,0) );
+    }
 }
 
 // exec function SetFlameOffset ( string x , string y , string z )
