@@ -8,15 +8,16 @@ class DH_MolotovProjectile extends DHProjectile;
 var     float           MinImpactSpeedToExplode;
 var     float           MaxObliquityAngleToExplode; // [degrees] // https://www.researchgate.net/figure/Definition-of-projectile-notations-including-the-angle-of-attack-AoA-obliquity-angle_fig10_259515946
 var class<WeaponPickup> PickupClass;                // pickup class when thrown but did not explode & lies on ground
+var     array<float>    SurfaceDampen;
 
 var     class<Actor>    FlameEffect;
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeEffectClass;
-
 var private Actor       _TrailInstance;
 
 var     class<Actor>    WaterSplashEffect;
 var     sound           WaterHitSound;
+var     array<sound>    SurfaceHits;
 
 //==============================================================================
 // Variables from deprecated ROThrowableExplosiveProjectile:
@@ -486,7 +487,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local ESurfaceTypes hitSurfaceType;
     local int i, max;
     local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
-    local Sound hitSound;
+    local Sound sfx;
     local vector hitPoint;
 
     destroMesh = RODestroyableStaticMesh( wall );
@@ -555,7 +556,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         // kinetic reflection from hit surface:
         Velocity = class'UCore'.static.VReflect(Velocity,hitNormal) // lossless kinetic reflection
             * FMax( 0.1 , 1.0 - obliquityDotProduct ) // dampen from hit angle
-            * GetSurfaceDampenValue( hitSurfaceType ); // dampen from surface type
+            * SurfaceDampen[ int(hitSurfaceType) ]; // dampen from surface type
 
         // if( Level.NetMode==NM_Standalone ) DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
     }
@@ -576,10 +577,10 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         && impactSpeed > 150.0
     )
     {
-        hitSound = GetReflectionSound( hitSurfaceType );
-        if( hitSound!=none )
+        sfx = SurfaceHits[ int(hitSurfaceType) ];
+        if( sfx!=none )
         {       
-            PlaySound( hitSound , SLOT_Misc , 1.1 );
+            PlaySound( sfx , SLOT_Misc , 1.1 );
         }
     }
 }
@@ -814,43 +815,6 @@ simulated function ESurfaceTypes TraceForHitSurfaceType
     else return ESurfaceTypes( hitMat.SurfaceType );
 }
 
-simulated static final function float GetSurfaceDampenValue ( ESurfaceTypes aSurfaceType )
-{
-    switch( aSurfaceType )
-    {
-        case EST_Default:   return 0.15;
-        case EST_Rock:      return 0.2;
-        case EST_Dirt:      return 0.1;
-        case EST_Metal:     return 0.2;
-        case EST_Wood:      return 0.15;
-        case EST_Plant:     return 0.1;
-        case EST_Flesh:     return 0.1;
-        case EST_Ice:       return 0.2;
-        case EST_Snow:      return 0.0;
-        case EST_Water:     return 0.0;
-        case EST_Glass:     return 0.3;
-        default:            return 0.15;
-    }
-}
-simulated static final function Sound GetReflectionSound ( ESurfaceTypes aSurfaceType )
-{
-    switch( aSurfaceType )
-    {
-        // case EST_Default:   return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Rock:      return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Dirt:      return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Metal:     return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Wood:      return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Plant:     return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Flesh:     return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Ice:       return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Snow:      return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Water:     return Sound'Inf_Weapons_Foley.grenadeland';
-        // case EST_Glass:     return Sound'Inf_Weapons_Foley.grenadeland';
-        default:            return Sound'Inf_Weapons_Foley.grenadeland';
-    }
-}
-
 simulated function PhysicsVolumeChange ( PhysicsVolume newVolume )
 {
     // if thrown projectile hits water we play a splash effect
@@ -937,8 +901,49 @@ defaultproperties
     bFixedRotationDir = true
     FailureRate = 0.001 // 1 in 1000
 
+    SurfaceDampen(0) = 1.0// EST_Default,
+	SurfaceDampen(1) = 1.0// EST_Rock,
+	SurfaceDampen(2) = 0.7// EST_Dirt,
+	SurfaceDampen(3) = 1.0// EST_Metal,
+	SurfaceDampen(4) = 1.0// EST_Wood,
+	SurfaceDampen(5) = 0.5// EST_Plant,
+	SurfaceDampen(6) = 0.5// EST_Flesh,
+    SurfaceDampen(7) = 1.0// EST_Ice,
+    SurfaceDampen(8) = 0// EST_Snow,
+    SurfaceDampen(9) = 0// EST_Water,
+    SurfaceDampen(10) = 1.0// EST_Glass,
+    SurfaceDampen(11) = 0.25// EST_Gravel,
+    SurfaceDampen(12) = 1.0// EST_Concrete,
+    SurfaceDampen(13) = 1.0// EST_HollowWood,
+    SurfaceDampen(14) = 0.25// EST_Mud,
+    SurfaceDampen(15) = 1.0// EST_MetalArmor,
+    SurfaceDampen(16) = 0.7// EST_Paper,
+    SurfaceDampen(17) = 0.7// EST_Cloth,
+    SurfaceDampen(18) = 1.5// EST_Rubber,
+    SurfaceDampen(19) = 0.5// EST_Poop,
+
     // sound
     ExplosionSoundRadius = 300.0
+    SurfaceHits(0) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Default,
+	SurfaceHits(1) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Rock,
+	SurfaceHits(2) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Dirt,
+	SurfaceHits(3) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Metal,
+	SurfaceHits(4) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Wood,
+	SurfaceHits(5) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Plant,
+	SurfaceHits(6) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Flesh,
+    SurfaceHits(7) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Ice,
+    SurfaceHits(8) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Snow,
+    SurfaceHits(9) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Water,
+    SurfaceHits(10) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Glass,
+    SurfaceHits(11) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Gravel,
+    SurfaceHits(12) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Concrete,
+    SurfaceHits(13) = Sound'Inf_Weapons_Foley.grenadeland' // EST_HollowWood,
+    SurfaceHits(14) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Mud,
+    SurfaceHits(15) = Sound'Inf_Weapons_Foley.grenadeland' // EST_MetalArmor,
+    SurfaceHits(16) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Paper,
+    SurfaceHits(17) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Cloth,
+    SurfaceHits(18) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Rubber,
+    SurfaceHits(19) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Poop
     
     // fx
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
