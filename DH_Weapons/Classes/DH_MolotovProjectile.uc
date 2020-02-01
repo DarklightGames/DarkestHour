@@ -673,12 +673,11 @@ simulated function Explode ( vector hitLocation , vector hitNormal )
 /// <summary> Deals damage, creates fx & sfx </summary>
 simulated function BlowUp ( vector hitLocation )
 {
-    local Actor instance, actorTraced;
+    local Actor instance, tracedActorHit;
     local ESurfaceTypes hitSurfaceType;
-    local vector hitPos, hitNormal;
+    local vector tracedHitPoint, tracedHitNormal;
     local rotator spread;
     local int i;
-    local float rnd;
 
     if( _TrailInstance!=none )
     {
@@ -700,34 +699,35 @@ simulated function BlowUp ( vector hitLocation )
         {
             hitSurfaceType = TraceForHitSurfaceType(
                 Normal( hitLocation - Location ) ,
-                /*out*/ hitPos ,
-                /*out*/ hitNormal ,
-                /*out*/ actorTraced
+                /*out*/ tracedHitPoint ,
+                /*out*/ tracedHitNormal ,
+                /*out*/ tracedActorHit
             );
-            if( hitSurfaceType!=EST_Snow )// || FRand()<0.5 )// 50% chance of explosion on snow
+            if( hitSurfaceType!=EST_Snow )
             {
-                // Spawn( ExplodeEffectClass ,,, hitPos , rotator(vect(0,0,1)) );
+                // spawn explosion fx:
+                if( ExplodeEffectClass!=none )
+                    Spawn( ExplodeEffectClass ,,, hitLocation , rotator(vect(0,0,1)) );
 
-                for( i=0 ; i<25 ; i++ )
+                // spawn flames:
+                for( i=0 ; i<10 ; i++ )
                 {
-                    // 65536 == 360'
-                    spread.Yaw = (65536/2) * (FRand() - 0.5);
-                    spread.Pitch = (65536/2) * (FRand() - 0.5);
-                    spread.Roll = (65536/2) * (FRand() - 0.5);
+                    // 65536 == 360', 32768 == 180', 16384 == 90' [degrees]
+                    spread.Yaw = 32768 * (FRand() - 0.5);
+                    spread.Pitch = 32768 * (FRand() - 0.5);
+                    spread.Roll = 32768 * (FRand() - 0.5);
                     
                     instance = Spawn( FlameEffect , Instigator.Controller ,, hitLocation );
-                    rnd = FRand();
-                    // instance.SetDrawScale( FMax(0.1,rnd) * 3.0 );//doent work?
-                    instance.Velocity = ( Normal(Velocity) >> spread ) * Lerp( rnd , 300 , 10 );
+                    instance.LifeSpan = 10.0 + ( FRand() * 20.0 );
+                    instance.Velocity = ( Normal(Velocity) >> spread ) * Lerp( FRand() , 300 , 10 );
                     
                     instance.SetCollisionSize( 5.0 , 0 );
-                    // instance.KSetBlockKarma(true);
                     instance.SetCollision(true);
                     instance.bCollideWorld = true;
                     instance.SetPhysics( PHYS_Falling );
 
-                    if( actorTraced!=none )
-                        instance.SetBase( actorTraced );
+                    if( tracedActorHit!=none )
+                        instance.SetBase( tracedActorHit );
 
                     // if( Level.NetMode==NM_Standalone ) DrawStayingDebugLine( hitLocation , hitLocation + instance.Velocity , 255,0,0 );
                 }
@@ -878,20 +878,24 @@ simulated function CheckForSplash ( vector pos )
 defaultproperties
 {
     bNetTemporary = false
-    bBlockHitPointTraces = false
-    Physics = PHYS_Falling
+    PickupClass = class'DH_Weapons.DH_MolotovWeapon'
+    
+    MaxObliquityAngleToExplode = 60
+    MinImpactSpeedToExplode = 1.0
+    FailureRate = 0.001 // 1 in 1000
+    
+    // mesh:
     DrawType = DT_StaticMesh
     StaticMesh = StaticMesh'DH_WeaponPickups.Projectile.MolotovCocktail_throw'
-    PickupClass = class'DH_Weapons.DH_MolotovWeapon'
 
     // damage
     Damage = 80.0
     DamageRadius = 160.0
     MyDamageType = class'DHBurningDamageType'
-    MaxObliquityAngleToExplode = 60
-    MinImpactSpeedToExplode = 1.0
     
     // physics
+    Physics = PHYS_Falling
+    bBlockHitPointTraces = false
     Speed = 800.0
     bBounce = true
     Bounces = 5
@@ -899,8 +903,8 @@ defaultproperties
     MomentumTransfer = 8000.0
     TossZ = 150.0
     bFixedRotationDir = true
-    FailureRate = 0.001 // 1 in 1000
 
+    // surface dampen values:
     SurfaceDampen(0) = 1.0// EST_Default,
 	SurfaceDampen(1) = 1.0// EST_Rock,
 	SurfaceDampen(2) = 0.7// EST_Dirt,
@@ -947,14 +951,14 @@ defaultproperties
     
     // fx
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
-    ExplodeEffectClass = class'DH_Effects.DHMolotovCoctailFlame'
+    ExplodeEffectClass = none
     ExplosionDecal = class'ROEffects.GrenadeMark'
     WaterSplashEffect = class'ROEffects.ROBulletHitWaterEffect'
 
     // give light
-    LightType = LT_Pulse;
-    LightBrightness = 2.0;
-    LightRadius = 70.0;
-    LightHue = 10;
-    LightSaturation = 255;
+    LightType = LT_Pulse
+    LightBrightness = 10//2.0
+    LightRadius = 70.0
+    LightHue = 10
+    LightSaturation = 255
 }
