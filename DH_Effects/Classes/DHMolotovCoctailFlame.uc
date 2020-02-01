@@ -92,36 +92,36 @@ defaultproperties
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-        FadeOut=true
-        FadeIn=true
-        RespawnDeadParticles=false
-        SpinParticles=true
-        UseSizeScale=true
-        UseRegularSizeScale=false
-        UniformSize=true
-        AutomaticInitialSpawning=false
-        Acceleration=(X=10.0,Z=10.0)
-        ColorScale(0)=(Color=(B=255,G=255,R=255))
-        ColorScale(1)=(RelativeTime=0.25,Color=(B=100,G=177,R=230,A=255))
-        ColorScale(2)=(RelativeTime=0.75,Color=(A=255))
-        ColorScale(3)=(RelativeTime=1.0,Color=(A=255))
-        FadeOutStartTime=0.65
-        FadeInEndTime=0.15
-        MaxParticles=100
-        // StartLocationOffset=(Z=-30.0)
-        RotationOffset=(Yaw=1092,Roll=13107)
-        SpinCCWorCW=(Y=1.0,Z=1.0)
-        SpinsPerSecondRange=(X=(Min=0.05,Max=0.1),Y=(Max=0.1),Z=(Min=1.0,Max=1.0))
-        StartSpinRange=(X=(Min=-0.5,Max=0.5),Y=(Min=16000.0,Max=20000.0),Z=(Min=9000.0,Max=12000.0))
-        StartSizeRange=(X=(Min=25.0,Max=50.0),Y=(Min=25.0,Max=50.0),Z=(Min=25.0,Max=50.0))
-        ParticlesPerSecond=4.0
-        InitialParticlesPerSecond=4.0
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_1'
-        LifetimeRange=(Min=0.7,Max=0.8)
-        StartVelocityRange=(X=(Min=10.0,Max=10.0),Y=(Min=10.0,Max=10.0),Z=(Min=50.0,Max=100.0))
-        VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))
-    End Object
-    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+    // Begin Object Class=SpriteEmitter Name=SpriteEmitter2
+    //     FadeOut=true
+    //     FadeIn=true
+    //     RespawnDeadParticles=false
+    //     SpinParticles=true
+    //     UseSizeScale=true
+    //     UseRegularSizeScale=false
+    //     UniformSize=true
+    //     AutomaticInitialSpawning=false
+    //     Acceleration=(X=10.0,Z=10.0)
+    //     ColorScale(0)=(Color=(B=255,G=255,R=255))
+    //     ColorScale(1)=(RelativeTime=0.25,Color=(B=100,G=177,R=230,A=255))
+    //     ColorScale(2)=(RelativeTime=0.75,Color=(A=255))
+    //     ColorScale(3)=(RelativeTime=1.0,Color=(A=255))
+    //     FadeOutStartTime=0.65
+    //     FadeInEndTime=0.15
+    //     MaxParticles=100
+    //     // StartLocationOffset=(Z=-30.0)
+    //     RotationOffset=(Yaw=1092,Roll=13107)
+    //     SpinCCWorCW=(Y=1.0,Z=1.0)
+    //     SpinsPerSecondRange=(X=(Min=0.05,Max=0.1),Y=(Max=0.1),Z=(Min=1.0,Max=1.0))
+    //     StartSpinRange=(X=(Min=-0.5,Max=0.5),Y=(Min=16000.0,Max=20000.0),Z=(Min=9000.0,Max=12000.0))
+    //     StartSizeRange=(X=(Min=25.0,Max=50.0),Y=(Min=25.0,Max=50.0),Z=(Min=25.0,Max=50.0))
+    //     ParticlesPerSecond=4.0
+    //     InitialParticlesPerSecond=4.0
+    //     DrawStyle=PTDS_AlphaBlend
+    //     Texture=Texture'Effects_Tex.explosions.DSmoke_1'
+    //     LifetimeRange=(Min=0.7,Max=0.8)
+    //     StartVelocityRange=(X=(Min=10.0,Max=10.0),Y=(Min=10.0,Max=10.0),Z=(Min=50.0,Max=100.0))
+    //     VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))
+    // End Object
+    // Emitters(2)=SpriteEmitter'SpriteEmitter2'
 }
