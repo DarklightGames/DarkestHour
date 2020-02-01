@@ -12,13 +12,40 @@ simulated function PostBeginPlay ()
 {
     super.PostBeginPlay();
 
+    // if( Level.NetMode!=NM_DedicatedServer )
+    // {
+    //     if( FlameInstance==none )
+    //     {
+    //         FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
+    //         AttachToBone( FlameInstance , 'Bip01 R Hand' );
+    //         FlameInstance.SetRelativeLocation( vect(4,0,10) );
+    //         FlameInstance.SetRelativeRotation( rot(0,0,0) );
+    //     }
+    // }
+}
+
+simulated function Fire ( float F )
+{
+    super.Fire(F);
+
     if( Level.NetMode!=NM_DedicatedServer )
     {
-        FlameInstance = Spawn( FlameEffect ,,, Location );
-        AttachToBone( FlameInstance , 'Bip01 R Hand' );
-        FlameInstance.SetRelativeLocation( vect(4,0,10) );
-        FlameInstance.SetRelativeRotation( rot(0,0,0) );
+        if( FlameInstance==none )
+        {
+            FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
+            AttachToBone( FlameInstance , 'Bip01 R Hand' );
+            FlameInstance.SetRelativeLocation( vect(4,0,10) );
+            FlameInstance.SetRelativeRotation( rot(0,0,0) );
+        }
     }
+}
+
+simulated function Destroyed ()
+{
+    super.Destroyed();
+
+    if( FlameInstance!=none )
+        FlameInstance.Destroy();
 }
 
 // exec function SetFlameOffset ( string x , string y , string z )
