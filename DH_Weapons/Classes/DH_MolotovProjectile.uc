@@ -545,29 +545,30 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     }
     else
     {
-        if( Level.NetMode==NM_Standalone )
-        {
-            DrawStayingDebugLine( Location , Location - (Normal(Velocity)*50) , 255,255,0 );
-            DrawStayingDebugLine( Location , Location + (hitNormal*25) , 0,255,255 );
-            DrawDebugSphere( hitPoint , 10 , 3 , 255,0,0 );
-        }
+        // debug draw reflection angle:
+        // if( Level.NetMode==NM_Standalone )
+        // {
+        //     DrawStayingDebugLine( Location , Location - (Normal(Velocity)*50) , 255,255,0 );
+        //     DrawStayingDebugLine( Location , Location + (hitNormal*25) , 0,255,255 );
+        // }
 
+        // kinetic reflection from hit surface:
         Velocity = class'UCore'.static.VReflect(Velocity,hitNormal) // lossless kinetic reflection
-             * FMax( 0.1 , 1.0 - obliquityDotProduct ); // dampen from hit angle
-            // * GetSurfaceDampenValue( hitSurfaceType );
+            * FMax( 0.1 , 1.0 - obliquityDotProduct ) // dampen from hit angle
+            * GetSurfaceDampenValue( hitSurfaceType ); // dampen from surface type
 
-        if( Level.NetMode==NM_Standalone )
-        {
-            DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
-        }
+        // if( Level.NetMode==NM_Standalone ) DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
     }
 
-    if(
-        impactSpeed > MinImpactSpeedToExplode
-        && impactObliquityAngle < MaxObliquityAngleToExplode
-    )
+    if( Role==ROLE_Authority)
     {
-        Explode( Location , hitNormal );
+        if(
+            impactSpeed > MinImpactSpeedToExplode
+            && impactObliquityAngle < MaxObliquityAngleToExplode
+        )
+        {
+            Explode( Location , hitNormal );
+        }
     }
 
     if(
@@ -676,6 +677,7 @@ simulated function BlowUp ( vector hitLocation )
     local vector hitPos, hitNormal;
     local rotator spread;
     local int i;
+    local float rnd;
 
     if( _TrailInstance!=none )
     {
@@ -703,25 +705,30 @@ simulated function BlowUp ( vector hitLocation )
             );
             if( hitSurfaceType!=EST_Snow )// || FRand()<0.5 )// 50% chance of explosion on snow
             {
-                Spawn( ExplodeEffectClass ,,, hitPos , rotator(vect(0,0,1)) );
+                // Spawn( ExplodeEffectClass ,,, hitPos , rotator(vect(0,0,1)) );
 
-                for( i=0 ; i<5 ; i++ )
+                for( i=0 ; i<25 ; i++ )
                 {
-                    //32768 is 180'
-                    //16384 is 90'
-                    spread.Yaw = 16384 * (FRand() - 0.5);
-                    spread.Pitch = 16384 * (FRand() - 0.5);
-                    spread.Roll = 16384 * (FRand() - 0.5);
+                    // 65536 == 360'
+                    spread.Yaw = (65536/2) * (FRand() - 0.5);
+                    spread.Pitch = (65536/2) * (FRand() - 0.5);
+                    spread.Roll = (65536/2) * (FRand() - 0.5);
                     
-                    instance = Spawn( FlameEffect , Instigator.Controller );
+                    instance = Spawn( FlameEffect , Instigator.Controller ,, hitLocation );
+                    rnd = FRand();
+                    // instance.SetDrawScale( FMax(0.1,rnd) * 3.0 );//doent work?
+                    instance.Velocity = ( Normal(Velocity) >> spread ) * Lerp( rnd , 300 , 10 );
+                    
+                    instance.SetCollisionSize( 5.0 , 0 );
+                    // instance.KSetBlockKarma(true);
+                    instance.SetCollision(true);
+                    instance.bCollideWorld = true;
                     instance.SetPhysics( PHYS_Falling );
-                    instance.Velocity = ( Normal(Velocity) >> spread ) * ( 2.0 - FRand() );
 
                     if( actorTraced!=none )
                         instance.SetBase( actorTraced );
 
-                    if( Level.NetMode==NM_Standalone )
-                        DrawStayingDebugLine( Location , Location + (Normal(instance.Velocity)*25) , 255,0,0 );
+                    // if( Level.NetMode==NM_Standalone ) DrawStayingDebugLine( hitLocation , hitLocation + instance.Velocity , 255,0,0 );
                 }
 
                 if( Level.NetMode!=NM_DedicatedServer )
