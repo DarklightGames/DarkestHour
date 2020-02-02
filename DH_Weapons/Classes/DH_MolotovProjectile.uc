@@ -181,7 +181,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local Class<DamageType> nextDamageType;
     local ESurfaceTypes hitSurfaceType;
     local int i, max;
-    local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
+    local float impactSpeed, impactObliquityAngle, obliquityDotProduct, surfaceDampenValue;
     local Sound sfx;
     local vector hitPoint;
 
@@ -247,11 +247,14 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         //     DrawStayingDebugLine( Location , Location - (Normal(Velocity)*50) , 255,255,0 );
         //     DrawStayingDebugLine( Location , Location + (hitNormal*25) , 0,255,255 );
         // }
+        
+        if( int(hitSurfaceType) < SurfaceDampen.Length ) surfaceDampenValue = SurfaceDampen[ int(hitSurfaceType) ];
+        else surfaceDampenValue = 1.0;
 
         // kinetic reflection from hit surface:
         Velocity = class'UCore'.static.VReflect(Velocity,hitNormal) // lossless kinetic reflection
             * FMax( 0.1 , 1.0 - obliquityDotProduct ) // dampen from hit angle
-            * SurfaceDampen[ int(hitSurfaceType) ]; // dampen from surface type
+            * surfaceDampenValue; // dampen from surface type
 
         // if( Level.NetMode==NM_Standalone ) DrawStayingDebugLine( Location , Location + (Normal(Velocity)*25) , 255,255,0 );
     }
@@ -273,10 +276,10 @@ simulated function HitWall ( vector hitNormal , Actor wall )
         && impactSpeed > 150.0
     )
     {
-        sfx = SurfaceHits[ int(hitSurfaceType) ];
-        if( sfx!=none )
-        {       
-            PlaySound( sfx , SLOT_Misc , 1.1 );
+        if( int(hitSurfaceType)<SurfaceHits.Length )
+        {
+            sfx = SurfaceHits[ int(hitSurfaceType) ];
+            if( sfx!=none ) PlaySound( sfx , SLOT_Misc , 1.1 );
         }
     }
 }
