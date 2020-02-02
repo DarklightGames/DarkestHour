@@ -42,11 +42,11 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BHPPickup'
 
     Mesh=SkeletalMesh'DH_BHP_1st.BHP-Mesh'
-    HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
+    HighDetailOverlay=Shader'DH_BHP_tex.BHP.BHP_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
 
-    Skins(0)=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
+    Skins(0)=Texture'DH_BHP_tex.BHP.BHP'
 
     HandNum=1
     SleeveNum=2

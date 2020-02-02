@@ -14,10 +14,10 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MAB38Pickup'
 
     Mesh=SkeletalMesh'DH_MAB_1st.MAB38-Mesh'
-    HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.SMG.Ber1Tex_S'
+    HighDetailOverlay=Shader'DH_MAB38_tex.MAB38.MAB38_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(0)=Texture'DH_MN_Weapons1st_tex.SMG.Ber1Tex'
+    Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
 
     handnum=1
     sleevenum=2
