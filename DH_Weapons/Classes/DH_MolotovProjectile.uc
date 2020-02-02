@@ -561,7 +561,7 @@ defaultproperties
     
     // mesh:
     DrawType = DT_StaticMesh
-    StaticMesh = StaticMesh'DH_WeaponPickups.Projectile.MolotovCocktail_throw'
+    StaticMesh = StaticMesh'DH_WeaponPickups_molotov.MolotovCocktail_throw'
     
     // physics
     Physics = PHYS_Falling
