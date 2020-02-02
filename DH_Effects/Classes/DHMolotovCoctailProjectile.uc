@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHMolotovCoctailFlame extends Emitter;
+class DHMolotovCoctailProjectile extends Emitter;
 
 defaultproperties
 {
@@ -31,15 +31,15 @@ defaultproperties
         ColorScale(3)=(RelativeTime=1.0,Color=(B=128,G=128,R=128,A=255))
         ColorScale(4)=(RelativeTime=1.0)
         ColorScale(5)=(RelativeTime=1.0)
-        FadeOutStartTime=0.4
-        FadeInEndTime=0.14
+        FadeOutStartTime = 0.1//0.4
+        FadeInEndTime = 0.1//0.14
         // StartLocationOffset=(Z=-34.0)
         StartLocationShape=PTLS_Sphere
-        // SphereRadiusRange = (Max=100.0)
+        // SphereRadiusRange = (Max=20.0)
         StartSpinRange=(X=(Min=-0.1,Max=0.1))
         StartSizeRange=(X=(Min=16.0,Max=25.0),Y=(Min=0.0,Max=0.0),Z=(Min=0.0,Max=0.0))
         SpinsPerSecondRange=(X=(Max=0.075))
-        SizeScale(0)=(RelativeTime=1.0,RelativeSize=0.06)//SizeScale(0)=(RelativeTime=1.0,RelativeSize=0.3)
+        SizeScale(0)=(RelativeTime=1.0,RelativeSize=0.6)
         ScaleSizeByVelocityMultiplier=(X=0.0,Y=0.0,Z=0.0)
         ScaleSizeByVelocityMax=0.0
         RelativeBoneIndexRange=(Min=0.9)
@@ -54,5 +54,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=-3.0,Max=5.0),Y=(Min=-3.0,Max=5.0),Z=(Min=5.0,Max=10.0))
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
-
+    
 }

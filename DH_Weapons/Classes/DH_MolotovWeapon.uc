@@ -8,22 +8,6 @@ class DH_MolotovWeapon extends DHExplosiveWeapon;
 var     class<Actor>    FlameEffect;
 var     Actor           FlameInstance;
 
-simulated function PostBeginPlay ()
-{
-    super.PostBeginPlay();
-
-    // if( Level.NetMode!=NM_DedicatedServer )
-    // {
-    //     if( FlameInstance==none )
-    //     {
-    //         FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
-    //         AttachToBone( FlameInstance , 'Bip01 R Hand' );
-    //         FlameInstance.SetRelativeLocation( vect(4,0,10) );
-    //         FlameInstance.SetRelativeRotation( rot(0,0,0) );
-    //     }
-    // }
-}
-
 simulated function Fire ( float F )
 {
     super.Fire(F);
