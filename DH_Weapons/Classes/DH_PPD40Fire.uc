@@ -15,8 +15,8 @@ defaultproperties
     // Recoil
     RecoilRate=0.05
     MaxVerticalRecoilAngle=280
-    MaxHorizontalRecoilAngle=90
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=4.0,OutVal=0.8),(InVal=10.0,OutVal=1.2),(InVal=15.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
+    MaxHorizontalRecoilAngle=80
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=4.0,OutVal=0.8),(InVal=10.0,OutVal=1.2),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=14.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_loop'
