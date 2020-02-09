@@ -17,9 +17,9 @@ simulated function Fire ( float F )
         if( FlameInstance==none )
         {
             FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
+            FlameInstance.bOnlyDrawIfAttached = true;
             AttachToBone( FlameInstance , 'Bip01 R Hand' );
             FlameInstance.SetRelativeLocation( vect(4,0,10) );
-            FlameInstance.SetRelativeRotation( rot(0,0,0) );
         }
     }
 }
@@ -54,8 +54,6 @@ defaultproperties
 
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
     
-    // Mesh = SkeletalMesh'DH_Molotov_1st.soviet'
-    // HighDetailOverlay = shader'DH_Weapon_tex.AlliedSmallArms.MolotovCocktail_s'
-    Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.stiel_s'
+    Mesh = SkeletalMesh'DH_Molotov_1st.Soviet'
+    //HighDetailOverlay = shader'shader goes here'
 }
