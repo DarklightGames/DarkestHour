@@ -10,5 +10,5 @@ defaultproperties
     MaxAmmo = 2
     InitialAmount = 1
     
-    IconMaterial = Texture'InterfaceArt_tex.HUD.Needle'
+	IconMaterial = Texture'DH_Weapon_tex_molotov.molotov_ammo'
 }
