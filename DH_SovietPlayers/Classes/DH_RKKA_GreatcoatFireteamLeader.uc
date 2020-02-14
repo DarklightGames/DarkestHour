@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreatcoatFireteamLeader extends DH_RKKA_GreatcoatFireteamLeaderEarly; //to be removed
+class DH_RKKA_GreatcoatFireteamLeader extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatPawn',Weight=1.0)
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
 }

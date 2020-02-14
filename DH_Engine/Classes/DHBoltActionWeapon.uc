@@ -33,10 +33,6 @@ var     name            FullReloadAnim;     // full reload animation (takes prec
 
 var     int             NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
 
-var     bool            bShouldSkipBolt;
-
-var     bool            bCanUseUnfiredRounds;
-
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -54,7 +50,7 @@ replication
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
+    if (bWaitingToBolt && !IsBusy())
     {
         WorkBolt();
     }
@@ -315,7 +311,7 @@ simulated state Reloading
         // Give back the unfired round that was in the chamber.
         if (Role == ROLE_Authority)
         {
-            if(!bWaitingToBolt && bCanUseUnfiredRounds)
+            if(!bWaitingToBolt)
             {
                 GiveBackAmmo(1);
             }
@@ -496,7 +492,7 @@ simulated state Reloading
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
             {
                 // Give back the unfired round in the chamber.
-                if (!bWaitingToBolt && bCanUseUnfiredRounds)
+                if (!bWaitingToBolt)
                 {
                     GiveBackAmmo(1);
                 }
@@ -757,6 +753,4 @@ defaultproperties
     AIRating=0.4
     CurrentRating=0.4
     bSniping=true
-
-    bCanUseUnfiredRounds=true
 }

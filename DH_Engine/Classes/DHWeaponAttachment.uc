@@ -20,14 +20,6 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
 
-// Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
-simulated function vector GetTipLocation()
-{
-    local Coords C;
-    C = GetBoneCoords(MuzzleBoneName);
-    return C.Origin;
-}
-
 // Modified to avoid spawning a barrel steam emitter - instead wait until weapon is selected
 simulated function PostBeginPlay()
 {

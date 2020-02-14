@@ -67,10 +67,6 @@ defaultproperties
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
 
-    InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
-    BarrelSteamBone="Muzzle"
-
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"

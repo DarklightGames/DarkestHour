@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreatcoatAntiTankEarly extends DHSOVAntiTankRoles;
+class DH_RKKA_GreatcoatAntiTankEarly extends DH_RKKA_GreatcoatAntiTank;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatBrownBagEarlyPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PTRDWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    Grenades(0)=none
+    GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
 }

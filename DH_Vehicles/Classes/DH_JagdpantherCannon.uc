@@ -15,7 +15,7 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Cannon armour (mantlet)
-    GunMantletArmorFactor=20.0
+    GunMantletArmorFactor=10.0
     GunMantletSlope=35.0
 
     // Cannon movement
