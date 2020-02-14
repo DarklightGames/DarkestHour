@@ -30,6 +30,8 @@ var     sound           ExplosionSound[3];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
 
+var Vector              _HitVelocity;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -185,6 +187,7 @@ simulated function HitWall ( vector hitNormal , Actor wall )
     local Sound sfx;
     local vector hitPoint;
 
+    _HitVelocity = Velocity;
     destroMesh = RODestroyableStaticMesh( wall );
     impactSpeed = VSize(Velocity);
     obliquityDotProduct = Normal(-Velocity) dot hitNormal;
@@ -415,7 +418,7 @@ simulated function BlowUp ( vector hitLocation )
 
                 if( Level.NetMode!=NM_DedicatedServer )
                 {
-                    Spawn( ExplosionDecal , self ,, Location , rotator(Velocity) );
+                    Spawn( ExplosionDecal , self ,, hitLocation , rotator(_HitVelocity) );//rotator(vect(0,0,-1))
                 }
             }
         }
