@@ -8,6 +8,9 @@ class DH_MolotovWeapon extends DHExplosiveWeapon;
 var     class<Actor>    FlameEffect;
 var     Actor           FlameInstance;
 
+var     sound           IgnitionSound;
+var     sound           ThrowSound;
+
 simulated function Fire ( float F )
 {
     super.Fire(F);
@@ -19,8 +22,23 @@ simulated function Fire ( float F )
             FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
             FlameInstance.bOnlyDrawIfAttached = true;
             AttachToBone( FlameInstance , 'Bip01 R Hand' );
-            FlameInstance.SetRelativeLocation( vect(4,0,10) );
+            FlameInstance.SetRelativeLocation( vect(4,0,20) );
+
+            if( IgnitionSound!=none )
+            {
+                PlaySound( IgnitionSound ,,,, 100 );
+            }
         }
+    }
+}
+
+simulated function PostFire ()
+{
+    super.PostFire();
+
+    if( ThrowSound!=none )
+    {
+        PlaySound( ThrowSound ,,,, 100 );
     }
 }
 
@@ -52,8 +70,14 @@ defaultproperties
     FireModeClass(0) = class'DH_Weapons.DH_MolotovFire'
     FireModeClass(1) = class'DH_Weapons.DH_MolotovTossFire'
 
+    // fx
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
+
+    // sound
+    IgnitionSound = Sound'DH_MolotovCocktail.ignite'
+    ThrowSound = Sound'DH_MolotovCocktail.throw'
     
+    // mesh
     Mesh = SkeletalMesh'DH_Molotov_1st.Soviet'
     //HighDetailOverlay = shader'shader goes here'
 }

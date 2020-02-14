@@ -601,26 +601,29 @@ defaultproperties
 
     // sound
     ExplosionSoundRadius = 300.0
-    SurfaceHits(0) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Default,
-	SurfaceHits(1) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Rock,
-	SurfaceHits(2) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Dirt,
-	SurfaceHits(3) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Metal,
-	SurfaceHits(4) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Wood,
-	SurfaceHits(5) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Plant,
-	SurfaceHits(6) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Flesh,
-    SurfaceHits(7) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Ice,
-    SurfaceHits(8) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Snow,
-    SurfaceHits(9) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Water,
-    SurfaceHits(10) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Glass,
-    SurfaceHits(11) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Gravel,
-    SurfaceHits(12) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Concrete,
-    SurfaceHits(13) = Sound'Inf_Weapons_Foley.grenadeland' // EST_HollowWood,
-    SurfaceHits(14) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Mud,
-    SurfaceHits(15) = Sound'Inf_Weapons_Foley.grenadeland' // EST_MetalArmor,
-    SurfaceHits(16) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Paper,
-    SurfaceHits(17) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Cloth,
-    SurfaceHits(18) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Rubber,
-    SurfaceHits(19) = Sound'Inf_Weapons_Foley.grenadeland' // EST_Poop
+    ExplosionSound(0) = Sound'DH_MolotovCocktail.explosion1'
+    ExplosionSound(1) = Sound'DH_MolotovCocktail.explosion2'
+    ExplosionSound(2) = Sound'DH_MolotovCocktail.explosion3'
+    SurfaceHits(0) = Sound'DH_MolotovCocktail.bounce' // EST_Default,
+	SurfaceHits(1) = Sound'DH_MolotovCocktail.bounce' // EST_Rock,
+	SurfaceHits(2) = Sound'DH_MolotovCocktail.bounce' // EST_Dirt,
+	SurfaceHits(3) = Sound'DH_MolotovCocktail.bounce' // EST_Metal,
+	SurfaceHits(4) = Sound'DH_MolotovCocktail.bounce' // EST_Wood,
+	SurfaceHits(5) = Sound'DH_MolotovCocktail.bounce' // EST_Plant,
+	SurfaceHits(6) = Sound'DH_MolotovCocktail.bounce' // EST_Flesh,
+    SurfaceHits(7) = Sound'DH_MolotovCocktail.bounce' // EST_Ice,
+    SurfaceHits(8) = Sound'DH_MolotovCocktail.bounce' // EST_Snow,
+    SurfaceHits(9) = Sound'DH_MolotovCocktail.bounce' // EST_Water,
+    SurfaceHits(10) = Sound'DH_MolotovCocktail.bounce' // EST_Glass,
+    SurfaceHits(11) = Sound'DH_MolotovCocktail.bounce' // EST_Gravel,
+    SurfaceHits(12) = Sound'DH_MolotovCocktail.bounce' // EST_Concrete,
+    SurfaceHits(13) = Sound'DH_MolotovCocktail.bounce' // EST_HollowWood,
+    SurfaceHits(14) = Sound'DH_MolotovCocktail.bounce' // EST_Mud,
+    SurfaceHits(15) = Sound'DH_MolotovCocktail.bounce' // EST_MetalArmor,
+    SurfaceHits(16) = Sound'DH_MolotovCocktail.bounce' // EST_Paper,
+    SurfaceHits(17) = Sound'DH_MolotovCocktail.bounce' // EST_Cloth,
+    SurfaceHits(18) = Sound'DH_MolotovCocktail.bounce' // EST_Rubber,
+    SurfaceHits(19) = Sound'DH_MolotovCocktail.bounce' // EST_Poop
     
     // fx
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
