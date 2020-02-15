@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreenTelogreikaEngineerLate extends DH_RKKA_GreenTelogreikaEngineerEarly;
+class DH_RKKA_GreenTelogreikaEngineerLate extends DH_RKKA_GreenTelogreikaEngineer;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloLatePawn',Weight=1.0)
-
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M44Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
 }

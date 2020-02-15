@@ -12,13 +12,13 @@ defaultproperties
     ShellDiameter=1.45
     BallisticCoefficient=0.675 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
 
-    //Damage
+    // Damage
     Damage=125.0
     MyDamageType=class'DH_Weapons.DH_PTRDDamType'
 
-    //adjusted penetration, my main source is this https://media.discordapp.net/attachments/339838693617565697/661960666399244320/5450cb284c38.png?width=883&height=621
-    //Penetration
-    //should penetrate ~41mm at point blank
+    // Penetration
+    // Adjusted penetration, my main source is this https://media.discordapp.net/attachments/339838693617565697/661960666399244320/5450cb284c38.png?width=883&height=621
+    // Should penetrate ~41mm at point blank
     DHPenetrationTable(0)=3.8  // 100
     DHPenetrationTable(1)=3.4  // 250
     DHPenetrationTable(2)=2.8  // 500

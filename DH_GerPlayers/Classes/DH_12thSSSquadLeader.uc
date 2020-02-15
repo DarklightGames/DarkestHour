@@ -7,9 +7,7 @@ class DH_12thSSSquadLeader extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="ScharfÃ¼hrer"
-
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
+    AltName="Scharführer"
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_German12thSSPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'

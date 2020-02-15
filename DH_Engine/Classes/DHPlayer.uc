@@ -6687,6 +6687,8 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
     local array<Controller> VehicleOccupants;
     local int i;
 
+    Log("SendVoiceMessage" @ Sender @ Sender @ MessageType @ MessageID @ BroadcastType);
+
     if (!AllowVoiceMessage(MessageType))
     {
         return;

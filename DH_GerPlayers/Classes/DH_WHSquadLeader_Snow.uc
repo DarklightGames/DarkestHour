@@ -7,8 +7,6 @@ class DH_WHSquadLeader_Snow extends DHGESergeantRoles;
 
 defaultproperties
 {
-
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_visWeapon')
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowHeerPawn',Weight=2.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueHeerPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'

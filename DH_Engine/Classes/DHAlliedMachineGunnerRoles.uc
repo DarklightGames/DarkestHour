@@ -15,5 +15,5 @@ defaultproperties
     PluralName="Machine-Gunners"
     Limit=1
     bCanCarryExtraAmmo=false
-    AddedRoleRespawnTime=20
+    AddedRoleRespawnTime=10
 }

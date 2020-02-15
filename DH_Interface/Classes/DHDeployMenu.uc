@@ -1305,7 +1305,7 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(RI.PrimaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none)
                     {
                         cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
                     }
@@ -1313,7 +1313,7 @@ function InternalOnChange(GUIComponent Sender)
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(RI.SecondaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none)
                     {
                         cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
                     }
