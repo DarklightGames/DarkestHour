@@ -28,6 +28,7 @@ defaultproperties
     VehicleMomentumScaling=1.3
     bThrowRagdoll=true
     GibPerterbation=0.15
+    bFlaming=true
     bExtraMomentumZ=true
     bArmorStops=false
 

@@ -1535,7 +1535,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         SetLimping(FMin(ActualDamage / 5.0, 10.0));
     }
-    else if (DamageType.default.bFlaming)
+    else if (DamageType.Name == 'DHBurningDamageType' || DamageType.Name == 'DamTypeVehicleExplosion' || DamageType.Name == 'DHShellSmokeWPDamageType')
     {
         if (ActualDamage <= 0 && bOnFire)
         {

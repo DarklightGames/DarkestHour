@@ -14,7 +14,6 @@ defaultproperties
     FemaleSuicide="%o burned herself to a crisp."
     bLocationalHit=false
     GibModifier=0.0
-    bFlaming=true
 
     TankDamageModifier=0.0
     VehicleMomentumScaling=1.0
