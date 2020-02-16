@@ -652,8 +652,8 @@ defaultproperties
     FlameEffect = class'DH_Effects.DHMolotovCoctailProjectile'
 
     // sound
-    SoundVolume = 255;
-    SoundRadius = 1000
+    SoundVolume = 80;
+    SoundRadius = 500
     AmbientSound = Sound'DH_MolotovCocktail.burning-loop'//Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'//Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     
     // give light
