@@ -7,12 +7,12 @@ class DHMolotovCoctailProjectile extends Emitter;
 
 defaultproperties
 {
-    bDynamicLight=true
-    LightType=LT_Flicker
-    LightHue=30
-    LightSaturation=100
-    LightBrightness=100.0
-    LightRadius=1.3
+    // bDynamicLight=true
+    // LightType=LT_Flicker
+    // LightHue=30
+    // LightSaturation=100
+    // LightBrightness=100.0
+    // LightRadius=1.3
 
     bNoDelete=false
     bOnlyDrawIfAttached=false

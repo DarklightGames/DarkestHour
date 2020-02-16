@@ -657,9 +657,9 @@ defaultproperties
     AmbientSound = Sound'DH_MolotovCocktail.burning-loop'//Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'//Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     
     // give light
-    LightType = LT_Pulse
-    LightBrightness = 3.0
-    LightRadius = 70.0
-    LightHue = 10
-    LightSaturation = 255
+    // LightType = LT_Pulse
+    // LightBrightness = 3.0
+    // LightRadius = 70.0
+    // LightHue = 10
+    // LightSaturation = 255
 }
