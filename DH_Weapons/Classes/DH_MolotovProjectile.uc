@@ -629,7 +629,7 @@ defaultproperties
     SurfaceHits(19) = Sound'DH_MolotovCocktail.bounce' // EST_Poop
     
     // fx
-    FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
+    FlameEffect = class'DH_Effects.DHMolotovCoctailTrail'
     SubProjectileClass = class'DH_Weapons.DH_MolotovSubProjectile'
     ExplodeEffectClass = none
     ExplosionDecal = class'DH_Effects.DH_MolotovMark'
@@ -637,8 +637,8 @@ defaultproperties
 
     // give light
     LightType = LT_Pulse
-    LightBrightness = 3.0
-    LightRadius = 70.0
+    LightBrightness = 1.0
+    LightRadius = 200.0
     LightHue = 10
     LightSaturation = 255
 }
