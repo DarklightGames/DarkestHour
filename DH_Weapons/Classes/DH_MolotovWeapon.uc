@@ -21,8 +21,8 @@ simulated function Fire ( float F )
         {
             FlameInstance = Spawn( FlameEffect ,,, Location + vect(0,0,-10) );
             FlameInstance.bOnlyDrawIfAttached = true;
-            AttachToBone( FlameInstance , 'Bip01 R Hand' );
-            FlameInstance.SetRelativeLocation( vect(4,0,20) );
+            AttachToBone( FlameInstance , 'Grenade' );
+            FlameInstance.SetRelativeLocation( vect(2,0,10) );
 
             if( IgnitionSound!=none )
             {
