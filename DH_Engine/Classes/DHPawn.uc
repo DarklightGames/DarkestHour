@@ -2169,7 +2169,7 @@ ignores Trigger, Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, 
                 }
             }
             // Set the body on fire if it's burning damage
-            else if (DamageType.default.bFlaming)
+            else if (DamageType.Name == 'DHBurningDamageType')
             {
                 if (!bOnFire)
                 {
