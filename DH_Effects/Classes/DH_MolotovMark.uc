@@ -8,6 +8,9 @@ class DH_MolotovMark extends BlastMark;
 
 defaultproperties
 {
+	ProjTexture=Texture'DH_Weapon_tex_molotov.molotov_mark'
+	MaterialBlendingOp=PB_Add
+	FrameBufferBlendingOp=PB_AlphaBlend
 	DrawScale=0.5
 	bGameRelevant=true
 	PushBack=24
@@ -17,5 +20,5 @@ defaultproperties
 	bProjectBSP=true
 	bProjectTerrain=true
 	bProjectStaticMesh=true
-	bProjectActor=false
+	bProjectActor=true
 }
