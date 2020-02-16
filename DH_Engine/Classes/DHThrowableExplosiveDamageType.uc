@@ -17,5 +17,4 @@ defaultproperties
     FemaleSuicide="%o was blown up by her own %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
     DeathOverlayTime=999.0
-    bThrowRagdoll=true
 }

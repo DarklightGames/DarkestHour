@@ -2126,12 +2126,9 @@ ignores Trigger, Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, 
                 return; // can't shoot corpses during de-res
             }
 
-            // Move the body if it's a grenade or mine explosion
-            if (
-                    DamageType.default.bThrowRagdoll
-                ||  DamageType.IsA(class'ROMineDamType'.Name)//TODO: set default bThrowRagdoll=true in base RO class and remove this line
-                ||  DamageType.IsA(class'ROSMineDamType'.Name)//TODO: set default bThrowRagdoll=true in base RO class and remove this line
-            )
+            // Move the body if it's a grenade or mine explosion // TODO: add others explosive types & try to remove projectile-specific literals as far as possible
+            if (DamageType.Name == 'DH_StielGranateDamType' || DamageType.Name == 'DH_M1GrenadeDamType' || DamageType.Name == 'DH_F1GrenadeDamType'
+                || DamageType.Name == 'ROMineDamType' || DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DHATMineDamage')
             {
                 ShotDir = Normal(Momentum);
                 PushLinVel = (RagDeathVel * ShotDir) +  vect(0.0, 0.0, 250.0);
