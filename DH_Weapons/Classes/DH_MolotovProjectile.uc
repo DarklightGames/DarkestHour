@@ -632,7 +632,7 @@ defaultproperties
     FlameEffect = class'DH_Effects.DHMolotovCoctailFlame'
     SubProjectileClass = class'DH_Weapons.DH_MolotovSubProjectile'
     ExplodeEffectClass = none
-    ExplosionDecal = class'ROEffects.GrenadeMark'
+    ExplosionDecal = class'DH_Effects.DH_MolotovMark'
     WaterSplashEffect = class'ROEffects.ROBulletHitWaterEffect'
 
     // give light
