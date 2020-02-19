@@ -8,8 +8,16 @@ class DHCommandMenu_FireSupport extends DHCommandMenu;
 function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+    local vector MapLocation;
 
     PC = GetPlayerController();
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
     if (PC == none || Index < 0 || Index >= Options.Length)
     {
@@ -22,10 +30,10 @@ function OnSelect(int Index, vector Location)
             PC.ServerSaveArtilleryPosition();
             break;
         case 1: // Fire request (HE)
-            // TODO: !
+            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
             break;
         case 2: // Fire request (Smoke)
-            // TODO: !
+            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
             break;
     }
 

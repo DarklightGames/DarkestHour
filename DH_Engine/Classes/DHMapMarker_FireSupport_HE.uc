@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMapMarker_FireSupport extends DHMapMarker
+class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport
     abstract;
 
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
@@ -41,7 +41,7 @@ static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
 
 defaultproperties
 {
-    MarkerName="Fire Support"
+    MarkerName="Fire Support (HE)"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
     IconColor=(R=204,G=,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
@@ -50,6 +50,5 @@ defaultproperties
     bIsUnique=true
     bIsSquadSpecific=true
     bIsVisibleToTeam=true
-    LifetimeSeconds=180 // 3 minutes
 }
 

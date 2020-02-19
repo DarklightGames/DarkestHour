@@ -1941,7 +1941,8 @@ defaultproperties
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
     MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
-    MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport"
+    MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport_Smoke"
+    MapMarkerClassNames(12)="DH_Engine.DHMapMarker_FireSupport_HE"
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in
