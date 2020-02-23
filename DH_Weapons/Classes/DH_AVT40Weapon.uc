@@ -26,7 +26,8 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_AVT40Pickup'
 
     Mesh=SkeletalMesh'Allies_Svt40_1st.svt40_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.SVT40_S'
+    Skins(2)=Texture'Weapons1st_tex.Rifles.svt40_sniper'
+    HighDetailOverlay=shader'Weapons1st_tex.Rifles.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

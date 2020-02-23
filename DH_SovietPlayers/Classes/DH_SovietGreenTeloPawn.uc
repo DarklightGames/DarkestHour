@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SovietGreenTeloPawn extends DH_SovietPawn;
+class DH_SovietGreenTeloPawn extends DH_SovietGreenTeloEarlyPawn; //eventually should be removed to avoid confusion
 
 defaultproperties
 {
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_green01'
+
 }

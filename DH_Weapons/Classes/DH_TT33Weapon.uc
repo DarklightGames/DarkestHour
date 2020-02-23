@@ -5,6 +5,35 @@
 
 class DH_TT33Weapon extends DHPistolWeapon;
 
+
+// This weapon has a special bit of logic that plays an alternate animation
+// when it's first drawn.
+var bool bHasBeenDrawn;
+var name FirstSelectAnim;
+
+simulated state RaisingWeapon
+{
+    simulated function EndState()
+    {
+        // Marks the weapon as being drawn already.
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
+}
+
+simulated function name GetSelectAnim()
+{
+    if (bHasBeenDrawn)
+    {
+        return SelectAnim;
+    }
+    else
+    {
+        return FirstSelectAnim;
+    }
+}
+
 defaultproperties
 {
     ItemName="TT-33"
@@ -36,4 +65,6 @@ defaultproperties
     SprintEndEmptyAnim="Sprint_Empty_End"
     SelectEmptyAnim="Draw_Empty"
     PutDownEmptyAnim="Put_Away_empty"
+
+    FirstSelectAnim="Draw2"
 }

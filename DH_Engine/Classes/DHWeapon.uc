@@ -223,9 +223,9 @@ simulated state StartMantle extends Busy
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -443,9 +443,9 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -848,6 +848,11 @@ simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
         default.PlayerViewOffset.Y = Y;
         default.PlayerViewOffset.Z = Z;
     }
+}
+
+simulated function name GetSelectAnim()
+{
+    return SelectAnim;
 }
 
 defaultproperties
