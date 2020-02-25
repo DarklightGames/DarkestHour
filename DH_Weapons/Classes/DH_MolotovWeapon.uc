@@ -51,6 +51,12 @@ defaultproperties
     FireModeClass(0) = class'DH_Weapons.DH_MolotovFire'
     FireModeClass(1) = class'DH_Weapons.DH_MolotovTossFire'
 
+    // anims
+    CrawlForwardAnim="crawl_F"
+    CrawlBackwardAnim="crawl_B"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+
     // sound
     IgnitionSound = Sound'DH_MolotovCocktail.ignite'
     ThrowSound = Sound'DH_MolotovCocktail.throw'
