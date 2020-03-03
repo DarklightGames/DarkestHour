@@ -7,7 +7,7 @@ class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="Large Satchel Charge"
+    ItemName="10lb Satchel Charge"
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
