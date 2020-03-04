@@ -119,7 +119,7 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
-// Smoke grendes for squad leaders
+// Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
 var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
 var int RequiredSquadMembersToReceiveSmoke;
