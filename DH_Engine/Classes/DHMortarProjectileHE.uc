@@ -53,6 +53,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     Marker = new class'DHArtilleryMarker_Hit_HE';
     Marker.LocationX = MapLocation.X;
     Marker.LocationY = MapLocation.Y;
+    Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
     PC.ArtilleryHit_HE = Marker;
 
     super.Explode(HitLocation, HitNormal);

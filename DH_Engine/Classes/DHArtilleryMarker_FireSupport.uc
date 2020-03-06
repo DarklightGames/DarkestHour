@@ -5,12 +5,8 @@
 
 class DHArtilleryMarker_FireSupport extends DHArtilleryMarker abstract;
 
-var DHPlayer PC;
-
-function string GetCaptionString()
-{
-    return PC.SquadReplicationInfo.GetSquadName(PC.GetTeamNum(), PC.GetSquadIndex());
-}
+var int TeamIndex;          // AXIS or ALLIES
+var int SquadIndex;
 
 defaultproperties
 {
@@ -18,6 +14,7 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
     IconColor=(R=204,G=,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    Time = -1.0;
+    TeamIndex = -1;
+    SquadIndex = -1;
 }
 

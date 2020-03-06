@@ -163,8 +163,10 @@ var private array<string>                   MapMarkerClassNames;
 var class<DHMapMarker>                      MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                               AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                               AlliesMapMarkers[MAP_MARKERS_MAX];
-var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests;
-var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests;
+var DHArtilleryMarker_FireSupport           AlliesArtilleryRequests_HE[8];      // TEAM_SQUADS_MAX
+var DHArtilleryMarker_FireSupport           AlliesArtilleryRequests_Smoke[8];
+var DHArtilleryMarker_FireSupport           AxisArtilleryRequests_HE[8];      // TEAM_SQUADS_MAX
+var DHArtilleryMarker_FireSupport           AxisArtilleryRequests_Smoke[8];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -1535,23 +1537,41 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     return -1;
 }
 
-
-function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport ArtilleryRequest)
+function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport Marker)
 {
-    if (PC == none ||  ArtilleryRequest == none)
+    local int SquadIdx, TeamIdx;
+    if (PC == none ||  Marker == none)
     {
         return -1;
     }
-    switch(PC.GetTeamNum())
+
+    SquadIdx = Marker.SquadIndex;
+    TeamIdx = Marker.TeamIndex;
+    
+    switch(TeamIdx)
     {
         case AXIS_TEAM_INDEX:
-            AxisArtilleryRequests.Insert(AxisArtilleryRequests.Length, 1);
-            AxisArtilleryRequests[AxisArtilleryRequests.Length] = ArtilleryRequest;
-            return AxisArtilleryRequests.Length;
+            if(Marker.Type == "HE")
+            {
+                AxisArtilleryRequests_HE[SquadIdx] = Marker;
+                return 0;
+            }
+            else if (Marker.Type == "smoke")
+            {
+                AxisArtilleryRequests_Smoke[SquadIdx] = Marker;
+                return 0;
+            }
         case ALLIES_TEAM_INDEX:
-            AlliesArtilleryRequests.Insert(AxisArtilleryRequests.Length, 1);
-            AlliesArtilleryRequests[AxisArtilleryRequests.Length] = ArtilleryRequest;
-            return AlliesArtilleryRequests.Length;
+            if(Marker.Type == "HE")
+            {
+                AlliesArtilleryRequests_HE[SquadIdx] = Marker;
+                return 0;
+            }
+            else if (Marker.Type == "smoke")
+            {
+                AlliesArtilleryRequests_Smoke[SquadIdx] = Marker;
+                return 0;
+            }
         default:
             break;
     }

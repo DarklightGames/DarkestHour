@@ -34,15 +34,19 @@ function OnSelect(int Index, vector Location)
             Marker = new class'DHArtilleryMarker_FireSupport_HE';
             Marker.LocationX = MapLocation.X;
             Marker.LocationY = MapLocation.Y;
+            Marker.TeamIndex = PC.GetTeamNum();
+            Marker.SquadIndex = PC.GetSquadIndex();
+            Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
             PC.ServerAddArtilleryMarker(Marker);
-            Marker.PC = PC;
             break;
         case 2: // Fire request (Smoke)
             Marker = new class'DHArtilleryMarker_FireSupport_Smoke';
             Marker.LocationX = MapLocation.X;
             Marker.LocationY = MapLocation.Y;
+            Marker.TeamIndex = PC.GetTeamNum();
+            Marker.SquadIndex = PC.GetSquadIndex();
+            Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
             PC.ServerAddArtilleryMarker(Marker);
-            Marker.PC = PC;
             break;
     }
 
