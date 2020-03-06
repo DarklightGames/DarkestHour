@@ -7,8 +7,8 @@ class DH_MolotovAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo = 2
-    InitialAmount = 1
-    
-	IconMaterial = Texture'DH_Weapon_tex_molotov.molotov_ammo'
+    MaxAmmo=2
+    InitialAmount=1
+
+    IconMaterial=Texture'DH_Weapon_tex_molotov.molotov_ammo'
 }

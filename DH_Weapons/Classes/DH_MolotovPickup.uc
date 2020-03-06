@@ -7,6 +7,6 @@ class DH_MolotovPickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    InventoryType = class'DH_Weapons.DH_MolotovWeapon'
-    StaticMesh = StaticMesh'DH_WeaponPickups_molotov.MolotovCocktail'
+    InventoryType=class'DH_Weapons.DH_MolotovWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups_molotov.MolotovCocktail'
 }
