@@ -3709,6 +3709,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     DrawMapIconAttachments(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
+    DrawArtilleryMarkersOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
@@ -3826,6 +3827,79 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                            PersonalMapMarkers[i].WorldLocation,
                            PC.Pawn,
                            PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i].WorldLocation));
+    }
+}
+
+function array<DHArtilleryMarker_FireSupport> GetArtilleryRequests(DHPlayer PC) 
+{
+    local array<DHArtilleryMarker_FireSupport> dummy;
+
+    if(DHGRI != none && PC.IsArtilleryRole())
+    {
+        switch(PC.GetTeamNum())
+        {
+            case AXIS_TEAM_INDEX:
+                Log("Team index: Axis"); 
+                return DHGRI.AxisArtilleryRequests;
+            case ALLIES_TEAM_INDEX:
+                Log("Team index: Allies");
+                return DHGRI.AlliesArtilleryRequests;
+            default:
+                //return empty array
+                Log("Team index: default");
+                return dummy;
+        }
+    }
+        
+    //return empty array
+    return dummy;
+}
+
+function DrawArtilleryMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local DHPlayer PC;
+    local int i;
+    local vector L;
+    local array<DHArtilleryMarker_FireSupport> FireRequestMarkers;
+    local DHArtilleryMarker_Hit ArtilleryHit;
+    local DHArtilleryMarker_FireSupport Marker;
+    local vector Target;
+    local string Caption;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (DHGRI == none || PC == none)
+    {
+        return;
+    }
+
+    // Last artillery hit
+    ArtilleryHit = PC.ArtilleryHit;
+
+    if(ArtilleryHit != None)
+    {
+        MapMarkerIcon.WidgetTexture = ArtilleryHit.IconMaterial;
+        MapMarkerIcon.TextureCoords = ArtilleryHit.IconCoords;
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit.IconColor;
+        Target = DHGRI.GetWorldCoords(L.X, L.Y);
+//        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
+    }
+
+    // Personal map markers
+    FireRequestMarkers = GetArtilleryRequests(PC);
+
+    Log("FireRequestMarkers.Length: " $ FireRequestMarkers.Length);
+
+    for (i = 0; i < FireRequestMarkers.Length; ++i)
+    {
+        MapMarkerIcon.WidgetTexture = FireRequestMarkers[i].IconMaterial;
+        MapMarkerIcon.TextureCoords = FireRequestMarkers[i].IconCoords;
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = FireRequestMarkers[i].IconColor;
+        L.X = FireRequestMarkers[i].LocationX;
+        L.Y = FireRequestMarkers[i].LocationY;
+        L = DHGRI.GetWorldCoords(L.X, L.Y);
+        Caption = FireRequestMarkers[i].GetCaptionString();
+        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,, Caption,, -1);
     }
 }
 

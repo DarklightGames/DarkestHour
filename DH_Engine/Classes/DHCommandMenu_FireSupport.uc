@@ -11,6 +11,7 @@ function OnSelect(int Index, vector Location)
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
+    local DHArtilleryMarker_FireSupport Marker;
 
     PC = GetPlayerController();
 
@@ -30,10 +31,16 @@ function OnSelect(int Index, vector Location)
             PC.ServerSaveArtilleryPosition();
             break;
         case 1: // Fire request (HE)
-            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
+            Marker = new class'DHArtilleryMarker_FireSupport_HE';
+            Marker.LocationX = MapLocation.X;
+            Marker.LocationY = MapLocation.Y;
+            PC.ServerAddArtilleryMarker(Marker);
+            Marker.PC = PC;
             break;
         case 2: // Fire request (Smoke)
-            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
+            Marker = new class'DHArtilleryMarker_FireSupport_Smoke';
+            PC.ServerAddArtilleryMarker(Marker);
+            Marker.PC = PC;
             break;
     }
 

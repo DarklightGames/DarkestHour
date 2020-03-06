@@ -159,10 +159,12 @@ struct ArtilleryTypeInfo
 };
 var ArtilleryTypeInfo                   ArtilleryTypeInfos[ARTILLERY_TYPES_MAX];
 
-var private array<string>               MapMarkerClassNames;
-var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
-var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
-var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
+var private array<string>                   MapMarkerClassNames;
+var class<DHMapMarker>                      MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
+var MapMarker                               AxisMapMarkers[MAP_MARKERS_MAX];
+var MapMarker                               AlliesMapMarkers[MAP_MARKERS_MAX];
+var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests;
+var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests;
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -1533,6 +1535,30 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     return -1;
 }
 
+
+function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport ArtilleryRequest, vector MapLocation)
+{
+    if (PC == none ||  ArtilleryRequest == none)
+    {
+        return -1;
+    }
+    switch(PC.GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            AxisArtilleryRequests.Insert(AxisArtilleryRequests.Length, 1);
+            AxisArtilleryRequests[AxisArtilleryRequests.Length] = ArtilleryRequest;
+            return AxisArtilleryRequests.Length;
+        case ALLIES_TEAM_INDEX:
+            AlliesArtilleryRequests.Insert(AxisArtilleryRequests.Length, 1);
+            AlliesArtilleryRequests[AxisArtilleryRequests.Length] = ArtilleryRequest;
+            return AlliesArtilleryRequests.Length;
+        default:
+            break;
+    }
+
+    return -1;
+}
+
 function RemoveMapMarker(int TeamIndex, int MapMarkerIndex)
 {
     if (MapMarkerIndex < 0 || MapMarkerIndex >= MAP_MARKERS_MAX)
@@ -1941,8 +1967,8 @@ defaultproperties
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
     MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
-    MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport_Smoke"
-    MapMarkerClassNames(12)="DH_Engine.DHMapMarker_FireSupport_HE"
+    //MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport_Smoke"
+    //MapMarkerClassNames(12)="DH_Engine.DHMapMarker_FireSupport_HE"
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in

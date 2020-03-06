@@ -25,6 +25,8 @@ struct PersonalMapMarker
     var vector WorldLocation;
 };
 
+var DHArtilleryMarker_Hit ArtilleryHit;
+
 var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
@@ -1043,6 +1045,14 @@ function ServerSaveArtilleryPosition()
             ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
         }
     }
+}
+
+
+function bool IsArtilleryRole()
+{
+    local DHRoleInfo RI;
+    RI = DHRoleInfo(GetRoleInfo());
+    return true;// IsInArtilleryVehicle() || RI.bCanUseMortars;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
@@ -5432,6 +5442,25 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
     {
         GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
     }
+}
+        
+
+function ServerAddArtilleryMarker(DHArtilleryMarker_FireSupport MapMarker)
+{
+    local DHGameReplicationInfo GRI;
+    local vector MapLocation;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    MapLocation.X = MapMarker.LocationX;
+    MapLocation.Y = MapMarker.LocationY;
+
+    if (GRI != none)
+    {
+        i = GRI.AddArtilleryRequest(self, MapMarker, MapLocation);
+    }
+    Log("wstawiono DHArtilleryMarker_FireSupport w " $ i);
 }
 
 function ServerRemoveMapMarker(int MapMarkerIndex)

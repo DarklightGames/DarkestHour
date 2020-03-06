@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMapMarker_ArtilleryHit_Smoke extends DHMapMarker_ArtilleryHit;
+class DHArtilleryMarker_Hit_Smoke extends DHArtilleryMarker;
 
 defaultproperties
 {

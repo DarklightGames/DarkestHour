@@ -21,7 +21,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     PC =  DHPlayer(Instigator.Controller);
     
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke', MapLocation.X, MapLocation.Y);
+    // PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke', MapLocation.X, MapLocation.Y);
     super.Explode(HitLocation, HitNormal);
 }
 
