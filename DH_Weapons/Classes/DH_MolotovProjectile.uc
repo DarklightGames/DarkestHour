@@ -90,6 +90,19 @@ simulated function Destroyed()
     if (Fear != none) Fear.Destroy();
     if (_TrailInstance != none) _TrailInstance.Destroy();
 
+    if (EffectIsRelevant(Location, false))
+    {
+        // spawn explosion fx:
+        if (ExplodeEffectClass != none)
+            Spawn(ExplodeEffectClass,,, Location, rotator(vect(0, 0, 1)));
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
+            Spawn(ExplosionDecal, self,, Location, rotator(_HitVelocity)); // rotator(vect(0,0,-1))
+        }
+    }
+
     super.Destroyed();
 }
 
@@ -354,47 +367,27 @@ simulated function BlowUp(vector hitLocation)
     {
         MakeNoise(1.0);
 
-        if (Level.NetMode != NM_DedicatedServer)
+        hitSurfaceType = TraceForHitSurfaceType(Normal(hitLocation - Location),
+                                                /*out*/ tracedHitPoint,
+                                                /*out*/ tracedHitNormal,
+                                                /*out*/ tracedActorHit);
+
+        // spawn flames:
+        for(i = 0; i < 20; i++) // TODO: Why 20? This should probably be a variable
         {
-            PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
-        }
+            // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
+            spread.Yaw = 32768 * (FRand() - 0.5);
+            spread.Pitch = 32768 * (FRand() - 0.5);
+            spread.Roll = 32768 * (FRand() - 0.5);
 
-        if (EffectIsRelevant(Location, false))
-        {
-            hitSurfaceType = TraceForHitSurfaceType(Normal(hitLocation - Location),
-                                                    /*out*/ tracedHitPoint,
-                                                    /*out*/ tracedHitNormal,
-                                                    /*out*/ tracedActorHit);
+            instance = Spawn(SubProjectileClass, Instigator.Controller,, hitLocation);
+            instance.LifeSpan = 5.0 + (FRand() * 30.0);
+            instance.Velocity = (Normal(Velocity) >> spread) * Lerp(FRand(), 60, 450);
 
-            if (hitSurfaceType != EST_Snow)
-            {
-                // spawn explosion fx:
-                if (ExplodeEffectClass != none)
-                    Spawn(ExplodeEffectClass,,, hitLocation, rotator(vect(0, 0, 1)));
+            if (tracedActorHit != none)
+                instance.SetBase(tracedActorHit);
 
-                // spawn flames:
-                for(i = 0; i < 20; i++) // TODO: Why 20? This should probably be a variable
-                {
-                    // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
-                    spread.Yaw = 32768 * (FRand() - 0.5);
-                    spread.Pitch = 32768 * (FRand() - 0.5);
-                    spread.Roll = 32768 * (FRand() - 0.5);
-
-                    instance = Spawn(SubProjectileClass, Instigator.Controller,, hitLocation);
-                    instance.LifeSpan = 5.0 + (FRand() * 30.0);
-                    instance.Velocity = (Normal(Velocity) >> spread) * Lerp(FRand(), 60, 450);
-
-                    if (tracedActorHit != none)
-                        instance.SetBase(tracedActorHit);
-
-                    // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(hitLocation, hitLocation + instance.Velocity, 255,0,0);
-                }
-
-                if (Level.NetMode != NM_DedicatedServer)
-                {
-                    Spawn(ExplosionDecal, self,, hitLocation, rotator(_HitVelocity)); // rotator(vect(0,0,-1))
-                }
-            }
+            // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(hitLocation, hitLocation + instance.Velocity, 255,0,0);
         }
     }
 }
