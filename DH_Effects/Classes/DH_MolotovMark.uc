@@ -19,5 +19,4 @@ defaultproperties
     bProjectBSP=true
     bProjectTerrain=true
     bProjectStaticMesh=true
-    bProjectActor=true
 }
