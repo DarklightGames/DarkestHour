@@ -1536,7 +1536,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
 }
 
 
-function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport ArtilleryRequest, vector MapLocation)
+function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport ArtilleryRequest)
 {
     if (PC == none ||  ArtilleryRequest == none)
     {

@@ -39,6 +39,8 @@ function OnSelect(int Index, vector Location)
             break;
         case 2: // Fire request (Smoke)
             Marker = new class'DHArtilleryMarker_FireSupport_Smoke';
+            Marker.LocationX = MapLocation.X;
+            Marker.LocationY = MapLocation.Y;
             PC.ServerAddArtilleryMarker(Marker);
             Marker.PC = PC;
             break;

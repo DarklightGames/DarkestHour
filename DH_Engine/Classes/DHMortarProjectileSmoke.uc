@@ -16,12 +16,16 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     local DHPlayer PC;
     local vector MapLocation;
     local DHGameReplicationInfo GRI;
+    local DHArtilleryMarker_Hit Marker;
     
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PC =  DHPlayer(Instigator.Controller);
     
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    // PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke', MapLocation.X, MapLocation.Y);
+    Marker = new class'DHArtilleryMarker_Hit_Smoke';
+    Marker.LocationX = MapLocation.X;
+    Marker.LocationY = MapLocation.Y;
+    PC.ArtilleryHit_Smoke = Marker;
     super.Explode(HitLocation, HitNormal);
 }
 

@@ -25,7 +25,8 @@ struct PersonalMapMarker
     var vector WorldLocation;
 };
 
-var DHArtilleryMarker_Hit ArtilleryHit;
+var DHArtilleryMarker_Hit ArtilleryHit_Smoke;
+var DHArtilleryMarker_Hit ArtilleryHit_HE;
 
 var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
@@ -5458,7 +5459,7 @@ function ServerAddArtilleryMarker(DHArtilleryMarker_FireSupport MapMarker)
 
     if (GRI != none)
     {
-        i = GRI.AddArtilleryRequest(self, MapMarker, MapLocation);
+        i = GRI.AddArtilleryRequest(self, MapMarker);
     }
     Log("wstawiono DHArtilleryMarker_FireSupport w " $ i);
 }
