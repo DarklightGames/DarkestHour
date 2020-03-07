@@ -61,7 +61,7 @@ defaultproperties
     // Movement
     MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(4)=0.7
-    TransRatio=0.072
+    TransRatio=0.08
 
     // Damage
     Health=600

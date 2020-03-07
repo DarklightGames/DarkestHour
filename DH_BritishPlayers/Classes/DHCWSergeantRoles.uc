@@ -13,9 +13,10 @@ defaultproperties
     Article="a "
     PluralName="Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1928_20rndWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M1928_30rndWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')

@@ -12,8 +12,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_M1GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_M1GrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_M1GrenadePickup'
-	DisplayFOV=80.0
-	
+    DisplayFOV=80.0
 
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
     Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon

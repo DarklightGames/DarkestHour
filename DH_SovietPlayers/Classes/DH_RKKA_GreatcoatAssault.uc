@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreatcoatAssault extends DHSOVAssaultRoles;
+class DH_RKKA_GreatcoatAssault extends DH_RKKA_GreatcoatAssaultEarly;   //to be removed
 
 defaultproperties
 {

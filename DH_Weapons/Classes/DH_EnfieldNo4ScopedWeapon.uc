@@ -8,7 +8,7 @@ class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Scoped Enfield No.4"
-	SwayModifyFactor=0.65 // +0.05 
+    SwayModifyFactor=0.65 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
@@ -41,7 +41,7 @@ defaultproperties
     SleeveNum=0
 
     MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles 
+    InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
     bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
@@ -60,4 +60,3 @@ defaultproperties
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"
 }
-

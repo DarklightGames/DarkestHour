@@ -216,8 +216,8 @@ defaultproperties
     CollisionHeight=4.0
 
     Speed=300.0
-    Damage=750.0
-    DamageRadius=750.0
+    Damage=1000.0
+    DamageRadius=1000.0
 
     UnderneathDamageMultiplier=8.0
 

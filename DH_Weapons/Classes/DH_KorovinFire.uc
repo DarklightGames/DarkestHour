@@ -1,0 +1,29 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
+
+class DH_KorovinFire extends DHAutomaticFire;
+
+defaultproperties
+{
+    ProjectileClass=class'DH_Weapons.DH_KorovinBullet'
+    AmmoClass=class'ROAmmo.PPS43Ammo'
+    FireRate=0.128 // 470 rpm
+    Spread=140.0
+
+   // Recoil
+    RecoilRate=0.075
+    MaxVerticalRecoilAngle=280
+    MaxHorizontalRecoilAngle=80
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=3.0,OutVal=0.6),(InVal=12.0,OutVal=1.2),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffFactor=10.0
+
+    FireSounds(0)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire1'
+    FireSounds(1)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire2'
+    FireSounds(2)=SoundGroup'DH_old_inf_Weapons.ppd40.korovinfire3'
+
+    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
+    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    ShellRotOffsetIron=(Pitch=5000)
+}

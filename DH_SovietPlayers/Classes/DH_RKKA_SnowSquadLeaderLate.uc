@@ -7,7 +7,7 @@ class DH_RKKA_SnowSquadLeaderLate extends DH_RKKA_SnowSquadLeader;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M44Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41_stickWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
 }

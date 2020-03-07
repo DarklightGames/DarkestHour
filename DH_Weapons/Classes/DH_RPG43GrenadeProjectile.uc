@@ -6,6 +6,10 @@
 class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
 // Obviously not a cannon shell but it is a HEAT explosive & by extending this we can make use of HEAT functionality & DH armour penetration calculations
 
+//TO DO: implement proper mechanic for penetration of top armor. Currently it thinks its top armor hit if grenade falls vertically downwards, which isnt really a good assumption at all.
+//A much better method would be looking at the angle of the armor, if armor is horizontal or close to horizontal - consider it to be top armor
+//If this new method gets implemented it should be used for RPG-40, RPG-43, other similar weapons and may be even satchels
+
 var     float           MinImpactSpeedToExplode;   // minimum impact speed at which grenade must hit a surface to explode on contact
 var     float           MaxImpactAOIToExplode;     // maximum angle, in degrees, at which grenade must hit a surface to explode on contact
 var     float           MaxVerticalAOIForTopArmor; // max impact angle from vertical (in degrees, relative to vehicle) that registers as a hit on relatively thin top armor
@@ -109,41 +113,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-// From DHThrowableExplosiveProjectile, modified so when projectile lands without having detonated it becomes a pickup
-// Also to adjust rotation on ground to compensate for static mesh being modelled facing forwards instead of up (required due to nature of this grenade's flight)
-// Also to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
-// Makes use of inherited NumDeflections variable as replacement for grenade's Bounces (works in reverse, counting up to 5 instead of down from 5)
-simulated function Landed(vector HitNormal)
-{
-    local rotator NewRotation;
-    local WeaponPickup P;
 
-    if (NumDeflections > 5)
-    {
-        if (Role == ROLE_Authority)
-        {
-            bOrientToVelocity = false; // disable this after grenade lands as it will have no velocity & we want to preserve its rotation on the ground
-            SetPhysics(PHYS_None);
-            NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
-            NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
-            SetRotation(NewRotation);
-
-            P = Spawn(default.PickupClass,,, Location + vect(0.0, 0.0, 2.0), Rotation);
-
-            if (P != none)
-            {
-                P.InitDroppedPickupFor(none);
-                P.AmmoAmount[0] = 1;
-            }
-        }
-
-        Destroy();
-    }
-    else
-    {
-        HitWall(HitNormal, none);
-    }
-}
 
 // Based on DHCannonShellHEAT with elements from DHGrenadeProjectile
 // Modified to handle possible explosion on impact, depending on impact speed
@@ -228,6 +198,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // If so we'll assume HEAT grenade's substantial penetration will defeat top armour of any vehicle's hull or turret, so skip penetration check
             // Top hits or armor are not modelled in this game, but it's a reasonable assumption as even heavy tanks only had 30-40mm top armor
             // Otherwise do normal armour penetration check & exit if it fails to penetrate (with suitable effects)
+            //TO DO: make a more proper method of handling of top armor hit. Ideally it should look at the angle of armor and detect if armor is horizontal or close to horizontal, then consider it a top armor
             if (DHArmoredVehicle(Wall) != none || DHVehicleCannon(Wall) != none)
             {
                 if (((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
@@ -498,9 +469,9 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
-    Speed=900.0
+    Speed=800.0  // reduced from 1100 as it was heavy grenade
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
-    LifeSpan=15.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
+    LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bExplodesOnHittingWater=false
     bHasTracer=false
 
@@ -520,8 +491,8 @@ defaultproperties
 
     // Damage
     ImpactDamage=200
-    Damage=180.0
-    DamageRadius=180.0
+    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
+    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
@@ -579,7 +550,7 @@ defaultproperties
     bNetTemporary=true // doesn't use replicated FuzeLengthTimer to make it explode, like other grenades (& short range weapon without ongoing movement replication like cannon shell)
     TransientSoundRadius=300.0
     TransientSoundVolume=0.3
-    ExplosionSoundVolume=3.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
+    ExplosionSoundVolume=6.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
     AmbientSound=none
     AmbientGlow=0
     FluidSurfaceShootStrengthMod=0.0
@@ -588,8 +559,8 @@ defaultproperties
     ForceType=FT_None
 
     // RPG-43 specific variables
-    MaxImpactAOIToExplode=45.0
-    MinImpactSpeedToExplode=450.0
+    MaxImpactAOIToExplode=70.0
+    MinImpactSpeedToExplode=1.0
     MaxVerticalAOIForTopArmor=33.0
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
