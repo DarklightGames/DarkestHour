@@ -17,6 +17,7 @@ enum ERoundType
     RT_Smoke,
     RT_AP,    // basic armor-piercing round, without any cap
     RT_APBC,  // with ballistic cap but not armor-piercing cap (used by Soviets)
+    RT_APBULLET // armor-piercing bullet, like PTRD or .50 cal
 };
 
 // Projectile characteristics

@@ -1226,17 +1226,17 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
     {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
+        // No penetration if vehicle has extra side armor that stops HEAT or armor-piercing bullet projectiles, so exit here (after any debug options)
+        if (bHasAddedSideArmor && (P.RoundType == RT_HEAT || P.RoundType == RT_APBULLET))
         {
             if (bLogDebugPenetration)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT/PTRD projectiles");
             }
 
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT/PTRD projectiles");
             }
 
             ResetTakeDamageVariables();
