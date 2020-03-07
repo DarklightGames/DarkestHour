@@ -27,6 +27,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     Marker.LocationX = MapLocation.X;
     Marker.LocationY = MapLocation.Y;
     Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
+    Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_Smoke);
+    Log("Marker.ClosestFireRequestIndex: " $ Marker.ClosestFireRequestIndex);
     PC.ArtilleryHit_Smoke = Marker;
 
     super.Explode(HitLocation, HitNormal);

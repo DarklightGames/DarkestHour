@@ -1053,7 +1053,7 @@ function bool IsArtilleryRole()
 {
     local DHRoleInfo RI;
     RI = DHRoleInfo(GetRoleInfo());
-    return IsInArtilleryVehicle() || RI.bCanUseMortars;
+    return IsInArtilleryVehicle() || (RI != None && RI.bCanUseMortars);
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
@@ -5461,7 +5461,6 @@ function ServerAddArtilleryMarker(DHArtilleryMarker_FireSupport MapMarker)
     {
         i = GRI.AddArtilleryRequest(self, MapMarker);
     }
-    Log("wstawiono DHArtilleryMarker_FireSupport w " $ i);
 }
 
 function ServerRemoveMapMarker(int MapMarkerIndex)

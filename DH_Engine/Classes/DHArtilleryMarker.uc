@@ -17,6 +17,7 @@ var IntBox              IconCoords;
 var color               IconColor;
 var int                 LifetimeSeconds;    // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 ExpiryTime;         // time created + LiftimeSeconds
+var float               MaximumDistance;    // 
 
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
@@ -31,4 +32,5 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=10
     Time = -1.0;
+    MaximumDistance = 3000.0;
 }

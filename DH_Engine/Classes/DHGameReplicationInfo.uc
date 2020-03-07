@@ -163,10 +163,10 @@ var private array<string>                   MapMarkerClassNames;
 var class<DHMapMarker>                      MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                               AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                               AlliesMapMarkers[MAP_MARKERS_MAX];
-var DHArtilleryMarker_FireSupport           AlliesArtilleryRequests_HE[8];      // TEAM_SQUADS_MAX
-var DHArtilleryMarker_FireSupport           AlliesArtilleryRequests_Smoke[8];
-var DHArtilleryMarker_FireSupport           AxisArtilleryRequests_HE[8];      // TEAM_SQUADS_MAX
-var DHArtilleryMarker_FireSupport           AxisArtilleryRequests_Smoke[8];
+var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests_HE;      // TEAM_SQUADS_MAX
+var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests_Smoke;
+var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests_HE;      // TEAM_SQUADS_MAX
+var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests_Smoke;
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -1554,22 +1554,26 @@ function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport Mark
             if(Marker.Type == "HE")
             {
                 AxisArtilleryRequests_HE[SquadIdx] = Marker;
+                Log("wstawiono w AxisArtilleryRequests_HE " $ SquadIdx);
                 return 0;
             }
             else if (Marker.Type == "smoke")
             {
                 AxisArtilleryRequests_Smoke[SquadIdx] = Marker;
+                Log("wstawiono w AxisArtilleryRequests_Smoke " $ SquadIdx);
                 return 0;
             }
         case ALLIES_TEAM_INDEX:
             if(Marker.Type == "HE")
             {
                 AlliesArtilleryRequests_HE[SquadIdx] = Marker;
+                Log("wstawiono w AlliesArtilleryRequests_HE " $ SquadIdx);
                 return 0;
             }
             else if (Marker.Type == "smoke")
             {
                 AlliesArtilleryRequests_Smoke[SquadIdx] = Marker;
+                Log("wstawiono w AlliesArtilleryRequests_Smoke " $ SquadIdx);
                 return 0;
             }
         default:
@@ -1989,6 +1993,11 @@ defaultproperties
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
     //MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport_Smoke"
     //MapMarkerClassNames(12)="DH_Engine.DHMapMarker_FireSupport_HE"
+
+    AlliesArtilleryRequests_HE.Insert(0, 8);
+    AlliesArtilleryRequests_Smoke.Insert(0, 8);
+    AxisArtilleryRequests_HE.Insert(0, 8);
+    AxisArtilleryRequests_Smoke.Insert(0, 8);
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in
