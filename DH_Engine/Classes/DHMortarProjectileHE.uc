@@ -31,7 +31,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     local DHPlayer PC;
     local vector MapLocation;
     local DHGameReplicationInfo GRI;
-    local DHArtilleryMarker_Hit Marker;
+    local DHArtilleryMarker_Hit_He Marker;
 
     if (!bDud)
     {

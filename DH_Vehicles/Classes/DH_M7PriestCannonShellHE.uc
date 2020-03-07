@@ -9,6 +9,29 @@
 
 class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
 
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    local DHVolumeTest VT;
+    local DHPlayer PC;
+    local vector MapLocation;
+    local DHGameReplicationInfo GRI;
+    local DHArtilleryMarker_Hit_HE Marker;
+    
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    
+    // get info about the shooter
+    PC =  DHPlayer(Instigator.Controller);
+    
+    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
+    Marker = new class'DHArtilleryMarker_Hit_HE';
+    Marker.LocationX = MapLocation.X;
+    Marker.LocationY = MapLocation.Y;
+    Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
+    PC.ArtilleryHit_HE = Marker;
+
+    super.Explode(HitLocation, HitNormal);
+}
+
 defaultproperties
 {
     Speed=8962.5         // 198m/s x 75%

@@ -3836,7 +3836,8 @@ function DrawArtilleryMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float
     local int i;
     local vector L;
     local array<DHArtilleryMarker_FireSupport> FireRequestMarkers;
-    local DHArtilleryMarker_Hit ArtilleryHit;
+    local DHArtilleryMarker_Hit_HE ArtilleryHit_HE;
+    local DHArtilleryMarker_Hit_Smoke ArtilleryHit_Smoke;
     local DHArtilleryMarker_FireSupport Marker;
     local vector Target;
     local string Caption, SquadName;
@@ -3844,35 +3845,36 @@ function DrawArtilleryMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float
 
     PC = DHPlayer(PlayerOwner);
 
-    if (DHGRI == none || PC == none)
+    Log("PC.IsArtilleryRole(): " $ PC.IsArtilleryRole());
+    if (DHGRI == none || PC == none || !PC.IsArtilleryRole())
     {
         return;
     }
 
     // Last artillery hit (HE)
-    ArtilleryHit = PC.ArtilleryHit_HE;
+    ArtilleryHit_HE = PC.ArtilleryHit_HE;
 
-    if(ArtilleryHit != None && ArtilleryHit.ExpiryTime > DHGRI.ElapsedTime)
+    if(ArtilleryHit_HE != None && ArtilleryHit_HE.ExpiryTime > DHGRI.ElapsedTime)
     {
-        MapMarkerIcon.WidgetTexture = ArtilleryHit.IconMaterial;
-        MapMarkerIcon.TextureCoords = ArtilleryHit.IconCoords;
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit.IconColor;
-        L.X = ArtilleryHit.LocationX;
-        L.Y = ArtilleryHit.LocationY;
+        MapMarkerIcon.WidgetTexture = ArtilleryHit_HE.IconMaterial;
+        MapMarkerIcon.TextureCoords = ArtilleryHit_HE.IconCoords;
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit_HE.IconColor;
+        L.X = ArtilleryHit_HE.LocationX;
+        L.Y = ArtilleryHit_HE.LocationY;
         L = DHGRI.GetWorldCoords(L.X, L.Y);
         DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,,,, -1);
     }
 
     // Last artillery hit (smoke)
-    ArtilleryHit = PC.ArtilleryHit_Smoke;
+    ArtilleryHit_Smoke = PC.ArtilleryHit_Smoke;
 
-    if(ArtilleryHit != None && PC.IsArtilleryRole() && ArtilleryHit.ExpiryTime > DHGRI.ElapsedTime)
+    if(ArtilleryHit_Smoke != None && ArtilleryHit_Smoke.ExpiryTime > DHGRI.ElapsedTime)
     {
-        MapMarkerIcon.WidgetTexture = ArtilleryHit.IconMaterial;
-        MapMarkerIcon.TextureCoords = ArtilleryHit.IconCoords;
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit.IconColor;
-        L.X = ArtilleryHit.LocationX;
-        L.Y = ArtilleryHit.LocationY;
+        MapMarkerIcon.WidgetTexture = ArtilleryHit_Smoke.IconMaterial;
+        MapMarkerIcon.TextureCoords = ArtilleryHit_Smoke.IconCoords;
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit_Smoke.IconColor;
+        L.X = ArtilleryHit_Smoke.LocationX;
+        L.Y = ArtilleryHit_Smoke.LocationY;
         L = DHGRI.GetWorldCoords(L.X, L.Y);
         DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,,,, -1);
     }

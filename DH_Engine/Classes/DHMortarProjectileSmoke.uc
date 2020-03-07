@@ -16,7 +16,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     local DHPlayer PC;
     local vector MapLocation;
     local DHGameReplicationInfo GRI;
-    local DHArtilleryMarker_Hit Marker;
+    local DHArtilleryMarker_Hit_Smoke Marker;
     
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PC =  DHPlayer(Instigator.Controller);

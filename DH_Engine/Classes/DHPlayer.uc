@@ -25,8 +25,8 @@ struct PersonalMapMarker
     var vector WorldLocation;
 };
 
-var DHArtilleryMarker_Hit ArtilleryHit_Smoke;
-var DHArtilleryMarker_Hit ArtilleryHit_HE;
+var DHArtilleryMarker_Hit_Smoke ArtilleryHit_Smoke;
+var DHArtilleryMarker_Hit_HE ArtilleryHit_HE;
 
 var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
@@ -1053,7 +1053,7 @@ function bool IsArtilleryRole()
 {
     local DHRoleInfo RI;
     RI = DHRoleInfo(GetRoleInfo());
-    return true;// IsInArtilleryVehicle() || RI.bCanUseMortars;
+    return IsInArtilleryVehicle() || RI.bCanUseMortars;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
