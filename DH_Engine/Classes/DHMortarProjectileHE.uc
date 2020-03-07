@@ -54,7 +54,15 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     Marker.LocationX = MapLocation.X;
     Marker.LocationY = MapLocation.Y;
     Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
-    Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_HE);
+    switch(PC.GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AxisArtilleryRequests_HE);
+            break;
+        case ALLIES_TEAM_INDEX:
+            Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_HE);
+            break;
+    }
     Log("Marker.ClosestFireRequestIndex: " $ Marker.ClosestFireRequestIndex);
     PC.ArtilleryHit_HE = Marker;
 

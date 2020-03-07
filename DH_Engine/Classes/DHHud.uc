@@ -3858,7 +3858,8 @@ function DrawArtilleryMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float
     // Last artillery hit (smoke)
     ArtilleryHit_Smoke = PC.ArtilleryHit_Smoke;
 
-    if(ArtilleryHit_Smoke != None && ArtilleryHit_Smoke.ExpiryTime > DHGRI.ElapsedTime)
+    if(ArtilleryHit_Smoke != None && ArtilleryHit_Smoke.ExpiryTime > DHGRI.ElapsedTime
+        && ArtilleryHit_Smoke.ClosestFireRequestIndex != -1)
     {
         MapMarkerIcon.WidgetTexture = ArtilleryHit_Smoke.IconMaterial;
         MapMarkerIcon.TextureCoords = ArtilleryHit_Smoke.IconCoords;
