@@ -1128,7 +1128,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local int     i;
     local string  HitSide, OppositeSide, DebugString1, DebugString2;
-    local bool    bRearHit;
+    local bool    bRearHit, bSideHit;
     local array<ArmorSection> HitSideArmorArray;
 
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
@@ -1226,17 +1226,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
     {
-        // No penetration if vehicle has extra side armor that stops HEAT or armor-piercing bullet projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && (P.RoundType == RT_HEAT || P.RoundType == RT_APBULLET))
+        bSideHit = true; // so we can check HEAT AOI vs. added side armor below
+
+        // No penetration if vehicle has extra side armor that stops small and med HE shells or armor-piercing bullet projectiles, so exit here (after any debug options)
+        // This is per Kummersdorf testing in Feb. 1943
+        if (bHasAddedSideArmor && (P.RoundType == RT_APBULLET  || (P.RoundType == RT_HE && P.ShellDiameter < 8.8)))
         {
             if (bLogDebugPenetration)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT/PTRD projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HE/PTRD projectiles");
             }
 
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT/PTRD projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HE/PTRD projectiles");
             }
 
             ResetTakeDamageVariables();
@@ -1282,6 +1285,14 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
         ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
+
+        //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45°
+        if (bSideHit && bHasAddedSideArmor && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
+        {
+            ResetTakeDamageVariables();
+
+            return false;
+        }
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
