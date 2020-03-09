@@ -26,11 +26,11 @@ exec function BreakLogs(string Side)
 {
     if (Role == ROLE_Authority)
     {
-        if (Side ~= "L")
+        if (Side ~= "L" && LogsLeft != none)
         {
             LogsLeft.BreakMe();
         }
-        else if (Side ~= "R")
+        else if (Side ~= "R" && LogsRight != none)
         {
             LogsRight.BreakMe();
         }
