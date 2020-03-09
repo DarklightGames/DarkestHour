@@ -1230,7 +1230,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         // No penetration if vehicle has extra side armor that stops small and med HE shells or armor-piercing bullet projectiles, so exit here (after any debug options)
         // This is per Kummersdorf testing in Feb. 1943
-        if (bHasAddedSideArmor && (P.RoundType == RT_APBULLET  || (P.RoundType == RT_HE && P.ShellDiameter < 8.8)))
+        if (bHasAddedSideArmor && (P.RoundType == RT_APBULLET  || (P.RoundType == RT_HE && P.ShellDiameter < 8.5)))
         {
             if (bLogDebugPenetration)
             {
