@@ -130,13 +130,13 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
 
-    ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
-    ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect' //temp
+    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'//temp
 
     //Start DH defaults
     bExplodesOnHittingBody=true

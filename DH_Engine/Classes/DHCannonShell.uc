@@ -193,9 +193,9 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     {
         HitSound = VehicleHitSound;
         HitEmitterClass = ShellHitVehicleEffectClass;
-        //BlurTime = 8.0;
-        //BlurEffectScalar = 8.0;
-        //PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_Interface, 1.0);
+        BlurTime = 8.0;
+        BlurEffectScalar = 8.0;
+        PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 30.0, false, 10.0, 1.0, true);
     }
     // Hit something else - get material type & set effects
     else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
