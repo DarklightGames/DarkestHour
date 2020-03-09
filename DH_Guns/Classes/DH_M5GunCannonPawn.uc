@@ -17,7 +17,6 @@ defaultproperties
     PlayerCameraBone="com_camera"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Wolverine_sight_background'
     GunsightSize=0.369 // 10 degrees 27 minutes visible FOV at 3x magnification (M79C telescope)
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
 }

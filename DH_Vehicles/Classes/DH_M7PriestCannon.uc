@@ -31,16 +31,23 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+
     ProjectileDescriptions(0)="HE-1"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="M1 HE-T"
+    nProjectileDescriptions(1)="M60 WP"
+    nProjectileDescriptions(2)="M67 HEAT"
+
+
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
     MaxPrimaryAmmo=58
     MaxSecondaryAmmo=3
     MaxTertiaryAmmo=8
-    Spread=0.005
+    Spread=0.0025
     SecondarySpread=0.005
     TertiarySpread=0.005
 

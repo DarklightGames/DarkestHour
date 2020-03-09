@@ -14,9 +14,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="Sprgr.Patr."
+    nProjectileDescriptions(1)="F.H.Gr.Nb."
+    nProjectileDescriptions(2)="Gr.38 Hl/C"
+
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=8
@@ -30,6 +36,12 @@ defaultproperties
     // Smoke launcher
     SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
     SmokeLauncherFireOffset(0)=(X=-18.0,Y=23.0,Z=30.0)
+
+    //Sounds
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 
     // Weapon fire & sounds
     WeaponFireOffset=-53.5

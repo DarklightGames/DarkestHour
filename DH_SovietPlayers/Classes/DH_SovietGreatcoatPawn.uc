@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SovietGreatcoatPawn extends DH_SovietPawn;
+class DH_SovietGreatcoatPawn extends DH_SovietGreatcoatGreyEarlyPawn; //eventually should be removed to avoid confusion
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_greatcoat'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_greatcoat'
+
 }

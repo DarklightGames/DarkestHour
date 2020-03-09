@@ -7,25 +7,24 @@ class DH_45mmM1937GunCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    ShellDiameter=4.5
     Speed=20218.0 // 335 m/s
     MaxSpeed=20218.0
+    ShellDiameter=4.5
     BallisticCoefficient=0.6 // TODO: try to find an accurate BC (this is from AHZ)
-    Tag="O-240"
-    bDebugInImperial=false
 
+    //Damage
+    ImpactDamage=225
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     Damage=190.0
     DamageRadius=600.0
     MyDamageType=Class'DH_Engine.DHShellHE50mmATDamageType'
-    ImpactDamage=225
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    HullFireChance=0.20
+    EngineFireChance=0.43
 
-    DHPenetrationTable(0)=1.3 // penetration same as Bofors 40mm HE, slightly better than US 37mm HE
-    DHPenetrationTable(1)=1.2
-    DHPenetrationTable(2)=1.1
-    DHPenetrationTable(3)=1.0
-    DHPenetrationTable(4)=1.0
+    bDebugInImperial=false
 
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     BlurTime=4.0
     BlurEffectScalar=1.5
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
@@ -37,6 +36,14 @@ defaultproperties
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
 
+    //Penetration
+    DHPenetrationTable(0)=1.3 // penetration same as Bofors 40mm HE, slightly better than US 37mm HE
+    DHPenetrationTable(1)=1.2
+    DHPenetrationTable(2)=1.1
+    DHPenetrationTable(3)=1.0
+    DHPenetrationTable(4)=1.0
+
+    //Gunsight adjustments
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.471)
     OpticalRanges(1)=(Range=500,RangeValue=0.505)

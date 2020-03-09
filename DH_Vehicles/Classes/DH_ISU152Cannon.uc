@@ -33,8 +33,13 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
-    ProjectileDescriptions(0)="HE"
+
     ProjectileDescriptions(1)="AP"
+    ProjectileDescriptions(0)="HE" // HE is primary
+
+    nProjectileDescriptions(1)="BR-540" // earlier AP round without ballistic cap
+    nProjectileDescriptions(0)="OF-540"
+
     InitialPrimaryAmmo=11
     InitialSecondaryAmmo=7
     MaxPrimaryAmmo=13
@@ -47,9 +52,9 @@ defaultproperties
     WeaponFireOffset=120.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
+    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.152mmSov.152mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.152mmSov.152mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.152mmSov.152mm_fire03'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_03')

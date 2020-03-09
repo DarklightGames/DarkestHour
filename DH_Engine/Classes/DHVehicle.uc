@@ -59,6 +59,7 @@ var     float       MaxCriticalSpeed;            // if vehicle goes over max spe
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
 
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
@@ -78,6 +79,8 @@ var     float       SpawnProtEnds;               // is set when a player spawns 
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
 var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
+var class<DamageType> LastHitByDamageType;       // Stores the last damage type this vehicle was hit by.
+                                                 // Unlike `HitDamageType`, this variable is not replicated.
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -87,6 +90,7 @@ var     float       IgnitionSwitchInterval;      // how frequently the engine ca
 var     float       EngineRestartFailChance;     // chance of engine failing to re-start (only temporarily) after it has been switched off (0 to 1 value)
 
 // Driving effects
+var     bool        bIsWinterVariant;            // Notes in the defaults if a vehicle uses Winter or Snow skins to force use of the white dust emitter (saves levelers from remembering to set the right dust color in Level Properties)
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       MaxPitchSpeed;               // used to set movement sounds volume, based on vehicle's speed
 var     sound       RumbleSound;                 // interior rumble sound
@@ -306,26 +310,67 @@ simulated function Destroyed()
 
 function StartEngineFire(Pawn InstigatedBy);
 
+function KilledBy(Pawn EventInstigator)
+{
+    local Controller Killer;
+    local class<DamageType> DT;
+
+    if (EventInstigator != None)
+    {
+        Killer = EventInstigator.Controller;
+    }
+
+    if (LastHitByDamageType == none || EventInstigator == self)
+    {
+        DT = class'Suicided';
+    }
+    else
+    {
+        DT = LastHitByDamageType;
+    }
+
+    Died(Killer, DT, Location);
+}
+
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
     local DHPlayer DHKiller;
-
-    // Call the super first
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (MapIconAttachment != none)
-    {
-        MapIconAttachment.Destroy();
-    }
+    local int RoundTime;
 
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
     {
         GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    }
+
+    // Log driver and vehicle kills before calling the super.
+    // NOTE: We match the conditions in the super function
+    // instead of overriding it completely.
+    if (GRI != none &&
+        !bDeleteMe &&
+        !Level.bLevelChange &&
+        !bVehicleDestroyed &&
+        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation) &&
+        DamageType != class'Suicided')
+    {
+        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
+
+        if (Controller != none && !bRemoteControlled && !bEjectDriver)
+        {
+            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, 0, RoundTime);
+        }
+    }
+
+    super.Died(Killer, DamageType, HitLocation);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
     }
 
     DHKiller = DHPlayer(Killer);
@@ -828,6 +873,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     local Vehicle             VehicleGoal;
     local bool                bPlayerIsTankCrew, bCanEnterTankCrewPositions, bHasTankCrewPositions;
     local int                 i;
+    local Vehicle             LowPriorityEntry;
 
     if (P == none)
     {
@@ -859,10 +905,27 @@ function Vehicle FindEntryVehicle(Pawn P)
             // Select weapon pawn if it's empty, & player isn't barred by tank crew restriction, & this isn't a locked armored vehicle that player can't enter
             if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || bCanEnterTankCrewPositions))
             {
-                return WP;
+                if (i >= PrioritizeWeaponPawnEntryFromIndex)
+                {
+                    return WP;
+                }
+
+                if (LowPriorityEntry == none)
+                {
+                    LowPriorityEntry = WP;
+                    continue;
+                }
             }
 
-            bHasTankCrewPositions = bHasTankCrewPositions || WP.bMustBeTankCrew;
+            if (LowPriorityEntry == none)
+            {
+                bHasTankCrewPositions = bHasTankCrewPositions || WP.bMustBeTankCrew;
+            }
+        }
+
+        if (LowPriorityEntry != none)
+        {
+            return LowPriorityEntry;
         }
 
         // There are no empty, usable vehicle positions for this player, so give him a screen message (only if vehicle is his team's) & don't let him enter
@@ -1828,17 +1891,20 @@ simulated function StartEmitters()
 
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
             Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i].CullDistance = 12000; // ~200m
 
             if (bLowDetail)
             {
                 Dust[i].MaxSpritePPS = 3;
                 Dust[i].MaxMeshPPS = 3;
+                Dust[i].CullDistance = 5000;
             }
 
             Dust[i].SetBase(self);
 
             // Boat vehicle uses different 'dirt' colour (white-grey) to simulate a spray effect instead of the usual wheel dust
-            if (IsA('DHBoatVehicle'))
+            // This also forces vehicles in snow camo skins to use the white-grey dust, which should save levelers from forgetting to set the correct color on Winter maps
+            if (IsA('DHBoatVehicle') || bIsWinterVariant)
             {
                 Dust[i].SetDirtColor(Level.WaterDustColor);
             }
@@ -1863,6 +1929,7 @@ simulated function StartEmitters()
             else
             {
                 ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+                ExhaustPipes[i].ExhaustEffect.CullDistance = 12000; // ~200m
             }
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
@@ -2070,6 +2137,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (InstigatedBy != none && InstigatedBy != self)
     {
         LastHitBy = InstigatedBy.Controller;
+        LastHitByDamageType = DamageType;
     }
 
     if (bDebuggingText)
@@ -3842,6 +3910,37 @@ simulated function int NumPassengers()
     return Num;
 }
 
+// Returns pawn's base vehicle. The pawn can either be driving the vehicle
+// (has DrivenVehicle set), or be the vehicle/vehicle weapon pawn itself.
+simulated static function DHVehicle GetDrivenVehicleBase(Pawn P)
+{
+    local Vehicle V;
+
+    if (P == none)
+    {
+        return none;
+    }
+
+    if (P.DrivenVehicle != none)
+    {
+        V = P.DrivenVehicle;
+    }
+    else
+    {
+        V = Vehicle(P);
+    }
+
+    if (V != none)
+    {
+        if (V.IsA('VehicleWeaponPawn'))
+        {
+            return DHVehicle(VehicleWeaponPawn(V).GetVehicleBase());
+        }
+
+        return DHVehicle(V);
+    }
+}
+
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):
 simulated event StartDriving(Vehicle V);
 simulated event StopDriving(Vehicle V);
@@ -4122,6 +4221,7 @@ defaultproperties
     EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)
 
     // Visual effects
+    bIsWinterVariant=false
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground

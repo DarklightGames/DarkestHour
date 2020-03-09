@@ -7,6 +7,31 @@ class DH_TigerCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=48281.0
+    MaxSpeed=48281.0
+    ShellDiameter=8.8
+    BallisticCoefficient=3.3 //TODO: find correct BC
+
+    //Damage
+    ImpactDamage=775
+    HullFireChance=0.5
+    EngineFireChance=0.98
+
+    //Penetration
+    DHPenetrationTable(0)=16.2
+    DHPenetrationTable(1)=15.8
+    DHPenetrationTable(2)=15.1
+    DHPenetrationTable(3)=14.4
+    DHPenetrationTable(4)=13.8
+    DHPenetrationTable(5)=13.2
+    DHPenetrationTable(6)=12.6
+    DHPenetrationTable(7)=12.2
+    DHPenetrationTable(8)=11.6
+    DHPenetrationTable(9)=10.6
+    DHPenetrationTable(10)=9.7
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=18.0)
     MechanicalRanges(3)=(Range=300,RangeValue=29.0)
@@ -37,22 +62,4 @@ defaultproperties
     MechanicalRanges(28)=(Range=3600,RangeValue=390.0)
     MechanicalRanges(29)=(Range=3800,RangeValue=415.0)
     MechanicalRanges(30)=(Range=4000,RangeValue=440.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=16.2
-    DHPenetrationTable(1)=15.8
-    DHPenetrationTable(2)=15.1
-    DHPenetrationTable(3)=14.4
-    DHPenetrationTable(4)=13.8
-    DHPenetrationTable(5)=13.2
-    DHPenetrationTable(6)=12.6
-    DHPenetrationTable(7)=12.2
-    DHPenetrationTable(8)=11.6
-    DHPenetrationTable(9)=10.6
-    DHPenetrationTable(10)=9.7
-    ShellDiameter=8.8
-    ImpactDamage=775
-    BallisticCoefficient=3.3
-    Speed=48281.0
-    MaxSpeed=48281.0
-    Tag="PzGr.39"
 }

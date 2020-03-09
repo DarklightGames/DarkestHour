@@ -144,7 +144,6 @@ defaultproperties
     DrivePos=(X=-10.0,Y=0.0,Z=-37.0)
     DriveAnim="VSU76_driver_idle_close"
     CameraBone="Camera_com"
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
     VehicleMGReloadTexture=Texture'DH_Artillery_tex.ATGun_Hud.m45_ammo_reload'
     bSpecialRotateSounds=true
     RotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'

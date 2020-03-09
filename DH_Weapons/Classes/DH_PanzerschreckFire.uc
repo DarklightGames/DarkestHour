@@ -13,4 +13,10 @@ defaultproperties
     ExhaustDamage=210.0
     ExhaustLength=280.0
     Spread=510.0
+
+    MuzzleBone="muzzle" //"warhead1"
+
+    //** Effects **//
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stPanzerschreck'
+    SmokeEmitterClass = class'ROEffects.ROMuzzleSmoke'
 }

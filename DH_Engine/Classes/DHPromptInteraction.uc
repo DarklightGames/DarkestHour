@@ -19,6 +19,7 @@ struct Option
 };
 var array<Option> Options;
 var string OptionsText;
+var color KeyTextColor;
 
 function OnOptionSelected(int Index)
 {
@@ -34,7 +35,7 @@ function Initialize()
 
     for (i = 0; i < Options.Length; ++i)
     {
-        OptionStrings[OptionStrings.Length] = class'GameInfo'.static.MakeColorCode(class'UColor'.default.Yellow) $
+        OptionStrings[OptionStrings.Length] = class'GameInfo'.static.MakeColorCode(KeyTextColor) $
         "[" $ GetFriendlyName(Options[i].Key) $ "]" $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) @ Options[i].Text;
     }
 
@@ -103,5 +104,6 @@ defaultproperties
 {
     bActive=true
     bVisible=true
+    KeyTextColor=(R=255,G=255,B=0,A=255)
 }
 

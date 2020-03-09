@@ -38,6 +38,10 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39/43"
+    nProjectileDescriptions(1)="Sprgr.Patr."
+
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=20
     MaxPrimaryAmmo=45
@@ -67,10 +71,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

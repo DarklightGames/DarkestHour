@@ -223,9 +223,9 @@ simulated state StartMantle extends Busy
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -443,9 +443,9 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -850,6 +850,11 @@ simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
     }
 }
 
+simulated function name GetSelectAnim()
+{
+    return SelectAnim;
+}
+
 defaultproperties
 {
     // Sway modifiers
@@ -860,7 +865,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
-    SwayBayonetModifier=1.02
+    SwayBayonetModifier=1.1
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=0.9

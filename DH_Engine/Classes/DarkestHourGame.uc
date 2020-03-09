@@ -8,6 +8,7 @@ class DarkestHourGame extends ROTeamGame;
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
+var     DHGameReplicationInfo       GRI;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 
@@ -20,8 +21,7 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 var     DHConstructionManager       ConstructionManager;
-
-var     DHVoteInfo                  ActiveVotes[3];                         // 0-Axis, 1-Allies, 2-Both
+var     DHVoteManager               VoteManager;
 
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
@@ -91,7 +91,13 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
-var     DHGameReplicationInfo       GRI;
+var()   config bool                 bIsSurrenderVoteEnabled;
+var()   config int                  SurrenderCooldownSeconds;               // The time between the votes
+var()   config int                  SurrenderEndRoundDelaySeconds;          // The time delay before the round ends
+var()   config int                  SurrenderRoundTimeRequiredSeconds;      // How soon the vote can be nominated
+var()   config float                SurrenderReinforcementsRequiredPercent; // How short on tickets the team needs to be
+var()   config float                SurrenderNominationsThresholdPercent;   // Nominations needed to start the vote
+var()   config float                SurrenderVotesThresholdPercent;         // "Yes" votes needed for the vote to pass
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -129,9 +135,14 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
-    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    // Force the server to update the MaxClientRate, setting it in config file
+    // doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more
+    // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
+
+    // Initialize geolocation service (verifies cache integrity)
+    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -290,6 +301,8 @@ function PostBeginPlay()
         GRI.SetDangerZoneBalance(DHLevelInfo.DangerZoneBalance, true);
     }
 
+    GRI.bIsSurrenderVoteEnabled = bIsSurrenderVoteEnabled;
+
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
     GRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
@@ -435,7 +448,15 @@ function PostBeginPlay()
         Metrics = Spawn(MetricsClass);
     }
 
+
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
+
+    VoteManager = Spawn(class'DHVoteManager', self);
+
+    if (VoteManager == none)
+    {
+        Warn("Failed to spawn vote manager");
+    }
 }
 
 // Modified to remove any return on # of bots (and to remove chance of negative)
@@ -2877,6 +2898,11 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
+        if (SquadReplicationInfo != none)
+        {
+            SquadReplicationInfo.ResetSquadInfo();
+        }
+
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
@@ -2908,6 +2934,11 @@ state ResetGameCountdown
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
                 Spawn(class'DHClientResetGame');
+            }
+
+            if (GRI != none)
+            {
+                GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
@@ -3052,7 +3083,6 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     // If round is in play AND roundtime is currently infinite AND the team is out of reinforcements AND the gametype can change time when at zero reinf
     if (IsInState('RoundInPlay') && GRI.DHRoundDuration == 0 && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bTimeCanChangeAtZeroReinf)
     {
-
         // If the opposing team is within limit for changing round time, then change round time
         if (GRI.SpawnsRemaining[int(!bool(Team))] <= DHLevelInfo.GameTypeClass.default.OutOfReinfLimitForTimeChange)
         {
@@ -3201,11 +3231,6 @@ exec function SetServerViewDistance(int NewDistance)
     {
         Z.SetNewTargetFogDistance(NewDistance);
     }
-}
-
-exec function SetAllChat(bool bOn)
-{
-    GRI.bAllChatEnabled = bOn;
 }
 
 exec function SetAllChatThreshold(int NewThreshold)
@@ -3385,6 +3410,35 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
     }
 }
 
+exec function ChangeSetupPhaseTime(int Minutes, int Seconds, optional string OperationType)
+{
+    local DHSetupPhaseManager SPM;
+    local int TimeInSeconds;
+
+    if (GRI == none || !GRI.bIsInSetupPhase)
+    {
+        return;
+    }
+
+    TimeInSeconds = Max(0, Minutes) * 60 + Max(0, Seconds);
+
+    foreach AllActors(class'DHSetupPhaseManager', SPM)
+    {
+        switch (OperationType)
+        {
+            case "Add":
+                SPM.ModifySetupPhaseDuration(TimeInSeconds);
+                break;
+            case "Subtract":
+                SPM.ModifySetupPhaseDuration(-TimeInSeconds);
+                break;
+            default:
+                SPM.ModifySetupPhaseDuration(TimeInSeconds, true);
+                break;
+        }
+    }
+}
+
 // Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
@@ -3492,6 +3546,24 @@ exec function SetDangerZoneBalance(int Factor)
     }
 
     GRI.SetDangerZoneBalance(Factor);
+}
+
+exec function SetSurrenderVote(bool bEnabled)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bIsSurrenderVoteEnabled = bEnabled;
+}
+
+// TODO: This function won't have an effect until the next NotifyObjStateChanged()
+// call (e.g. you won't be able to enable/disable the attrition after the last
+// objective has been captured). Use with care.
+exec function SetAttrition(bool bEnabled)
+{
+    bIsAttritionEnabled = bEnabled;
 }
 
 //***********************************************************************************
@@ -3963,6 +4035,34 @@ function UpdateMunitionPercentages()
     }
 }
 
+function DelayedEndRound(int Delay, string Reason, byte WinnerTeamIndex, class<LocalMessage> WinnerMessageClass, int WinnerMessageOption, class<LocalMessage> LoserMessageClass, int LoserMessageOption)
+{
+    local string WinnerTeamName;
+
+    if (GRI == none || !IsInState('RoundInPlay') || GRI.RoundWinnerTeamIndex < 2)
+    {
+        return;
+    }
+
+    switch (WinnerTeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            WinnerTeamName = "Axis";
+            break;
+        case ALLIES_TEAM_INDEX:
+            WinnerTeamName = "Allies";
+    }
+
+    GRI.RoundWinnerTeamIndex = WinnerTeamIndex;
+    GRI.RoundEndReason = Repl(Reason, "{0}", WinnerTeamName); // "The {0} has won the round because..."
+
+    ModifyRoundTime(Delay, 2);
+
+    // Inform the teams
+    BroadcastTeamLocalizedMessage(Level, int(!bool(WinnerTeamIndex)), LoserMessageClass, LoserMessageOption);
+    BroadcastTeamLocalizedMessage(Level, WinnerTeamIndex, WinnerMessageClass, WinnerMessageOption);
+}
+
 // Modified for DHObjectives
 function ChooseWinner()
 {
@@ -3974,6 +4074,14 @@ function ChooseWinner()
 
     if (GRI == none)
     {
+        return;
+    }
+
+    // Delayed round ending
+    if (GRI.RoundWinnerTeamIndex < 2)
+    {
+        Level.Game.Broadcast(self, GRI.RoundEndReason, 'Say');
+        EndRound(GRI.RoundWinnerTeamIndex);
         return;
     }
 
@@ -4897,6 +5005,8 @@ event PostLogin(PlayerController NewPlayer)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
     }
+
+    class'DHGeolocationService'.static.GetIpData(PC);
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5264,40 +5374,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
-exec function StartSurrenderVote(int Team)
-{
-    // Check to see if we already have a vote present for the team
-    //
-
-}
-
-function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction)
-{
-
-
-}
-
-// Overriden to stop the addition of duplicate keys into the server info array.
-static function AddServerDetail(out ServerResponseLine ServerState, string RuleName, coerce string RuleValue)
-{
-    local int i;
-
-    for (i = 0; i < ServerState.ServerInfo.Length; ++i)
-    {
-        if (ServerState.ServerInfo[i].Key == RuleName)
-        {
-            ServerState.ServerInfo[i].Value = RuleValue;
-            return;
-        }
-    }
-
-    i = ServerState.ServerInfo.Length;
-    ServerState.ServerInfo.Length = i + 1;
-
-    ServerState.ServerInfo[i].Key = RuleName;
-    ServerState.ServerInfo[i].Value = RuleValue;
-}
-
 defaultproperties
 {
     ServerTickForInfraction=17.0
@@ -5348,7 +5424,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="GÃ¼nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5357,10 +5433,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton MÃ¼ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans GrÃ¼schke"
+    GermanNames(12)="Wilhelm KrÃ¼ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5398,8 +5474,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=1
-        Patch=7
+        Minor=6
+        Patch=1
         Prerelease=""
     End Object
     Version=VersionObject
@@ -5414,8 +5490,16 @@ defaultproperties
 
     bUseIdleKickingThreshold=true
     EnableIdleKickingThreshold=50
-    DisableAllChatThreshold=50
+    DisableAllChatThreshold=32
     bAllowAllChat=true
     bIsAttritionEnabled=true
     bIsDangerZoneEnabled=true
+
+    bIsSurrenderVoteEnabled=true
+    SurrenderCooldownSeconds=300
+    SurrenderEndRoundDelaySeconds=15
+    SurrenderRoundTimeRequiredSeconds=900
+    SurrenderReinforcementsRequiredPercent=0.50
+    SurrenderNominationsThresholdPercent=0.15
+    SurrenderVotesThresholdPercent=0.5
 }

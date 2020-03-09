@@ -35,7 +35,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+
+
     ProjectileDescriptions(2)="Canister"
+
+    nProjectileDescriptions(0)="M51B1 APC"
+    nProjectileDescriptions(1)="M63 HE-T"
+    nProjectileDescriptions(2)="M2 Canister"
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=24
     InitialTertiaryAmmo=8

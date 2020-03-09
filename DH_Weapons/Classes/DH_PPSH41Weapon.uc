@@ -48,6 +48,7 @@ simulated function ToggleFireMode()
 
 defaultproperties
 {
+    SwayModifyFactor=0.9 // +0.1
     ItemName="PPSh-41"
 
     FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'
@@ -60,11 +61,15 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=30.0
+    IronSightDisplayFOV=40.0
 
     bHasSelectFire=true
-    MaxNumPrimaryMags=4
-    InitialNumPrimaryMags=4
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

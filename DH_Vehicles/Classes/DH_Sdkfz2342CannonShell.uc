@@ -7,6 +7,34 @@ class DH_Sdkfz2342CannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=50392.0
+    MaxSpeed=50392.0
+    ShellDiameter=5.0
+    BallisticCoefficient=1.19
+
+    //Damage
+    ImpactDamage=390
+    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
+    HullFireChance=0.3
+    EngineFireChance=0.60
+
+    //Effects
+    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
+
+    //Penetration
+    DHPenetrationTable(0)=9.6
+    DHPenetrationTable(1)=8.9
+    DHPenetrationTable(2)=7.9
+    DHPenetrationTable(3)=7.0
+    DHPenetrationTable(4)=6.2
+    DHPenetrationTable(5)=5.5
+    DHPenetrationTable(6)=4.9
+    DHPenetrationTable(7)=4.2
+    DHPenetrationTable(8)=3.8
+    DHPenetrationTable(9)=3.0
+    DHPenetrationTable(10)=2.3
+
+    bMechanicalAiming=true
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=18.0)
     MechanicalRanges(3)=(Range=300,RangeValue=29.0)
@@ -27,24 +55,4 @@ defaultproperties
     MechanicalRanges(18)=(Range=1800,RangeValue=213.0)
     MechanicalRanges(19)=(Range=1900,RangeValue=228.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=248.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=9.6
-    DHPenetrationTable(1)=8.9
-    DHPenetrationTable(2)=7.9
-    DHPenetrationTable(3)=7.0
-    DHPenetrationTable(4)=6.2
-    DHPenetrationTable(5)=5.5
-    DHPenetrationTable(6)=4.9
-    DHPenetrationTable(7)=4.2
-    DHPenetrationTable(8)=3.8
-    DHPenetrationTable(9)=3.0
-    DHPenetrationTable(10)=2.3
-    ShellDiameter=5.0
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
-    ImpactDamage=390
-    BallisticCoefficient=1.19
-    Speed=50392.0
-    MaxSpeed=50392.0
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    Tag="PzGr.39"
 }

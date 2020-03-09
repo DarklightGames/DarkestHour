@@ -8,14 +8,18 @@ class DH_ZiS3CannonShell extends DHSovietCannonShell;
 defaultproperties
 {
     RoundType=RT_APBC
-    ShellDiameter=7.62
-    BallisticCoefficient=1.55
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.55 //TODO: pls, check
+
+    //Damage
     ImpactDamage=560
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    Tag="BR-350B"
+    HullFireChance=0.38
+    EngineFireChance=0.75
 
+    //Penetration
     DHPenetrationTable(0)=8.4  // 100m (all same as T34/76)
     DHPenetrationTable(1)=8.1  // 250m
     DHPenetrationTable(2)=7.6  // 500m
@@ -28,6 +32,7 @@ defaultproperties
     DHPenetrationTable(9)=4.7
     DHPenetrationTable(10)=4.2 // 3000m
 
+    //Gunsight adjustments
     bMechanicalAiming=true
     MechanicalRanges(1)=(Range=200,RangeValue=47.0)
     MechanicalRanges(2)=(Range=400,RangeValue=63.0)

@@ -286,6 +286,10 @@ defaultproperties
     bExplodesOnHittingWater=true
     bAlwaysDoShakeEffect=true
     ShellImpactDamage=class'DH_Engine.DHShellHEATImpactDamageType'
+
+    HullFireChance=0.65
+    EngineFireChance=0.85
+
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
@@ -300,7 +304,7 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=2.1
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
     DamageRadius=300.0
     MyDamageType=class'DH_Engine.DHShellHEATDamageType'

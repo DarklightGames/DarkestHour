@@ -7,6 +7,7 @@ class DHEnemyInformationMsg extends LocalMessage
     abstract;
 
 var localized string EnemyIsWeak;
+var localized string EnemyIsSurrendering;
 
 static function string GetString(
     optional int Switch,
@@ -18,6 +19,8 @@ static function string GetString(
     {
         case 0:
             return default.EnemyIsWeak;
+        case 1:
+            return default.EnemyIsSurrendering;
         default:
             return default.EnemyIsWeak;
     }
@@ -26,6 +29,7 @@ static function string GetString(
 defaultproperties
 {
     EnemyIsWeak="The enemy is nearly out of reinforcements, victory is near!"
+    EnemyIsSurrendering="The enemy is surrendering, the battle will be over shortly!"
 
     bFadeMessage=true
     bIsUnique=true

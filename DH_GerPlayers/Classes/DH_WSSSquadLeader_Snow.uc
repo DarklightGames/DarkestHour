@@ -7,7 +7,9 @@ class DH_WSSSquadLeader_Snow extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="Scharführer"
+    AltName="ScharfÃ¼hrer"
+
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowSSPawn',Weight=2.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueSSPawn',Weight=1.0)

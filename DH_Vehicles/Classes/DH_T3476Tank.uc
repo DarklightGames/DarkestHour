@@ -69,7 +69,6 @@ defaultproperties
     TreadHitMaxHeight=5.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-105.0,Y=0.0,Z=40.0) // adjusted from original
-    HullFireChance=0.55
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3476_Destroyed'

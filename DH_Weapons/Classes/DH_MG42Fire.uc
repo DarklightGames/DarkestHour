@@ -12,7 +12,7 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_MG42Ammo'
     FireRate=0.05
     TracerFrequency=7
-    Spread=70.0
+    Spread=80.0
     RecoilRate=0.03125
 
     // Recoil

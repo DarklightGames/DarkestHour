@@ -8,6 +8,7 @@ class DH_PPS43Weapon extends DHFastAutoWeapon;
 defaultproperties
 {
     ItemName="PPS-43"
+    SwayModifyFactor=0.65 // -0.15 because its a light SMG
     FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
     FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
@@ -18,10 +19,14 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=50.0
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

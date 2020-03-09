@@ -19,8 +19,8 @@ defaultproperties
     bHasTemporarySpawnVehicles=true
     bOmitTimeAttritionForDefender=true
     bTimeCanChangeAtZeroReinf=true
-    bKeepSpawningWithoutReinf=true
-    OutOfReinfRoundTime=120
+    bKeepSpawningWithoutReinf=false
+    OutOfReinfRoundTime=30
     OutOfReinfLimitForTimeChange=50
 
     ObjSpawnMinimumDepth=1

@@ -32,6 +32,9 @@ function ServerToggleVehicleLock();
 defaultproperties
 {
     bMustBeTankCrew=false
+    bManualTraverseOnly=true
+    ManualMinRotateThreshold=0.5
+    ManualMaxRotateThreshold=3.0
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=1
     BinocPositionIndex=2
@@ -39,7 +42,6 @@ defaultproperties
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     HudName="Gunner"
     FireImpulse=(X=-1000.0)
 }

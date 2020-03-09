@@ -17,13 +17,15 @@ defaultproperties
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col'
 
     // Turret armor
-    FrontArmorFactor=9.0
+    FrontArmorFactor=8.4 //9.0 cm reduced by cast armor modifier 93%
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=5.2
-    LeftArmorSlope=20.0
-    RightArmorSlope=20.0
+
+    LeftArmorSlope=18.0
+    RightArmorSlope=18.0
     RearArmorSlope=10.0
+
     FrontLeftAngle=342.0
     FrontRightAngle=18.0
     RearRightAngle=162.0
@@ -36,15 +38,27 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
+    ProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellAPCR'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
+
     ProjectileDescriptions(0)="APBC"
+    ProjectileDescriptions(1)="APCR"
+    ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="BR-365"
+    nProjectileDescriptions(1)="BR-365P"
+    nProjectileDescriptions(2)="O-365"
+
     InitialPrimaryAmmo=28
-    InitialSecondaryAmmo=16
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=16
     MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=25
-    SecondarySpread=0.002
+    MaxSecondaryAmmo=6
+    MaxTertiaryAmmo=25
+    SecondarySpread=0.001
+    TertiarySpread=0.002
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
@@ -65,10 +79,10 @@ defaultproperties
     CannonFireSound(2)=Sound'Vehicle_Weapons.T34_85.85mm_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.t34_85_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.t34_85_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.t34_85_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.t34_85_reload_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)

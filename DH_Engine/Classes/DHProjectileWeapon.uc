@@ -85,6 +85,7 @@ var     bool                bBarrelFailed;          // barrel overheated and can
 
 // Scopes
 var     bool            bHasScope;
+var     bool            bHasModelScope;
 var     float           ScopePortalFOV;          // the FOV to zoom the scope portal by
 var     float           ScopePortalFOVHigh;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
@@ -699,7 +700,7 @@ simulated state RaisingWeapon
         }
         else
         {
-            Anim = SelectAnim;
+            Anim = GetSelectAnim();
         }
 
         if (ClientState == WS_Hidden)
@@ -785,9 +786,9 @@ simulated state LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(Anim))
@@ -2600,6 +2601,7 @@ simulated function UpdateScopeMode()
             scopePortalFOV = default.scopePortalFOV;
             IronSightDisplayFOV = default.IronSightDisplayFOV;
             bPlayerFOVZooms = false;
+            bHasModelScope = true;
 
             if (bUsingSights)
             {
@@ -2642,6 +2644,7 @@ simulated function UpdateScopeMode()
             ScopePortalFOV = ScopePortalFOVHigh;
             IronSightDisplayFOV = default.IronSightDisplayFOV;
             bPlayerFOVZooms = false;
+            bHasModelScope = true;
 
             if (bUsingSights)
             {

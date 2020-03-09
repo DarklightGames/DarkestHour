@@ -441,16 +441,16 @@ defaultproperties
     FireRate=0.25
     MinHoldtime=0.1
     FullHeldTime=0.3
-    TraceRange=75.0
-    BayonetTraceRange=125.0
+    TraceRange=85.0
+    BayonetTraceRange=140.0
     MeleeAttackSpread=8.0
     RearAngleArc=16000.0
     MomentumTransfer=0.0 // was 100 in RO
 
     DamageMin=30
     DamageMax=40
-    BayonetDamageMin=38
-    BayonetDamageMax=52
+    BayonetDamageMin=75
+    BayonetDamageMax=85
     VulnerableDamageFactor=3.0
 
     PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'

@@ -23,6 +23,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Schw.Sprgr.Patr."
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=50

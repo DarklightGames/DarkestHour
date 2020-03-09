@@ -24,7 +24,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VUC_driver_idle_open"
     CameraBone="Camera_com"
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag' // TODO: get ammo icon made (either a clip of 4 rounds, or maybe two clips of 4 rounds stacked one on top of other)
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
 }

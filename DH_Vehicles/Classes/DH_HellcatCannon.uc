@@ -40,8 +40,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
+
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="M62 APC"
+    nProjectileDescriptions(1)="M93 HVAP"
+    nProjectileDescriptions(2)="M42A1 HE-T"
+
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=5

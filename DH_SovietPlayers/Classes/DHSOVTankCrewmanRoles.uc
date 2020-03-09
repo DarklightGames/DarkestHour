@@ -10,8 +10,8 @@ defaultproperties
 {
     AltName="Ekipazh tanka"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
+    GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
     DetachedLegClass=class'ROEffects.SeveredLegSovTanker'

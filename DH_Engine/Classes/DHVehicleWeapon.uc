@@ -34,12 +34,12 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Reloading
 struct ReloadStage
 {
-var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
-var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
-var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
+    var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+    var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
+    var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
 
-enum    EReloadState
+enum EReloadState
 {
     RL_ReloadingPart1,
     RL_ReloadingPart2,
@@ -56,8 +56,8 @@ var     bool                bReloadPaused;        // a reload has started but wa
 var     bool                bNewOrResumedReload;  // tells Timer we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
 
 // Hatch fire effects - Ch!cKeN
-var     VehicleDamagedEffect        HatchFireEffect;
-var     class<VehicleDamagedEffect> FireEffectClass;
+var     DHTurretFireEffect          TurretFireEffect;
+var     class<DHTurretFireEffect>   FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
@@ -831,7 +831,7 @@ simulated function AttemptAltReload()
 // Using PlayOwnedSound() to avoid broadcasting over network to owning net client as it will play locally there anyway
 simulated function PlayStageReloadSound()
 {
-    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
+    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 1.0,, 25.0,, true); //reduced volume to 1.0 as do not want players outside tank to hear
 }
 
 // New helper function to remove 1 spare mag, used when we begin a new mag reload (a separate function to allow easy subclassing)
@@ -1060,20 +1060,20 @@ simulated function int LimitYaw(int yaw)
 // New function to start a hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
 simulated function StartHatchFire()
 {
-    if (HatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
+    if (TurretFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        HatchFireEffect = Spawn(FireEffectClass);
+        TurretFireEffect = Spawn(FireEffectClass);
     }
 
-    if (HatchFireEffect != none)
+    if (TurretFireEffect != none)
     {
-        AttachToBone(HatchFireEffect, FireAttachBone);
-        HatchFireEffect.SetRelativeLocation(FireEffectOffset);
-        HatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+        AttachToBone(TurretFireEffect, FireAttachBone);
+        TurretFireEffect.SetRelativeLocation(FireEffectOffset);
+        TurretFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
 
         if (FireEffectScale != 1.0)
         {
-            HatchFireEffect.SetEffectScale(FireEffectScale);
+            TurretFireEffect.SetEffectScale(FireEffectScale);
         }
     }
 }
@@ -1135,9 +1135,9 @@ simulated function DestroyEffects()
         CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
     }
 
-    if (HatchFireEffect != none)
+    if (TurretFireEffect != none)
     {
-        HatchFireEffect.Kill();
+        TurretFireEffect.Kill();
     }
 }
 
@@ -1215,7 +1215,7 @@ defaultproperties
     PitchUpLimit=15000
     PitchDownLimit=45000
     SoundRadius=272.7
-    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    FireEffectClass=class'DH_Effects.DHTurretFireEffect'
     FireEffectScale=1.0
     bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
     bAutoTraceNotify=true

@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M1CarbineBullet'
     AmmoClass=class'DH_Weapons.DH_M1CarbineAmmo'
-    Spread=85.0
+    Spread=100.0
     MaxVerticalRecoilAngle=410
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'

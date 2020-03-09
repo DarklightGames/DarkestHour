@@ -35,14 +35,20 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="M1 HE-T"
+    nProjectileDescriptions(1)="M60 WP"
+    nProjectileDescriptions(2)="M67 HEAT"
+
     InitialPrimaryAmmo=30
-    InitialSecondaryAmmo=5
+    InitialSecondaryAmmo=4
     InitialTertiaryAmmo=12
     MaxPrimaryAmmo=45
-    MaxSecondaryAmmo=6
+    MaxSecondaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
     MaxTertiaryAmmo=15
     Spread=0.003
     SecondarySpread=0.0036

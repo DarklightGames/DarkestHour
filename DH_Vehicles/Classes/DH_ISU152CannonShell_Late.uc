@@ -8,17 +8,20 @@ class DH_ISU152CannonShell_Late extends DH_ISU152CannonShell;
 defaultproperties
 {
     RoundType=RT_APBC
-    Tag="BR-540B" // APBC round adopted in late 1944
 
-    DHPenetrationTable(0)=13.0  // 100m
-    DHPenetrationTable(1)=13.0  // 250m
-    DHPenetrationTable(2)=13.0  // 500m
-    DHPenetrationTable(3)=12.5
-    DHPenetrationTable(4)=12.0  // 1000m
-    DHPenetrationTable(5)=11.75
-    DHPenetrationTable(6)=11.5  // 1500m
-    DHPenetrationTable(7)=11.0
-    DHPenetrationTable(8)=10.5  // 2000m
-    DHPenetrationTable(9)=9.5
-    DHPenetrationTable(10)=8.5  // 3000m
+    //Damage
+    ImpactDamage=3000 // has explosive filler - so higher than solid AP round
+
+    //Penetration - BR540b
+    DHPenetrationTable(0)=14.8  // 100m
+    DHPenetrationTable(1)=14.6  // 250m
+    DHPenetrationTable(2)=14.2  // 500m
+    DHPenetrationTable(3)=13.8
+    DHPenetrationTable(4)=13.5 // 1000m
+    DHPenetrationTable(5)=13.2
+    DHPenetrationTable(6)=12.8  // 1500m
+    DHPenetrationTable(7)=12.4
+    DHPenetrationTable(8)=12.2  // 2000m
+    DHPenetrationTable(9)=11.6
+    DHPenetrationTable(10)=11.0  // 3000m
 }

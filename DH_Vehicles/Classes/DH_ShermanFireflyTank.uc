@@ -67,7 +67,6 @@ defaultproperties
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_right'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-80.0,Y=0.0,Z=75.0)
-    HullFireChance=0.45
     FireAttachBone="Body"
     FireEffectOffset=(X=80.0,Y=-35.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_Dest'

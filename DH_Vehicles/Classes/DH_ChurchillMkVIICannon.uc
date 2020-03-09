@@ -36,13 +36,22 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
+
+
     ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(0)="M61 APC"
+    nProjectileDescriptions(1)="M48 HE-T"
+    nProjectileDescriptions(2)="M89 WP"
+
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=15
-    InitialTertiaryAmmo=6
+    InitialTertiaryAmmo=5
+
     MaxPrimaryAmmo=38
     MaxSecondaryAmmo=38
-    MaxTertiaryAmmo=8
+    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 

@@ -182,6 +182,13 @@ var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 
+// Delayed round ending
+var byte   RoundWinnerTeamIndex;
+var string RoundEndReason;
+
+var         bool bIsSurrenderVoteEnabled;
+var private byte SurrenderVotesInProgress[2];
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -235,7 +242,10 @@ replication
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
         DangerZoneNeutral,
-        DangerZoneBalance;
+        DangerZoneBalance,
+        RoundWinnerTeamIndex,
+        bIsSurrenderVoteEnabled,
+        SurrenderVotesInProgress;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -348,6 +358,19 @@ simulated function PostNetBeginPlay()
                 }
             }
         }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
+    {
+        DangerZoneUpdated();
+
+        OldDangerZoneNeutral = DangerZoneNeutral;
+        OldDangerZoneBalance = DangerZoneBalance;
     }
 }
 
@@ -1904,16 +1927,23 @@ simulated function DangerZoneUpdated()
     }
 }
 
-simulated function PostNetReceive()
+//==============================================================================
+// SURRENDER VOTE
+//==============================================================================
+
+simulated function bool IsSurrenderVoteInProgress(byte TeamIndex)
 {
-    super.PostNetReceive();
-
-    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
+    if (TeamIndex < arraycount(SurrenderVotesInProgress))
     {
-        DangerZoneUpdated();
+        return bool(SurrenderVotesInProgress[TeamIndex]);
+    }
+}
 
-        OldDangerZoneNeutral = DangerZoneNeutral;
-        OldDangerZoneBalance = DangerZoneBalance;
+function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
+{
+    if (TeamIndex < arraycount(SurrenderVotesInProgress))
+    {
+        SurrenderVotesInProgress[TeamIndex] = byte(bInProgress);
     }
 }
 
@@ -1926,6 +1956,7 @@ defaultproperties
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
+    RoundWinnerTeamIndex=255
 
     // Constructions
 
@@ -1934,29 +1965,31 @@ defaultproperties
     ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+    // ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_Hedgehog"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
 
     // Guns
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Medium"
 
     // Defenses
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers

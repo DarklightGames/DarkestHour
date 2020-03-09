@@ -152,6 +152,12 @@ var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 // Replication
 var                         EObjectiveState             OldObjState;
 
+// Danger zone
+var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone) float AxisInfluenceModifier;
+var(DHDangerZone) float AlliesInfluenceModifier;
+var(DHDangerZone) float NeutralInfluenceModifier;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -1355,6 +1361,21 @@ simulated function bool IsOwnedByTeam(byte TeamIndex)
     return false;
 }
 
+simulated function byte GetTeamIndex()
+{
+    switch (ObjState)
+    {
+        case OBJ_Axis:
+            return AXIS_TEAM_INDEX;
+        case OBJ_Allies:
+            return ALLIES_TEAM_INDEX;
+        case OBJ_Neutral:
+            return NEUTRAL_TEAM_INDEX;
+        default:
+            return -1;
+    }
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
@@ -1444,4 +1465,10 @@ defaultproperties
     bTankersCanCapture=true
     PlayersNeededToCapture=1
     AwardedReinforcementFactor=0.25
+
+    // Danger zone
+    BaseInfluenceModifier=1
+    AxisInfluenceModifier=1
+    AlliesInfluenceModifier=1
+    NeutralInfluenceModifier=1
 }

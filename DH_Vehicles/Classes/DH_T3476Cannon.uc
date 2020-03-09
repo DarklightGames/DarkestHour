@@ -18,9 +18,10 @@ defaultproperties
 
     // Turret armor (model 1941)
     FrontArmorFactor=5.2
-    LeftArmorFactor=5.2
-    RightArmorFactor=5.2
+    LeftArmorFactor=4.5
+    RightArmorFactor=4.5
     RearArmorFactor=4.5
+    FrontArmorSlope=15.0
     LeftArmorSlope=30.0
     RightArmorSlope=30.0
     RearArmorSlope=30.0
@@ -40,6 +41,10 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
+
+    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
+    nProjectileDescriptions(1)="OF-350"
+
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=25
     MaxPrimaryAmmo=27
@@ -66,10 +71,10 @@ defaultproperties
     CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.t34_76_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.t34_76_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.t34_76_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.t34_76_reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)

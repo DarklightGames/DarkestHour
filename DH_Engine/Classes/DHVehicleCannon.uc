@@ -20,6 +20,8 @@ var     bool                bHasAddedSideArmor;     // has side skirts that will
 var     byte                MainAmmoChargeExtra[3];  // current quantity of each round type (using byte for more efficient replication)
 var     class<Projectile>   TertiaryProjectileClass; // new option for a 3rd type of cannon ammo
 var localized array<string> ProjectileDescriptions;  // text for each round type to display on HUD
+var localized array<string> nProjectileDescriptions; // "Native" or Technical name for projectile
+
 var     int                 InitialTertiaryAmmo;     // starting load of tertiary round type
 var     float               SecondarySpread;         // spread for secondary ammo type
 var     float               TertiarySpread;

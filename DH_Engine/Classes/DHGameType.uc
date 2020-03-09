@@ -32,5 +32,5 @@ defaultproperties
 {
     GameTypeName="Unknown Game Type"
 
-    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=0.0),(InVal=5400.0,OutVal=100.0),(InVal=10800.0,OutVal=1000.0)))
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=7200.0,OutVal=0.0),(InVal=10800.0,OutVal=100.0),(InVal=14400.0,OutVal=1000.0)))
 }

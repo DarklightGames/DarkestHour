@@ -15,7 +15,7 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Cannon armour (mantlet)
-    GunMantletArmorFactor=10.0
+    GunMantletArmorFactor=20.0
     GunMantletSlope=35.0
 
     // Cannon movement
@@ -35,6 +35,10 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39/43"
+    nProjectileDescriptions(1)="Sprgr.Patr."
+
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=7
     MaxPrimaryAmmo=42

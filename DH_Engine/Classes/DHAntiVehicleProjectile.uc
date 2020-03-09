@@ -11,12 +11,13 @@ enum ERoundType
 {
     RT_APC,   // either APC (with just armor-piercing cap) or APCBC (with both armor-piercing cap & ballistic cap)
     RT_HE,
-    RT_HVAP,  // HVAP in US parlance, known elsewhere as APCR (same thing)
-    RT_APDS,
+    RT_HVAP,  // HVAP in US parlance - full caliber APCR round
+    RT_APDS,  // Sub-caliber tungsten round, discarding sabot; also APCR (sabot'd round that does not discard - Used by Sovs and Germans)
     RT_HEAT,  // includes infantry AT HEAT weapons (e.g. rockets & PIAT)
     RT_Smoke,
     RT_AP,    // basic armor-piercing round, without any cap
     RT_APBC,  // with ballistic cap but not armor-piercing cap (used by Soviets)
+    RT_APBULLET // armor-piercing bullet, like PTRD or .50 cal
 };
 
 // Projectile characteristics
@@ -43,6 +44,11 @@ var     sound           ShatterSound[4];         // sound of the round shatterin
 var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
 var     class<Effects>  CoronaClass;             // tracer effect class
 var     Effects         Corona;                  // shell tracer
+
+//New Effects
+var     bool                    bHasShellTrail;
+var     class<Emitter>          TankShellTrailClass;         // shell "streak" emitter
+var     Emitter                 ShellTrail;
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -71,6 +77,10 @@ var     bool            bDidExplosionFX;            // already did the explosion
 // Impact damage
 var class<DamageType>   ShellImpactDamage;
 var     int             ImpactDamage;
+
+// Fire variables (new)
+var float   HullFireChance;
+var float   EngineFireChance;
 
 // Deflection
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
@@ -498,6 +508,11 @@ simulated function BlowUp(vector HitLocation)
         Corona.Destroy();
     }
 
+    if (ShellTrail != none)
+    {
+        ShellTrail.Destroy();
+    }
+
     super.BlowUp(HitLocation);
 }
 
@@ -852,7 +867,7 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetPhysics(PHYS_Falling);
-        AmbientSound = none;
+        AmbientSound = none; //TODO: add some ricochet 'whistle' sound here
     }
 
     bTrueBallistics = false;
@@ -861,6 +876,7 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 
     // Reflect off hit surface, with damping
     VNorm = (Velocity dot HitNormal) * HitNormal;
+    VNorm = VNorm + VRand() * FRand() * 10000.0; // add random spread to deflect
     Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
     Speed = VSize(Velocity);
 }
@@ -1023,6 +1039,11 @@ simulated function Destroyed()
     {
         Corona.Destroy();
     }
+
+    if (ShellTrail != none)
+    {
+        ShellTrail.Destroy();
+    }
 }
 
 simulated function bool ShouldDrawDebugLines()
@@ -1088,10 +1109,13 @@ defaultproperties
     BlurEffectScalar=1.9
     PenetrationMag=100.0
 
+    HullFireChance=0.0
+    EngineFireChance=0.0
+
     // From deprecated ROAntiVehicleProjectile class:
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
-    DampenFactor=0.5
-    DampenFactorParallel=0.2
+    DampenFactor=1.5 //0.5
+    DampenFactorParallel=0.5 //0.2
     DestroyTime=0.2
     bFirstHit=true
 }

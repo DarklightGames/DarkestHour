@@ -61,7 +61,7 @@ defaultproperties
     // Movement
     MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(4)=0.7
-    TransRatio=0.072
+    TransRatio=0.08
 
     // Damage
     Health=600
@@ -121,7 +121,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.84
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
-//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1S' // TODO: get this icon made
+  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

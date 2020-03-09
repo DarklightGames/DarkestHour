@@ -25,11 +25,22 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
+    TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
+
+
     ProjectileDescriptions(0)="APBC"
+    ProjectileDescriptions(2)="APCR"
+
+    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
+    nProjectileDescriptions(1)="OF-350"
+    nProjectileDescriptions(2)="BR-350P"
+
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=20
+    InitialTertiaryAmmo=4
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=60
+    MaxTertiaryAmmo=6
     SecondarySpread=0.002
 
     // Sounds

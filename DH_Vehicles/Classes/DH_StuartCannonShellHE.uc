@@ -7,13 +7,20 @@ class DH_StuartCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=1.2
-    DHPenetrationTable(1)=1.1
-    DHPenetrationTable(2)=1.0
-    DHPenetrationTable(3)=1.0
-    DHPenetrationTable(4)=1.0
+    Speed=53291.0
+    MaxSpeed=53291.0
     ShellDiameter=3.7
+    BallisticCoefficient=0.984 //TODO: double check this
+
+    //Damage
     ImpactDamage=185
+    Damage=150.0
+    DamageRadius=800.0
+    MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
+    HullFireChance=0.15
+    EngineFireChance=0.40
+
+    //Effects
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
@@ -22,11 +29,11 @@ defaultproperties
     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
-    BallisticCoefficient=0.984
-    Speed=53291.0
-    MaxSpeed=53291.0
-    Damage=150.0
-    DamageRadius=800.0
-    MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
-    Tag="M63 HE"
+
+    //Penetration
+    DHPenetrationTable(0)=1.2
+    DHPenetrationTable(1)=1.1
+    DHPenetrationTable(2)=1.0
+    DHPenetrationTable(3)=1.0
+    DHPenetrationTable(4)=1.0
 }

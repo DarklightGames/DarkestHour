@@ -7,6 +7,29 @@ class DH_PanzerIVCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=45270.0
+    MaxSpeed=45270.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.52
+
+    //Damage
+    ImpactDamage=650
+    HullFireChance=0.45
+    EngineFireChance=0.85
+
+    //Penetration
+    DHPenetrationTable(0)=13.5
+    DHPenetrationTable(1)=13.0
+    DHPenetrationTable(2)=12.3
+    DHPenetrationTable(3)=11.6
+    DHPenetrationTable(4)=10.9
+    DHPenetrationTable(5)=10.3
+    DHPenetrationTable(6)=9.7
+    DHPenetrationTable(7)=9.2
+    DHPenetrationTable(8)=8.6
+    DHPenetrationTable(9)=7.6
+    DHPenetrationTable(10)=6.8
+
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
     MechanicalRanges(2)=(Range=200,RangeValue=37.0)
     MechanicalRanges(3)=(Range=300,RangeValue=41.0)
@@ -33,21 +56,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=318.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=338.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=13.5
-    DHPenetrationTable(1)=13.0
-    DHPenetrationTable(2)=12.3
-    DHPenetrationTable(3)=11.6
-    DHPenetrationTable(4)=10.9
-    DHPenetrationTable(5)=10.3
-    DHPenetrationTable(6)=9.7
-    DHPenetrationTable(7)=9.2
-    DHPenetrationTable(8)=8.6
-    DHPenetrationTable(9)=7.6
-    DHPenetrationTable(10)=6.8
-    ShellDiameter=7.5
-    ImpactDamage=650
-    BallisticCoefficient=2.52
-    Speed=45270.0
-    MaxSpeed=45270.0
-    Tag="PzGr.39"
 }

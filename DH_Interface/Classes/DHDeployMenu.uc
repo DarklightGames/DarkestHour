@@ -96,7 +96,8 @@ var localized   string                      NoneText,
                                             BotsText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
-                                            RecommendJoiningSquadText;
+                                            RecommendJoiningSquadText,
+                                            UnassignedPlayersCaptionText;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -116,6 +117,14 @@ var             EMapMode                    MapMode;
 
 var Texture LockIcon;
 var Texture UnlockIcon;
+
+var localized string        SurrenderConfirmBaseText;
+var localized string        SurrenderConfirmNominationText;
+var localized string        SurrenderConfirmEndRoundText;
+var localized string        SurrenderButtonText[2];
+var localized array<string> SurrenderResponseMessages;
+var int                     SurrenderButtonUnlockTime;
+var int                     SurrenderButtonCooldownSeconds;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -414,26 +423,43 @@ function UpdateSpawnPoints()
 function UpdateStatus()
 {
     local int TeamSizes[2];
+    local bool bSurrenderButtonEnabled;
 
-    if (GRI != none)
+    if (GRI == none || PC == none)
     {
-        GRI.GetTeamSizes(TeamSizes);
-
-        l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
-        l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
+        return;
     }
+
+    GRI.GetTeamSizes(TeamSizes);
+
+    l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
+    l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
 
     l_Status.Caption = GetStatusText();
 
-    // Suicide button status
-    if (PC != none && PC.Pawn != none)
+    // Suicide
+    SetEnabled(b_MenuOptions[1], PC.Pawn != none);
+
+    // Surrender
+    bSurrenderButtonEnabled = GRI.bIsSurrenderVoteEnabled;
+
+    if (bSurrenderButtonEnabled)
     {
-        b_MenuOptions[1].MenuStateChange(MSAT_Blurry);
+        b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
+
+        if (!PC.bSurrendered && GRI.ElapsedTime < SurrenderButtonUnlockTime)
+        {
+            bSurrenderButtonEnabled = false;
+            b_MenuOptions[2].Caption @= "(" $ class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
+        }
+
+        bSurrenderButtonEnabled = bSurrenderButtonEnabled &&
+                                  (class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
+                                  !GRI.IsSurrenderVoteInProgress(PC.GetTeamNum()) &&
+                                  GRI.RoundWinnerTeamIndex > 1;
     }
-    else
-    {
-        b_MenuOptions[1].MenuStateChange(MSAT_Disabled);
-    }
+
+    SetEnabled(b_MenuOptions[2], bSurrenderButtonEnabled);
 }
 
 function string GetStatusText()
@@ -649,11 +675,13 @@ function bool OnClick(GUIComponent Sender)
     local GUIQuestionPage ConfirmWindow;
     local string          ConfirmMessage;
 
+    PC = DHPlayer(PlayerOwner());
+
     switch (Sender)
     {
         // Disconnect
         case b_MenuOptions[0]:
-            PlayerOwner().ConsoleCommand("DISCONNECT");
+            PC.ConsoleCommand("DISCONNECT");
             CloseMenu();
             break;
 
@@ -662,9 +690,12 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("SUICIDE");
             break;
 
-        // Kick vote
+        // Surrender
         case b_MenuOptions[2]:
-            Controller.OpenMenu(Controller.KickVotingMenu);
+            if (PC != none)
+            {
+                PC.ServerTeamSurrenderRequest(true);
+            }
             break;
 
         // Map vote
@@ -774,6 +805,15 @@ function bool OnClick(GUIComponent Sender)
     }
 
     return false;
+}
+
+function OnSurrenderConfirmButtonClick(byte Button)
+{
+    if (Button == QBTN_YES && PC != none && GRI != none)
+    {
+        PC.ServerTeamSurrenderRequest();
+        SurrenderButtonUnlockTime = GRI.ElapsedTime + SurrenderButtonCooldownSeconds;
+    }
 }
 
 function OnRecommendJoiningSquadButtonClick(byte Button)
@@ -1086,8 +1126,11 @@ function AutoSelectVehicle()
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int    Result;
-    local string ErrorMessage;
+    local int Result;
+    local string MessageText;
+    local GUIQuestionPage ConfirmWindow;
+    local int TeamSizes[2];
+    local byte TeamIndex;
 
     Result = int(MsgLife);
 
@@ -1118,15 +1161,63 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 break;
 
             default:
-                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
-                Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+                MessageText = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
+                Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
                 break;
+        }
+    }
+    else if (Msg ~= "NOTIFY_GUI_SURRENDER_RESULT")
+    {
+        if (Result == -1)
+        {
+            // Player can surrender; show the confirmation prompt
+
+            if (PC != none && GRI != none)
+            {
+                GRI.GetTeamSizes(TeamSizes);
+                TeamIndex = PC.GetTeamNum();
+
+                MessageText = default.SurrenderConfirmBaseText;
+
+                if (TeamIndex < arraycount(TeamSizes) && TeamSizes[TeamIndex] == 1)
+                {
+                    // The round will end immediately
+                    MessageText @= default.SurrenderConfirmEndRoundText;
+                }
+                else
+                {
+                    // The vote will be nominated
+                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
+                }
+
+                ConfirmWindow = Controller.ShowQuestionDialog(MessageText, QBTN_YesNo, QBTN_Yes);
+                ConfirmWindow.OnButtonClick = OnSurrenderConfirmButtonClick;
+            }
+        }
+        else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
+        {
+            // The request was denied by the server
+
+            switch (Result)
+            {
+                case 8:
+                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
+                    break;
+                default:
+                    MessageText = SurrenderResponseMessages[Result];
+            }
+
+            Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
+        }
+        else
+        {
+            Warn("Received invalid result code");
         }
     }
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
     {
-        ErrorMessage = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
-        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
 
     SetButtonsEnabled(true);
@@ -1214,7 +1305,7 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(RI.PrimaryWeapons[i].Item.default.ItemName) == -1)
                     {
                         cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
                     }
@@ -1222,7 +1313,7 @@ function InternalOnChange(GUIComponent Sender)
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(RI.SecondaryWeapons[i].Item.default.ItemName) == -1)
                     {
                         cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
                     }
@@ -1540,7 +1631,7 @@ function UpdateSquads()
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
-    local int  TeamIndex, i, j, k;
+    local int TeamIndex, SquadLimit, i, j, k;
     local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
 
     super.Timer();
@@ -1588,9 +1679,10 @@ function UpdateSquads()
     }
 
     bIsInASquad = PRI.IsInSquad();
+    SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
     // Go through the active squads
-    for (i = 0; i < SRI.GetTeamSquadLimit(TeamIndex); ++i)
+    for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
@@ -1693,7 +1785,7 @@ function UpdateSquads()
         ++j;
     }
 
-    if (!bIsInASquad && j < p_Squads.SquadComponents.Length)
+    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
     {
         C = p_Squads.SquadComponents[j++];
 
@@ -1709,20 +1801,71 @@ function UpdateSquads()
         SetVisible(C.eb_SquadName, false);
     }
 
-    while (j < p_Squads.SquadComponents.Length)
+    while (j < p_Squads.SquadComponents.Length - 1)
     {
         SetVisible(p_Squads.SquadComponents[j], false);
         ++j;
     }
+
+    // Show the unassigned category
+    SRI.GetUnassignedPlayers(TeamIndex, Members);
+
+    if (j >= p_Squads.SquadComponents.Length)
+    {
+        return;
+    }
+
+    if (Members.Length > 0)
+    {
+        C = p_Squads.SquadComponents[j];
+        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+        C.SquadIndex = -1;
+
+        SetVisible(C, true);
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, true);
+        SetVisible(C.eb_SquadName, false);
+        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
+
+        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+        // Add or remove entries to match the member count.
+        while (C.li_Members.ItemCount < Members.Length)
+        {
+            C.li_Members.Add("");
+        }
+
+        while (C.li_Members.ItemCount > Members.Length)
+        {
+            C.li_Members.Remove(0, 1);
+        }
+
+        // Update the text and associated object for each item.
+        for (k = 0; k < Members.Length; ++k)
+        {
+            C.li_Members.SetItemAtIndex(k, Members[k].PlayerName);
+            C.li_Members.SetObjectAtIndex(k, Members[k]);
+        }
+
+        // Re-select the previous selection.
+        C.li_Members.SelectByObject(SavedPRI);
+    }
+    else
+    {
+        SetVisible(p_Squads.SquadComponents[j], false);
+    }
 }
 
-function static SetVisible(GUIComponent C, bool bVisible)
+static function SetEnabled(GUIComponent C, bool bEnabled)
 {
     if (C != none)
     {
-        C.SetVisibility(bVisible);
-
-        if (bVisible)
+        if (bEnabled)
         {
             C.EnableMe();
         }
@@ -1730,6 +1873,15 @@ function static SetVisible(GUIComponent C, bool bVisible)
         {
             C.DisableMe();
         }
+    }
+}
+
+static function SetVisible(GUIComponent C, bool bVisible)
+{
+    if (C != none)
+    {
+        C.SetVisibility(bVisible);
+        SetEnabled(C, bVisible);
     }
 }
 
@@ -1752,6 +1904,27 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+    UnassignedPlayersCaptionText="Unassigned"
+
+    SurrenderButtonCooldownSeconds=30
+    SurrenderConfirmBaseText="Are you sure you want to surrender?"
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
+
+    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[1]="Keep fighting"
+
+    SurrenderResponseMessages[0]="Fatal error!";
+    SurrenderResponseMessages[1]="You haven't picked a team.";
+    SurrenderResponseMessages[2]="Round hasn't started yet.";
+    SurrenderResponseMessages[3]="Surrender vote is disabled.";
+    SurrenderResponseMessages[4]="Vote is already in progress.";
+    SurrenderResponseMessages[5]="You've already surrendered.";
+    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
+    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
+    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[9]="You cannot surrender this early.";
+    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
 
     MapMode=MODE_Map
     bButtonsEnabled=true
@@ -2148,7 +2321,7 @@ defaultproperties
     b_MenuOptions(1)=SuicideButtonObject
 
     Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Kick Vote"
+        Caption="Surrender"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
@@ -2423,4 +2596,3 @@ defaultproperties
     LockIcon=Texture'DH_InterfaceArt2_tex.Icons.lock'
     UnlockIcon=Texture'DH_InterfaceArt2_tex.Icons.unlock'
 }
-

@@ -33,7 +33,13 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
+
     ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.34"
+    nProjectileDescriptions(2)="Nbgr.Kw.K"
+
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=16
     InitialTertiaryAmmo=4
@@ -63,7 +69,7 @@ defaultproperties
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings

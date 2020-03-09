@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_P38Attachment'
     PickupClass=class'DH_Weapons.DH_P38Pickup'
 
-    Mesh=SkeletalMesh'Axis_P38_1st.P-38-Mesh'
+    Mesh=SkeletalMesh'DH_P38_1st.P-38-Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Pistols.p38_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2

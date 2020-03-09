@@ -62,5 +62,4 @@ defaultproperties
     RangePositionX=0.02
     RangeRingScale=0.67
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

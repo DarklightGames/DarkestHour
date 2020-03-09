@@ -88,9 +88,16 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+
     ProjectileDescriptions(0)="Mixed"
     ProjectileDescriptions(1)="AP"
     ProjectileDescriptions(2)="HE-T"
+
+    nProjectileDescriptions(0)="PzGr.+Sprgr.39"
+    nProjectileDescriptions(1)="PzGr."
+    nProjectileDescriptions(2)="Sprgr.39"
+
+
     NumPrimaryMags=15
     NumSecondaryMags=15
     NumTertiaryMags=15

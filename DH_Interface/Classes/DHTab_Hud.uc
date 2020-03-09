@@ -13,11 +13,13 @@ var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
 var automated moCheckBox    ch_ShowRallyPoint;
+var automated moCheckBox    ch_UseTechnicalAmmoNames;
 var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
 var bool bShowIndicators;
 var bool bShowRallyPoint;
+var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -32,6 +34,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
     i_BG1.ManageComponent(nu_MinPacketLoss);
+    i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -108,6 +111,17 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             bUseNativeRoleNamesD = bUseNativeRoleNames;
             ch_UseNativeRoleNames.SetComponentValue(bUseNativeRoleNames,true);
+            break;
+        case ch_UseTechnicalAmmoNames:
+            if (H != none)
+            {
+                bUseTechnicalAmmoNames = H.bUseTechnicalAmmoNames;
+            }
+            else
+            {
+                bUseTechnicalAmmoNames = class'DHHud'.default.bUseTechnicalAmmoNames;
+            }
+            ch_UseTechnicalAmmoNames.SetComponentValue(bUseTechnicalAmmoNames,true);
             break;
         case ch_ShowMapFirstSpawn:
             if (DHP != none)
@@ -303,6 +317,14 @@ function SaveSettings()
             bSave = true;
         }
 
+        if (H.bUseTechnicalAmmoNames != bUseTechnicalAmmoNames)
+        {
+            H.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
+            PC.ConsoleCommand("set DH_Engine.DHHud bUseTechnicalAmmoNames" @ string(bUseTechnicalAmmoNames));
+            bSave = true;
+        }
+
+
         if (bSave)
         {
             H.SaveConfig();
@@ -316,6 +338,7 @@ function SaveSettings()
         class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+        class'DHHud'.default.bUseTechnicalAmmoNames = bUseTechnicalAmmoNames;
         class'DHHud'.static.StaticSaveConfig();
     }
 }
@@ -354,6 +377,9 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_ShowRallyPoint:
             bShowRallyPoint = ch_ShowRallyPoint.IsChecked();
+            break;
+        case ch_UseTechnicalAmmoNames:
+            bUseTechnicalAmmoNames = ch_UseTechnicalAmmoNames.IsChecked();
             break;
         default:
             super.InternalOnChange(Sender);
@@ -404,7 +430,7 @@ defaultproperties
         WinLeft=0.555313
         WinWidth=0.373749
         WinHeight=0.034156
-        TabOrder=26
+        TabOrder=27
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
@@ -420,7 +446,7 @@ defaultproperties
         WinLeft=0.555313
         WinWidth=0.373749
         WinHeight=0.034156
-        TabOrder=27
+        TabOrder=29
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
@@ -443,7 +469,7 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
         bAutoSizeCaption=true
-        TabOrder=28
+        TabOrder=30
     End Object
     nu_MinPacketLoss=MinPacketLoss_NU
 
@@ -471,7 +497,7 @@ defaultproperties
         WinTop=0.481406
         WinLeft=0.555313
         WinWidth=0.373749
-        TabOrder=26
+        TabOrder=28
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
@@ -507,6 +533,22 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeRoleNames'
+
+    Begin Object Class=DHmoCheckBox Name=UseTechnicalAmmoNames
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Use Technical Ammo Names (Tanks/AT Guns)"
+        OnCreateComponent=UseTechnicalAmmoNames.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.822959
+        WinLeft=0.555313
+        WinWidth=0.373749
+        WinHeight=0.034156
+        TabOrder=26
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+    End Object
+    ch_UseTechnicalAmmoNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseTechnicalAmmoNames'
 
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left

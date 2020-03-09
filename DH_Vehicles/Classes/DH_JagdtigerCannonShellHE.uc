@@ -7,6 +7,46 @@ class DH_JagdtigerCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=53110.0
+    MaxSpeed=53110.0
+    ShellDiameter=12.8
+    BallisticCoefficient=3.9
+
+    //Damage
+    ImpactDamage=900
+    Damage=700.0
+    DamageRadius=2715.0
+    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
+    PenetrationMag=1500.0
+    HullFireChance=0.55
+    EngineFireChance=1.0
+
+    bDebugInImperial=false
+
+    //Effects
+    bHasTracer=false
+
+    //Effects
+    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+
+    //Penetration
+    DHPenetrationTable(0)=10.5
+    DHPenetrationTable(1)=9.9
+    DHPenetrationTable(2)=9.5
+    DHPenetrationTable(3)=8.9
+    DHPenetrationTable(4)=8.5
+    DHPenetrationTable(5)=8.1
+    DHPenetrationTable(6)=7.7
+    DHPenetrationTable(7)=7.3
+    DHPenetrationTable(8)=6.7
+    DHPenetrationTable(9)=6.2
+    DHPenetrationTable(10)=5.9
+
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
     ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
     ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
@@ -37,32 +77,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=212.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=227.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=10.5
-    DHPenetrationTable(1)=9.9
-    DHPenetrationTable(2)=9.5
-    DHPenetrationTable(3)=8.9
-    DHPenetrationTable(4)=8.5
-    DHPenetrationTable(5)=8.1
-    DHPenetrationTable(6)=7.7
-    DHPenetrationTable(7)=7.3
-    DHPenetrationTable(8)=6.7
-    DHPenetrationTable(9)=6.2
-    DHPenetrationTable(10)=5.9
-    ShellDiameter=12.8
-    bDebugInImperial=false
-    PenetrationMag=1500.0
-    ImpactDamage=900
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
-    BallisticCoefficient=3.9
-    Speed=53110.0
-    MaxSpeed=53110.0
-    Damage=700.0
-    DamageRadius=2715.0
-    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
-    Tag="Schw.Spgr.Patr"
 }

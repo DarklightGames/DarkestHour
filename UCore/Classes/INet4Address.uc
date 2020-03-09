@@ -8,6 +8,20 @@ class INet4Address extends Object;
 var private int Addresses[4];
 var private int Port;
 
+static function string TrimPort(string NetworkAddress)
+{
+    local int i;
+
+    i = InStr(NetworkAddress, ":");
+
+    if (i >= 0)
+    {
+        NetworkAddress = Left(NetworkAddress, i);
+    }
+
+    return NetworkAddress;
+}
+
 function INet4Address StripPort()
 {
     Port = 0;

@@ -39,8 +39,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
+
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="Mk.IV APC"
+    nProjectileDescriptions(1)="Mk.I APDS"
+    nProjectileDescriptions(2)="Mk.I HE-T"
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=2
     InitialTertiaryAmmo=8

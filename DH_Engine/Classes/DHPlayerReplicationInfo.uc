@@ -34,12 +34,15 @@ var     int                     CategoryScores[2];
 var     localized string        SquadLeaderAbbreviation;
 var     localized string        AssistantAbbreviation;
 
+
+var     int                     CountryIndex;
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores;
+        TotalScore, CategoryScores, CountryIndex;
 }
 
 simulated function string GetNamePrefix()
@@ -142,4 +145,5 @@ defaultproperties
     SquadMemberIndex=-1
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
+    CountryIndex=-1
 }

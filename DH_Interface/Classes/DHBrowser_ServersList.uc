@@ -9,6 +9,7 @@ const MAX_RULES_REFRESH_ATTEMPTS = 5;
 
 var(Style) noexport GUIStyles           WrongVersionStyle;
 var(Style) string                       WrongVersionStyleName;
+var        color                        WrongVersionColor;
 
 var int    ServerRulesRefreshAttempts;
 
@@ -89,6 +90,8 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
     // Choose style, we will grey out servers which don't match version
     if (VersionString != class'DarkestHourGame'.default.Version.ToString())
     {
+        VersionString = class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
+
         if (bSelected)
         {
             WrongVersionStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
@@ -188,6 +191,7 @@ defaultproperties
     SectionStyleName="DHListSelectionStyle"
     StyleName="DHListSelectionStyle"
     WrongVersionStyleName="DHListSelectionGreyStyle"
+    WrongVersionColor=(R=188,G=32,B=38)
 
     ColumnHeadings(0)=""
     ColumnHeadings(1)="Server Name"

@@ -36,7 +36,7 @@ function bool AsBoolean()
     return false;
 }
 
-static function JSONString Create(string Value)
+static function JSONString Create(coerce string Value)
 {
     local JSONString S;
 

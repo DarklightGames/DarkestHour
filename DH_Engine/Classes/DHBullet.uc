@@ -673,12 +673,14 @@ simulated function Deflect(vector HitNormal)
 
     bHasDeflected = true;
 
-    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
+    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) //14.4 m/s
     {
+        AmbientGlow=0.0;
+        LightBrightness=0.0;
         TracerEffect.Destroy();
     }
 
-    if (StaticMesh != DeflectedMesh)
+    if (StaticMesh != DeflectedMesh) //swaps to ball mesh from streak mesh, but still has trail until below 14.4 m/s
     {
         SetStaticMesh(DeflectedMesh);
     }
@@ -693,7 +695,7 @@ simulated function Deflect(vector HitNormal)
 
         // Reflect off Wall with damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread
+        VNorm = VNorm + VRand() * FRand() * 10000.0; // add random spread 5000.0
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
         Bounces--;
     }
@@ -788,11 +790,11 @@ defaultproperties
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0
-    TracerPullback=150.0
+    TracerPullback=150.0//150.0
     bBounce=true
-    Bounces=2
-    DampenFactor=0.1
-    DampenFactorParallel=0.05
+    Bounces=1 //2
+    DampenFactor=0.05//0.1
+    DampenFactorParallel=0.10//0.05
 
     // From deprecated ROBullet class:
     bUseCollisionStaticMesh=true

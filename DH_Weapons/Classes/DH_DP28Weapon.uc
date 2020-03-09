@@ -38,7 +38,8 @@ defaultproperties
 
     MaxNumPrimaryMags=4
     InitialNumPrimaryMags=4
-    NumMagsToResupply=1 // TODO: seems a low resupply
+    NumMagsToResupply=1
+    bCanHaveInitialNumMagsChanged=false  //makes sense because carried ammo is primarily limited by "dead weight" of the pan magazines rather than ammo itself
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_DP28Barrel'

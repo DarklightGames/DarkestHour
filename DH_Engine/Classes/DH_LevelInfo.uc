@@ -40,6 +40,11 @@ enum EWeather
     WEATHER_Snowy
 };
 
+struct SNationString
+{
+    var string Germany, USA, Britain, Canada, USSR;
+};
+
 struct ArtilleryType
 {
     var() int                   TeamIndex;
