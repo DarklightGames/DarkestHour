@@ -87,6 +87,10 @@ simulated function PostBeginPlay()
 
 simulated function Destroyed()
 {
+    local actor TraceHitActor;
+    local vector TraceHitLocation;
+    local vector TraceHitNormal;
+
     if (Fear != none) Fear.Destroy();
     if (_TrailInstance != none) _TrailInstance.Destroy();
 
@@ -99,7 +103,20 @@ simulated function Destroyed()
         if (Level.NetMode != NM_DedicatedServer)
         {
             PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
-            Spawn(ExplosionDecal, self,, Location, rotator(_HitVelocity)); // rotator(vect(0,0,-1))
+
+            TraceHitActor = Trace(TraceHitLocation,
+                                  TraceHitNormal,
+                                  Location + (16.0 * Normal(_HitVelocity)),
+                                  Location,
+                                  true);
+
+            // Spawn explosion decal only when terrain or a static mesh is hit
+            if (TraceHitActor != none &&
+                !TraceHitActor.IsA('DHCollisionMeshActor') &&
+                (TraceHitActor.IsA('TerrainInfo') || TraceHitActor.IsA('StaticMeshActor')))
+            {
+                Spawn(ExplosionDecal, self,, Location, rotator(_HitVelocity)); // rotator(vect(0,0,-1))
+            }
         }
     }
 
