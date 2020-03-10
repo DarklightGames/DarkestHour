@@ -40,5 +40,28 @@ defaultproperties
     AltFireSpawnOffsetX=0.0
 
     StowageStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.turret.turret_stowage'
+
+    // Projectiles
+    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=13
+    InitialTertiaryAmmo=2
+    MaxPrimaryAmmo=43
+    MaxSecondaryAmmo=26
+    MaxTertiaryAmmo=2
+    SecondarySpread=0.00135
+    TertiarySpread=0.001
+
+    ProjectileDescriptions(0)="APCBC"
+    ProjectileDescriptions(1)="HE"
+    ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(0)="M62 APC"
+    nProjectileDescriptions(1)="M42 HE"
+    nProjectileDescriptions(2)="M88 HC"
 }
 
