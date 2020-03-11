@@ -12,6 +12,12 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
     VehicleNameString="Sherman M4A3E8 "
+
+    VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.Menu.body'
+    VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_look'
+    VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_rot'
+    SpawnOverlay(0)=Texture'DH_ShermanM4A3E8_tex.Menu.sherman_m4a3e8'
+
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E8')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A3E8')
 

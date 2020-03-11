@@ -96,5 +96,10 @@ defaultproperties
 
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
     LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
+
+    VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.Menu.body_fury'
+    VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_fury_look'
+    VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_fury_rot'
+    SpawnOverlay(0)=Texture'DH_ShermanM4A3E8_tex.Menu.sherman_m4a3e8_fury'
 }
 
