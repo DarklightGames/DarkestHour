@@ -201,11 +201,11 @@ def main():
         print('error could not resolve mod system directory')
         sys.exit(1)
 
-    config = ConfigParserMultiOpt()
 
     # read the default config 
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
     if os.path.isfile(default_config_path):
+        config = ConfigParserMultiOpt()
         config.read(default_config_path)
         default_packages = config.get('Editor.EditorEngine', '+editpackages')
     else:
@@ -216,6 +216,7 @@ def main():
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
     paths = []
     if os.path.isfile(config_path):
+        config = ConfigParserMultiOpt()
         config.read(config_path)
         paths = config.get('Core.System', 'paths')
 
@@ -262,6 +263,7 @@ def main():
 
     # get packages from generated INI?
     if os.path.isfile(config_path):
+        config = ConfigParserMultiOpt()
         config.read(config_path)
         packages = config.get('Editor.EditorEngine', 'editpackages')
     else:
