@@ -8,6 +8,7 @@ class DH_M1928_30rndWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1928 Thompson /30rnd"
+	SwayModifyFactor=0.88 // +0.08 
     FireModeClass(0)=class'DH_Weapons.DH_M1928_30rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1928_30rndAttachment'
