@@ -1690,6 +1690,7 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints
 
     return ActiveSquadRallyPoints;
 }
+
 // TODO: Some errors are more processing intensive than others.
 // Only the actionable, cheap ones should be in this check. Things like the
 // the world traces etc. should be omitted.

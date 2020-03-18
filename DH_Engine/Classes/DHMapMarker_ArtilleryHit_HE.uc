@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMarker_ArtilleryHit_HE extends DHMarker_ArtilleryHit abstract;
+class DHMapMarker_ArtilleryHit_HE extends DHMapMarker_ArtilleryHit;
 
 defaultproperties
 {

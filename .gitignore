@@ -104,4 +104,6 @@ XWebAdmin/
 */UCPP
 UserLogs
 *.rus
-.vs/*
+.vs/VSWorkspaceState.json
+.vs/slnx.sqlite
+.vs/red orchestra/v16/.suo

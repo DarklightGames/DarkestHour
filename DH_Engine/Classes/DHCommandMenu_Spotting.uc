@@ -47,7 +47,6 @@ function OnSelect(int OptionIndex, vector Location)
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    Log("Spotting: " $ Options[OptionIndex].OptionalObject);
     MapMarkerClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
 
     if (GRI == none || PRI == none || MapMarkerClass == none)

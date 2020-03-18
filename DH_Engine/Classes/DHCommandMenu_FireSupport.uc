@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHCommandMenu_FireSupport extends DHCommandMenu
-dependson(DHGameReplicationInfo);
+class DHCommandMenu_FireSupport extends DHCommandMenu;
 
 function OnSelect(int Index, vector Location)
 {
@@ -14,29 +13,27 @@ function OnSelect(int Index, vector Location)
     local vector MapLocation;
 
     PC = GetPlayerController();
-    if (PC == none || Index < 0 || Index >= Options.Length)
-    {
-        return;
-    }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
+
+    if (PC == none || Index < 0 || Index >= Options.Length)
+    {
+        return;
+    }
+
     switch (Index)
     {
         case 0: // Artillery barrage
             PC.ServerSaveArtilleryPosition();
             break;
         case 1: // Fire request (HE)
-            Log("pre HE PC.AddArtilleryRequest(Marker)");
-            PC.ServerAddArtilleryMarker(class'DH_Engine.DHMarker_ArtilleryRequest_HE', MapLocation.X, MapLocation.Y);
-            Log("post HE PC.AddArtilleryRequest(Marker)");
+            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
             break;
         case 2: // Fire request (Smoke)
-            //Log("pre smoke PC.ServerAddArtilleryMarker(Marker)");
-            PC.ServerAddArtilleryMarker(class'DH_Engine.DHMarker_ArtilleryRequest_Smoke', MapLocation.X, MapLocation.Y);
-            Log("post smoke PC.ServerAddArtilleryMarker(Marker)");
+            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
             break;
     }
 

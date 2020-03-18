@@ -46,24 +46,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     
     // get info about the shooter
-    PC =  DHPlayer(InstigatorController);
-
+    PC =  DHPlayer(Instigator.Controller);
+    
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    // Marker = new class'DHArtilleryMarker_Hit_HE';
-    // Marker.LocationX = MapLocation.X;
-    // Marker.LocationY = MapLocation.Y;
-    // Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
-    switch(PC.GetTeamNum())
-    {
-        case AXIS_TEAM_INDEX:
-            //Marker.ClosestFireRequestIndex = 0; //FindClosestRequest(HitLocation, GRI.AxisArtilleryRequests_HE);
-            break;
-        case ALLIES_TEAM_INDEX:
-            //Marker.ClosestFireRequestIndex = 0; //FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_HE);
-            break;
-    }
-    //Log("Marker.ClosestFireRequestIndex: " $ Marker.ClosestFireRequestIndex);
-    //PC.ArtilleryHit_HE = Marker;
+    PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_HE', MapLocation.X, MapLocation.Y);
 
     super.Explode(HitLocation, HitNormal);
 }

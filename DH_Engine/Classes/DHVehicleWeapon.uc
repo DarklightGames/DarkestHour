@@ -368,6 +368,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (P != none)
     {
+        if (bIsArtillery && P.IsA('DHBallisticProjectile'))
+        {
+            DHBallisticProjectile(P).VehicleWeapon = self;
+        }
 
         // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
         if (!bSkipFiringEffects)

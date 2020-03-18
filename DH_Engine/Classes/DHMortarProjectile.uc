@@ -218,6 +218,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
+        SetHitLocation(HitLocation);
+
         MakeNoise(1.0); // shell landing makes noise, even if a dud & doesn't detonate
     }
 
