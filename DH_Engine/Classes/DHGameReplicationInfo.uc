@@ -61,6 +61,28 @@ enum EArtilleryTypeError
     ERROR_Cancellable
 };
 
+    
+// Artillery request
+struct ArtilleryRequest
+{
+    var float LocationX;     // Quantized representation of 0.0..1.0
+    var float LocationY;
+    var int SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
+    var int TeamIndex;    // The squad index that owns the marker, or -1 if team-wide
+    var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
+    var class<DHMarker_ArtilleryRequest> MarkerClass;
+};
+    
+// Artillery hiy
+struct ArtilleryHit
+{
+    var float LocationX;     // Quantized representation of 0.0..1.0
+    var float LocationY;
+    var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
+    var class<DHMarker_ArtilleryHit> MarkerClass;
+    var int ClosestFireRequestIndex;
+};
+
 var class<DHGameType>   GameType;
 
 var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
@@ -146,7 +168,6 @@ struct MapMarker
     var byte SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
-
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
 // TODO: reset this somewhere on round begin
 struct ArtilleryTypeInfo
@@ -163,10 +184,10 @@ var private array<string>                   MapMarkerClassNames;
 var class<DHMapMarker>                      MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                               AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                               AlliesMapMarkers[MAP_MARKERS_MAX];
-var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests_HE;      // TEAM_SQUADS_MAX
-var array<DHArtilleryMarker_FireSupport>    AlliesArtilleryRequests_Smoke;
-var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests_HE;      // TEAM_SQUADS_MAX
-var array<DHArtilleryMarker_FireSupport>    AxisArtilleryRequests_Smoke;
+var ArtilleryRequest                        AlliesArtilleryRequests_HE[MAP_MARKERS_MAX];      // TEAM_SQUADS_MAX
+var ArtilleryRequest                        AlliesArtilleryRequests_Smoke[MAP_MARKERS_MAX];
+var ArtilleryRequest                        AxisArtilleryRequests_HE[MAP_MARKERS_MAX];      // TEAM_SQUADS_MAX
+var ArtilleryRequest                        AxisArtilleryRequests_Smoke[MAP_MARKERS_MAX];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -213,6 +234,10 @@ replication
         SupplyPoints,
         AxisMapMarkers,
         AlliesMapMarkers,
+        AlliesArtilleryRequests_HE,
+        AlliesArtilleryRequests_Smoke,
+        AxisArtilleryRequests_HE,
+        AxisArtilleryRequests_Smoke,
         bAllChatEnabled,
         RoundOverTime,
         DHRoundLimit,
@@ -1377,7 +1402,6 @@ simulated function GetMapMarkers(out array<MapMarker> MapMarkers, out array<int>
             break;
     }
 }
-
 simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, int SquadIndex)
 {
     local int i;
@@ -1537,46 +1561,103 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     return -1;
 }
 
-function int AddArtilleryRequest(DHPlayer PC, DHArtilleryMarker_FireSupport Marker)
+simulated function GetArtilleryRequests(out array<ArtilleryRequest> Markers, int TeamIndex)
 {
-    local int SquadIdx, TeamIdx;
-    if (PC == none ||  Marker == none)
-    {
-        return -1;
-    }
+    local int i;
+    local ArtilleryRequest Request;
 
-    SquadIdx = Marker.SquadIndex;
-    TeamIdx = Marker.TeamIndex;
-    
-    switch(TeamIdx)
+    switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if(Marker.Type == "HE")
+            for (i = 0; i < arraycount(AxisArtilleryRequests_HE); i++)
+            {
+                Request = AxisArtilleryRequests_HE[i];
+                Markers[Markers.Length] = Request;
+            }
+            for (i = 0; i < arraycount(AxisArtilleryRequests_Smoke); i++)
+            {
+                Request = AxisArtilleryRequests_Smoke[i];
+                Markers[Markers.Length] = Request;
+            }
+            Log("returning AxisArtilleryRequests, length: " $ Markers.Length);
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesArtilleryRequests_HE); i++)
+            {
+                Request = AlliesArtilleryRequests_HE[i];
+                Markers[Markers.Length] = Request;
+            }
+            for (i = 0; i < arraycount(AlliesArtilleryRequests_Smoke); i++)
+            {
+                Request = AlliesArtilleryRequests_Smoke[i];
+                Markers[Markers.Length] = Request;
+            }
+            Log("returning AlliesArtilleryRequests, length: " $ Markers.Length);
+            break;
+    }
+}
+    
+
+function int AddArtilleryRequest(DHPlayerReplicationInfo PRI, class<DHMarker_ArtilleryRequest> MapMarkerClass, vector MapLocation)
+{
+    local int SquadIdx, TeamIdx;
+    local ArtilleryRequest Marker;
+
+    Log("pre SquadIdx =  DHPlayerReplicationInfo(PC.PlayerReplicationInfo).SquadIndex;");
+    SquadIdx =  PRI.SquadIndex;
+    Log("post SquadIdx =  DHPlayerReplicationInfo(PC.PlayerReplicationInfo).SquadIndex; SquadIdx = " $ SquadIdx);
+    Log("pre TeamIdx = PC.GetTeamNum();");
+    TeamIdx = PRI.Team.TeamIndex;
+    Log("post TeamIdx = PC.GetTeamNum(); TeamIdx = " $ TeamIdx);
+    Log("Marker.MarkerClass: " $ MapMarkerClass);
+
+    Marker.MarkerClass = MapMarkerClass;
+    // Quantize map-space coordinates for transmission.
+    Marker.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
+    Marker.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
+    if (MapMarkerClass.default.LifetimeSeconds != -1)
+    {
+        Marker.ExpiryTime = ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    }
+    else
+    {
+        Marker.ExpiryTime = -1;
+    }
+    Marker.SquadIndex = SquadIdx;
+    Marker.TeamIndex = TeamIdx;
+
+    switch(MapMarkerClass)
+    {
+        case class'DH_Engine.DHMarker_ArtilleryRequest_HE':
+            Log("class DHMarker_ArtilleryRequest_HE");
+            if (TeamIdx == AXIS_TEAM_INDEX)
             {
                 AxisArtilleryRequests_HE[SquadIdx] = Marker;
-                Log("wstawiono w AxisArtilleryRequests_HE " $ SquadIdx);
+                Log("inserted into AxisArtilleryRequests_HE " $ SquadIdx);
                 return 0;
             }
-            else if (Marker.Type == "smoke")
-            {
-                AxisArtilleryRequests_Smoke[SquadIdx] = Marker;
-                Log("wstawiono w AxisArtilleryRequests_Smoke " $ SquadIdx);
-                return 0;
-            }
-        case ALLIES_TEAM_INDEX:
-            if(Marker.Type == "HE")
+            else if (TeamIdx == ALLIES_TEAM_INDEX)
             {
                 AlliesArtilleryRequests_HE[SquadIdx] = Marker;
-                Log("wstawiono w AlliesArtilleryRequests_HE " $ SquadIdx);
+                Log("inserted into AlliesArtilleryRequests_HE " $ SquadIdx);
                 return 0;
             }
-            else if (Marker.Type == "smoke")
+        case class'DH_Engine.DHMarker_ArtilleryRequest_Smoke':
+            Log("class DHMarker_ArtilleryRequest_Smoke");
+            if (TeamIdx == AXIS_TEAM_INDEX)
+            {
+                AxisArtilleryRequests_Smoke[SquadIdx] = Marker;
+                Log("inserted into AxisArtilleryRequests_Smoke " $ SquadIdx);
+                return 0;
+            }
+            else if (TeamIdx == ALLIES_TEAM_INDEX)
             {
                 AlliesArtilleryRequests_Smoke[SquadIdx] = Marker;
-                Log("wstawiono w AlliesArtilleryRequests_Smoke " $ SquadIdx);
+                Log("inserted into AlliesArtilleryRequests_Smoke " $ SquadIdx);
                 return 0;
             }
         default:
+            Log("hit default on pattern matching");
             break;
     }
 
@@ -1993,11 +2074,6 @@ defaultproperties
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
     //MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport_Smoke"
     //MapMarkerClassNames(12)="DH_Engine.DHMapMarker_FireSupport_HE"
-
-    AlliesArtilleryRequests_HE.Insert(0, 8);
-    AlliesArtilleryRequests_Smoke.Insert(0, 8);
-    AxisArtilleryRequests_HE.Insert(0, 8);
-    AxisArtilleryRequests_Smoke.Insert(0, 8);
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in

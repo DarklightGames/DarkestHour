@@ -25,8 +25,8 @@ struct PersonalMapMarker
     var vector WorldLocation;
 };
 
-var DHArtilleryMarker_Hit_Smoke ArtilleryHit_Smoke;
-var DHArtilleryMarker_Hit_HE ArtilleryHit_HE;
+var DHGameReplicationInfo.ArtilleryHit ArtilleryHit_Smoke;
+var DHGameReplicationInfo.ArtilleryHit ArtilleryHit_HE;
 
 var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
@@ -179,7 +179,7 @@ replication
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
         ServerClearObstacle, ServerCutConstruction,
-        ServerAddMapMarker, ServerRemoveMapMarker,
+        ServerAddMapMarker, ServerRemoveMapMarker, ServerAddArtilleryMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
@@ -5446,20 +5446,21 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
 }
         
 
-function ServerAddArtilleryMarker(DHArtilleryMarker_FireSupport MapMarker)
+function ServerAddArtilleryMarker(class<DHMarker_ArtilleryRequest> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
     local vector MapLocation;
-    local int i;
 
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    MapLocation.X = MapMarker.LocationX;
-    MapLocation.Y = MapMarker.LocationY;
+    MapLocation.X = MapLocationX;
+    MapLocation.Y = MapLocationY;
 
     if (GRI != none)
     {
-        i = GRI.AddArtilleryRequest(self, MapMarker);
+        GRI.AddArtilleryRequest(PRI, MapMarkerClass, MapLocation);
     }
 }
 
@@ -6839,4 +6840,7 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
+    
+    ArtilleryHit_HE.ExpiryTeamm = 0
+    ArtilleryHit_Smoke.ExpiryTeamm = 0
 }

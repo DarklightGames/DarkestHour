@@ -16,27 +16,27 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     local DHPlayer PC;
     local vector MapLocation;
     local DHGameReplicationInfo GRI;
-    local DHArtilleryMarker_Hit_Smoke Marker;
+    //local DHArtilleryMarker_Hit_Smoke Marker;
     
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PC =  DHPlayer(InstigatorController);
     
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    Marker = new class'DHArtilleryMarker_Hit_Smoke';
-    Marker.LocationX = MapLocation.X;
-    Marker.LocationY = MapLocation.Y;
-    Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
+    // Marker = new class'DHArtilleryMarker_Hit_Smoke';
+    // Marker.LocationX = MapLocation.X;
+    // Marker.LocationY = MapLocation.Y;
+    // Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
     switch(PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AxisArtilleryRequests_Smoke);
+            //Marker.ClosestFireRequestIndex = 0; //FindClosestRequest(HitLocation, GRI.AxisArtilleryRequests_Smoke);
             break;
         case ALLIES_TEAM_INDEX:
-            Marker.ClosestFireRequestIndex = FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_Smoke);
+            //Marker.ClosestFireRequestIndex = 0; //FindClosestRequest(HitLocation, GRI.AlliesArtilleryRequests_Smoke);
             break;
     }
-    Log("Marker.ClosestFireRequestIndex: " $ Marker.ClosestFireRequestIndex);
-    PC.ArtilleryHit_Smoke = Marker;
+    //Log("Marker.ClosestFireRequestIndex: " $ Marker.ClosestFireRequestIndex);
+    //PC.ArtilleryHit_Smoke = Marker;
     super.Explode(HitLocation, HitNormal);
 }
 

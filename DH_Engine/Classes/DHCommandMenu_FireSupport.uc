@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHCommandMenu_FireSupport extends DHCommandMenu;
+class DHCommandMenu_FireSupport extends DHCommandMenu
+dependson(DHGameReplicationInfo);
 
 function OnSelect(int Index, vector Location)
 {
@@ -11,42 +12,31 @@ function OnSelect(int Index, vector Location)
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
-    local DHArtilleryMarker_FireSupport Marker;
 
     PC = GetPlayerController();
-
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-
-    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-
     if (PC == none || Index < 0 || Index >= Options.Length)
     {
         return;
     }
 
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
     switch (Index)
     {
         case 0: // Artillery barrage
             PC.ServerSaveArtilleryPosition();
             break;
         case 1: // Fire request (HE)
-            Marker = new class'DHArtilleryMarker_FireSupport_HE';
-            Marker.LocationX = MapLocation.X;
-            Marker.LocationY = MapLocation.Y;
-            Marker.TeamIndex = PC.GetTeamNum();
-            Marker.SquadIndex = PC.GetSquadIndex();
-            Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
-            PC.ServerAddArtilleryMarker(Marker);
+            Log("pre HE PC.AddArtilleryRequest(Marker)");
+            PC.ServerAddArtilleryMarker(class'DH_Engine.DHMarker_ArtilleryRequest_HE', MapLocation.X, MapLocation.Y);
+            Log("post HE PC.AddArtilleryRequest(Marker)");
             break;
         case 2: // Fire request (Smoke)
-            Marker = new class'DHArtilleryMarker_FireSupport_Smoke';
-            Marker.LocationX = MapLocation.X;
-            Marker.LocationY = MapLocation.Y;
-            Marker.TeamIndex = PC.GetTeamNum();
-            Marker.SquadIndex = PC.GetSquadIndex();
-            Marker.ExpiryTime = GRI.ElapsedTime + Marker.LifetimeSeconds;
-            PC.ServerAddArtilleryMarker(Marker);
+            //Log("pre smoke PC.ServerAddArtilleryMarker(Marker)");
+            PC.ServerAddArtilleryMarker(class'DH_Engine.DHMarker_ArtilleryRequest_Smoke', MapLocation.X, MapLocation.Y);
+            Log("post smoke PC.ServerAddArtilleryMarker(Marker)");
             break;
     }
 

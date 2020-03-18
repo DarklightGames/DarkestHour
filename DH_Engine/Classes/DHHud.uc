@@ -3751,7 +3751,7 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     }
 }
 
-function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMapMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)
+function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)
 {
     MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
@@ -3824,128 +3824,113 @@ function DrawArtilleryMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float
     local DHPlayer PC;
     local int i;
     local vector L;
-    local array<DHArtilleryMarker_FireSupport> FireRequestMarkers;
-    local DHArtilleryMarker_Hit_HE ArtilleryHit_HE;
-    local DHArtilleryMarker_Hit_Smoke ArtilleryHit_Smoke;
-    local DHArtilleryMarker_FireSupport Marker;
+    local DHGameReplicationInfo.ArtilleryRequest Marker;
+    local array<DHGameReplicationInfo.ArtilleryRequest> Markers;
     local vector Target;
     local string Caption, SquadName;
-    local int SquadIdx, TeamIdx;
+    local int SquadIdx, TeamIdx, ExpiryTime;
 
     PC = DHPlayer(PlayerOwner);
 
-    Log("PC.IsArtilleryRole(): " $ PC.IsArtilleryRole());
+    //Log("PC.IsArtilleryRole(): " $ PC.IsArtilleryRole());
     if (DHGRI == none || PC == none || !PC.IsArtilleryRole())
     {
         return;
     }
 
-    // Last artillery hit (HE)
-    ArtilleryHit_HE = PC.ArtilleryHit_HE;
-
-    if(ArtilleryHit_HE != None && ArtilleryHit_HE.ExpiryTime > DHGRI.ElapsedTime 
-        && ArtilleryHit_HE.ClosestFireRequestIndex != -1)
-    {
-        MapMarkerIcon.WidgetTexture = ArtilleryHit_HE.IconMaterial;
-        MapMarkerIcon.TextureCoords = ArtilleryHit_HE.IconCoords;
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit_HE.IconColor;
-        L.X = ArtilleryHit_HE.LocationX;
-        L.Y = ArtilleryHit_HE.LocationY;
-        L = DHGRI.GetWorldCoords(L.X, L.Y);
-        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,,,, -1);
-    }
-
-    // Last artillery hit (smoke)
-    ArtilleryHit_Smoke = PC.ArtilleryHit_Smoke;
-
-    if(ArtilleryHit_Smoke != None && ArtilleryHit_Smoke.ExpiryTime > DHGRI.ElapsedTime
-        && ArtilleryHit_Smoke.ClosestFireRequestIndex != -1)
-    {
-        MapMarkerIcon.WidgetTexture = ArtilleryHit_Smoke.IconMaterial;
-        MapMarkerIcon.TextureCoords = ArtilleryHit_Smoke.IconCoords;
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = ArtilleryHit_Smoke.IconColor;
-        L.X = ArtilleryHit_Smoke.LocationX;
-        L.Y = ArtilleryHit_Smoke.LocationY;
-        L = DHGRI.GetWorldCoords(L.X, L.Y);
-        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,,,, -1);
-    }
-
     TeamIdx = PC.GetTeamNum();
+
+    // Last HE hit
+    if(PC.ArtilleryHit_HE.ExpiryTime > DHGRI.ElapsedTime)
+//        && PC.ArtilleryHit_HE.ClosestFireRequestIndex != -1)
+    {
+        Log("Last HE hit ExpiryTime=" $ PC.ArtilleryHit_HE.ExpiryTime); 
+        L.X = PC.ArtilleryHit_HE.LocationX;
+        L.Y = PC.ArtilleryHit_HE.LocationY;
+        L = DHGRI.GetWorldCoords(L.X, L.Y);
+        DrawMapMarkerOnMap(C,
+                        SubCoords,
+                        MyMapScale,
+                        MapCenter,
+                        Viewport,
+                        PC.ArtilleryHit_HE.MarkerClass,
+                        L,
+                        PC.Pawn,
+                        "HE hit");
+    }
+
+    // Last smoke hit
+
+    if(PC.ArtilleryHit_Smoke.ExpiryTime > DHGRI.ElapsedTime)
+//        && PC.ArtilleryHit_Smoke.ClosestFireRequestIndex != -1)
+    {
+        Log("Last smoke hit ExpiryTime=" $ PC.ArtilleryHit_Smoke.ExpiryTime); 
+        L.X = PC.ArtilleryHit_Smoke.LocationX;
+        L.Y = PC.ArtilleryHit_Smoke.LocationY;
+        L = DHGRI.GetWorldCoords(L.X, L.Y);
+        DrawMapMarkerOnMap(C,
+                        SubCoords,
+                        MyMapScale,
+                        MapCenter,
+                        Viewport,
+                        PC.ArtilleryHit_Smoke.MarkerClass,
+                        L,
+                        PC.Pawn,
+                        "smoke hit");
+    }
+
+    //DHGRI.GetArtilleryRequests(Markers, TeamIdx);
+
+    //Log("Markers.Length: " $ Markers.Length);
+
     switch(TeamIdx)
     {
-        case AXIS_TEAM_INDEX:
-            // HE requests
-            for (i = 0; i < DHGRI.AxisArtilleryRequests_HE.Length; ++i)
-            {
-                Marker = DHGRI.AxisArtilleryRequests_HE[i];
-                if(Marker != None && PC.SquadReplicationInfo.IsSquadActive(TeamIdx, i) && Marker.ExpiryTime > DHGRI.ElapsedTime)
-                {
-                    MapMarkerIcon.WidgetTexture = Marker.IconMaterial;
-                    MapMarkerIcon.TextureCoords = Marker.IconCoords;
-                    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = Marker.IconColor;
-                    L.X = Marker.LocationX;
-                    L.Y = Marker.LocationY;
-                    L = DHGRI.GetWorldCoords(L.X, L.Y);
-                    SquadName = PC.SquadReplicationInfo.GetSquadName(TeamIdx, i);
-                    Caption = SquadName $ " (" $ Marker.Type $ ")";
-                    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,, Caption,, -1);
-                }
-            }
-            // smoke requests
-            for (i = 0; i < DHGRI.AxisArtilleryRequests_Smoke.Length; ++i)
-            {
-                Marker = DHGRI.AxisArtilleryRequests_Smoke[i];
-                if(Marker != None && PC.SquadReplicationInfo.IsSquadActive(TeamIdx, i) && Marker.ExpiryTime > DHGRI.ElapsedTime)
-                {
-                    MapMarkerIcon.WidgetTexture = Marker.IconMaterial;
-                    MapMarkerIcon.TextureCoords = Marker.IconCoords;
-                    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = Marker.IconColor;
-                    L.X = Marker.LocationX;
-                    L.Y = Marker.LocationY;
-                    L = DHGRI.GetWorldCoords(L.X, L.Y);
-                    SquadName = PC.SquadReplicationInfo.GetSquadName(TeamIdx, i);
-                    Caption = SquadName $ " (" $ Marker.Type $ ")";
-                    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,, Caption,, -1);
-                }
-            }
         case ALLIES_TEAM_INDEX:
-            // HE requests
-            for (i = 0; i < DHGRI.AlliesArtilleryRequests_HE.Length; ++i)
+            for (i = 0; i < DHGRI.MAP_MARKERS_MAX; i++)
             {
                 Marker = DHGRI.AlliesArtilleryRequests_HE[i];
-                if(Marker != None && PC.SquadReplicationInfo.IsSquadActive(TeamIdx, i) && Marker.ExpiryTime > DHGRI.ElapsedTime)
+                SquadIdx = Marker.SquadIndex;
+                ExpiryTime = Marker.ExpiryTime;
+                if(PC.SquadReplicationInfo.IsSquadActive(TeamIdx, SquadIdx) 
+                    && ExpiryTime > DHGRI.ElapsedTime)
                 {
-                    MapMarkerIcon.WidgetTexture = Marker.IconMaterial;
-                    MapMarkerIcon.TextureCoords = Marker.IconCoords;
-                    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = Marker.IconColor;
+//                    Log("DHGRI.AlliesArtilleryRequests_HE[i] ExpiryTime=" $ DHGRI.AlliesArtilleryRequests_HE[i].ExpiryTime $ ", SquadIndex=" $ DHGRI.AlliesArtilleryRequests_HE[i].SquadIndex $ ", TeamIndex=" $ DHGRI.AlliesArtilleryRequests_HE[i].TeamIndex); 
                     L.X = Marker.LocationX;
                     L.Y = Marker.LocationY;
                     L = DHGRI.GetWorldCoords(L.X, L.Y);
-                    SquadName = PC.SquadReplicationInfo.GetSquadName(TeamIdx, i);
-                    Caption = SquadName $ " (" $ Marker.Type $ ")";
-                    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,, Caption,, -1);
+                    DrawMapMarkerOnMap(C,
+                                    SubCoords,
+                                    MyMapScale,
+                                    MapCenter,
+                                    Viewport,
+                                    Marker.MarkerClass,
+                                    L,
+                                    PC.Pawn,
+                                    "HE hit");
                 }
             }
-            // smoke requests
-            for (i = 0; i < DHGRI.AlliesArtilleryRequests_Smoke.Length; ++i)
+            for (i = 0; i < DHGRI.MAP_MARKERS_MAX; i++)
             {
-                Marker = DHGRI.AlliesArtilleryRequests_Smoke[i];
-                if(Marker != None && PC.SquadReplicationInfo.IsSquadActive(TeamIdx, i) && Marker.ExpiryTime > DHGRI.ElapsedTime)
+                //Log("Marker ExpiryTime=" $ Marker.ExpiryTime $ ", SquadIndex=" $ Marker.SquadIndex $ ", TeamIndex=" $ Marker.TeamIndex); 
+                if(PC.SquadReplicationInfo.IsSquadActive(TeamIdx, DHGRI.AlliesArtilleryRequests_Smoke[i].SquadIndex) && DHGRI.AlliesArtilleryRequests_Smoke[i].ExpiryTime > DHGRI.ElapsedTime)
                 {
-                    MapMarkerIcon.WidgetTexture = Marker.IconMaterial;
-                    MapMarkerIcon.TextureCoords = Marker.IconCoords;
-                    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = Marker.IconColor;
-                    L.X = Marker.LocationX;
-                    L.Y = Marker.LocationY;
+                    L.X = DHGRI.AlliesArtilleryRequests_Smoke[i].LocationX;
+                    L.Y = DHGRI.AlliesArtilleryRequests_Smoke[i].LocationY;
                     L = DHGRI.GetWorldCoords(L.X, L.Y);
-                    SquadName = PC.SquadReplicationInfo.GetSquadName(TeamIdx, i);
-                    Caption = SquadName $ " (" $ Marker.Type $ ")";
-                    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport,, Caption,, -1);
+                    DrawMapMarkerOnMap(C,
+                                    SubCoords,
+                                    MyMapScale,
+                                    MapCenter,
+                                    Viewport,
+                                    DHGRI.AlliesArtilleryRequests_Smoke[i].MarkerClass,
+                                    L,
+                                    PC.Pawn,
+                                    "smoke hit");
                 }
             }
-        default:
-            break;
+
     }
+    
 }
 
 function DangerZoneOverlayUpdateRequest()

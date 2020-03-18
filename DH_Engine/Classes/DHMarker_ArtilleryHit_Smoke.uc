@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHArtilleryMarker_Hit_HE extends DHArtilleryMarker_Hit;
+class DHMarker_ArtilleryHit_Smoke extends DHMarker_ArtilleryHit abstract;
 
 defaultproperties
 {
-    MarkerName="Artillery hit (HE)"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Fire'
+    MarkerName="Artillery hit (smoke)"
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attack'
 }
 
