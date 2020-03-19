@@ -67,8 +67,8 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    WeaponFireOffset=10.0
-    AltFireOffset=(X=-56.0,Y=19.0,Z=6.5)
+    WeaponFireOffset=25.0
+    AltFireOffset=(X=-55.0,Y=19.5,Z=0.0)
     AltFireSpawnOffsetX=0.0
 
     // Sounds
