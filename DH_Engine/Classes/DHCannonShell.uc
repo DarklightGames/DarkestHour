@@ -191,11 +191,10 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Hit a vehicle - set hit effects and play a suppression/shell shock effect for vehicle occupants
     if (ROVehicle(SavedHitActor) != none)
     {
+        //VehicleShellShockEffect();
         HitSound = VehicleHitSound;
         HitEmitterClass = ShellHitVehicleEffectClass;
-        BlurTime = 8.0;
-        BlurEffectScalar = 8.0;
-        PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 30.0, false, 10.0, 1.0, true);
+        PlayOwnedSound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true);
     }
     // Hit something else - get material type & set effects
     else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
