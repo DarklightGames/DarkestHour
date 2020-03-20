@@ -1420,7 +1420,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 {
                     if (AxisMapMarkers[i].MapMarkerClass != none &&
                         AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                        AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                        (AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex))
                     {
                         AxisMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
@@ -1464,7 +1464,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 {
                     if (AlliesMapMarkers[i].MapMarkerClass != none &&
                         AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                        AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                        (AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex))
                     {
                         AlliesMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));

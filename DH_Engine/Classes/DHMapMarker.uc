@@ -100,4 +100,9 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=-1
     GroupIndex=-1
+    bShouldOverwriteGroup=false
+    bIsSquadSpecific=false
+    bIsUnique=false
+    bIsVisibleToTeam=false
+    bShouldShowOnCompass=false
 }
