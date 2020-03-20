@@ -141,11 +141,11 @@ var private byte        OldDangerZoneBalance;
 struct MapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
-    var byte LocationX;     // Quantized representation of 0.0..1.0
-    var byte LocationY;
-    var byte SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
-    var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
-    var vector WorldLocation; // used only in personal MapMarkers
+    var byte LocationX;         // Quantized representation of 0.0..1.0 - X coordinate
+    var byte LocationY;         // Quantized representation of 0.0..1.0 - Y coordinate
+    var byte SquadIndex;        // The squad index that owns the marker, or -1 if team-wide
+    var int ExpiryTime;         // The expiry time, relative to ElapsedTime in GRI
+    var vector WorldLocation;   // World location of the marker; used only in personal MapMarkers in DHPlayer
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
@@ -1352,65 +1352,28 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
     return true;
 }
 
-simulated function GetMapMarkers(out array<MapMarker> MapMarkers, out array<int> Indices, int TeamIndex, int SquadIndex)
-{
-    local int i;
-
-    GetMapMarkerIndices(Indices, TeamIndex, SquadIndex);
-
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            for (i = 0; i < Indices.Length; ++i)
-            {
-                MapMarkers[MapMarkers.Length] = AxisMapMarkers[Indices[i]];
-            }
-            break;
-        case ALLIES_TEAM_INDEX:
-            for (i = 0; i < Indices.Length; ++i)
-            {
-                MapMarkers[MapMarkers.Length] = AlliesMapMarkers[Indices[i]];
-            }
-            break;
-    }
-}
-
-simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, int SquadIndex)
+// Trying to refactor this function to access AxisMapMarkers and AlliesMapMarkers directly from other objects 
+// will most likely cause "Context expression: Variable is too large (480 bytes, 255 max)" compilation error.
+// You can't access big static arrays of structs from outside of the given object; you have to
+// use a proxy function like this one to retrive elements of a static array as a dynamic array.
+simulated function GetMapMarkers(out array<MapMarker> MapMarkers, int TeamIndex, int SquadIndex)
 {
     local int i;
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     PC = DHPlayer(Level.GetLocalPlayerController());
+    PRI = DHPlayerReplicationInfo(PC.Owner);
 
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
-            {
-                if (AxisMapMarkers[i].MapMarkerClass != none &&
-                    (AxisMapMarkers[i].ExpiryTime == -1 || AxisMapMarkers[i].ExpiryTime > ElapsedTime) &&
-                    (AxisMapMarkers[i].MapMarkerClass.default.bIsVisibleToTeam 
-                        || AxisMapMarkers[i].SquadIndex == 255 
-                        || AxisMapMarkers[i].SquadIndex == SquadIndex
-                        || ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport') && PC.IsArtilleryRole()))
-                {
-                    Indices[Indices.Length] = i;
-                }
-            }
+                MapMarkers[MapMarkers.Length] = AxisMapMarkers[i];
             break;
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
-            {
-                if (AlliesMapMarkers[i].MapMarkerClass != none &&
-                    (AlliesMapMarkers[i].ExpiryTime == -1 || AlliesMapMarkers[i].ExpiryTime > ElapsedTime) &&
-                    (AlliesMapMarkers[i].MapMarkerClass.default.bIsVisibleToTeam 
-                    || AlliesMapMarkers[i].SquadIndex == 255 
-                    || AlliesMapMarkers[i].SquadIndex == SquadIndex)
-                    || ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport') && PC.IsArtilleryRole())
-                {
-                    Indices[Indices.Length] = i;
-                }
-            }
+                MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
             break;
     }
 }
@@ -1420,25 +1383,19 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     local int i;
     local MapMarker M;
 
-    if (PRI == none || PRI.Team == none || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self) || !MapMarkerClass.static.CanPlayerUse(PRI))
+    if (PRI == none || PRI.Team == none || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self) || !MapMarkerClass.static.CanPlaceMarker(PRI))
     {
         return -1;
     }
 
     M.MapMarkerClass = MapMarkerClass;
 
-    Log("AddMapMarker(..); MapMarkerClass" $ MapMarkerClass);
-
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
-
-    Log("ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport')" $ ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'));
-
-    if(MapMarkerClass.default.bIsSquadSpecific || ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'))
+    if(MapMarkerClass.default.bIsSquadSpecific)
     {
         M.SquadIndex = PRI.SquadIndex;
-        Log("adding " $ MapMarkerClass $ " to squad " $ PRI.SquadIndex);
     }
     else
     {
@@ -1472,16 +1429,14 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 }
             }
 
-            if (MapMarkerClass.default.bIsUnique || ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'))
+            if (MapMarkerClass.default.bIsUnique)
             {
                 for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                 {
                     if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (!MapMarkerClass.default.bIsSquadSpecific && !ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport')
-                        || ((MapMarkerClass.default.bIsSquadSpecific || ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'))
-                            && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        (!MapMarkerClass.default.bIsSquadSpecific
+                        || (MapMarkerClass.default.bIsSquadSpecific && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                     {
-                        Log("unique replacing " $ MapMarkerClass $ " for " $ PRI.SquadIndex);
                         AxisMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
                         return i;
@@ -1518,16 +1473,14 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 }
             }
 
-            if (MapMarkerClass.default.bIsUnique || ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'))
+            if (MapMarkerClass.default.bIsUnique)
             {
                 for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                 {
                     if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (!MapMarkerClass.default.bIsSquadSpecific && !ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport')
-                        || ((MapMarkerClass.default.bIsSquadSpecific || ClassIsChildOf(MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport'))
-                            && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        (!MapMarkerClass.default.bIsSquadSpecific
+                        || (MapMarkerClass.default.bIsSquadSpecific && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                     {
-                        Log("unique replacing " $ MapMarkerClass $ " for " $ PRI.SquadIndex);
                         AlliesMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
                         return i;

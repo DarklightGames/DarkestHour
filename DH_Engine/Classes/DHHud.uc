@@ -2734,7 +2734,6 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
-    local array<int> Indices;
 
     CompassIcons.WidgetTexture = default.CompassIcons.WidgetTexture;
 
@@ -2907,7 +2906,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Map markers
-        DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+        //DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
@@ -3779,37 +3778,44 @@ function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapS
 function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local DHPlayer PC;
-    local int i;
+    local DHPlayerReplicationInfo PRI;
+    local int i, ElapsedTime;
     local vector L;
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
-    local array<int> Indices;
 
     PC = DHPlayer(PlayerOwner);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    if (DHGRI == none || PC == none)
+    if (DHGRI == none || PC == none || PRI == none)
     {
         return;
     }
 
     // Team & squad map markers
-    DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+    DHGRI.GetMapMarkers(MapMarkers, PC.GetTeamNum(), PC.GetSquadIndex());
+    ElapsedTime = DHGRI.ElapsedTime;
 
     for (i = 0; i < MapMarkers.Length; ++i)
     {
-        L.X = float(MapMarkers[i].LocationX) / 255.0;
-        L.Y = float(MapMarkers[i].LocationY) / 255.0;
-        L = DHGRI.GetWorldCoords(L.X, L.Y);
+        if(MapMarkers[i].MapMarkerClass != none 
+            && (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime)
+            && MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+        {
+            L.X = float(MapMarkers[i].LocationX) / 255.0;
+            L.Y = float(MapMarkers[i].LocationY) / 255.0;
+            L = DHGRI.GetWorldCoords(L.X, L.Y);
 
-        DrawMapMarkerOnMap(C,
-                           SubCoords,
-                           MyMapScale,
-                           MapCenter,
-                           Viewport,
-                           MapMarkers[i].MapMarkerClass,
-                           L,
-                           PC.Pawn,
-                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
+            DrawMapMarkerOnMap(C,
+                            SubCoords,
+                            MyMapScale,
+                            MapCenter,
+                            Viewport,
+                            MapMarkers[i].MapMarkerClass,
+                            L,
+                            PC.Pawn,
+                            MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
+        }
     }
 
     // Personal map markers
@@ -3817,15 +3823,20 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        DrawMapMarkerOnMap(C,
-                           SubCoords,
-                           MyMapScale,
-                           MapCenter,
-                           Viewport,
-                           PersonalMapMarkers[i].MapMarkerClass,
-                           PersonalMapMarkers[i].WorldLocation,
-                           PC.Pawn,
-                           PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
+        if(PersonalMapMarkers[i].MapMarkerClass != none 
+            && (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime)
+            && PersonalMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PersonalMapMarkers[i]))
+        {
+            DrawMapMarkerOnMap(C,
+                                SubCoords,
+                                MyMapScale,
+                                MapCenter,
+                                Viewport,
+                                PersonalMapMarkers[i].MapMarkerClass,
+                                PersonalMapMarkers[i].WorldLocation,
+                                PC.Pawn,
+                                PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
+        }
     }
 }
 

@@ -1071,6 +1071,16 @@ simulated function bool IsSLorASL()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
+    
+simulated function bool IsSL()
+{
+return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSL();
+}
+
+simulated function bool IsASL()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
+}
 
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
 // The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
@@ -5449,7 +5459,7 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
         return;
     }
 
-    if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanPlayerUse(PRI))
+    if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanRemoveMarker(PRI, MM))
     {
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
@@ -5499,12 +5509,17 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
-    PMM.LocationX = MapLocationX;
-    PMM.LocationY = MapLocationY;
+    PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
+    PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
     PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
-
+    if(MapMarkerClass.default.LifetimeSeconds != -1)
+        PMM.ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    else
+        PMM.ExpiryTime = -1;
+    
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
+    Log("Succesfully inserted personal map marker: " $ MapMarkerClass);
 }
 
 function RemovePersonalMarker(int Index)

@@ -29,7 +29,21 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 // Override this function to determine if this map marker can be placed by
 // the provided player.
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
+{
+    return false;
+}
+
+// Override this function to determine if this map marker can be removed by
+// the provided player.
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return false;
+}
+    
+// Override this function to determine if this map marker can be displayed on the map by
+// the provided player.
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     return false;
 }
@@ -46,13 +60,14 @@ static function OnMapMarkerPlaced(DHPlayer PC);
 // added/removed.
 static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 {
-    Log("Inserting " $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
     if (default.bIsPersonal)
     {
+        Log("Inserting personal marker" $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
         PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
     }
     else
     {
+        Log("Inserting public marker" $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
         PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
     }
 }

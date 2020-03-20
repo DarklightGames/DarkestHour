@@ -11,10 +11,29 @@ var vector          Location;
 var float           Time;
 var int             ClosestFireRequestIndex; // this can be used for quickly finding nearest fire requests later on
 
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+
+// Only allow artillery roles to place artillery hits.
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
-    Log("entered CanPlayerUse in " $ default.MarkerName);
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+    return PRI != none && (PC.IsArtilleryRole());
+}
+
+// Disable for everyone - artillery hits can't be removed from the map.
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
     return false;
+}
+
+// Only allow artillery roles to see artillery hits
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+    return PRI != none && (PC.IsArtilleryRole());
 }
 
 defaultproperties
@@ -23,8 +42,8 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attack'
     IconColor=(R=204,G=255,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    bIsPersonal = true
     bIsUnique=true
+    bIsPersonal = true
     bIsSquadSpecific=false
     bIsVisibleToTeam=false
     LifetimeSeconds=30 // 30 seconds

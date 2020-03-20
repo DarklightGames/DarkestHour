@@ -6,7 +6,10 @@
 class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+var string TypeName;
+
+// Any squad leader can call artillery support
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
 
@@ -17,7 +20,31 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsSLorASL();    // TODO: we can have this be just ASL maybe.
+    return PC != none && PC.IsSL();
+}
+
+// Arillery support markers can be removed only by the SLs or ASLs 
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PC != none && PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
+}
+
+// Only allow artillery roles to see artillery hits
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+    return PRI != none && (PC.IsArtilleryRole());
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
@@ -35,7 +62,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     SquadIndex = Marker.SquadIndex;
     SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
 
-    return SquadName;
+    return default.TypeName $ " request (" $ SquadName $ ")";
 }
 
 defaultproperties
@@ -46,8 +73,10 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    bIsUnique=false
+    bIsUnique=true
+    bIsSquadSpecific=true
     bIsVisibleToTeam=false
+    bIsPersonal=false
     LifetimeSeconds=180 // 3 minutes
 }
 
