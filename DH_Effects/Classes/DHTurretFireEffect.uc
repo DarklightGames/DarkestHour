@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHVehicleDamagedEffect extends VehicleDamagedEffect;
+class DHTurretFireEffect extends VehicleDamagedEffect;
 
 //Overriden to add cook-off sparks (DH)
 simulated event UpdateDamagedEffect(bool bFlame, float VelMag, bool bMediumSmoke, bool bHeavySmoke)
@@ -16,10 +16,11 @@ simulated event UpdateDamagedEffect(bool bFlame, float VelMag, bool bMediumSmoke
         Emitters[1].AllParticlesDead = false;
 
         //smoke
-        Emitters[2].ParticlesPerSecond = 4;
-        Emitters[2].InitialParticlesPerSecond = 4;
+        Emitters[2].ParticlesPerSecond = 12;
+        Emitters[2].InitialParticlesPerSecond = 12;
         Emitters[2].LifetimeRange.Min = 8.0;
         Emitters[2].LifetimeRange.Max = 8.0;
+        Emitters[2].StartLocationOffset.Z = 0.0;
         Emitters[2].AllParticlesDead = false;
 
         //kill any light smoke
@@ -79,7 +80,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.5
         MaxParticles=30
-        StartLocationOffset=(Z=2.000000)
+        StartLocationOffset=(Z=-5.000000)
         InitialParticlesPerSecond=5.000000
         Texture=Texture'Effects_Tex.explosions.fire_quad'
         LifetimeRange=(Min=1.000000,Max=2.0)

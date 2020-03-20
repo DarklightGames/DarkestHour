@@ -529,6 +529,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    RoundType=RT_APBULLET
     WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'

@@ -304,7 +304,7 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=2.1
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
     DamageRadius=300.0
     MyDamageType=class'DH_Engine.DHShellHEATDamageType'

@@ -1128,7 +1128,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local int     i;
     local string  HitSide, OppositeSide, DebugString1, DebugString2;
-    local bool    bRearHit;
+    local bool    bRearHit, bSideHit;
     local array<ArmorSection> HitSideArmorArray;
 
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
@@ -1226,17 +1226,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
     {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
+        bSideHit = true; // so we can check HEAT AOI vs. added side armor below
+
+        // No penetration if vehicle has extra side armor that stops small and med HE shells or armor-piercing bullet projectiles, so exit here (after any debug options)
+        // This is per Kummersdorf testing in Feb. 1943
+        if (bHasAddedSideArmor && (P.RoundType == RT_APBULLET  || (P.RoundType == RT_HE && P.ShellDiameter < 8.5)))
         {
             if (bLogDebugPenetration)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HE/PTRD projectiles");
             }
 
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HE/PTRD projectiles");
             }
 
             ResetTakeDamageVariables();
@@ -1282,6 +1285,14 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
         ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
+
+        //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45°
+        if (bSideHit && bHasAddedSideArmor && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
+        {
+            ResetTakeDamageVariables();
+
+            return false;
+        }
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
@@ -1604,10 +1615,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             DamageModifier = WepDamageType.default.TankDamageModifier;
         }
 
+        /*
         if (DamageType != VehicleBurningDamType)
         {
             DamageModifier *= RandRange(0.85, 1.25);
         }
+        */
 
         if (bHasTreads)
         {
@@ -1758,7 +1771,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
         }
 
-        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration or large HE shell hit
+        // Random damage to crew or vehicle components due to spalling or fragmentation inside vehicle
         if (bProjectilePenetrated)
         {
             if (Cannon != none)
@@ -1843,8 +1856,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
             else if (bTurretPenetration)
             {
-                Damage *= 0.75; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
-
                 // Random chance of shrapnel killing driver
                 if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
                 {
@@ -1866,6 +1877,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                     MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
+
+                Damage *= 0.75; //(reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate)
             }
         }
 
@@ -1874,7 +1887,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             CheckTreadDamage(HitLocation, Momentum);
 
-            Damage *= 0.55; // reduce overall damage to vehicle itself if tread area hit (wheels and bottom treads usually below critical areas)
+            Damage *= 0.55; // -- reduce overall damage to vehicle itself if tread area hit (wheels and bottom treads usually below critical areas)
         }
     }
 
@@ -2371,7 +2384,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'ROEngine.VehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
