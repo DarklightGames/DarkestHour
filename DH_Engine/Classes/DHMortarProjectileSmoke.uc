@@ -14,14 +14,15 @@ var     float           SmokeSoundDuration; // duration until smoke sound stops 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local DHPlayer PC;
-    local vector MapLocation;
     local DHGameReplicationInfo GRI;
+    local vector MapLocation;
+
+    PC =  DHPlayer(InstigatorController);
     
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    PC =  DHPlayer(Instigator.Controller);
-    
-    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke', MapLocation.X, MapLocation.Y);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+
+    class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
     super.Explode(HitLocation, HitNormal);
 }
 

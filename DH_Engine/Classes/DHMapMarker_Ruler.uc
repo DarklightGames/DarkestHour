@@ -12,10 +12,13 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 }
 
 // Override this to have a caption accompany the marker.
-static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local vector PlayerLocation;
     local int Distance;
+    local vector WorldLocation;
+
+    WorldLocation = Marker.WorldLocation;
 
     if (PC != none && PC.Pawn != none)
     {

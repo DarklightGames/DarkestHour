@@ -20,23 +20,22 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
     return PC != none && PC.IsSLorASL();    // TODO: we can have this be just ASL maybe.
 }
 
-static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local vector PlayerLocation;
-    local int Distance;
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+    local DHSquadReplicationInfo SRI;
+    local int TeamIndex, SquadIndex;
+    local string SquadName;
 
-    if (PC != none && PC.Pawn != none)
-    {
-        PlayerLocation = PC.Pawn.Location;
-        PlayerLocation.Z = 0.0;
-        WorldLocation.Z = 0.0;
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    SRI = PC.SquadReplicationInfo;
 
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
+    TeamIndex = PRI.Team.TeamIndex;
+    SquadIndex = Marker.SquadIndex;
+    SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
 
-        return string((Distance / 5) * 5) $ "m";
-    }
-
-    return "";
+    return SquadName;
 }
 
 defaultproperties
@@ -46,10 +45,9 @@ defaultproperties
     IconColor=(R=204,G=,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
-    bShouldShowOnCompass=true
-    bIsUnique=true
-    bIsSquadSpecific=true
-    bIsVisibleToTeam=true
+    bShouldShowOnCompass=false
+    bIsUnique=false
+    bIsVisibleToTeam=false
     LifetimeSeconds=180 // 3 minutes
 }
 

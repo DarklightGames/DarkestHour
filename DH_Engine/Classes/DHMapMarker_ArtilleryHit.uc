@@ -13,7 +13,8 @@ var int             ClosestFireRequestIndex; // this can be used for quickly fin
 
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
-    return true;
+    Log("entered CanPlayerUse in " $ default.MarkerName);
+    return false;
 }
 
 defaultproperties
@@ -22,10 +23,9 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attack'
     IconColor=(R=204,G=255,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    GroupIndex=5
-    bShouldShowOnCompass=true
+    bIsPersonal = true
     bIsUnique=true
     bIsSquadSpecific=false
-    bIsVisibleToTeam=true
-    LifetimeSeconds=180 // 3 minutes
+    bIsVisibleToTeam=false
+    LifetimeSeconds=30 // 30 seconds
 }

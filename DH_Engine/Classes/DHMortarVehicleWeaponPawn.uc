@@ -128,7 +128,7 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     local string DeflectionSign;
     local vector WeaponLocation, Target;
     local rotator WeaponRotation;
-    local DHPlayer.PersonalMapMarker TargetMarker;
+    local DHGameReplicationInfo.MapMarker TargetMarker;
 
     if (PC == none)
     {

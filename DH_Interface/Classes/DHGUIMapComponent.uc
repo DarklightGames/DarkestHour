@@ -397,7 +397,7 @@ function bool IsMarkerUnderCursor(float LocationX, float LocationY, float Cursor
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
@@ -424,7 +424,9 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (IsMarkerUnderCursor(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+        Log("PersonalMarker i=" $ i $ ", class=" $ PersonalMapMarkers[i].MapMarkerClass);
+        if (IsMarkerUnderCursor(PersonalMapMarkers[i].LocationX, PersonalMapMarkers[i].LocationY, MapClickLocation.X, MapClickLocation.Y)
+            && !ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass,  class'DH_Engine.DHMapMarker_ArtilleryHit'))
         {
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
@@ -438,17 +440,18 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     {
         for (i = 0; i < MapMarkers.Length; ++i)
         {
-            if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) ||
-                !IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            if (MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) &&
+                IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y) &&
+                    (!ClassIsChildOf(MapMarkers[i].MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport')
+                    || ClassIsChildOf(MapMarkers[i].MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport') 
+                        && MapMarkers[i].SquadIndex == PRI.SquadIndex))
             {
-                continue;
+                bRemoveMapMarker = true;
+                MapMarkerIndexToRemove = Indices[i];
+                Sender.AddItem(RemoveText);
+                MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
+                break;
             }
-
-            bRemoveMapMarker = true;
-            MapMarkerIndexToRemove = Indices[i];
-            Sender.AddItem(RemoveText);
-            MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
-            break;
         }
     }
 

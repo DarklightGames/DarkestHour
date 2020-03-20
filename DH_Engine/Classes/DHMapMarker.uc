@@ -46,6 +46,7 @@ static function OnMapMarkerPlaced(DHPlayer PC);
 // added/removed.
 static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 {
+    Log("Inserting " $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
     if (default.bIsPersonal)
     {
         PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
@@ -74,7 +75,7 @@ static function RemoveMarker(DHPlayer PC, optional int Index)
 }
 
 // Override this to have a caption accompany the marker.
-static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return "";
 }

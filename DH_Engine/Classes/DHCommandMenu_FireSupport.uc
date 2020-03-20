@@ -30,10 +30,10 @@ function OnSelect(int Index, vector Location)
             PC.ServerSaveArtilleryPosition();
             break;
         case 1: // Fire request (HE)
-            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
+            class'DH_Engine.DHMapMarker_FireSupport_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
             break;
         case 2: // Fire request (Smoke)
-            PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
+            class'DH_Engine.DHMapMarker_FireSupport_Smoke'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
             break;
     }
 

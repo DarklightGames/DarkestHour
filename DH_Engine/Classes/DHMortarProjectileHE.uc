@@ -32,6 +32,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     local vector MapLocation;
     local DHGameReplicationInfo GRI;
 
+    Log("HitLocation: " $ HitLocation);
+
     if (!bDud)
     {
         VT = Spawn(class'DHVolumeTest',,, HitLocation);
@@ -43,14 +45,13 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
     }
     
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    
     // get info about the shooter
-    PC =  DHPlayer(Instigator.Controller);
+    PC =  DHPlayer(InstigatorController);
     
-    GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
-    PC.ServerAddMapMarker(class'DH_Engine.DHMapMarker_ArtilleryHit_HE', MapLocation.X, MapLocation.Y);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
 
+    class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
     super.Explode(HitLocation, HitNormal);
 }
 

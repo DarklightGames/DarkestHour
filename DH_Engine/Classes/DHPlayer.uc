@@ -16,17 +16,9 @@ enum EMapMode
     MODE_Map,
     MODE_Squads
 };
-
-struct PersonalMapMarker
-{
-    var class<DHMapMarker> MapMarkerClass;
-    var float MapLocationX;
-    var float MapLocationY;
-    var vector WorldLocation;
-};
-
+    
 var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
-var     private array<PersonalMapMarker>    PersonalMapMarkers;
+var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -2141,6 +2133,14 @@ simulated function ResetSwayAfterBolt()
     WeaponSwayYawRate = 0.0;
     WeaponSwayPitchRate = 0.0;
     SwayTime = 0.0;
+}
+
+function bool IsArtilleryRole()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+    return RI.bCanUseMortars || IsInArtilleryVehicle();
 }
 
 // Modified to allow mortar operator to make a resupply request
@@ -5455,12 +5455,12 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
-function array<PersonalMapMarker> GetPersonalMarkers()
+function array<DHGameReplicationInfo.MapMarker> GetPersonalMarkers()
 {
     return PersonalMapMarkers;
 }
 
-function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+function DHGameReplicationInfo.MapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
 {
     local int i;
 
@@ -5476,7 +5476,7 @@ function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
 function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
-    local PersonalMapMarker PMM;
+    local DHGameReplicationInfo.MapMarker PMM;
     local int i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -5499,8 +5499,8 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
-    PMM.MapLocationX = MapLocationX;
-    PMM.MapLocationY = MapLocationY;
+    PMM.LocationX = MapLocationX;
+    PMM.LocationY = MapLocationY;
     PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
 
     PersonalMapMarkers.Insert(0, 1);

@@ -2731,7 +2731,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local ROGameReplicationInfo GRI;
     local float angle, XL, YL;
     local rotator rotAngle;
-    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
     local array<int> Indices;
@@ -3323,7 +3323,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
-    local DHVehicleWeapon           VW;
 
     if (DHGRI == none)
     {
@@ -3766,6 +3765,7 @@ function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapS
     MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
     MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.default.IconColor;
+    //Log("Drawing MapMarkerClass" $ MapMarkerClass $ " in location: (" $ Target.X $ ", " $ Target.Y $ ")");
 
     DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
 
@@ -3781,7 +3781,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     local DHPlayer PC;
     local int i;
     local vector L;
-    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
 
@@ -3809,7 +3809,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                            MapMarkers[i].MapMarkerClass,
                            L,
                            PC.Pawn,
-                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, L));
+                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
     }
 
     // Personal map markers
@@ -3825,7 +3825,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                            PersonalMapMarkers[i].MapMarkerClass,
                            PersonalMapMarkers[i].WorldLocation,
                            PC.Pawn,
-                           PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i].WorldLocation));
+                           PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
     }
 }
 
