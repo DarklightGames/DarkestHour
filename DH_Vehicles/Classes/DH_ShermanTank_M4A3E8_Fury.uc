@@ -97,6 +97,8 @@ defaultproperties
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
     LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
 
+    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.fury_destroyed'
+
     VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.Menu.body_fury'
     VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_fury_look'
     VehicleHudTurretLook=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_fury_rot'

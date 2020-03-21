@@ -41,5 +41,7 @@ defaultproperties
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42 HE"
     nProjectileDescriptions(2)="M88 HC"
+
+    FireAttachBone="com_attachment"
 }
 

@@ -74,8 +74,6 @@ simulated function ClientPlayDestroyedEffects()
     {
         SpawnLocation = Location + (DestroyedEmitterOffset << Rotation);
         DestroyedEmitter = Spawn(DestroyedEmitterClass,,, SpawnLocation, Rotation);
-
-        Spawn(class'RODebugTracer',,, SpawnLocation, Rotation);
     }
 }
 

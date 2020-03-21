@@ -46,13 +46,15 @@ defaultproperties
     Skins(1)=Texture'DH_ShermanM4A3E8_tex.wheels_ext'
     Skins(2)=Texture'DH_ShermanM4A3E8_tex.tread'
     Skins(3)=Texture'DH_ShermanM4A3E8_tex.tread'
-    Skins(4)=Texture'DH_ShermanM4A3E8_tex.body_int'
+    Skins(4)=FinalBlend'DH_ShermanM4A3E8_tex.body_int_fb'
 
     LeftTreadPanDirection=(Pitch=1,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=1,Yaw=0,Roll=0)
 
     LeftLeverBoneName="lever.L"
     RightLeverBoneName="lever.R"
+
+    DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
 
     LeftWheelBones(0)="wheel.L.001"
     LeftWheelBones(1)="wheel.L.002"
@@ -80,6 +82,8 @@ defaultproperties
     RightWheelBones(10)="wheel.R.011"
     RightWheelBones(11)="wheel.R.012"
     RightWheelBones(12)="wheel.R.013"
+
+    FireAttachBone="driver_attachment"
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
