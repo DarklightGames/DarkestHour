@@ -11,16 +11,7 @@ var string TypeName;
 // Any squad leader can call artillery support.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
-    local DHPlayer PC;
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    PC = DHPlayer(PRI.Owner);
-
-    return PC != none && PC.IsSL();
+    return PRI != none && DHPlayer(PRI.Owner).IsSL();
 }
 
 // An artillery support request can be removed only by the SL of the squad that called artillery request.
@@ -29,22 +20,22 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     local DHPlayer PC;
 
     if (PRI == none)
-    {
         return false;
-    }
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
+    return PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
 }
 
 // Only allow artillery roles and the SL who made the mark to see artillery requests.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
+    if(PRI == none)
+        return false;
 
     PC = DHPlayer(PRI.Owner);
-    return PRI != none && (PC.IsArtilleryRole()) || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
+    return (PC.IsArtilleryRole()) || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)

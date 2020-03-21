@@ -21,7 +21,7 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
 // Allow everyone on the team to see friendly markers.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return true;
+    return PRI != none;
 }
 
 defaultproperties

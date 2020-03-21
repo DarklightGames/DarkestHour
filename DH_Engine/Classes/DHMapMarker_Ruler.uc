@@ -9,29 +9,20 @@ class DHMapMarker_Ruler extends DHMapMarker
 // allow only artillery roles to place a Ruler marker
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(PRI.Owner);
-    return PC.IsArtilleryRole();
+    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
 }
     
 // allow only artillery roles to remove a Ruler marker
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(PRI.Owner);
-    return PC.IsArtilleryRole();
+    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
 }
 
 // keep in mind that this class is only inserted to personal map makers!
 // thus a Ruler marker can only be seen by the person who created it anyway
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(PRI.Owner);
-    return PC.IsArtilleryRole();
+    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
 }
 
 // Override this to have a caption accompany the marker.
