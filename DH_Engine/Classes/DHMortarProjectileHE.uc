@@ -45,13 +45,14 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
     }
     
-    // get info about the shooter
+    // Get info about the shooter and save a hit marker on the shooters machine. 
     PC =  DHPlayer(InstigatorController);
-    
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-
-    class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
+    if(PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+        class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
+    }
     super.Explode(HitLocation, HitNormal);
 }
 
