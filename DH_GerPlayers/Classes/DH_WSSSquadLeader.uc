@@ -7,7 +7,7 @@ class DH_WSSSquadLeader extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="ScharfÃ¼hrer"
+    AltName="Scharführer"
 
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 
