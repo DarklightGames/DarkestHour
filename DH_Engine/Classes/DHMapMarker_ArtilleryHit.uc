@@ -6,9 +6,6 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-var DHPlayer        Controller; // the guy who fired the projectile
-var vector          Location;
-var float           Time;
 var int             ClosestFireRequestIndex; // this can be used for quickly finding nearest fire requests later on
 
 
@@ -27,7 +24,9 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     return false;
 }
 
-// Only allow artillery roles to see artillery hits
+// Only allow artillery roles to see artillery hits.
+// Keep in mind that ArtilleryHits are to be used as personal marker, so
+// nobody else than the shooter will see it anyway.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
@@ -43,8 +42,6 @@ defaultproperties
     IconColor=(R=204,G=255,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     bIsUnique=true
-    bIsPersonal = true
-    bIsSquadSpecific=false
-    bIsVisibleToTeam=false
+    Scope=PERSONAL
     LifetimeSeconds=30 // 30 seconds
 }

@@ -6,19 +6,24 @@
 class DHMapMarker extends Object
     abstract;
 
+enum EScopeType
+{
+    PERSONAL,
+    SQUAD,
+    TEAM
+};
+
 var localized string    MarkerName;
 var Material            IconMaterial;
 var IntBox              IconCoords;
 var color               IconColor;
-var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
-var bool                bIsSquadSpecific;       // If true, when this marker is placed, it will only be visible to squad members
+var EScopeType          Scope;
 var int                 LifetimeSeconds;        // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
+var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
 var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
 var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
-var bool                bIsPersonal;
-var bool                bIsVisibleToTeam;       // If true, this marker is visible to everyone on the team (used for squad markers that we want everyone to see)
 
 // Override this function to determine if this map marker can be used. This
 // function evaluated once at the beginning of the map.
@@ -60,7 +65,7 @@ static function OnMapMarkerPlaced(DHPlayer PC);
 // added/removed.
 static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 {
-    if (default.bIsPersonal)
+    if (default.Scope == PERSONAL)
     {
         Log("Inserting personal marker" $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
         PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
@@ -79,7 +84,7 @@ static function RemoveMarker(DHPlayer PC, optional int Index)
         return;
     }
 
-    if (default.bIsPersonal)
+    if (default.Scope == PERSONAL)
     {
         PC.RemovePersonalMarker(Index);
     }
@@ -100,9 +105,8 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=-1
     GroupIndex=-1
+    Scope=TEAM
     bShouldOverwriteGroup=false
-    bIsSquadSpecific=false
     bIsUnique=false
-    bIsVisibleToTeam=false
     bShouldShowOnCompass=false
 }

@@ -66,6 +66,6 @@ defaultproperties
     GroupIndex=4
     bShouldShowOnCompass=true
     bIsUnique=true
-    bIsPersonal=true
+    Scope=PERSONAL
 }
 

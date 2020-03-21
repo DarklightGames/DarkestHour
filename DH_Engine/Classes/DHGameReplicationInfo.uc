@@ -1393,7 +1393,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
-    if(MapMarkerClass.default.bIsSquadSpecific)
+    if(MapMarkerClass.default.Scope==SQUAD)
     {
         M.SquadIndex = PRI.SquadIndex;
     }
@@ -1434,8 +1434,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                 {
                     if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (!MapMarkerClass.default.bIsSquadSpecific
-                        || (MapMarkerClass.default.bIsSquadSpecific && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        (MapMarkerClass.default.Scope==TEAM
+                        || (MapMarkerClass.default.Scope==SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                     {
                         AxisMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
@@ -1478,8 +1478,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                 {
                     if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (!MapMarkerClass.default.bIsSquadSpecific
-                        || (MapMarkerClass.default.bIsSquadSpecific && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        (MapMarkerClass.default.Scope==TEAM
+                        || (MapMarkerClass.default.Scope==SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                     {
                         AlliesMapMarkers[i] = M;
                         MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));

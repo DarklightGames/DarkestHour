@@ -8,7 +8,7 @@ class DHMapMarker_FireSupport extends DHMapMarker
 
 var string TypeName;
 
-// Any squad leader can call artillery support
+// Any squad leader can call artillery support.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
@@ -23,7 +23,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
     return PC != none && PC.IsSL();
 }
 
-// Arillery support markers can be removed only by the SLs or ASLs 
+// An artillery support request can be removed only by the SL of the squad that called artillery request.
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
@@ -38,13 +38,13 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     return PC != none && PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
 }
 
-// Only allow artillery roles to see artillery hits
+// Only allow artillery roles and the SL who made the mark to see artillery requests.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
 
     PC = DHPlayer(PRI.Owner);
-    return PRI != none && (PC.IsArtilleryRole());
+    return PRI != none && (PC.IsArtilleryRole()) || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
@@ -74,9 +74,7 @@ defaultproperties
     GroupIndex=5
     bShouldShowOnCompass=false
     bIsUnique=true
-    bIsSquadSpecific=true
-    bIsVisibleToTeam=false
-    bIsPersonal=false
+    Scope=SQUAD
     LifetimeSeconds=180 // 3 minutes
 }
 

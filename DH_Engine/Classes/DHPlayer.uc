@@ -5491,7 +5491,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    if (GRI == none || MapMarkerClass == none || !(MapMarkerClass.default.Scope == PERSONAL))
     {
         return;
     }
@@ -5519,7 +5519,6 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
-    Log("Succesfully inserted personal map marker: " $ MapMarkerClass);
 }
 
 function RemovePersonalMarker(int Index)

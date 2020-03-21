@@ -26,7 +26,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
 defaultproperties
 {
-    bIsSquadSpecific=true
+    Scope=SQUAD
     GroupIndex=0
     bIsUnique=true
     bShouldOverwriteGroup=true
