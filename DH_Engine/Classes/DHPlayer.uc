@@ -5486,8 +5486,12 @@ function DHGameReplicationInfo.MapMarker FindPersonalMarker(class<DHMapMarker> M
 function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
-    local DHGameReplicationInfo.MapMarker PMM;
-    local int i;
+    local DHGameReplicationInfo.MapMarker PMM, Marker;
+    local int i, ClosestArtilleryRequest, ElapsedTime;
+    local float MinimumDistance, Distance;
+    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers;
+    local DHPlayerReplicationInfo PRI;
+    local string SquadName;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -5517,6 +5521,42 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     else
         PMM.ExpiryTime = -1;
     
+    // For each artillery hit the closest artillery request is calculated.
+    if(ClassIsChildOf(MapMarkerClass, class'DHMapMarker_ArtilleryHit'))
+    {
+        PMM.WorldLocation.Z = 0.0;
+        ClosestArtilleryRequest = -1;
+        MinimumDistance = class'UFloat'.static.Infinity();
+        ElapsedTime = GRI.ElapsedTime;
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+        
+        GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
+        for(i = 0; i < PublicMapMarkers.Length; i++)
+        {
+            Marker = PublicMapMarkers[i];
+            if(ClassIsChildOf(Marker.MapMarkerClass, class'DH_Engine.DHMapMarker_FireSupport')
+                && (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime)
+                && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
+            {
+                Marker.WorldLocation.Z = 0.0;
+                Log("Comparing Marker.WorldLocation: " $ Marker.WorldLocation $ " with PMM.WorldLocation:" $ PMM.WorldLocation );
+                Distance = VSize(Marker.WorldLocation - PMM.WorldLocation);
+                if(MinimumDistance > Distance)
+                {
+                    ClosestArtilleryRequest = i;
+                    MinimumDistance = Distance;
+                }
+            }
+        }
+        Log("ClosestArtilleryRequest: " $ ClosestArtilleryRequest);
+        if(ClosestArtilleryRequest != -1)
+        {
+            SquadName = SquadReplicationInfo.GetSquadName(GetTeamNum(), PublicMapMarkers[ClosestArtilleryRequest].SquadIndex);
+            Log("The closest was " $ PublicMapMarkers[ClosestArtilleryRequest].MapMarkerClass $ " (squad " $ SquadName $ ")");
+        }
+    }
+    PMM.ClosestArtilleryRequest = ClosestArtilleryRequest;
+
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
 }

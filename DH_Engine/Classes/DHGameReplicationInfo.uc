@@ -141,11 +141,12 @@ var private byte        OldDangerZoneBalance;
 struct MapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
-    var byte LocationX;         // Quantized representation of 0.0..1.0 - X coordinate
-    var byte LocationY;         // Quantized representation of 0.0..1.0 - Y coordinate
-    var byte SquadIndex;        // The squad index that owns the marker, or -1 if team-wide
-    var int ExpiryTime;         // The expiry time, relative to ElapsedTime in GRI
-    var vector WorldLocation;   // World location of the marker; used only in personal MapMarkers in DHPlayer
+    var byte LocationX;                     // Quantized representation of 0.0..1.0 - X coordinate
+    var byte LocationY;                     // Quantized representation of 0.0..1.0 - Y coordinate
+    var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
+    var int ExpiryTime;                     // The expiry time, relative to ElapsedTime in GRI
+    var vector WorldLocation;               // World location of the marker
+    var byte ClosestArtilleryRequest;       // Index of the closes artillery request; used  only in ArtilleryHit
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
@@ -1356,13 +1357,11 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 // will most likely cause "Context expression: Variable is too large (480 bytes, 255 max)" compilation error.
 // You can't access big static arrays of structs from outside of the given object; you have to
 // use a proxy function like this one to retrive elements of a static array as a dynamic array.
-simulated function GetMapMarkers(out array<MapMarker> MapMarkers, int TeamIndex, int SquadIndex)
+simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
 {
     local int i;
-    local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
-    PC = DHPlayer(Level.GetLocalPlayerController());
     PRI = DHPlayerReplicationInfo(PC.Owner);
 
     switch (TeamIndex)
@@ -1393,6 +1392,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
+    M.WorldLocation = GetWorldCoords(MapLocation.X, MapLocation.Y);
+
     if(MapMarkerClass.default.Scope==SQUAD)
     {
         M.SquadIndex = PRI.SquadIndex;

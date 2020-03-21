@@ -2906,7 +2906,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Map markers
-        //DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+        DHGRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
@@ -3793,7 +3793,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     }
 
     // Team & squad map markers
-    DHGRI.GetMapMarkers(MapMarkers, PC.GetTeamNum(), PC.GetSquadIndex());
+    DHGRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
     ElapsedTime = DHGRI.ElapsedTime;
 
     for (i = 0; i < MapMarkers.Length; ++i)
