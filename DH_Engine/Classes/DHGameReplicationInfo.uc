@@ -146,7 +146,6 @@ struct MapMarker
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
     var int ExpiryTime;                     // The expiry time, relative to ElapsedTime in GRI
     var vector WorldLocation;               // World location of the marker
-    var byte ClosestArtilleryRequest;       // Index of the closes artillery request; used  only in ArtilleryHit
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).

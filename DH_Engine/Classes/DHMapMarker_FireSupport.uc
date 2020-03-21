@@ -35,7 +35,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
         return false;
 
     PC = DHPlayer(PRI.Owner);
-    return (PC.IsArtilleryRole()) || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
+    return PC.IsArtilleryRole() || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
