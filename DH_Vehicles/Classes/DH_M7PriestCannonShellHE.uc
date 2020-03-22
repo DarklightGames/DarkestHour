@@ -9,7 +9,23 @@
 
 class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
 
-defaultproperties
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local vector MapLocation;
+
+    PC =  DHPlayer(InstigatorController);
+    if(PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+        class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
+    }
+    super.Explode(HitLocation, HitNormal);
+}
+
+    defaultproperties
 {
     Speed=8962.5         // 198m/s x 75%
     MaxSpeed=8962.5

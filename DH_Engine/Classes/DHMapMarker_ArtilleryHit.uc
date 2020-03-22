@@ -18,12 +18,12 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     return false;
 }
 
-static function FindClosestArtilleryRequest(DHPlayer PC,
+static function FindClosestArtilleryRequest(out DHPlayer PC,
                                             out DHPlayer.ArtilleryHitInfo HitInfo, 
-                                            array<DHGameReplicationInfo.MapMarker> MapMarkers, 
+                                            out array<DHGameReplicationInfo.MapMarker> MapMarkers, 
                                             class<DHMapMarker_FireSupport> RequestClass, 
-                                            vector WorldLocation,
-                                            int ElapsedTime)
+                                            out vector WorldLocation,
+                                            out int ElapsedTime)
 {
     local DHGameReplicationInfo.MapMarker Marker;
     local int i, ClosestArtilleryRequest;
@@ -35,21 +35,21 @@ static function FindClosestArtilleryRequest(DHPlayer PC,
     MinimumDistance = class'UFloat'.static.Infinity();
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    Log("MapMarkers.Length: " $ MapMarkers.Length);
+    //Log("MapMarkers.Length: " $ MapMarkers.Length);
 
     for(i = 0; i < MapMarkers.Length; i++)
     {
         Marker = MapMarkers[i];
-        Log("i=" $ i);
-        Log("Marker.MapMarkerClass=" $ Marker.MapMarkerClass $ ", RequestClass=" $ RequestClass);
-        Log("Marker.ExpiryTime=" $ Marker.ExpiryTime);
-        Log("Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)=" $ Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker));
+        //Log("i=" $ i);
+        //Log("Marker.MapMarkerClass=" $ Marker.MapMarkerClass $ ", RequestClass=" $ RequestClass);
+        //Log("Marker.ExpiryTime=" $ Marker.ExpiryTime);
+        //Log("Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)=" $ Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker));
         if(Marker.MapMarkerClass == RequestClass
             && (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime)
             && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
         {
             Marker.WorldLocation.Z = 0.0;
-            Log(Marker.MapMarkerClass $ ", comparing Marker.WorldLocation: " $ Marker.WorldLocation $ " with WorldLocation:" $ WorldLocation);
+            //Log(Marker.MapMarkerClass $ ", comparing Marker.WorldLocation: " $ Marker.WorldLocation $ " with WorldLocation:" $ WorldLocation);
             Distance = VSize(Marker.WorldLocation - WorldLocation);
             if(MinimumDistance > Distance)
             {
@@ -60,7 +60,7 @@ static function FindClosestArtilleryRequest(DHPlayer PC,
     }
     HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
     HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
-    Log("ClosestArtilleryRequest: " $ ClosestArtilleryRequest);
+    //Log("ClosestArtilleryRequest: " $ ClosestArtilleryRequest);
     if(ClosestArtilleryRequest != -1)
     {
         Log("The closest was " $ MapMarkers[ClosestArtilleryRequest].MapMarkerClass $ " (squad " $ MapMarkers[ClosestArtilleryRequest].SquadIndex $ ")");
