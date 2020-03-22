@@ -20,6 +20,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
     local string S;
     local DHSpawnManager SM;
 
+    SM = DHSpawnManager(OptionalObject);
+
     switch (Switch)
     {
         case 0:
@@ -167,8 +169,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
         default:
             break;
     }
-
-    SM = DHSpawnManager(OptionalObject);
 
     // This is a fairly hacky workaround to the fact that this function can't
     // accept class references as arguments. The remainder of Switch/100
