@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.turret_ext'
     Skins(0)=Texture'DH_ShermanM4A3E8_tex.turret_ext'
-    Skins(1)=Texture'DH_ShermanM4A3E8_tex.body_int'
+    Skins(1)=FinalBlend'DH_ShermanM4A3E8_tex.body_int_fb'
     CollisionStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.Turret.turret_collision'
 
     WeaponFireAttachmentBone="muzzle"
@@ -43,5 +43,6 @@ defaultproperties
     nProjectileDescriptions(2)="M88 HC"
 
     FireAttachBone="com_attachment"
+    FireEffectOffset=(X=0,Y=0,Z=50)
 }
 

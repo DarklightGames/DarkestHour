@@ -84,6 +84,7 @@ defaultproperties
     RightWheelBones(12)="wheel.R.013"
 
     FireAttachBone="driver_attachment"
+    FireEffectOffset=(X=0,Y=-10,Z=50)
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
