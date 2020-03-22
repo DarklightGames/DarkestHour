@@ -1424,7 +1424,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                             (AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex))
                         {
                             AxisMapMarkers[i] = M;
-                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                             return i;
                         }
                     }
@@ -1437,7 +1437,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                             || (MapMarkerClass.default.Scope==SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AxisMapMarkers[i] = M;
-                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                             return i;
                         }
                     }
@@ -1453,7 +1453,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AxisMapMarkers[i] = M;
-                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                     return i;
                 }
             }
@@ -1470,7 +1470,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                             (AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex))
                         {
                             AlliesMapMarkers[i] = M;
-                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                             return i;
                         }
                     }
@@ -1484,7 +1484,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                             || (MapMarkerClass.default.Scope==SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AlliesMapMarkers[i] = M;
-                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                             return i;
                         }
                     }
@@ -1500,7 +1500,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AlliesMapMarkers[i] = M;
-                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
                     return i;
                 }
             }

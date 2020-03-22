@@ -67,11 +67,6 @@ static function FindClosestArtilleryRequest(DHPlayer PC,
     }
 }
 
-static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
-{
-    // overload this method in all artillery types
-}
-
 // Only allow artillery roles to see artillery hits.
 // Keep in mind that ArtilleryHits are to be used as personal marker, so nobody else than the shooter will see them 
 // except for the mortar operators/Priest crewmen.

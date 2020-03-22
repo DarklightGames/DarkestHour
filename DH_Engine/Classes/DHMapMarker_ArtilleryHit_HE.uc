@@ -5,7 +5,7 @@
 
 class DHMapMarker_ArtilleryHit_HE extends DHMapMarker_ArtilleryHit abstract;
 
-static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer.ArtilleryHitInfo HitInfo;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
@@ -17,7 +17,7 @@ static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
-    WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+    WorldLocation = Marker.WorldLocation;
 
     FindClosestArtilleryRequest(PC,
                                 HitInfo, 
@@ -25,8 +25,7 @@ static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
                                 class'DHMapMarker_FireSupport_HE', 
                                 WorldLocation,
                                 GRI.ElapsedTime);
-    PC.SmokeHitInfo = HitInfo;
-    PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
+    PC.HEHitInfo = HitInfo;
 }
 
 defaultproperties

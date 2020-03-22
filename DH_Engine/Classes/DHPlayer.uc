@@ -5541,6 +5541,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
+    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[0]);
 }
 
 function RemovePersonalMarker(int Index)
