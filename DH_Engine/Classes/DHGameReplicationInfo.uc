@@ -1414,41 +1414,43 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     switch (PRI.Team.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            switch(MapMarkerClass.default.OverwritingRule)
             {
-                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
-                {
-                    if (AxisMapMarkers[i].MapMarkerClass != none &&
-                        AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                        (AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                case UNIQUE_PER_GROUP:
+                    for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
-                        AxisMapMarkers[i] = M;
-                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
-                        return i;
+                        if (AxisMapMarkers[i].MapMarkerClass != none &&
+                            AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                            (AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                        {
+                            AxisMapMarkers[i] = M;
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            return i;
+                        }
                     }
-                }
-            }
-
-            if (MapMarkerClass.default.bIsUnique)
-            {
-                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
-                {
-                    if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (MapMarkerClass.default.Scope==TEAM
-                        || (MapMarkerClass.default.Scope==SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    break;
+                case UNIQUE:
+                    for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
-                        AxisMapMarkers[i] = M;
-                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
-                        return i;
+                        if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                            (MapMarkerClass.default.Scope==TEAM
+                            || (MapMarkerClass.default.Scope==SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        {
+                            AxisMapMarkers[i] = M;
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            return i;
+                        }
                     }
-                }
+                    break;
+                case OFF:
+                    break;
             }
-
+            Log("Inserting for the first time");
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
             {
                 if (AxisMapMarkers[i].MapMarkerClass == none ||
                     (AxisMapMarkers[i].ExpiryTime != -1 &&
-                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
+                    AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AxisMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
@@ -1456,52 +1458,53 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 }
             }
             break;
-
         case ALLIES_TEAM_INDEX:
-            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            switch(MapMarkerClass.default.OverwritingRule)
             {
-                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
-                {
-                    if (AlliesMapMarkers[i].MapMarkerClass != none &&
-                        AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                        (AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                case UNIQUE_PER_GROUP:
+                    Log("Entered UNIQUE_PER_GROUP");
+                    for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
-                        AlliesMapMarkers[i] = M;
-                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
-                        return i;
+                        if (AlliesMapMarkers[i].MapMarkerClass != none &&
+                            AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                            (AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                        {
+                            AlliesMapMarkers[i] = M;
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            return i;
+                        }
                     }
-                }
-            }
-
-            if (MapMarkerClass.default.bIsUnique)
-            {
-                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
-                {
-                    if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                        (MapMarkerClass.default.Scope==TEAM
-                        || (MapMarkerClass.default.Scope==SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    break;
+                case UNIQUE:
+                    Log("Entered UNIQUE");
+                    for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
-                        AlliesMapMarkers[i] = M;
-                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
-                        return i;
+                        if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                            (MapMarkerClass.default.Scope==TEAM
+                            || (MapMarkerClass.default.Scope==SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        {
+                            AlliesMapMarkers[i] = M;
+                            MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                            return i;
+                        }
                     }
-                }
+                    break;
+                case OFF:
+                        break;
             }
-
+            Log("Inserting for the first time");
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
             {
                 if (AlliesMapMarkers[i].MapMarkerClass == none ||
                     (AlliesMapMarkers[i].ExpiryTime != -1 &&
-                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
+                    AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AlliesMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
                     return i;
                 }
             }
-            break;
     }
-
     return -1;
 }
 

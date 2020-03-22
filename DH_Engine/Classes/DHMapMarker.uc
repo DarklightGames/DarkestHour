@@ -6,27 +6,35 @@
 class DHMapMarker extends Object
     abstract;
 
+// EScopeType replaces DHMapMarker.bIsSquadSpecific and DHMapMarker.bIsVisibleToTeam.
 enum EScopeType
 {
-    PERSONAL,
-    SQUAD,
-    TEAM
+    PERSONAL,                                   // marker is coupled with a player (saved in DHPlayer.PersonalMapMarkers)
+    SQUAD,                                      // marker is coupled with a squad
+    TEAM                                        // marker is 
 };
+var EScopeType          Scope;
+
+// EOverwritingRule replaces DHMapMarker.bIsUnique and DHMapMarker.bShouldOverwriteGroup.
+enum EOverwritingRule
+{
+    UNIQUE_PER_GROUP,                           // there will always be exactly one or zero markers that have the given GroupIndex
+    UNIQUE,                                     // there will always be exactly one or zero such marker
+    OFF                                        // this marker can be drawn in any number on the map
+};
+var EOverwritingRule    OverwritingRule;        // 
 
 var localized string    MarkerName;
 var Material            IconMaterial;
 var IntBox              IconCoords;
 var color               IconColor;
-var EScopeType          Scope;
 var int                 LifetimeSeconds;        // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
 var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
-var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
-var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 
 // Override this function to determine if this map marker can be used. This
-// function evaluated once at the beginning of the map.
+// function is evaluated once at the beginning of the map.
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
 {
     return true;
@@ -106,7 +114,6 @@ defaultproperties
     LifetimeSeconds=-1
     GroupIndex=-1
     Scope=TEAM
-    bShouldOverwriteGroup=false
-    bIsUnique=false
+    OverwritingRule=NONE
     bShouldShowOnCompass=false
 }

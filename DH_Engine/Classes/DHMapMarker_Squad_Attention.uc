@@ -19,5 +19,4 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.attention'
     IconColor=(R=231,G=119,B=40,A=255)
     MarkerName="Squad Attention"
-    bIsUnique=true
 }

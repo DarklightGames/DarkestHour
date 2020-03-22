@@ -28,7 +28,6 @@ defaultproperties
 {
     Scope=SQUAD
     GroupIndex=0
-    bIsUnique=true
-    bShouldOverwriteGroup=true
+    OverwritingRule = UNIQUE_PER_GROUP
     bShouldShowOnCompass=true
 }

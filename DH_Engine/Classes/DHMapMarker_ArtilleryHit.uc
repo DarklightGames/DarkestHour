@@ -86,9 +86,8 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attack'
     IconColor=(R=204,G=255,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    bIsUnique=true
-    bShouldOverwriteGroup=true
-    GroupIndex=6Z
+    GroupIndex=6
+    OverwritingRule = UNIQUE_PER_GROUP
     Scope=PERSONAL
     LifetimeSeconds=30 // 30 seconds
 }

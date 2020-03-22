@@ -5504,16 +5504,30 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
         return;
     }
 
-    if (MapMarkerClass.default.bIsUnique)
+    switch (MapMarkerClass.default.OverwritingRule)
     {
-        for (i = 0; i < PersonalMapMarkers.Length; ++i)
-        {
-            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        case UNIQUE_PER_GROUP:
+            for (i = 0; i < PersonalMapMarkers.Length; ++i)
             {
-                PersonalMapMarkers.Remove(i, 1);
-                break;
+                if (PersonalMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    PersonalMapMarkers.Remove(i, 1);
+                    break;
+                }
             }
-        }
+            break;
+        case UNIQUE:
+            for (i = 0; i < PersonalMapMarkers.Length; ++i)
+            {
+                if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+                {
+                    PersonalMapMarkers.Remove(i, 1);
+                    break;
+                }
+            }
+            break;
+        case OFF:
+            break;
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
