@@ -79,6 +79,8 @@ simulated function DestroyAttachments()
 {
     local int i;
 
+    super.DestroyAttachments();
+
     for (i = 0; i < Attachments.Length; ++i)
     {
         if (Attachments[i] != none)
