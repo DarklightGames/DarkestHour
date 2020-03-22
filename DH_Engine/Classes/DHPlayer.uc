@@ -2158,7 +2158,7 @@ function bool IsArtilleryRole()
     local DHRoleInfo RI;
 
     RI = DHRoleInfo(GetRoleInfo());
-    return RI.bCanUseMortars || IsInArtilleryVehicle();
+    return RI.bCanUseMortars || IsInArtilleryVehicle() && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self.Pawn);
 }
 
 // Modified to allow mortar operator to make a resupply request
