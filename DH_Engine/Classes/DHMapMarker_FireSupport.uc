@@ -7,6 +7,7 @@ class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
 var string TypeName;
+var float HitVisibilityRadius;      // the maximum distance a shell can land from the artillery request for the hit to be visible on the map
 
 // Any squad leader can call artillery support.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
@@ -67,5 +68,6 @@ defaultproperties
     OverwritingRule = UNIQUE
     Scope=SQUAD
     LifetimeSeconds=180 // 3 minutes
+    HitVisibilityRadius=5000.0
 }
 

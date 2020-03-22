@@ -42,7 +42,8 @@ var     globalconfig int        MinDesiredFPS;       // client option used to ca
 struct ArtilleryHitInfo
 {
     var int         ClosestArtilleryRequestIndex;       // position in the markers array
-    var vector      ClosestArtilleryRequestLocation;    // worold location of the closest artillery request
+    var vector      ClosestArtilleryRequestLocation;    // world location of the closest artillery request
+    var bool        bIsHitVisible;                      // was the hit within the radius of the closest artillery request?
 };
 var     ArtilleryHitInfo        HEHitInfo, SmokeHitInfo;
 

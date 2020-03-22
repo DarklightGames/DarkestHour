@@ -7,25 +7,15 @@ class DHMapMarker_ArtilleryHit_HE extends DHMapMarker_ArtilleryHit abstract;
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayer.ArtilleryHitInfo HitInfo;
-    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
-    local DHGameReplicationInfo GRI;
-    local vector WorldLocation;
-
-    if(!PC.IsArtilleryRole())
-        return;
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
-    WorldLocation = Marker.WorldLocation;
-
-    FindClosestArtilleryRequest(PC,
-                                HitInfo, 
-                                MapMarkers,
+    CalculateHitMarkerVisibility(PC,
+                                PC.HEHitInfo,
                                 class'DHMapMarker_FireSupport_HE', 
-                                WorldLocation,
-                                GRI.ElapsedTime);
-    PC.HEHitInfo = HitInfo;
+                                Marker.WorldLocation);
+}
+
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole() && DHPlayer(PRI.Owner).HEHitInfo.bIsHitVisible;
 }
 
 defaultproperties

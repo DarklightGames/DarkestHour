@@ -18,38 +18,33 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     return false;
 }
 
-static function FindClosestArtilleryRequest(out DHPlayer PC,
+static function CalculateHitMarkerVisibility(out DHPlayer PC,
                                             out DHPlayer.ArtilleryHitInfo HitInfo, 
-                                            out array<DHGameReplicationInfo.MapMarker> MapMarkers, 
-                                            class<DHMapMarker_FireSupport> RequestClass, 
-                                            out vector WorldLocation,
-                                            out int ElapsedTime)
+                                            class<DHMapMarker_FireSupport> RequestClass,
+                                            vector WorldLocation)
 {
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker Marker;
-    local int i, ClosestArtilleryRequest;
+    local int i, ClosestArtilleryRequest, ElapsedTime;
     local float MinimumDistance, Distance;
     local DHPlayerReplicationInfo PRI;
-    local string SquadName;
 
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     ClosestArtilleryRequest = -1;
     MinimumDistance = class'UFloat'.static.Infinity();
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    //Log("MapMarkers.Length: " $ MapMarkers.Length);
+    ElapsedTime = GRI.ElapsedTime;
+    GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
     for(i = 0; i < MapMarkers.Length; i++)
     {
         Marker = MapMarkers[i];
-        //Log("i=" $ i);
-        //Log("Marker.MapMarkerClass=" $ Marker.MapMarkerClass $ ", RequestClass=" $ RequestClass);
-        //Log("Marker.ExpiryTime=" $ Marker.ExpiryTime);
-        //Log("Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)=" $ Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker));
         if(Marker.MapMarkerClass == RequestClass
             && (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime)
             && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
         {
             Marker.WorldLocation.Z = 0.0;
-            //Log(Marker.MapMarkerClass $ ", comparing Marker.WorldLocation: " $ Marker.WorldLocation $ " with WorldLocation:" $ WorldLocation);
             Distance = VSize(Marker.WorldLocation - WorldLocation);
             if(MinimumDistance > Distance)
             {
@@ -58,21 +53,13 @@ static function FindClosestArtilleryRequest(out DHPlayer PC,
             }
         }
     }
-    HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
     //Log("ClosestArtilleryRequest: " $ ClosestArtilleryRequest);
-    if(ClosestArtilleryRequest != -1)
+    if(ClosestArtilleryRequest != -1 && MinimumDistance < RequestClass.default.HitVisibilityRadius)
     {
-        Log("The closest was " $ MapMarkers[ClosestArtilleryRequest].MapMarkerClass $ " (squad " $ MapMarkers[ClosestArtilleryRequest].SquadIndex $ ")");
+        HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
+        HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
+        HitInfo.bIsHitVisible = MinimumDistance < RequestClass.default.HitVisibilityRadius;
     }
-}
-
-// Only allow artillery roles to see artillery hits.
-// Keep in mind that ArtilleryHits are to be used as personal marker, so nobody else than the shooter will see them 
-// except for the mortar operators/Priest crewmen.
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
 }
 
 defaultproperties
