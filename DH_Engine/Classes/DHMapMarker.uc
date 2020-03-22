@@ -75,12 +75,10 @@ static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 {
     if (default.Scope == PERSONAL)
     {
-        Log("Inserting personal marker" $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
         PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
     }
     else
     {
-        Log("Inserting public marker" $ default.MarkerName $ " in (" $ MapLocationX $ ", " $ MapLocationY $ ")");
         PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
     }
 }

@@ -68,6 +68,6 @@ defaultproperties
     OverwritingRule = UNIQUE
     Scope=SQUAD
     LifetimeSeconds=180 // 3 minutes
-    HitVisibilityRadius=5000.0
+    HitVisibilityRadius=3000.0
 }
 

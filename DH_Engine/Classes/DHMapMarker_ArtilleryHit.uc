@@ -53,12 +53,11 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
             }
         }
     }
-    //Log("ClosestArtilleryRequest: " $ ClosestArtilleryRequest);
+    HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
+    HitInfo.bIsHitVisible = (MinimumDistance < RequestClass.default.HitVisibilityRadius);
     if(ClosestArtilleryRequest != -1 && MinimumDistance < RequestClass.default.HitVisibilityRadius)
     {
-        HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
         HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
-        HitInfo.bIsHitVisible = MinimumDistance < RequestClass.default.HitVisibilityRadius;
     }
 }
 

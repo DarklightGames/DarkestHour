@@ -1445,7 +1445,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case OFF:
                     break;
             }
-            Log("Inserting for the first time");
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
             {
                 if (AxisMapMarkers[i].MapMarkerClass == none ||
@@ -1462,7 +1461,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             switch(MapMarkerClass.default.OverwritingRule)
             {
                 case UNIQUE_PER_GROUP:
-                    Log("Entered UNIQUE_PER_GROUP");
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
                         if (AlliesMapMarkers[i].MapMarkerClass != none &&
@@ -1476,7 +1474,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                     }
                     break;
                 case UNIQUE:
-                    Log("Entered UNIQUE");
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
                         if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
@@ -1492,7 +1489,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case OFF:
                         break;
             }
-            Log("Inserting for the first time");
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
             {
                 if (AlliesMapMarkers[i].MapMarkerClass == none ||
