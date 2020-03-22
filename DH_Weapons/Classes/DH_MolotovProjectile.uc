@@ -379,6 +379,7 @@ simulated function BlowUp(vector hitLocation)
     local vector tracedHitPoint, tracedHitNormal;
     local rotator spread;
     local int i;
+    local Controller InstigatorController;
 
     if (Role == ROLE_Authority)
     {
@@ -390,6 +391,11 @@ simulated function BlowUp(vector hitLocation)
                                                 /*out*/ tracedActorHit);
 
         // spawn flames:
+        if (Instigator != none)
+        {
+            InstigatorController = Instigator.Controller;
+        }
+
         for(i = 0; i < 20; i++) // TODO: Why 20? This should probably be a variable
         {
             // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
@@ -398,11 +404,19 @@ simulated function BlowUp(vector hitLocation)
             spread.Roll = 32768 * (FRand() - 0.5);
 
             instance = Spawn(SubProjectileClass, Instigator.Controller,, hitLocation);
-            instance.LifeSpan = 5.0 + (FRand() * 30.0);
-            instance.Velocity = (Normal(Velocity) >> spread) * Lerp(FRand(), 60, 450);
 
-            if (tracedActorHit != none)
-                instance.SetBase(tracedActorHit);
+            // TODO: Instances fail to spawn when hitting certain things (ammo
+            // crates, inner walls of HQs, etc.).
+            if (instance != none)
+            {
+                instance.LifeSpan = 5.0 + (FRand() * 30.0);
+                instance.Velocity = (Normal(Velocity) >> spread) * Lerp(FRand(), 60, 450);
+
+                if (tracedActorHit != none)
+                {
+                    instance.SetBase(tracedActorHit);
+                }
+            }
 
             // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(hitLocation, hitLocation + instance.Velocity, 255,0,0);
         }

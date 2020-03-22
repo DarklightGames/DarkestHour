@@ -54,24 +54,18 @@ simulated function Destroyed()
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
-function HurtRadius
-(
-    float damageAmount,
-    float damageRadius,
-    class<DamageType> damageType,
-    float momentum,
-    vector hitLocation
-)
+function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor         victim, traceActor;
-    local DHVehicle     victimVehicle;
+    local Actor         Victim, TraceActor;
+    local DHVehicle     VictimVehicle;
     local ROVehicle     lastTouchedVehicle;
-    local ROPawn        victimPawn;
+    local ROPawn        VictimPawn;
     local array<ROPawn> checkedROPawns;
     local bool          bAlreadyChecked;
-    local vector        victimLocation, direction, traceHitLocation, traceHitNormal;
-    local float         damageScale, distance, damageExposure;
+    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float         DamageScale, Distance, DamageExposure;
     local int           i;
+    local DHArmoredVehicle VictimArmoredVehicle;
 
     // Make sure nothing else runs HurtRadius while we are in the middle of the function
     if (bHurtEntry)
@@ -91,32 +85,32 @@ function HurtRadius
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
-    foreach CollidingActors(class'Actor', victim, damageRadius, hitLocation)
+    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
     {
-        if (!victim.bBlockActors || victim.IsA(class'Projectile'.Name)) // ignore other projectiles
+        if (!Victim.bBlockActors || Victim.IsA(class'Projectile'.Name)) // ignore other projectiles
         {
             continue;
         }
 
         // If hit a collision mesh actor, switch to its owner
-        if (victim.IsA(class'DHCollisionMeshActor'.Name))
+        if (Victim.IsA(class'DHCollisionMeshActor'.Name))
         {
-            if (DHCollisionMeshActor(victim).bWontStopBlastDamage)
+            if (DHCollisionMeshActor(Victim).bWontStopBlastDamage)
             {
                 continue; // ignore col mesh actor if it is set not to stop blast damage
             }
 
-            victim = victim.Owner;
+            Victim = Victim.Owner;
         }
 
         // Don't damage this projectile, an actor already damaged by projectile impact (HurtWall), cannon actors, non-authority actors, or fluids
         // We skip damage on cannons because the blast will hit the vehicle base so we don't want to double up on damage to the same vehicle
-        if (victim == none ||
-            victim == self ||
-            victim == HurtWall ||
-            victim.IsA(class'DHVehicleCannon'.Name) ||
-            victim.Role < ROLE_Authority ||
-            victim.IsA(class'FluidSurfaceInfo'.Name))
+        if (Victim == none ||
+            Victim == self ||
+            Victim == HurtWall ||
+            Victim.IsA(class'DHVehicleCannon'.Name) ||
+            Victim.Role < ROLE_Authority ||
+            Victim.IsA(class'FluidSurfaceInfo'.Name))
         {
             continue;
         }
@@ -124,50 +118,51 @@ function HurtRadius
         // Now we need to check whether there's something in the way that could shield this actor from the blast
         // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
-        victimLocation = victim.Location;
-        victimVehicle = DHVehicle(victim);
+        VictimLocation = Victim.Location;
+        VictimVehicle = DHVehicle(Victim);
 
-        if (victimVehicle != none &&
-            victimVehicle.Cannon != none &&
-            victimVehicle.Cannon.AttachmentBone != '')
+        if (VictimVehicle != none &&
+            VictimVehicle.Cannon != none &&
+            VictimVehicle.Cannon.AttachmentBone != '')
         {
-            victimLocation.Z = victimVehicle.GetBoneCoords(victimVehicle.Cannon.AttachmentBone).Origin.Z;
+            VictimLocation.Z = VictimVehicle.GetBoneCoords(VictimVehicle.Cannon.AttachmentBone).Origin.Z;
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
-        traceActor = Trace(/*out*/ traceHitLocation,
-                           /*out*/ traceHitNormal,
-                           victimLocation,
-                           hitLocation);
+        TraceActor = Trace(/*out*/ TraceHitLocation,
+                           /*out*/ TraceHitNormal,
+                           VictimLocation,
+                           HitLocation);
 
-        if (DHCollisionMeshActor(traceActor) != none)
+        if (DHCollisionMeshActor(TraceActor) != none)
         {
-            if (DHCollisionMeshActor(traceActor).bWontStopBlastDamage)
+            if (DHCollisionMeshActor(TraceActor).bWontStopBlastDamage)
             {
                 continue;
             }
 
-            traceActor = traceActor.Owner; // as normal, if hit a collision mesh actor then switch to its owner
+            TraceActor = TraceActor.Owner; // as normal, if hit a collision mesh actor then switch to its owner
         }
 
         // Ignore the actor if the blast is blocked by world geometry, a vehicle, or a turret (but don't let a turret block damage to its own vehicle)
-        if (traceActor != none &&
-            traceActor != victim &&
-            (traceActor.bWorldGeometry ||
-             traceActor.IsA(class'ROVehicle'.Name) ||
-             (traceActor.IsA(class'DHVehicleCannon'.Name) && victim != traceActor.Base)))
+        if (TraceActor != none &&
+            TraceActor != Victim &&
+            (TraceActor.bWorldGeometry ||
+             TraceActor.IsA(class'ROVehicle'.Name) ||
+             (TraceActor.IsA(class'DHVehicleCannon'.Name) && Victim != TraceActor.Base)))
         {
             continue;
         }
 
         // Check for hit on player pawn
-        victimPawn = ROPawn(victim);
-        if (victimPawn != none)
+        VictimPawn = ROPawn(Victim);
+
+        if (VictimPawn != none)
         {
             // If we hit a player pawn, make sure we haven't already registered the hit & add pawn to array of already hit/checked pawns
-            for(i=0 ; i<checkedROPawns.Length ; ++i)
+            for(i = 0; i < checkedROPawns.Length; ++i)
             {
-                if (victimPawn == checkedROPawns[i])
+                if (VictimPawn == checkedROPawns[i])
                 {
                     bAlreadyChecked = true;
                     break;
@@ -180,66 +175,58 @@ function HurtRadius
                 continue;
             }
 
-            checkedROPawns[checkedROPawns.Length] = victimPawn;
+            checkedROPawns[checkedROPawns.Length] = VictimPawn;
 
             // If player is partially shielded from the blast, calculate damage reduction scale
-            damageExposure = victimPawn.GetExposureTo(hitLocation + 15.0 * -Normal(PhysicsVolume.Gravity));
+            DamageExposure = VictimPawn.GetExposureTo(HitLocation + 15.0 * -Normal(PhysicsVolume.Gravity));
 
-            if (damageExposure <= 0.0)
+            if (DamageExposure <= 0.0)
             {
                 continue;
             }
         }
 
         // Calculate damage based on distance from explosion
-        direction = victimLocation - hitLocation;
-        distance = FMax(1.0, VSize(direction));
-        direction = direction / distance;
-        damageScale = 1.0 - FMax(0.0, (distance - victim.CollisionRadius) / damageRadius);
+        Direction = VictimLocation - HitLocation;
+        Distance = FMax(1.0, VSize(Direction));
+        Direction = Direction / Distance;
+        DamageScale = 1.0 - FMax(0.0, (Distance - Victim.CollisionRadius) / DamageRadius);
 
-        if (victimPawn != none)
+        if (VictimPawn != none)
         {
-            damageScale *= damageExposure;
+            DamageScale *= DamageExposure;
         }
 
         // Record player responsible for damage caused, & if we're damaging LastTouched actor, reset that to avoid damaging it again at end of function
         if (Instigator == none || Instigator.Controller == none)
         {
-            victim.SetDelayedDamageInstigatorController(InstigatorController);
+            Victim.SetDelayedDamageInstigatorController(InstigatorController);
         }
 
-        if (victim == LastTouched)
+        if (Victim == LastTouched)
         {
             LastTouched = none;
         }
 
         // Damage the actor hit by the blast - if it's a vehicle, check for damage to any exposed occupants
-        // Log("damageAmount: "@ damageScale @", damageAmount: "@ damageAmount @", final: "@ (damageScale*damageAmount));
-        victim.TakeDamage(damageScale * damageAmount,
+        // Log("DamageAmount: "@ DamageScale @", DamageAmount: "@ DamageAmount @", final: "@ (DamageScale*DamageAmount));
+
+        Log(Victim.Class);
+
+        Victim.TakeDamage(DamageScale * DamageAmount,
                           Instigator,
-                          victimLocation - 0.5 * (victim.CollisionHeight + victim.CollisionRadius) * direction,
-                          damageScale * momentum * direction,
-                          damageType);
+                          VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction,
+                          DamageScale * Momentum * Direction,
+                          DamageType);
 
-        if (ROVehicle(victim) != none && ROVehicle(victim).Health > 0)
+        if (VictimVehicle != none && VictimVehicle.Health > 0)
         {
-            CheckVehicleOccupantsRadiusDamage(ROVehicle(victim),
-                                              damageAmount,
-                                              damageRadius,
-                                              damageType,
-                                              momentum,
-                                              hitLocation);
-
-            // If vehicle's engine is vulnerable to "grenades", then we can cause some damage to the engine!
-            if (victimVehicle.EngineDamageFromGrenadeModifier > 0.0)
-            {
-                // Cause reduced damage to vehicle's engine
-                victimVehicle.DamageEngine(damageScale * damageAmount * victimVehicle.EngineDamageFromGrenadeModifier,
-                                           Instigator,
-                                           victimLocation - 0.5 * (victim.CollisionHeight + victim.CollisionRadius) * direction,
-                                           damageScale * momentum * direction,
-                                           damageType);
-            }
+            CheckVehicleOccupantsRadiusDamage(VictimVehicle,
+                                              DamageAmount,
+                                              DamageRadius,
+                                              DamageType,
+                                              Momentum,
+                                              HitLocation);
         }
     }
 
@@ -249,32 +236,33 @@ function HurtRadius
         LastTouched.Role == ROLE_Authority &&
         !LastTouched.IsA(class'FluidSurfaceInfo'.Name))
     {
-        direction = LastTouched.Location - hitLocation;
-        distance = FMax(1.0, VSize(direction));
-        direction = direction / distance;
-        damageScale = FMax(LastTouched.CollisionRadius / (LastTouched.CollisionRadius + LastTouched.CollisionHeight),
-                           1.0 - FMax(0.0, (distance - LastTouched.CollisionRadius)/damageRadius));
+        Direction = LastTouched.Location - HitLocation;
+        Distance = FMax(1.0, VSize(Direction));
+        Direction = Direction / Distance;
+        DamageScale = FMax(LastTouched.CollisionRadius / (LastTouched.CollisionRadius + LastTouched.CollisionHeight),
+                           1.0 - FMax(0.0, (Distance - LastTouched.CollisionRadius) / DamageRadius));
 
         if (Instigator == none || Instigator.Controller == none)
         {
             LastTouched.SetDelayedDamageInstigatorController(InstigatorController);
         }
 
-        LastTouched.TakeDamage(damageScale * damageAmount,
+        LastTouched.TakeDamage(DamageScale * DamageAmount,
                                Instigator,
-                               LastTouched.Location - 0.5 * (LastTouched.CollisionHeight + LastTouched.CollisionRadius) * direction,
-                               damageScale * momentum * direction,
-                               damageType);
+                               LastTouched.Location - 0.5 * (LastTouched.CollisionHeight + LastTouched.CollisionRadius) * Direction,
+                               DamageScale * Momentum * Direction,
+                               DamageType);
 
         lastTouchedVehicle = ROVehicle(LastTouched);
+
         if (lastTouchedVehicle != none && lastTouchedVehicle.Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(lastTouchedVehicle,
-                                              damageAmount,
-                                              damageRadius,
-                                              damageType,
-                                              momentum,
-                                              hitLocation);
+                                              DamageAmount,
+                                              DamageRadius,
+                                              DamageType,
+                                              Momentum,
+                                              HitLocation);
         }
 
         LastTouched = none;
@@ -284,31 +272,24 @@ function HurtRadius
 }
 
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius
-function CheckVehicleOccupantsRadiusDamage
-(
-    ROVehicle vehicle,
-    float damageAmount,
-    float damageRadius,
-    class<DamageType> damageType,
-    float momentum,
-    vector hitLocation
-)
+function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
     local ROVehicleWeaponPawn weaponPawn;
     local int i, numWeapons;
 
-    if (vehicle.Driver != none &&
-        vehicle.DriverPositions[vehicle.DriverPositionIndex].bExposed &&
-        !vehicle.Driver.bCollideActors &&
-        !vehicle.bRemoteControlled)
+    if (Vehicle.Driver != none &&
+        Vehicle.DriverPositions[Vehicle.DriverPositionIndex].bExposed &&
+        !Vehicle.Driver.bCollideActors &&
+        !Vehicle.bRemoteControlled)
     {
-        VehicleOccupantBlastDamage(vehicle.Driver, damageAmount, damageRadius, damageType, momentum, hitLocation);
+        VehicleOccupantBlastDamage(Vehicle.Driver, DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
     }
 
-    numWeapons = vehicle.WeaponPawns.Length;
+    numWeapons = Vehicle.WeaponPawns.Length;
+
     for(i = 0; i < numWeapons; ++i)
     {
-        weaponPawn = ROVehicleWeaponPawn(vehicle.WeaponPawns[i]);
+        weaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
         if (weaponPawn != none &&
             weaponPawn.Driver != none &&
             ((weaponPawn.bMultiPosition && weaponPawn.DriverPositions[weaponPawn.DriverPositionIndex].bExposed) ||
@@ -316,53 +297,45 @@ function CheckVehicleOccupantsRadiusDamage
             !weaponPawn.bCollideActors &&
             !weaponPawn.bRemoteControlled)
         {
-            VehicleOccupantBlastDamage(weaponPawn.Driver, damageAmount, damageRadius, damageType, momentum, hitLocation);
+            VehicleOccupantBlastDamage(weaponPawn.Driver, DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }
     }
 }
 
-function VehicleOccupantBlastDamage
-(
-    Pawn pawn,
-    float damageAmount,
-    float damageRadius,
-    class<DamageType> damageType,
-    float momentum,
-    vector hitLocation
-)
+function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor  traceHitActor;
-    local coords headBoneCoords;
-    local vector headLocation, traceHitLocation, traceHitNormal, direction;
-    local float  dist, damageScale;
+    local Actor  TraceHitActor;
+    local coords HeadBoneCoords;
+    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local float  Dist, DamageScale;
 
-    if (pawn != none)
+    if (Pawn != none)
     {
-        headBoneCoords = pawn.GetBoneCoords(pawn.HeadBone);
-        headLocation = headBoneCoords.Origin + ((pawn.HeadHeight + (0.5 * pawn.HeadRadius)) * pawn.HeadScale * headBoneCoords.XAxis);
+        HeadBoneCoords = Pawn.GetBoneCoords(Pawn.HeadBone);
+        HeadLocation = HeadBoneCoords.Origin + ((Pawn.HeadHeight + (0.5 * Pawn.HeadRadius)) * Pawn.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', traceHitActor, traceHitLocation, traceHitNormal, headLocation, hitLocation)
+        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
-            if (traceHitActor.bBlockActors)
+            if (TraceHitActor.bBlockActors)
                 return;
         }
 
         // Calculate damage based on distance from explosion
-        direction = pawn.Location - hitLocation;
-        dist = FMax(1.0, VSize(direction));
-        direction = direction / dist;
-        damageScale = 1.0 - FMax(0.0, (dist - pawn.CollisionRadius)/damageRadius);
+        Direction = Pawn.Location - HitLocation;
+        Dist = FMax(1.0, VSize(Direction));
+        Direction = Direction / Dist;
+        DamageScale = 1.0 - FMax(0.0, (Dist - Pawn.CollisionRadius) / DamageRadius);
 
         // Damage the vehicle occupant
-        if (damageScale > 0.0)
+        if (DamageScale > 0.0)
         {
-            pawn.SetDelayedDamageInstigatorController(InstigatorController);
-            pawn.TakeDamage(damageScale * damageAmount,
+            Pawn.SetDelayedDamageInstigatorController(InstigatorController);
+            Pawn.TakeDamage(DamageScale * DamageAmount,
                             InstigatorController.Pawn,
-                            pawn.Location - (0.5 * (pawn.CollisionHeight + pawn.CollisionRadius)) * direction,
-                            damageScale * momentum * direction,
-                            damageType);
+                            Pawn.Location - (0.5 * (Pawn.CollisionHeight + Pawn.CollisionRadius)) * Direction,
+                            DamageScale * Momentum * Direction,
+                            DamageType);
         }
     }
 }
@@ -378,7 +351,38 @@ simulated function UpdateInstigator()
 
 simulated function Landed(vector hitNormal)
 {
-    HitWall(hitNormal, none);
+    local Actor         Victim;
+    local DHVehicle     VictimVehicle;
+
+    UpdateInstigator();
+
+    // Just return if the player switches teams after throwing the explosive - this prevent people TK exploiting by switching teams
+    if (InstigatorController == none || InstigatorController.GetTeamNum() != ThrowerTeam || ThrowerTeam == 255)
+    {
+        return;
+    }
+
+    // Set vehicles on fire!
+    foreach CollidingActors(class'Actor', Victim, DamageRadius, Location)
+    {
+        // If hit a collision mesh actor, switch to its owner
+        if (Victim.IsA(class'DHCollisionMeshActor'.Name))
+        {
+            if (DHCollisionMeshActor(Victim).bWontStopBlastDamage)
+            {
+                continue; // ignore col mesh actor if it is set not to stop blast damage
+            }
+
+            Victim = Victim.Owner;
+        }
+
+        VictimVehicle = DHVehicle(Victim);
+
+        if (VictimVehicle != none && VictimVehicle.Health > 0)
+        {
+            VictimVehicle.TakeIncendiaryDamage(Instigator, Location, MyDamageType);
+        }
+    }
 }
 
 simulated function HitWall(vector hitNormal, Actor wall)
@@ -406,7 +410,7 @@ simulated function HitWall(vector hitNormal, Actor wall)
                                   class'DHWeaponBashDamageType');
 
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
-            if (destroMesh.Health<0)
+            if (destroMesh.Health < 0)
             {
                 return;
             }

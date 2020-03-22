@@ -173,6 +173,10 @@ var     int                     VehiclePoolIndex;     // the vehicle pool index 
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
 
+// Incendiary damage
+var     float       EngineIncendiaryHitPointRadius;
+var     float       EngineIncendiaryLeakChance;
+
 // Debugging
 var     bool        bDebuggingText;
 
@@ -1979,6 +1983,12 @@ simulated function StopEmitters()
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************************  DAMAGE  ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageType> DamageType)
+{
+    // Kill the engine and set it on fire!
+    DamageEngine(EngineHealth, Instigator, HitLocation, vect(0, 0, 0), DamageType);
+}
 
 // Modified to handle possible tread damage, to add randomised damage, & to add engine fire to APCs
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -4184,6 +4194,10 @@ defaultproperties
     ImpactWorldDamageMult=0.001
     DriverDamageMult=1.0
     DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+
+    // Incendiary damage
+    EngineIncendiaryHitPointRadius=80.0
+    EngineIncendiaryLeakChance=1.0 // 100%
 
     // Smoking/burning engine effect
     HeavyEngineDamageThreshold=0.5
