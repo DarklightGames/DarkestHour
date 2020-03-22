@@ -7391,6 +7391,19 @@ simulated exec function DebugGiveWeapon(string ClassName)
     }
 }
 
+simulated exec function AttachRain()
+{
+    local Emitter E;
+
+    E = Spawn(class'DHRainEmitter', self);
+
+    E.SetBase(self);
+    E.SetRelativeLocation(vect(0, 0, 0));
+    E.bFixedRotationDir = true;
+
+    Log(E);
+}
+
 defaultproperties
 {
     // General class & interaction stuff
