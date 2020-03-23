@@ -7397,11 +7397,12 @@ simulated exec function AttachRain()
 
     E = Spawn(class'DHRainEmitter', self);
 
-    E.SetBase(self);
-    E.SetRelativeLocation(vect(0, 0, 0));
-    E.bFixedRotationDir = true;
-
-    Log(E);
+    if (E != none)
+    {
+        E.SetBase(self);
+        E.SetRelativeLocation(vect(0, 0, 0));
+        E.bFixedRotationDir = true;
+    }
 }
 
 defaultproperties

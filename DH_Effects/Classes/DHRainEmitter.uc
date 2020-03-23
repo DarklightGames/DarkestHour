@@ -7,10 +7,13 @@ class DHRainEmitter extends Emitter;
 
 // TODO: check if we're in a ran or no-rain zone!
 var xWeatherEffect WeatherEffect;
+var array<Volume> NoRainVolumes;
+var int VolumeIndex;
 
 function PostBeginPlay()
 {
     local xWeatherEffect WE;
+    local Volume V;
 
     super.PostBeginPlay();
 
@@ -27,12 +30,74 @@ function PostBeginPlay()
     {
         // No corresponding weather effect, just delete us.
         Destroy();
+        return;
     }
 
     SetRainStrength(WeatherEffect.numParticles);
+
+    // Accumulate all no-rain volumes
+    foreach AllActors(class'Volume', V, WeatherEffect.Tag)
+    {
+        NoRainVolumes[NoRainVolumes.Length] = V;
+    }
+
+    SetTimer(1.0, true);
 }
 
-function
+function Timer()
+{
+    UpdatedVolumeIndex();
+}
+
+function bool IsInNoRainVolume()
+{
+    return VolumeIndex != -1;
+}
+
+function UpdatedVolumeIndex()
+{
+    local int i;
+    local int OldVolumeIndex;
+
+    if (VolumeIndex != -1 && NoRainVolumes[VolumeIndex].Encompasses(self))
+    {
+        // We are in the same volume we were in before, nothing to see here.
+        return;
+    }
+
+    OldVolumeIndex = VolumeIndex;
+
+    VolumeIndex = -1;
+
+    for (i = 0; i < NoRainVolumes.Length; ++i)
+    {
+        if (NoRainVolumes[i].Encompasses(self))
+        {
+            VolumeIndex = i;
+            break;
+        }
+    }
+
+    if (VolumeIndex != OldVolumeIndex)
+    {
+        VolumeIndexChanged();
+    }
+}
+
+function VolumeIndexChanged()
+{
+    local bool bIsInNoRainVolume;
+    local int i;
+
+    bIsInNoRainVolume = IsInNoRainVolume();
+
+    for (i = 0; i < Emitters.Length; ++i)
+    {
+        Emitters[i].Disabled = bIsInNoRainVolume;
+    }
+
+    Log("VolumeIndexChanged" @ VolumeIndex @ bIsInNoRainVolume);
+}
 
 function SetRainStrength(int P)
 {
@@ -42,6 +107,11 @@ function SetRainStrength(int P)
 
 defaultproperties
 {
+    RemoteRole=ROLE_None
+    bHidden=false
+
+    VolumeIndex=-1
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter807
         UseCollision=True
         UseMaxCollisions=True
@@ -54,7 +124,7 @@ defaultproperties
         SpawnFromOtherEmitter=1
         SpawnAmount=1
         MaxParticles=256
-        StartLocationRange=(Y=(Min=-512.000000,Max=512.000000),X=(Min=-512.000000,Max=512.000000),Z=(Min=2048,Max=2048))c
+        StartLocationRange=(Y=(Min=-512.000000,Max=512.000000),X=(Min=-512.000000,Max=512.000000),Z=(Min=1024,Max=1024))
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=1.000000,Max=1.000000),Y=(Min=1.000000,Max=1.000000))
         ParticlesPerSecond=64.000000
