@@ -6,10 +6,10 @@
 class DHBrowser_Footer extends UT2k4Browser_Footer;
 
 var automated GUIButton b_Main;
-var DHPlayer            PC;
 
 function bool InternalOnClick(GUIComponent Sender)
 {
+    local DHPlayer PC;
     if (Sender == b_Main)
     {
         //Open main menu
