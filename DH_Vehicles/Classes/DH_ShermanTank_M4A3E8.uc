@@ -8,10 +8,95 @@
 
 class DH_ShermanTank_M4A3E8 extends DH_ShermanTank_M4A376W;
 
+var StaticMesh LogsLeftStaticMesh;
+var StaticMesh LogsRightStaticMesh;
+var DHDestroyableStaticMesh LogsLeft;
+var DHDestroyableStaticMesh LogsRight;
+
+var array<Actor> Attachments;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    CreateAttachments();
+}
+
+exec function BreakLogs(string Side)
+{
+    if (Role == ROLE_Authority)
+    {
+        if (Side ~= "L" && LogsLeft != none)
+        {
+            LogsLeft.BreakMe();
+        }
+        else if (Side ~= "R" && LogsRight != none)
+        {
+            LogsRight.BreakMe();
+        }
+    }
+}
+
+// In the movie, Fury has some protective logs that absorb a Panzerfaust strike
+// at one point, but then fall off as a result. Our Fury will do the same!
+simulated function CreateAttachments()
+{
+    if (Role == ROLE_Authority)
+    {
+        // Left logs
+        LogsLeft = Spawn(class'DHDestroyableStaticMesh', self);
+
+        if (LogsLeft != none)
+        {
+            LogsLeft.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsLeftEmitter';
+            LogsLeft.SetStaticMesh(LogsLeftStaticMesh);
+            AttachToBone(LogsLeft, 'body');
+            Attachments[Attachments.Length] = LogsLeft;
+        }
+
+        // Right logs
+        LogsRight = Spawn(class'DHDestroyableStaticMesh', self);
+
+        if (LogsRight != none)
+        {
+            LogsRight.SetStaticMesh(LogsRightStaticMesh);
+            LogsRight.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsRightEmitter';
+            AttachToBone(LogsRight, 'body');
+            Attachments[Attachments.Length] = LogsRight;
+        }
+    }
+}
+
+function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+{
+    super.Died(Killer, DamageType, HitLocation);
+
+    // TODO: i don't think this gets run on the client?
+    DestroyAttachments();
+}
+
+simulated function DestroyAttachments()
+{
+    local int i;
+
+    super.DestroyAttachments();
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (Attachments[i] != none)
+        {
+            Attachments[i].Destroy();
+        }
+    }
+}
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
-    VehicleNameString="Sherman M4A3E8 "
+    VehicleNameString="Sherman M4A3E8"
+
+    LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
+    LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
 
     VehicleHudImage=Texture'DH_ShermanM4A3E8_tex.Menu.body'
     VehicleHudTurret=TexRotator'DH_ShermanM4A3E8_tex.Menu.turret_look'

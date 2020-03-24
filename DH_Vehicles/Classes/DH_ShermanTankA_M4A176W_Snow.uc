@@ -15,3 +15,4 @@ defaultproperties
     CannonSkins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
     CannonSkins(1)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
 }
+
