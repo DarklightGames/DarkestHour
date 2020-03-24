@@ -138,6 +138,7 @@ auto state Timing
         local DHDestroyableSM DSM;
         local DarkestHourGame G;
         local DHGameReplicationInfo GRI;
+        local float ScaleUpModifier;
 
         TimerCount = 0;
 
@@ -188,7 +189,6 @@ auto state Timing
             }
         }
 
-        // Set the reinforcements
         if (bScaleUpPhaseEndReinforcements)
         {
             // Scale up the reinforcements at a factor of the number of players on the server / 2
@@ -196,13 +196,30 @@ auto state Timing
             // There are 50 players on the server
             // 8 * (50 / 2) = 200
             // 10 * (50 / 2) = 250
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[ALLIES_TEAM_INDEX];
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[AXIS_TEAM_INDEX];
+            ScaleUpModifier = (Max(10, G.GetNumPlayers()) * 0.5);
         }
         else
         {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements + UnspawnedPlayers[ALLIES_TEAM_INDEX];
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
+            ScaleUpModifier = 1.0;
+        }
+
+        // Set the reinforcements
+        if (PhaseEndReinforcements.AlliesReinforcements < 0)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * ScaleUpModifier + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+        }
+
+        if (PhaseEndReinforcements.AxisReinforcements < 0)
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
+        }
+        else
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * ScaleUpModifier + UnspawnedPlayers[AXIS_TEAM_INDEX];
         }
 
         // Set the starting reinforcements in DHGame (for use in reinforcement warning calculation)

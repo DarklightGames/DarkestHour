@@ -215,7 +215,7 @@ simulated function Timer()
 
             if (ReloadSound != none)
             {
-                PlayOwnedSound(ReloadSound, SLOT_Misc, 2.0,, 25.0,, true);
+                PlayOwnedSound(ReloadSound, SLOT_Misc, 0.5,, 10.0,, true); // reduce sound volume to avoid hearing reload at long ranges
             }
 
             if (AltReloadStages[AltReloadState].Duration > 0.0) // use reload duration if specified, otherwise get the sound duration
@@ -1300,10 +1300,10 @@ simulated function ClientSetReloadState(byte NewState)
     }
 }
 
-// Modified for bigger radius for reloading sound
+// Modified for main reloading sound
 simulated function PlayStageReloadSound()
 {
-    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 0.5,, 10.0,, false); // reduce sound volume to avoid hearing reload at long ranges
 }
 
 // Modified to use extended ammo types

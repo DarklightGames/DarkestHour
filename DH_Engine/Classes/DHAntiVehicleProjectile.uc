@@ -897,7 +897,7 @@ simulated function DoShakeEffect()
             if (Distance < PenetrationMag * 3.0)
             {
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
-                Scale *= BlurEffectScalar;
+                //Scale *= BlurEffectScalar;
 
                 PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
 
@@ -911,6 +911,39 @@ simulated function DoShakeEffect()
         }
     }
 }
+
+/*
+simulated function VehicleShellShock()
+{
+    local PlayerController PC;
+    local float            Distance, Scale;
+
+    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none && PC.ViewTarget != none)
+        {
+            Distance = VSize(Location - PC.ViewTarget.Location);
+
+            if (Distance < PenetrationMag * 3.0)
+            {
+                Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
+                Scale *= 8.0;
+
+                PC.ShakeView(ShakeRotMag * 10.0, ShakeRotRate * 20.0, ShakeRotTime, ShakeOffsetMag * scale, ShakeOffsetRate, ShakeOffsetTime);
+
+                if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+                {
+                    Scale = Scale - (Scale * 0.35 - ((Scale * 0.35) * ROPawn(PC.Pawn).GetExposureTo(Location + 50.0 * -Normal(PhysicsVolume.Gravity))));
+                }
+
+                ROPlayer(PC).AddBlur(6.0 * Scale, FMin(1.0, Scale));
+            }
+        }
+    }
+}
+*/
 
 // Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
@@ -1093,12 +1126,14 @@ defaultproperties
     bDebugInImperial=true
     SpeedFudgeScale=0.5
     InitialAccelerationTime=0.2
+
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     ShakeRotTime=3.0

@@ -36,4 +36,7 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
+
+    //Add AMMO HIT BOX for 7.5 cm shell storage
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 }

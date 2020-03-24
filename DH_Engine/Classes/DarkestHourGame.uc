@@ -5424,7 +5424,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="GÃ¼nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5433,10 +5433,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton MÃ¼ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans GrÃ¼schke"
-    GermanNames(12)="Wilhelm KrÃ¼ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5475,7 +5475,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=9
         Minor=6
-        Patch=1
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject
