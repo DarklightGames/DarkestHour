@@ -8,7 +8,7 @@ class DH_ShermanCannon_M4A3E8 extends DH_ShermanCannonA_76mm;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.turret_ext'
-    Skins(0)=Texture'DH_ShermanM4A3E8_tex.turret_ext'
+    Skins(0)=Texture'DH_ShermanM4A3E8_tex.turret2_ext'
     Skins(1)=FinalBlend'DH_ShermanM4A3E8_tex.body_int_fb'
     CollisionStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.Turret.turret_collision'
 
