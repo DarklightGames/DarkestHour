@@ -177,7 +177,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer.L.F"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
         bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.LF_Steering'
@@ -186,7 +186,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer.R.F"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -194,7 +194,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer.L.B"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
         bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.LR_Steering'
@@ -203,14 +203,14 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer.R.B"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive.L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
         bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.Left_Drive_Wheel'
@@ -218,7 +218,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="drive.R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=32.0
+        WheelRadius=31.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.Right_Drive_Wheel'
 }
