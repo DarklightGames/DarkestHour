@@ -373,7 +373,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
             HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
         }
-        else if (Other.IsA('DHConstruction'))
+        else if (Other.IsA('DHConstruction') || Other.IsA('DHDestroyableStaticMesh'))
         {
             if (Role == ROLE_Authority)
             {

@@ -149,7 +149,6 @@ simulated function BuildLocationHintsArrays()
             }
         }
     }
-
 }
 
 // Modified to activate/deactivate any linked mine volume, resupply volume or vehicle factories, that get activated/deactivated with this spawn point
