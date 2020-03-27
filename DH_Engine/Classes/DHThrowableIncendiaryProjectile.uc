@@ -3,7 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovProjectile extends DHProjectile;
+class DHThrowableIncendiaryProjectile extends DHProjectile
+    abstract;
+
+const EXPLOSION_SOUNDS_MAX = 3;
 
 var     float           MinImpactSpeedToExplode;
 var     float           MaxObliquityAngleToExplode; // [degrees] // https://www.researchgate.net/figure/Definition-of-projectile-notations-including-the-angle-of-attack-AoA-obliquity-angle_fig10_259515946
@@ -12,9 +15,10 @@ var     array<float>    SurfaceDampen;
 
 var     class<Actor>    FlameEffect;
 var     class<Actor>    SubProjectileClass;
+var     int             SubProjectilesAmount;
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeEffectClass;
-var private Actor       _TrailInstance;
+var private Actor       TrailInstance;
 
 var     class<Actor>    WaterSplashEffect;
 var     sound           WaterHitSound;
@@ -26,11 +30,11 @@ var     array<sound>    SurfaceHits;
 var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
 var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
-var     sound           ExplosionSound[3];
+var     sound           ExplosionSound[EXPLOSION_SOUNDS_MAX];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
 
-var Vector              _HitVelocity;
+var Vector              HitVelocity;
 
 replication
 {
@@ -61,11 +65,11 @@ simulated function PostBeginPlay()
         bDud = FRand() < FailureRate;
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (FlameEffect != none && Level.NetMode != NM_DedicatedServer)
     {
-        _TrailInstance = Spawn(FlameEffect);
-        _TrailInstance.SetBase(self);
-        _TrailInstance.SetRelativeLocation(vect(0, 0, 0));
+        TrailInstance = Spawn(FlameEffect);
+        TrailInstance.SetBase(self);
+        TrailInstance.SetRelativeLocation(vect(0, 0, 0));
 
         bDynamicLight = true;
     }
@@ -91,31 +95,43 @@ simulated function Destroyed()
     local vector TraceHitLocation;
     local vector TraceHitNormal;
 
-    if (Fear != none) Fear.Destroy();
-    if (_TrailInstance != none) _TrailInstance.Destroy();
+    if (Fear != none)
+    {
+        Fear.Destroy();
+    }
+
+    if (TrailInstance != none)
+    {
+        TrailInstance.Destroy();
+    }
 
     if (EffectIsRelevant(Location, false))
     {
         // spawn explosion fx:
         if (ExplodeEffectClass != none)
+        {
             Spawn(ExplodeEffectClass,,, Location, rotator(vect(0, 0, 1)));
+        }
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
+            PlaySound(ExplosionSound[Rand(EXPLOSION_SOUNDS_MAX)],, 5.0,, ExplosionSoundRadius, 1.0, true);
 
-            TraceHitActor = Trace(TraceHitLocation,
-                                  TraceHitNormal,
-                                  Location + (16.0 * Normal(_HitVelocity)),
-                                  Location,
-                                  true);
-
-            // Spawn explosion decal only when terrain or a static mesh is hit
-            if (TraceHitActor != none &&
-                !TraceHitActor.IsA('DHCollisionMeshActor') &&
-                (TraceHitActor.IsA('TerrainInfo') || TraceHitActor.IsA('StaticMeshActor')))
+            if (ExplosionDecal != none)
             {
-                Spawn(ExplosionDecal, self,, Location, rotator(_HitVelocity)); // rotator(vect(0,0,-1))
+                TraceHitActor = Trace(TraceHitLocation,
+                                      TraceHitNormal,
+                                      Location + (16.0 * Normal(HitVelocity)),
+                                      Location,
+                                      true);
+
+                // Spawn explosion decal only when terrain or a static mesh is hit
+                if (TraceHitActor != none &&
+                    !TraceHitActor.IsA('DHCollisionMeshActor') &&
+                    (TraceHitActor.IsA('TerrainInfo') || TraceHitActor.IsA('StaticMeshActor')))
+                {
+                    Spawn(ExplosionDecal, self,, Location, rotator(HitVelocity)); // rotator(vect(0,0,-1))
+                }
             }
         }
     }
@@ -123,48 +139,40 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-function VehicleOccupantBlastDamage
-(
-    Pawn pawn,
-    float damageAmount,
-    float damageRadius,
-    class<DamageType> damageType,
-    float momentum,
-    vector hitLocation
-)
+function VehicleOccupantBlastDamage(Pawn Pawn, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor  traceHitActor;
-    local coords headBoneCoords;
-    local vector headLocation, traceHitLocation, traceHitNormal, direction;
-    local float  dist, damageScale;
+    local Actor  TraceHitActor;
+    local coords HeadBoneCoords;
+    local vector HeadLocation, TraceHitLocation, TraceHitNormal, Direction;
+    local float  Dist, DamageScale;
 
-    if (pawn != none)
+    if (Pawn != none)
     {
-        headBoneCoords = pawn.GetBoneCoords(pawn.HeadBone);
-        headLocation = headBoneCoords.Origin + ((pawn.HeadHeight + (0.5 * pawn.HeadRadius)) * pawn.HeadScale * headBoneCoords.XAxis);
+        HeadBoneCoords = Pawn.GetBoneCoords(Pawn.HeadBone);
+        HeadLocation = HeadBoneCoords.Origin + ((Pawn.HeadHeight + (0.5 * Pawn.HeadRadius)) * Pawn.HeadScale * HeadBoneCoords.XAxis);
 
         // Trace from the explosion to the top of player pawn's head & if there's a blocking actor in between (probably the vehicle), exit without damaging pawn
-        foreach TraceActors(class'Actor', traceHitActor, traceHitLocation, traceHitNormal, headLocation, hitLocation)
+        foreach TraceActors(class'Actor', TraceHitActor, TraceHitLocation, TraceHitNormal, HeadLocation, HitLocation)
         {
-            if (traceHitActor.bBlockActors)
+            if (TraceHitActor.bBlockActors)
                 return;
         }
 
         // Calculate damage based on distance from explosion
-        direction = pawn.Location - hitLocation;
-        dist = FMax(1.0, VSize(direction));
-        direction = direction / dist;
-        damageScale = 1.0 - FMax(0.0, (dist - pawn.CollisionRadius) / damageRadius);
+        Direction = Pawn.Location - HitLocation;
+        Dist = FMax(1.0, VSize(Direction));
+        Direction = Direction / Dist;
+        DamageScale = 1.0 - FMax(0.0, (Dist - Pawn.CollisionRadius) / DamageRadius);
 
         // Damage the vehicle occupant
-        if (damageScale > 0.0)
+        if (DamageScale > 0.0)
         {
-            pawn.SetDelayedDamageInstigatorController(InstigatorController);
-            pawn.TakeDamage(damageScale * damageAmount,
+            Pawn.SetDelayedDamageInstigatorController(InstigatorController);
+            Pawn.TakeDamage(DamageScale * DamageAmount,
                             InstigatorController.Pawn,
-                            pawn.Location - (0.5 * (pawn.CollisionHeight + pawn.CollisionRadius)) * direction,
-                            damageScale * momentum * direction,
-                            damageType);
+                            Pawn.Location - (0.5 * (Pawn.CollisionHeight + Pawn.CollisionRadius)) * Direction,
+                            DamageScale * Momentum * Direction,
+                            DamageType);
         }
     }
 }
@@ -199,36 +207,36 @@ simulated function Landed(vector hitNormal)
     }
 }
 
-simulated function HitWall(vector hitNormal, Actor wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local RODestroyableStaticMesh destroMesh;
-    local Class<DamageType> nextDamageType;
-    local ESurfaceTypes hitSurfaceType;
-    local int i, max;
-    local float impactSpeed, impactObliquityAngle, obliquityDotProduct, surfaceDampenValue;
-    local Sound sfx;
-    local vector hitPoint;
+    local RODestroyableStaticMesh DestroMesh;
+    local Class<DamageType> NextDamageType;
+    local ESurfaceTypes HitSurfaceType;
+    local int i, DamageTypesAmount;
+    local float ImpactSpeed, ImpactObliquityAngle, ObliquityDotProduct, SurfaceDampenValue;
+    local Sound SoundFX;
+    local vector HitPoint;
 
-    _HitVelocity = Velocity;
-    destroMesh = RODestroyableStaticMesh(wall);
-    impactSpeed = VSize(Velocity);
-    obliquityDotProduct = Normal(-Velocity) dot hitNormal;
-    impactObliquityAngle = Acos(obliquityDotProduct) * 180.0 / Pi;
+    HitVelocity = Velocity;
+    DestroMesh = RODestroyableStaticMesh(Wall);
+    ImpactSpeed = VSize(Velocity);
+    ObliquityDotProduct = Normal(-Velocity) dot HitNormal;
+    ImpactObliquityAngle = Acos(ObliquityDotProduct) * 180.0 / Pi;
 
     // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll probably break it instead of bouncing off it
-    if (destroMesh != none && destroMesh.bWontStopBullets)
+    if (DestroMesh != none && DestroMesh.bWontStopBullets)
     {
         // On a server (single player), we'll simply cause enough damage to break the mesh
         if (Role == ROLE_Authority)
         {
-            destroMesh.TakeDamage(destroMesh.Health + 1,
+            DestroMesh.TakeDamage(DestroMesh.Health + 1,
                                   Instigator,
                                   Location,
                                   MomentumTransfer * Normal(Velocity),
                                   class'DHWeaponBashDamageType');
 
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
-            if (destroMesh.Health < 0)
+            if (DestroMesh.Health < 0)
             {
                 return;
             }
@@ -237,14 +245,14 @@ simulated function HitWall(vector hitNormal, Actor wall)
         // So as a workaround we'll loop through the meshes TypesCanDamage array & check if the server's weapon bash DamageType will have broken the mesh
         else
         {
-            max = destroMesh.TypesCanDamage.Length;
+            DamageTypesAmount = DestroMesh.TypesCanDamage.Length;
 
-            for(i = 0; i < max; ++i)
+            for(i = 0; i < DamageTypesAmount; ++i)
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
-                nextDamageType = destroMesh.TypesCanDamage[i];
-                if (nextDamageType == class'DHWeaponBashDamageType' ||
-                    ClassIsChildOf(class'DHWeaponBashDamageType', nextDamageType))
+                NextDamageType = DestroMesh.TypesCanDamage[i];
+                if (NextDamageType == class'DHWeaponBashDamageType' ||
+                    ClassIsChildOf(class'DHWeaponBashDamageType', NextDamageType))
                 {
                     return;
                 }
@@ -252,9 +260,10 @@ simulated function HitWall(vector hitNormal, Actor wall)
         }
     }
 
-    hitSurfaceType = TraceForHitSurfaceType(-hitNormal, /*out*/ hitPoint);
+    HitSurfaceType = TraceForHitSurfaceType(-HitNormal, /*out*/ HitPoint);
 
     Bounces--;
+
     if (Bounces <= 0)
     {
         bBounce = false;
@@ -268,13 +277,19 @@ simulated function HitWall(vector hitNormal, Actor wall)
         //     DrawStayingDebugLine(Location, Location + (hitNormal*25), 0,255,255);
         // }
 
-        if (int(hitSurfaceType) < SurfaceDampen.Length) surfaceDampenValue = SurfaceDampen[int(hitSurfaceType)];
-        else surfaceDampenValue = 1.0;
+        if (int(HitSurfaceType) < SurfaceDampen.Length)
+        {
+            SurfaceDampenValue = SurfaceDampen[int(HitSurfaceType)];
+        }
+        else
+        {
+            SurfaceDampenValue = 1.0;
+        }
 
         // kinetic reflection from hit surface:
-        Velocity = class'UCore'.static.VReflect(Velocity, hitNormal) * // lossless kinetic reflection
-                   FMax(0.1, 1.0 - obliquityDotProduct) * // dampen from hit angle
-                   surfaceDampenValue; // dampen from surface type
+        Velocity = class'UCore'.static.VReflect(Velocity, HitNormal) * // lossless kinetic reflection
+                   FMax(0.1, 1.0 - ObliquityDotProduct) * // dampen from hit angle
+                   SurfaceDampenValue; // dampen from surface type
 
         // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(Location, Location + (Normal(Velocity)*25), 255,255,0);
     }
@@ -282,35 +297,39 @@ simulated function HitWall(vector hitNormal, Actor wall)
     if (Role == ROLE_Authority)
     {
         // Log("impactSpeed: "@ impactSpeed @", MinImpactSpeedToExplode: "@ MinImpactSpeedToExplode);
-        if (impactSpeed > MinImpactSpeedToExplode ||
-            impactObliquityAngle < MaxObliquityAngleToExplode)
+        if (ImpactSpeed > MinImpactSpeedToExplode ||
+            ImpactObliquityAngle < MaxObliquityAngleToExplode)
         {
-            Explode(Location, hitNormal);
+            Explode(Location, HitNormal);
         }
     }
 
-    if (Level.NetMode != NM_DedicatedServer && impactSpeed > 150.0)
+    if (Level.NetMode != NM_DedicatedServer && ImpactSpeed > 150.0)
     {
-        if (int(hitSurfaceType) < SurfaceHits.Length)
+        if (int(HitSurfaceType) < SurfaceHits.Length)
         {
-            sfx = SurfaceHits[int(hitSurfaceType)];
-            if (sfx != none) PlaySound(sfx, SLOT_Misc, 1.1);
+            SoundFX = SurfaceHits[int(HitSurfaceType)];
+
+            if (SoundFX != none)
+            {
+                PlaySound(SoundFX, SLOT_Misc, 1.1);
+            }
         }
     }
 }
 
 // Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
-simulated singular function Touch(Actor other)
+simulated singular function Touch(Actor Other)
 {
-    local vector hitLocation, hitNormal;
+    local vector HitLocation, HitNormal;
 
     // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(other) != none)
+    if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
     }
 
-    if (other == none || (!other.bProjTarget && !other.bBlockActors))
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
     {
         return;
     }
@@ -320,114 +339,116 @@ simulated singular function Touch(Actor other)
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
     // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (VSizeSquared(Velocity) == 0 ||
-        other.IsA(class'Mover'.Name) ||
-        other.TraceThisActor(/*out*/ hitLocation,
-                             /*out*/ hitNormal,
+        Other.IsA(class'Mover'.Name) ||
+        Other.TraceThisActor(/*out*/ HitLocation,
+                             /*out*/ HitNormal,
                              Location,
                              Location - (2.0 * Velocity),
                              GetCollisionExtent()))
     {
-        hitLocation = Location;
+        HitLocation = Location;
     }
 
     // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
-    if (other.IsA(class'DHCollisionMeshActor'.Name))
+    if (Other.IsA(class'DHCollisionMeshActor'.Name))
     {
-        if (DHCollisionMeshActor(other).bWontStopThrownProjectile)
+        if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
         {
             return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
         }
 
-        other = other.Owner;
+        Other = Other.Owner;
     }
 
-    ProcessTouch(other, hitLocation);
+    ProcessTouch(Other, HitLocation);
 }
 
-simulated function ProcessTouch(Actor other, vector hitLocation)
+simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local vector tempHitLocation, hitNormal;
+    local vector TempHitLocation, HitNormal;
 
-    if (other == Instigator ||
-        other.Base == Instigator ||
-        ROBulletWhipAttachment(other) != none)
+    if (Other == Instigator ||
+        Other.Base == Instigator ||
+        ROBulletWhipAttachment(Other) != none)
     {
         return;
     }
 
-    Trace(/*out*/ tempHitLocation,
-          /*out*/ hitNormal,
-          hitLocation + Normal(Velocity) * 50.0,
-          hitLocation - Normal(Velocity) * 50.0,
+    Trace(/*out*/ TempHitLocation,
+          /*out*/ HitNormal,
+          HitLocation + Normal(Velocity) * 50.0,
+          HitLocation - Normal(Velocity) * 50.0,
           true); // get a reliable HitNormal for a deflection
 
-    HitWall(hitNormal, other);
+    HitWall(HitNormal, Other);
 }
 
-/// <summary> Calls Destroy() </summary>
-simulated function Explode(vector hitLocation, vector hitNormal)
+// Calls Destroy()
+simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    if (!bDud) BlowUp(hitLocation);
+    if (!bDud)
+    {
+        BlowUp(HitLocation);
+    }
+
     Destroy();
 }
 
-/// <summary> Deals damage, creates fx & sfx </summary>
-simulated function BlowUp(vector hitLocation)
+// Deals damage, creates fx & sfx
+simulated function BlowUp(vector HitLocation)
 {
-    local Actor instance, tracedActorHit;
-    local ESurfaceTypes hitSurfaceType;
-    local vector tracedHitPoint, tracedHitNormal;
-    local rotator spread;
+    local Actor Instance, TracedActorHit;
+    local ESurfaceTypes HitSurfaceType;
+    local vector TracedHitPoint, TracedHitNormal;
+    local rotator Spread;
     local int i;
-    local Controller InstigatorController;
 
     if (Role == ROLE_Authority)
     {
         MakeNoise(1.0);
 
-        hitSurfaceType = TraceForHitSurfaceType(Normal(hitLocation - Location),
-                                                /*out*/ tracedHitPoint,
-                                                /*out*/ tracedHitNormal,
-                                                /*out*/ tracedActorHit);
+        HitSurfaceType = TraceForHitSurfaceType(Normal(HitLocation - Location),
+                                                /*out*/ TracedHitPoint,
+                                                /*out*/ TracedHitNormal,
+                                                /*out*/ TracedActorHit);
 
         // spawn flames:
-        if (Instigator != none)
+        if (InstigatorController != none)
         {
-            InstigatorController = Instigator.Controller;
-        }
-
-        for(i = 0; i < 20; i++) // TODO: Why 20? This should probably be a variable
-        {
-            // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
-            spread.Yaw = 32768 * (FRand() - 0.5);
-            spread.Pitch = 32768 * (FRand() - 0.5);
-            spread.Roll = 32768 * (FRand() - 0.5);
-
-            instance = Spawn(SubProjectileClass, Instigator.Controller,, hitLocation);
-
-            // TODO: Instances fail to spawn when hitting certain things (ammo
-            // crates, inner walls of HQs, etc.).
-            if (instance != none)
+            for(i = 0; i < SubProjectilesAmount; i++)
             {
-                instance.LifeSpan = 5.0 + (FRand() * 30.0);
-                instance.Velocity = (Normal(Velocity) >> spread) * Lerp(FRand(), 60, 450);
+                // TODO: Instances fail to spawn when hitting certain things (ammo
+                // crates, inner walls of HQs, etc.).
+                Instance = Spawn(SubProjectileClass, InstigatorController,, HitLocation);
 
-                if (tracedActorHit != none)
+                if (Instance != none)
                 {
-                    instance.SetBase(tracedActorHit);
+                    // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
+                    Spread.Yaw = 32768 * (FRand() - 0.5);
+                    Spread.Pitch = 32768 * (FRand() - 0.5);
+                    Spread.Roll = 32768 * (FRand() - 0.5);
+
+                    Instance.LifeSpan = 5.0 + (FRand() * 30.0);
+                    Instance.Velocity = (Normal(Velocity) >> Spread) * Lerp(FRand(), 60, 450);
+
+                    if (TracedActorHit != none)
+                    {
+                        Instance.SetBase(TracedActorHit);
+                    }
                 }
+
             }
 
-            // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(hitLocation, hitLocation + instance.Velocity, 255,0,0);
+            // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(HitLocation, HitLocation + instance.Velocity, 255,0,0);
         }
     }
 }
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
 {
-    local PlayerController playerController;
+    local PlayerController PlayerController;
 
     // Only relevant on a dedicated server if the bForceDedicated option has been passed
     if (Level.NetMode == NM_DedicatedServer)
@@ -450,9 +471,9 @@ simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedica
         }
     }
 
-    playerController = Level.GetLocalPlayerController();
+    PlayerController = Level.GetLocalPlayerController();
 
-    if (playerController == none || playerController.ViewTarget == none)
+    if (PlayerController == none || PlayerController.ViewTarget == none)
     {
         return false;
     }
@@ -460,50 +481,51 @@ simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (playerController.Pawn != Instigator &&
-        vector(playerController.CalcViewRotation) dot (spawnLocation-playerController.ViewTarget.Location) < 0.0)
+    if (PlayerController.Pawn != Instigator &&
+        vector(PlayerController.CalcViewRotation) dot (SpawnLocation-PlayerController.ViewTarget.Location) < 0.0)
     {
-        return VSizeSquared(playerController.ViewTarget.Location-spawnLocation) < (1600*1600); // 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+        return VSizeSquared(PlayerController.ViewTarget.Location-SpawnLocation) < (1600*1600); // 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
 
     // Effect relevance is based on normal distance check
-    return CheckMaxEffectDistance(playerController, spawnLocation);
+    return CheckMaxEffectDistance(PlayerController, SpawnLocation);
 }
 
-simulated function ESurfaceTypes TraceForHitSurfaceType
-(
-    vector dir,
-    optional out vector out_hitLoc,
-    optional out vector out_hitNorm,
-    optional out Actor actorTraced
-)
+simulated function ESurfaceTypes TraceForHitSurfaceType(vector Direction, optional out vector HitLocation, optional out vector HitNormal, optional out Actor ActorTraced)
 {
-    local material  hitMat;
-    actorTraced = Trace(/*out*/ out_hitLoc,
-                        /*out*/ out_hitNorm,
-                        Location - (dir * 16.0),
+    local material  HitMaterial;
+
+    ActorTraced = Trace(/*out*/ HitLocation,
+                        /*out*/ HitNormal,
+                        Location - (Direction * 16.0),
                         Location,
                         false,,
-                        /*out*/ hitMat);
+                        /*out*/ HitMaterial);
 
-    if (hitMat == none) return EST_Default;
-    else return ESurfaceTypes(hitMat.SurfaceType);
+    if (HitMaterial == none)
+    {
+        return EST_Default;
+    }
+    else
+    {
+        return ESurfaceTypes(HitMaterial.SurfaceType);
+    }
 }
 
-simulated function PhysicsVolumeChange(PhysicsVolume newVolume)
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     // if thrown projectile hits water we play a splash effect
-    if (newVolume != none && newVolume.bWaterVolume)
+    if (NewVolume != none && NewVolume.bWaterVolume)
     {
         Velocity *= 0.25;
         CheckForSplash(Location);
     }
 }
 
-simulated function CheckForSplash(vector pos)
+simulated function CheckForSplash(vector Position)
 {
-    local Actor  hitActor;
-    local vector hitLocation, hitNormal;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
 
     // No splash if detail settings are low, or if projectile is already in a water volume
     if (Level.NetMode != NM_DedicatedServer &&
@@ -514,26 +536,26 @@ simulated function CheckForSplash(vector pos)
         Instigator.PhysicsVolume.bWaterVolume))
     {
         bTraceWater = true;
-        hitActor = Trace(/*out*/ hitLocation,
-                         /*out*/ hitNormal,
-                         pos - vect(0, 0, 50),
-                         pos + vect(0, 0, 15),
+        HitActor = Trace(/*out*/ HitLocation,
+                         /*out*/ HitNormal,
+                         Position - vect(0, 0, 50),
+                         Position + vect(0, 0, 15),
                          true);
         bTraceWater = false;
 
         // We hit a water volume or a fluid surface, so play splash effects
-        if ((PhysicsVolume(hitActor) != none && PhysicsVolume(hitActor).bWaterVolume) ||
-            FluidSurfaceInfo(hitActor) != none)
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) ||
+            FluidSurfaceInfo(HitActor) != none)
         {
             if (WaterHitSound != none)
                 PlaySound(WaterHitSound);
 
-            if (WaterSplashEffect != none && EffectIsRelevant(hitLocation, false))
-                Spawn(WaterSplashEffect,,, hitLocation, rot(16384, 0, 0));
+            if (WaterSplashEffect != none && EffectIsRelevant(HitLocation, false))
+                Spawn(WaterSplashEffect,,, HitLocation, rot(16384, 0, 0));
 
             // fire is out:
             bDud = true;
-            _TrailInstance.Destroy();
+            TrailInstance.Destroy();
         }
     }
 }
@@ -541,17 +563,12 @@ simulated function CheckForSplash(vector pos)
 defaultproperties
 {
     bNetTemporary=false
-    PickupClass=class'DH_Weapons.DH_MolotovWeapon'
-
     MaxObliquityAngleToExplode=60
     MinImpactSpeedToExplode=100
     FailureRate=0.001 // 1 in 1000
-
-    // mesh:
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_WeaponPickups_molotov.MolotovCocktail_throw'
 
-    // physics
+    // Physics
     Physics=PHYS_Falling
     bBlockHitPointTraces=false
     Speed=800.0
@@ -562,7 +579,7 @@ defaultproperties
     TossZ=150.0
     bFixedRotationDir=true
 
-    // surface dampen values:
+    // Surface dampen values:
     SurfaceDampen(0)=1.0// EST_Default,
     SurfaceDampen(1)=1.0// EST_Rock,
     SurfaceDampen(2)=0.7// EST_Dirt,
@@ -584,7 +601,7 @@ defaultproperties
     SurfaceDampen(18)=1.5// EST_Rubber,
     SurfaceDampen(19)=0.5// EST_Poop,
 
-    // sound
+    // Sound
     ExplosionSoundRadius=300.0
     ExplosionSound(0)=Sound'DH_MolotovCocktail.explosion1'
     ExplosionSound(1)=Sound'DH_MolotovCocktail.explosion2'
@@ -610,14 +627,15 @@ defaultproperties
     SurfaceHits(18)=Sound'DH_MolotovCocktail.bounce' // EST_Rubber,
     SurfaceHits(19)=Sound'DH_MolotovCocktail.bounce' // EST_Poop
 
-    // fx
-    FlameEffect=class'DH_Effects.DHMolotovCoctailTrail'
-    SubProjectileClass=class'DH_Weapons.DH_MolotovSubProjectile'
+    // FX
+    SubProjectileClass=class'DH_Engine.DHIncendiarySubProjectile'
+    SubProjectilesAmount=20
     ExplodeEffectClass=none
-    ExplosionDecal=class'DH_Effects.DH_MolotovMark'
     WaterSplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    // FlameEffect=class'DH_Effects.DHMolotovCoctailTrail'
+    // ExplosionDecal=class'DH_Effects.DH_MolotovMark'
 
-    // give light
+    // Give light
     LightType=LT_Pulse
     LightBrightness=1.0
     LightRadius=200.0

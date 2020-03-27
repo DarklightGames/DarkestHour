@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovSubProjectile extends DHProjectile;
+class DHIncendiarySubProjectile extends DHProjectile;
 
 var     class<Actor>    FlameEffect;
-var private Actor       _FlameInstance;
+var private Actor       FlameInstance;
 
 //==============================================================================
 // Variables from deprecated ROThrowableExplosiveProjectile:
@@ -25,9 +25,9 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        _FlameInstance = Spawn(FlameEffect);//,,, Location, rotator(vect(0,0,1)));
-        _FlameInstance.SetBase(self);
-        _FlameInstance.SetRelativeLocation(vect(0, 0, 0));
+        FlameInstance = Spawn(FlameEffect);//,,, Location, rotator(vect(0,0,1)));
+        FlameInstance.SetBase(self);
+        FlameInstance.SetRelativeLocation(vect(0, 0, 0));
 
         bDynamicLight = true;
     }
@@ -45,7 +45,7 @@ simulated function PostBeginPlay()
 simulated function Destroyed()
 {
     if (Fear != none) Fear.Destroy();
-    if (_FlameInstance != none) _FlameInstance.Destroy();
+    if (FlameInstance != none) FlameInstance.Destroy();
 
     super.Destroyed();
 }
@@ -65,7 +65,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
     local int           i;
-    local DHArmoredVehicle VictimArmoredVehicle;
 
     // Make sure nothing else runs HurtRadius while we are in the middle of the function
     if (bHurtEntry)
@@ -211,8 +210,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // Damage the actor hit by the blast - if it's a vehicle, check for damage to any exposed occupants
         // Log("DamageAmount: "@ DamageScale @", DamageAmount: "@ DamageAmount @", final: "@ (DamageScale*DamageAmount));
 
-        Log(Victim.Class);
-
         Victim.TakeDamage(DamageScale * DamageAmount,
                           Instigator,
                           VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction,
@@ -274,8 +271,8 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 // New function to check for possible blast damage to all vehicle occupants that don't have collision of their own & so won't be 'caught' by HurtRadius
 function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local ROVehicleWeaponPawn weaponPawn;
-    local int i, numWeapons;
+    local ROVehicleWeaponPawn WeaponPawn;
+    local int i, NumWeapons;
 
     if (Vehicle.Driver != none &&
         Vehicle.DriverPositions[Vehicle.DriverPositionIndex].bExposed &&
@@ -285,19 +282,19 @@ function CheckVehicleOccupantsRadiusDamage(ROVehicle Vehicle, float DamageAmount
         VehicleOccupantBlastDamage(Vehicle.Driver, DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
     }
 
-    numWeapons = Vehicle.WeaponPawns.Length;
+    NumWeapons = Vehicle.WeaponPawns.Length;
 
-    for(i = 0; i < numWeapons; ++i)
+    for(i = 0; i < NumWeapons; ++i)
     {
-        weaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
-        if (weaponPawn != none &&
-            weaponPawn.Driver != none &&
-            ((weaponPawn.bMultiPosition && weaponPawn.DriverPositions[weaponPawn.DriverPositionIndex].bExposed) ||
-             weaponPawn.bSinglePositionExposed) &&
-            !weaponPawn.bCollideActors &&
-            !weaponPawn.bRemoteControlled)
+        WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
+        if (WeaponPawn != none &&
+            WeaponPawn.Driver != none &&
+            ((WeaponPawn.bMultiPosition && WeaponPawn.DriverPositions[WeaponPawn.DriverPositionIndex].bExposed) ||
+             WeaponPawn.bSinglePositionExposed) &&
+            !WeaponPawn.bCollideActors &&
+            !WeaponPawn.bRemoteControlled)
         {
-            VehicleOccupantBlastDamage(weaponPawn.Driver, DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
+            VehicleOccupantBlastDamage(WeaponPawn.Driver, DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }
     }
 }
@@ -349,7 +346,7 @@ simulated function UpdateInstigator()
     }
 }
 
-simulated function Landed(vector hitNormal)
+simulated function Landed(vector HitNormal)
 {
     local Actor         Victim;
     local DHVehicle     VictimVehicle;
@@ -385,32 +382,32 @@ simulated function Landed(vector hitNormal)
     }
 }
 
-simulated function HitWall(vector hitNormal, Actor wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local RODestroyableStaticMesh destroMesh;
-    local Class<DamageType> nextDamageType;
-    local int i, max;
-    local float impactSpeed, impactObliquityAngle, obliquityDotProduct;
+    local RODestroyableStaticMesh DestroyMesh;
+    local Class<DamageType> NextDamageType;
+    local int i, DamageTypesAmount;
+    local float ImpactSpeed, ImpactObliquityAngle, ObliquityDotProduct;
 
-    destroMesh = RODestroyableStaticMesh(wall);
-    impactSpeed = VSize(Velocity);
-    obliquityDotProduct = Normal(-Velocity) dot hitNormal;
-    impactObliquityAngle = Acos(obliquityDotProduct) * 180.0 / Pi;
+    DestroyMesh = RODestroyableStaticMesh(Wall);
+    ImpactSpeed = VSize(Velocity);
+    ObliquityDotProduct = Normal(-Velocity) dot HitNormal;
+    ImpactObliquityAngle = Acos(ObliquityDotProduct) * 180.0 / Pi;
 
     // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll probably break it instead of bouncing off it
-    if (destroMesh != none && destroMesh.bWontStopBullets)
+    if (DestroyMesh != none && DestroyMesh.bWontStopBullets)
     {
         // On a server (single player), we'll simply cause enough damage to break the mesh
         if (Role == ROLE_Authority)
         {
-            destroMesh.TakeDamage(destroMesh.Health + 1,
+            DestroyMesh.TakeDamage(DestroyMesh.Health + 1,
                                   Instigator,
                                   Location,
                                   MomentumTransfer * Normal(Velocity),
                                   class'DHWeaponBashDamageType');
 
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
-            if (destroMesh.Health < 0)
+            if (DestroyMesh.Health < 0)
             {
                 return;
             }
@@ -419,13 +416,13 @@ simulated function HitWall(vector hitNormal, Actor wall)
         // So as a workaround we'll loop through the meshes TypesCanDamage array & check if the server's weapon bash DamageType will have broken the mesh
         else
         {
-            max = destroMesh.TypesCanDamage.Length;
-            for(i = 0; i < max; ++i)
+            DamageTypesAmount = DestroyMesh.TypesCanDamage.Length;
+            for(i = 0; i < DamageTypesAmount; ++i)
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
-                nextDamageType = destroMesh.TypesCanDamage[i];
-                if (nextDamageType == class'DHWeaponBashDamageType' ||
-                    ClassIsChildOf(class'DHWeaponBashDamageType', nextDamageType))
+                NextDamageType = DestroyMesh.TypesCanDamage[i];
+                if (NextDamageType == class'DHWeaponBashDamageType' ||
+                    ClassIsChildOf(class'DHWeaponBashDamageType', NextDamageType))
                 {
                     return;
                 }
@@ -435,17 +432,17 @@ simulated function HitWall(vector hitNormal, Actor wall)
 }
 
 // Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
-simulated singular function Touch(Actor other)
+simulated singular function Touch(Actor Other)
 {
     local vector hitLocation, hitNormal;
 
     // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(other) != none)
+    if (FluidSurfaceInfo(Other) != none)
     {
         self.Destroy();
     }
 
-    if (other == none || (!other.bProjTarget && !other.bBlockActors))
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
     {
         return;
     }
@@ -455,8 +452,8 @@ simulated singular function Touch(Actor other)
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
     // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (VSizeSquared(Velocity) == 0 ||
-        other.IsA(class'Mover'.Name) ||
-        other.TraceThisActor(/*out*/ hitLocation,
+        Other.IsA(class'Mover'.Name) ||
+        Other.TraceThisActor(/*out*/ hitLocation,
                              /*out*/ hitNormal,
                              Location,
                              Location - (2.0 * Velocity),
@@ -466,42 +463,42 @@ simulated singular function Touch(Actor other)
     }
 
     // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
-    if (other.IsA(class'DHCollisionMeshActor'.Name))
+    if (Other.IsA(class'DHCollisionMeshActor'.Name))
     {
-        if (DHCollisionMeshActor(other).bWontStopThrownProjectile)
+        if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
         {
             return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
         }
 
-        other = other.Owner;
+        Other = Other.Owner;
     }
 
     // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
     // Record LastTouched to make sure that if HurtRadius gets called to give blast damage, it will always 'find' the hit actor
-    LastTouched = other;
-    ProcessTouch(other, hitLocation);
+    LastTouched = Other;
+    ProcessTouch(Other, hitLocation);
     LastTouched = none;
 }
 
-simulated function ProcessTouch(Actor other, vector hitLocation)
+simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local vector tempHitLocation, hitNormal;
 
-    if (other == Instigator ||
-        other.Base == Instigator ||
-        ROBulletWhipAttachment(other) != none)
+    if (Other == Instigator ||
+        Other.Base == Instigator ||
+        ROBulletWhipAttachment(Other) != none)
     {
         return;
     }
 
     Trace(/*out*/ tempHitLocation,
           /*out*/ hitNormal,
-          hitLocation + Normal(Velocity) * 50.0,
-          hitLocation - Normal(Velocity) * 50.0,
+          HitLocation + Normal(Velocity) * 50.0,
+          HitLocation - Normal(Velocity) * 50.0,
           true); // get a reliable HitNormal for a deflection
 
     // call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
-    HitWall(hitNormal, other);
+    HitWall(hitNormal, Other);
 }
 
 function Timer ()
@@ -515,9 +512,9 @@ function Timer ()
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedicated)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
 {
-    local PlayerController playerController;
+    local PlayerController PlayerController;
 
     // Only relevant on a dedicated server if the bForceDedicated option has been passed
     if (Level.NetMode == NM_DedicatedServer)
@@ -540,9 +537,9 @@ simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedica
         }
     }
 
-    playerController = Level.GetLocalPlayerController();
+    PlayerController = Level.GetLocalPlayerController();
 
-    if (playerController == none || playerController.ViewTarget == none)
+    if (PlayerController == none || PlayerController.ViewTarget == none)
     {
         return false;
     }
@@ -550,20 +547,20 @@ simulated function bool EffectIsRelevant(vector spawnLocation, bool bForceDedica
     // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
     // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (playerController.Pawn != Instigator &&
-        vector(playerController.CalcViewRotation) dot (spawnLocation-playerController.ViewTarget.Location) < 0.0)
+    if (PlayerController.Pawn != Instigator &&
+        vector(PlayerController.CalcViewRotation) dot (SpawnLocation-PlayerController.ViewTarget.Location) < 0.0)
     {
-        return VSizeSquared(playerController.ViewTarget.Location-spawnLocation) < (1600*1600); // 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+        return VSizeSquared(PlayerController.ViewTarget.Location-SpawnLocation) < (1600*1600); // 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
 
     // Effect relevance is based on normal distance check
-    return CheckMaxEffectDistance(playerController, spawnLocation);
+    return CheckMaxEffectDistance(PlayerController, SpawnLocation);
 }
 
-simulated function PhysicsVolumeChange(PhysicsVolume newVolume)
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     // if thrown projectile hits water
-    if (newVolume != none && newVolume.bWaterVolume)
+    if (NewVolume != none && NewVolume.bWaterVolume)
     {
         // fire is out!
         self.Destroy();

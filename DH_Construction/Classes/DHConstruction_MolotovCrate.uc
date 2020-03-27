@@ -13,7 +13,7 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context C
             switch (Context.LevelInfo.AlliedNation)
             {
                 case NATION_USSR:
-                    return class'DH_Weapons.DH_MolotovSpawner';
+                    return class'DH_Weapons.DH_IncendiaryBottleNo1Spawner';
                 default:
                     break;
             }

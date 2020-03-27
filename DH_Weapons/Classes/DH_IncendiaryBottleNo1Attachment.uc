@@ -3,14 +3,14 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovAttachment extends DHThrowableExplosiveAttachment;
+class DH_IncendiaryBottleNo1Attachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.Sticknade'
 
-    Mesh=SkeletalMesh'Weapons3rd_anm.Stielhandgranate'
-    Skins(0)=Texture'Weapons3rd_tex.German.Stielhandgranate'
-    WA_Idle="idle_potato"
-    WA_Fire="idle_potato"
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.sov_BottleNo1_3rd'
+    Skins(0)=Texture'DH_ATbottles_tex.ATbottles.sov_bottleNo1'
+    // WA_Idle="idle_potato"
+    // WA_Fire="idle_potato"
 }

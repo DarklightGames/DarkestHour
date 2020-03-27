@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovFire extends DHThrownExplosiveFire;
+class DH_IncendiaryBottleNo1Fire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MolotovProjectile'
-    AmmoClass=class'DH_Weapons.DH_MolotovAmmo'
+    ProjectileClass=class'DH_Weapons.DH_IncendiaryBottleNo1Projectile'
+    AmmoClass=class'DH_Weapons.DH_IncendiaryBottleNo1Ammo'
 
     bIsSmokeGrenade=true; //blocks molotov from exploding in hands
 

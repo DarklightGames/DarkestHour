@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovSpawner extends DHInventorySpawner;
+class DH_IncendiaryBottleNo1Spawner extends DHInventorySpawner;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_MolotovWeapon'
+    WeaponClass=class'DH_Weapons.DH_IncendiaryBottleNo1Weapon'
     PickupCount=7
     PickupsMax=7
 

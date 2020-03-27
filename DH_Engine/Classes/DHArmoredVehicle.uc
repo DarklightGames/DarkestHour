@@ -1065,7 +1065,6 @@ function bool IsTurretRingHit(vector HitLocation)
 {
     local vector TurretRingBottom;
     local vector TurretRingTop;
-    local name   TurretRingBone;
 
     if (Cannon != none && Cannon.bHasTurret && Cannon.AttachmentBone != '')
     {
@@ -1572,9 +1571,6 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 
 function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageType> DamageType)
 {
-    local float rand;
-    local string S;
-
     if (Health <= 0)
     {
         return;
@@ -2430,8 +2426,8 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Incendiary fuel leaks / fire probabilities
-    TurretRingIncendiaryLeakChance=0.20;
-    EngineIncendiaryLeakChance=0.80;
+    TurretRingIncendiaryLeakChance=0.10;
+    EngineIncendiaryLeakChance=0.75;
 
     // Vehicle fires
     EngineToHullFireChance=0.05

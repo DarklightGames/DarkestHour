@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovPickup extends DHOneShotWeaponPickup;
+class DH_IncendiaryBottleNo1Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_MolotovWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups_molotov.MolotovCocktail'
+    MaxAmmo=2
+    InitialAmount=1
+
+    IconMaterial=Texture'DH_Weapon_tex_molotov.molotov_ammo'
 }
