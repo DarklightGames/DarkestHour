@@ -103,12 +103,6 @@ var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
 var     sound       SmokingEngineSound;
 
-// Turret ring
-var vector TurretRingOffset;
-var float  TurretRingRadius;
-var float  TurretRingHeight;
-var float  TurretRingIncendiaryLeakChance;
-
 // Debugging
 var     bool        bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
 var     bool        bLogDebugPenetration; // similar debug log entries
@@ -1060,25 +1054,6 @@ simulated function bool IsEngineBurning()
 //  ************************  HIT DETECTION & PENETRATION  ************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-
-function bool IsTurretRingHit(vector HitLocation)
-{
-    local vector TurretRingBottom;
-    local vector TurretRingTop;
-    local name   TurretRingBone;
-
-    if (Cannon != none && Cannon.bHasTurret && Cannon.AttachmentBone != '')
-    {
-        TurretRingBottom = GetBoneCoords(Cannon.AttachmentBone).Origin + TurretRingOffset;
-        TurretRingTop = TurretRingBottom + (vect(0, 0, 1) * TurretRingHeight) >> GetBoneRotation(Cannon.AttachmentBone);
-
-        return class'UVector'.static.IsInsideCylinder(HitLocation,
-                                                      TurretRingBottom,
-                                                      TurretRingTop,
-                                                      TurretRingRadius);
-    }
-}
-
 // New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
 function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, optional float CheckDistance)
 {
@@ -1569,38 +1544,6 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************************  DAMAGE  ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
-
-function TakeIncendiaryDamage(Pawn Instigator, vector HitLocation, class<DamageType> DamageType)
-{
-    local float rand;
-    local string S;
-
-    if (Health <= 0)
-    {
-        return;
-    }
-
-    // Engine
-    if (!IsEngineBurning() &&
-        VSize(GetEngineLocation() - HitLocation) <= EngineIncendiaryHitPointRadius &&
-        FRand() < EngineIncendiaryLeakChance)
-    {
-        StartEngineFire(Instigator);
-    }
-
-    if (!IsVehicleBurning())
-    {
-        // Leaking through the turret ring
-        if (IsTurretRingHit(HitLocation) &&
-            FRand() < TurretRingIncendiaryLeakChance)
-        {
-            StartHullFire(Instigator);
-        }
-
-        // Leaking through hatches:
-        // TODO: !
-    }
-}
 
 // Modified to DH special damage points, random special damage and/or crew deaths if penetrated, & possibility of setting engine or vehicle on fire
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
@@ -2396,8 +2339,6 @@ defaultproperties
     PointValue=1000
     WeaponLockTimeForTK=30
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
-    TurretRingHeight=20.0
-    TurretRingRadius=60.0
 
     // Driver & positions
     bMustBeTankCommander=true
@@ -2428,10 +2369,6 @@ defaultproperties
     TraverseDamageChance=2000.0
     TurretDetonationThreshold=1750.0
     AmmoIgnitionProbability=0.75
-
-    // Incendiary fuel leaks / fire probabilities
-    TurretRingIncendiaryLeakChance=0.20;
-    EngineIncendiaryLeakChance=0.80;
 
     // Vehicle fires
     EngineToHullFireChance=0.05
