@@ -141,6 +141,11 @@ defaultproperties
 
     DestroyedVehicleMesh=StaticMesh'DH_ShermanM4A3E8_stc.Destroyed.m4a3e8_destroyed'
 
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+
     LeftWheelBones(0)="wheel.L.001"
     LeftWheelBones(1)="wheel.L.002"
     LeftWheelBones(2)="wheel.L.003"
@@ -170,6 +175,26 @@ defaultproperties
 
     FireAttachBone="driver_attachment"
     FireEffectOffset=(X=0,Y=-10,Z=50)
+
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(X=0,Y=0,Z=-0.5)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        KMaxAngularSpeed=0.9 // default is 1.0
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+    End Object
+    KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanTank_M4A3E8.KParams0'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering

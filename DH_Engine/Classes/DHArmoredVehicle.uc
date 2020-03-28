@@ -1944,7 +1944,6 @@ function ResetTakeDamageVariables()
 // Modified to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
-
     // Apply new damage
     if (EngineHealth > 0)
     {
