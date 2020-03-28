@@ -240,6 +240,12 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 
+            case EST_Metal:
+            case EST_MetalArmor:
+                HitSound = VehicleDeflectSound;
+                HitEmitterClass = ShellDeflectEffectClass;
+                break;
+
             default:
                 HitSound = DirtHitSound;
                 HitEmitterClass = ShellHitDirtEffectClass;
