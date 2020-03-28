@@ -242,9 +242,12 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 
             case EST_Metal:
             case EST_MetalArmor:
-                HitSound = VehicleDeflectSound;
-                HitEmitterClass = ShellDeflectEffectClass;
-                break;
+                if (SavedHitActor.bStatic)
+                {
+                    HitSound = VehicleDeflectSound;
+                    HitEmitterClass = ShellDeflectEffectClass;
+                    break;
+                }
 
             default:
                 HitSound = DirtHitSound;
