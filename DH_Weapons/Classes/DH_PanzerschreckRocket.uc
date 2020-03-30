@@ -20,6 +20,7 @@ defaultproperties
     ImpactDamage=775
     Speed=6337.0
     MaxSpeed=6337.0
+    DamageRadius=400.0
     MyDamageType=class'DH_Weapons.DH_PanzerschreckDamType'
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Panzerschreck_shell'
     //RocketSmokeTrailClass=class'DH_Effects.DHPanzerschreckTrail'

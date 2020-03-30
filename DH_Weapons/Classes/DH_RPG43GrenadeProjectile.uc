@@ -469,7 +469,8 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
-    Speed=800.0  // reduced from 1100 as it was heavy grenade
+    Speed=700.0  // reduced from 1100 as it was heavy grenade
+	//above doesnt seem to work?
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bExplodesOnHittingWater=false
@@ -522,11 +523,11 @@ defaultproperties
     // Properties from usual grenade parent classes (DHGrenadeProjectile & DHThrowableExplosiveProjectile)
     Physics=PHYS_Falling
     bBounce=true
-    MaxSpeed=1500.0
+    MaxSpeed=1000.0
     TossZ=150.0
     DampenFactor=0.05
     DampenFactorParallel=0.8
-    MomentumTransfer=8000.0
+    MomentumTransfer=3000.0
     bSwitchToZeroCollision=true
     bBlockHitPointTraces=false
     CollisionHeight=2.0
@@ -550,7 +551,7 @@ defaultproperties
     bNetTemporary=true // doesn't use replicated FuzeLengthTimer to make it explode, like other grenades (& short range weapon without ongoing movement replication like cannon shell)
     TransientSoundRadius=300.0
     TransientSoundVolume=0.3
-    ExplosionSoundVolume=6.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
+    ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
     AmbientSound=none
     AmbientGlow=0
     FluidSurfaceShootStrengthMod=0.0
