@@ -56,8 +56,8 @@ var     bool                bReloadPaused;        // a reload has started but wa
 var     bool                bNewOrResumedReload;  // tells Timer we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
 
 // Hatch fire effects - Ch!cKeN
-var     DHTurretFireEffect          TurretFireEffect;
-var     class<DHTurretFireEffect>   FireEffectClass;
+var     VehicleDamagedEffect          HatchFireEffect;
+var     class<VehicleDamagedEffect>   FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
@@ -1060,20 +1060,20 @@ simulated function int LimitYaw(int yaw)
 // New function to start a hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
 simulated function StartHatchFire()
 {
-    if (TurretFireEffect == none && Level.NetMode != NM_DedicatedServer)
+    if (HatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        TurretFireEffect = Spawn(FireEffectClass);
+        HatchFireEffect = Spawn(FireEffectClass);
     }
 
-    if (TurretFireEffect != none)
+    if (HatchFireEffect != none)
     {
-        AttachToBone(TurretFireEffect, FireAttachBone);
-        TurretFireEffect.SetRelativeLocation(FireEffectOffset);
-        TurretFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+        AttachToBone(HatchFireEffect, FireAttachBone);
+        HatchFireEffect.SetRelativeLocation(FireEffectOffset);
+        HatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
 
         if (FireEffectScale != 1.0)
         {
-            TurretFireEffect.SetEffectScale(FireEffectScale);
+            HatchFireEffect.SetEffectScale(FireEffectScale);
         }
     }
 }
@@ -1135,9 +1135,9 @@ simulated function DestroyEffects()
         CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
     }
 
-    if (TurretFireEffect != none)
+    if (HatchFireEffect != none)
     {
-        TurretFireEffect.Kill();
+        HatchFireEffect.Kill();
     }
 }
 
@@ -1215,7 +1215,7 @@ defaultproperties
     PitchUpLimit=15000
     PitchDownLimit=45000
     SoundRadius=272.7
-    FireEffectClass=class'DH_Effects.DHTurretFireEffect'
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireEffectScale=1.0
     bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
     bAutoTraceNotify=true
