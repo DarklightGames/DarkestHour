@@ -74,7 +74,7 @@ var     float       SpikeTime;                  // saved future time when a disa
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
-var     VehicleDamagedEffect        HatchFireEffect;
+var     VehicleDamagedEffect        DriverHatchFireEffect;
 var     name        FireAttachBone;
 var     vector      FireEffectOffset;
 var     float       HullFirePercent; //helper variable
@@ -1020,20 +1020,20 @@ simulated function StartDriverHatchFire()
 {
     bDriverHatchFireNeeded = false;
 
-    if (HatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
+    if (DriverHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        HatchFireEffect = Spawn(FireEffectClass);
+        DriverHatchFireEffect = Spawn(FireEffectClass);
     }
 
-    if (HatchFireEffect != none)
+    if (DriverHatchFireEffect != none)
     {
-        AttachToBone(HatchFireEffect, FireAttachBone);
-        HatchFireEffect.SetRelativeLocation(FireEffectOffset);
-        HatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+        AttachToBone(DriverHatchFireEffect, FireAttachBone);
+        DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
+        DriverHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
 
         if (DamagedEffectScale != 1.0)
         {
-            HatchFireEffect.SetEffectScale(DamagedEffectScale);
+            DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
         }
     }
 }
@@ -2146,9 +2146,9 @@ simulated function DestroyAttachments()
 {
     super. DestroyAttachments();
 
-    if (HatchFireEffect != none)
+    if (DriverHatchFireEffect != none)
     {
-        HatchFireEffect.Kill();
+        DriverHatchFireEffect.Kill();
     }
 }
 
@@ -2383,7 +2383,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'ROEngine.VehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
