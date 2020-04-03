@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=2.3
 
     //Damage
-    ImpactDamage=900
+    ImpactDamage=1800
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     HullFireChance=0.55
     EngineFireChance=1.0

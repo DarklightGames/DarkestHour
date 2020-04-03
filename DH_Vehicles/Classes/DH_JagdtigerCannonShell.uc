@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=3.9
 
     //Damage
-    ImpactDamage=950
+    ImpactDamage=1800
     HullFireChance=0.60
     EngineFireChance=1.0
 
