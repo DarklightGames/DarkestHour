@@ -10,7 +10,7 @@ defaultproperties //this should probably be significantly modified due to differ
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    ROShellCaseClass=none //its a revolver
     bRapidFire=false
 
     WA_Idle="idle_p38"

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_EnfieldNo2Weapon extends DHPistolWeapon;
+class DH_EnfieldNo2Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
@@ -17,11 +17,13 @@ defaultproperties
     HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+	
+    bCanAttachOnBack=false
 
     IronSightDisplayFOV=70.0
 
-    MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=12
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
 
     IdleEmptyAnim="Idle"
     IronIdleEmptyAnim="Iron_idle"
@@ -41,9 +43,25 @@ defaultproperties
     SelectEmptyAnim="Draw"
     PutDownEmptyAnim="putaway"
 
-    MagPartialReloadAnim="reload_half"
-
     HandNum=0
     SleeveNum=1
-    bDiscardMagOnReload=true
+
+	//trick to make partial reload work properly on this weapon
+	PreReloadAnim="reload_half"
+    SingleReloadAnim="blank"
+    PostReloadAnim="blank"
+	FullReloadAnim="reload_empty"
+
+    InventoryGroup=3
+    Priority=5
+    FreeAimRotationSpeed=8.0
+    AIRating=0.35
+    CurrentRating=0.35
+    bSniping=false
+    bUsesIronsightFOV=false
+
+    bShouldSkipBolt=true
+
+    bCanUseUnfiredRounds=false
+	
 }
