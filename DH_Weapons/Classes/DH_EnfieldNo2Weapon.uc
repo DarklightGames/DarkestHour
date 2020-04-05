@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_EnfieldNo2Weapon extends DHBoltActionWeapon;
+class DH_EnfieldNo2Weapon extends DHRevolverWeapon;
 
 defaultproperties
 {
@@ -17,8 +17,6 @@ defaultproperties
     HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-
-    bCanAttachOnBack=false
 
     IronSightDisplayFOV=70.0
 
@@ -51,16 +49,4 @@ defaultproperties
     SingleReloadAnim="blank2"
     PostReloadAnim="blank"
     FullReloadAnim="reload_empty"
-
-    InventoryGroup=3
-    Priority=5
-    FreeAimRotationSpeed=8.0
-    AIRating=0.35
-    CurrentRating=0.35
-    bSniping=false
-    bUsesIronsightFOV=false
-
-    bShouldSkipBolt=true
-
-    bCanUseUnfiredRounds=false
 }

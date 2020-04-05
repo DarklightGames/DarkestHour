@@ -3552,7 +3552,9 @@ state PutWeaponAway
                 }
             }
             // Putting away a pistol, or a shovel that hangs on the player's left hip
-            else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (Weapon.IsA('DHPistolWeapon') ||
+                     Weapon.IsA('DHRevolverWeapon') ||
+                     (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 if (bIsCrawling)
                 {
@@ -3669,7 +3671,9 @@ state PutWeaponAway
             if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
                 // From grenade or binocs, to pistol or shovel from left hip
-                if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                if (Weapon.IsA('DHPistolWeapon') ||
+                    Weapon.IsA('DHRevolverWeapon') ||
+                    (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3705,7 +3709,9 @@ state PutWeaponAway
                     }
                 }
             }
-            else if (SwapWeapon.IsA('DHPistolWeapon') || (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (SwapWeapon.IsA('DHPistolWeapon') ||
+                     SwapWeapon.IsA('DHRevolverWeapon') ||
+                     (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 // From pistol or shovel that goes on left hip, to grenade or binocs
                 if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
@@ -3720,7 +3726,9 @@ state PutWeaponAway
                     }
                 }
                 // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') ||(Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHPistolWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3759,7 +3767,9 @@ state PutWeaponAway
                     }
                 }
                 // From any other weapon, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {

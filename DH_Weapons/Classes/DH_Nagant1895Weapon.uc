@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Nagant1895Weapon extends DHBoltActionWeapon;
+class DH_Nagant1895Weapon extends DHRevolverWeapon;
 
 defaultproperties
 {
@@ -14,8 +14,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Nagant1895Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant1895_1st.Nagant1895'
-
-    bCanAttachOnBack=false
 
     bUseHighDetailOverlayIndex=false
     Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
@@ -33,17 +31,4 @@ defaultproperties
 
     SingleReloadAnim="single_insert"
     PostReloadAnim="single_close"
-
-    InventoryGroup=3
-    Priority=5
-    FreeAimRotationSpeed=8.0
-    AIRating=0.35
-    CurrentRating=0.35
-    bSniping=false
-    bUsesIronsightFOV=false
-
-    bShouldSkipBolt=true
-
-    bCanUseUnfiredRounds=false
 }
-
