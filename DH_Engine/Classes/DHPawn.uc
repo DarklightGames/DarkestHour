@@ -3727,7 +3727,7 @@ state PutWeaponAway
                 }
                 // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
                 else if (Weapon.IsA('DHPistolWeapon') ||
-                         Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
                          (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
