@@ -17,7 +17,7 @@ defaultproperties
     HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-	
+
     bCanAttachOnBack=false
 
     IronSightDisplayFOV=70.0
@@ -46,11 +46,11 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-	//trick to make partial reload work properly on this weapon
-	PreReloadAnim="reload_half"
+    //trick to make partial reload work properly on this weapon
+    PreReloadAnim="reload_half"
     SingleReloadAnim="blank2"
     PostReloadAnim="blank"
-	FullReloadAnim="reload_empty"
+    FullReloadAnim="reload_empty"
 
     InventoryGroup=3
     Priority=5
@@ -63,5 +63,4 @@ defaultproperties
     bShouldSkipBolt=true
 
     bCanUseUnfiredRounds=false
-	
 }
