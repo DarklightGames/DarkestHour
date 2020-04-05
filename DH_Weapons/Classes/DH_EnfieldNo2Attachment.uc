@@ -12,6 +12,8 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
+	
+	MuzzleBoneName="Muzzle"
 
     WA_Idle="idle_enfieldno2"
     WA_IdleEmpty="idle_enfieldno2"

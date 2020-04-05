@@ -48,7 +48,7 @@ defaultproperties
 
 	//trick to make partial reload work properly on this weapon
 	PreReloadAnim="reload_half"
-    SingleReloadAnim="blank"
+    SingleReloadAnim="blank2"
     PostReloadAnim="blank"
 	FullReloadAnim="reload_empty"
 
