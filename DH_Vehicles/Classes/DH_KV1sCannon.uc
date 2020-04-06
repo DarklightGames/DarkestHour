@@ -44,6 +44,13 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
+	
+    TertiaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellAPCR'
+	InitialTertiaryAmmo=4
+	MaxTertiaryAmmo=6
+    nProjectileDescriptions(2)="BR-350P"
+    ProjectileDescriptions(2)="APCR"
+	
 
     // Weapon fire
     WeaponFireOffset=69.6

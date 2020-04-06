@@ -5,19 +5,16 @@
 
 class DH_PanzerIIIJCannon extends DHVehicleCannon;
 
-//wip
 
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3L_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
+    Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_turret_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext'
+
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_turret_coll'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    //HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    bUseHighDetailOverlayIndex=false
 
     // Turret armor
     FrontArmorFactor=5.0

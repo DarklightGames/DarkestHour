@@ -3,16 +3,16 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_T3476CannonPawn extends DHSovietCannonPawn;
+class DH_T3476_42CannonPawn extends DHSovietCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_T3476Cannon'
-    DriverPositions(0)=(ViewLocation=(X=115.0,Y=-15.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-76_turret_int',bDrawOverlays=true)
-    DriverPositions(1)=(ViewLocation=(X=35,Y=-5.0,Z=20.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-76_turret_int',DriverTransitionAnim="VT3476_com_idle_close",TransitionUpAnim="com_open",DriverTransitionAnim="VT3476_com_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
+    GunClass=class'DH_Vehicles.DH_T3476_42Cannon'
+    DriverPositions(0)=(ViewLocation=(X=115.0,Y=-15.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext',bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(X=35,Y=-5.0,Z=20.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext',DriverTransitionAnim="VT3476_com_idle_close",TransitionUpAnim="com_open",DriverTransitionAnim="VT3476_com_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34-76_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VT3476_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-76_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VT3476_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
 
     PeriscopePositionIndex=1
     UnbuttonedPositionIndex=2

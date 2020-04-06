@@ -57,6 +57,7 @@ defaultproperties
 
     // Movement
     GearRatios(4)=0.72
+    GearRatios(0)=-0.35
     TransRatio=0.09
 
     // Damage

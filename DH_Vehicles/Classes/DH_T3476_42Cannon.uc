@@ -3,28 +3,28 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_T3476Cannon extends DHVehicleCannon;
+class DH_T3476_42Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_T34_anm.T34-76_turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    Mesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext'
+    Skins(0)=Texture'DH_T34_3_tex.Vehicles.T3476_M42_green'
+    //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
+    bUseHighDetailOverlayIndex=false
+
+    //HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-76_turret_col'
 
-    // Turret armor (model 1941)
-    FrontArmorFactor=4.5
-    LeftArmorFactor=4.5
-    RightArmorFactor=4.5
-    RearArmorFactor=4.5
-    FrontArmorSlope=15.0
-    LeftArmorSlope=30.0
-    RightArmorSlope=30.0
-    RearArmorSlope=30.0
+    // Turret armor (model 1942)
+    FrontArmorFactor=5.3
+    LeftArmorFactor=5.3
+    RightArmorFactor=5.3
+    RearArmorFactor=5.3
+    FrontArmorSlope=30.0
+    LeftArmorSlope=25.0
+    RightArmorSlope=25.0
+    RearArmorSlope=20.0
     FrontLeftAngle=341.0
     FrontRightAngle=19.0
     RearRightAngle=162.0
@@ -37,12 +37,12 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
+    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
 
-    nProjectileDescriptions(0)="BR-350A" //
+    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
     nProjectileDescriptions(1)="OF-350"
 
     InitialPrimaryAmmo=25

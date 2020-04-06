@@ -5,31 +5,29 @@
 
 class DH_PanzerIIIJTank extends DHArmoredVehicle;
 
-//this is a WIP code, based on pzIII ausf L tank, values are changed to represent ausf J but it still references ausf L meshes/textures/etc
-//TO DO: ausf J meshes, textures, etc.
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer III Ausf.J"
-    VehicleMass=11.5
+    VehicleMass=11.0
     ReinforcementCost=4
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3j_body_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(3)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(4)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    Skins(5)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=4
+    HighDetailOverlayIndex=3
     BeginningIdleAnim="periscope_idle_out"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIJCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-90.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-120.0,Y=-30.0,Z=50.0),DriveRot=(Pitch=3500,Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
@@ -38,9 +36,9 @@ defaultproperties
 
     // Driver
     UnbuttonedPositionIndex=3
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
     PeriscopeOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
     PeriscopeSize=0.765 //65° FOV 1x magnification KFF2 driver's scope
@@ -74,7 +72,7 @@ defaultproperties
     TreadDamageThreshold=0.5
     DamagedEffectScale=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_dest2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3n_destroyed2'
 
     // Exit
     ExitPositions(0)=(X=-66.0,Y=1.0,Z=145.0)
@@ -150,7 +148,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -159,7 +157,7 @@ defaultproperties
         BoneOffset=(X=40.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -169,7 +167,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -178,7 +176,7 @@ defaultproperties
         BoneOffset=(X=-5.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -187,7 +185,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -195,5 +193,5 @@ defaultproperties
         BoneOffset=(X=10.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Right_Drive_Wheel'
 }

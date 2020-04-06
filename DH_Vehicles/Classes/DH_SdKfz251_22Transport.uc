@@ -22,6 +22,9 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
+    Health=700  //reduced from 2000 because this vehicle has ammorack, therefore its health should be closer to tanks and not to transports
+    HealthMax=700
+	
     VehicleNameString="Sd.Kfz.251/22 Halftrack"
     PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'

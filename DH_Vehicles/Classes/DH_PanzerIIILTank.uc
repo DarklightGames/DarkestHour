@@ -147,7 +147,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -156,7 +156,7 @@ defaultproperties
         BoneOffset=(X=40.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -166,7 +166,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -175,7 +175,7 @@ defaultproperties
         BoneOffset=(X=-5.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -184,7 +184,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -192,5 +192,5 @@ defaultproperties
         BoneOffset=(X=10.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Right_Drive_Wheel'
 }
