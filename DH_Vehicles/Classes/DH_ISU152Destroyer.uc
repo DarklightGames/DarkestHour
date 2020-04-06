@@ -61,6 +61,7 @@ defaultproperties
     // Movement
     GearRatios(4)=0.72
     TransRatio=0.09
+    GearRatios(0)=-0.35
 
     // Damage
     Health=650 // was 800 but adjusted to more in line with similar DH vehicles
