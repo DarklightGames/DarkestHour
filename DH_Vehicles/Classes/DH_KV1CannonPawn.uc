@@ -8,12 +8,12 @@ class DH_KV1CannonPawn extends DHSovietCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_KV1Cannon'
-    DriverPositions(0)=(ViewLocation=(X=24.0,Y=-13.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',bDrawOverlays=true)
-    DriverPositions(1)=(ViewLocation=(X=49.0,Y=-4.0,Z=5.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_ext',ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
+    DriverPositions(0)=(ViewLocation=(X=24.0,Y=-13.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(X=49.0,Y=-4.0,Z=5.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext',ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     //
-    DriverPositions(2)=(ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VKV1_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VKV1_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(4)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VKV1_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VKV1_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(4)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
 
     PeriscopePositionIndex=1
     UnbuttonedPositionIndex=3

@@ -8,14 +8,16 @@ class DH_KV1Cannon extends DH_T3476Cannon; // different turret but shares much i
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_KV_anm.KV1S_turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.kv1_int'
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.kv1_int_s'
+    Mesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+    Skins(2)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
+    Skins(3)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1S_turret_collision'
 
     // Turret armor
-    FrontArmorFactor=8.2 //actually its more complicated, most of turret's front is spherical 90mm and small areas of 75mm under 20 degrees slope. Since there is no way to differentiate, i made a compromise (KV-1s seems to have the same thing)
+    FrontArmorFactor=8.3 //actually its more complicated, most of turret's front is spherical 90mm and small areas of 75mm under 20 degrees slope. Since there is no way to differentiate, i made a compromise (KV-1s seems to have the same thing)
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=7.5
