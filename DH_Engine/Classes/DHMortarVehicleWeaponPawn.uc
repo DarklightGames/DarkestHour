@@ -427,6 +427,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 // New keybound function to toggle the selected ammo type
 exec function SwitchFireMode()
 {
+    Log("DriverPositions.Length=" @ DriverPositions.Length @ ".");
     if (DHMortarVehicleWeapon(Gun) != none && Gun.bMultipleRoundTypes)
     {
         DHMortarVehicleWeapon(Gun).ToggleRoundType();
@@ -931,7 +932,6 @@ simulated function UpdatePrecacheMaterials()
 
 // Functions emptied out as not relevant to a mortar:
 simulated function SwitchWeapon(byte F);
-function ServerChangeDriverPosition(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
 simulated exec function ToggleVehicleLock();
 function ServerToggleVehicleLock();
@@ -939,6 +939,7 @@ function ServerToggleVehicleLock();
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
+    bMultiPosition=true
     bSinglePositionExposed=true
     ElevationAdjustmentDelay=0.125
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar

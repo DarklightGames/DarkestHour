@@ -7,6 +7,8 @@ class DH_Kz8cmGrW42VehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 defaultproperties
 {
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewLocation=(X=0.0,Y=-10.0,Z=40.0),ViewFOV=80.0,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="optic_in",bDrawOverlays=true,bExposed=true)
     WeaponClass=class'DH_Weapons.DH_Kz8cmGrW42Weapon'
     GunClass=class'DH_Weapons.DH_Kz8cmGrW42VehicleWeapon'
     HUDOverlayClass=class'DH_Weapons.DH_Kz8cmGrW42Overlay'
