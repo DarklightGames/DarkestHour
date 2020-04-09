@@ -20,15 +20,15 @@ defaultproperties
     PitchBone=gun
 
 
-    // Turret armor (model 1941)
-    FrontArmorFactor=4.5
-    LeftArmorFactor=4.5
-    RightArmorFactor=4.5
-    RearArmorFactor=4.5
-    FrontArmorSlope=15.0
-    LeftArmorSlope=30.0
-    RightArmorSlope=30.0
-    RearArmorSlope=30.0
+    // Turret armor 
+    FrontArmorFactor=1.5
+    LeftArmorFactor=1.5
+    RightArmorFactor=1.5
+    RearArmorFactor=1.3
+    FrontArmorSlope=20.0
+    LeftArmorSlope=13.0
+    RightArmorSlope=13.0
+    RearArmorSlope=15.0
     FrontLeftAngle=341.0
     FrontRightAngle=19.0
     RearRightAngle=162.0
