@@ -44,17 +44,17 @@ defaultproperties
 
     nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
     nProjectileDescriptions(1)="OF-350"
-	
+
 
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=25
     MaxPrimaryAmmo=27
     MaxSecondaryAmmo=50
     SecondarySpread=0.002
-	
-	TertiaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellAPCR'
-	InitialTertiaryAmmo=4
-	MaxTertiaryAmmo=6
+
+    TertiaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellAPCR'
+    InitialTertiaryAmmo=4
+    MaxTertiaryAmmo=6
     nProjectileDescriptions(2)="BR-350P"
     ProjectileDescriptions(2)="APCR"
 
@@ -84,8 +84,8 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=1.35)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=2.2,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

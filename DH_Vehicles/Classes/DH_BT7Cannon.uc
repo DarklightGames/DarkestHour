@@ -12,15 +12,15 @@ defaultproperties
     skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
     skins(1)=Texture'allies_ahz_vehicles_tex.int_vehicles.BT7_int'
     HighDetailOverlay=Material'allies_ahz_vehicles_tex.int_vehicles.BT7_int'
-	bUseHighDetailOverlayIndex=true
-	HighDetailOverlayIndex=1
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=1
     BeginningIdleAnim=com_idle_close
     YawBone=turret
 
     PitchBone=gun
 
 
-    // Turret armor 
+    // Turret armor
     FrontArmorFactor=1.5
     LeftArmorFactor=1.5
     RightArmorFactor=1.5
@@ -97,8 +97,8 @@ defaultproperties
 
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=1.35)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=2.2,HUDProportion=0.35)
 
 
 }
