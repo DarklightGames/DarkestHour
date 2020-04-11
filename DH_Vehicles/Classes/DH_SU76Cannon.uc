@@ -3,45 +3,58 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ZiS3Cannon extends DHATGunCannon;
+class DH_SU76Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
-    Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision'
+    Mesh=Mesh'allies_su76_anm.SU76_turret_ext'
+    skins(0)=Texture'allies_vehicles_tex.ext_vehicles.SU76_ext'
+    skins(1)=Texture'allies_vehicles_tex.int_vehicles.SU76_int'
+	HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.SU76_int_s'
+	bUseHighDetailOverlayIndex=true
+	HighDetailOverlayIndex=1
 
-    // Turret movement
-    MaxPositiveYaw=4915 // 27 degrees
-    MaxNegativeYaw=-4915
-    YawStartConstraint=-5500.0
-    YawEndConstraint=5500.0
-    CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64100
+    // Cannon armour (mantlet)
+    GunMantletArmorFactor=6.0 //gun breech should stop the shells, i think. In case of su-76 its rather a strong point rather than a weak point, as the rest of superstructure armor is very thin and not sloped
+    GunMantletSlope=0.0
+
+    // Cannon movement
+    bHasTurret=false
+    ManualRotationsPerSecond=0.04
+    YawBone="turret"
+    bLimitYaw=true
+    MaxPositiveYaw=2780 // +/- 15 degrees
+    MaxNegativeYaw=-2780
+    YawStartConstraint=-4000.0
+    YawEndConstraint=4000.0
+    CustomPitchUpLimit=4633 // +25/-5 degrees
+    CustomPitchDownLimit=64620
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
-    PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
-
-
+    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
-    ProjectileDescriptions(2)="APCR"
 
     nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
     nProjectileDescriptions(1)="OF-350"
-    nProjectileDescriptions(2)="BR-350P"
 
-    InitialPrimaryAmmo=10
-    InitialSecondaryAmmo=20
-    InitialTertiaryAmmo=0 //have to build ammo crate for APCR, seems like a good balance measure
-    MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=60
-    MaxTertiaryAmmo=2
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=25
+    MaxPrimaryAmmo=27
+    MaxSecondaryAmmo=27
     SecondarySpread=0.002
+
+    TertiaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellAPCR'
+    InitialTertiaryAmmo=2
+    MaxTertiaryAmmo=6
+    nProjectileDescriptions(2)="BR-350P"
+    ProjectileDescriptions(2)="APCR"
+
+    // Weapon fire
+
+    WeaponFireOffset=200.0
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
@@ -51,6 +64,9 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+
+    // View shake
+
 
     // Cannon range settings
     RangeSettings(1)=200

@@ -3,13 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_BT7Tank_camoA extends DH_BT7Tank;
+class DH_SU76Destroyer_CamoA extends DH_SU76Destroyer; 
 
 defaultproperties
 {
-
-    bIsWinterVariant=true
-	Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.BT7_CamoA_ext'
-    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.BT7_CamoA_ext'
-
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.SU76_stripe_ext'
+	CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.SU76_stripe_ext'
 }
