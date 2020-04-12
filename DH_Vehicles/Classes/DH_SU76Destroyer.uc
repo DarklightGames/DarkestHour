@@ -33,9 +33,10 @@ defaultproperties
 
     // Driver
     DriverAttachmentBone=driver_attachment
-    DriverPositions(0)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,ViewFOV=85,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     InitialPositionIndex=0
+    UnbuttonPositionIndex=1 // position in array where driver can exit
     FPCamPos=(X=0,Y=0,Z=0)
     FPCamViewOffset=(X=0,Y=0,Z=0)
     bFPNoZFromCameraPitch=True
@@ -51,16 +52,16 @@ defaultproperties
     HUDOverlayFOV=85
 
     // Hull armor
-    FrontArmor(0)=(Thickness=3.0,Slope=-30.0,MaxRelativeHeight=-15.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=2.5,Slope=60.0,MaxRelativeHeight=1.0,LocationName="upper")  //change all height values, they are copied from isu152 and are definitely wrong
-    FrontArmor(2)=(Thickness=2.5,Slope=27.0,LocationName="superstructure")
-    RightArmor(0)=(Thickness=1.5,MaxRelativeHeight=0.8,LocationName="lower")
-    RightArmor(1)=(Thickness=1.0,Slope=20.0,LocationName="superstructure")
-    LeftArmor(0)=(Thickness=1.5,MaxRelativeHeight=0.8,LocationName="lower")
-    LeftArmor(1)=(Thickness=1.0,Slope=20.0,LocationName="superstructure")
-    RearArmor(0)=(Thickness=1.5,Slope=0,MaxRelativeHeight=-12.8,LocationName="lower")
-
-    RearArmor(1)=(Thickness=0.0,LocationName="superstructure") //literally no armor
+    FrontArmor(0)=(Thickness=3.0,Slope=-30.0,MaxRelativeHeight=-10.5,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=2.5,Slope=60.0,MaxRelativeHeight=23.5,LocationName="upper")
+    FrontArmor(2)=(Thickness=2.5,Slope=20.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=1.5,MaxRelativeHeight=23.5,LocationName="lower")
+    RightArmor(1)=(Thickness=1.0,Slope=25.0,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=1.5,MaxRelativeHeight=23.5,LocationName="lower")
+    LeftArmor(1)=(Thickness=1.0,Slope=25.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=1.5,Slope=-30,MaxRelativeHeight=-15.0,LocationName="lower")
+    RearArmor(1)=(Thickness=1.5,MaxRelativeHeight=42.0,LocationName="lower superstructure")
+    RearArmor(2)=(Thickness=0.0,LocationName="upper superstructure") // literally no armor - open in the back
 
     FrontLeftAngle=322.0
     FrontRightAngle=38.0
