@@ -30,24 +30,6 @@ simulated function PostNetBeginPlay()
     {
         SetDrawType(DT_StaticMesh);
         bOrientToVelocity = true;
-
-        if (Level.bDropDetail)
-        {
-            bDynamicLight = false;
-        }
-        else
-        {
-            bDynamicLight = true;
-            LightType = LT_Steady;
-        }
-
-        LightBrightness = 90.0;
-        LightRadius = 10.0;
-        LightHue = 45;
-        LightSaturation = 128;
-        AmbientGlow = 254;
-        LightCone = 16;
-
         TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
     }
 }

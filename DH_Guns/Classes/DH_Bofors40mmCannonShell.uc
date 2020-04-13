@@ -28,10 +28,11 @@ defaultproperties
     DeflectedMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     TracerEffectClass=class'DH_Effects.DHBulletTracer_RedLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
+    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    TracerHue=0
 
     //Penetration
     DHPenetrationTable(0)=6.0  // 100m // TODO: try to get some accurate penetration data (this uses reported penetration at 100, 500, 1k & 2k ranges, with the gaps then estimated)

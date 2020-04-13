@@ -230,7 +230,7 @@ defaultproperties
 {
     bUsesMags=true
     Spread=0.003
-    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
+    FlashEmitterClass=class'DH_Effects.DH20mmCannonFireEffect'
     EffectEmitterClass=none
     CannonDustEmitterClass=none
     AIInfo(0)=(RefireRate=0.99)

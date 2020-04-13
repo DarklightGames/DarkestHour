@@ -24,9 +24,29 @@ defaultproperties
     EngineFireChance=0.30
 
     //Effects
+    DrawScale=0.75
+    bHasTracer=true
     bHasShellTrail=true
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
+    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+
+    bDebugInImperial=false
+
+    //Effects
+    BlurTime=2.0
+    BlurEffectScalar=0.9
+    PenetrationMag=110.0
+
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
+    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+
+    ExplosionDecal=class'ROEffects.GrenadeMark'
+    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 
     //Penetration
     DHPenetrationTable(0)=1.9
@@ -52,20 +72,4 @@ defaultproperties
     MechanicalRanges(11)=(Range=1100,RangeValue=122.0)
     MechanicalRanges(12)=(Range=1200,RangeValue=131.0)
     bMechanicalAiming=true
-
-    bDebugInImperial=false
-
-    //Effects
-    BlurTime=2.0
-    BlurEffectScalar=0.9
-    PenetrationMag=110.0
-    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer' // static mesh shows as tracer so we see one, even thought HE shell inherits bHasTracer & has no CoronaClass
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
-    ExplosionDecal=class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 }

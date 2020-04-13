@@ -34,8 +34,6 @@ defaultproperties
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
 
     //Fire Effects
-    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
-    //EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeB'
     CannonDustEmitterClass=class'ROEffects.TankCannonDust'
 
     // Turret movement
@@ -69,5 +67,6 @@ defaultproperties
 
     // Weapon fire
     FireInterval=0.5
+    FireOffset=2.0
     AddedPitch=40 // results in shell hitting exactly where tip of sight is, at point blank range
 }

@@ -41,14 +41,14 @@ var     sound           ShatterVehicleHitSound;  // sound of this shell shatteri
 var     sound           ShatterSound[4];         // sound of the round shattering
 
 // Effects
-var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
-var     class<Effects>  CoronaClass;             // tracer effect class
-var     Effects         Corona;                  // shell tracer
-
-//New Effects
-var     bool                    bHasShellTrail;
-var     class<Emitter>          TankShellTrailClass;         // shell "streak" emitter
-var     Emitter                 ShellTrail;
+var     bool            bHasTracer;
+var     class<Effects>  CoronaClass;             // shell base tracer effect class
+var     Effects         Corona;                  // shell base tracer
+var     bool            bHasShellTrail;
+var     class<Emitter>  TankShellTrailClass;     // shell "streak" emitter effect
+var     Emitter         ShellTrail;
+var     int             TracerHue;               // allows custom control of ambient light hue
+var     int             TracerSaturation;        // allows custom control of ambient light saturation
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -136,6 +136,37 @@ simulated function PostNetBeginPlay()
     if (bDebugROBallistics)
     {
         bDebugBallistics = true;
+    }
+
+    if (bHasTracer && Level.NetMode != NM_DedicatedServer)
+    {
+        SetDrawType(DT_StaticMesh);
+        bOrientToVelocity = true;
+
+        if (Level.bDropDetail)
+        {
+            bDynamicLight = false;
+        }
+        else
+        {
+            bDynamicLight = true;
+            LightType = LT_Steady;
+        }
+
+        LightBrightness = 90.0;
+        LightRadius = 10.0;
+        LightHue = TracerHue;
+        LightSaturation = TracerSaturation;
+        AmbientGlow = 254;
+        LightCone = 16;
+
+        Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail.SetBase(self);
     }
 
     if (bDebugBallistics)
@@ -1143,6 +1174,9 @@ defaultproperties
     BlurTime=3.0
     BlurEffectScalar=1.9
     PenetrationMag=100.0
+
+    TracerHue=45
+    TracerSaturation=128
 
     HullFireChance=0.0
     EngineFireChance=0.0

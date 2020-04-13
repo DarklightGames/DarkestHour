@@ -38,26 +38,9 @@ simulated function PostBeginPlay()
             break;
     }
 
-    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
-    {
-        Corona = Spawn(CoronaClass, self);
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
-    {
-        ShellTrail = Spawn(TankShellTrailClass, self);
-        ShellTrail.SetBase(self);
-    }
-
     if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         Velocity *= 0.6;
-    }
-
-    if (Level.bDropDetail)
-    {
-        bDynamicLight = false;
-        LightType = LT_None;
     }
 
     super.PostBeginPlay();

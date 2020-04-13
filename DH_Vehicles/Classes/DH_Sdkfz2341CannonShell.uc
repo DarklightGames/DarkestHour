@@ -21,12 +21,15 @@ defaultproperties
     EngineFireChance=0.35
 
     //Effects
+    DrawScale=0.75
     bHasTracer=true
     bHasShellTrail=true
-    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
+    TracerHue=40
 
+    //Sounds
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Grass'
@@ -36,10 +39,10 @@ defaultproperties
 
     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    ShellHitDirtEffectClass=class'ROEffects.ROBulletHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.ROBulletHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.ROBulletHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.ROBulletHitConcreteEffect'
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
