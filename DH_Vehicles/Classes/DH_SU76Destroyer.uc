@@ -36,7 +36,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     InitialPositionIndex=0
-    UnbuttonPositionIndex=1 // position in array where driver can exit
+    UnbuttonedPositionIndex=1 // position in array where driver can exit
     FPCamPos=(X=0,Y=0,Z=0)
     FPCamViewOffset=(X=0,Y=0,Z=0)
     bFPNoZFromCameraPitch=True
@@ -90,8 +90,8 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.SU76_Destroyed'
 
     // Exit positions
-    ExitPositions(0)=(X=0,Y=-200,Z=100)
-    ExitPositions(1)=(X=0,Y=200,Z=100)
+    ExitPositions(0)=(X=250,Y=000,Z=50)
+    ExitPositions(1)=(X=-50,Y=000,Z=250)
 
 
     // Sounds

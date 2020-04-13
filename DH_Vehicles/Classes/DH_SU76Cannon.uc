@@ -32,9 +32,9 @@ defaultproperties
     CustomPitchDownLimit=64620
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
+    ProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellHE'
     ProjectileDescriptions(0)="APBC"
 
     nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
@@ -46,7 +46,7 @@ defaultproperties
     MaxSecondaryAmmo=27
     SecondarySpread=0.002
 
-    TertiaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellAPCR'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_SU76CannonShellAPCR'
     InitialTertiaryAmmo=2
     MaxTertiaryAmmo=6
     nProjectileDescriptions(2)="BR-350P"
@@ -55,7 +55,8 @@ defaultproperties
     // Weapon fire
 
     WeaponFireOffset=200.0
-
+    
+	
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
