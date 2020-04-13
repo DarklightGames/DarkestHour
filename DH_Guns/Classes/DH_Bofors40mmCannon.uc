@@ -67,6 +67,6 @@ defaultproperties
 
     // Weapon fire
     FireInterval=0.5
-    FireOffset=2.0
+    WeaponFireOffset=2.0
     AddedPitch=40 // results in shell hitting exactly where tip of sight is, at point blank range
 }
