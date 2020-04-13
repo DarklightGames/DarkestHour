@@ -9,9 +9,8 @@ defaultproperties
 {
     bIsTracerBullet=true
     TracerEffectClass=class'DH_Effects.DHBulletTracer_YellowOrange'
-    StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'//'DH_Tracers.Ger_Tracer'
+    StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     SpeedFudgeScale=0.50
-    LightHue=30
-    LightSaturation=0
+    TracerHue=40
 }
