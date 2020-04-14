@@ -24,9 +24,10 @@ defaultproperties
     LeftArmorSlope=26.0
     RearArmorSlope=16.0
 
-    FrontRightAngle=38.0
-    RearRightAngle=142.0
-    RearLeftAngle=218.0
+    FrontLeftAngle=318.0
+    FrontRightAngle=42.0
+    RearRightAngle=138.0
+    RearLeftAngle=222.0
 
     // Turret movement
     ManualRotationsPerSecond=0.02
