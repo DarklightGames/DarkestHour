@@ -39,11 +39,11 @@ defaultproperties
     PenetrationMag=110.0
 
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
 
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
