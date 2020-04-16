@@ -8,14 +8,16 @@ class DH_KV1ECannon extends DH_T3476Cannon; // different turret but shares much 
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_KV_anm.KV1S_turret_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext'
-    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.kv1_int'
-    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.kv1_int_s'
+    Mesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+    Skins(2)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
+    Skins(3)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1S_turret_collision'
 
     // Turret armor
-    FrontArmorFactor=9.5 //just like with other KVs, turret's front armor is complex and cant be modelled properly. Here it is spherical 90mm armor and areas with flat 75mm armor with added 30mm shields
+    FrontArmorFactor=9.3 //just like with other KVs, turret's front armor is complex and cant be modelled properly. Here it is spherical 90mm armor and areas with flat 75mm armor with added 30mm shields
     LeftArmorFactor=10.5
     RightArmorFactor=10.5  //sides are covered in 30mm shields
     RearArmorFactor=7.5
@@ -30,7 +32,7 @@ defaultproperties
 
     // Turret movement
     ManualRotationsPerSecond=0.02
-    PoweredRotationsPerSecond=0.0666 // 24 degrees per sec
+    PoweredRotationsPerSecond=0.0778 // 28 degrees per sec
     CustomPitchUpLimit=5097 // +28/-7 degrees
     CustomPitchDownLimit=64261
 
