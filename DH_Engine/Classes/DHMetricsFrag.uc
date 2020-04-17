@@ -23,6 +23,19 @@ var class<DHVehicle>    VictimVehicle;
 
 function JSONValue ToJSON()
 {
+    local JSONValue KillerVehicleObject;
+    local JSONValue VictimVehicleObject;
+
+    if (KillerVehicle != none)
+    {
+        KillerVehicleObject = class'JSONString'.static.Create(KillerVehicle.Name);
+    }
+
+    if (VictimVehicle != none)
+    {
+        VictimVehicleObject = class'JSONString'.static.Create(VictimVehicle.Name);
+    }
+
     return (new class'JSONObject')
         .PutString("damage_type", DamageType.Name)
         .PutInteger("hit_index", HitIndex)
@@ -32,12 +45,11 @@ function JSONValue ToJSON()
             .PutInteger("team", KillerTeam)
             .PutString("pawn", KillerPawn.Name)
             .PutIVector("location", KillerLocation)
-            .PutString("vehicle", KillerVehicle.Name))
+            .Put("vehicle", KillerVehicleObject))
         .Put("victim", (new class'JSONObject')
             .PutString("id", VictimID)
             .PutInteger("team", VictimTeam)
             .PutString("pawn", VictimPawn.Name)
             .PutIVector("location", VictimLocation)
-            .PutString("vehicle", VictimVehicle.Name));
+            .Put("vehicle", VictimVehicleObject));
 }
-
