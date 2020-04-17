@@ -9,13 +9,13 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'axis_Panzer4F2_anm.Panzer4F2_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=Texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
-    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
+    skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+	HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+	bUseHighDetailOverlayIndex=true
+	HighDetailOverlayIndex=1
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+
 
     // Turret armor
     bHasAddedSideArmor=true
