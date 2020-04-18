@@ -12,7 +12,7 @@ defaultproperties
     VehicleNameString="5.0 cm Pak38 AT gun"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
-    //Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38_grau'
+    Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
     //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_destroyed'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'

@@ -7,6 +7,11 @@ class DH_KV1ETank extends DHArmoredVehicle;
 
 defaultproperties
 {
+
+    //to do: this particular KV hull model appears to have small driver window that cannot be used to exit
+	//however, there is a hull hatch for the hull machinegunner, so quitting out of hull should still be possible
+	//the way it works now is you "exit" through the small drivers window, but in the future its better to make exit for hull machinegunner and not for the driver
+	
     // Vehicle properties
     VehicleNameString="KV-1E"
     VehicleTeam=1

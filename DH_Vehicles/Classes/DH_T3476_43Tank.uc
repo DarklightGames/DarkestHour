@@ -13,7 +13,7 @@ defaultproperties
     ReinforcementCost=4
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_T34_2_anm.T34_42_hull'
+    Mesh=SkeletalMesh'DH_T34_2_anm.T34m43_body_ext'
     Skins(0)=Texture'DH_T34_2_tex.Vehicles.T3476_M42_green'
     Skins(1)=Texture'allies_vehicles_tex.Treads.T3476_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.T3476_treads'
