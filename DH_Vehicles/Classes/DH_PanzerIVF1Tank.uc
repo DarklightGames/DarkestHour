@@ -89,7 +89,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer4F1_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4F1_body'
     VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_rot'
     VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_look'
     VehicleHudTreadsPosX(0)=0.36
