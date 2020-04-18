@@ -75,6 +75,7 @@ defaultproperties
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
     DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
 
+
     // Exit
     ExitPositions(0)=(X=235.0,Y=0.0,Z=50.0)     // driver
     ExitPositions(1)=(X=13.0,Y=26.0,Z=200.0)    // commander

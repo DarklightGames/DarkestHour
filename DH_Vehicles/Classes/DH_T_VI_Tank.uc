@@ -10,8 +10,8 @@ defaultproperties
     VehicleNameString="T-VI 'Panther' mod. G"
     VehicleTeam=1
 
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.sov_Pantherg_ext'      // soviet captured panther (or british and US too? according to photos, they both marked them with similar white stars)
-    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.sov_Pantherg_ext'     
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_allied_ext' // allied capture panther, should be usable to both red army and western allies because both seemed to use similar white stars
+    CannonSkins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_allied_ext'
     //DestroyedMeshSkins(0)=
-	//to do: destroyed mesh skin (although its just white stars?)
+    //to do: destroyed mesh skin (although its just white stars?)
 }
