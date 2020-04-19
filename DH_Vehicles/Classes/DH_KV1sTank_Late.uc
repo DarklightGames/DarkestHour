@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_KV1sTank_Green extends DH_KV1sTank_Late;
+class DH_KV1sTank_Late extends DH_KV1sTank; //with subcalibers for `43-`45
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1S_Green_ext'
-    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1S_green_ext'
+
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1sCannonPawn_Late',WeaponBone="Turret_Placement")
 
 }
