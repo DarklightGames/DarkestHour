@@ -40,7 +40,7 @@ var     class<Emitter>  ShellShatterEffectClass; // effect for this shell shatte
 var     sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
 var     sound           ShatterSound[4];         // sound of the round shattering
 
-// Effects
+// Shell Tracer Effects
 var     bool            bHasTracer;
 var     class<Effects>  CoronaClass;             // shell base tracer effect class
 var     Effects         Corona;                  // shell base tracer
@@ -49,6 +49,12 @@ var     class<Emitter>  TankShellTrailClass;     // shell "streak" emitter effec
 var     Emitter         ShellTrail;
 var     int             TracerHue;               // allows custom control of ambient light hue
 var     int             TracerSaturation;        // allows custom control of ambient light saturation
+
+// AP Bullet Tracer Effects
+var     class<Emitter>      TracerEffectClass;
+var     Emitter             TracerEffect;
+var     StaticMesh          DeflectedMesh;
+var     float               TracerPullback;
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -119,6 +125,17 @@ simulated function PostBeginPlay()
     {
         Velocity *= 0.5;
     }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
+    {
+        Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail.SetBase(self);
+    }
 }
 
 // Modified to set InstigatorController (used to attribute radius damage kills correctly) & to move bDebugBallistics stuff here from PostBeginPlay (with bDebugROBallistics option)
@@ -138,14 +155,16 @@ simulated function PostNetBeginPlay()
         bDebugBallistics = true;
     }
 
-    if (bHasTracer && Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer && RoundType == RT_APBULLET)
     {
         SetDrawType(DT_StaticMesh);
         bOrientToVelocity = true;
+        TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
 
         if (Level.bDropDetail)
         {
             bDynamicLight = false;
+            LightType = LT_None;
         }
         else
         {
@@ -159,14 +178,6 @@ simulated function PostNetBeginPlay()
         LightSaturation = TracerSaturation;
         AmbientGlow = 254;
         LightCone = 16;
-
-        Corona = Spawn(CoronaClass, self);
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
-    {
-        ShellTrail = Spawn(TankShellTrailClass, self);
-        ShellTrail.SetBase(self);
     }
 
     if (bDebugBallistics)

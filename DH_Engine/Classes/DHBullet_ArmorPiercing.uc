@@ -15,24 +15,6 @@ var     int                 WhizType;
 var     float               VehiclePenetrateSoundVolume;
 var     float               VehicleDeflectSoundVolume;
 
-// Tracers
-var     class<Emitter>      TracerEffectClass;
-var     Emitter             TracerEffect;
-var     StaticMesh          DeflectedMesh;
-var     float               TracerPullback;
-
-// Modified to set tracer properties if this is a tracer bullet (from DHBullet)
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    if (bHasTracer && Level.NetMode != NM_DedicatedServer)
-    {
-        SetDrawType(DT_StaticMesh);
-        bOrientToVelocity = true;
-        TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
-    }
-}
 
 // From DHBullet, to use DHCollisionMeshActor handling that is specific to a bullet
 // But removing the bIsBulletProof checks if we hit a collision mesh, as this is an armour-piercing bullet
@@ -531,6 +513,7 @@ defaultproperties
     bBotNotifyIneffective=false
 
     // Tracer properties (won't affect ordinary bullet):
+    bHasShellTrail=false
     DrawScale=2.0
     TracerPullback=150.0
     bBounce=true

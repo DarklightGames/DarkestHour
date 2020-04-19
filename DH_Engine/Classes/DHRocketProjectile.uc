@@ -19,11 +19,6 @@ simulated function PostBeginPlay()
 {
     SetPhysics(PHYS_Flying);
 
-    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
-    {
-        Corona = Spawn(CoronaClass, self);
-    }
-
     if (Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
     {
         SmokeTrail = Spawn(RocketSmokeTrailClass, self);
