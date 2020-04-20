@@ -367,6 +367,17 @@ event Opened(GUIComponent Sender)
             }
         }
 
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
+        {
+            Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
+
+            if (PlayerOwner().ConsoleCommand("get IpDrv.TcpNetDriver KeepAliveTime") != "0.004")
+            {
+                PlayerOwner().ConsoleCommand("set IpDrv.TcpNetDriver KeepAliveTime 0.004");
+                PlayerOwner().SaveConfig();
+            }
+        }
+
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }
