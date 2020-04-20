@@ -3,14 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreenTelogreikaAntiTankEarly extends DHSOVAntiTankRoles;
+class DH_RKKA_GreenTelogreikaAntiTankEarly extends DH_RKKA_GreenTelogreikaAntiTank;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloSLEarlyPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    HeadgearProbabilities(0)=0.5
-    HeadgearProbabilities(1)=0.5
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_Green'
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PTRDWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    Grenades(0)=none
+    GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
 }
