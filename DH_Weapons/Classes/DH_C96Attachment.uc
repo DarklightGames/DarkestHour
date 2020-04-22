@@ -10,21 +10,19 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    MuzzleBoneName="tip"
+    MuzzleBoneName="Muzzle"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    ShellEjectionBoneName="weapon_eject"
+    ShellEjectionBoneName="ejector"
 
     ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
 
-
-
-    WA_Idle="Idle_Colt"
-    WA_IdleEmpty="idle_empty_Colt"
-    WA_Fire="shoot_Colt"
-    WA_Reload="reload_half_Colt"
-    WA_ReloadEmpty="reload_empty_Colt"
-    WA_ProneReload="prone_reload_half_Colt"
-    WA_ProneReloadEmpty="prone_reload_empty_Colt"
+    WA_Idle="idle_c96"
+    WA_IdleEmpty="idle_c96"
+    WA_Fire="idle_c96"
+    WA_Reload="idle_c96"
+    WA_ReloadEmpty="idle_c96"
+    WA_ProneReload="idle_c96"
+    WA_ProneReloadEmpty="idle_c96"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
@@ -114,10 +112,10 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_pistol"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_pistol"
     PA_IdleProneAnim="prone_idle_pistol"
-    PA_ReloadAnim="stand_reloadhalf_tt33"
-    PA_ProneReloadAnim="prone_reloadhalf_tt33"
-    PA_ReloadEmptyAnim="stand_reloadempty_tt33"
-    PA_ProneReloadEmptyAnim="prone_reloadempty_tt33"
+    PA_ReloadAnim="stand_reloadhalf_pps43"
+    PA_ProneReloadAnim="prone_reloadhalf_pps43"
+    PA_ReloadEmptyAnim="stand_reloadempty_pps43"
+    PA_ProneReloadEmptyAnim="prone_reloadempty_pps43"
     PA_ProneIdleRestAnim="prone_idle_pistol"
     PA_Fire="stand_shoothip_pistol"
     PA_IronFire="stand_shootiron_pistol"

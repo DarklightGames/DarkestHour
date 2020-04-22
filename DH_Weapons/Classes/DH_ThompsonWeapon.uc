@@ -8,7 +8,6 @@ class DH_ThompsonWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1A1 Thompson"
-	SwayModifyFactor=0.88 // +0.08 
     FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'
@@ -17,7 +16,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson' // TODO: there is no specularity mask for this weapon
 
     PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=65.0
+    IronSightDisplayFOV=50.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
@@ -27,10 +26,7 @@ defaultproperties
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
-    SelectFireAnim="fire_select"
-    SelectFireIronAnim="Iron_fire_select"
-    PutDownAnim="put_away"
-
-    MagEmptyReloadAnim="reload_m1a1"
-    MagPartialReloadAnim="reload_m1a1"
+    SelectFireAnim="switch_fire"
+    SelectFireIronAnim="Iron_switch_fire"
+    PutDownAnim="putaway"
 }
