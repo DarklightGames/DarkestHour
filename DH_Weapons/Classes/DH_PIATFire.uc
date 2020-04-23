@@ -22,7 +22,7 @@ defaultproperties
     AimError=1200.0
 
     //** Effects **//
-    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stBazooka'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stPIAT'
     SmokeEmitterClass = class'ROEffects.ROMuzzleSmoke'
 
     //Sounds

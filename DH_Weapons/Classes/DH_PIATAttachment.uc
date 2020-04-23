@@ -12,7 +12,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPIAT'
     bHeavy=true
-    MuzzleBoneName="Muzzle"
+    MuzzleBoneName=warhead
 
     WA_Idle="idle_PIAT"
     WA_Fire="idle_PIAT"
