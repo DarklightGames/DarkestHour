@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
+
 class DH_HetzerVehicleMGEmitter extends WeaponAmbientEmitter; // TODO: after next DH release extend DHVehicleMGFlashAndShellEmitter
 
 simulated function SetEmitterStatus(bool bEnabled)
