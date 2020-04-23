@@ -22,17 +22,18 @@ defaultproperties
     EngineFireChance=0.40
 
     //Effects
-    bHasShellTrail=true
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
+    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
     BlurTime=4.0
     BlurEffectScalar=1.5
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+
+    //Sound
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
 

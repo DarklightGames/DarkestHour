@@ -25,6 +25,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'

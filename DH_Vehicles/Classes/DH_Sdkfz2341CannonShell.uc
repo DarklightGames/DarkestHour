@@ -22,20 +22,8 @@ defaultproperties
 
     //Effects
     DrawScale=0.75
-    bHasTracer=true
-    bHasShellTrail=true
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
-    TracerHue=40
-
-    //Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
 
     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
@@ -47,6 +35,14 @@ defaultproperties
 
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
     ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
+
+    //Sounds
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
 
     //Penetration
     DHPenetrationTable(0)=3.1 //100m

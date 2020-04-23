@@ -33,6 +33,8 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+
+    //Sound
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
 

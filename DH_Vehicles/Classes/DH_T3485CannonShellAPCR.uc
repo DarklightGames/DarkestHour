@@ -20,8 +20,8 @@ defaultproperties
     EngineFireChance=0.65
 
     //Effects
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=17.5 // 100m

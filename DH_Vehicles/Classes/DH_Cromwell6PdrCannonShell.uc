@@ -19,8 +19,8 @@ defaultproperties
     EngineFireChance=0.55
 
     //Effects
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
 
     //Penetration
     DHPenetrationTable(0)=11.5

@@ -25,8 +25,9 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
-    //Effects
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'

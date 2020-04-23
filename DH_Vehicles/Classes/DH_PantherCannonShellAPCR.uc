@@ -23,8 +23,6 @@ defaultproperties
 
     //Effects
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
 
     //Penetration
     DHPenetrationTable(0)=25.3

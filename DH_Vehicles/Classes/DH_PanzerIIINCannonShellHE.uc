@@ -22,6 +22,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
 
     bDebugInImperial=false
 

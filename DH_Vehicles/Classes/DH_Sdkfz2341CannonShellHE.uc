@@ -27,18 +27,9 @@ defaultproperties
     DrawScale=0.75
     bHasTracer=true
     bHasShellTrail=true
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
 
-    bDebugInImperial=false
-
-    //Effects
-    BlurTime=2.0
-    BlurEffectScalar=0.9
-    PenetrationMag=110.0
-
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
     ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
     ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
@@ -47,6 +38,15 @@ defaultproperties
 
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+
+    BlurTime=2.0
+    BlurEffectScalar=0.9
+    PenetrationMag=110.0
+
+    //Sound
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+
+    bDebugInImperial=false
 
     //Penetration
     DHPenetrationTable(0)=1.9

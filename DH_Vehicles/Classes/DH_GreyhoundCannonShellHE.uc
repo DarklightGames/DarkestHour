@@ -21,14 +21,16 @@ defaultproperties
     EngineFireChance=0.40
 
     //Effects
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+
+    //Sound
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=1.2

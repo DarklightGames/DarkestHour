@@ -18,7 +18,6 @@ defaultproperties
     HullFireChance=0.30
     EngineFireChance=0.55
 
-
     bShatterProne=true
 
     //Effects

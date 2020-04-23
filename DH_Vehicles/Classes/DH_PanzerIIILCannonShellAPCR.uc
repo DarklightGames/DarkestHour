@@ -21,6 +21,12 @@ defaultproperties
     HullFireChance=0.22
     EngineFireChance=0.45
 
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+
+    bDebugInImperial=false
+
     //Penetration
     DHPenetrationTable(0)=14.9
     DHPenetrationTable(1)=13.2
@@ -33,13 +39,6 @@ defaultproperties
     DHPenetrationTable(8)=3.2
     DHPenetrationTable(9)=2.1
     DHPenetrationTable(10)=1.4
-
-    //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-
-    bDebugInImperial=false
 
     MechanicalRanges(1)=(Range=100,RangeValue=4.0)
     MechanicalRanges(2)=(Range=200,RangeValue=10.0)

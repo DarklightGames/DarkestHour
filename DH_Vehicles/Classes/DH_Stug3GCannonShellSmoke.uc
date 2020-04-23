@@ -12,6 +12,10 @@ defaultproperties
     ShellDiameter=7.5
     BallisticCoefficient=2.1
 
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+
     bDebugInImperial=false
 
     //Gunsight adjustments

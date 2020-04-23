@@ -27,6 +27,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
 
     //Penetration
     DHPenetrationTable(0)=3.3

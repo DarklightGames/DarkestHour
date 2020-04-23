@@ -12,7 +12,6 @@ defaultproperties
     bNoDelete=false
     Physics=PHYS_Trailer
     bHardAttach=true
-    //DrawScale=10.0
 
     Begin Object Class=TrailEmitter Name=TrailEmitter0
         TrailShadeType=PTTST_None//PTTST_Linear

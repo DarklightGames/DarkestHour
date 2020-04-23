@@ -7,5 +7,5 @@ class DHShellTracer_RedLarge extends DHShellTracer_Red;
 
 defaultproperties
 {
-    DrawScaleIncreaseRate=0.4
+    DrawScaleIncreaseRate=0.6 //0.4
 }

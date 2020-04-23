@@ -24,6 +24,7 @@ defaultproperties
     //Effects
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=25.3

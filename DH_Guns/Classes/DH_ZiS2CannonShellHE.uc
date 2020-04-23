@@ -8,7 +8,6 @@ class DH_ZiS2CannonShellHE extends DHCannonShellHE;
 defaultproperties
 {
     Speed=42375.0 // 700 m/s
-
     MaxSpeed=42375.0
     ShellDiameter=5.7
     BallisticCoefficient=1.14 //assumed
@@ -27,6 +26,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
 
     //Penetration
     //left it as it was on zis3

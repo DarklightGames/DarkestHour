@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=62525.0
     DHPenetrationTable(10)=6.7
     ShellDiameter=7.62
-    BallisticCoefficient=0.888 //TODO: pls find correct BC
+    BallisticCoefficient=0.888 //TODO: pls find correct BC, this is terribly wrong
 
     //Damage
     ImpactDamage=425

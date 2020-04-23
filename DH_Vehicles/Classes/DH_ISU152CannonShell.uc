@@ -18,11 +18,11 @@ defaultproperties
     EngineFireChance=1.0
 
     //Effects
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    DrawScale=2.1
+    DrawScale=1.5
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     //Penetration
-  DHPenetrationTable(0)=14.3  // 100m
+    DHPenetrationTable(0)=14.3  // 100m
     DHPenetrationTable(1)=14.1  // 250m
     DHPenetrationTable(2)=13.7  // 500m
     DHPenetrationTable(3)=13.3

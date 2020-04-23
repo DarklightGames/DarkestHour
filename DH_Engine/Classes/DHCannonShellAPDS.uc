@@ -13,4 +13,5 @@ defaultproperties
     SpeedFudgeScale=0.4
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
 }
