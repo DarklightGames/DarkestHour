@@ -692,6 +692,16 @@ Begin:
     }
 }
 
+// overriding ViewTransition to enter 'Idle' state instead of ''.
+simulated state ViewTransition
+{
+Begin:
+    HandleTransition();
+    Sleep(ViewTransitionDuration);
+    GotoState('Idle');
+}
+
+
 // New state where mortar is being fired
 // Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
 simulated state Firing extends Busy
