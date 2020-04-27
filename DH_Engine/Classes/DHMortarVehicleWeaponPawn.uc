@@ -54,6 +54,20 @@ var     DigitSet    Digits;                  // numerals for showing ammo count
 // Fire adjustment info
 var     class<DHMapMarker>    TargetMarkerClass;
 
+// mortar periscope & range table handling
+var     int         PeriscopeIndex;
+var     int         ShooterIndex;
+var     texture     PeriscopeOverlay;           // periscope overlay texture
+
+struct SRangeTableRecord
+{
+    var float Mils;     // Pitch, in mils.
+    var float Range;    // Range, in meters.
+    var float TTI;      // Time-to-impact in seconds
+};
+
+var array<SRangeTableRecord>    RangeTable;
+
 replication
 {
     // Variables the server will replicate to all clients except the one that owns this actor
@@ -166,6 +180,73 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 
     return DeflectionSign $ string(Deflection);
 }
+    
+simulated function DrawRangeTable(Canvas C)
+{
+    local int i;
+    local float X, Y;
+    local float XL, YL;
+    local int YawMils;
+
+    if ( RangeTable.Length == 0)
+    {
+        return;
+    }
+
+    Y = (C.SizeY / 2) - (RangeTable.Length * YL / 2);
+
+    for (i = 0; i < RangeTable.Length; ++i)
+    {
+        C.SetPos(X, Y);
+
+        Y += YL;
+    }
+
+    Y += YL;
+    YawMils = int(class'UUnits'.static.UnrealToMils((-1.0) * float((VehWep.GetWeaponFireRotation().Yaw - VehWep.Rotation.Yaw))));
+
+    // bring radial coordinates to a human-readable form
+    // in other words change:   3     2     1     0    6282  6281  6280
+    //                          |     |     |     |     |     |     |
+    //                    to:  -3    -2    -1     0     1     2     3
+    // note that 6282 = 2 * pi * 1000 [rads]
+
+    if(YawMils > 3141)
+        YawMils = YawMils - 6282;
+    else
+        YawMils = - YawMils;
+    
+    Y = 0.1 * C.SizeY;
+    X = 0.45 * C.SizeX;
+    C.SetPos(X, Y);
+    C.DrawText("pitch:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mils, yaw  :" @ YawMils @ "mils");
+}
+
+exec function CalibrateFire(int MilsMin, int MilsMax)
+{
+    local int Mils;
+    local DHBallisticProjectile BP;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
+        {
+            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Yaw = 0;
+
+            VehWep.CalcWeaponFire(false);
+            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
+
+            if (BP != none)
+            {
+                BP.bIsCalibrating = true;
+                BP.LifeStart = Level.TimeSeconds;
+                BP.DebugMils = Mils;
+                BP.StartLocation = BP.Location;
+            }
+        }
+    }
+}
 
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
@@ -185,8 +266,7 @@ simulated function DrawHUD(Canvas C)
         // Draw HUDOverlay
         HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
         HUDOverlay.SetRotation(PC.CalcViewRotation);
-        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-
+        
         if (PC.myHUD == none || PC.myHUD.bHideHUD)
         {
             return;
@@ -216,81 +296,107 @@ simulated function DrawHUD(Canvas C)
 
         TraverseString $= string(Traverse) @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $ GetDeflectionAdjustmentString(DHPlayer(PC));
 
-        // Draw current round type icon
-        RoundIndex = VehWep.GetAmmoIndex();
-
-        if (VehWep.HasAmmo(RoundIndex))
+        if(DriverPositionIndex == ShooterIndex)
         {
+            // draw mortar
+            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+
+            // Draw current round type icon
+            RoundIndex = VehWep.GetAmmoIndex();
+    
+            if (VehWep.HasAmmo(RoundIndex))
+            {
+                C.SetDrawColor(255, 255, 255, 255);
+            }
+            else
+            {
+                C.SetDrawColor(128, 128, 128, 255);
+            }
+    
+            C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
+    
+            if (RoundIndex == 0)
+            {
+                C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
+            }
+            else
+            {
+                C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
+            }
+    
+            // Draw current round type quantity
+            C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
+    
+            if (VehWep.MainAmmoCharge[RoundIndex] < 10)
+            {
+                Quotient = VehWep.MainAmmoCharge[RoundIndex];
+    
+                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+    
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
+                    Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
+            }
+            else
+            {
+                Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
+                Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
+    
+                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+    
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
+    
+                SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
+                SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
+    
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
+            }
+    
+            // Draw current round type name
             C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
+            C.DrawText(VehWep.ProjectileClass.default.Tag);
+    
+            // Draw the elevation indicator icon
+            C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
+            C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
+    
+            HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
+            Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
+            Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
+            C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
+            C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
+    
+            // Draw elevation & traverse text
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
+            C.DrawText("E:" @ string(Elevation));
+    
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
+            C.DrawText(TraverseString);
         }
-        else
-        {
-            C.SetDrawColor(128, 128, 128, 255);
+        else {
+            DrawPeriscopeOverlay(C);
+            DrawRangeTable(C);
         }
+    }
+}
 
-        C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
+// New function to draw any textured driver's periscope overlay
+simulated function DrawPeriscopeOverlay(Canvas C)
+{
+    local float ScreenRatio;
 
-        if (RoundIndex == 0)
-        {
-            C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-        }
-        else
-        {
-            C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-        }
+    if (PeriscopeOverlay != none)
+    {
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
 
-        // Draw current round type quantity
-        C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-
-        if (VehWep.MainAmmoCharge[RoundIndex] < 10)
-        {
-            Quotient = VehWep.MainAmmoCharge[RoundIndex];
-
-            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
-                Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
-        }
-        else
-        {
-            Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
-            Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
-
-            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
-
-            SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
-            SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
-        }
-
-        // Draw current round type name
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-        C.DrawText(VehWep.ProjectileClass.default.Tag);
-
-        // Draw the elevation indicator icon
-        C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
-        C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-
-        HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
-        Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-        Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-        C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
-        C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
-
-        // Draw elevation & traverse text
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-        C.DrawText("E:" @ string(Elevation));
-
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-        C.DrawText(TraverseString);
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
     }
 }
 
@@ -692,7 +798,7 @@ Begin:
     }
 }
 
-// overriding ViewTransition to enter 'Idle' state instead of ''.
+// overriding DHVehicle.ViewTransition to enter 'Idle' state instead of ''
 simulated state ViewTransition
 {
 Begin:
@@ -953,7 +1059,6 @@ defaultproperties
     bSinglePositionExposed=true
     ElevationAdjustmentDelay=0.125
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
-
     // View & display
     bDrawMeshInFP=false
     CameraBone="Camera"
@@ -979,4 +1084,8 @@ defaultproperties
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
+    ShooterIndex = 0;
+    PeriscopeIndex = 1;
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
+
 }
