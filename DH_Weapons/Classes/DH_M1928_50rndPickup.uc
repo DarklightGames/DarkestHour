@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonAmmo extends DHAmmunition;
+class DH_M1928_50rndPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    MaxAmmo=30
-    InitialAmount=30
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
+    InventoryType=class'DH_Weapons.DH_M1928_50rndWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1928_50rnd'
 }

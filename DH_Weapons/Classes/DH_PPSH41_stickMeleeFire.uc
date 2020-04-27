@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonAmmo extends DHAmmunition;
+class DH_PPSh41_stickMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    MaxAmmo=30
-    InitialAmount=30
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
+    DamageType=class'DH_Weapons.DH_PPSH41_stickBashDamType'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 }

@@ -3,11 +3,14 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonAmmo extends DHAmmunition;
+class DH_MP41RDamType extends DHSmallCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=30
-    InitialAmount=30
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
+    WeaponClass=class'DH_Weapons.DH_MP41RWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    KDamageImpulse=1000.0
+    KDeathVel=100.0
+    KDeathUpKick=0.0
 }

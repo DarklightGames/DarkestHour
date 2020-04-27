@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonAmmo extends DHAmmunition;
+class DH_PPSh41_stickBullet extends DHBullet;
 
 defaultproperties
 {
-    MaxAmmo=30
-    InitialAmount=30
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
+    Speed=24000.0
+    BallisticCoefficient=0.15
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_PPSH41_stickDamType'
 }
