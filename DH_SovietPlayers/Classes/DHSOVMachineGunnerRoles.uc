@@ -13,4 +13,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
+
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
 }
