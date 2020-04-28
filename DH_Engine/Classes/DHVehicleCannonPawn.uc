@@ -306,7 +306,6 @@ simulated function DrawRangeTable(Canvas C)
     X = 0.45 * C.SizeX;
     C.SetPos(X, Y);
     C.DrawText("pitch:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mils, yaw  :" @ YawMils @ "mils");
-    Log("ProjectileClass" @ Cannon.ProjectileClass);
 }
 
 // New function to draw the gunsight overlay plus any additional overlay for aiming reticle - using a different drawing method to RO

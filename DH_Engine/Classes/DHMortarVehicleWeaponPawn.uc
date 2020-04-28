@@ -193,12 +193,14 @@ simulated function DrawRangeTable(Canvas C)
         return;
     }
 
+    C.TextSize("A", XL, YL);
+    
     Y = (C.SizeY / 2) - (RangeTable.Length * YL / 2);
 
     for (i = 0; i < RangeTable.Length; ++i)
     {
         C.SetPos(X, Y);
-
+        C.DrawText(string(int(RangeTable[i].Mils)) @ "mils" @ "-" @ int(RangeTable[i].Range) $ "m");
         Y += YL;
     }
 
@@ -218,8 +220,6 @@ simulated function DrawRangeTable(Canvas C)
     
     Y = 0.1 * C.SizeY;
     X = 0.45 * C.SizeX;
-    C.SetPos(X, Y);
-    C.DrawText("pitch:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mils, yaw  :" @ YawMils @ "mils");
 }
 
 exec function CalibrateFire(int MilsMin, int MilsMax)
@@ -298,7 +298,7 @@ simulated function DrawHUD(Canvas C)
 
         if(DriverPositionIndex == ShooterIndex)
         {
-            // draw mortar
+            // Draw mortar
             C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
 
             // Draw current round type icon
@@ -604,7 +604,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false) && DriverPositionIndex != ShooterIndex)
         {
             GotoState('Firing');
         }
