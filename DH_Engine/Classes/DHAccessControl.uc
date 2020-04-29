@@ -155,4 +155,5 @@ defaultproperties
     Patrons(0)=(ROID="76561198066643021",Tier="silver") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
     Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
+    Patrons(3)=(ROID="76561198011091616",Tier="bronze") // Owls
 }
