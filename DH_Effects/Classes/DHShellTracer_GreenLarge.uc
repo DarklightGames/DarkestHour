@@ -7,5 +7,5 @@ class DHShellTracer_GreenLarge extends DHShellTracer_Green;
 
 defaultproperties
 {
-    DrawScaleIncreaseRate=0.4
+    DrawScaleIncreaseRate=0.6 //0.4
 }

@@ -24,6 +24,8 @@ defaultproperties
     //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+
+    //Sound
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'

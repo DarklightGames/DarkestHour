@@ -14,7 +14,6 @@ defaultproperties
 
     //Damage
     ImpactDamage=550
-
     Damage=475.0
     DamageRadius=1550.0
     MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
@@ -24,6 +23,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
 
     bDebugInImperial=false
 

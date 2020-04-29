@@ -22,9 +22,11 @@ defaultproperties
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+
+    //Sound
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=7.1

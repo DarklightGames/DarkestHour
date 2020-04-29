@@ -22,23 +22,28 @@ defaultproperties
     EngineFireChance=1.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    DrawScale=2.1
-    BlurEffectScalar=3.0 // gives this large HE shell more screen blur
-    TransientSoundRadius=3000.0
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    DrawScale=1.5
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
     ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+
+    BlurEffectScalar=3.0 // gives this large HE shell more screen blur
+
+    //Sound
+    TransientSoundRadius=3000.0
+    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
 
     bDebugInImperial=false
 

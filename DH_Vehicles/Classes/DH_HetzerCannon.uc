@@ -1,9 +1,22 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
+
 class DH_HetzerCannon extends DHVehicleCannon;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
+    Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
+    CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision'
+    bAttachColMeshToPitchBone=True
+
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
+
+    PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
     TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
 
 
@@ -46,8 +59,7 @@ defaultproperties
      RangeSettings(24)=2800
      RangeSettings(25)=3000
      bHasTurret=False
-     CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision'
-     bAttachColMeshToPitchBone=True
+
      ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
      ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
      ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
@@ -69,8 +81,5 @@ defaultproperties
      MaxPrimaryAmmo=30
      MaxSecondaryAmmo=15
      MaxTertiaryAmmo=5
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-     Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
-     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
+
 }

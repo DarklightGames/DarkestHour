@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
+
 class DH_HetzerFactory_CamoTwo_Bushes extends DH_HetzerFactory_CamoTwo;
 
 defaultproperties

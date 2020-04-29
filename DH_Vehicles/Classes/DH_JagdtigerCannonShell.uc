@@ -14,8 +14,13 @@ defaultproperties
 
     //Damage
     ImpactDamage=1800
+    Damage=450 //Going to treat this like a medium HE shell when it hits the ground
+    DamageRadius=700
     HullFireChance=0.60
     EngineFireChance=1.0
+
+    //Effects
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     //Penetration
     DHPenetrationTable(0)=26.7

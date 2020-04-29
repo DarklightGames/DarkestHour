@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHTankShellTrail_Red extends Emitter;
+class DHTankShellTrail_Green extends Emitter;
 
 
 defaultproperties
@@ -26,8 +26,8 @@ defaultproperties
         UseRegularSizeScale=false
         RespawnDeadParticles=False //added to kill tracer element at end of Lifetime
         AutomaticInitialSpawning=false
-        ColorScale(0)=(Color=(R=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(R=255))
+        ColorScale(0)=(Color=(G=255,R=108))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(G=255,R=108))
         Opacity=1.0
         MaxParticles=1
         SizeScale(0)=(RelativeSize=0.75)

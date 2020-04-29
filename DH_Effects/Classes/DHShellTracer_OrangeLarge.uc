@@ -7,5 +7,5 @@ class DHShellTracer_OrangeLarge extends DHShellTracer_Orange;
 
 defaultproperties
 {
-    DrawScaleIncreaseRate=0.4
+    DrawScaleIncreaseRate=0.6 //0.4
 }

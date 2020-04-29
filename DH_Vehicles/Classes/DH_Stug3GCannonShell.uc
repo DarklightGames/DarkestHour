@@ -10,10 +10,10 @@ defaultproperties
     Speed=45270.0
     MaxSpeed=45270.0
     ShellDiameter=7.5
+    BallisticCoefficient=2.52 //compare to other 75mm Pzgr39
 
     //Damage
     ImpactDamage=650
-    BallisticCoefficient=2.52 //compare to other 75mm Pzgr39
     HullFireChance=0.45
     EngineFireChance=0.85
 

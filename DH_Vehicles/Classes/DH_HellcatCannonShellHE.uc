@@ -10,7 +10,7 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: pls find correct BC
+    BallisticCoefficient=1.368 //TODO: pls find correct BC, this is terribly wrong
 
     //Damage
     ImpactDamage=450

@@ -468,16 +468,21 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
     Speed=700.0  // reduced from 1100 as it was heavy grenade
-	//above doesnt seem to work?
+    MaxSpeed=700.0
+    ShellDiameter=9.5
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bExplodesOnHittingWater=false
-    bHasTracer=false
+
+    // Damage
+    ImpactDamage=200
+    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
+    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
+    ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
+    MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
     // Armour penetration
-    ShellDiameter=9.5
     DHPenetrationTable(0)=7.5
     DHPenetrationTable(1)=7.5
     DHPenetrationTable(2)=7.5
@@ -490,21 +495,17 @@ defaultproperties
     DHPenetrationTable(9)=7.5
     DHPenetrationTable(10)=7.5
 
-    // Damage
-    ImpactDamage=200
-    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
-    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
-    ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
-
     // Effects
+    bHasTracer=false
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
     ShellHitDirtEffectClass=class'GrenadeExplosion'
     ShellHitWoodEffectClass=class'GrenadeExplosion'
     ShellHitRockEffectClass=class'GrenadeExplosion'
     ShellHitSnowEffectClass=class'GrenadeExplosionSnow'
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellDeflectEffectClass=class'GrenadeExplosion'
+
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 
@@ -523,7 +524,6 @@ defaultproperties
     // Properties from usual grenade parent classes (DHGrenadeProjectile & DHThrowableExplosiveProjectile)
     Physics=PHYS_Falling
     bBounce=true
-    MaxSpeed=1000.0
     TossZ=150.0
     DampenFactor=0.05
     DampenFactorParallel=0.8

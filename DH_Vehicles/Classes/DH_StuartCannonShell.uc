@@ -20,11 +20,13 @@ defaultproperties
     EngineFireChance=0.45
 
     //Effects
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
+
+    //Sound
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=7.1

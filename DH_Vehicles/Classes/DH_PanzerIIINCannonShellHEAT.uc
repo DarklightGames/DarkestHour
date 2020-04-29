@@ -18,8 +18,10 @@ defaultproperties
     DamageRadius=200.0
 
     //Effects
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+
+    bDebugInImperial=false
 
     //Penetration
     DHPenetrationTable(0)=10.0
@@ -33,8 +35,6 @@ defaultproperties
     DHPenetrationTable(8)=10.0
     DHPenetrationTable(9)=10.0
     DHPenetrationTable(10)=10.0
-
-    bDebugInImperial=false
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

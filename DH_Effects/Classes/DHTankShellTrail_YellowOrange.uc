@@ -12,12 +12,13 @@ defaultproperties
     bNoDelete=false
     Physics=PHYS_Trailer
     bHardAttach=true
+    DrawScale=2.0
 
     Begin Object Class=TrailEmitter Name=TrailEmitter0
         TrailShadeType=PTTST_None//PTTST_Linear
         TrailLocation=PTTL_FollowEmitter
-        MaxPointsPerTrail=1000.0 //150
-        DistanceThreshold=100.0 //80.0
+        MaxPointsPerTrail=10.0
+        DistanceThreshold=10.0
         UseCrossedSheets=true
         PointLifeTime=0.2
         UseColorScale=true
@@ -27,11 +28,11 @@ defaultproperties
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(B=20,G=209,R=235))
         ColorScale(1)=(RelativeTime=1.0,Color=(B=20,G=209,R=235))
-        Opacity=0.1//0.65
+        Opacity=1.0
         MaxParticles=1
-        SizeScale(0)=(RelativeSize=1.0)
-        SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.75)
-        StartSizeRange=(X=(Min=6.0,Max=8.0))
+        SizeScale(0)=(RelativeSize=0.75)
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=2.0)
+        StartSizeRange=(X=(Min=6.0,Max=8.0),Y=(Min=30.0,Max=30.0),Z=(Min=30.0,Max=30.0))
         InitialParticlesPerSecond=2000.0
         Texture=Texture'Effects_tex.Weapons.trailblur'
         SecondsBeforeInactive=0.0

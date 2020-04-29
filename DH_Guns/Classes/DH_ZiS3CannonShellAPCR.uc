@@ -21,6 +21,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
 
     //Penetration

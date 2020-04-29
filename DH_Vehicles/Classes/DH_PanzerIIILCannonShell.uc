@@ -20,8 +20,6 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-
 
     //Penetration
     DHPenetrationTable(0)=9.6

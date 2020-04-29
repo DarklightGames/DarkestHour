@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=700.0
 
     //Effects
-    DrawScale=1.3
+    DrawScale=1.5
 
     //Penetration
     DHPenetrationTable(0)=12.8

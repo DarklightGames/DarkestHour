@@ -22,20 +22,8 @@ defaultproperties
 
     //Effects
     DrawScale=0.75
-    bHasTracer=true
-    bHasShellTrail=true
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
-    TracerHue=40
-
-    //Sounds
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Grass'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Asphalt'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
 
     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
@@ -43,23 +31,31 @@ defaultproperties
     ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
     ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
     ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
+    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
 
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
     ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
 
+    //Sounds
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
+    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Gravel'
+    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+
     //Penetration
-    DHPenetrationTable(0)=2.5
-    DHPenetrationTable(1)=2.1
-    DHPenetrationTable(2)=1.8
-    DHPenetrationTable(3)=1.3
-    DHPenetrationTable(4)=1.1
-    DHPenetrationTable(5)=0.8
-    DHPenetrationTable(6)=0.6
-    DHPenetrationTable(7)=0.4
-    DHPenetrationTable(8)=0.2
-    DHPenetrationTable(9)=0.1
-    DHPenetrationTable(10)=0.1
+    DHPenetrationTable(0)=3.1 //100m
+    DHPenetrationTable(1)=2.6 //250
+    DHPenetrationTable(2)=2.0 //500
+    DHPenetrationTable(3)=1.4 //750
+    DHPenetrationTable(4)=1.1 //1000
+    DHPenetrationTable(5)=0.8 //1250
+    DHPenetrationTable(6)=0.6 //1500
+    DHPenetrationTable(7)=0.4 //1750
+    DHPenetrationTable(8)=0.2 //2000
+    DHPenetrationTable(9)=0.1 //2500
+    DHPenetrationTable(10)=0.1 //3000
 
     //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
