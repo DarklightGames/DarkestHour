@@ -58,6 +58,7 @@ var     class<DHMapMarker>    TargetMarkerClass;
 var     int         PeriscopeIndex;
 var     int         ShooterIndex;
 var     texture     PeriscopeOverlay;           // periscope overlay texture
+const VisibleSegments = 40;
 
 struct SRangeTableRecord
 {
@@ -109,103 +110,147 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (Gun != none)
     {
-        if(DriverPositionIndex == ShooterIndex)
+        CameraCoords = Gun.GetBoneCoords(CameraBone);
+
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = CameraCoords.Origin;
+
+        if (FPCamPos != vect(0.0, 0.0, 0.0))
         {
-            CameraCoords = Gun.GetBoneCoords(CameraBone);
-
-            // Get camera location & adjust for any offset positioning
-            CameraLocation = CameraCoords.Origin;
-
-            if (FPCamPos != vect(0.0, 0.0, 0.0))
-            {
-                WeaponAimRot = Gun.CurrentAim;
-                WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-                WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
-                WeaponAimRot.Roll = Gun.Rotation.Roll;
-                CameraLocation += (FPCamPos >> WeaponAimRot);
-            }
-
-            // Set camera rotation
-            CameraRotation = rotator(CameraCoords.XAxis);
-            CameraRotation.Roll = 0; // make the mortar view have no roll
-
-            // Finalise the camera with any shake
-            if (PC != none)
-            {
-                CameraLocation += (PC.ShakeOffset >> PC.Rotation);
-                CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            }
+            WeaponAimRot = Gun.CurrentAim;
+            WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+            WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
+            WeaponAimRot.Roll = Gun.Rotation.Roll;
+            CameraLocation += (FPCamPos >> WeaponAimRot);
         }
-        else {
-            CameraLocation = PC.Location;
-            CameraRotation = (-1.0)*PC.Rotation;
+
+        // Set camera rotation
+        CameraRotation = rotator(CameraCoords.XAxis);
+        CameraRotation.Roll = 0; // make the mortar view have no roll
+
+        // Finalise the camera with any shake
+        if (PC != none)
+        {
+            CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
         }
     }
 }
-
-simulated function DrawScale(Canvas C,
-                            bool isVertical, 
+    
+simulated function DrawYaw(Canvas C,
                             float X, 
                             float Y, 
-                            float lineSize, 
-                            int segmentsNumber, 
-                            float lowerLimit, 
-                            float upperLimit, 
-                            float value                 // must be in <lowerLimit, upperLimit>
+                            float LineSize, 
+                            float LowerLimit, 
+                            float UpperLimit, 
+                            float Value                 // must be in <LowerLimit, UpperLimit>
                             )
 {
-    local float StepY;
-    local float ValueOffset;
-    local float scaleStep;
-    local float Span, Shade;
-    local int t;
-    local color WhiteColor;
+    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, LowerValue, UpperValue, AllSegments;
+    local int t, LowerIndex,  UpperIndex, i;
 
-    Span = (upperLimit - lowerLimit);
-    WhiteColor = class'UColor'.default.Red;
-    StepY = lineSize / segmentsNumber;
-    scaleStep = (upperLimit - lowerLimit) / segmentsNumber;
-    ValueOffset = StepY * (value - lowerLimit) / scaleStep;
+    AllSegments = (UpperLimit - LowerLimit) * 2;
+    Span = (UpperLimit - LowerLimit);
+    StepX = LineSize / VisibleSegments;
+    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
+    MiddleIndex = VisibleSegments / 2.0;
+    MiddleOffset = StepX * MiddleIndex;
+    ValueIndex = (Value - LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - (VisibleSegments/2);
+    UpperIndex = ValueIndex + (VisibleSegments/2);
 
     C.Font = C.TinyFont;
 
-    // draw scale vertically (the X coordinate must be constant)
-    if(isVertical == true)
-    {
-        C.CurX = X;
-        C.CurY = Y;
-        C.DrawVertical(X, lineSize);
-        C.CurX = X - 5.0;
-        for(t = 0; t <= lineSize/StepY; t++) {
-            //Log("drawing in x=" @ C.CurX @ " y=" @ t);
-            Shade = t / (lineSize/StepY);
-            C.CurX = X - 5.0;
-            Shade = int(255 * ((-4)*Shade*(Shade-1)));
-            //Log("Shade=" @ Shade);
-            C.SetDrawColor(Shade, Shade, Shade, Shade);
-            if(t % 10 == 0)
-            {
-                C.DrawHorizontal(Y + t * StepY, -50.0);
-                C.CurX = X - 100.0;
-                C.CurY = Y + t * StepY - 4;
-                C.DrawText(string(lowerLimit + t * 0.5));
-            }
-            else
-                C.DrawHorizontal(Y + t * StepY, -20.0);
-            }
-            //Log("aaaaaaaaaaaa");
-            
-        // C.CurX = X + 5.0;
-        // HUDArrowTexture.Rotation.Yaw = -90.0;
-        // C.DrawTile(HUDArrowTexture, 64.0 , 64.0, 0.0, 0.0, 128.0, 128.0);
-        C.SetDrawColor(255, 255, 255, 255);
-        C.DrawHorizontal(Y + ValueOffset, -50.0);
+    C.CurX = X;
+    C.CurY = Y;
+    C.DrawHorizontal(Y, LineSize);
+    C.CurY = Y - 5.0;
+    i = LowerIndex;
+    for(t = 0; t <= VisibleSegments; t++) {
+        Shade = t / (LineSize/StepX);
+        C.CurY = Y - 5.0;
+        Shade = int(255 * ((-4)*Shade*(Shade-1)));
+        C.SetDrawColor(Shade, Shade, Shade, Shade);
+        if(i % 10 == 0)
+        {
+            C.DrawVertical(X + LineSize - t * StepX, -50.0);
+            C.CurY = Y - 70.0;
+            C.CurX = X + LineSize - t * StepX - 15;
+            C.DrawText(string(LowerLimit + i/2));
+        }
+        else if(i % 5 == 0)
+        {
+            C.DrawVertical(X + LineSize - t * StepX, -30.0);
+            C.CurY = Y - 50.0;
+            C.CurX = X + LineSize - t * StepX - 15;
+            C.DrawText(string(LowerLimit + i/2));
+        }
+        else
+            C.DrawVertical(X + LineSize - t * StepX, -20.0);
+        i++;
     }
-    // draw scale horizontally (the Y coordinate must be constant)
-    else if(isVertical == false)
-    {
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurY = Y + 15.0;
+    C.CurX = X + MiddleOffset;
+    C.DrawVertical(X + MiddleOffset, 20.0);
+}
 
+simulated function DrawPitch(Canvas C,
+                            float X, 
+                            float Y, 
+                            float LineSize, 
+                            float LowerLimit, 
+                            float UpperLimit, 
+                            float Value                 // must be in <LowerLimit, UpperLimit>
+                            )
+{
+    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, LowerValue, UpperValue, AllSegments;
+    local int t, LowerIndex,  UpperIndex, i;
+
+    AllSegments = (UpperLimit - LowerLimit) * 2;
+    Span = (UpperLimit - LowerLimit);
+    StepY = LineSize / VisibleSegments;
+    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
+    MiddleIndex = VisibleSegments / 2.0;
+    MiddleOffset = StepY * MiddleIndex;
+    ValueIndex = (Value - LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - (VisibleSegments/2);
+    UpperIndex = ValueIndex + (VisibleSegments/2);
+
+    C.Font = C.TinyFont;
+
+    C.CurX = X;
+    C.CurY = Y;
+    C.DrawVertical(X, LineSize);
+    C.CurX = X - 5.0;
+    i = LowerIndex;
+    for(t = 0; t <= VisibleSegments; t++) {
+        Shade = t / (LineSize/StepY);
+        C.CurX = X - 5.0;
+        Shade = int(255 * ((-4)*Shade*(Shade-1)));
+        C.SetDrawColor(Shade, Shade, Shade, Shade);
+        if(i % 10 == 0)
+        {
+            C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
+            C.CurX = X - 100.0;
+            C.CurY = Y + LineSize - t * StepY - 4;
+            C.DrawText(string(LowerLimit + i/2));
+        }
+        else if(i % 5 == 0)
+        {
+            C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
+            C.CurX = X - 70.0;
+            C.CurY = Y + LineSize - t * StepY - 4;
+            C.DrawText(string(LowerLimit + i/2));
+        }
+        else
+            C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
+        i++;
     }
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurX = X + 5.0;
+    C.CurY = Y + MiddleOffset;
+    C.DrawHorizontal(Y + MiddleOffset, 20.0);
 }
 
 simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
@@ -453,7 +498,8 @@ simulated function DrawHUD(Canvas C)
             DrawPeriscopeOverlay(C);
             DrawRangeTable(C);
             //C.DrawVertical(300.0, -1000.0);
-            DrawScale(C, true, C.SizeX * 0.2, C.SizeY * 0.25, 500.0, 86, 45.0, 88.0, Elevation);
+            DrawPitch(C, C.SizeX * 0.30, C.SizeY * 0.33, 300, 45.0, 88.0, Elevation);
+            DrawYaw(C, C.SizeX * 0.4, C.SizeY * 0.94, 300, -177.0, 177.0, Traverse);
         }
     }
 }
@@ -465,7 +511,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 
     if (PeriscopeOverlay != none)
     {
-        GunsightSize = 0.25;
+        GunsightSize = 0.333;
         TextureSize = float(PeriscopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / GunsightSize * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
