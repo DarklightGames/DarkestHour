@@ -109,30 +109,102 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (Gun != none)
     {
-        CameraCoords = Gun.GetBoneCoords(CameraBone);
-
-        // Get camera location & adjust for any offset positioning
-        CameraLocation = CameraCoords.Origin;
-
-        if (FPCamPos != vect(0.0, 0.0, 0.0))
+        if(DriverPositionIndex == ShooterIndex)
         {
-            WeaponAimRot = Gun.CurrentAim;
-            WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-            WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
-            WeaponAimRot.Roll = Gun.Rotation.Roll;
-            CameraLocation += (FPCamPos >> WeaponAimRot);
-        }
+            CameraCoords = Gun.GetBoneCoords(CameraBone);
 
-        // Set camera rotation
-        CameraRotation = rotator(CameraCoords.XAxis);
-        CameraRotation.Roll = 0; // make the mortar view have no roll
+            // Get camera location & adjust for any offset positioning
+            CameraLocation = CameraCoords.Origin;
 
-        // Finalise the camera with any shake
-        if (PC != none)
-        {
-            CameraLocation += (PC.ShakeOffset >> PC.Rotation);
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+            if (FPCamPos != vect(0.0, 0.0, 0.0))
+            {
+                WeaponAimRot = Gun.CurrentAim;
+                WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+                WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
+                WeaponAimRot.Roll = Gun.Rotation.Roll;
+                CameraLocation += (FPCamPos >> WeaponAimRot);
+            }
+
+            // Set camera rotation
+            CameraRotation = rotator(CameraCoords.XAxis);
+            CameraRotation.Roll = 0; // make the mortar view have no roll
+
+            // Finalise the camera with any shake
+            if (PC != none)
+            {
+                CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+                CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+            }
         }
+        else {
+            CameraLocation = PC.Location;
+            CameraRotation = (-1.0)*PC.Rotation;
+        }
+    }
+}
+
+simulated function DrawScale(Canvas C,
+                            bool isVertical, 
+                            float X, 
+                            float Y, 
+                            float lineSize, 
+                            int segmentsNumber, 
+                            float lowerLimit, 
+                            float upperLimit, 
+                            float value                 // must be in <lowerLimit, upperLimit>
+                            )
+{
+    local float StepY;
+    local float ValueOffset;
+    local float scaleStep;
+    local float Span, Shade;
+    local int t;
+    local color WhiteColor;
+
+    Span = (upperLimit - lowerLimit);
+    WhiteColor = class'UColor'.default.Red;
+    StepY = lineSize / segmentsNumber;
+    scaleStep = (upperLimit - lowerLimit) / segmentsNumber;
+    ValueOffset = StepY * (value - lowerLimit) / scaleStep;
+
+    C.Font = C.TinyFont;
+
+    // draw scale vertically (the X coordinate must be constant)
+    if(isVertical == true)
+    {
+        C.CurX = X;
+        C.CurY = Y;
+        C.DrawVertical(X, lineSize);
+        C.CurX = X - 5.0;
+        for(t = 0; t <= lineSize/StepY; t++) {
+            //Log("drawing in x=" @ C.CurX @ " y=" @ t);
+            Shade = t / (lineSize/StepY);
+            C.CurX = X - 5.0;
+            Shade = int(255 * ((-4)*Shade*(Shade-1)));
+            //Log("Shade=" @ Shade);
+            C.SetDrawColor(Shade, Shade, Shade, Shade);
+            if(t % 10 == 0)
+            {
+                C.DrawHorizontal(Y + t * StepY, -50.0);
+                C.CurX = X - 100.0;
+                C.CurY = Y + t * StepY - 4;
+                C.DrawText(string(lowerLimit + t * 0.5));
+            }
+            else
+                C.DrawHorizontal(Y + t * StepY, -20.0);
+            }
+            //Log("aaaaaaaaaaaa");
+            
+        // C.CurX = X + 5.0;
+        // HUDArrowTexture.Rotation.Yaw = -90.0;
+        // C.DrawTile(HUDArrowTexture, 64.0 , 64.0, 0.0, 0.0, 128.0, 128.0);
+        C.SetDrawColor(255, 255, 255, 255);
+        C.DrawHorizontal(Y + ValueOffset, -50.0);
+    }
+    // draw scale horizontally (the Y coordinate must be constant)
+    else if(isVertical == false)
+    {
+
     }
 }
 
@@ -380,6 +452,8 @@ simulated function DrawHUD(Canvas C)
         else {
             DrawPeriscopeOverlay(C);
             DrawRangeTable(C);
+            //C.DrawVertical(300.0, -1000.0);
+            DrawScale(C, true, C.SizeX * 0.2, C.SizeY * 0.25, 500.0, 86, 45.0, 88.0, Elevation);
         }
     }
 }
@@ -387,16 +461,22 @@ simulated function DrawHUD(Canvas C)
 // New function to draw any textured driver's periscope overlay
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
-    local float ScreenRatio;
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
     if (PeriscopeOverlay != none)
     {
-        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        GunsightSize = 0.25;
+        TextureSize = float(PeriscopeOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / GunsightSize * 0.955;
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
         C.SetPos(0.0, 0.0);
 
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
-            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
-            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        //Log("ScreenRation=" @ ScreenRatio @ " C.SizeX=" @ C.SizeX @ " C.SizeY=" @ C.SizeY @ " PeriscopeOverlay.VSize=" @ PeriscopeOverlay.VSize);
+        //C.SetPos(0.0, 0.0);
+        //C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.3, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
     }
 }
 
@@ -604,7 +684,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false) && DriverPositionIndex != ShooterIndex)
+        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false) && DriverPositionIndex == ShooterIndex)
         {
             GotoState('Firing');
         }
@@ -1056,7 +1136,6 @@ defaultproperties
 {
     // Mortar operator, aiming & undeploying
     bMultiPosition=true
-    bSinglePositionExposed=true
     ElevationAdjustmentDelay=0.125
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
     // View & display
@@ -1086,6 +1165,6 @@ defaultproperties
     TargetMarkerClass=class'DHMapMarker_Ruler'
     ShooterIndex = 0;
     PeriscopeIndex = 1;
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
 
 }

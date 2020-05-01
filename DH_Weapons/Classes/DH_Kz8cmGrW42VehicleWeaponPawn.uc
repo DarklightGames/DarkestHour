@@ -7,15 +7,8 @@ class DH_Kz8cmGrW42VehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 defaultproperties
 {
-//    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewLocation=(X=0.0,Y=-10.0,Z=40.0),ViewFOV=80.0,bDrawOverlays=true,bExposed=true)
-//    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="optic_in",bDrawOverlays=true,bExposed=true)
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionUpAnim="Overlay_Out")
-    DriverPositions(1)=(ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
-    DriverPositions(2)=(ViewFOV=25.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
-    DriverPositions(3)=(ViewFOV=20.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
-    DriverPositions(4)=(ViewFOV=15.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
-    DriverPositions(5)=(ViewFOV=10.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
-    DriverPositions(6)=(ViewFOV=5.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
+    DriverPositions(1)=(ViewFOV=20.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
     WeaponClass=class'DH_Weapons.DH_Kz8cmGrW42Weapon'
     GunClass=class'DH_Weapons.DH_Kz8cmGrW42VehicleWeapon'
     HUDOverlayClass=class'DH_Weapons.DH_Kz8cmGrW42Overlay'

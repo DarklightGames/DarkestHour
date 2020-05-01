@@ -2701,7 +2701,7 @@ function DrawMapMarkerOnCompass (Canvas C, float CenterX, float CenterY, float R
     local float Angle;
     local rotator RotAngle;
 
-    if (!MapMarkerClass.default.bShouldShowOnCompass)
+    if (MapMarkerClass == none || !MapMarkerClass.default.bShouldShowOnCompass)
     {
         return;
     }
