@@ -146,18 +146,21 @@ simulated function DrawYaw(Canvas C,
                             float Value                 // must be in <LowerLimit, UpperLimit>
                             )
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, LowerValue, UpperValue, AllSegments;
-    local int t, LowerIndex,  UpperIndex, i;
+    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, AllSegments, i;
+    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
+    local string Label;
 
-    AllSegments = (UpperLimit - LowerLimit) * 2;
+    AllSegments = (UpperLimit - LowerLimit)/2;
     Span = (UpperLimit - LowerLimit);
     StepX = LineSize / VisibleSegments;
     ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
     MiddleIndex = VisibleSegments / 2.0;
     MiddleOffset = StepX * MiddleIndex;
     ValueIndex = (Value - LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - (VisibleSegments/2);
-    UpperIndex = ValueIndex + (VisibleSegments/2);
+    ZeroIndex = (-LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
+    BottomLimit = -ZeroIndex;
+    TopLimit = UpperLimit/ScaleStep;
 
     C.Font = C.TinyFont;
 
@@ -169,30 +172,48 @@ simulated function DrawYaw(Canvas C,
     for(t = 0; t <= VisibleSegments; t++) {
         Shade = t / (LineSize/StepX);
         C.CurY = Y - 5.0;
-        Shade = int(255 * ((-4)*Shade*(Shade-1)));
-        C.SetDrawColor(Shade, Shade, Shade, Shade);
-        if(i % 10 == 0)
+        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
+        C.SetDrawColor(Shade, Shade, Shade, 255);
+        Label = string(i*ScaleStep);
+        C.CurX = X + t * StepX - Len(Label)*3;
+        if((i) % 10.0 == 0)
         {
-            C.DrawVertical(X + LineSize - t * StepX, -50.0);
+            C.DrawVertical(X + t * StepX, -50.0);
             C.CurY = Y - 70.0;
-            C.CurX = X + LineSize - t * StepX - 15;
-            C.DrawText(string(LowerLimit + i/2));
+            C.DrawText(Label);
         }
-        else if(i % 5 == 0)
+        else if((i) % 5.0 == 0)
         {
-            C.DrawVertical(X + LineSize - t * StepX, -30.0);
+            C.DrawVertical(X + t * StepX, -30.0);
             C.CurY = Y - 50.0;
-            C.CurX = X + LineSize - t * StepX - 15;
-            C.DrawText(string(LowerLimit + i/2));
+            C.DrawText(Label);
         }
         else
-            C.DrawVertical(X + LineSize - t * StepX, -20.0);
-        i++;
+            C.DrawVertical(X + t * StepX, -20.0);
+        if(i < BottomLimit)
+        {
+            C.CurX = X + t * StepX;
+            C.DrawHorizontal(Y - 15, StepX);
+        }
+        if(i > TopLimit)
+        {
+            C.CurX = X + t * StepX;
+            C.DrawHorizontal(Y - 15, -StepX);
+        }
+        i = i + 1;
     }
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = Y + 15.0;
     C.CurX = X + MiddleOffset;
     C.DrawVertical(X + MiddleOffset, 20.0);
+
+    // debug
+    // C.CurX = 50;
+    // C.CurY = 50;
+    // C.DrawText("LowerIndex=" @ LowerIndex @ " BottomLimit=" @ BottomLimit);
+    // C.DrawText("ValueIndex=" @ ValueIndex );
+    // C.DrawText("VisibleSegments=" @ VisibleSegments );
+    // C.DrawText("TopLimit=" @ TopLimit );
 }
 
 simulated function DrawPitch(Canvas C,
@@ -204,8 +225,9 @@ simulated function DrawPitch(Canvas C,
                             float Value                 // must be in <LowerLimit, UpperLimit>
                             )
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, LowerValue, UpperValue, AllSegments;
-    local int t, LowerIndex,  UpperIndex, i;
+    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, AllSegments, i;
+    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
+    local string Label;
 
     AllSegments = (UpperLimit - LowerLimit) * 2;
     Span = (UpperLimit - LowerLimit);
@@ -214,8 +236,10 @@ simulated function DrawPitch(Canvas C,
     MiddleIndex = VisibleSegments / 2.0;
     MiddleOffset = StepY * MiddleIndex;
     ValueIndex = (Value - LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - (VisibleSegments/2);
-    UpperIndex = ValueIndex + (VisibleSegments/2);
+    ZeroIndex = (-LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
+    BottomLimit = -ZeroIndex;
+    TopLimit = UpperLimit/ScaleStep;
 
     C.Font = C.TinyFont;
 
@@ -227,25 +251,36 @@ simulated function DrawPitch(Canvas C,
     for(t = 0; t <= VisibleSegments; t++) {
         Shade = t / (LineSize/StepY);
         C.CurX = X - 5.0;
-        Shade = int(255 * ((-4)*Shade*(Shade-1)));
-        C.SetDrawColor(Shade, Shade, Shade, Shade);
-        if(i % 10 == 0)
+        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
+        Label = string(i*ScaleStep);
+        C.SetDrawColor(Shade, Shade, Shade, 255);
+        if(i % 10.0 == 0)
         {
             C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
             C.CurX = X - 100.0;
             C.CurY = Y + LineSize - t * StepY - 4;
-            C.DrawText(string(LowerLimit + i/2));
+            C.DrawText(Label);
         }
-        else if(i % 5 == 0)
+        else if(i % 5.0 == 0)
         {
             C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
             C.CurX = X - 70.0;
             C.CurY = Y + LineSize - t * StepY - 4;
-            C.DrawText(string(LowerLimit + i/2));
+            C.DrawText(Label);
         }
         else
             C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
-        i++;
+        i = i + 1;
+        if(i < BottomLimit)
+        {
+            C.CurY = Y + LineSize - t * StepY;
+            C.DrawVertical(X - 15, -2*StepY);
+        }
+        if(i > TopLimit)
+        {
+            C.CurY = Y + LineSize - t * StepY;
+            C.DrawVertical(X - 15, -StepY);
+        }
     }
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = X + 5.0;
@@ -303,22 +338,46 @@ simulated function DrawRangeTable(Canvas C)
     local int i;
     local float X, Y;
     local float XL, YL;
+    local float TableWidth, TableHeight;
     local int YawMils;
+    const FirstColumn = 45;
+    const SecondColumn = 185;
 
     if ( RangeTable.Length == 0)
     {
         return;
     }
 
+    C.Font = C.TinyFont;
     C.TextSize("A", XL, YL);
     
-    Y = (C.SizeY / 2) - (RangeTable.Length * YL / 2);
+    Y = (C.SizeY * 0.15 );
+    X = C.SizeX * 0.75;
+    
+//    DrawTile(Texture'engine.WhiteSquareTexture', 2, height, 0, 0, 2, 2);
+    C.SetPos(X, Y);
+    TableHeight = (RangeTable.Length + 1) * YL + 5;     // plus 1 because of table header 
+    TableWidth = 280.0;
+    C.DrawTile(Texture'engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
 
-    for (i = 0; i < RangeTable.Length; ++i)
+    // draw table header
+    C.SetDrawColor(0, 0, 0, 255);
+    C.SetPos(X + SecondColumn + 7, Y + 3);
+    C.DrawText("Range");
+    C.SetPos(X + FirstColumn, Y + 3);
+    C.DrawText("Elevation");
+    C.SetPos(X, Y);
+    C.DrawVertical(X + TableWidth/2, TableHeight);
+    C.SetPos(X, Y);
+    Y += YL + 8;
+    C.DrawHorizontal(Y, TableWidth);
+    for (i = 1; i < RangeTable.Length; ++i)
     {
-        C.SetPos(X, Y);
-        C.DrawText(string(int(RangeTable[i].Mils)) @ "mils" @ "-" @ int(RangeTable[i].Range) $ "m");
         Y += YL;
+        C.SetPos(X + FirstColumn, Y);
+        C.DrawText(string(RangeTable[i].Mils) $ "mils");
+        C.SetPos(X + SecondColumn, Y);
+        C.DrawText(string(RangeTable[i].Range) $ "m");
     }
 
     Y += YL;
@@ -498,8 +557,8 @@ simulated function DrawHUD(Canvas C)
             DrawPeriscopeOverlay(C);
             DrawRangeTable(C);
             //C.DrawVertical(300.0, -1000.0);
-            DrawPitch(C, C.SizeX * 0.30, C.SizeY * 0.33, 300, 45.0, 88.0, Elevation);
-            DrawYaw(C, C.SizeX * 0.4, C.SizeY * 0.94, 300, -177.0, 177.0, Traverse);
+            DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.33 + OverlayCorrectionY, 300, 46.0, 88.0, Elevation);
+            DrawYaw(C, C.SizeX * 0.4, C.SizeY * 0.93, 300, -180.0, 180.0, Traverse);
         }
     }
 }
@@ -511,7 +570,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 
     if (PeriscopeOverlay != none)
     {
-        GunsightSize = 0.333;
+        GunsightSize = 0.4;
         TextureSize = float(PeriscopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / GunsightSize * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
@@ -1212,5 +1271,5 @@ defaultproperties
     ShooterIndex = 0;
     PeriscopeIndex = 1;
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
-
+    OverlayCorrectionY = -60.0;
 }
