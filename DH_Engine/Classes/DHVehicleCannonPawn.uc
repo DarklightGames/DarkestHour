@@ -295,16 +295,6 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
-
-        // TODO: debug draw in the info
-        C.TextSize("E", XL, YL);
-
-        C.SetPos(0.0, 0.0);
-        C.DrawText("E:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mil");
-        C.SetPos(0.0, YL);
-        C.DrawText("T:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Yaw)) @ "mil");
-
-        DrawRangeTable(C);
     }
 }
 

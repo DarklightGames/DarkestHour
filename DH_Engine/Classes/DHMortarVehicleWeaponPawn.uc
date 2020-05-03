@@ -199,21 +199,6 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
-// Helper function to calculate yaw in milliradians given a yaw value in Unrealscript units
-function int GetYawFromUnrealUnits(int Yaw)
-{
-    local int Traverse;
-    Traverse = class'DHUnits'.static.UnrealToMilliradians(Yaw);
-    if (Traverse > 3200) // convert to +/-
-    {
-        Traverse -= 6400;
-    }
-
-    Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-
-    return Traverse; // returned value is in milliradians
-}
-
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
@@ -345,14 +330,16 @@ simulated function DrawHUD(Canvas C)
                 300,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMaximum,
-                Elevation);
+                Elevation,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum - DHMortarVehicleWeapon(VehWep).default.ElevationMinimum);
             DrawYaw(C, 
                 C.SizeX * 0.4, 
                 C.SizeY * 0.93, 
                 300, 
                 GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw),
                 GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw),
-                Traverse);
+                Traverse,
+                (GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw) - GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw))/2);
             // C.SetPos(50, 50);
             // C.DrawText(string(GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw)));
             // C.SetPos(50, 75);

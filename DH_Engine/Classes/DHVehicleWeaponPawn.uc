@@ -59,6 +59,21 @@ replication
         ServerToggleVehicleLock;
 }
 
+// Helper function to calculate yaw in milliradians given a yaw value in Unrealscript units
+function int GetYawFromUnrealUnits(int Yaw)
+{
+    local int Traverse;
+    Traverse = class'DHUnits'.static.UnrealToMilliradians(Yaw);
+    if (Traverse > 3200) // convert to +/-
+    {
+        Traverse -= 6400;
+    }
+
+    Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+
+    return Traverse; // returned value is in milliradians
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS ************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -217,14 +232,14 @@ simulated function DrawYaw(Canvas C,
                             float LineSize, 
                             float LowerLimit, 
                             float UpperLimit,
-                            float Value                 // must be in <LowerLimit, UpperLimit>
+                            float Value,                 // must be in <LowerLimit, UpperLimit>
+                            int AllSegments
                             )
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, AllSegments, i;
+    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, i;
     local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
     local string Label;
 
-    AllSegments = (UpperLimit - LowerLimit)/2;
     Span = (UpperLimit - LowerLimit);
     StepX = LineSize / VisibleSegments;
     ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
@@ -296,14 +311,14 @@ simulated function DrawPitch(Canvas C,
                             float LineSize, 
                             float LowerLimit, 
                             float UpperLimit, 
-                            float Value                 // must be in <LowerLimit, UpperLimit>
+                            float Value,                 // must be in <LowerLimit, UpperLimit>
+                            int AllSegments
                             )
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, AllSegments, i;
+    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, i;
     local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
     local string Label;
 
-    AllSegments = (UpperLimit - LowerLimit);
     Span = (UpperLimit - LowerLimit);
     StepY = LineSize / VisibleSegments;
     ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
@@ -384,7 +399,10 @@ simulated function DrawRangeTable(Canvas C)
     Y = (C.SizeY - TableHeight)/2;
     X = C.SizeX * 0.75;
     
+
+    // draw table background
     C.SetPos(X, Y);
+    C.SetDrawColor(255, 255, 255, 255);
     C.DrawTile(Texture'engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
 
     // draw table header
@@ -404,9 +422,9 @@ simulated function DrawRangeTable(Canvas C)
     {
         Y += YL;
         C.SetPos(X + FirstColumn, Y);
-        C.DrawText(string(RangeTable[i-1].Mils) $ "mils");
-        C.SetPos(X + SecondColumn, Y);
         C.DrawText(string(RangeTable[i-1].Range) $ "m");
+        C.SetPos(X + SecondColumn, Y);
+        C.DrawText(string(RangeTable[i-1].Mils) $ "mils");
     }
 }
 
