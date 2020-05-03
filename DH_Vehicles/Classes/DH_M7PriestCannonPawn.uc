@@ -77,7 +77,7 @@ defaultproperties
     bHasAltFire=false
     OverlayCorrectionY=-80
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
-    GunsightSize=0.40 // 12.3 degrees visible FOV at 3x magnification (M16 sight) // TODO: find M16 sight properties
+    GunsightSize=0.40
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
