@@ -300,7 +300,7 @@ defaultproperties
     SpreadYawMax=364.0
     Elevation=75.0
     ElevationMaximum=90.0
-    ElevationMinimum=46.0
+    ElevationMinimum=45.0
     ElevationStride=0.5
 
     // Ammo & firing

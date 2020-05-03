@@ -58,16 +58,6 @@ var     class<DHMapMarker>    TargetMarkerClass;
 var     int         PeriscopeIndex;
 var     int         ShooterIndex;
 var     texture     PeriscopeOverlay;           // periscope overlay texture
-const VisibleSegments = 40;
-
-struct SRangeTableRecord
-{
-    var float Mils;     // Pitch, in mils.
-    var float Range;    // Range, in meters.
-    var float TTI;      // Time-to-impact in seconds
-};
-
-var array<SRangeTableRecord>    RangeTable;
 
 replication
 {
@@ -137,156 +127,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     }
 }
     
-simulated function DrawYaw(Canvas C,
-                            float X, 
-                            float Y, 
-                            float LineSize, 
-                            float LowerLimit, 
-                            float UpperLimit, 
-                            float Value                 // must be in <LowerLimit, UpperLimit>
-                            )
-{
-    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, AllSegments, i;
-    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
-    local string Label;
-
-    AllSegments = (UpperLimit - LowerLimit)/2;
-    Span = (UpperLimit - LowerLimit);
-    StepX = LineSize / VisibleSegments;
-    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
-    MiddleIndex = VisibleSegments / 2.0;
-    MiddleOffset = StepX * MiddleIndex;
-    ValueIndex = (Value - LowerLimit) / ScaleStep;
-    ZeroIndex = (-LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
-    BottomLimit = -ZeroIndex;
-    TopLimit = UpperLimit/ScaleStep;
-
-    C.Font = C.TinyFont;
-
-    C.CurX = X;
-    C.CurY = Y;
-    C.DrawHorizontal(Y, LineSize);
-    C.CurY = Y - 5.0;
-    i = LowerIndex;
-    for(t = 0; t <= VisibleSegments; t++) {
-        Shade = t / (LineSize/StepX);
-        C.CurY = Y - 5.0;
-        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
-        C.SetDrawColor(Shade, Shade, Shade, 255);
-        Label = string(i*ScaleStep);
-        C.CurX = X + t * StepX - Len(Label)*3;
-        if((i) % 10.0 == 0)
-        {
-            C.DrawVertical(X + t * StepX, -50.0);
-            C.CurY = Y - 70.0;
-            C.DrawText(Label);
-        }
-        else if((i) % 5.0 == 0)
-        {
-            C.DrawVertical(X + t * StepX, -30.0);
-            C.CurY = Y - 50.0;
-            C.DrawText(Label);
-        }
-        else
-            C.DrawVertical(X + t * StepX, -20.0);
-        if(i < BottomLimit)
-        {
-            C.CurX = X + t * StepX;
-            C.DrawHorizontal(Y - 15, StepX);
-        }
-        if(i > TopLimit)
-        {
-            C.CurX = X + t * StepX;
-            C.DrawHorizontal(Y - 15, -StepX);
-        }
-        i = i + 1;
-    }
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y + 15.0;
-    C.CurX = X + MiddleOffset;
-    C.DrawVertical(X + MiddleOffset, 20.0);
-
-    // debug
-    // C.CurX = 50;
-    // C.CurY = 50;
-    // C.DrawText("LowerIndex=" @ LowerIndex @ " BottomLimit=" @ BottomLimit);
-    // C.DrawText("ValueIndex=" @ ValueIndex );
-    // C.DrawText("VisibleSegments=" @ VisibleSegments );
-    // C.DrawText("TopLimit=" @ TopLimit );
-}
-
-simulated function DrawPitch(Canvas C,
-                            float X, 
-                            float Y, 
-                            float LineSize, 
-                            float LowerLimit, 
-                            float UpperLimit, 
-                            float Value                 // must be in <LowerLimit, UpperLimit>
-                            )
-{
-    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, AllSegments, i;
-    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
-    local string Label;
-
-    AllSegments = (UpperLimit - LowerLimit) * 2;
-    Span = (UpperLimit - LowerLimit);
-    StepY = LineSize / VisibleSegments;
-    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
-    MiddleIndex = VisibleSegments / 2.0;
-    MiddleOffset = StepY * MiddleIndex;
-    ValueIndex = (Value - LowerLimit) / ScaleStep;
-    ZeroIndex = (-LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
-    BottomLimit = -ZeroIndex;
-    TopLimit = UpperLimit/ScaleStep;
-
-    C.Font = C.TinyFont;
-
-    C.CurX = X;
-    C.CurY = Y;
-    C.DrawVertical(X, LineSize);
-    C.CurX = X - 5.0;
-    i = LowerIndex;
-    for(t = 0; t <= VisibleSegments; t++) {
-        Shade = t / (LineSize/StepY);
-        C.CurX = X - 5.0;
-        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
-        Label = string(i*ScaleStep);
-        C.SetDrawColor(Shade, Shade, Shade, 255);
-        if(i % 10.0 == 0)
-        {
-            C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
-            C.CurX = X - 100.0;
-            C.CurY = Y + LineSize - t * StepY - 4;
-            C.DrawText(Label);
-        }
-        else if(i % 5.0 == 0)
-        {
-            C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
-            C.CurX = X - 70.0;
-            C.CurY = Y + LineSize - t * StepY - 4;
-            C.DrawText(Label);
-        }
-        else
-            C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
-        i = i + 1;
-        if(i < BottomLimit)
-        {
-            C.CurY = Y + LineSize - t * StepY;
-            C.DrawVertical(X - 15, -2*StepY);
-        }
-        if(i > TopLimit)
-        {
-            C.CurY = Y + LineSize - t * StepY;
-            C.DrawVertical(X - 15, -StepY);
-        }
-    }
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurX = X + 5.0;
-    C.CurY = Y + MiddleOffset;
-    C.DrawHorizontal(Y + MiddleOffset, 20.0);
-}
 
 simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 {
@@ -332,71 +172,6 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 
     return DeflectionSign $ string(Deflection);
 }
-    
-simulated function DrawRangeTable(Canvas C)
-{
-    local int i;
-    local float X, Y;
-    local float XL, YL;
-    local float TableWidth, TableHeight;
-    local int YawMils;
-    const FirstColumn = 45;
-    const SecondColumn = 185;
-
-    if ( RangeTable.Length == 0)
-    {
-        return;
-    }
-
-    C.Font = C.TinyFont;
-    C.TextSize("A", XL, YL);
-    
-    Y = (C.SizeY * 0.15 );
-    X = C.SizeX * 0.75;
-    
-//    DrawTile(Texture'engine.WhiteSquareTexture', 2, height, 0, 0, 2, 2);
-    C.SetPos(X, Y);
-    TableHeight = (RangeTable.Length + 1) * YL + 5;     // plus 1 because of table header 
-    TableWidth = 280.0;
-    C.DrawTile(Texture'engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
-
-    // draw table header
-    C.SetDrawColor(0, 0, 0, 255);
-    C.SetPos(X + SecondColumn + 7, Y + 3);
-    C.DrawText("Range");
-    C.SetPos(X + FirstColumn, Y + 3);
-    C.DrawText("Elevation");
-    C.SetPos(X, Y);
-    C.DrawVertical(X + TableWidth/2, TableHeight);
-    C.SetPos(X, Y);
-    Y += YL + 8;
-    C.DrawHorizontal(Y, TableWidth);
-    for (i = 1; i < RangeTable.Length; ++i)
-    {
-        Y += YL;
-        C.SetPos(X + FirstColumn, Y);
-        C.DrawText(string(RangeTable[i].Mils) $ "mils");
-        C.SetPos(X + SecondColumn, Y);
-        C.DrawText(string(RangeTable[i].Range) $ "m");
-    }
-
-    Y += YL;
-    YawMils = int(class'UUnits'.static.UnrealToMils((-1.0) * float((VehWep.GetWeaponFireRotation().Yaw - VehWep.Rotation.Yaw))));
-
-    // bring radial coordinates to a human-readable form
-    // in other words change:   3     2     1     0    6282  6281  6280
-    //                          |     |     |     |     |     |     |
-    //                    to:  -3    -2    -1     0     1     2     3
-    // note that 6282 = 2 * pi * 1000 [rads]
-
-    if(YawMils > 3141)
-        YawMils = YawMils - 6282;
-    else
-        YawMils = - YawMils;
-    
-    Y = 0.1 * C.SizeY;
-    X = 0.45 * C.SizeX;
-}
 
 exec function CalibrateFire(int MilsMin, int MilsMax)
 {
@@ -424,6 +199,21 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
+// Helper function to calculate yaw in milliradians given a yaw value in Unrealscript units
+function int GetYawFromUnrealUnits(int Yaw)
+{
+    local int Traverse;
+    Traverse = class'DHUnits'.static.UnrealToMilliradians(Yaw);
+    if (Traverse > 3200) // convert to +/-
+    {
+        Traverse -= 6400;
+    }
+
+    Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+
+    return Traverse; // returned value is in milliradians
+}
+
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
@@ -434,7 +224,7 @@ simulated function DrawHUD(Canvas C)
     local int              SizeX, SizeY, RoundIndex, Traverse;
     local byte             Quotient, Remainder;
     local string           TraverseString;
-
+    
     PC = PlayerController(Controller);
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
@@ -454,15 +244,7 @@ simulated function DrawHUD(Canvas C)
 
         // Get elevation & traverse
         Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = class'DHUnits'.static.UnrealToMilliradians(VehWep.CurrentAim.Yaw);
-
-        if (Traverse > 3200) // convert to +/-
-        {
-            Traverse -= 6400;
-        }
-
-        Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-
+        Traverse = GetYawFromUnrealUnits(VehWep.CurrentAim.Yaw);
         TraverseString = "T: ";
 
         if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
@@ -557,8 +339,24 @@ simulated function DrawHUD(Canvas C)
             DrawPeriscopeOverlay(C);
             DrawRangeTable(C);
             //C.DrawVertical(300.0, -1000.0);
-            DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.33 + OverlayCorrectionY, 300, 46.0, 88.0, Elevation);
-            DrawYaw(C, C.SizeX * 0.4, C.SizeY * 0.93, 300, -180.0, 180.0, Traverse);
+            DrawPitch(C,
+                C.SizeX * 0.27, 
+                C.SizeY * 0.33 + OverlayCorrectionY,
+                300,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum,
+                Elevation);
+            DrawYaw(C, 
+                C.SizeX * 0.4, 
+                C.SizeY * 0.93, 
+                300, 
+                GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw),
+                GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw),
+                Traverse);
+            // C.SetPos(50, 50);
+            // C.DrawText(string(GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw)));
+            // C.SetPos(50, 75);
+            // C.DrawText(string(GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw)));
         }
     }
 }

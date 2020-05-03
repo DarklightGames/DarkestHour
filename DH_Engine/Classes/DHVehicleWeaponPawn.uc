@@ -36,6 +36,18 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
+// Range table
+struct SRangeTableRecord
+{
+    var float Mils;     // Pitch, in mils.
+    var float Range;    // Range, in meters.
+    var float TTI;      // Time-to-impact in seconds
+};
+var array<SRangeTableRecord>    RangeTable;
+
+// pitch & yaw indicators
+const VisibleSegments = 40; // visible span on the indicator
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -196,6 +208,205 @@ simulated function DrawBinocsOverlay(Canvas C)
         C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
             0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
             BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    }
+}
+
+simulated function DrawYaw(Canvas C,
+                            float X, 
+                            float Y, 
+                            float LineSize, 
+                            float LowerLimit, 
+                            float UpperLimit,
+                            float Value                 // must be in <LowerLimit, UpperLimit>
+                            )
+{
+    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, AllSegments, i;
+    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
+    local string Label;
+
+    AllSegments = (UpperLimit - LowerLimit)/2;
+    Span = (UpperLimit - LowerLimit);
+    StepX = LineSize / VisibleSegments;
+    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
+    MiddleIndex = VisibleSegments / 2.0;
+    MiddleOffset = StepX * MiddleIndex;
+    ValueIndex = (Value - LowerLimit) / ScaleStep;
+    ZeroIndex = (-LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
+    BottomLimit = -ZeroIndex;
+    TopLimit = UpperLimit/ScaleStep;
+
+    C.Font = C.TinyFont;
+
+    C.CurX = X;
+    C.CurY = Y;
+    C.DrawHorizontal(Y, LineSize);
+    C.CurY = Y - 5.0;
+    i = LowerIndex;
+    for(t = 0; t <= VisibleSegments; t++) {
+        Shade = t / (LineSize/StepX);
+        C.CurY = Y - 5.0;
+        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
+        C.SetDrawColor(Shade, Shade, Shade, 255);
+        Label = string(int(i*ScaleStep));
+        C.CurX = X + t * StepX - Len(Label)*3;
+        if((i) % 10.0 == 0)
+        {
+            C.DrawVertical(X + t * StepX, -50.0);
+            C.CurY = Y - 70.0;
+            C.DrawText(Label);
+        }
+        else if((i) % 5.0 == 0)
+        {
+            C.DrawVertical(X + t * StepX, -30.0);
+            C.CurY = Y - 50.0;
+            C.DrawText(Label);
+        }
+        else
+            C.DrawVertical(X + t * StepX, -20.0);
+        if(i < BottomLimit)
+        {
+            C.CurX = X + t * StepX;
+            C.DrawHorizontal(Y - 15, StepX);
+        }
+        if(i > TopLimit)
+        {
+            C.CurX = X + t * StepX;
+            C.DrawHorizontal(Y - 15, -StepX);
+        }
+        i = i + 1;
+    }
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurY = Y + 15.0;
+    C.CurX = X + MiddleOffset;
+    C.DrawVertical(X + MiddleOffset, 20.0);
+
+    // debug
+    // C.CurX = 50;
+    // C.CurY = 50;
+    // C.DrawText("LowerIndex=" @ LowerIndex @ " BottomLimit=" @ BottomLimit);
+    // C.DrawText("ValueIndex=" @ ValueIndex );
+    // C.DrawText("VisibleSegments=" @ VisibleSegments );
+    // C.DrawText("TopLimit=" @ TopLimit );
+}
+
+simulated function DrawPitch(Canvas C,
+                            float X, 
+                            float Y, 
+                            float LineSize, 
+                            float LowerLimit, 
+                            float UpperLimit, 
+                            float Value                 // must be in <LowerLimit, UpperLimit>
+                            )
+{
+    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, AllSegments, i;
+    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
+    local string Label;
+
+    AllSegments = (UpperLimit - LowerLimit);
+    Span = (UpperLimit - LowerLimit);
+    StepY = LineSize / VisibleSegments;
+    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
+    MiddleIndex = VisibleSegments / 2.0;
+    MiddleOffset = StepY * MiddleIndex;
+    ValueIndex = (Value - LowerLimit) / ScaleStep;
+    ZeroIndex = (-LowerLimit) / ScaleStep;
+    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
+    BottomLimit = -ZeroIndex;
+    TopLimit = UpperLimit/ScaleStep;
+
+    C.Font = C.TinyFont;
+
+    C.CurX = X;
+    C.CurY = Y;
+    C.DrawVertical(X, LineSize);
+    C.CurX = X - 5.0;
+    i = LowerIndex;
+    for(t = 0; t <= VisibleSegments; t++) {
+        Shade = t / (LineSize/StepY);
+        C.CurX = X - 5.0;
+        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
+        Label = string(int(i*ScaleStep));
+        C.SetDrawColor(Shade, Shade, Shade, 255);
+        if(i % 10.0 == 0)
+        {
+            C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
+            C.CurX = X - 80.0;
+            C.CurY = Y + LineSize - t * StepY - 4;
+            C.DrawText(Label);
+        }
+        else if(i % 5.0 == 0)
+        {
+            C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
+            C.CurX = X - 60.0;
+            C.CurY = Y + LineSize - t * StepY - 4;
+            C.DrawText(Label);
+        }
+        else
+            C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
+        i = i + 1;
+        if(i < BottomLimit)
+        {
+            C.CurY = Y + LineSize - t * StepY;
+            C.DrawVertical(X - 15, -2*StepY);
+        }
+        if(i > TopLimit)
+        {
+            C.CurY = Y + LineSize - t * StepY;
+            C.DrawVertical(X - 15, -StepY);
+        }
+    }
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurX = X + 5.0;
+    C.CurY = Y + MiddleOffset;
+    C.DrawHorizontal(Y + MiddleOffset, 20.0);
+}
+simulated function DrawRangeTable(Canvas C)
+{
+    local int i;
+    local float X, Y;
+    local float XL, YL;
+    local float TableWidth, TableHeight;
+    const FirstColumn = 45;
+    const SecondColumn = 185;
+
+    if ( RangeTable.Length == 0)
+    {
+        return;
+    }
+
+    C.Font = C.TinyFont;
+    C.TextSize("A", XL, YL);
+
+    TableWidth = 280.0;
+    TableHeight = (RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
+
+    Y = (C.SizeY - TableHeight)/2;
+    X = C.SizeX * 0.75;
+    
+    C.SetPos(X, Y);
+    C.DrawTile(Texture'engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
+
+    // draw table header
+    C.SetDrawColor(0, 0, 0, 255);
+    C.SetPos(X + SecondColumn + 7, Y + 3);
+    C.DrawText("Range");
+    C.SetPos(X + FirstColumn, Y + 3);
+    C.DrawText("Elevation");
+    C.SetPos(X, Y);
+    C.DrawVertical(X + TableWidth/2, TableHeight);
+    C.SetPos(X, Y);
+    Y += YL + 8;
+    C.DrawHorizontal(Y, TableWidth);
+
+    // draw table rows
+    for (i = 1; i <= RangeTable.Length; ++i)
+    {
+        Y += YL;
+        C.SetPos(X + FirstColumn, Y);
+        C.DrawText(string(RangeTable[i-1].Mils) $ "mils");
+        C.SetPos(X + SecondColumn, Y);
+        C.DrawText(string(RangeTable[i-1].Range) $ "m");
     }
 }
 

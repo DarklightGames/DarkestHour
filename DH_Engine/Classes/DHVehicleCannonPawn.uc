@@ -263,51 +263,6 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-simulated function DrawRangeTable(Canvas C)
-{
-    local int i;
-    local float X, Y;
-    local float XL, YL;
-    local int YawMils;
-
-    if (Cannon == none || Cannon.RangeTable.Length == 0)
-    {
-        return;
-    }
-
-    C.TextSize("A", XL, YL);
-
-    Y = (C.SizeY / 2) - (Cannon.RangeTable.Length * YL / 2);
-
-    for (i = 0; i < Cannon.RangeTable.Length; ++i)
-    {
-        C.SetPos(X, Y);
-
-        C.DrawText(string(int(Cannon.RangeTable[i].Mils)) @ "mils" @ "-" @ int(Cannon.RangeTable[i].Range) $ "m");
-
-        Y += YL;
-    }
-
-    Y += YL;
-    YawMils = int(class'UUnits'.static.UnrealToMils((-1.0) * float((VehWep.GetWeaponFireRotation().Yaw - VehWep.Rotation.Yaw))));
-
-    // bring radial coordinates to a human-readable form
-    // in other words change:   3     2     1     0    6282  6281  6280
-    //                          |     |     |     |     |     |     |
-    //                    to:  -3    -2    -1     0     1     2     3
-    // note that 6282 = 2 * pi * 1000 [rads]
-
-    if(YawMils > 3141)
-        YawMils = YawMils - 6282;
-    else
-        YawMils = - YawMils;
-        
-    Y = 0.1 * C.SizeY;
-    X = 0.45 * C.SizeX;
-    C.SetPos(X, Y);
-    C.DrawText("pitch:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mils, yaw  :" @ YawMils @ "mils");
-}
-
 // New function to draw the gunsight overlay plus any additional overlay for aiming reticle - using a different drawing method to RO
 // The setting for GunsightSize is used to calculate how much of the gunsight texture to draw, with 1.0 meaning it's expanded to fill the screen width
 // The DrawTile arguments are manipulated so whole screen gets drawn over, without need for separately drawing black rectangles to fill the edges, as in RO
