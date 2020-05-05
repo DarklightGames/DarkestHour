@@ -16,7 +16,7 @@ enum EMapMode
     MODE_Map,
     MODE_Squads
 };
-    
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 
@@ -1080,7 +1080,7 @@ simulated function bool IsSLorASL()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
-    
+
 simulated function bool IsSL()
 {
 return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSL();
@@ -5536,11 +5536,16 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
     PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
     PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
-    if(MapMarkerClass.default.LifetimeSeconds != -1)
+
+    if (MapMarkerClass.default.LifetimeSeconds != -1)
+    {
         PMM.ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    }
     else
+    {
         PMM.ExpiryTime = -1;
-    
+    }
+
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
     MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[0]);
