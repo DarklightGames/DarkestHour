@@ -3,8 +3,13 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SovietTanTeloSLEarlyPawn extends DH_SovietTanTeloPawn;
+class DH_SovietTanTeloSLEarlyPawn extends DH_SovietPawn;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DHCharacters_anm.sov_tunic_sergeant_early'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
+    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
+
+    bReversedSkinsSlots=true
 }

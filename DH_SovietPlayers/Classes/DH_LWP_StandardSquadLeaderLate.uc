@@ -8,6 +8,7 @@ class DH_LWP_StandardSquadLeaderLate extends DHPOLSergeantRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLLatePawn',Weight=1.0)
+    Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
 
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 
