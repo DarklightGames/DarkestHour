@@ -89,9 +89,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4F1_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_look'
+    VehicleHudImage=Texture'DH_Panzer4F1_tex.Interface.panzer4f1_body'
+    VehicleHudTurret=TexRotator'DH_Panzer4F1_tex.Interface.panzer4F1_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Panzer4F1_tex.Interface.panzer4F1_turret_look'
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.71
@@ -105,7 +105,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
+    SpawnOverlay(0)=Material'DH_Panzer4F1_tex.Interface.panzer4f1'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
