@@ -30,6 +30,13 @@ var     float       GunsightSize;                // size of the gunsight overlay
 var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
 
+// Spotting scope overlay
+var     int         SpottingScopePositionIndex;
+var     Material    SpottingScopeOverlay;             // texture overlay for gunsight
+var     float       SpottingScopeSize;                // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+var     float       SpottingScopeOverlayCorrectionX;  // scope center correction in pixels, in case an overlay is off-center by pixel or two
+var     float       SpottingScopeOverlayCorrectionY;
+
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
@@ -45,8 +52,8 @@ struct SRangeTableRecord
 };
 var array<SRangeTableRecord>    RangeTable;
 
-// pitch & yaw indicators
-const VisibleSegments = 40; // visible span on the indicator
+var localized string RangeString;
+var localized string ElevationString;
 
 replication
 {
@@ -57,21 +64,6 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerToggleVehicleLock;
-}
-
-// Helper function to calculate yaw in milliradians given a yaw value in Unrealscript units
-function int GetYawFromUnrealUnits(int Yaw)
-{
-    local int Traverse;
-    Traverse = class'DHUnits'.static.UnrealToMilliradians(Yaw);
-    if (Traverse > 3200) // convert to +/-
-    {
-        Traverse -= 6400;
-    }
-
-    Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-
-    return Traverse; // returned value is in milliradians
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -226,30 +218,109 @@ simulated function DrawBinocsOverlay(Canvas C)
     }
 }
 
-simulated function DrawYaw(Canvas C,
-                            float X, 
-                            float Y, 
-                            float LineSize, 
-                            float LowerLimit, 
-                            float UpperLimit,
-                            float Value,                 // must be in <LowerLimit, UpperLimit>
-                            int AllSegments
-                            )
+simulated function DrawSpottingScopeOverlay(Canvas C)
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepX, MiddleIndex, ValueIndex, i;
-    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
-    local string Label;
+    DrawRangeTable(C);
+    DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.5 - 150 + OverlayCorrectionY, 300, -89, 621, 355);
+    DrawYaw(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
+}
 
-    Span = (UpperLimit - LowerLimit);
-    StepX = LineSize / VisibleSegments;
-    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
-    MiddleIndex = VisibleSegments / 2.0;
+// These values are for easily grabbing the range and current value of pitch and yaw values.
+// Primarily for use in drawing the spotting scope knobs.
+simulated function int GetGunYaw()
+{
+    local int Yaw;
+
+    Yaw = VehWep.CurrentAim.Yaw;
+
+    if (Yaw >= 32768)
+    {
+        Yaw -= 65536;
+    }
+
+    return Yaw;
+}
+
+simulated function int GetGunYawMin()
+{
+    return VehWep.MaxNegativeYaw;
+}
+
+simulated function int GetGunYawMax()
+{
+    return VehWep.MaxPositiveYaw;
+}
+
+simulated function int GetGunPitch()
+{
+    local int Pitch;
+
+    Pitch = VehWep.CurrentAim.Pitch;
+
+    if (Pitch >= 32768)
+    {
+        Pitch -= 65536;
+    }
+
+    return Pitch;
+}
+
+simulated function int GetGunPitchMin()
+{
+    return -VehWep.PitchDownLimit;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return VehWep.PitchUpLimit;
+}
+
+final function int GetGunPitchRange()
+{
+    return GetGunPitchMax() - GetGunPitchMin();
+}
+
+final function int GetGunYawRange()
+{
+    return GetGunYawMax() - GetGunYawMin();
+}
+
+simulated function DrawYaw(Canvas C, float X, float Y, float LineSize)
+{
+    local int Range, MiddleOffset, StepX, MiddleIndex, ValueIndex;
+    local int i, t, LowerIndex, ZeroIndex;
+    local int Alpha;
+    local string Label;
+    local float Value;
+    local int SegmentCount;
+    local int ValueMin;
+    local int ValueMax;
+
+    const VISIBLE_SEGMENTS = 40; // visible span on the indicator
+
+    Value = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
+    ValueMin = class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin());
+    ValueMax = class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax());
+
+    Range = ValueMax - ValueMin;
+    StepX = LineSize / VISIBLE_SEGMENTS;
+
+    SegmentCount = Range;
+
+    // Middle index
+    MiddleIndex = VISIBLE_SEGMENTS / 2.0;
+
+    // X-offset value of the middle index
     MiddleOffset = StepX * MiddleIndex;
-    ValueIndex = (Value - LowerLimit) / ScaleStep;
-    ZeroIndex = (-LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
-    BottomLimit = -ZeroIndex;
-    TopLimit = UpperLimit/ScaleStep;
+
+    // Tick index of the current value
+    ValueIndex = Value - ValueMin;
+
+    // Tick index of the "zero" value
+    ZeroIndex = -ValueMin;
+
+    // The minimum visible index
+    LowerIndex = ValueIndex - ZeroIndex - (VISIBLE_SEGMENTS / 2);
 
     C.Font = C.TinyFont;
 
@@ -257,100 +328,111 @@ simulated function DrawYaw(Canvas C,
     C.CurY = Y;
     C.DrawHorizontal(Y, LineSize);
     C.CurY = Y - 5.0;
+
     i = LowerIndex;
-    for(t = 0; t <= VisibleSegments; t++) {
-        Shade = t / (LineSize/StepX);
+
+    for(t = 0; t <= VISIBLE_SEGMENTS; ++t)
+    {
+        Alpha = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_SEGMENTS));
+        Label = string(i);
+
         C.CurY = Y - 5.0;
-        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
-        C.SetDrawColor(Shade, Shade, Shade, 255);
-        Label = string(int(i*ScaleStep));
-        C.CurX = X + t * StepX - Len(Label)*3;
-        if((i) % 10.0 == 0)
+        C.SetDrawColor(255, 255, 255, Alpha);
+        C.CurX = X + t * StepX - Len(Label) * 3;
+
+        if (i % 10 == 0)
         {
             C.DrawVertical(X + t * StepX, -50.0);
             C.CurY = Y - 70.0;
             C.DrawText(Label);
         }
-        else if((i) % 5.0 == 0)
+        else if (i % 5 == 0)
         {
             C.DrawVertical(X + t * StepX, -30.0);
             C.CurY = Y - 50.0;
             C.DrawText(Label);
         }
         else
+        {
             C.DrawVertical(X + t * StepX, -20.0);
-        if(i < BottomLimit)
+        }
+
+        // Draw a strike-through if this segment is beyond the lower or upper limits.
+        if (i < ValueMin)
         {
             C.CurX = X + t * StepX;
             C.DrawHorizontal(Y - 15, StepX);
         }
-        if(i > TopLimit)
+
+        if (i > ValueMax)
         {
             C.CurX = X + t * StepX;
             C.DrawHorizontal(Y - 15, -StepX);
         }
-        i = i + 1;
+
+        i += 1;
     }
+
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = Y + 15.0;
     C.CurX = X + MiddleOffset;
     C.DrawVertical(X + MiddleOffset, 20.0);
-
-    // debug
-    // C.CurX = 50;
-    // C.CurY = 50;
-    // C.DrawText("LowerIndex=" @ LowerIndex @ " BottomLimit=" @ BottomLimit);
-    // C.DrawText("ValueIndex=" @ ValueIndex );
-    // C.DrawText("VisibleSegments=" @ VisibleSegments );
-    // C.DrawText("TopLimit=" @ TopLimit );
 }
 
 simulated function DrawPitch(Canvas C,
-                            float X, 
-                            float Y, 
-                            float LineSize, 
-                            float LowerLimit, 
-                            float UpperLimit, 
-                            float Value,                 // must be in <LowerLimit, UpperLimit>
+                            float X,
+                            float Y,
+                            float LineSize,
+                            float LowerLimit,
+                            float UpperLimit,
                             int AllSegments
                             )
 {
-    local float ScaleStep, Span, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, i;
+    local float ScaleStep, Range, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, i;
     local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
     local string Label;
+    local float Value;
 
-    Span = (UpperLimit - LowerLimit);
-    StepY = LineSize / VisibleSegments;
+    Value = GetGunPitch();
+
+    Range = (UpperLimit - LowerLimit);
+    StepY = LineSize / VISIBLE_SEGMENTS;
     ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
-    MiddleIndex = VisibleSegments / 2.0;
+    MiddleIndex = VISIBLE_SEGMENTS / 2.0;
     MiddleOffset = StepY * MiddleIndex;
     ValueIndex = (Value - LowerLimit) / ScaleStep;
     ZeroIndex = (-LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - ZeroIndex - (VisibleSegments/2);
+    LowerIndex = ValueIndex - ZeroIndex - (VISIBLE_SEGMENTS / 2);
     BottomLimit = -ZeroIndex;
     TopLimit = UpperLimit/ScaleStep;
 
     C.Font = C.TinyFont;
-
     C.CurX = X;
     C.CurY = Y;
+
     C.DrawVertical(X, LineSize);
+
     C.CurX = X - 5.0;
+
     i = LowerIndex;
-    for(t = 0; t <= VisibleSegments; t++) {
-        Shade = t / (LineSize/StepY);
+
+    for (t = 0; t <= VISIBLE_SEGMENTS; ++t)
+    {
+        Shade = t / (LineSize / StepY);
         C.CurX = X - 5.0;
-        Shade = int(255 * (16*Shade*Shade*(Shade-1)*(Shade-1)));
-        Label = string(int(i*ScaleStep));
+        Shade = int(255 * (16 * Shade * Shade * (Shade - 1) * (Shade - 1)));
+        Label = string(int(i * ScaleStep));
+
         C.SetDrawColor(Shade, Shade, Shade, 255);
-        if(i % 10.0 == 0)
+
+        if (i % 10 == 0)
         {
             C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
             C.CurX = X - 80.0;
             C.CurY = Y + LineSize - t * StepY - 4;
             C.DrawText(Label);
         }
-        else if(i % 5.0 == 0)
+        else if (i % 5 == 0)
         {
             C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
             C.CurX = X - 60.0;
@@ -358,24 +440,31 @@ simulated function DrawPitch(Canvas C,
             C.DrawText(Label);
         }
         else
+        {
             C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
-        i = i + 1;
-        if(i < BottomLimit)
+        }
+
+        i += 1;
+
+        if (i < BottomLimit)
         {
             C.CurY = Y + LineSize - t * StepY;
-            C.DrawVertical(X - 15, -2*StepY);
+            C.DrawVertical(X - 15, -2 * StepY);
         }
-        if(i > TopLimit)
+
+        if (i > TopLimit)
         {
             C.CurY = Y + LineSize - t * StepY;
             C.DrawVertical(X - 15, -StepY);
         }
     }
+
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = X + 5.0;
     C.CurY = Y + MiddleOffset;
     C.DrawHorizontal(Y + MiddleOffset, 20.0);
 }
+
 simulated function DrawRangeTable(Canvas C)
 {
     local int i;
@@ -385,7 +474,7 @@ simulated function DrawRangeTable(Canvas C)
     const FirstColumn = 45;
     const SecondColumn = 185;
 
-    if ( RangeTable.Length == 0)
+    if (RangeTable.Length == 0)
     {
         return;
     }
@@ -396,35 +485,34 @@ simulated function DrawRangeTable(Canvas C)
     TableWidth = 280.0;
     TableHeight = (RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
 
-    Y = (C.SizeY - TableHeight)/2;
+    Y = (C.SizeY - TableHeight) / 2;
     X = C.SizeX * 0.75;
-    
 
     // draw table background
     C.SetPos(X, Y);
     C.SetDrawColor(255, 255, 255, 255);
-    C.DrawTile(Texture'engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
+    C.DrawTile(Texture'Engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
 
     // draw table header
     C.SetDrawColor(0, 0, 0, 255);
     C.SetPos(X + SecondColumn + 7, Y + 3);
-    C.DrawText("Range");
+    C.DrawText(RangeString);
     C.SetPos(X + FirstColumn, Y + 3);
-    C.DrawText("Elevation");
+    C.DrawText(ElevationString);
     C.SetPos(X, Y);
-    C.DrawVertical(X + TableWidth/2, TableHeight);
+    C.DrawVertical(X + TableWidth / 2, TableHeight);
     C.SetPos(X, Y);
     Y += YL + 8;
     C.DrawHorizontal(Y, TableWidth);
 
     // draw table rows
-    for (i = 1; i <= RangeTable.Length; ++i)
+    for (i = 0; i < RangeTable.Length; ++i)
     {
         Y += YL;
         C.SetPos(X + FirstColumn, Y);
-        C.DrawText(string(RangeTable[i-1].Range) $ "m");
+        C.DrawText(string(RangeTable[i].Range) $ "m");
         C.SetPos(X + SecondColumn, Y);
-        C.DrawText(string(RangeTable[i-1].Mils) $ "mils");
+        C.DrawText(string(RangeTable[i].Mils) $ "mils");
     }
 }
 
@@ -1765,12 +1853,18 @@ static function StaticPrecache(LevelInfo L)
     {
         default.GunClass.static.StaticPrecache(L);
     }
+
+    if (default.SpottingScopeOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to add extra material properties (no need to call the Super, as it's only in Actor & only caches the Skins array, which a weapon pawn doesn't have)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(GunsightOverlay);
+    Level.AddPrecacheMaterial(SpottingScopeOverlay);
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
@@ -2471,6 +2565,7 @@ defaultproperties
     bCustomAiming=true
     bHasAltFire=false
     BinocPositionIndex=-1 // none by default, so set an invalid position
+    SpottingScopePositionIndex=-1
     WeaponFOV=0.0 // neutralise inherited RO value, so unless overridden in subclass we will use the player's default view FOV (i.e. player's normal FOV when on foot)
     DriveAnim=""
     TPCamDistance=300.0
@@ -2489,4 +2584,7 @@ defaultproperties
     bAllowViewChange=false
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+    RangeString="Range"
+    ElevationString="Elevation"
 }

@@ -26,7 +26,7 @@ var     texture     AltAmmoReloadTexture;        // used to show coaxial MG relo
 var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float       RangePositionX;              // X & Y positioning of range text (0.0 to 1.0)
 var     float       RangePositionY;
-var localized string    RangeText;               // metres or yards (can be localised for other languages)
+var localized string    RangeText;               // metres or yards
 var     bool        bIsPeriscopicGunsight;       // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
@@ -103,6 +103,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         bOnGunsight = true;
         CameraRotation = VehWep.GetBoneRotation(CameraBone);
     }
+    else if (DriverPositionIndex == SpottingScopePositionIndex && !IsInState('ViewTransition'))
+    {
+        // TODO: set the camera location and LOCK the camera pitch to zero, somehow
+        bOnGunsight = true;
+        CameraRotation = VehWep.GetBoneRotation(VehWep.YawBone);
+    }
     // Or if camera is locked during a current transition, use PlayerCameraBone for camera rotation
     else if (bLockCameraDuringTransition && IsInState('ViewTransition'))
     {
@@ -174,8 +180,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local float            SavedOpacity, PosX, PosY, XL, YL, MapX, MapY;
-    local color            SavedColor, WhiteColor;
+    local float            SavedOpacity;
 
     PC = PlayerController(Controller);
 
@@ -192,55 +197,24 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                // Player on the gunsight
-                if (DriverPositionIndex < GunsightPositions)
+                if (DriverPositionIndex < GunsightPositions)   // TODO: this variable (GunsightPositions) is TERRIBLE
                 {
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
-
-                    // Draw range setting in text, if cannon has range settings
-                    if (Cannon != none && Cannon.RangeSettings.Length > 0)
-                    {
-                        C.Style = ERenderStyle.STY_Normal;
-                        SavedColor = C.DrawColor;
-                        WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
-                        C.DrawColor = WhiteColor;
-                        MapX = RangePositionX * C.ClipX;
-                        MapY = RangePositionY * C.ClipY;
-                        C.SetPos(MapX, MapY);
-                        C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-                        C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-                        C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
-                        C.DrawColor = SavedColor;
-                    }
-
-                    // Debug - draw cross on center of screen to check sight overlay is properly centred
-                    if (bDebugSights)
-                    {
-                        PosX = C.SizeX / 2.0;
-                        PosY = C.SizeY / 2.0;
-                        C.SetPos(0.0, 0.0);
-                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        C.DrawVertical(PosX, PosY - 3.0);
-                        C.SetPos(0.0, PosY + 3.0);
-                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        C.DrawVertical(PosX, PosY - 3.0);
-                        C.SetPos(0.0, 0.0);
-                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        C.DrawHorizontal(PosY, PosX - 3.0);
-                        C.SetPos(PosX + 3.0, 0.0);
-                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        C.DrawHorizontal(PosY, PosX - 3.0);
-                    }
                 }
-                // Draw periscope overlay
+                else if (DriverPositionIndex == SpottingScopePositionIndex)
+                {
+                    // Draw the spotting scope overlay
+                    DrawSpottingScopeOverlay(C);
+                }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {
+                    // Draw periscope overlay
                     DrawPeriscopeOverlay(C);
                 }
-                // Draw binoculars overlay
                 else if (DriverPositionIndex == BinocPositionIndex)
                 {
+                    // Draw binoculars overlay
                     DrawBinocsOverlay(C);
                 }
 
@@ -270,7 +244,8 @@ simulated function DrawHUD(Canvas C)
 simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
-    local float XL, YL;
+    local float XL, YL, MapX, MapY, PosX, PosY;
+    local color SavedColor, WhiteColor;
 
     if (GunsightOverlay != none)
     {
@@ -295,6 +270,79 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
+
+        // Draw range setting in text, if cannon has range settings
+        if (Cannon != none && Cannon.RangeSettings.Length > 0)
+        {
+            C.Style = ERenderStyle.STY_Normal;
+            SavedColor = C.DrawColor;
+            WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+            C.DrawColor = WhiteColor;
+            MapX = RangePositionX * C.ClipX;
+            MapY = RangePositionY * C.ClipY;
+            C.SetPos(MapX, MapY);
+            C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+            C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
+            C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+            C.DrawColor = SavedColor;
+        }
+
+        // Debug - draw cross on center of screen to check sight overlay is properly centred
+        if (bDebugSights)
+        {
+            PosX = C.SizeX / 2.0;
+            PosY = C.SizeY / 2.0;
+            C.SetPos(0.0, 0.0);
+            C.DrawVertical(PosX - 1.0, PosY - 3.0);
+            C.DrawVertical(PosX, PosY - 3.0);
+            C.SetPos(0.0, PosY + 3.0);
+            C.DrawVertical(PosX - 1.0, PosY - 3.0);
+            C.DrawVertical(PosX, PosY - 3.0);
+            C.SetPos(0.0, 0.0);
+            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            C.DrawHorizontal(PosY, PosX - 3.0);
+            C.SetPos(PosX + 3.0, 0.0);
+            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            C.DrawHorizontal(PosY, PosX - 3.0);
+        }
+    }
+}
+
+// Similar to DrawGunsightOverlay, except with the pitch and yaw indicators
+simulated function DrawSpottingScopeOverlay(Canvas C)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (SpottingScopeOverlay != none)
+    {
+        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+        TextureSize = float(SpottingScopeOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / SpottingScopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - SpottingScopeOverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - SpottingScopeOverlayCorrectionY;
+
+        // Draw the gunsight overlay
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+
+        DrawRangeTable(C);
+        DrawPitch(C,
+            C.SizeX * 0.27,
+            C.SizeY * 0.5 - 150 + OverlayCorrectionY,
+            300,
+            -89,
+            621,
+            355);
+
+        DrawYaw(C,
+            C.SizeX * 0.5 - 150,
+            C.SizeY * 1.02 + OverlayCorrectionY,
+            300);
     }
 }
 
@@ -659,7 +707,7 @@ simulated state ViewTransition
 // Modified to include a periscope overlay position & to allow for a cannon having more than 1 gunsight position
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
-    return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex < GunsightPositions || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex);
+    return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex < GunsightPositions || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex || PositionIndex == SpottingScopePositionIndex);
 }
 
 // Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards
@@ -1065,6 +1113,14 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
                 BP.StartLocation = BP.Location;
             }
         }
+    }
+}
+
+exec function SetSpottingScopeSize(float NewSize)
+{
+    if (IsDebugModeAllowed())
+    {
+        SpottingScopeSize = NewSize;
     }
 }
 

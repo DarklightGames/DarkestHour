@@ -69,4 +69,9 @@ static final function rotator RDeceleration(float T, rotator A, rotator B)
     return RLinear(Deceleration(T, 0.0, 1.0), A, B);
 }
 
+// Function is periodic
+static final function float Mimi(float T)
+{
+    return 16 * (T ** 2) * ((T - 1) ** 2);
+}
 

@@ -126,7 +126,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         }
     }
 }
-    
+
 
 simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 {
@@ -209,7 +209,7 @@ simulated function DrawHUD(Canvas C)
     local int              SizeX, SizeY, RoundIndex, Traverse;
     local byte             Quotient, Remainder;
     local string           TraverseString;
-    
+
     PC = PlayerController(Controller);
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
@@ -217,7 +217,7 @@ simulated function DrawHUD(Canvas C)
         // Draw HUDOverlay
         HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
         HUDOverlay.SetRotation(PC.CalcViewRotation);
-        
+
         if (PC.myHUD == none || PC.myHUD.bHideHUD)
         {
             return;
@@ -229,7 +229,7 @@ simulated function DrawHUD(Canvas C)
 
         // Get elevation & traverse
         Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = GetYawFromUnrealUnits(VehWep.CurrentAim.Yaw);
+        Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
         TraverseString = "T: ";
 
         if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
@@ -246,7 +246,7 @@ simulated function DrawHUD(Canvas C)
 
             // Draw current round type icon
             RoundIndex = VehWep.GetAmmoIndex();
-    
+
             if (VehWep.HasAmmo(RoundIndex))
             {
                 C.SetDrawColor(255, 255, 255, 255);
@@ -255,9 +255,9 @@ simulated function DrawHUD(Canvas C)
             {
                 C.SetDrawColor(128, 128, 128, 255);
             }
-    
+
             C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
-    
+
             if (RoundIndex == 0)
             {
                 C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
@@ -266,17 +266,17 @@ simulated function DrawHUD(Canvas C)
             {
                 C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
             }
-    
+
             // Draw current round type quantity
             C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-    
+
             if (VehWep.MainAmmoCharge[RoundIndex] < 10)
             {
                 Quotient = VehWep.MainAmmoCharge[RoundIndex];
-    
+
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-    
+
                 C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
                     Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
             }
@@ -284,38 +284,38 @@ simulated function DrawHUD(Canvas C)
             {
                 Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
                 Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
-    
+
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-    
+
                 C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
-    
+
                 SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
                 SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
-    
+
                 C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
             }
-    
+
             // Draw current round type name
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
             C.DrawText(VehWep.ProjectileClass.default.Tag);
-    
+
             // Draw the elevation indicator icon
             C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
             C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-    
+
             HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
             Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
             Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
             C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
             C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
-    
+
             // Draw elevation & traverse text
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
             C.DrawText("E:" @ string(Elevation));
-    
+
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
             C.DrawText(TraverseString);
@@ -324,28 +324,33 @@ simulated function DrawHUD(Canvas C)
             DrawPeriscopeOverlay(C);
             DrawRangeTable(C);
             //C.DrawVertical(300.0, -1000.0);
-            DrawPitch(C,
-                C.SizeX * 0.27, 
-                C.SizeY * 0.33 + OverlayCorrectionY,
-                300,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum,
-                Elevation,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum - DHMortarVehicleWeapon(VehWep).default.ElevationMinimum);
-            DrawYaw(C, 
-                C.SizeX * 0.4, 
-                C.SizeY * 0.93, 
-                300, 
-                GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw),
-                GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw),
-                Traverse,
-                (GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw) - GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw))/2);
-            // C.SetPos(50, 50);
-            // C.DrawText(string(GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxNegativeYaw)));
-            // C.SetPos(50, 75);
-            // C.DrawText(string(GetYawFromUnrealUnits(DHMortarVehicleWeapon(VehWep).default.MaxPositiveYaw)));
+//            DrawPitch(C,
+//                C.SizeX * 0.27,
+//                C.SizeY * 0.33 + OverlayCorrectionY,
+//                300,
+//                ,
+//                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum - );
+            DrawYaw(C,
+                C.SizeX * 0.4,
+                C.SizeY * 0.93,
+                300);
         }
     }
+}
+
+simulated function int GetGunPitch()
+{
+    return DHMortarVehicleWeapon(VehWep).Elevation;
+}
+
+simulated function int GetGunPitchMin()
+{
+    return DHMortarVehicleWeapon(VehWep).default.ElevationMinimum;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return DHMortarVehicleWeapon(VehWep).default.ElevationMaximum;
 }
 
 // New function to draw any textured driver's periscope overlay

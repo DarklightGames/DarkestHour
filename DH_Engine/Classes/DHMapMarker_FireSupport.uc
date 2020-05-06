@@ -42,7 +42,6 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayerReplicationInfo PRI;
-    local DHGameReplicationInfo GRI;
     local DHSquadReplicationInfo SRI;
     local int TeamIndex, SquadIndex;
     local string SquadName;

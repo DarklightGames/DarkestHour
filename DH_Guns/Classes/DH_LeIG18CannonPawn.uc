@@ -5,45 +5,6 @@
 
 class DH_LeIG18CannonPawn extends DHATGunCannonPawn;
 
-simulated function DrawHUD(Canvas C)
-{
-    local float Elevation;
-    local int Traverse;
-
-    super.DrawHUD(C);
-    
-    if(DriverPositionIndex < GunsightPositions)
-    {
-        Elevation = -GetYawFromUnrealUnits(VehWep.CurrentAim.Pitch);
-        Traverse = -GetYawFromUnrealUnits(VehWep.CurrentAim.Yaw);
-
-        Log("VehWep: " @ VehWep);
-        C.SetPos(50, 50);
-        C.DrawText("Elevation: " @ Elevation);
-        C.SetPos(50, 75);
-        C.DrawText("Traverse: " @ Traverse);
-
-        DrawRangeTable(C);
-        DrawPitch(C,
-            C.SizeX * 0.27, 
-            C.SizeY * 0.5 - 150 + OverlayCorrectionY,
-            300,
-            -179,
-            1297,
-            Elevation,
-            1476); // 1476 = (1297+179)
-        
-        DrawYaw(C, 
-            C.SizeX * 0.5 - 150, 
-            C.SizeY * 1.02 + OverlayCorrectionY, 
-            300, 
-            -107,
-            107,
-            Traverse,
-            213);
-    }
-}
-
 defaultproperties
 {
     // TODO: change all the yaw limits etc.

@@ -20,58 +20,29 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-    simulated function DrawHUD(Canvas C)
-{
-    local float Elevation;
-    local int Traverse;
-
-    super.DrawHUD(C);
-    
-    if(DriverPositionIndex < GunsightPositions)
-    {
-        Elevation = -GetYawFromUnrealUnits(VehWep.CurrentAim.Pitch);
-        Traverse = -GetYawFromUnrealUnits(VehWep.CurrentAim.Yaw);
-
-        // Log("VehWep: " @ VehWep);
-        // C.SetPos(50, 50);
-        // C.DrawText("Elevation: " @ Elevation);
-        // C.SetPos(50, 75);
-        // C.DrawText("Traverse: " @ Traverse);
-
-        DrawRangeTable(C);
-        DrawPitch(C,
-            C.SizeX * 0.27, 
-            C.SizeY * 0.5 - 150 + OverlayCorrectionY,
-            300,
-            -89,
-            621,
-            Elevation,
-            355);
-        
-        DrawYaw(C, 
-            C.SizeX * 0.5 - 150, 
-            C.SizeY * 1.02 + OverlayCorrectionY, 
-            300, 
-            -267,
-            533,
-            Traverse,
-            400);
-    }
-}
-
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestCannon'
     // gunsight
-    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)// kneeling
+    // spotting scope
+    DriverPositions(1)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=60.0,bDrawOverlays=true,bExposed=true)
     // kneeling
-    DriverPositions(1)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(2)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // standing
-    DriverPositions(2)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(3)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // binoculars
-    DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
+    DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
+
+    // Spotting Scope Size
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
+    SpottingScopeSize=0.35
+
     UnbuttonedPositionIndex=0
-    RaisedPositionIndex=2
+    RaisedPositionIndex=3
+    BinocPositionIndex=4
+    SpottingScopePositionIndex=1
+
     DriveAnim="crouch_idle_binoc"
     bManualTraverseOnly=true
     bHasAltFire=false
@@ -82,7 +53,7 @@ defaultproperties
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
-    
+
     RangeTable(0)=(Mils=0,Range=115)
     RangeTable(1)=(Mils=25,Range=200)
     RangeTable(2)=(Mils=55,Range=300)
