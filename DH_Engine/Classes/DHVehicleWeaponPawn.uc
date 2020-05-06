@@ -220,9 +220,14 @@ simulated function DrawBinocsOverlay(Canvas C)
 
 simulated function DrawSpottingScopeOverlay(Canvas C)
 {
-    DrawRangeTable(C);
-    DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.5 - 150 + OverlayCorrectionY, 300, -89, 621, 355);
-    DrawYaw(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
+    // draw range table and pitch/yaw indicators once the scope has zoomed in
+    if(!IsInState('ViewTransition'))
+    {
+        DrawRangeTable(C);
+        DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.5 - 150 + OverlayCorrectionY, 300, -89, 621, 355);
+        DrawYaw(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
+
+    }
 }
 
 // These values are for easily grabbing the range and current value of pitch and yaw values.
@@ -289,7 +294,7 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize)
 {
     local int Range, MiddleOffset, StepX, MiddleIndex, ValueIndex;
     local int i, t, LowerIndex, ZeroIndex;
-    local int Alpha;
+    local int Shade;
     local string Label;
     local float Value;
     local int SegmentCount;
@@ -324,36 +329,46 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize)
 
     C.Font = C.TinyFont;
 
+    // Draw a long vertical bar that imitates edge of the indicator
     C.CurX = X;
     C.CurY = Y;
     C.DrawHorizontal(Y, LineSize);
-    C.CurY = Y - 5.0;
 
+    // Start drawing scale ticks on the indicator
     i = LowerIndex;
+    C.CurY = Y - 5.0;
 
     for(t = 0; t <= VISIBLE_SEGMENTS; ++t)
     {
-        Alpha = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_SEGMENTS));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_SEGMENTS));
         Label = string(i);
 
+        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
+        // text labels completly disappear. I propose to change the color instead of alpha channel
+        // because the background is black anyway. - mimi~
+        C.SetDrawColor(Shade, Shade, Shade, 255);
+
         C.CurY = Y - 5.0;
-        C.SetDrawColor(255, 255, 255, Alpha);
+        // 3 is a rough factor to compensate X position of the label with respect to number of letters
         C.CurX = X + t * StepX - Len(Label) * 3;
 
         if (i % 10 == 0)
         {
+            // Draw long vertical tick & label it
             C.DrawVertical(X + t * StepX, -50.0);
             C.CurY = Y - 70.0;
             C.DrawText(Label);
         }
         else if (i % 5 == 0)
         {
+            // Draw middle-sized vertical tick & label it
             C.DrawVertical(X + t * StepX, -30.0);
             C.CurY = Y - 50.0;
             C.DrawText(Label);
         }
         else
         {
+            // Smallest granularity - draw short vertical tick (no label)
             C.DrawVertical(X + t * StepX, -20.0);
         }
 
@@ -373,6 +388,7 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize)
         i += 1;
     }
 
+    // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = Y + 15.0;
     C.CurX = X + MiddleOffset;
