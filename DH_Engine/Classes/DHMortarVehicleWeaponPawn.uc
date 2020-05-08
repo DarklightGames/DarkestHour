@@ -333,7 +333,8 @@ simulated function DrawHUD(Canvas C)
             DrawYaw(C,
                 C.SizeX * 0.4,
                 C.SizeY * 0.93,
-                300);
+                300,
+                4);
         }
     }
 }
