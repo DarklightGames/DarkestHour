@@ -23,7 +23,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'

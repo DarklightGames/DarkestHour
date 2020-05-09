@@ -19,7 +19,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=8.0

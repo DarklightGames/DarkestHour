@@ -17,8 +17,8 @@ defaultproperties
     //Damage
     ImpactDamage=125
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=110.0
-    DamageRadius=250
+    Damage=125.0 //10.2 gr of TNT -- 2m kill radius
+    DamageRadius=600
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.10
     EngineFireChance=0.30
@@ -27,7 +27,7 @@ defaultproperties
     DrawScale=0.75
     bHasTracer=true
     bHasShellTrail=true
-    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
 
     ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'

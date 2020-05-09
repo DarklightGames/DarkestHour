@@ -24,9 +24,9 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
     ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
     ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
     ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'

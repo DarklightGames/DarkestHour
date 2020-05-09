@@ -10,6 +10,6 @@ defaultproperties
 {
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
     TracerHue=64
 }

@@ -77,9 +77,18 @@ simulated function Timer()
 {
     SetPhysics(PHYS_Projectile);
 
+    //Kill the light
+    bDynamicLight = false;
+    LightType = LT_None;
+
     if (SmokeTrail != none)
     {
         SmokeTrail.Destroy();
+    }
+
+    if (ShellTrail != none)
+    {
+        ShellTrail.Destroy();
     }
 
     if (Corona != none)
@@ -133,7 +142,7 @@ defaultproperties
 
     //Effects
     bHasTracer=true
-    bHasSmokeTrail=true
+    bHasSmokeTrail=false
     bHasShellTrail=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'

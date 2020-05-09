@@ -10,7 +10,7 @@ defaultproperties
     Speed=49667.0 //2700 fps or 823 m/s
     MaxSpeed=49667.0
     ShellDiameter=9.0
-    BallisticCoefficient=3.35 //Correct - verified on range at 1000 yards
+    BallisticCoefficient=3.62 //Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=510
@@ -19,7 +19,7 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
     PenetrationMag=1020.0
     HullFireChance=0.35
-    EngineFireChance=0.81
+    EngineFireChance=0.85
 
     //Penetration
     DHPenetrationTable(0)=5.2

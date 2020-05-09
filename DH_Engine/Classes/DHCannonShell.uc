@@ -289,7 +289,7 @@ defaultproperties
     DrawScale=1.5
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
 
@@ -320,7 +320,7 @@ defaultproperties
     ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
     DrawType=DT_StaticMesh
 
-    bNetTemporary=false
+    bNetTemporary=true // false
     bUpdateSimulatedPosition=true
 
     LifeSpan=7.5
