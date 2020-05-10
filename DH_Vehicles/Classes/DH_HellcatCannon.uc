@@ -59,7 +59,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=-4.0
-    AddedPitch=52
+    //AddedPitch=52
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'

@@ -43,7 +43,6 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'
 
-
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
 
@@ -62,7 +61,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=33.0
-    AddedPitch=190//145
+    //AddedPitch=190//145
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'

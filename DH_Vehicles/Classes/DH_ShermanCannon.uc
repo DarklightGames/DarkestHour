@@ -83,7 +83,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=18.0
-    AddedPitch=68
+    //AddedPitch=68
     AltFireOffset=(X=-90.0,Y=-27.5,Z=-1.5)
     AltFireSpawnOffsetX=50.0
 
