@@ -6860,7 +6860,7 @@ defaultproperties
     CorpseStayTimeMax=60
 
     // Sway values
-    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
+    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.33),(InVal=12.0,OutVal=0.25),(InVal=45.0,OutVal=0.33),(InVal=10000000000.0,OutVal=0.5)))
     DHSwayElasticFactor=8.0
     DHSwayDampingFactor=0.51
     BaseSwayYawAcc=600
