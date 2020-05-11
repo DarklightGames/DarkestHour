@@ -64,7 +64,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=10.0
-    //AddedPitch=18
+    AddedPitch=18
     EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
     AltFireOffset=(X=-66.5,Y=8.3,Z=0.0)
     ShakeRotRate=(Z=600.0)
