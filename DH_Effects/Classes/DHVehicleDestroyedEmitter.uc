@@ -7,11 +7,15 @@ class DHVehicleDestroyedEmitter extends Emitter;
 
 defaultproperties
 {
-    AutoDestroy=true
-    bNoDelete=false
-    LifeSpan=8.0
+    AutoDestroy=True
     Style=STY_Masked
+    bUnlit=true
+    bDirectional=True
+    bNoDelete=false
+    RemoteRole=ROLE_SimulatedProxy
+    bNetTemporary=true
     bHardAttach=true
+    LifeSpan = 8
 
     AmbientSound=sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
     SoundRadius=750.0 //experiment
@@ -131,7 +135,6 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=1.600000
         MaxParticles=60
-
         StartLocationOffset=(Z=75.000000)
         InitialParticlesPerSecond=25.000000
         Texture=Texture'Effects_Tex.explosions.fire_quad'
