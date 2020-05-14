@@ -8,5 +8,5 @@ class DH_StuartMountedMGPawn extends DH_ShermanMountedMGPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_StuartMountedMG'
-    FPCamPos=(X=-9.0,Y=0.0,Z=7.5)
+    FPCamPos=(X=-8.0,Y=0.0,Z=7.5)
 }
