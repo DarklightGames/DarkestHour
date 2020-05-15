@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_G43Bullet'
     AmmoClass=class'ROAmmo.G43Ammo'
-    Spread=70.0
+    Spread=60.0
     MaxVerticalRecoilAngle=840
     MaxHorizontalRecoilAngle=280
     FireRate=0.2

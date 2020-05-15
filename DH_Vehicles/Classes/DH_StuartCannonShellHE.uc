@@ -7,8 +7,8 @@ class DH_StuartCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=53291.0
-    MaxSpeed=53291.0
+    Speed=47828.0 // 2600 fps or 793 m/s
+    MaxSpeed=47828.0
     ShellDiameter=3.7
     BallisticCoefficient=0.984 //TODO: double check this
 

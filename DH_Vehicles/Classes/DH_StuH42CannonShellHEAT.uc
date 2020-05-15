@@ -22,7 +22,7 @@ defaultproperties
     //Effects
     DrawScale=1.5
     CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=11.5

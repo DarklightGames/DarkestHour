@@ -24,7 +24,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=4.0

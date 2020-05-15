@@ -7,10 +7,10 @@ class DH_ShermanM4A176WCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=47799.0
-    MaxSpeed=47799.0
+    Speed=47823.0 // 2600 fps or 793 m/s (THIS IS FOR APC)
+    MaxSpeed=47823.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: pls check
+    BallisticCoefficient=3.21 // Correct for APC - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=450

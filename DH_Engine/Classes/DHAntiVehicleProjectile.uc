@@ -45,7 +45,7 @@ var     bool            bHasTracer;
 var     class<Effects>  CoronaClass;             // shell base tracer effect class
 var     Effects         Corona;                  // shell base tracer
 var     bool            bHasShellTrail;
-var     class<Emitter>  TankShellTrailClass;     // shell "streak" emitter effect
+var     class<Emitter>  ShellTrailClass;     // shell "streak" emitter effect
 var     Emitter         ShellTrail;
 var     int             TracerHue;               // allows custom control of ambient light hue
 var     int             TracerSaturation;        // allows custom control of ambient light saturation
@@ -133,7 +133,7 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
     {
-        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail = Spawn(ShellTrailClass, self);
         ShellTrail.SetBase(self);
     }
 }
@@ -155,11 +155,15 @@ simulated function PostNetBeginPlay()
         bDebugBallistics = true;
     }
 
-    if (Level.NetMode != NM_DedicatedServer && bHasTracer && RoundType == RT_APBULLET)
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
         SetDrawType(DT_StaticMesh);
         bOrientToVelocity = true;
-        TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
+
+        if (RoundType == RT_APBULLET)
+        {
+            TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
+        }
 
         if (Level.bDropDetail)
         {
@@ -953,39 +957,6 @@ simulated function DoShakeEffect()
         }
     }
 }
-
-/*
-simulated function VehicleShellShock()
-{
-    local PlayerController PC;
-    local float            Distance, Scale;
-
-    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0)
-    {
-        PC = Level.GetLocalPlayerController();
-
-        if (PC != none && PC.ViewTarget != none)
-        {
-            Distance = VSize(Location - PC.ViewTarget.Location);
-
-            if (Distance < PenetrationMag * 3.0)
-            {
-                Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
-                Scale *= 8.0;
-
-                PC.ShakeView(ShakeRotMag * 10.0, ShakeRotRate * 20.0, ShakeRotTime, ShakeOffsetMag * scale, ShakeOffsetRate, ShakeOffsetTime);
-
-                if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
-                {
-                    Scale = Scale - (Scale * 0.35 - ((Scale * 0.35) * ROPawn(PC.Pawn).GetExposureTo(Location + 50.0 * -Normal(PhysicsVolume.Gravity))));
-                }
-
-                ROPlayer(PC).AddBlur(6.0 * Scale, FMin(1.0, Scale));
-            }
-        }
-    }
-}
-*/
 
 // Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)

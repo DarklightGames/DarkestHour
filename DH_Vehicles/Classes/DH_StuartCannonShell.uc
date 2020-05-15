@@ -7,19 +7,19 @@ class DH_StuartCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53291.0
-    MaxSpeed=53291.0
+    Speed=53346.0 //2900 fps or 884 m/s
+    MaxSpeed=53346.0
     ShellDiameter=3.7
-    bShatterProne=true
-    BallisticCoefficient=0.984 //TODO: double check this
+    BallisticCoefficient=1.52 //Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=250
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
-    HullFireChance=0.15
+    HullFireChance=0.2
     EngineFireChance=0.45
 
     //Effects
+    bShatterProne=true
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'

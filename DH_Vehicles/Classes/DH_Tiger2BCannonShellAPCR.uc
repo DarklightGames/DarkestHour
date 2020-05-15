@@ -21,7 +21,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     bDebugInImperial=false
 

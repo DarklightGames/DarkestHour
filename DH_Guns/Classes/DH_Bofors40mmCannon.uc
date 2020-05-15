@@ -33,9 +33,6 @@ defaultproperties
     Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
 
-    //Fire Effects
-    CannonDustEmitterClass=class'ROEffects.TankCannonDust'
-
     // Turret movement
     RotationsPerSecond=0.138888 // 50 degrees per sec
     PitchUpLimit=16384

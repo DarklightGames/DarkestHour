@@ -7,10 +7,10 @@ class DH_JacksonCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=51480.0 //2800 fps or 853 m/s
-    MaxSpeed=51480.0
+    Speed=51507.0 //2800 fps or 853 m/s
+    MaxSpeed=51507.0
     ShellDiameter=9.0
-    BallisticCoefficient=3.85 //Correct - verified on range at 1000 yards
+    BallisticCoefficient=3.95 //Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=700

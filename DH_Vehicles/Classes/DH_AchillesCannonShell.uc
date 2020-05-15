@@ -7,8 +7,8 @@ class DH_AchillesCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53351.0
-    MaxSpeed=53351.0
+    Speed=53346.0 //2900 fps or 884 m/s
+    MaxSpeed=53346.0
     ShellDiameter=7.62
     BallisticCoefficient=2.45
 

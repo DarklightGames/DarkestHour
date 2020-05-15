@@ -7,10 +7,10 @@ class DH_GreyhoundCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53291.0
-    MaxSpeed=53291.0
+    Speed=53346.0 //2900 fps or 884 m/s
+    MaxSpeed=53346.0
     ShellDiameter=3.7
-    BallisticCoefficient=0.984 //TODO: find correct BC
+    BallisticCoefficient=1.52 //Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=250
@@ -20,8 +20,8 @@ defaultproperties
 
     //Effects
     bShatterProne=true
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Sound

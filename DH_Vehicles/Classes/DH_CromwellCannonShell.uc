@@ -7,10 +7,10 @@ class DH_CromwellCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=37358.0 //TODO: pls, check
-    MaxSpeed=37358.0
+    Speed=37342.0 // 2030 fps or 619 m/s
+    MaxSpeed=37342.0
     ShellDiameter=7.5
-    BallisticCoefficient=1.735 //TODO: double check with Sherman 75
+    BallisticCoefficient=2.98 // Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=540
@@ -31,7 +31,7 @@ defaultproperties
     DHPenetrationTable(9)=5.3
     DHPenetrationTable(10)=4.7
 
-    //Gunsight adjustment
+    //Gunsight adjustment - TODO: Recalibrate to new B/C
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=200,RangeValue=36.0)
     MechanicalRanges(2)=(Range=400,RangeValue=68.0)

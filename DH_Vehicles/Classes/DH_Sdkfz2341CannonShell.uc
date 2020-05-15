@@ -20,13 +20,16 @@ defaultproperties
     HullFireChance=0.15
     EngineFireChance=0.35
 
+    Damage=50 //no explosive filler in 20mm PzGr -- this damage is just to simulate some splinters flying
+    DamageRadius=120
+
     //Effects
     DrawScale=0.75
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    TankShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
 
     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
     ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
     ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
     ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'

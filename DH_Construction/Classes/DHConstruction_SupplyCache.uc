@@ -14,6 +14,29 @@ var class<DHConstructionSupplyAttachment> SupplyAttachmentClass;
 var() int InitialSupplyCount;
 var() int BonusSupplyGenerationRate;
 
+var class<DHMapIconAttachment> MapIconAttachmentClass;
+var DHMapIconAttachment        MapIconAttachment;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority && MapIconAttachmentClass != none)
+    {
+        MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.SetBase(self);
+            MapIconAttachment.SetTeamIndex(GetTeamIndex());
+        }
+        else
+        {
+            MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+        }
+    }
+}
+
 simulated function OnConstructed()
 {
     if (Role == ROLE_Authority)
@@ -22,17 +45,19 @@ simulated function OnConstructed()
         // We hide the supply attachment since we are going to handle the visualization through the the construction.
         SupplyAttachment = Spawn(SupplyAttachmentClass, self);
 
-        if (SupplyAttachment == none)
+        if (SupplyAttachment != none)
+        {
+            SupplyAttachment.SetBase(self);
+            SupplyAttachment.SetTeamIndex(GetTeamIndex());
+            SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
+            SupplyAttachment.SetInitialSupply(InitialSupplyCount);
+            SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
+            SupplyAttachment.bHidden = true;
+        }
+        else
         {
             Error("Failed to spawn supply attachment!");
         }
-
-        SupplyAttachment.SetBase(self);
-        SupplyAttachment.SetTeamIndex(GetTeamIndex());
-        SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
-        SupplyAttachment.SetInitialSupply(InitialSupplyCount);
-        SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
-        SupplyAttachment.bHidden = true;
     }
 }
 
@@ -43,6 +68,11 @@ simulated function Destroyed()
     if (SupplyAttachment != none)
     {
         SupplyAttachment.Destroy();
+    }
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
     }
 }
 
@@ -59,9 +89,17 @@ simulated function OnTeamIndexChanged()
 {
     super.OnTeamIndexChanged();
 
-    if (Role == ROLE_Authority && SupplyAttachment != none)
+    if (Role == ROLE_Authority)
     {
-        SupplyAttachment.SetTeamIndex(GetTeamIndex());
+        if (SupplyAttachment != none)
+        {
+            SupplyAttachment.SetTeamIndex(GetTeamIndex());
+        }
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.SetTeamIndex(GetTeamIndex());
+        }
     }
 }
 
@@ -124,6 +162,7 @@ defaultproperties
     bCanBeTornDownByFriendlies=false
     bCanBeTornDownWhenConstructed=true
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"
 
     // Essentially we are just making this a satchel explosion
@@ -136,4 +175,3 @@ defaultproperties
 
     GroupClass=class'DHConstructionGroup_Logistics'
 }
-
