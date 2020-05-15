@@ -26,6 +26,8 @@ defaultproperties
     CustomPitchUpLimit=3500
     CustomPitchDownLimit=63500
 
+    WeaponAttachOffset=(X=0.0,Y=0.0,Z=-1.0) //need to lower the turret a bit due to gap
+
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     InitialPrimaryAmmo=63
@@ -37,7 +39,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
-    WeaponFireOffset=-8.0 // originally zero but flash was too far out in front of the muzzle
+    WeaponFireOffset=10.0
     AmbientEffectEmitterClass=class'VehicleMGEmitterBA'
     FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
