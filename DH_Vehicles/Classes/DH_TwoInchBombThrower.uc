@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_TwoInchBombThrower extends DHVehicleSmokeLauncher; // British 2 inch bomb thrower, mounted in vehicles as a smoke launcher

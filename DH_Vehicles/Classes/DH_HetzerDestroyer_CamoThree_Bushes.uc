@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_HetzerDestroyer_CamoThree_Bushes extends DH_HetzerDestroyer_CamoThree;
