@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_G41Bullet'
     AmmoClass=class'ROAmmo.G41Ammo'
     FireRate=0.28
-    Spread=70.0
+    Spread=60.0
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=110
     FireSounds(0)=SoundGroup'DH_WeaponSounds.g41.g41_fire01'
