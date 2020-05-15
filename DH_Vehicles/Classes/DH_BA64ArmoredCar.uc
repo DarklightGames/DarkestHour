@@ -55,7 +55,7 @@ defaultproperties
     LeftArmor(0)=(Thickness=0.9,Slope=-30.0,MaxRelativeHeight=3.0,LocationName="lower")
     LeftArmor(1)=(Thickness=0.9,Slope=30.0,LocationName="upper")
 
-    RearArmor(0)=(Thickness=0.6,Slope=35.0,MaxRelativeHeight=-11.0,LocationName="lower")
+    RearArmor(0)=(Thickness=0.6,Slope=-35.0,MaxRelativeHeight=-11.0,LocationName="lower")
     RearArmor(1)=(Thickness=0.9,Slope=30.0,LocationName="upper")
 
     FrontLeftAngle=338.0
