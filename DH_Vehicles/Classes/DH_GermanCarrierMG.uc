@@ -3,28 +3,24 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_VehMG34_Noshield extends DHVehicleMG;
+class DH_GermanCarrierMG extends DHVehicleMG;
 
 defaultproperties
 {
     // MG mesh
-    Mesh=SkeletalMesh'DH_VehMG34_Noshield.halftrack_gun_noshield'
-	//Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' 
-    Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
-    bMatchSkinToVehicle=false
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll'
+    Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    GunnerAttachmentBone="com_attachment"
-
+    GunnerAttachmentBone="loader_player"
 
     // Movement
+    bLimitYaw = true
+    YawBone="mg_yaw"
+    PitchBone="mg_yaw"
     RotationsPerSecond=0.5
-    YawBone="Gun_protection"
-    MaxPositiveYaw=10000
-    MaxNegativeYaw=-10000
-    PitchBone="Gun"
-    CustomPitchUpLimit=2000
-    CustomPitchDownLimit=63000
+    MaxPositiveYaw=8500
+    MaxNegativeYaw=-8500
+    CustomPitchUpLimit=4000
+    CustomPitchDownLimit=60000
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
@@ -35,8 +31,7 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    WeaponFireAttachmentBone="Gun"
-    WeaponFireOffset=40.0
+    WeaponFireAttachmentBone="tip"
     AmbientEffectEmitterClass=class'VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'

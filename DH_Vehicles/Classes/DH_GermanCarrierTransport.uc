@@ -5,6 +5,20 @@
 
 class DH_GermanCarrierTransport extends DHVehicle;  //to do: destroyed texture
 
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin.Material1 = Skins[0];
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.FallbackMaterial = Skins[0];
+    DestroyedSkin.CombineOperation = CO_Multiply;
+    DestroyedMeshSkins[0] = DestroyedSkin;
+
+    super.DestroyAppearance();
+}
+
 defaultproperties
 {
     // Vehicle properties
@@ -31,7 +45,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_VehMG34_NoshieldPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GermanCarrierMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VUC_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_1",DriveAnim="VUC_rider1_idle")
@@ -166,7 +180,8 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.LF_Steering'
+
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -175,7 +190,8 @@ defaultproperties
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.RF_Steering'
+
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -185,7 +201,8 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.LR_Steering'
+
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -194,7 +211,7 @@ defaultproperties
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GermanCarrierTransport.RR_Steering'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -215,5 +232,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_BrenCarrierTransport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.DH_GermanCarrierTransport.KParams0'
 }
