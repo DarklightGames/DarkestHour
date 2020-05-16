@@ -11,9 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'axis_Panzer4F2_anm.Panzer4F2_turret_ext'
     skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
     skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-	HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
-	bUseHighDetailOverlayIndex=true
-	HighDetailOverlayIndex=1
+    HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=1
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
 
 
@@ -39,16 +39,16 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
+    ProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShellHEAT'
 
     ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.34"
-    nProjectileDescriptions(2)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Gr.38 Hl/B"
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=16

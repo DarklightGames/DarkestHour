@@ -24,17 +24,17 @@ defaultproperties
     bDebugInImperial=false
 
     //Penetration
-    DHPenetrationTable(0)=10.0
-    DHPenetrationTable(1)=10.0
-    DHPenetrationTable(2)=10.0
-    DHPenetrationTable(3)=10.0
-    DHPenetrationTable(4)=10.0
-    DHPenetrationTable(5)=10.0
-    DHPenetrationTable(6)=10.0
-    DHPenetrationTable(7)=10.0
-    DHPenetrationTable(8)=10.0
-    DHPenetrationTable(9)=10.0
-    DHPenetrationTable(10)=10.0
+    DHPenetrationTable(0)=11.5
+    DHPenetrationTable(1)=11.5
+    DHPenetrationTable(2)=11.5
+    DHPenetrationTable(3)=11.5
+    DHPenetrationTable(4)=11.5
+    DHPenetrationTable(5)=11.5
+    DHPenetrationTable(6)=11.5
+    DHPenetrationTable(7)=11.5
+    DHPenetrationTable(8)=11.5
+    DHPenetrationTable(9)=11.5
+    DHPenetrationTable(10)=11.5
 
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)
