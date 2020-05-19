@@ -21,7 +21,7 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-    VehicleNameString="T-5 'Panther' mod.G"
+    VehicleNameString="T-V 'Pantera' mod.G"
     VehicleTeam=1
 
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_allied_ext' // allied capture panther, should be usable to both red army and western allies because both seemed to use similar white stars

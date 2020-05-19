@@ -22,7 +22,7 @@ simulated event DestroyAppearance()
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="T-4 mod.G"
+    VehicleNameString="T-IV mod.G"
     ReinforcementCost=4
     VehicleTeam=1
 
