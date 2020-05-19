@@ -8,14 +8,14 @@ class DH_PanzerIVGEarlyCannon extends DHVehicleCannon;
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'axis_Panzer4F2_anm.Panzer4F2_turret_ext'
-    skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' //hide the turret schurzen
+    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
+    HighDetailOverlayIndex=2
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
-
 
     // Turret armor
     bHasAddedSideArmor=true

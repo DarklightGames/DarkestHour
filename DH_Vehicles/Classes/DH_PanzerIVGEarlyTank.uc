@@ -61,9 +61,9 @@ defaultproperties
     TreadHitMaxHeight=14.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Panzer4F2_Destroyed'
-    DestroyedMeshSkins(0)=Texture'axis_destroyed_vehicles_tex.Panzer4F2.Panzer4F2_Camo_Destroyed'
-    //DestroyedMeshSkins(2)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    DestroyedMeshSkins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' //hide the turret schurzen
 
     // Exit
     ExitPositions(0)=(X=91.0,Y=-38.0,Z=110.0)  // driver
@@ -90,9 +90,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer4F1_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4g_body'
+    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F2_turret_rot'
+    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F2_turret_look'
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.71
@@ -106,7 +106,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g' //TODO: need proper spawn image
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
