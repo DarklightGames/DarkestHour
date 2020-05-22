@@ -90,7 +90,7 @@ var float   EngineFireChance;
 
 // Deflection
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
-var     float           DampenFactor;
+var     float           DampenFactor;               // the smaller the number, the less the projectile will move after deflection
 var     float           DampenFactorParallel;
 
 // Impact sounds
@@ -942,8 +942,11 @@ simulated function DoShakeEffect()
 
             if (Distance < PenetrationMag * 3.0)
             {
+
+                PC.PlaySound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
+
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
-                //Scale *= BlurEffectScalar;
+                Scale *= BlurEffectScalar;
 
                 PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
 
