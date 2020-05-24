@@ -25,7 +25,7 @@ defaultproperties
     DrawScale=1.5
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'

@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DHTankShellTrail_YellowOrange extends Emitter;
-
+class DHShellTrail_YellowOrange extends Emitter;
 
 defaultproperties
 {

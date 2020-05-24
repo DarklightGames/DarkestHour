@@ -289,7 +289,7 @@ defaultproperties
     DrawScale=1.5
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
-    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Red'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
 

@@ -26,7 +26,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellTrailClass=class'DH_Effects.DHTankShellTrail_Green'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
 
     //Penetration
     //left it as it was on zis3

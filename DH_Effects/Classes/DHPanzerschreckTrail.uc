@@ -5,7 +5,6 @@
 
 class DHPanzerschreckTrail extends Emitter;
 
-
 defaultproperties
 {
     AutoDestroy=true
