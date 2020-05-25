@@ -13,9 +13,8 @@ defaultproperties
     ReinforcementCost=3
     VehicleMass=7.0
 
-
     // Hull mesh
-    Mesh=Mesh'allies_ahz_bt7_anm.bt7_body_ext'
+    Mesh=Mesh'DH_BT7_anm.bt7_body_ext'
     Skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
     Skins(1)=Texture'allies_ahz_vehicles_tex.Treads.bt7_treads'
     Skins(2)=Texture'allies_ahz_vehicles_tex.Treads.bt7_treads'
@@ -34,21 +33,16 @@ defaultproperties
     PassengerPawns(3)=(AttachBone=passenger_04,DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    InitialPositionIndex=0
-    UnbuttonedPositionIndex=1
+    InitialPositionIndex=1
+    UnbuttonedPositionIndex=2
     DriverAttachmentBone=driver_attachment
-    DriverPositions(0)=(PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_body_int',DriverTransitionAnim=none,TransitionUpAnim=Overlay_Out,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true,ViewFOV=53)
-    DriverPositions(1)=(PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_close,TransitionUpAnim=driver_hatch_open,TransitionDownAnim=Overlay_In,ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=false,ViewFOV=85)
-    DriverPositions(2)=(PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=2730,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bExposed=true,ViewFOV=85)
+    DriverPositions(0)=(PositionMesh=Mesh'DH_BT7_anm.BT7_body_int',DriverTransitionAnim=none,TransitionUpAnim=Overlay_Out,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=Mesh'DH_BT7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_close,TransitionUpAnim=driver_hatch_open,TransitionDownAnim=Overlay_In,ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=false)
+    DriverPositions(2)=(PositionMesh=Mesh'DH_BT7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=2730,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bExposed=true)
 
-    FPCamPos=(X=0,Y=0,Z=0)
-    FPCamViewOffset=(X=0,Y=0,Z=0)
-    bFPNoZFromCameraPitch=True
-    TPCamLookat=(X=-50,Y=0,Z=0)
-    TPCamWorldOffset=(X=0,Y=0,Z=250)
-    TPCamDistance=600
     DrivePos=(X=35,Y=0,Z=-5)
 
+    //Driver's hatch overlay
     HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
     HUDOverlayFOV=85.0
 
@@ -79,14 +73,14 @@ defaultproperties
     Health=375
     HealthMax=375.0
     EngineHealth=200
-    VehHitpoints(0)=(PointOffset=(X=-73.0,Z=10.0)) // engine
+    VehHitpoints(0)=(PointRadius=28.0,PointOffset=(X=-73.0,Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    TreadHitMaxHeight=59.0
-    TreadDamageThreshold=0.5
-    DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
-    FireAttachBone="Player_Driver"
+    TreadHitMaxHeight=-3.25
+    TreadDamageThreshold=0.15
+    DamagedEffectOffset=(X=-78.0,Y=0.0,Z=25.0)
+    FireAttachBone="turret_placement"
 
     DestroyedVehicleMesh=StaticMesh'allies_ahz_vehicles_stc.BT7_destroyed'
 
@@ -122,8 +116,10 @@ defaultproperties
     VehicleHudImage=Texture 'InterfaceArt_ahz_tex.Tank_Hud.BT7_body'
     VehicleHudTurret=TexRotator'InterfaceArt_ahz_tex.Tank_Hud.BT7_turret_rot'
     VehicleHudTurretLook=TexRotator'InterfaceArt_ahz_tex.Tank_Hud.BT7_turret_look'
-
-
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.63
+    VehicleHudTreadsPosY=0.52
+    VehicleHudTreadsScale=0.55     //size of tank on HUD
     VehicleHudEngineX=0.511
     VehicleHudEngineY=0.66
     VehicleHudOccupantsX(0)=0.50   //horizontal, driver            X = Left/Right
@@ -217,5 +213,4 @@ defaultproperties
          WheelRadius=33.000000
      End Object
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_BT7Tank.Right_Drive_Wheel'
-
 }

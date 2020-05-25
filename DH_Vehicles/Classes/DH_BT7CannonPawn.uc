@@ -7,27 +7,37 @@ class DH_BT7CannonPawn extends DHSovietCannonPawn;
 
 defaultproperties
 {
+    //Gun Class
     GunClass=class'DH_Vehicles.DH_BT7Cannon'
-  	DriverPositions(0)=(ViewLocation=(X=55,Y=-10,Z=1),ViewFOV=34,PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_turret_int',DriverTransitionAnim=VPanzer4_com_close,TransitionUpAnim=com_open,ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)
-	DriverPositions(1)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=85,PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_turret_int',DriverTransitionAnim=VT3476_com_open,TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=true)
-	DriverPositions(2)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=20,PositionMesh=Mesh'allies_ahz_bt7_anm.BT7_turret_int',DriverTransitionAnim=none,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
 
+    //Driver's positions and anims
+    DriverPositions(0)=(ViewLocation=(X=8,Y=-8,Z=5),ViewFOV=30,PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)
+    DriverPositions(1)=(ViewLocation=(X=25,Y=0,Z=18),PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim=VPanther_driver_close,TransitionUpAnim=com_open,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
 
-    UnbuttonedPositionIndex=1
-    BinocPositionIndex=2
+    DriverPositions(2)=(PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim=VPanther_driver_open,TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=true)
+    DriverPositions(3)=(ViewFOV=12.0,PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+
+    DrivePos=(X=10.0,Y=3.0,Z=-10.0)
+    DriveAnim="VPanther_driver_idle_close"
+    bLockCameraDuringTransition=true
+
+    PeriscopePositionIndex=1
+    UnbuttonedPositionIndex=2
+    BinocPositionIndex=3
+
+    //Periscope
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight' //emulating the PT4-7 periscope 2.5x 26' FOV
+    PeriscopeSize=0.76
 
     bManualTraverseOnly=true
 
-    DriveAnim=VPanzer4_com_idle_close  
-    bLockCameraDuringTransition=true 
+    //Gunsight
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background'
     CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
-    GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
+    GunsightSize=0.5// 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+
+    //HUD
     AmmoShellTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count
     AmmoShellReloadTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell_reload'
-	
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
 }
