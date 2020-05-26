@@ -30,7 +30,7 @@ defaultproperties
     RearLeftAngle=198.0
 
     // Turret movement
-    ManualRotationsPerSecond=0.04
+    ManualRotationsPerSecond=0.0256 // ~ 38 seconds for full rotation
     CustomPitchUpLimit=4551 // +25/-8 degrees
     CustomPitchDownLimit=64079
 

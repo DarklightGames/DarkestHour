@@ -40,22 +40,24 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=Mesh'DH_BT7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_close,TransitionUpAnim=driver_hatch_open,TransitionDownAnim=Overlay_In,ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=false)
     DriverPositions(2)=(PositionMesh=Mesh'DH_BT7_anm.BT7_body_int',DriverTransitionAnim=VT60_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=2730,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bExposed=true)
 
+    FPCamPos=(X=4.0,Y=0,Z=0)
     DrivePos=(X=35,Y=0,Z=-5)
 
     //Driver's hatch overlay
-    HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
-    HUDOverlayFOV=85.0
+    HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
+    //HUDOverlayOffset=(X=2.0)
+    HUDOverlayFOV=90.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=2.0,Slope=5.0,MaxRelativeHeight=-21.5,LocationName="lower")
-    FrontArmor(1)=(Thickness=1.5,Slope=60.0,MaxRelativeHeight=0.0,LocationName="glacis")
-    FrontArmor(2)=(Thickness=2.0,Slope=18.0,LocationName="driver's plate")
+    FrontArmor(0)=(Thickness=2.0,Slope=0.0,MaxRelativeHeight=-21.5,LocationName="lower nose") // the nose is rounded, so we do it in two parts - one flat and one slightly sloped
+    FrontArmor(1)=(Thickness=2.0,Slope=10.0,MaxRelativeHeight=-11.0,LocationName="upper nose")
+    FrontArmor(2)=(Thickness=1.5,Slope=60.0,MaxRelativeHeight=0.0,LocationName="glacis")
+    FrontArmor(3)=(Thickness=2.0,Slope=18.0,MaxRelativeHeight=0.0,LocationName="driver's plate")
     RightArmor(0)=(Thickness=1.5,Slope=0.0,LocationName="lower")
-    //RightArmor(1)=(Thickness=4.5,Slope=40.0,LocationName="upper")
     LeftArmor(0)=(Thickness=1.5,Slope=0.0,LocationName="lower")
-    //LeftArmor(1)=(Thickness=4.5,Slope=40.0,LocationName="upper")
-    RearArmor(0)=(Thickness=1.3,Slope=-10.0,MaxRelativeHeight=7.7,LocationName="lower")
-    RearArmor(1)=(Thickness=1.0,Slope=55.0,LocationName="upper")
+    RearArmor(0)=(Thickness=1.3,Slope=-58.0,MaxRelativeHeight=-30.0,LocationName="lower")
+    RearArmor(1)=(Thickness=1.3,Slope=-10.0,MaxRelativeHeight=7.7,LocationName="middle")
+    RearArmor(2)=(Thickness=1.0,Slope=55.0,LocationName="upper")
 
     FrontLeftAngle=330.0
     FrontRightAngle=30.0
@@ -80,7 +82,7 @@ defaultproperties
     TreadHitMaxHeight=-3.25
     TreadDamageThreshold=0.15
     DamagedEffectOffset=(X=-78.0,Y=0.0,Z=25.0)
-    FireAttachBone="turret_placement"
+    FireAttachBone="turret_placement" // we don't need a driver hatch fire since the tank is so tiny. Just spawn a fire right in the middle!
 
     DestroyedVehicleMesh=StaticMesh'allies_ahz_vehicles_stc.BT7_destroyed'
 
