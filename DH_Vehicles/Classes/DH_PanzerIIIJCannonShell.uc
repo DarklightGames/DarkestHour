@@ -22,23 +22,20 @@ defaultproperties
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
 
-	
-
     //Penetration
-	//Approximate because german penetration table only have values for 30 degrees slope, so i had to make a proportion
-    DHPenetrationTable(0)=7.6
-    DHPenetrationTable(1)=7.1
-    DHPenetrationTable(2)=6.3
-    DHPenetrationTable(3)=5.6
-    DHPenetrationTable(4)=5.0
-    DHPenetrationTable(5)=4.4
-    DHPenetrationTable(6)=4.0
-    DHPenetrationTable(7)=3.4
-    DHPenetrationTable(8)=2.8
-    DHPenetrationTable(9)=2.2
-    DHPenetrationTable(10)=1.6
+    DHPenetrationTable(0)=7.3 //100
+    DHPenetrationTable(1)=6.7 //250
+    DHPenetrationTable(2)=5.9 //500
+    DHPenetrationTable(3)=5.1 //750
+    DHPenetrationTable(4)=4.5 //1000
+    DHPenetrationTable(5)=3.9 //1250
+    DHPenetrationTable(6)=3.4 //1500
+    DHPenetrationTable(7)=3.0 //1750
+    DHPenetrationTable(8)=2.6 //2000
+    DHPenetrationTable(9)=2.0 //2500
+    DHPenetrationTable(10)=1.5//3000
 
-  	//below is very approximate, i just added 20% above ausf L values
+    //below is very approximate, i just added 20% above ausf L values
 
     MechanicalRanges(1)=(Range=100,RangeValue=9.6)
     MechanicalRanges(2)=(Range=200,RangeValue=22.0)

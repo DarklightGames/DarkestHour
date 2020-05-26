@@ -92,8 +92,6 @@ defaultproperties
     RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
 
     // Visual effects
-    LeftTreadIndex=2
-    RightTreadIndex=3
     TreadVelocityScale=98.0
     WheelRotationScale=48750.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-175.0,Y=-52.0,Z=55.0),ExhaustRotation=(Pitch=22000))
@@ -101,9 +99,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3n_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3l_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3l_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3j_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3j_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3j_turret_look'
     VehicleHudOccupantsX(3)=0.375
     VehicleHudOccupantsY(3)=0.7
     VehicleHudOccupantsX(4)=0.45
