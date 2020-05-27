@@ -245,6 +245,8 @@ defaultproperties
     ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
 
+    ImpactSound=Sound'DH_WeaponSounds.satchel.satcheldrops'
+
     BlurTime=6.0
     BlurEffectScalar=2.1
     ShakeRotMag=(X=0.0,Y=0.0,Z=300.0)
