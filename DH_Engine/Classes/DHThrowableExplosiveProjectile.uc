@@ -713,55 +713,46 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
-            ImpactSound = ImpactSound;
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
-            DampenFactorParallel = 0.0;
-            ImpactSound = ImpactSound;
+            DampenFactorParallel = 0.0;;
             break;
 
         case EST_Water:
@@ -773,7 +764,6 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
-            ImpactSound = ImpactSound;
             break;
     }
 }
