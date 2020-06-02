@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -364,6 +364,17 @@ event Opened(GUIComponent Sender)
                     PlayerOwner().Player.ConfiguredInternetSpeed = 10000;
                     PlayerOwner().ConsoleCommand("NetSpeed" @ 10000);
                 }
+            }
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
+        {
+            Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
+
+            if (PlayerOwner().ConsoleCommand("get IpDrv.TcpNetDriver KeepAliveTime") != "0.004")
+            {
+                PlayerOwner().ConsoleCommand("set IpDrv.TcpNetDriver KeepAliveTime 0.004");
+                PlayerOwner().SaveConfig();
             }
         }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_50CalVehicleBullet extends DHBullet_ArmorPiercing;
@@ -21,7 +21,7 @@ defaultproperties
 
     ShellDiameter=1.27
     BallisticCoefficient=0.65 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
-    Damage=125.0 // same as PTRD, normal MG and rifle bullets are 115
+    Damage=150.0 // same as PTRD, normal MG and rifle bullets are 115
     MyDamageType=class'DH_Vehicles.DH_50CalDamType'
     Speed=53268.0 // 880 m/s
     MaxSpeed=53268.0

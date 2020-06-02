@@ -1,13 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JacksonCannon_Early extends DH_JacksonCannon;
 
 defaultproperties
 {
+    // Turret mesh
     Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
+
+    // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'
@@ -22,5 +25,7 @@ defaultproperties
     InitialSecondaryAmmo=12
     MaxPrimaryAmmo=25
     MaxSecondaryAmmo=13
+
+    // Weapon fire
     WeaponFireOffset=16.5
 }

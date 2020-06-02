@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_IS2CannonShell extends DHSovietCannonShell;
@@ -13,10 +13,12 @@ defaultproperties
     BallisticCoefficient=2.3
 
     //Damage
-    ImpactDamage=900
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    ImpactDamage=1800
     HullFireChance=0.55
     EngineFireChance=1.0
+
+    //Effects
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     //Penetration - BR-471 (uncapped)
     DHPenetrationTable(0)=17.4  // 100m

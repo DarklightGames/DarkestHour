@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_TigerCannonShellHE extends DHCannonShellHE;
@@ -23,6 +23,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
 
     bDebugInImperial=false
 

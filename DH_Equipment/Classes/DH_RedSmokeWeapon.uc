@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_RedSmokeWeapon extends DHExplosiveWeapon;
@@ -23,14 +23,25 @@ function bool CanDeadThrow()
 
 defaultproperties
 {
-    ItemName="M16 Red Smoke Grenade"
+    ItemName="M16 Signal Grenade"
     FireModeClass(0)=class'DH_Equipment.DH_RedSmokeFire'
     FireModeClass(1)=class'DH_Equipment.DH_RedSmokeTossFire'
     AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
     PickupClass=class'DH_Equipment.DH_RedSmokePickup'
-    Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
+    //Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
+
+    Mesh=SkeletalMesh'DH_M8Grenade_1st.M8'
+    Skins(1)=Texture'DH_M8Grenade_tex.m16.M16red'
+
+    HandNum=0
+    SleeveNum=2
 
     InventoryGroup=4
     GroupOffset=3
     Priority=1
+
+    bHasReleaseLever=true
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseVolume=1.0
+    LeverReleaseRadius=200.0
 }

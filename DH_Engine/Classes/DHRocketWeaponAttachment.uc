@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHRocketWeaponAttachment extends DHWeaponAttachment
@@ -14,6 +14,11 @@ var     Emitter         mExhFlash3rd;
 // Emptied out to avoid spawning mMuzFlash3rd as 3rd person effects are handled differently (& barrel steam emitter isn't relevant to rocket weapon)
 simulated function PostBeginPlay()
 {
+    if (mMuzFlashClass != None)
+    {
+        mMuzFlash3rd = Spawn(mMuzFlashClass);
+        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+    }
 }
 
 // Modified because the 3rd person effects are handled differently for rocket weapons
@@ -38,10 +43,9 @@ simulated event ThirdPersonEffects()
 
         WeaponLight();
 
-        if (mMuzFlash3rd == none && mMuzFlashClass != none && MuzzleBoneName != '')
+        if (mMuzFlash3rd != none)
         {
-            mMuzFlash3rd = Spawn(mMuzFlashClass);
-            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd.Trigger(self, none);
         }
 
         if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')

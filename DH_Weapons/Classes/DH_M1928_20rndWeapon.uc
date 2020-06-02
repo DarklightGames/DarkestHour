@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_M1928_20rndWeapon extends DHAutoWeapon;
@@ -8,7 +8,7 @@ class DH_M1928_20rndWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1928 Thompson /20rnd"
-	SwayModifyFactor=0.85 // +0.05 
+    SwayModifyFactor=0.85 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_M1928_20rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1928_20rndAttachment'

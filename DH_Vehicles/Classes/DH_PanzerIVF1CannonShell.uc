@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIVF1CannonShell extends DHGermanCannonShell;
@@ -17,6 +17,8 @@ defaultproperties
     HullFireChance=0.45
     EngineFireChance=0.85
 
+    bDebugInImperial=false
+
     //Penetration
     DHPenetrationTable(0)=5.4
     DHPenetrationTable(1)=5.3
@@ -29,8 +31,6 @@ defaultproperties
     DHPenetrationTable(8)=3.8
     DHPenetrationTable(9)=3.5
     DHPenetrationTable(10)=3.2
-
-    bDebugInImperial=false
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_RPG43GrenadeAmmo extends DHAmmunition;
@@ -8,6 +8,6 @@ class DH_RPG43GrenadeAmmo extends DHAmmunition;
 defaultproperties
 {
     MaxAmmo=2
-    InitialAmount=2
+    InitialAmount=1
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_ammo'
 }

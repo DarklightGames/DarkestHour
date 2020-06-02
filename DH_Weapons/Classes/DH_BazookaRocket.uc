@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_BazookaRocket extends DHRocketProjectile;
@@ -11,6 +11,7 @@ defaultproperties
     MaxSpeed=4967.0
     BallisticCoefficient=0.0475 //guestimate
     ImpactDamage=575
+    DamageRadius=400.0
     ShellImpactDamage=class'DH_Weapons.DH_BazookaImpactDamType'
 
     MyDamageType=class'DH_Weapons.DH_BazookaDamType'

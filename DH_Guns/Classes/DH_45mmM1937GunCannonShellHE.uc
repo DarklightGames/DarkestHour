@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_45mmM1937GunCannonShellHE extends DHCannonShellHE;
@@ -33,6 +33,8 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+
+    //Sound
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
 

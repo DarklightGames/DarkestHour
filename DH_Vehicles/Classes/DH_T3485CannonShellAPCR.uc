@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_T3485CannonShellAPCR extends DHCannonShellAPDS;
@@ -20,8 +20,8 @@ defaultproperties
     EngineFireChance=0.65
 
     //Effects
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=17.5 // 100m

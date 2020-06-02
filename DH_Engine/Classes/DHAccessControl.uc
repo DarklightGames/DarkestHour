@@ -1,20 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHAccessControl extends AccessControlINI;
 
-// WARNING: Changing anything in here would be a great way to get your server blacklisted.
-
-struct Patron
-{
-    var string ROID;
-    var string Tier;
-};
-
 var private array<string>           DeveloperIDs;
-var private array<Patron>           Patrons; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
 
 function bool AdminLogin(PlayerController P, string Username, string Password)
 {
@@ -125,23 +116,6 @@ static function bool IsDeveloper(string ROID)
     return false;
 }
 
-// This only gets the patron level off the PatreonIDs array in the default properties below, not from the webserver
-// This is used to fix an issue with MAC/Linux not being able to properly use the HTTP request function
-static function string GetPatronTier(string ROID)
-{
-    local int i;
-
-    for (i = 0; i < default.Patrons.Length; ++i)
-    {
-        if (ROID ~= default.Patrons[i].ROID)
-        {
-            return default.Patrons[i].Tier;
-        }
-    }
-
-    return "";
-}
-
 defaultproperties
 {
     IPBanned="You cannot join this server, you have been banned."
@@ -151,8 +125,4 @@ defaultproperties
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
-
-    Patrons(0)=(ROID="76561198066643021",Tier="silver") // PFC Patison
-    Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
-    Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
 }

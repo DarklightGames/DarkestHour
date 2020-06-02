@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIIINCannonShellHEAT extends DHCannonShellHEAT;
@@ -18,8 +18,10 @@ defaultproperties
     DamageRadius=200.0
 
     //Effects
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+
+    bDebugInImperial=false
 
     //Penetration
     DHPenetrationTable(0)=10.0
@@ -33,8 +35,6 @@ defaultproperties
     DHPenetrationTable(8)=10.0
     DHPenetrationTable(9)=10.0
     DHPenetrationTable(10)=10.0
-
-    bDebugInImperial=false
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

@@ -1,14 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WHSquadLeader extends DHGESergeantRoles;
 
 defaultproperties
 {
-
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_visWeapon')
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'

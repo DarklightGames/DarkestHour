@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -183,7 +183,7 @@ replication
         ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
@@ -3391,30 +3391,9 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 
 function ClientSaveROIDHash(string ROID)
 {
-    local HTTPRequest PatronRequest;
-    local string PatronTier;
-
     ROIDHash = ROID;
 
     SaveConfig();
-
-    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
-    PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
-
-    // If we have script patron status, then set patron status on server
-    if (PatronTier != "")
-    {
-        ServerSetPatronTier(PatronTier);
-    }
-    else // Else, check via HTTP request for patron status
-    {
-        PatronRequest = Spawn(class'HTTPRequest');
-        PatronRequest.Method = "GET";
-        PatronRequest.Host = "api.darklightgames.com";
-        PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
-        PatronRequest.OnResponse = PatronRequestOnResponse;
-        PatronRequest.Send();
-    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -6256,64 +6235,6 @@ function ServerRequestBanInfo(int PlayerID)
     }
 }
 
-// TODO: this needs ot change!
-function PatronRequestOnResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
-{
-    local JSONParser Parser;
-    local JSONObject O, Patron;
-    local JSONArray Results;
-
-    if (Status == 200)
-    {
-        Log("Patron status request success (" $ Status  $ ")");
-
-        Parser = new class'JSONParser';
-        O = Parser.ParseObject(Content);
-
-        Results = O.Get("results").AsArray();
-
-        if (Results.Size() == 1)
-        {
-            Patron = Results.Get(0).AsObject();
-
-            if (Patron != none)
-            {
-                ServerSetPatronTier(Patron.Get("tier").AsString());
-            }
-        }
-    }
-}
-
-// Client-to-server function that reports the player's patron tier to the server.
-function ServerSetPatronTier(string PatronTier)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (PRI != none)
-    {
-        PRI.PatronTier = GetPatronTier(PatronTier);
-    }
-}
-
-function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string Tier)
-{
-    switch (Tier)
-    {
-        case "lead":
-            return PATRON_Lead;
-        case "bronze":
-            return PATRON_Bronze;
-        case "silver":
-            return PATRON_Silver;
-        case "gold":
-            return PATRON_Gold;
-        default:
-            return PATRON_None;
-    }
-}
-
 // Client-to-server function when player wants to volunteer to be squad leader.
 function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
 {
@@ -6860,7 +6781,7 @@ defaultproperties
     CorpseStayTimeMax=60
 
     // Sway values
-    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
+    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.33),(InVal=12.0,OutVal=0.25),(InVal=45.0,OutVal=0.33),(InVal=10000000000.0,OutVal=0.5)))
     DHSwayElasticFactor=8.0
     DHSwayDampingFactor=0.51
     BaseSwayYawAcc=600

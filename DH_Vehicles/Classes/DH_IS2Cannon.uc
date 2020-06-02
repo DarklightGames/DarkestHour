@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_IS2Cannon extends DHVehicleCannon;
@@ -48,10 +48,10 @@ defaultproperties
     nProjectileDescriptions(0)="BR-471" // earlier AP round without ballistic cap
     nProjectileDescriptions(1)="OF-471"
 
-    InitialPrimaryAmmo=18
-    InitialSecondaryAmmo=6
-    MaxPrimaryAmmo=18
-    MaxSecondaryAmmo=10
+    InitialPrimaryAmmo=16
+    InitialSecondaryAmmo=8
+    MaxPrimaryAmmo=16
+    MaxSecondaryAmmo=12
     SecondarySpread=0.002
 
     // Coaxial MG ammo

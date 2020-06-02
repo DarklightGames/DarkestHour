@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WSSSquadLeader_Autumn extends DHGESergeantRoles;
@@ -8,8 +8,6 @@ class DH_WSSSquadLeader_Autumn extends DHGESergeantRoles;
 defaultproperties
 {
     AltName="Scharführer"
-
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSSPawn',Weight=1.5)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanAutumnSmockSSPawn',Weight=1.0)

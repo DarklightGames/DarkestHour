@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Sdkfz2342CannonShell extends DHGermanCannonShell;
@@ -17,9 +17,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
     HullFireChance=0.3
     EngineFireChance=0.60
-
-    //Effects
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
 
     //Penetration
     DHPenetrationTable(0)=9.6

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -3552,7 +3552,9 @@ state PutWeaponAway
                 }
             }
             // Putting away a pistol, or a shovel that hangs on the player's left hip
-            else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (Weapon.IsA('DHPistolWeapon') ||
+                     Weapon.IsA('DHRevolverWeapon') ||
+                     (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 if (bIsCrawling)
                 {
@@ -3669,7 +3671,9 @@ state PutWeaponAway
             if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
                 // From grenade or binocs, to pistol or shovel from left hip
-                if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                if (Weapon.IsA('DHPistolWeapon') ||
+                    Weapon.IsA('DHRevolverWeapon') ||
+                    (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3705,7 +3709,9 @@ state PutWeaponAway
                     }
                 }
             }
-            else if (SwapWeapon.IsA('DHPistolWeapon') || (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (SwapWeapon.IsA('DHPistolWeapon') ||
+                     SwapWeapon.IsA('DHRevolverWeapon') ||
+                     (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 // From pistol or shovel that goes on left hip, to grenade or binocs
                 if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
@@ -3720,7 +3726,9 @@ state PutWeaponAway
                     }
                 }
                 // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') ||(Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3759,7 +3767,9 @@ state PutWeaponAway
                     }
                 }
                 // From any other weapon, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -7399,12 +7409,13 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=40.0
-    StanceChangeStaminaDrain=1.5
-    StaminaRecoveryRate=1.15
-    CrouchStaminaRecoveryRate=1.3
-    ProneStaminaRecoveryRate=1.5
-    SlowStaminaRecoveryRate=0.5
+    Stamina=50.0                        // How many second of stamina the player has
+    StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
+    StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
+    CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching
+    ProneStaminaRecoveryRate=2.5        // How much stamina to recover per second while proning
+    SlowStaminaRecoveryRate=0.75        // How much stamina to recover per second when moving
+    JumpStaminaDrain=2.5                // How much stamina is lost by jumping
 
     // Weapon aim
     IronsightBobAmplitude=1.0

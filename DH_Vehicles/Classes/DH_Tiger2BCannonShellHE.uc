@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Tiger2BCannonShellHE extends DHCannonShellHE;
@@ -14,7 +14,6 @@ defaultproperties
 
     //Damage
     ImpactDamage=550
-
     Damage=475.0
     DamageRadius=1550.0
     MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
@@ -24,6 +23,7 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
 
     bDebugInImperial=false
 

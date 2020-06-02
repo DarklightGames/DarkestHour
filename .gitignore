@@ -9,6 +9,7 @@
 *.int
 *.u
 *.DS_Store
+*.blend1
 .idea
 Red Orchestra.app
 /Animations/

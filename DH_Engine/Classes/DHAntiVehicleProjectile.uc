@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHAntiVehicleProjectile extends DHBallisticProjectile
@@ -40,15 +40,21 @@ var     class<Emitter>  ShellShatterEffectClass; // effect for this shell shatte
 var     sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
 var     sound           ShatterSound[4];         // sound of the round shattering
 
-// Effects
-var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
-var     class<Effects>  CoronaClass;             // tracer effect class
-var     Effects         Corona;                  // shell tracer
+// Shell Tracer Effects
+var     bool            bHasTracer;
+var     class<Effects>  CoronaClass;             // shell base tracer effect class
+var     Effects         Corona;                  // shell base tracer
+var     bool            bHasShellTrail;
+var     class<Emitter>  ShellTrailClass;     // shell "streak" emitter effect
+var     Emitter         ShellTrail;
+var     int             TracerHue;               // allows custom control of ambient light hue
+var     int             TracerSaturation;        // allows custom control of ambient light saturation
 
-//New Effects
-var     bool                    bHasShellTrail;
-var     class<Emitter>          TankShellTrailClass;         // shell "streak" emitter
-var     Emitter                 ShellTrail;
+// AP Bullet Tracer Effects
+var     class<Emitter>      TracerEffectClass;
+var     Emitter             TracerEffect;
+var     StaticMesh          DeflectedMesh;
+var     float               TracerPullback;
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -84,7 +90,7 @@ var float   EngineFireChance;
 
 // Deflection
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
-var     float           DampenFactor;
+var     float           DampenFactor;               // the smaller the number, the less the projectile will move after deflection
 var     float           DampenFactorParallel;
 
 // Impact sounds
@@ -119,6 +125,17 @@ simulated function PostBeginPlay()
     {
         Velocity *= 0.5;
     }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
+    {
+        Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(ShellTrailClass, self);
+        ShellTrail.SetBase(self);
+    }
 }
 
 // Modified to set InstigatorController (used to attribute radius damage kills correctly) & to move bDebugBallistics stuff here from PostBeginPlay (with bDebugROBallistics option)
@@ -136,6 +153,35 @@ simulated function PostNetBeginPlay()
     if (bDebugROBallistics)
     {
         bDebugBallistics = true;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
+    {
+        SetDrawType(DT_StaticMesh);
+        bOrientToVelocity = true;
+
+        if (RoundType == RT_APBULLET)
+        {
+            TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
+        }
+
+        if (Level.bDropDetail)
+        {
+            bDynamicLight = false;
+            LightType = LT_None;
+        }
+        else
+        {
+            bDynamicLight = true;
+            LightType = LT_Steady;
+        }
+
+        LightBrightness = 90.0;
+        LightRadius = 10.0;
+        LightHue = TracerHue;
+        LightSaturation = TracerSaturation;
+        AmbientGlow = 254;
+        LightCone = 16;
     }
 
     if (bDebugBallistics)
@@ -896,8 +942,11 @@ simulated function DoShakeEffect()
 
             if (Distance < PenetrationMag * 3.0)
             {
+
+                PC.PlaySound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
+
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
-                //Scale *= BlurEffectScalar;
+                Scale *= BlurEffectScalar;
 
                 PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
 
@@ -911,39 +960,6 @@ simulated function DoShakeEffect()
         }
     }
 }
-
-/*
-simulated function VehicleShellShock()
-{
-    local PlayerController PC;
-    local float            Distance, Scale;
-
-    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0)
-    {
-        PC = Level.GetLocalPlayerController();
-
-        if (PC != none && PC.ViewTarget != none)
-        {
-            Distance = VSize(Location - PC.ViewTarget.Location);
-
-            if (Distance < PenetrationMag * 3.0)
-            {
-                Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
-                Scale *= 8.0;
-
-                PC.ShakeView(ShakeRotMag * 10.0, ShakeRotRate * 20.0, ShakeRotTime, ShakeOffsetMag * scale, ShakeOffsetRate, ShakeOffsetTime);
-
-                if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
-                {
-                    Scale = Scale - (Scale * 0.35 - ((Scale * 0.35) * ROPawn(PC.Pawn).GetExposureTo(Location + 50.0 * -Normal(PhysicsVolume.Gravity))));
-                }
-
-                ROPlayer(PC).AddBlur(6.0 * Scale, FMin(1.0, Scale));
-            }
-        }
-    }
-}
-*/
 
 // Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
@@ -1143,6 +1159,9 @@ defaultproperties
     BlurTime=3.0
     BlurEffectScalar=1.9
     PenetrationMag=100.0
+
+    TracerHue=45
+    TracerSaturation=128
 
     HullFireChance=0.0
     EngineFireChance=0.0

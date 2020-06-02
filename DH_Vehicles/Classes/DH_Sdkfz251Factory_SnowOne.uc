@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Sdkfz251Factory_SnowOne extends DH_Sdkfz251Factory; // snow topped version of CamoOne

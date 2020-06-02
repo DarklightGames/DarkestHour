@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -42,6 +42,7 @@ var     vector      OverlayFPCamPos;            // optional camera offset for ov
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
+var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
 
 // Vehicle locking
 var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
@@ -1997,7 +1998,6 @@ function ResetTakeDamageVariables()
 // Modified to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
-
     // Apply new damage
     if (EngineHealth > 0)
     {
@@ -2204,6 +2204,23 @@ simulated function DestroyAttachments()
     {
         DriverHatchFireEffect.Kill();
     }
+}
+
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    if (bUsesCodedDestroyedSkins)
+    {
+        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+        DestroyedSkin.Material1 = Skins[0];
+        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+        DestroyedSkin.FallbackMaterial = Skins[0];
+        DestroyedSkin.CombineOperation = CO_Multiply;
+        DestroyedMeshSkins[0] = DestroyedSkin;
+    }
+
+    super.DestroyAppearance();
 }
 
 // Modified to handle extended vehicle fire system, plus setting manual/powered turret
@@ -2414,6 +2431,7 @@ defaultproperties
     bCanCrash=false
     ImpactDamageThreshold=5000.0
     DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.General.Destroyed'
+    bUsesCodedDestroyedSkins=true
 
     // Component damage probabilities
     DriverKillChance=1150.0

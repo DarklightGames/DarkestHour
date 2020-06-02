@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdpanzerIVL70CannonShellAPCR extends DHGermanCannonShell;
@@ -24,6 +24,7 @@ defaultproperties
     //Effects
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     //Penetration
     DHPenetrationTable(0)=25.3

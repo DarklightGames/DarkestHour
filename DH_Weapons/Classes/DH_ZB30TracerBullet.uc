@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ZB30TracerBullet extends DH_ZB30Bullet;
@@ -12,6 +12,5 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'//'DH_Tracers.Ger_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
     SpeedFudgeScale=0.50
-    LightHue=30
-    LightSaturation=0
+    TracerHue=40
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIIILTank extends DHArmoredVehicle;
@@ -8,13 +8,13 @@ class DH_PanzerIIILTank extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Panzer III Ausf.M"
+    VehicleNameString="Panzer III Ausf.L"
     VehicleMass=11.5
     ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.panzer3_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(3)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'

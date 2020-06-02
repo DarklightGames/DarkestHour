@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIVF1Cannon extends DHVehicleCannon;
@@ -11,7 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panzer4F1_anm.Panzer4F1_turret_ext'
     skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
     skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
+
+    //DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
 
     // Turret armor
     FrontArmorFactor=5.0
@@ -24,6 +26,7 @@ defaultproperties
     LeftArmorSlope=26.0
     RearArmorSlope=16.0
 
+    FrontLeftAngle=322.0
     FrontRightAngle=38.0
     RearRightAngle=142.0
     RearLeftAngle=218.0

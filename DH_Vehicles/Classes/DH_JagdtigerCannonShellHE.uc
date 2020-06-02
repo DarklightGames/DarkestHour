@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdtigerCannonShellHE extends DHCannonShellHE;
@@ -25,8 +25,9 @@ defaultproperties
 
     //Effects
     bHasTracer=false
+    bHasShellTrail=false
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
-    //Effects
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'

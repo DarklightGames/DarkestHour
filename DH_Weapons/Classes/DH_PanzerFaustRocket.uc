@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerFaustRocket extends DHRocketProjectile;
@@ -22,6 +22,7 @@ defaultproperties
     BallisticCoefficient=0.075
     Speed=2716.0
     MaxSpeed=2716.0
+    DamageRadius=400.0
     MyDamageType=class'DH_Weapons.DH_PanzerFaustDamType'
     StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
 }

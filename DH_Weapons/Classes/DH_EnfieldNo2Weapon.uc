@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_EnfieldNo2Weapon extends DHPistolWeapon;
+class DH_EnfieldNo2Weapon extends DHRevolverWeapon;
 
 defaultproperties
 {
@@ -20,8 +20,8 @@ defaultproperties
 
     IronSightDisplayFOV=70.0
 
-    MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=12
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
 
     IdleEmptyAnim="Idle"
     IronIdleEmptyAnim="Iron_idle"
@@ -41,9 +41,12 @@ defaultproperties
     SelectEmptyAnim="Draw"
     PutDownEmptyAnim="putaway"
 
-    MagPartialReloadAnim="reload_half"
-
     HandNum=0
     SleeveNum=1
-    bDiscardMagOnReload=true
+
+    //trick to make partial reload work properly on this weapon
+    PreReloadAnim="reload_half"
+    SingleReloadAnim="blank2"
+    PostReloadAnim="blank"
+    FullReloadAnim="reload_empty"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_STG44Fire extends DHAutomaticFire;
@@ -12,13 +12,13 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.14
 
-    Spread=100.0
+    Spread=95.0
 
     // Recoil
     RecoilRate=0.07
-    MaxVerticalRecoilAngle=400
+    MaxVerticalRecoilAngle=440
     MaxHorizontalRecoilAngle=140
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.66),(InVal=6.0,OutVal=1.2),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.7),(InVal=6.0,OutVal=1.2),(InVal=10.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'

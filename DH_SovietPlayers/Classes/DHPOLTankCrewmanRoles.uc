@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRoles
@@ -8,9 +8,8 @@ class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRoles
 
 defaultproperties
 {
-    AltName="Zalogant czolgu"
+    AltName="Czolgista"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'

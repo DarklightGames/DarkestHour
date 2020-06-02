@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_LWP_StandardAntiTankLate extends DHPOLAntiTankRoles;
@@ -14,6 +14,4 @@ defaultproperties
 
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"
-
-
 }

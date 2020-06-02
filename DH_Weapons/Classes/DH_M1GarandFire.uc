@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_M1GarandFire extends DHSemiAutoFire;
@@ -102,7 +102,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
     FireRate=0.27
-    Spread=75.0
+    Spread=70.0
     MaxVerticalRecoilAngle=660
     MaxHorizontalRecoilAngle=200
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
