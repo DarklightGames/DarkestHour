@@ -1990,6 +1990,7 @@ defaultproperties
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
     ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
     ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(21)="DH_Construction.DHConstruction_MolotovCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers
