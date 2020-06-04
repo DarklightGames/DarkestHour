@@ -156,5 +156,5 @@ defaultproperties
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
     Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
     Patrons(3)=(ROID="76561198011091616",Tier="bronze") // Owls
-    Patrons(3)=(ROID="76561198048993064",Tier="lead") // Ches217
+    Patrons(4)=(ROID="76561198048993064",Tier="lead") // Ches217
 }
