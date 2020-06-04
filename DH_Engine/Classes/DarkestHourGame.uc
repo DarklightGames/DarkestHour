@@ -5,14 +5,6 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-struct Patron
-{
-    var string ROID;
-    var string Tier;
-};
-
-var     private array<Patron>       PatronData;
-
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
@@ -171,7 +163,6 @@ function PostBeginPlay()
     local ROArtilleryTrigger    RAT;
     local SpectatorCam          ViewPoint;
     local DHObstacleInfo        DHOI;
-    local HTTPRequest           PatronRequest;
     local bool                  bMultipleLevelInfos;
     local int                   i, j, k, m, n, o, p;
 
@@ -457,13 +448,6 @@ function PostBeginPlay()
         Metrics = Spawn(MetricsClass);
     }
 
-    // Handle HTTP Patron request
-    PatronRequest = Spawn(class'HTTPRequest');
-    PatronRequest.Method = "GET";
-    PatronRequest.Host = "api.darklightgames.com";
-    PatronRequest.Path = "/patrons/?limit=10000";
-    PatronRequest.OnResponse = ParsePatronData;
-    PatronRequest.Send();
 
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
 
@@ -4844,7 +4828,6 @@ function OpenPlayerMenus()
 
 // Modified to tell client to save their ROID to their .ini file so they can easily copy it, store session data & handle metrics
 // Also to remove redundant SteamStatsAndAchievements stuff that caused "accessed none" log errors (some other redundancy also removed)
-// Also to support Patreon patrons
 // Note: on net client & SP it appears some native code is calling the Super of this event from GameInfo class, so any override here is ignored by that
 event PostLogin(PlayerController NewPlayer)
 {
@@ -4971,8 +4954,6 @@ event PostLogin(PlayerController NewPlayer)
 
     if (ROIDHash != "")
     {
-        PRI.PatronTier = GetPatronTier(ROIDHash);
-
         // Record player's ROID on server & his client
         if (Level.NetMode == NM_DedicatedServer)
         {
@@ -5026,62 +5007,6 @@ event PostLogin(PlayerController NewPlayer)
     }
 
     class'DHGeolocationService'.static.GetIpData(PC);
-}
-
-function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string ROIDHash)
-{
-    local int i;
-
-    for (i = 0; i < PatronData.Length; ++i)
-    {
-        if (PatronData[i].ROID == ROIDHash)
-        {
-            switch (PatronData[i].Tier)
-            {
-                case "lead":
-                    return PATRON_Lead;
-                case "bronze":
-                    return PATRON_Bronze;
-                case "silver":
-                    return PATRON_Silver;
-                case "gold":
-                    return PATRON_Gold;
-                default:
-                    return PATRON_None;
-            }
-        }
-    }
-
-    return PATRON_None;
-}
-
-// Function which handles patron HTTP response
-function ParsePatronData(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
-{
-    local int i;
-    local JSONParser Parser;
-    local JSONObject O, Patron;
-    local JSONArray Results;
-
-    if (Status == 200)
-    {
-        Parser = new class'JSONParser';
-        O = Parser.ParseObject(Content);
-
-        Results = O.Get("results").AsArray();
-
-        // Parse the results in uscript array
-        for (i = 0; i < Results.Size(); ++i)
-        {
-            // Isolate a single Patron
-            Patron = Results.Get(i).AsObject();
-
-            // Insert new spot in array and then add the data from the isolated Patron
-            PatronData.Insert(0, 1);
-            PatronData[0].ROID = Patron.Get("player").AsString();
-            PatronData[0].Tier = Patron.Get("tier").AsString();
-        }
-    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
