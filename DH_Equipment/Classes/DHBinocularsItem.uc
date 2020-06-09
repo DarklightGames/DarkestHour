@@ -285,7 +285,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    BinocsOverlay=Texture'Weapon_overlays.Scopes.BINOC_overlay'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30General'
 
     IronSightDisplayFOV=70.0
     bPlayerFOVZooms=true
