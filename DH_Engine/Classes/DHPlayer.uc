@@ -188,7 +188,7 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrenderRequest;
+        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropGroup;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -5242,6 +5242,117 @@ function ServerSquadVolunteerToAssist()
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// PARADROPS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+// Moves the player to a specified location and gives him a parachute.
+function Paradrop(vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local Pawn PlayerPawn;
+    local Vehicle DrivenVehicle;
+
+    DrivenVehicle = Vehicle(Pawn);
+
+    if (DrivenVehicle != none)
+    {
+        if (!bForceOutOfVehicle && !DrivenVehicle.IsA('DHATGun'))
+        {
+            Log(bForceOutOfVehicle);
+            Log(DrivenVehicle.IsA('DHATGun'));
+            Log("Fail");
+            return;
+        }
+
+        Log("Leave");
+        // Player is manning an AT gun, so we kick him out of it.
+        DrivenVehicle.KDriverLeave(true);
+    }
+
+    PlayerPawn = DHPawn(Pawn);
+
+    Log(PlayerPawn);
+
+    if (PlayerPawn != none)
+    {
+        PlayerPawn.SetLocation(DropLocation + RandRange(1.0, 2.0) * SpreadModifier * vector(RotRand()));
+        DHPawn(PlayerPawn).GiveChute();
+    }
+}
+
+// Paradrop a single player.
+simulated function ServerParadropPlayer(vector DropLocation, DHPlayerReplicationInfo PRI, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local DHPlayer PC;
+
+    if (PRI != none)
+    {
+        return;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC != none)
+    {
+        PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
+    }
+}
+
+// This function either paradrops a squad or a team.
+// An entire team is selected when squad index is unspecified (<0).
+function ServerParadropGroup(vector DropLocation, byte TeamIndex, int SquadIndex, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local array<DHPlayerReplicationInfo> Players;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local int i;
+
+    if (TeamIndex > 1)
+    {
+        return;
+    }
+
+    if (SquadIndex < 0)
+    {
+        // Squad index ain't specified; we are paradropping an entire team.
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            for (i = 0; i < GRI.PRIArray.Length; ++i)
+            {
+                PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+                if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex)
+                {
+                    Players[Players.Length] = PRI;
+                }
+            }
+        }
+    }
+    else
+    {
+        // Get squad members for a paradrop.
+        if (SquadReplicationInfo == none)
+        {
+            return;
+        }
+
+        SquadReplicationInfo.GetMembers(TeamIndex, SquadIndex, Players);
+    }
+
+    for (i = 0; i < Players.Length; ++i)
+    {
+        PC = DHPlayer(Players[i].Owner);
+
+        if (PC != none)
+        {
+            PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
+        }
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -6916,4 +7027,5 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
+    PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
 }
