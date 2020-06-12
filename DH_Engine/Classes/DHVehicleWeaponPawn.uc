@@ -292,7 +292,7 @@ final function int GetGunYawRange()
 
 simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
 {
-    local float i, Value, StepX, ValueMax, ValueMin, SegmentCount, IndicatorStep;
+    local float i, CurrentYaw, StepX, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
     local string Label;
     const VISIBLE_SEGMENTS = 40; // visible span on the indicator
@@ -303,11 +303,11 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
         ScaleStep = 1.0;
     }
 
-    Value = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    ValueMin = Value - ScaleStep * VISIBLE_SEGMENTS/2;
-    ValueMax = Value + ScaleStep * VISIBLE_SEGMENTS/2;
-    SegmentCount = (ValueMax - ValueMin) / ScaleStep;
-    StepX = (ValueMax - ValueMin) / SegmentCount;
+    CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
+    YawLowerBound = CurrentYaw - ScaleStep * VISIBLE_SEGMENTS/2;
+    YawUpperBound = CurrentYaw + ScaleStep * VISIBLE_SEGMENTS/2;
+    SegmentCount = (YawUpperBound - YawLowerBound) / ScaleStep;
+    StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
     IndicatorStep = LineSize / VISIBLE_SEGMENTS;
 
     C.Font = C.TinyFont;
@@ -320,10 +320,10 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
     // Start drawing scale ticks
     C.CurY = Y - 5.0;
 
-    for(i = ValueMin; i <= ValueMax; i = i + StepX)
+    for(i = YawLowerBound; i <= YawUpperBound; i = i + StepX)
     {
         // Calculate index of the tick in the indicator reference frame 
-        t = (i - ValueMin) / StepX;
+        t = (i - YawLowerBound) / StepX;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_SEGMENTS));
