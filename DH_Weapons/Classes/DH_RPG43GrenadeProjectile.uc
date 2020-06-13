@@ -477,8 +477,8 @@ defaultproperties
 
     // Damage
     ImpactDamage=200
-    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
-    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
+    Damage=400.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
+    DamageRadius=600.0  
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 

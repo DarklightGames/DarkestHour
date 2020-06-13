@@ -14,4 +14,6 @@ defaultproperties
 
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"
+
+
 }
