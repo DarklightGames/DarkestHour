@@ -14,7 +14,7 @@ defaultproperties
 
     Spread=120.0
 
-     // Recoil
+    // Recoil
     RecoilRate=0.04285
     MaxVerticalRecoilAngle=230
     MaxHorizontalRecoilAngle=66

@@ -12,7 +12,7 @@ defaultproperties
     FireRate=0.128 // 470 rpm
     Spread=140.0
 
-   // Recoil
+    // Recoil
     RecoilRate=0.075
     MaxVerticalRecoilAngle=280
     MaxHorizontalRecoilAngle=80

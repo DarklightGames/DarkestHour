@@ -18,14 +18,13 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
     Skins(1)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
-	HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
     handnum=0
     sleevenum=2
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=75.0
-	
-	DisplayFOV=80.0
+    DisplayFOV=80.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5

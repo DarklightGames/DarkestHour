@@ -25,5 +25,4 @@ defaultproperties
     HighDetailOverlayIndex=2
     DisplayFOV=70.0
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
-
 }

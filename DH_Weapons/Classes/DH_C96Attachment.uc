@@ -16,8 +16,6 @@ defaultproperties
 
     ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
 
-
-
     WA_Idle="Idle_Colt"
     WA_IdleEmpty="idle_empty_Colt"
     WA_Fire="shoot_Colt"

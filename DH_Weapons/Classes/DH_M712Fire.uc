@@ -28,5 +28,4 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
-
 }
