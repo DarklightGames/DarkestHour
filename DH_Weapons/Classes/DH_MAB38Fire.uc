@@ -12,13 +12,13 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.1 //600 per minute
 
-    Spread=114.0
+    Spread=120.0
 
      // Recoil
     RecoilRate=0.04285
-    MaxVerticalRecoilAngle=225
-    MaxHorizontalRecoilAngle=60
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.4),(InVal=4.0,OutVal=0.6),(InVal=8.0,OutVal=1.2),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    MaxVerticalRecoilAngle=230
+    MaxHorizontalRecoilAngle=66
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=8.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=13.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
