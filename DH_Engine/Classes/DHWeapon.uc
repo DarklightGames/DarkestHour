@@ -25,6 +25,11 @@ var     private float   PlayerIronsightFOV;
 var     float           SwayModifyFactor;
 var     float           BobModifyFactor;
 
+// An alternate animation to `SelectAnim` that plays when a weapon is drawn
+// for a first time.
+var()   name            FirstSelectAnim;
+var     bool            bHasBeenDrawn;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -368,6 +373,12 @@ simulated state Idle
 // Implemented in subclasses as required
 simulated state PostFiring
 {
+}
+
+simulated state RaisingWeapon
+{
+Begin:
+    bHasBeenDrawn = true;
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
@@ -852,6 +863,11 @@ simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
 
 simulated function name GetSelectAnim()
 {
+    if (FirstSelectAnim != '' && !bHasBeenDrawn)
+    {
+        return FirstSelectAnim;
+    }
+
     return SelectAnim;
 }
 
