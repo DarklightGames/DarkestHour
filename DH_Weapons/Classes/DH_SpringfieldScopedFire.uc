@@ -11,7 +11,8 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_SpringfieldAmmo'
     Spread=20.0
     PctRestDeployRecoil=0.25
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire01'
+    FireSounds(0)=Sound'DH_old_inf_Weapons.nagant9138.nagant9138_fire02'
+    FireSounds(1)=Sound'DH_old_inf_Weapons.nagant9138.nagant9138_fire03'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stNagant'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     FireAnim="shoot_last"
