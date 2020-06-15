@@ -159,6 +159,11 @@ var     rotator                 LazyCamRotationTarget;
 // Surrender
 var     bool                    bSurrendered;
 
+// Paradrops
+var     class<DHMapMarker>      ParadropMarkerClass;
+var     float                   ParadropHeight;
+var     float                   ParadropSpreadModifier;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -188,7 +193,7 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropGroup;
+        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -5257,20 +5262,14 @@ function Paradrop(vector DropLocation, optional float SpreadModifier, optional b
     {
         if (!bForceOutOfVehicle && !DrivenVehicle.IsA('DHATGun'))
         {
-            Log(bForceOutOfVehicle);
-            Log(DrivenVehicle.IsA('DHATGun'));
-            Log("Fail");
             return;
         }
 
-        Log("Leave");
         // Player is manning an AT gun, so we kick him out of it.
         DrivenVehicle.KDriverLeave(true);
     }
 
     PlayerPawn = DHPawn(Pawn);
-
-    Log(PlayerPawn);
 
     if (PlayerPawn != none)
     {
@@ -5279,12 +5278,27 @@ function Paradrop(vector DropLocation, optional float SpreadModifier, optional b
     }
 }
 
-// Paradrop a single player.
-simulated function ServerParadropPlayer(vector DropLocation, DHPlayerReplicationInfo PRI, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ParadropGroup(out array<DHPlayerReplicationInfo> PlayersToDrop, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local DHPlayer PC;
+    local int i;
+
+    for (i = 0; i < PlayersToDrop.Length; ++i)
+    {
+        PC = DHPlayer(PlayersToDrop[i].Owner);
+
+        if (PC != none)
+        {
+            PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
+        }
+    }
+}
+
+function ServerParadropPlayer(DHPlayerReplicationInfo PRI, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
     local DHPlayer PC;
 
-    if (PRI != none)
+    if (PRI == none)
     {
         return;
     }
@@ -5297,59 +5311,90 @@ simulated function ServerParadropPlayer(vector DropLocation, DHPlayerReplication
     }
 }
 
-// This function either paradrops a squad or a team.
-// An entire team is selected when squad index is unspecified (<0).
-function ServerParadropGroup(vector DropLocation, byte TeamIndex, int SquadIndex, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+function ServerParadropTeam(byte TeamIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
 {
-    local array<DHPlayerReplicationInfo> Players;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    local DHPlayer PC;
+    local array<DHPlayerReplicationInfo> PlayersToDrop;
     local int i;
 
-    if (TeamIndex > 1)
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
     {
         return;
     }
 
-    if (SquadIndex < 0)
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        // Squad index ain't specified; we are paradropping an entire team.
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
 
-        if (GRI != none)
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex)
         {
-            for (i = 0; i < GRI.PRIArray.Length; ++i)
-            {
-                PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
-
-                if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex)
-                {
-                    Players[Players.Length] = PRI;
-                }
-            }
+            PlayersToDrop[PlayersToDrop.Length] = PRI;
         }
+    }
+
+    ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
+}
+
+function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local array<DHPlayerReplicationInfo> PlayersToDrop;
+
+    if (TeamIndex > 1 || SquadReplicationInfo == none)
+    {
+        return;
+    }
+
+    if (SquadIndex >= 0)
+    {
+        SquadReplicationInfo.GetMembers(TeamIndex, SquadIndex, PlayersToDrop);
     }
     else
     {
-        // Get squad members for a paradrop.
-        if (SquadReplicationInfo == none)
-        {
-            return;
-        }
-
-        SquadReplicationInfo.GetMembers(TeamIndex, SquadIndex, Players);
+        SquadReplicationInfo.GetUnassignedPlayers(TeamIndex, PlayersToDrop);
     }
 
-    for (i = 0; i < Players.Length; ++i)
+    ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
+}
+
+simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
+{
+    local PersonalMapMarker ParadropMarker;
+
+    ParadropMarker = FindPersonalMarker(ParadropMarkerClass);
+
+    if (ParadropMarker.MapMarkerClass != none)
     {
-        PC = DHPlayer(Players[i].Owner);
+        ParadropLocation = ParadropMarker.WorldLocation;
+        ParadropLocation.Z = ParadropHeight;
 
-        if (PC != none)
-        {
-            PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
-        }
+        return true;
     }
+}
+
+simulated function bool GetSquadLeaderParadropLocation(out vector ParadropLocation, DHPlayerReplicationInfo SelectedPRI)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || GetSquadIndex() < 0 || SquadMemberLocations[0] == 0)
+    {
+        return false;
+    }
+
+    // We use squad leader's quantized position since we don't need
+    // precision here.
+    class'UQuantize'.static.DequantizeClamped2DPose(SquadMemberLocations[0],
+                                                    ParadropLocation.X,
+                                                    ParadropLocation.Y);
+
+    ParadropLocation = GRI.GetWorldCoords(ParadropLocation.X, ParadropLocation.Y);
+    ParadropLocation.Z = ParadropHeight;
+
+    return true;
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -5688,6 +5733,19 @@ function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
         if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
         {
             return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return true;
         }
     }
 }
@@ -7003,6 +7061,11 @@ defaultproperties
     ViewFOVMin=80.0
     ViewFOVMax=100.0
     ConfigViewFOV=85.0
+
+    // Paradrops
+    ParadropMarkerClass=class'DHMapMarker_Paradrop'
+    ParadropHeight=10000
+    ParadropSpreadModifier=600
 
     // Other values
     NextSpawnTime=15
