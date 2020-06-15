@@ -128,6 +128,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
     local DHSquadReplicationInfo SRI;
     local int Index;
+    local bool bContextMenuIsPopulated;
 
     PC = DHPlayer(PlayerOwner());
 
@@ -170,6 +171,8 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
             {
                 Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
             }
+
+            bContextMenuIsPopulated = true;
         }
         else
         {
@@ -178,6 +181,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
             if (Index == 0 && !SRI.HasAssistant(PC.GetTeamNum(), MyPRI.SquadIndex))
             {
                 Sender.AddItem(Repl(default.VolunteerToAssistText, "{0}", OtherPRI.PlayerName));
+                bContextMenuIsPopulated = true;
             }
         }
     }
@@ -196,7 +200,19 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
         {
             // We have selected another squad's leader.
             Sender.AddItem(default.MergeRequestText);
+            bContextMenuIsPopulated = true;
         }
+    }
+
+    // Admin menu
+    if (MyPRI.IsLoggedInAsAdmin())
+    {
+        if (bContextMenuIsPopulated)
+        {
+            Sender.AddItem("-");
+        }
+
+        class'DHContextMenuEntries_SquadAdminMenu'.static.OnOpen(Sender, MyPRI, OtherPRI);
     }
 
     return Sender.ContextItems.Length > 0;
@@ -211,6 +227,7 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo MyPRI, PRI;
+    local int ClickIndexOffset;
 
     PC = DHPlayer(PlayerOwner());
 
@@ -235,13 +252,13 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
             {
                 case 0: // Kick
                     PC.ServerSquadKick(PRI);
-                    break;
+                    return;
                 case 1: // Ban
                     PC.ServerSquadBan(PRI);
-                    break;
+                    return;
                 case 3: // Promote
                     PC.ServerSquadPromote(PRI);
-                    break;
+                    return;
                 case 5:
                     if (PRI.bIsSquadAssistant)
                     {
@@ -253,8 +270,11 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
                         // Make assistant
                         PC.ServerSquadMakeAssistant(PRI);
                     }
-                    break;
+                    return;
             }
+
+            // Offset by the number of cases + separators.
+            ClickIndexOffset = 7;
         }
         else
         {
@@ -263,8 +283,10 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
             {
                 case 0: // volunteer
                     PC.ServerSquadVolunteerToAssist();
-                    break;
+                    return;
             }
+
+            ClickIndexOffset = 2;
         }
     }
     else if (SquadIndex == -1)
@@ -287,9 +309,17 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
             {
                 case 0:
                     PC.ServerSendSquadMergeRequest(SquadIndex);
-                    break;
+                    return;
             }
+
+            ClickIndexOffset = 2;
         }
+    }
+
+    // Admin menu
+    if (MyPRI.IsLoggedInAsAdmin())
+    {
+        class'DHContextMenuEntries_SquadAdminMenu'.static.OnClick(ClickIndex - ClickIndexOffset, Sender, MyPRI, PRI);
     }
 }
 
