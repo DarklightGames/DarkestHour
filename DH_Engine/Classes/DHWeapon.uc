@@ -350,11 +350,7 @@ simulated state Idle
 {
     simulated function BeginState()
     {
-        if (ClientState == WS_ReadyToFire)
-        {
-            PlayIdle();
-        }
-        else if (ClientState == WS_BringUp)
+        if (ClientState == WS_BringUp)
         {
             PlayIdle();
             ClientState = WS_ReadyToFire;
