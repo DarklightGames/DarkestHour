@@ -17,4 +17,5 @@ defaultproperties
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G41Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M712Weapon')
 }

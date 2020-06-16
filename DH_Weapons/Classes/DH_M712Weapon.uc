@@ -1,47 +1,44 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_C96Weapon extends DHPistolWeapon;
+class DH_M712Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Mauser C96"
-    FireModeClass(0)=class'DH_Weapons.DH_C96Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_C96MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_C96Attachment'
-    PickupClass=class'DH_Weapons.DH_C96Pickup'
+    ItemName="Mauser M712 'Schnellfeuer'"
+    FireModeClass(0)=class'DH_Weapons.DH_M712Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_M712MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_M712Attachment'
+    PickupClass=class'DH_Weapons.DH_M712Pickup'
 
-    Mesh=SkeletalMesh'DH_C96_1st.c96_mesh'
+    Mesh=SkeletalMesh'DH_C96_1st.M712_mesh'
 
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(0)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
+    Skins(1)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
     HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
-    handnum=2
-    sleevenum=1
+    handnum=0
+    sleevenum=2
 
-    SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=75.0
+    DisplayFOV=80.0
 
-    DisplayFOV=75.0
-    IronSightDisplayFOV=70
-
-    MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=12
-    bHasSelectFire=false
-
-    bTwoMagsCapacity=true
-    bPlusOneLoading=false
+    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=5
+    bHasSelectFire=true
 
     SelectEmptyAnim="Draw_empty"
-    PutDownAnim="put_away"
+    PutDownAnim="putaway"
     PutDownEmptyAnim="putaway_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="Iron_In_empty"
     IronPutDownEmpty="Iron_Out_empty"
-
+    SelectFireAnim="switch_fire"
+    SelectFireIronAnim="Iron_switch_fire"
     SprintStartEmptyAnim="Sprint_Start_Empty"
     SprintLoopEmptyAnim="Sprint_Middle_Empty"
     SprintEndEmptyAnim="Sprint_End_Empty"
@@ -49,6 +46,4 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
-
-    FirstSelectAnim="Draw2"
 }
