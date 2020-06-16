@@ -10,6 +10,7 @@ defaultproperties
 {
     AltName="Pulemetchik"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
 
