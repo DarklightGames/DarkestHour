@@ -17,6 +17,4 @@ defaultproperties
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ViSWeapon')
 }

@@ -13,5 +13,4 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ViSWeapon')
 }

@@ -18,5 +18,4 @@ defaultproperties
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 }
