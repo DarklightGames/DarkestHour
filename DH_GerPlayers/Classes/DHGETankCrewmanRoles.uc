@@ -9,7 +9,6 @@ class DHGETankCrewmanRoles extends DHAxisTankCrewmanRoles
 defaultproperties
 {
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M712Weapon')
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
