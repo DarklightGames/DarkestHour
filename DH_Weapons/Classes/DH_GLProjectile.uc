@@ -8,7 +8,7 @@ class DH_GLProjectile extends DH_SatchelCharge10lb10sProjectile;
 defaultproperties
 {
     MyDamageType=class'DH_Weapons.DH_GLDamType'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GL'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GL_pickup'
 
     ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
     ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
