@@ -5,14 +5,6 @@
 
 class DH_BrenWeapon extends DHBipodAutoWeapon;
 
-// Modified to play the click sound that would usually be played in the select animation (we don't have a select anim for the Bren)
-simulated function ToggleFireMode()
-{
-    super.ToggleFireMode();
-
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-}
-
 defaultproperties
 {
     SwayModifyFactor=1.2 // Increased sway (0.8 is default otherwise)
@@ -40,6 +32,7 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bHasSelectFire=true
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     SightUpIronBringUp="Deploy"
     SightUpIronPutDown="undeploy"

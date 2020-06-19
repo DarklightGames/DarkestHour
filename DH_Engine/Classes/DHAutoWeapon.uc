@@ -10,6 +10,10 @@ var     name    SelectFireAnim;            // animation for selecting the firing
 var     name    SelectFireIronAnim;        // animation for selecting the firing mode in ironsights
 var     name    SightUpSelectFireIronAnim; // animation for selecting the firing mode in ironsights
 
+// Sound effect for the fire selector switch (in case it's not handled by the animation).
+var     sound   SelectFireSound;
+var     float   SelectFireVolume;
+
 replication
 {
     // Functions a client can call on the server
@@ -64,6 +68,11 @@ simulated function ToggleFireMode()
 {
     if (bHasSelectFire)
     {
+        if (SelectFireSound != none)
+        {
+            PlaySound(SelectFireSound,, SelectFireVolume);
+        }
+
         FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
     }
 }
@@ -226,6 +235,8 @@ simulated state Reloading
 defaultproperties
 {
     bPlusOneLoading=true
+    SelectFireVolume=2.0
+
     IronIdleAnim="Iron_idle"
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"

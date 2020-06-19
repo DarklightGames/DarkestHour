@@ -5,14 +5,6 @@
 
 class DH_ZB30Weapon extends DHBipodAutoWeapon;
 
-// Modified to play the click sound that would usually be played in the select animation (we don't have a select anim for the Bren)
-simulated function ToggleFireMode()
-{
-    super.ToggleFireMode();
-
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-}
-
 defaultproperties
 {
     ItemName="ZB30 Machine Gun"
@@ -30,10 +22,12 @@ defaultproperties
     DisplayFOV=110.0
     IronSightDisplayFOV=110.0
 
+    bHasSelectFire=true
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
     NumMagsToResupply=1
-    bHasSelectFire=true
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_ZB30Barrel'
@@ -55,10 +49,3 @@ defaultproperties
     SelectAnim="Draw"
     PutDownAnim="Put_away"
 }
-
-
-
-
-
-
-

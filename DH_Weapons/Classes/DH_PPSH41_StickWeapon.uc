@@ -34,18 +34,6 @@ simulated function bool StartFire(int Mode)
     return false;
 }
 
-// Modified to play the click sound as there is no anim AND a hack to allow for another firemode for a DHFastAutoWeapon
-simulated function ToggleFireMode()
-{
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-
-    // Toggles the fire mode between single and auto
-    if (bHasSelectFire)
-    {
-        FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-    }
-}
-
 defaultproperties
 {
     SwayModifyFactor=0.74 // -0.6
@@ -66,6 +54,8 @@ defaultproperties
     IronSightDisplayFOV=67
 
     bHasSelectFire=true
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
 

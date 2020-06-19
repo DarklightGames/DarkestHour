@@ -5,17 +5,6 @@
 
 class DH_AVT40Weapon extends DHAutoWeapon;
 
-simulated function ToggleFireMode()
-{
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-
-    // Toggles the fire mode between single and auto
-    if (bHasSelectFire)
-    {
-        FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-    }
-}
-
 defaultproperties
 {
     ItemName="AVT-40"
@@ -42,6 +31,7 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim=null
     SelectFireIronAnim=null
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
