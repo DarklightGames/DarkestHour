@@ -11,6 +11,7 @@ defaultproperties
     AmmoClass=class'ROAmmo.SVT40Ammo'
     FireRate=0.085 // ~700rpm
     Spread=90.0
+    bWaitForRelease=true // set to semi-auto by default
 
     RecoilRate=0.06
     MaxVerticalRecoilAngle=700
