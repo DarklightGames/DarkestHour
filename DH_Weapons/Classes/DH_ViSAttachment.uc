@@ -13,13 +13,13 @@ defaultproperties
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     bRapidFire=false
 
-    WA_Idle="idle_tt33"
-    WA_IdleEmpty="empty_tt33"
-    WA_Fire="shoot_tt33"
-    WA_Reload="reloadhalf_tt33"
-    WA_ReloadEmpty="reloadempty_tt33"
-    WA_ProneReload="prone_reloadhalf_tt33"
-    WA_ProneReloadEmpty="prone_reloadempty_tt33"
+    WA_Idle="Idle"
+    WA_IdleEmpty="Idle"
+    WA_Fire="Idle"
+    WA_Reload="Idle"
+    WA_ReloadEmpty="Idle"
+    WA_ProneReload="Idle"
+    WA_ProneReloadEmpty="Idle"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"

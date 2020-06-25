@@ -13,15 +13,15 @@ defaultproperties
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
 
-    WA_Idle="idle_p38"
-    WA_IdleEmpty="empty_p38"
-    WA_Fire="idle_p38"
+    WA_Idle="Idle"
+    WA_IdleEmpty="Idle"
+    WA_Fire="Idle"
 
-    WA_Reload="idle_p38"
-    WA_ProneReload="idle_p38"
-    WA_ReloadEmpty="idle_p38"
-    WA_ProneReloadEmpty="idle_p38"
-    WA_PostReload="idle_p38"
+    WA_Reload="Idle"
+    WA_ProneReload="Idle"
+    WA_ReloadEmpty="Idle"
+    WA_ProneReloadEmpty="Idle"
+    WA_PostReload="Idle"
 
     PA_ReloadAnim="stand_reloadhalf_tt33"
     PA_ReloadEmptyAnim="stand_reloadempty_tt33"
