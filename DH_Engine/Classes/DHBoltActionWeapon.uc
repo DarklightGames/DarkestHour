@@ -640,7 +640,7 @@ simulated function byte GetRoundsToLoad()
         return 0;
     }
 
-    CurrentLoadedRounds = AmmoAmount(0) - int(!bWaitingToBolt);
+    CurrentLoadedRounds = AmmoAmount(0) - int(!bShouldSkipBolt && !bWaitingToBolt);
 
     //ensure we haven't dipped below 0
     CurrentLoadedRounds = Max(0,CurrentLoadedRounds);
