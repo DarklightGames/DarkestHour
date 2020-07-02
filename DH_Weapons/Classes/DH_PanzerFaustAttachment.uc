@@ -13,9 +13,9 @@ defaultproperties
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPanzerfaust'
-    //mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
+    mExhFlashClass=class'DH_Effects.DH3rdPersonPFaustExhaustFX'
     MuzzleBoneName="tip"
-    //ExhaustBoneName="default"
+    ExhaustBoneName="tip"
 
     PA_MovementAnims(0)="stand_jogF_faust"
     PA_MovementAnims(1)="stand_jogB_faust"

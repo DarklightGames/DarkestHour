@@ -12,7 +12,7 @@ defaultproperties
     mExhFlashClass=class'DH_Effects.DH3rdPersonPSchreckExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
     MuzzleBoneName="Muzzle"
-    ExhaustBoneName="ejector"
+    ExhaustBoneName="dummy_rocket"
 
     WA_Idle="idle_panzerschreck"
     WA_Fire="idle_panzerschreck"

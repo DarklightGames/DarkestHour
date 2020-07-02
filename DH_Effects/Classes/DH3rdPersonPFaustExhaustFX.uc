@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH3rdPersonPSchreckExhaustFX extends Emitter;
+class DH3rdPersonPFaustExhaustFX extends Emitter;
 
 defaultproperties
 {
@@ -34,12 +34,12 @@ defaultproperties
         MaxParticles=15
         Opacity=0.50
         Name="Smoke"
-        StartLocationOffset=(X=-20.000000)
+        StartLocationOffset=(X=-50.000000)
         StartLocationRange=(X=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Max=0.050000))
         StartSpinRange=(X=(Max=1.000000))
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=5.000000)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.000000)
         InitialParticlesPerSecond=50000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.explosions.LSmoke1'
@@ -69,25 +69,25 @@ defaultproperties
         FadeInEndTime=0.080000
         MaxParticles=10
         Name="rear flash"
-        StartLocationOffset=(X=-50.000000)
+        StartLocationOffset=(X=-20.000000)
         StartLocationShape=PTLS_Sphere
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=0.500000,Max=1.000000),Z=(Min=0.500000,Max=1.000000))
-        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=9.000000)
-        StartSizeRange=(X=(Min=4.000000,Max=6.000000),Y=(Min=4.000000,Max=6.000000),Z=(Min=4.000000,Max=6.000000))
+        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=8.000000)
+        StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
         InitialParticlesPerSecond=5000.000000
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.explosions.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.200000,Max=0.300000)
-        StartVelocityRange=(X=(Min=-300.000000),Y=(Min=-30.000000,Max=30.000000),Z=(Min=-30.000000,Max=30.000000))
+        StartVelocityRange=(X=(Min=-200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter0
-        BeamDistanceRange=(Min=150.000000,Max=250.000000)
+        BeamDistanceRange=(Min=100.000000,Max=200.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=3
         UseColorScale=True
@@ -95,7 +95,7 @@ defaultproperties
         FadeIn=True
         RespawnDeadParticles=False
         UniformSize=True
-        //StartLocationOffset=(X=0.000000)
+        StartLocationOffset=(X=-20.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.040000
@@ -103,10 +103,10 @@ defaultproperties
         FadeInEndTime=0.0
         MaxParticles=8
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=150.0,Max=250.000000),Y=(Min=150.0,Max=250.000000),Z=(Min=150.0,Max=250.000000))
+        StartSizeRange=(X=(Min=100.0,Max=200.000000),Y=(Min=100.0,Max=200.000000),Z=(Min=100.0,Max=200.000000))
         Texture=Texture'DH_FX_Tex.Effects.Spotlight'
-        LifetimeRange=(Min=0.15,Max=0.30)
-        StartVelocityRange=(X=(Min=-50.000000,Max=-100.000000))
+        LifetimeRange=(Min=0.150000,Max=0.300000)
+        StartVelocityRange=(X=(Min=-50.000000,Max=-50.000000))
     End Object
     Emitters(2)=BeamEmitter'BeamEmitter0'
 }
