@@ -7,17 +7,17 @@ class DH_SpringfieldScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="M1903 Springfield Scoped"
+    ItemName="M1903A4 Springfield Scoped"  
     FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'
     PickupClass=class'DH_Weapons.DH_SpringfieldScopedPickup'
 
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_Scoped'
-    Skins(0)=Texture'DH_Springfield_tex.Scopes.Springfield_tex'
-    Skins(4)=Texture'DH_Weapon_tex.AlliedSmallArms.BARAmmo'
-    //HighDetailOverlay=
-    bUseHighDetailOverlayIndex=false  //to do
+    Skins(0)=Texture'DH_Springfield_tex.Rifle.Springfield_tex'
+    Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.BARAmmo'
+    HighDetailOverlay=Shader'DH_Springfield_tex.Rifle.Springfield_S'
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
 	sleevenum=1
 	handnum=2
@@ -32,7 +32,7 @@ defaultproperties
     PlayerFOVZoom=36.0 // 2.5x
     ScopePortalFOV=15.0  // worse zoom than kar98k
     ScopePortalFOVHigh=15.0
-    LensMaterialID=3
+    LensMaterialID=4
     bUsesIronsightFOV=false
 
     MaxNumPrimaryMags=13

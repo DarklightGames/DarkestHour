@@ -7,19 +7,19 @@ class DH_BHPAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.BHP_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BHP_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.bhp_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     bRapidFire=false
 
-    WA_Idle="Idle"
-    WA_IdleEmpty="Idle"
-    WA_Fire="Idle"
-    WA_Reload="Idle"
-    WA_ReloadEmpty="Idle"
-    WA_ProneReload="Idle"
-    WA_ProneReloadEmpty="Idle"
+    WA_Idle="idle_p38"
+    WA_IdleEmpty="empty_p38"
+    WA_Fire="shoot_p38"
+    WA_Reload="reloadhalf_p38"
+    WA_ReloadEmpty="reloadempty_p38"
+    WA_ProneReload="prone_reloadhalf_p38"
+    WA_ProneReloadEmpty="prone_reloadempty_p38"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
