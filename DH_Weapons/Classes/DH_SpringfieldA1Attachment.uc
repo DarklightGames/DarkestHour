@@ -8,7 +8,7 @@ class DH_SpringfieldA1Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.SpringfieldA1_3rd'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.kar98'  //CHANGE
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldA1_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
