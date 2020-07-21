@@ -8,5 +8,5 @@ class DH_IncendiaryBottleNo1Pickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_IncendiaryBottleNo1Pickup'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.sov_bottleNo1'
+    StaticMesh=StaticMesh'DH_IncendiaryBottles_stc.Weapons.BottleNo1'
 }

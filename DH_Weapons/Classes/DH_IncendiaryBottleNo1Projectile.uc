@@ -8,7 +8,7 @@ class DH_IncendiaryBottleNo1Projectile extends DHThrowableIncendiaryProjectile;
 defaultproperties
 {
     PickupClass=class'DH_Weapons.DH_IncendiaryBottleNo1Pickup'
-    StaticMesh=StaticMesh'DH_WeaponPickups.sov_BottleNo1'
+    StaticMesh=StaticMesh'DH_IncendiaryBottles_stc.Weapons.BottleNo1'
 
     // Sound
     ExplosionSoundRadius=300.0
