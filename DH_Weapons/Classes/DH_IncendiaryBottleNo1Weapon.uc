@@ -41,7 +41,7 @@ class DH_IncendiaryBottleNo1Weapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="Incendiary Bottle No.1"
+    ItemName="Flammable mixture No.1"
     DisplayFOV=70.0
     GroupOffset=3
 

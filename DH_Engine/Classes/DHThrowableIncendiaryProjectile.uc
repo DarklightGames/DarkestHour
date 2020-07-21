@@ -8,43 +8,41 @@ class DHThrowableIncendiaryProjectile extends DHProjectile
 
 const EXPLOSION_SOUNDS_MAX = 3;
 
+var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
+var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
+var     AvoidMarker     Fear;             // scares the bots away from this
+var     byte            Bounces;
+var     bool            bDud;
+var     vector          HitVelocity;
+
+// Surface damping
 var     float           MinImpactSpeedToExplode;
 var     float           MaxObliquityAngleToExplode; // [degrees] // https://www.researchgate.net/figure/Definition-of-projectile-notations-including-the-angle-of-attack-AoA-obliquity-angle_fig10_259515946
 var class<WeaponPickup> PickupClass;                // pickup class when thrown but did not explode & lies on ground
 var     array<float>    SurfaceDampen;
 
-var     class<Actor>    FlameEffect;
+// Explosion / splash
 var     class<Actor>    SubProjectileClass;
 var     int             SubProjectilesAmount;
-var     float           ExplosionSoundRadius;
+var     float           SubProjectileSpawnDistance;
 var     class<Emitter>  ExplodeEffectClass;
-var private Actor       TrailInstance;
+var     class<Emitter>  WaterSplashEffect;
 
-var     class<Actor>    WaterSplashEffect;
-var     sound           WaterHitSound;
-var     array<sound>    SurfaceHits;
-
-//==============================================================================
-// Variables from deprecated ROThrowableExplosiveProjectile:
-
-var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
-var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
-var     bool            bDud;
+// Sound effects
 var     sound           ExplosionSound[EXPLOSION_SOUNDS_MAX];
-var     AvoidMarker     Fear;             // scares the bots away from this
-var     byte            Bounces;
+var     float           ExplosionSoundRadius;
+var     array<sound>    SurfaceHits;
+var     sound           WaterHitSound;
 
-var Vector              HitVelocity;
+// Trail effect
+var         class<Emitter> ProjectileTrailEffect;
+var private Emitter        ProjectileTrail;
 
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         Bounces, bDud;
-
-    // Functions a client can call on the server
-    // reliable if( Role<ROLE_Authority )
-    //     ServerDoSomething;
 }
 
 simulated function PostBeginPlay()
@@ -65,11 +63,11 @@ simulated function PostBeginPlay()
         bDud = FRand() < FailureRate;
     }
 
-    if (FlameEffect != none && Level.NetMode != NM_DedicatedServer)
+    if (ProjectileTrailEffect != none && Level.NetMode != NM_DedicatedServer)
     {
-        TrailInstance = Spawn(FlameEffect);
-        TrailInstance.SetBase(self);
-        TrailInstance.SetRelativeLocation(vect(0, 0, 0));
+        ProjectileTrail = Spawn(ProjectileTrailEffect);
+        ProjectileTrail.SetBase(self);
+        ProjectileTrail.SetRelativeLocation(vect(0, 0, 0));
 
         bDynamicLight = true;
     }
@@ -79,7 +77,6 @@ simulated function PostBeginPlay()
     }
 
     Acceleration = 0.5 * PhysicsVolume.Gravity;
-
     RotationRate.Pitch = -(90000 + Rand(30000));
     // RandSpin(100000.0);
 
@@ -91,49 +88,14 @@ simulated function PostBeginPlay()
 
 simulated function Destroyed()
 {
-    local actor TraceHitActor;
-    local vector TraceHitLocation;
-    local vector TraceHitNormal;
-
     if (Fear != none)
     {
         Fear.Destroy();
     }
 
-    if (TrailInstance != none)
+    if (ProjectileTrail != none)
     {
-        TrailInstance.Destroy();
-    }
-
-    if (EffectIsRelevant(Location, false))
-    {
-        // spawn explosion fx:
-        if (ExplodeEffectClass != none)
-        {
-            Spawn(ExplodeEffectClass,,, Location, rotator(vect(0, 0, 1)));
-        }
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            PlaySound(ExplosionSound[Rand(EXPLOSION_SOUNDS_MAX)],, 5.0,, ExplosionSoundRadius, 1.0, true);
-
-            if (ExplosionDecal != none)
-            {
-                TraceHitActor = Trace(TraceHitLocation,
-                                      TraceHitNormal,
-                                      Location + (16.0 * Normal(HitVelocity)),
-                                      Location,
-                                      true);
-
-                // Spawn explosion decal only when terrain or a static mesh is hit
-                if (TraceHitActor != none &&
-                    !TraceHitActor.IsA('DHCollisionMeshActor') &&
-                    (TraceHitActor.IsA('TerrainInfo') || TraceHitActor.IsA('StaticMeshActor')))
-                {
-                    Spawn(ExplosionDecal, self,, Location, rotator(HitVelocity)); // rotator(vect(0,0,-1))
-                }
-            }
-        }
+        ProjectileTrail.Destroy();
     }
 
     super.Destroyed();
@@ -383,63 +345,103 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-// Calls Destroy()
+simulated function SpawnEffects(vector HitLocation, vector HitNormal)
+{
+    local actor  TraceHitActor;
+    local vector TraceHitLocation;
+    local vector TraceHitNormal;
+
+    if (!EffectIsRelevant(Location, false))
+    {
+        return;
+    }
+
+    // Spwn explosion effect
+    if (ExplodeEffectClass != none)
+    {
+        Spawn(ExplodeEffectClass,,, Location, rotator(vect(0, 0, 1)));
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PlaySound(ExplosionSound[Rand(EXPLOSION_SOUNDS_MAX)],, 5.0,, ExplosionSoundRadius, 1.0, true);
+
+        if (ExplosionDecal != none)
+        {
+            TraceHitActor = Trace(TraceHitLocation,
+                                  TraceHitNormal,
+                                  Location + (16.0 * Normal(HitVelocity)),
+                                  Location,
+                                  true);
+
+            // Spawn explosion decal only when terrain or a static mesh is hit
+            if (TraceHitActor != none &&
+                !TraceHitActor.IsA('DHCollisionMeshActor') &&
+                (TraceHitActor.IsA('TerrainInfo') || TraceHitActor.IsA('StaticMeshActor')))
+            {
+                Spawn(ExplosionDecal, self,, Location, rotator(HitVelocity)); // rotator(vect(0,0,-1))
+            }
+        }
+    }
+}
+
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (!bDud)
     {
         BlowUp(HitLocation);
     }
-
-    Destroy();
 }
 
-// Deals damage, creates fx & sfx
-simulated function BlowUp(vector HitLocation)
+function BlowUp(vector HitLocation)
 {
-    local Actor Instance, TracedActorHit;
+    local Actor SubProjectile, TracedActorHit;
     local ESurfaceTypes HitSurfaceType;
     local vector TracedHitPoint, TracedHitNormal;
     local rotator Spread;
+    local vector EjectDirection;
     local int i;
 
-    if (Role == ROLE_Authority)
+    if (Role != ROLE_Authority)
     {
-        MakeNoise(1.0);
+        return;
+    }
 
-        HitSurfaceType = TraceForHitSurfaceType(Normal(HitLocation - Location),
-                                                /*out*/ TracedHitPoint,
-                                                /*out*/ TracedHitNormal,
-                                                /*out*/ TracedActorHit);
+    MakeNoise(1.0);
 
-        // spawn flames:
-        if (InstigatorController != none)
+    HitSurfaceType = TraceForHitSurfaceType(Normal(HitLocation - Location),
+                                            /*out*/ TracedHitPoint,
+                                            /*out*/ TracedHitNormal,
+                                            /*out*/ TracedActorHit);
+
+    // Spawn sub-projectiles (flames)
+    if (InstigatorController != none)
+    {
+        for(i = 0; i < SubProjectilesAmount; i++)
         {
-            for(i = 0; i < SubProjectilesAmount; i++)
+            // Sub-projectiles sometimes fail to spawn when when they hit
+            // static meshes. To combat this, we spawn them at a slight
+            // distance from the hit locations.
+            Spread.Yaw = 32768 * (FRand() - 0.5);
+            Spread.Pitch = 32768 * (FRand() - 0.5);
+            Spread.Roll = 32768 * (FRand() - 0.5);
+            EjectDirection = Normal(Velocity) >> Spread;
+
+            SubProjectile = Spawn(SubProjectileClass,
+                                InstigatorController,
+                                ,
+                                HitLocation + EjectDirection * SubProjectileSpawnDistance);
+
+            if (SubProjectile != none)
             {
-                // TODO: Instances fail to spawn when hitting certain things (ammo
-                // crates, inner walls of HQs, etc.).
-                Instance = Spawn(SubProjectileClass, InstigatorController,, HitLocation);
+                SubProjectile.LifeSpan = 5.0 + (FRand() * 30.0);
+                SubProjectile.Velocity = EjectDirection * Lerp(FRand(), 60, 450);
 
-                if (Instance != none)
+                if (TracedActorHit != none)
                 {
-                    // 65536  ==  360', 32768  ==  180', 16384  ==  90' [degrees]
-                    Spread.Yaw = 32768 * (FRand() - 0.5);
-                    Spread.Pitch = 32768 * (FRand() - 0.5);
-                    Spread.Roll = 32768 * (FRand() - 0.5);
-
-                    Instance.LifeSpan = 5.0 + (FRand() * 30.0);
-                    Instance.Velocity = (Normal(Velocity) >> Spread) * Lerp(FRand(), 60, 450);
-
-                    if (TracedActorHit != none)
-                    {
-                        Instance.SetBase(TracedActorHit);
-                    }
+                    SubProjectile.SetBase(TracedActorHit);
                 }
-
             }
-
-            // if (Level.NetMode == NM_Standalone) DrawStayingDebugLine(HitLocation, HitLocation + instance.Velocity, 255,0,0);
         }
     }
 }
@@ -555,7 +557,7 @@ simulated function CheckForSplash(vector Position)
 
             // fire is out:
             bDud = true;
-            TrailInstance.Destroy();
+            ProjectileTrail.Destroy();
         }
     }
 }
@@ -632,7 +634,7 @@ defaultproperties
     SubProjectilesAmount=20
     ExplodeEffectClass=none
     WaterSplashEffect=class'ROEffects.ROBulletHitWaterEffect'
-    // FlameEffect=class'DH_Effects.DHMolotovCoctailTrail'
+    // ProjectileTrailEffect=class'DH_Effects.DHMolotovCoctailTrail'
     // ExplosionDecal=class'DH_Effects.DH_MolotovMark'
 
     // Give light
