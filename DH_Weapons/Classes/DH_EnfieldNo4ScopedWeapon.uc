@@ -57,6 +57,6 @@ defaultproperties
     MagPartialReloadAnim="reload_half"
 
     PreReloadAnim="reload_start"
-    PostReloadAnim="reload_end"
+    PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
 }

@@ -165,6 +165,7 @@ simulated state DeployingBipod extends WeaponBusy
 
         if (bUsingSights)
         {
+            ZoomOut();
             Anim = BipodHipToDeploy;
         }
         else if (AmmoAmount(0) < 1 && HasAnim(IdleToBipodDeployEmpty))
@@ -187,11 +188,6 @@ simulated state DeployingBipod extends WeaponBusy
     }
 
 Begin:
-    if (bUsingSights)
-    {
-        ZoomOut();
-    }
-
     if (InstigatorIsLocalHuman())
     {
         SmoothZoom(true);

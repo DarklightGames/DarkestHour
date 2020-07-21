@@ -28,7 +28,6 @@ defaultproperties
     FireModeClass(1)=class'DH_Equipment.DH_RedSmokeTossFire'
     AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
     PickupClass=class'DH_Equipment.DH_RedSmokePickup'
-    //Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
 
     Mesh=SkeletalMesh'DH_M8Grenade_1st.M8'
     Skins(1)=Texture'DH_M8Grenade_tex.m16.M16red'

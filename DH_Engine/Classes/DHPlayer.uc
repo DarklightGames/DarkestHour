@@ -159,6 +159,11 @@ var     rotator                 LazyCamRotationTarget;
 // Surrender
 var     bool                    bSurrendered;
 
+// Paradrops
+var     class<DHMapMarker>      ParadropMarkerClass;
+var     float                   ParadropHeight;
+var     float                   ParadropSpreadModifier;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -183,12 +188,12 @@ replication
         ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrenderRequest;
+        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -3391,9 +3396,30 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 
 function ClientSaveROIDHash(string ROID)
 {
+    local HTTPRequest PatronRequest;
+    local string PatronTier;
+
     ROIDHash = ROID;
 
     SaveConfig();
+
+    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
+
+    // If we have script patron status, then set patron status on server
+    if (PatronTier != "")
+    {
+        ServerSetPatronTier(PatronTier);
+    }
+    else // Else, check via HTTP request for patron status
+    {
+        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest.Method = "GET";
+        PatronRequest.Host = "api.darklightgames.com";
+        PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
+        PatronRequest.OnResponse = PatronRequestOnResponse;
+        PatronRequest.Send();
+    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -5221,6 +5247,157 @@ function ServerSquadVolunteerToAssist()
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// PARADROPS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+// Moves the player to a specified location and gives him a parachute.
+function Paradrop(vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local Pawn PlayerPawn;
+    local Vehicle DrivenVehicle;
+
+    DrivenVehicle = Vehicle(Pawn);
+
+    if (DrivenVehicle != none)
+    {
+        if (!bForceOutOfVehicle && !DrivenVehicle.IsA('DHATGun'))
+        {
+            return;
+        }
+
+        // Player is manning an AT gun, so we kick him out of it.
+        DrivenVehicle.KDriverLeave(true);
+    }
+
+    PlayerPawn = DHPawn(Pawn);
+
+    if (PlayerPawn != none)
+    {
+        PlayerPawn.SetLocation(DropLocation + RandRange(1.0, 2.0) * SpreadModifier * vector(RotRand()));
+        DHPawn(PlayerPawn).GiveChute();
+    }
+}
+
+function ParadropGroup(out array<DHPlayerReplicationInfo> PlayersToDrop, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local DHPlayer PC;
+    local int i;
+
+    for (i = 0; i < PlayersToDrop.Length; ++i)
+    {
+        PC = DHPlayer(PlayersToDrop[i].Owner);
+
+        if (PC != none)
+        {
+            PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
+        }
+    }
+}
+
+function ServerParadropPlayer(DHPlayerReplicationInfo PRI, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC != none)
+    {
+        PC.Paradrop(DropLocation, SpreadModifier, bForceOutOfVehicle);
+    }
+}
+
+function ServerParadropTeam(byte TeamIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local array<DHPlayerReplicationInfo> PlayersToDrop;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex)
+        {
+            PlayersToDrop[PlayersToDrop.Length] = PRI;
+        }
+    }
+
+    ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
+}
+
+function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation, optional float SpreadModifier, optional bool bForceOutOfVehicle)
+{
+    local array<DHPlayerReplicationInfo> PlayersToDrop;
+
+    if (TeamIndex > 1 || SquadReplicationInfo == none)
+    {
+        return;
+    }
+
+    if (SquadIndex >= 0)
+    {
+        SquadReplicationInfo.GetMembers(TeamIndex, SquadIndex, PlayersToDrop);
+    }
+    else
+    {
+        SquadReplicationInfo.GetUnassignedPlayers(TeamIndex, PlayersToDrop);
+    }
+
+    ParadropGroup(PlayersToDrop, DropLocation, SpreadModifier, bForceOutOfVehicle);
+}
+
+simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
+{
+    local PersonalMapMarker ParadropMarker;
+
+    ParadropMarker = FindPersonalMarker(ParadropMarkerClass);
+
+    if (ParadropMarker.MapMarkerClass != none)
+    {
+        ParadropLocation = ParadropMarker.WorldLocation;
+        ParadropLocation.Z = ParadropHeight;
+
+        return true;
+    }
+}
+
+simulated function bool GetSquadLeaderParadropLocation(out vector ParadropLocation, DHPlayerReplicationInfo SelectedPRI)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || GetSquadIndex() < 0 || SquadMemberLocations[0] == 0)
+    {
+        return false;
+    }
+
+    // We use squad leader's quantized position since we don't need
+    // precision here.
+    class'UQuantize'.static.DequantizeClamped2DPose(SquadMemberLocations[0],
+                                                    ParadropLocation.X,
+                                                    ParadropLocation.Y);
+
+    ParadropLocation = GRI.GetWorldCoords(ParadropLocation.X, ParadropLocation.Y);
+    ParadropLocation.Z = ParadropHeight;
+
+    return true;
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -5556,6 +5733,19 @@ function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
         if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
         {
             return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return true;
         }
     }
 }
@@ -6235,6 +6425,64 @@ function ServerRequestBanInfo(int PlayerID)
     }
 }
 
+// TODO: this needs ot change!
+function PatronRequestOnResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
+{
+    local JSONParser Parser;
+    local JSONObject O, Patron;
+    local JSONArray Results;
+
+    if (Status == 200)
+    {
+        Log("Patron status request success (" $ Status  $ ")");
+
+        Parser = new class'JSONParser';
+        O = Parser.ParseObject(Content);
+
+        Results = O.Get("results").AsArray();
+
+        if (Results.Size() == 1)
+        {
+            Patron = Results.Get(0).AsObject();
+
+            if (Patron != none)
+            {
+                ServerSetPatronTier(Patron.Get("tier").AsString());
+            }
+        }
+    }
+}
+
+// Client-to-server function that reports the player's patron tier to the server.
+function ServerSetPatronTier(string PatronTier)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.PatronTier = GetPatronTier(PatronTier);
+    }
+}
+
+function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string Tier)
+{
+    switch (Tier)
+    {
+        case "lead":
+            return PATRON_Lead;
+        case "bronze":
+            return PATRON_Bronze;
+        case "silver":
+            return PATRON_Silver;
+        case "gold":
+            return PATRON_Gold;
+        default:
+            return PATRON_None;
+    }
+}
+
 // Client-to-server function when player wants to volunteer to be squad leader.
 function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
 {
@@ -6814,6 +7062,11 @@ defaultproperties
     ViewFOVMax=100.0
     ConfigViewFOV=85.0
 
+    // Paradrops
+    ParadropMarkerClass=class'DHMapMarker_Paradrop'
+    ParadropHeight=10000
+    ParadropSpreadModifier=600
+
     // Other values
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
@@ -6837,4 +7090,5 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
+    PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_C96Weapon extends DHFastAutoWeapon;
+class DH_C96Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
@@ -13,27 +13,35 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_C96Attachment'
     PickupClass=class'DH_Weapons.DH_C96Pickup'
 
-    Mesh=SkeletalMesh'DH_C96_1st.c96'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.c96_S'
+    Mesh=SkeletalMesh'DH_C96_1st.c96_mesh'
+
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    HighDetailOverlayIndex=0
+    Skins(0)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
+    handnum=2
+    sleevenum=1
 
-    PlayerIronsightFOV=70.0
-    IronSightDisplayFOV=45.0
+    SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
-    bHasSelectFire=true
+    DisplayFOV=75.0
+    IronSightDisplayFOV=70
+
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
+    bHasSelectFire=false
+
+    bTwoMagsCapacity=true
+    bPlusOneLoading=false
 
     SelectEmptyAnim="Draw_empty"
-    PutDownAnim="putaway"
+    PutDownAnim="put_away"
     PutDownEmptyAnim="putaway_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="Iron_In_empty"
     IronPutDownEmpty="Iron_Out_empty"
-    SelectFireAnim="switch_fire"
-    SelectFireIronAnim="Iron_switch_fire"
+
     SprintStartEmptyAnim="Sprint_Start_Empty"
     SprintLoopEmptyAnim="Sprint_Middle_Empty"
     SprintEndEmptyAnim="Sprint_End_Empty"
@@ -41,4 +49,6 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
+
+    FirstSelectAnim="Draw2"
 }
