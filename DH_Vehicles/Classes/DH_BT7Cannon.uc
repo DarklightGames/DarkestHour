@@ -68,7 +68,7 @@ defaultproperties
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
-    InitialAltAmmo=60
+    InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
@@ -76,9 +76,9 @@ defaultproperties
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire03'
+    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire01'
+    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire02'
+    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire03'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
@@ -89,5 +89,5 @@ defaultproperties
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=1.35)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=2.2,HUDProportion=0.35)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=1.2,HUDProportion=0.35)
 }

@@ -97,11 +97,11 @@ defaultproperties
     ExitPositions(6)=(X=200.0,Y=0.0,Z=75.0)    // front
 
     // Sounds
-    SoundPitch=32 // half normal pitch = 1 octave lower
+    //SoundPitch=32 // half normal pitch = 1 octave lower
     MaxPitchSpeed=350
-    IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
+    IdleSound=SoundGroup'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_loop'
+    StartUpSound=Sound'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_start'
+    ShutDownSound=Sound'DH_CC_Vehicle_Sounds.engine_sounds.BT7_petrol_stop'
     LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
     RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
     RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
