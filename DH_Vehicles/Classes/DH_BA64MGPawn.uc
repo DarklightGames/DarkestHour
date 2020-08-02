@@ -34,7 +34,7 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //Driver's positions and anims
-    DriverPositions(0)=(ViewLocation=(X=0,Y=0,Z=0),PositionMesh=Mesh'DH_BA64_anm.BA64_turret_int',DriverTransitionAnim=VBA64_com_close,TransitionUpAnim=com_open,ViewPitchUpLimit=3500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=72.0,PositionMesh=Mesh'DH_BA64_anm.BA64_turret_int',DriverTransitionAnim=VBA64_com_close,TransitionUpAnim=com_open,ViewPitchUpLimit=3500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(ViewLocation=(X=0,Y=0,Z=0),PositionMesh=Mesh'DH_BA64_anm.BA64_turret_int',DriverTransitionAnim=VBA64_com_open,TransitionDownAnim=com_close,ViewPitchUpLimit=3500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriverPositions(2)=(ViewLocation=(X=0,Y=0,Z=0),ViewFOV=12.0,PositionMesh=Mesh'DH_BA64_anm.BA64_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
 

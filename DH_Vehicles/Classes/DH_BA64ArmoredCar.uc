@@ -125,7 +125,7 @@ defaultproperties
     DriverKillChance=900.0
     CommanderKillChance=600.0
     TraverseDamageChance=1250.0
-    DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Ba64_destoyed'
+    DestroyedVehicleMesh=StaticMesh'DH_BA64_stc.Ba64_destoyed'
 
     // Exit
     ExitPositions(0)=(X=-92.0,Y=4.0,Z=150.0)
