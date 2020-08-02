@@ -27,7 +27,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement) //CHANGE
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement) 
 
     // Driver
     DriverAttachmentBone=driver_attachment
@@ -98,9 +98,9 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=200,OutVal=0.75),(InVal=1500,OutVal=2.0),(InVal=2200,OutVal=0.0)))
     GearRatios(0)=-0.20
     GearRatios(1)=0.20
-    GearRatios(2)=0.35
-    GearRatios(3)=0.60
-    GearRatios(4)=0.85
+    GearRatios(2)=0.42
+    GearRatios(3)=0.80
+    GearRatios(4)=1.05
     TransRatio=0.16
     ChangeUpPoint=1990.000000
     ChangeDownPoint=1000.000000
@@ -111,7 +111,8 @@ defaultproperties
     IdleRPM=500.000000
     EngineRPMSoundRange=5000.000000
     RevMeterScale=4000.000000
-    GroundSpeed=325.000000
+    //GroundSpeed=325.000000
+	//^ for some reason this line makes it slow as hell, and it doesnt exist on gaz67 so i removed it
 
     // Damage
     Health=500.0
