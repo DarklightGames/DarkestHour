@@ -136,7 +136,8 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.75    //0.65    //vertical, passenger three
     VehicleHudOccupantsX(5)=0.36    //0.65    //horizontal, passenger four
     VehicleHudOccupantsY(5)=0.65    //0.75    //vertical, passenger four
-    //to do: spawnoverlay
+	
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.bt7'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

@@ -110,7 +110,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_l'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_j'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

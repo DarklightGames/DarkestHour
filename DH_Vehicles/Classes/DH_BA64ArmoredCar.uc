@@ -156,7 +156,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.5
     VehicleHudOccupantsY(1)=0.665
     VehicleHudOccupantsY(2)=none
-    //SpawnOverlay(0)=Material'  <to do
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.ba64'
 
     // Physics wheels
      Begin Object Class=SVehicleWheel Name=LFWheel
