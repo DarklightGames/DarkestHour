@@ -11,6 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_BA64_anm.BA64_turret_ext'
     CollisionStaticMesh=StaticMesh'DH_BA64_stc.BA64.BA64_Turret_Coll'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
+    bMatchSkinToVehicle=true
     GunnerAttachmentBone=com_attachment
     BeginningIdleAnim=com_idle_close
 
