@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_T3485CannonShellHE extends DHCannonShellHE;
@@ -23,7 +23,8 @@ defaultproperties
     bDebugInImperial=false
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=4.0

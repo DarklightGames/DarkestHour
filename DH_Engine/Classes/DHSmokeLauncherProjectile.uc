@@ -1,10 +1,36 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHSmokeLauncherProjectile extends DHMortarProjectileSmoke
     abstract;
+
+var bool        bHasSmokeTrail;  // some smoke pots ignite immediately upon firing
+var             class<Emitter>      MortarSmokeTrailClass;  // some smoke pots ignite immediately upon firing
+var             Emitter             SmokeTrail;
+var float       SmokeTrailDuration; // we want to destroy the trail a few seconds after landing (but not immediately b/c it looks weird)
+
+simulated function PostBeginPlay()
+{
+    if ( Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
+    {
+        SmokeTrail = Spawn(MortarSmokeTrailClass,self);
+        SmokeTrail.SetBase(self);
+    }
+
+    Super.PostBeginPlay();
+}
+
+simulated function HandleDestruction()
+{
+    if ( SmokeTrail != None )
+    {
+        SmokeTrail.LifeSpan = SmokeTrailDuration;
+    }
+
+    super.HandleDestruction();
+}
 
 // Modified so remove mortar shell's 'Whistle' state, with its descending sound & delayed impact effects
 // Also to ignore any collision with a vehicle weapon on the launcher's own vehicle
@@ -69,4 +95,22 @@ simulated function SpawnFiringEffect()
 defaultproperties
 {
     bUseCollisionStaticMesh=true // mostly for accurate detection of collision with own vehicle, preventing unwanted impacts
+
+    //Effects
+    bHasSmokeTrail=true
+    SmokeTrailDuration=4.0
+    MortarSmokeTrailClass=class'DH_Effects.DHMortarSmokeTrail'
+
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'IndustrySM.Barrels.Barrel_Green' //PLACEHOLDER: Emulates the 90mm Nb.K.S 39 smoke grenade
+    DrawScale=0.15
+
+    HitDirtEmitterClass=class'DH_Effects.DHSmokeMortarHitDirtEffect'
+    HitRockEmitterClass=class'DH_Effects.DHSmokeMortarHitRockEffect'
+    HitWoodEmitterClass=class'DH_Effects.DHSmokeMortarHitWoodEffect'
+    HitSnowEmitterClass=class'DH_Effects.DHSmokeMortarHitSnowEffect'
+
+    bFixedRotationDir=true
+    RotationRate=(Pitch=15000)
+    DesiredRotation=(Pitch=3000) //30000
 }

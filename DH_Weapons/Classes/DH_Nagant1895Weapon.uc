@@ -25,10 +25,9 @@ defaultproperties
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
 
-    SwayModifyFactor=2.0    //very hard double action trigger
+    SwayModifyFactor=1.8    //very hard double action trigger
 
     PreReloadAnim="single_open"
-
     SingleReloadAnim="single_insert"
     PostReloadAnim="single_close"
 }

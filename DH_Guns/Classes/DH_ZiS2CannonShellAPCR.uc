@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ZiS2CannonShellAPCR extends DHCannonShellAPDS;
@@ -21,6 +21,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
 
     //Penetration

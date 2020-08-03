@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIIILCannonShell extends DHGermanCannonShell;
@@ -20,8 +20,6 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-
 
     //Penetration
     DHPenetrationTable(0)=9.6

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MP41RWeapon extends DHFastAutoWeapon;
@@ -34,18 +34,6 @@ simulated function bool StartFire(int Mode)
     return false;
 }
 
-// Modified to play the click sound as there is no anim AND a hack to allow for another firemode for a DHFastAutoWeapon
-simulated function ToggleFireMode()
-{
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-
-    // Toggles the fire mode between single and auto
-    if (bHasSelectFire)
-    {
-        FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-    }
-}
-
 defaultproperties
 {
     SwayModifyFactor=0.75 // -0.5
@@ -70,6 +58,8 @@ defaultproperties
     IronSightDisplayFOV=60
 
     bHasSelectFire=true
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
@@ -91,6 +81,4 @@ defaultproperties
 
     MagEmptyReloadAnim="reload_empty_mp41r"
     MagPartialReloadAnim="reload_half_mp41r"
-
-
 }

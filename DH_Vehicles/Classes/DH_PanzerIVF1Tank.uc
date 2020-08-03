@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIVF1Tank extends DHArmoredVehicle;
@@ -30,7 +30,7 @@ defaultproperties
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-115.0,Y=70.0,Z=55.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=61000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
 
@@ -89,9 +89,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4g_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panzer4F1_turret_look'
+    VehicleHudImage=Texture'DH_Panzer4F1_tex.Interface.panzer4f1_body'
+    VehicleHudTurret=TexRotator'DH_Panzer4F1_tex.Interface.panzer4F1_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Panzer4F1_tex.Interface.panzer4F1_turret_look'
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.71
@@ -105,7 +105,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g' //TODO: need proper spawn image
+    SpawnOverlay(0)=Material'DH_Panzer4F1_tex.Interface.panzer4f1'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

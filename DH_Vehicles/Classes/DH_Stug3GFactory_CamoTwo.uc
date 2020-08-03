@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Stug3GFactory_CamoTwo extends DH_Stug3GFactory_Late // just a legacy class for backwards compatibility, as CamoTwo version was renamed to 'Late'

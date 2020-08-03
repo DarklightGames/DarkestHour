@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHConstructionSupplyAttachment_Static extends DHConstructionSupplyAttachment;
@@ -12,5 +12,4 @@ defaultproperties
     SupplyDepositInterval=5
     SupplyGenerationRate=300
     HumanReadableName="Supply Cache"
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
 }

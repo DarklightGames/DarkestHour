@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PPS43Weapon extends DHFastAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
     PickupClass=class'DH_Weapons.DH_PPS43Pickup'
 
-    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-Meshnew'
+    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-1st'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPS43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2

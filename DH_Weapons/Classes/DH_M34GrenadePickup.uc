@@ -8,5 +8,5 @@ class DH_M34GrenadePickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_M34GrenadeWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M34'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M34_pickup'
 }

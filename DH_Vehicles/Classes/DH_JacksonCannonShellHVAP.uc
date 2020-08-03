@@ -1,15 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JacksonCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {
-    Speed=61619.0 // 3350 fps or 1021 m/s
-    MaxSpeed=61619.0
-    SpeedFudgeScale=0.4
+    Speed=61624.0 // 3350 fps or 1021 m/s
+    MaxSpeed=61624.0
     ShellDiameter=9.0 //full caliber
     BallisticCoefficient=2.55 // Correct - verified on range at 1000 yards
 

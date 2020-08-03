@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_HellcatCannonShellHE extends DHCannonShellHE;
@@ -10,7 +10,7 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: pls find correct BC
+    BallisticCoefficient=1.368 //TODO: pls find correct BC, this is terribly wrong
 
     //Damage
     ImpactDamage=450

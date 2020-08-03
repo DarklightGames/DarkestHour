@@ -1,20 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_AVT40Weapon extends DHAutoWeapon;
-
-simulated function ToggleFireMode()
-{
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-
-    // Toggles the fire mode between single and auto
-    if (bHasSelectFire)
-    {
-        FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-    }
-}
 
 defaultproperties
 {
@@ -43,6 +32,7 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim=null
     SelectFireIronAnim=null
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     bHasBayonet=true
     BayonetBoneName="bayonet"

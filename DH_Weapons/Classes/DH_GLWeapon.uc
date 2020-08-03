@@ -18,14 +18,11 @@ defaultproperties
     GroupOffset=1
     Priority=2
 
-    Mesh=SkeletalMesh'DH_GL_1st.geballteLadung_mesh'
-    Skins(2)=Texture'DH_Weapon_CC2_tex.Grenades.gl_skin'
-    bUseHighDetailOverlayIndex=false
-    DisplayFOV=65.0
-    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
+    Mesh=SkeletalMesh'DH_GL_1st.GL_mesh'
 
-    SprintStartAnim="Sprint_Start"
-    SprintLoopAnim="Sprint_Middle"
-    SprintEndAnim="Sprint_Stop"
-    PreFireHoldAnim="Weapon_Down"
+    HighDetailOverlay=shader'Weapons1st_tex.Grenades.stiel_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+    DisplayFOV=70.0
+    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
 }

@@ -14,8 +14,8 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MAB38Pickup'
 
     Mesh=SkeletalMesh'DH_MAB_1st.MAB38-Mesh'
-    HighDetailOverlay=Shader'DH_MAB38_tex.MAB38.MAB38_s'
-    bUseHighDetailOverlayIndex=true
+
+    bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=0
     Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
 

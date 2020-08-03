@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_C96Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
+    Mesh=SkeletalMesh'Weapons3rd_anm.C96'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="tip"
@@ -15,8 +15,6 @@ defaultproperties
     ShellEjectionBoneName="weapon_eject"
 
     ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
-
-
 
     WA_Idle="Idle_Colt"
     WA_IdleEmpty="idle_empty_Colt"

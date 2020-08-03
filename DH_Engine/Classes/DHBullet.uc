@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHBullet extends DHBallisticProjectile
@@ -21,6 +21,8 @@ var     StaticMesh      DeflectedMesh;
 var     class<Emitter>  TracerEffectClass;
 var     Emitter         TracerEffect;
 var     float           TracerPullback;
+var     int             TracerHue;
+var     int             TracerSaturation;
 var     float           DampenFactor;
 var     float           DampenFactorParallel;
 
@@ -87,8 +89,8 @@ simulated function PostNetBeginPlay()
 
         LightBrightness = 90.0;
         LightRadius = 10.0;
-        LightHue = 45;
-        LightSaturation = 128;
+        LightHue = TracerHue;
+        LightSaturation = TracerSaturation;
         AmbientGlow = 254;
         LightCone = 16;
 
@@ -793,6 +795,8 @@ defaultproperties
     TracerPullback=150.0//150.0
     bBounce=true
     Bounces=1 //2
+    TracerHue=45
+    TracerSaturation=128
     DampenFactor=0.05//0.1
     DampenFactorParallel=0.10//0.05
 

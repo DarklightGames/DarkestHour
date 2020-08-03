@@ -18,6 +18,4 @@ defaultproperties
    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Webley.m1895'
-
-
 }

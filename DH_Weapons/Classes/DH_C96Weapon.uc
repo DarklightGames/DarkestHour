@@ -1,41 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_C96Weapon extends DHPistolWeapon;
-
-//completely replaces old full auto c96
-//will possibly make proper m712 in the future as a separate weapon
-
-
-// This weapon has a special bit of logic that plays an alternate animation
-// when it's first drawn.
-var bool bHasBeenDrawn;
-var name FirstSelectAnim;
-
-simulated state RaisingWeapon
-{
-    simulated function EndState()
-    {
-        // Marks the weapon as being drawn already.
-        super.EndState();
-
-        bHasBeenDrawn = true;
-    }
-}
-
-simulated function name GetSelectAnim()
-{
-    if (bHasBeenDrawn)
-    {
-        return SelectAnim;
-    }
-    else
-    {
-        return FirstSelectAnim;
-    }
-}
 
 defaultproperties
 {
@@ -47,9 +15,10 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_C96_1st.c96_mesh'
 
-    bUseHighDetailOverlayIndex=false
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
-    Skins(0)=Texture'DH_c96_tex.c96.c96'
+    Skins(0)=Texture'Weapons1st_tex.Pistols.Mauser_c96'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.c96_S'
     handnum=2
     sleevenum=1
 

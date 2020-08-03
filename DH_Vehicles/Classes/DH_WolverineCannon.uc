@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WolverineCannon extends DHVehicleCannon;
@@ -40,7 +40,6 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHE'
 
-
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
 
@@ -59,7 +58,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=15.0
-    AddedPitch=52
+    AddedPitch=20 //52
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'

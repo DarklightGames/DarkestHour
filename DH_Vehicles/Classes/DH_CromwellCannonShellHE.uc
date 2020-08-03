@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_CromwellCannonShellHE extends DHCannonShellHE;
@@ -10,7 +10,7 @@ defaultproperties
     Speed=27943.0
     MaxSpeed=27943.0
     ShellDiameter=7.5
-    BallisticCoefficient=1.686
+    BallisticCoefficient=1.686 //TODO: pls check
 
     //Damage
     ImpactDamage=475

@@ -5,34 +5,6 @@
 
 class DH_BHPWeapon extends DHPistolWeapon;
 
-// This weapon has a special bit of logic that plays an alternate animation
-// when it's first drawn.
-var bool bHasBeenDrawn;
-var name FirstSelectAnim;
-
-simulated state RaisingWeapon
-{
-    simulated function EndState()
-    {
-        // Marks the weapon as being drawn already.
-        super.EndState();
-
-        bHasBeenDrawn = true;
-    }
-}
-
-simulated function name GetSelectAnim()
-{
-    if (bHasBeenDrawn)
-    {
-        return SelectAnim;
-    }
-    else
-    {
-        return FirstSelectAnim;
-    }
-}
-
 defaultproperties
 {
     ItemName="Browning High-Power"
@@ -42,9 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BHPPickup'
 
     Mesh=SkeletalMesh'DH_BHP_1st.BHP-Mesh'
-    HighDetailOverlay=Shader'DH_BHP_tex.BHP.BHP_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=0
+    bUseHighDetailOverlayIndex=false
 
     Skins(0)=Texture'DH_BHP_tex.BHP.BHP'
 

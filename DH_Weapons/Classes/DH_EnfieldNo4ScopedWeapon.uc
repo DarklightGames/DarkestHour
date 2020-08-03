@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
@@ -57,6 +57,6 @@ defaultproperties
     MagPartialReloadAnim="reload_half"
 
     PreReloadAnim="reload_start"
-    PostReloadAnim="reload_end"
+    PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
 }

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2020
+//==============================================================================
+
 class DH_HetzerMountedMGPawn extends DH_StuH42MountedMGPawn;
 
 // Modified to prevent player from unbuttoning if MG is not turned sideways (otherwise it will be blocking hatch, due to hetzer's small size)

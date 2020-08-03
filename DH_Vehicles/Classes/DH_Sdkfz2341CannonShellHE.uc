@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
@@ -17,16 +17,36 @@ defaultproperties
     //Damage
     ImpactDamage=125
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=110.0
-    DamageRadius=250
+    Damage=125.0 //10.2 gr of TNT -- 2m kill radius
+    DamageRadius=600
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.10
     EngineFireChance=0.30
 
     //Effects
+    DrawScale=0.75
+    bHasTracer=true
     bHasShellTrail=true
-    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_YellowOrange'
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+
+    ExplosionDecal=class'ROEffects.GrenadeMark'
+    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+
+    BlurTime=2.0
+    BlurEffectScalar=0.9
+    PenetrationMag=110.0
+
+    //Sound
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+
+    bDebugInImperial=false
 
     //Penetration
     DHPenetrationTable(0)=1.9
@@ -52,20 +72,4 @@ defaultproperties
     MechanicalRanges(11)=(Range=1100,RangeValue=122.0)
     MechanicalRanges(12)=(Range=1200,RangeValue=131.0)
     bMechanicalAiming=true
-
-    bDebugInImperial=false
-
-    //Effects
-    BlurTime=2.0
-    BlurEffectScalar=0.9
-    PenetrationMag=110.0
-    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer' // static mesh shows as tracer so we see one, even thought HE shell inherits bHasTracer & has no CoronaClass
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
-    ExplosionDecal=class'ROEffects.GrenadeMark'
-    ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 }

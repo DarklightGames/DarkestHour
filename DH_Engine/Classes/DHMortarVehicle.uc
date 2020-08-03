@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHMortarVehicle extends ROVehicle
@@ -225,6 +225,7 @@ defaultproperties
     ExitPositions(2)=(X=-48.0,Y=-48.0)
     ExitPositions(3)=(X=-48.0,Y=48.0)
     ExitPositions(4)=(Y=-48.0)
+    ExitPositions(5)=()
 
     // Karma properties - minimal, just to stop "KInitActorDynamics: No Model" log error every time actor spawns (also had to add a small karma collision box to mesh)
     Begin Object Class=KarmaParamsRBFull Name=KParams0

@@ -1,20 +1,28 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHRocketWeaponAttachment extends DHWeaponAttachment
     abstract;
 
 var     mesh            EmptyMesh;       // the mesh to swap to after a round is fired
+
+var     bool            bPanzerfaustAttachment; //Panzerfaust 3rd person muzzle flash needs to be handled differently
 var     name            ExhaustBoneName;
 var     class<Emitter>  mExhFlashClass;
 var     Emitter         mExhFlash3rd;
 
-// Emptied out to avoid spawning mMuzFlash3rd as 3rd person effects are handled differently (& barrel steam emitter isn't relevant to rocket weapon)
+// Overridden to use standard muzzle flash code for non-Panzerfaust rocket weps
 simulated function PostBeginPlay()
 {
+    if (Level.NetMode != NM_DedicatedServer && mMuzFlashClass != none && !bPanzerfaustAttachment)
+    {
+        mMuzFlash3rd = Spawn(mMuzFlashClass);
+        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+    }
 }
+
 
 // Modified because the 3rd person effects are handled differently for rocket weapons
 simulated event ThirdPersonEffects()
@@ -38,10 +46,14 @@ simulated event ThirdPersonEffects()
 
         WeaponLight();
 
-        if (mMuzFlash3rd == none && mMuzFlashClass != none && MuzzleBoneName != '')
+        if (!bPanzerfaustAttachment)
         {
-            mMuzFlash3rd = Spawn(mMuzFlashClass);
-            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd.Trigger(self, none);
+        }
+        else
+        {
+                mMuzFlash3rd = Spawn(mMuzFlashClass);
+                AttachToBone(mMuzFlash3rd, MuzzleBoneName);
         }
 
         if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')
@@ -67,6 +79,7 @@ simulated event ThirdPersonEffects()
 
 defaultproperties
 {
+    bPanzerfaustAttachment=false
     bNetNotify=false // don't need to update bayonet fixing or steaming barrel for a rocket weapon
     bRapidFire=false
 }

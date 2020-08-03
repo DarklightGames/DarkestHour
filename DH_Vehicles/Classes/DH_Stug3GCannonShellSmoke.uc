@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Stug3GCannonShellSmoke extends DHCannonShellSmoke;
@@ -11,6 +11,10 @@ defaultproperties
     MaxSpeed=33073.0
     ShellDiameter=7.5
     BallisticCoefficient=2.1
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 

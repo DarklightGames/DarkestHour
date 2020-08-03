@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHTurretFireEffect extends VehicleDamagedEffect;
@@ -80,6 +80,8 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.5
         MaxParticles=30
+        StartLocationShape=PTLS_Sphere
+        SphereRadiusRange=(Max=20.000000)
         StartLocationOffset=(Z=-5.000000)
         InitialParticlesPerSecond=5.000000
         Texture=Texture'Effects_Tex.explosions.fire_quad'

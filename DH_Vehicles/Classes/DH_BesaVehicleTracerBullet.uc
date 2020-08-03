@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_BesaVehicleTracerBullet extends DH_BesaVehicleBullet;
@@ -12,6 +12,5 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'//'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'
     SpeedFudgeScale=0.50
-    LightHue=0
-    LightSaturation=0
+    TracerHue=0
 }

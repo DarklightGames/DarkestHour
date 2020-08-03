@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -7409,12 +7409,13 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=40.0
-    StanceChangeStaminaDrain=1.5
-    StaminaRecoveryRate=1.15
-    CrouchStaminaRecoveryRate=1.3
-    ProneStaminaRecoveryRate=1.5
-    SlowStaminaRecoveryRate=0.5
+    Stamina=50.0                        // How many second of stamina the player has
+    StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
+    StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
+    CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching
+    ProneStaminaRecoveryRate=2.5        // How much stamina to recover per second while proning
+    SlowStaminaRecoveryRate=0.75        // How much stamina to recover per second when moving
+    JumpStaminaDrain=2.5                // How much stamina is lost by jumping
 
     // Weapon aim
     IronsightBobAmplitude=1.0

@@ -15,10 +15,11 @@ defaultproperties
     WA_Idle="idle_MAB"
     WA_IdleEmpty="idle_MAB"
     WA_Fire="shoot_MAB"
-    WA_Reload="reloadhalf_MAB"
-    WA_ReloadEmpty="reloadempty_MAB"
-    WA_ProneReload="reloadhalf_MAB"
-    WA_ProneReloadEmpty="reloadempty_MAB"
+    WA_Reload="idle_MAB"
+    WA_ReloadEmpty="idle_MAB"
+    WA_ProneReload="idle_MAB"
+    WA_ProneReloadEmpty="idle_MAB"
+    //reload animations are unused because mag movement is not synced with the hand movement
 
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
@@ -5474,7 +5474,7 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=7
+        Minor=8
         Patch=2
         Prerelease=""
     End Object

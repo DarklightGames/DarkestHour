@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHThrowableExplosiveProjectile extends DHProjectile
@@ -713,55 +713,46 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
-            DampenFactorParallel = 0.0;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
+            DampenFactorParallel = 0.0;;
             break;
 
         case EST_Water:
@@ -773,7 +764,6 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
-            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
     }
 }

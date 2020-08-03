@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MP41Weapon extends DHAutoWeapon;
@@ -19,7 +19,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=45.0
     FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 

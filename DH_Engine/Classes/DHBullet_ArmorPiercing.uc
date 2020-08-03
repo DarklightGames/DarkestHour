@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
@@ -15,42 +15,6 @@ var     int                 WhizType;
 var     float               VehiclePenetrateSoundVolume;
 var     float               VehicleDeflectSoundVolume;
 
-// Tracers
-var     class<Emitter>      TracerEffectClass;
-var     Emitter             TracerEffect;
-var     StaticMesh          DeflectedMesh;
-var     float               TracerPullback;
-
-// Modified to set tracer properties if this is a tracer bullet (from DHBullet)
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    if (bHasTracer && Level.NetMode != NM_DedicatedServer)
-    {
-        SetDrawType(DT_StaticMesh);
-        bOrientToVelocity = true;
-
-        if (Level.bDropDetail)
-        {
-            bDynamicLight = false;
-        }
-        else
-        {
-            bDynamicLight = true;
-            LightType = LT_Steady;
-        }
-
-        LightBrightness = 90.0;
-        LightRadius = 10.0;
-        LightHue = 45;
-        LightSaturation = 128;
-        AmbientGlow = 254;
-        LightCone = 16;
-
-        TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
-    }
-}
 
 // From DHBullet, to use DHCollisionMeshActor handling that is specific to a bullet
 // But removing the bIsBulletProof checks if we hit a collision mesh, as this is an armour-piercing bullet
@@ -549,6 +513,7 @@ defaultproperties
     bBotNotifyIneffective=false
 
     // Tracer properties (won't affect ordinary bullet):
+    bHasShellTrail=false
     DrawScale=2.0
     TracerPullback=150.0
     bBounce=true

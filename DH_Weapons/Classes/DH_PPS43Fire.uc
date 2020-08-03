@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PPS43Fire extends DHFastAutoFire;
@@ -15,8 +15,8 @@ defaultproperties
     // Recoil
     RecoilRate=0.04285
     MaxVerticalRecoilAngle=260
-    MaxHorizontalRecoilAngle=90
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=4.0,OutVal=0.6),(InVal=8.0,OutVal=1.2),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    MaxHorizontalRecoilAngle=85
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=13.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.pps43.pps43_fire_loop'

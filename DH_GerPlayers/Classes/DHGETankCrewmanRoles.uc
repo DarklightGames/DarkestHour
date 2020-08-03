@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHGETankCrewmanRoles extends DHAxisTankCrewmanRoles
@@ -9,12 +9,12 @@ class DHGETankCrewmanRoles extends DHAxisTankCrewmanRoles
 defaultproperties
 {
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=none
-    GivenItems(0)="DH_Equipment.DHBinocularsItemGerman"
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M712Weapon')
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
+
+    GivenItems(0)="DH_Equipment.DHBinocularsItemGerman"
 
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'

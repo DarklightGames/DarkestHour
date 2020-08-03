@@ -1,37 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ColtM1911Weapon extends DHPistolWeapon;
-
-// This weapon has a special bit of logic that plays an alternate animation
-// when it's first drawn.
-var bool bHasBeenDrawn;
-var name FirstSelectAnim;
-
-simulated state RaisingWeapon
-{
-    simulated function EndState()
-    {
-        // Marks the weapon as being drawn already.
-        super.EndState();
-
-        bHasBeenDrawn = true;
-    }
-}
-
-simulated function name GetSelectAnim()
-{
-    if (bHasBeenDrawn)
-    {
-        return SelectAnim;
-    }
-    else
-    {
-        return FirstSelectAnim;
-    }
-}
 
 defaultproperties
 {
@@ -71,5 +43,5 @@ defaultproperties
     SprintLoopEmptyAnim="Sprint_Middle_Empty"
     SprintEndEmptyAnim="Sprint_End_Empty"
 
-    FirstSelectAnim="Draw2"  
+    FirstSelectAnim="Draw2"
 }
