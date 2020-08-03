@@ -12,7 +12,7 @@ defaultproperties
     skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
     skins(1)=Texture'allies_ahz_vehicles_tex.int_vehicles.BT7_int'
     bUseHighDetailOverlayIndex=false
-    //CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
+    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.BT7.BT7_turret_coll'
 
     // Turret armor
     FrontArmorFactor=1.5
