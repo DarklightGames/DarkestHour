@@ -5,6 +5,20 @@
 
 class DH_BrenCarrierTransport extends DHVehicle;
 
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin.Material1 = Skins[0];
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.FallbackMaterial = Skins[0];
+    DestroyedSkin.CombineOperation = CO_Multiply;
+    DestroyedMeshSkins[0] = DestroyedSkin;
+
+    super.DestroyAppearance();
+}
+
 defaultproperties
 {
     // Vehicle properties
