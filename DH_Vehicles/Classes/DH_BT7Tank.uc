@@ -44,9 +44,9 @@ defaultproperties
     DrivePos=(X=35,Y=0,Z=-5)
 
     //Driver's hatch overlay
-    HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
+    HUDOverlayClass=none //class'ROVehicles.KV1DriverOverlay'
     //HUDOverlayOffset=(X=2.0)
-    HUDOverlayFOV=90.0
+    //HUDOverlayFOV=90.0
 
     // Hull armor
     FrontArmor(0)=(Thickness=2.0,Slope=0.0,MaxRelativeHeight=-21.5,LocationName="lower nose") // the nose is rounded, so we do it in two parts - one flat and one slightly sloped
@@ -136,7 +136,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.75    //0.65    //vertical, passenger three
     VehicleHudOccupantsX(5)=0.36    //0.65    //horizontal, passenger four
     VehicleHudOccupantsY(5)=0.65    //0.75    //vertical, passenger four
-	
+
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.bt7'
 
     // Visible wheels
