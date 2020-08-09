@@ -16,10 +16,10 @@ defaultproperties
 
     //Damage
     bShatterProne=true
-    ImpactDamage=250
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.22
-    EngineFireChance=0.45
+    ImpactDamage=310
+    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
+    HullFireChance=0.4
+    EngineFireChance=0.6
 
     //Penetration
     DHPenetrationTable(0)=14.9

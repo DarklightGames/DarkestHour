@@ -12,7 +12,7 @@ defaultproperties
     ShellDiameter=8.8
     BallisticCoefficient=3.8 //TODO: find correct BC
 
-    ImpactDamage=775
+    ImpactDamage=1150  //109 gramms TNT filler
     HullFireChance=0.5
     EngineFireChance=0.98
 

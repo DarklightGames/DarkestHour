@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=1.87 // Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=450
+    ImpactDamage=460
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
-    HullFireChance=0.33
+    HullFireChance=0.36
     EngineFireChance=0.65
 
     //Penetration

@@ -13,8 +13,8 @@ defaultproperties
     BallisticCoefficient=2.96
 
     //Damage
-    ImpactDamage=650
-    Damage=415.0
+    ImpactDamage=373  //~~600 gramms TNT
+    Damage=300.0
     DamageRadius=700.0
 
     bDebugInImperial=false

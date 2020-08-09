@@ -14,18 +14,16 @@ defaultproperties
     BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
 
     //Damage
-    ImpactDamage=290
+    ImpactDamage=265 //30 gramms TNT filler
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.25
-    EngineFireChance=0.50
+    HullFireChance=0.30
+    EngineFireChance=0.55
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
 
     //Sound
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Penetration

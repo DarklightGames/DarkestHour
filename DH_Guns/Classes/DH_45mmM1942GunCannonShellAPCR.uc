@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=52506.0
 
     //Damage
-    ImpactDamage=280 // just a tungsten slug; no explosive filler
+    ImpactDamage=240 // just a tungsten slug; no explosive filler
 
     //Penetration
     DHPenetrationTable(0)=10.8  // 100m // TODO: confirm penetration

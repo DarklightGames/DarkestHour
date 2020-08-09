@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=52506.0
 
     //Damage
-    ImpactDamage=320
+    ImpactDamage=285  //30 gramms TNT filler
 
     //Penetration
     DHPenetrationTable(0)=7.1  // 100m

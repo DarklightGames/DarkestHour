@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=3.9
 
     //Damage
-    ImpactDamage=1800
-    Damage=450 //Going to treat this like a medium HE shell when it hits the ground
-    DamageRadius=700
-    HullFireChance=0.60
+    ImpactDamage=3000  //787 gramms TNT filler
+    Damage=1000 //Going to treat this like a powerful HE shell when it hits the ground
+    DamageRadius=900
+    HullFireChance=1.0
     EngineFireChance=1.0
 
     //Effects

@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.45
 
     //Damage
-    ImpactDamage=580
-    HullFireChance=0.40
-    EngineFireChance=0.70
+    ImpactDamage=580  //solid shell
+    HullFireChance=0.35
+    EngineFireChance=0.75
 
     //Penetration
     DHPenetrationTable(0)=18.5

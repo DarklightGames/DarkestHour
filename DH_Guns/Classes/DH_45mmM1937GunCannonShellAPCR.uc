@@ -14,10 +14,10 @@ defaultproperties
     BallisticCoefficient=0.7 // TODO: pls check accurate BC (this is from AHZ)
 
     //Damage
-    ImpactDamage=225 // just a tungsten slug; no explosive filler
+    ImpactDamage=220 // just a tungsten slug; no explosive filler
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    HullFireChance=0.20
-    EngineFireChance=0.43
+    HullFireChance=0.3
+    EngineFireChance=0.45
 
     bShatterProne=true
 

@@ -15,9 +15,9 @@ defaultproperties
     BallisticCoefficient=1.527 //TODO: find correct BC - this is grossly incorrect
 
     //Damage
-    ImpactDamage=545
+    ImpactDamage=505
     HullFireChance=0.38
-    EngineFireChance=0.75
+    EngineFireChance=0.63
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

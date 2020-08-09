@@ -11,10 +11,10 @@ defaultproperties
     WeaponClass=class'DH_Weapons.DH_PTRDWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
-    VehicleDamageModifier=0.75
-    TankDamageModifier=0.50
-    APCDamageModifier=0.75
-    TreadDamageModifier=0.5
+    TankDamageModifier=0.2
+    APCDamageModifier=0.2
+    VehicleDamageModifier=0.2
+    TreadDamageModifier=0.3
 
     PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
     bThrowRagdoll=true

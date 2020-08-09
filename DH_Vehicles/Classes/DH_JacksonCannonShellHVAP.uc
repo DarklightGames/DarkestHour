@@ -15,7 +15,7 @@ defaultproperties
     //Damage
     ImpactDamage=525
     HullFireChance=0.38
-    EngineFireChance=0.73
+    EngineFireChance=0.63
 
     //Penetration
     DHPenetrationTable(0)=30.6
