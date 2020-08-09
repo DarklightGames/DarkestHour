@@ -47,6 +47,7 @@ defaultproperties
     bManualTraverseOnly=true
     bHasAltFire=false
     OverlayCorrectionY=-80
+    OverlayCorrectionX=0
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
     GunsightSize=0.40
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
@@ -55,6 +56,7 @@ defaultproperties
     FireImpulse=(X=-110000.0)
 
     YawScaleStep=5.0
+    PitchScaleStep=10.0
 
     RangeTable(0)=(Mils=0,Range=115)
     RangeTable(1)=(Mils=25,Range=200)

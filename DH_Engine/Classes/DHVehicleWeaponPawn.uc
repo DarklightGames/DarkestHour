@@ -224,7 +224,7 @@ simulated function DrawSpottingScopeOverlay(Canvas C)
     if(!IsInState('ViewTransition'))
     {
         DrawRangeTable(C);
-        DrawPitch(C, C.SizeX * 0.27, C.SizeY * 0.5 - 150 + OverlayCorrectionY, 300, -89, 621, 355);
+        DrawPitch(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
         DrawYaw(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
 
     }
@@ -290,12 +290,12 @@ final function int GetGunYawRange()
     return GetGunYawMax() - GetGunYawMin();
 }
 
-simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
+    simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
 {
     local float i, CurrentYaw, StepX, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
     local string Label;
-    const VISIBLE_SEGMENTS = 40; // visible span on the indicator
+    const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
     // if ScaleStep was not passed by the caller set it to 1
     if(ScaleStep == 0.0)
@@ -304,15 +304,15 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
     }
 
     CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    YawLowerBound = CurrentYaw - ScaleStep * VISIBLE_SEGMENTS/2;
-    YawUpperBound = CurrentYaw + ScaleStep * VISIBLE_SEGMENTS/2;
+    YawLowerBound = CurrentYaw - ScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawUpperBound = CurrentYaw + ScaleStep * VISIBLE_YAW_SEGMENTS/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / ScaleStep;
     StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
-    IndicatorStep = LineSize / VISIBLE_SEGMENTS;
+    IndicatorStep = LineSize / VISIBLE_YAW_SEGMENTS;
 
     C.Font = C.TinyFont;
 
-    // Draw a long vertical bar that imitates edge of the indicator
+    // Draw a long horizontal bar that imitates edge of the indicator
     C.CurX = X;
     C.CurY = Y;
     C.DrawHorizontal(Y, LineSize);
@@ -326,7 +326,7 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
         t = (i - YawLowerBound) / StepX;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_SEGMENTS));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_YAW_SEGMENTS));
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = class'UMath'.static.FlooredDivision(i, ScaleStep);
@@ -383,91 +383,102 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
     C.CurY = Y + 15.0;
     C.DrawVertical(X + (LineSize / 2), 20.0);
 }
-
-simulated function DrawPitch(Canvas C,
-                            float X,
-                            float Y,
-                            float LineSize,
-                            float LowerLimit,
-                            float UpperLimit,
-                            int AllSegments
-                            )
+    
+simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
 {
-    local float ScaleStep, Range, Shade, MiddleOffset, StepY, MiddleIndex, ValueIndex, i;
-    local int t, LowerIndex, ZeroIndex, BottomLimit, TopLimit;
+    local float i, CurrentPitch, StepY, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
+    local int Shade, Quotient, t;
     local string Label;
-    local float Value;
+    const VISIBLE_PITCH_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
-    Value = GetGunPitch();
+    // if ScaleStep was not passed by the caller set it to 1
+    if(ScaleStep == 0.0)
+    {
+        ScaleStep = 1.0;
+    }
 
-    Range = (UpperLimit - LowerLimit);
-    StepY = LineSize / VISIBLE_SEGMENTS;
-    ScaleStep = (UpperLimit - LowerLimit) / AllSegments;
-    MiddleIndex = VISIBLE_SEGMENTS / 2.0;
-    MiddleOffset = StepY * MiddleIndex;
-    ValueIndex = (Value - LowerLimit) / ScaleStep;
-    ZeroIndex = (-LowerLimit) / ScaleStep;
-    LowerIndex = ValueIndex - ZeroIndex - (VISIBLE_SEGMENTS / 2);
-    BottomLimit = -ZeroIndex;
-    TopLimit = UpperLimit/ScaleStep;
+    CurrentPitch = class'DHUnits'.static.UnrealToMilliradians(GetGunPitch());
+    PitchLowerBound = CurrentPitch - ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
+    PitchUpperBound = CurrentPitch + ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
+    SegmentCount = (PitchUpperBound - PitchLowerBound) / ScaleStep;
+    StepY = (PitchUpperBound - PitchLowerBound) / SegmentCount;
+    IndicatorStep = LineSize / VISIBLE_PITCH_SEGMENTS;
 
     C.Font = C.TinyFont;
+
+    // Draw a long horizontal bar that imitates edge of the indicator
     C.CurX = X;
     C.CurY = Y;
+    C.DrawVertical(Y, LineSize);
 
-    C.DrawVertical(X, LineSize);
+    // Start drawing scale ticks
+    C.CurY = Y - 5.0;
 
-    C.CurX = X - 5.0;
-
-    i = LowerIndex;
-
-    for (t = 0; t <= VISIBLE_SEGMENTS; ++t)
+    for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
     {
-        Shade = t / (LineSize / StepY);
-        C.CurX = X - 5.0;
-        Shade = int(255 * (16 * Shade * Shade * (Shade - 1) * (Shade - 1)));
-        Label = string(int(i * ScaleStep));
+        // Calculate index of the tick in the indicator reference frame 
+        t = (i - PitchLowerBound) / StepY;
 
+        // Calculate color of the current indicator tick
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_PITCH_SEGMENTS));
+
+        // Calculate index of the current readout value on the mortar yaw span
+        Quotient = class'UMath'.static.FlooredDivision(i, ScaleStep);
+
+        Label = string(class'UMath'.static.Floor(i, ScaleStep));
+
+        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
+        // text labels completly disappear. I propose to change the color instead of alpha channel
+        // because the background is black anyway. - mimi~
         C.SetDrawColor(Shade, Shade, Shade, 255);
 
-        if (i % 10 == 0)
+        C.CurX = X - 5.0;
+        C.CurY = Y + t * LineSize / SegmentCount;
+
+        if (Quotient % 10 == 0)
         {
-            C.DrawHorizontal(Y + LineSize - t * StepY, -50.0);
-            C.CurX = X - 80.0;
-            C.CurY = Y + LineSize - t * StepY - 4;
+            //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
+            // Draw long vertical tick & label it
+            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -50.0);
+
+            // 3 is a rough factor to compensate X position of the label with respect to number of letters
+            C.CurX = X - 60.0 - Len(Label) * 3;
             C.DrawText(Label);
         }
-        else if (i % 5 == 0)
+        else if (Quotient % 5 == 0)
         {
-            C.DrawHorizontal(Y + LineSize - t * StepY, -30.0);
-            C.CurX = X - 60.0;
-            C.CurY = Y + LineSize - t * StepY - 4;
+            // Draw middle-sized vertical tick & label it
+            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -30.0);
+
+            // 3 is a rough factor to compensate X position of the label with respect to number of letters
+            C.CurX = X - 40.0 - Len(Label) * 3;
             C.DrawText(Label);
         }
         else
         {
-            C.DrawHorizontal(Y + LineSize - t * StepY, -20.0);
+            // Smallest granularity - draw short vertical tick (no label)
+            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -20.0);
         }
 
-        i += 1;
-
-        if (i < BottomLimit)
+        // Draw a strike-through if this segment is beyond the lower or upper limits.
+        if (class'UMath'.static.Floor(i + StepY, ScaleStep) < class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()))
         {
-            C.CurY = Y + LineSize - t * StepY;
-            C.DrawVertical(X - 15, -2 * StepY);
+            //Log(class'UMath'.static.Floor(i, ScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
+            C.CurY = Y + t * LineSize / SegmentCount;
+            C.DrawVertical(X - 15, IndicatorStep);
         }
 
-        if (i > TopLimit)
+        if (class'UMath'.static.Floor(i, ScaleStep) > class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()))
         {
-            C.CurY = Y + LineSize - t * StepY;
-            C.DrawVertical(X - 15, -StepY);
+            C.CurY = Y + t * LineSize / SegmentCount;
+            C.DrawVertical(X - 15, -IndicatorStep);
         }
     }
 
+    // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
-    C.CurX = X + 5.0;
-    C.CurY = Y + MiddleOffset;
-    C.DrawHorizontal(Y + MiddleOffset, 20.0);
+    C.CurX = X + 15.0;
+    C.DrawHorizontal(Y + (LineSize / 2), 20.0);
 }
 
 simulated function DrawRangeTable(Canvas C)

@@ -333,13 +333,7 @@ simulated function DrawSpottingScopeOverlay(Canvas C)
         C.DrawTile(SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 
         DrawRangeTable(C);
-        DrawPitch(C,
-            C.SizeX * 0.27,
-            C.SizeY * 0.5 - 150 + OverlayCorrectionY,
-            300,
-            -89,
-            621,
-            355);
+        DrawPitch(C, C.SizeX * 0.25, C.SizeY / 2 + OverlayCorrectionY, 300, PitchScaleStep);
 
         DrawYaw(C,
             C.SizeX * 0.5 - 150,
