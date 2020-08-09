@@ -23,11 +23,13 @@ var     float       PeriscopeSize;               // so we can adjust the "exteri
 var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
-var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
-var     float       RangePositionX;              // X & Y positioning of range text (0.0 to 1.0)
-var     float       RangePositionY;
-var localized string    RangeText;               // metres or yards
-var     bool        bIsPeriscopicGunsight;       // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
+var     texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
+var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
+var     float               RangePositionY;
+var     localized string    RangeText;                  // metres or yards
+var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
+var     float               YawScaleStep;               // how quickly yaw indicator should traverse
+var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -342,7 +344,8 @@ simulated function DrawSpottingScopeOverlay(Canvas C)
         DrawYaw(C,
             C.SizeX * 0.5 - 150,
             C.SizeY * 1.02 + OverlayCorrectionY,
-            300);
+            300,
+            YawScaleStep);
     }
 }
 
@@ -1151,6 +1154,8 @@ defaultproperties
 
     //Periscope overlay
     PeriscopeSize=1.0 //default for most peri's
+    YawScaleStep=1.0
+    PitchScaleStep=1.0
 
     // Turret/cannon movement
     MaxRotateThreshold=1.5

@@ -54,6 +54,8 @@ defaultproperties
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
 
+    YawScaleStep=5.0
+
     RangeTable(0)=(Mils=0,Range=115)
     RangeTable(1)=(Mils=25,Range=200)
     RangeTable(2)=(Mils=55,Range=300)

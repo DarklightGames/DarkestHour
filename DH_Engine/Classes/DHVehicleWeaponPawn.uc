@@ -364,7 +364,7 @@ simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional 
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
-        if (class'UMath'.static.Floor(i, ScaleStep) < class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()))
+        if (class'UMath'.static.Floor(i + StepX, ScaleStep) < class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()))
         {
             //Log(class'UMath'.static.Floor(i, ScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
             C.CurX = X + t * LineSize / SegmentCount;
