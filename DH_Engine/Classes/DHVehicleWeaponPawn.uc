@@ -406,14 +406,7 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
 
     C.Font = C.TinyFont;
 
-    // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = X;
-    C.CurY = Y;
-    C.DrawVertical(Y, LineSize);
-
     // Start drawing scale ticks
-    C.CurY = Y - 5.0;
-
     for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
     {
         // Calculate index of the tick in the indicator reference frame 
@@ -439,25 +432,33 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
         {
             //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
             // Draw long vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -50.0);
+            C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
 
             // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 60.0 - Len(Label) * 3;
+            C.CurX = X - 60.0 - Len(Label) * 6;
+
+            // Readjust label height so it is on the same level as the tick
+            C.CurY = C.CurY - 5;
+            
             C.DrawText(Label);
         }
         else if (Quotient % 5 == 0)
         {
             // Draw middle-sized vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -30.0);
+            C.DrawHorizontal(Y + (t * IndicatorStep), -30.0);
 
             // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 40.0 - Len(Label) * 3;
+            C.CurX = X - 40.0 - Len(Label) * 6;
+            
+            // Readjust label height so it is on the same level as the tick
+            C.CurY = C.CurY - 5;
+
             C.DrawText(Label);
         }
         else
         {
             // Smallest granularity - draw short vertical tick (no label)
-            C.DrawHorizontal(Y + (t * IndicatorStep) + 10, -20.0);
+            C.DrawHorizontal(Y + (t * IndicatorStep), -20.0);
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
@@ -474,6 +475,11 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
             C.DrawVertical(X - 15, -IndicatorStep);
         }
     }
+
+    // Draw a long horizontal bar that imitates edge of the indicator
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurY = Y;
+    C.DrawVertical(X, LineSize);
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);

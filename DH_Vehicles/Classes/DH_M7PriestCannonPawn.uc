@@ -56,7 +56,7 @@ defaultproperties
     FireImpulse=(X=-110000.0)
 
     YawScaleStep=5.0
-    PitchScaleStep=10.0
+    PitchScaleStep=5.0
 
     RangeTable(0)=(Mils=0,Range=115)
     RangeTable(1)=(Mils=25,Range=200)
