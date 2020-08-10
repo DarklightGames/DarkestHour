@@ -272,12 +272,14 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    return -VehWep.PitchDownLimit;
+    //Log("VehWep.CustomPitchDownLimit:" @ VehWep.CustomPitchDownLimit);
+    return (-1) * (65535 - VehWep.CustomPitchDownLimit);
 }
 
 simulated function int GetGunPitchMax()
 {
-    return VehWep.PitchUpLimit;
+    //Log("VehWep.CustomPitchUpLimit:" @ VehWep.CustomPitchUpLimit);
+    return VehWep.CustomPitchUpLimit;
 }
 
 final function int GetGunPitchRange()
@@ -406,9 +408,13 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
 
     C.Font = C.TinyFont;
 
+    // Log("CurrentPitch:" @ CurrentPitch);
+    // Log("class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin())" @ class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()));
+
     // Start drawing scale ticks
     for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
     {
+        // Log("i:" @ i);
         // Calculate index of the tick in the indicator reference frame 
         t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / StepY;
 
@@ -461,15 +467,15 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
             C.DrawHorizontal(Y + (t * IndicatorStep), -20.0);
         }
 
-        // Draw a strike-through if this segment is beyond the lower or upper limits.
-        if (class'UMath'.static.Floor(i + StepY, ScaleStep) < class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()))
+        // Draw a strike-through if this segment is below the lower limit.
+        if (i - StepY < class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()))
         {
-            //Log(class'UMath'.static.Floor(i, ScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
             C.CurY = Y + t * LineSize / SegmentCount;
             C.DrawVertical(X - 15, IndicatorStep);
         }
 
-        if (class'UMath'.static.Floor(i, ScaleStep) > class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()))
+        // Draw a strike-through if this segment is above the upper limit.
+        if (i + StepY > class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()))
         {
             C.CurY = Y + t * LineSize / SegmentCount;
             C.DrawVertical(X - 15, -IndicatorStep);
@@ -2120,6 +2126,7 @@ function int LocalLimitPitch(int pitch)
             }
         }
     }
+    Log("Pitch" @ pitch);
 
     return pitch;
 }
