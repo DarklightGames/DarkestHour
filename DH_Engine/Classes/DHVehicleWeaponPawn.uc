@@ -410,7 +410,7 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
     for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
     {
         // Calculate index of the tick in the indicator reference frame 
-        t = (i - PitchLowerBound) / StepY;
+        t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / StepY;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_PITCH_SEGMENTS));
