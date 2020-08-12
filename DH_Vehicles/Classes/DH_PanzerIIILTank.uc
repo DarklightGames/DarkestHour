@@ -61,8 +61,15 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-    Health=475
-    HealthMax=475.0
+	// pros: 5 men crew
+	// cons: petrol fuel 
+    Health=560
+    HealthMax=560.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.6  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+    TurretDetonationThreshold=2000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=30.0,PointHeight=32.0,PointOffset=(X=-70.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

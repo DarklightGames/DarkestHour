@@ -71,8 +71,16 @@ defaultproperties
     ChangeDownPoint=1000.0
 
     // Damage
-    Health=600
-    HealthMax=600.0
+	// pros: 5 men crew;
+	// cons: petrol fuel; general unreliability of the panthers; this variant in particular is an early one which was even more unreliable
+    Health=560
+    HealthMax=560.0
+	EngineHealth=200 //engine health is lowered for above reason
+    EngineRestartFailChance=0.4 //unreliability
+	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+	
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

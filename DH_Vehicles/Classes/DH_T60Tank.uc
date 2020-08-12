@@ -63,9 +63,15 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-    Health=375
-    HealthMax=375.0
-    EngineHealth=200
+	// pros: 20mm ammo is very unlikely to explode
+	// cons: 2 men crew; petrol fuel
+    Health=400
+    HealthMax=400.0
+	AmmoIgnitionProbability=0.2  // 0.75 default
+    TurretDetonationThreshold=5000.0 // increased from 1750
+    EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=-90.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(1)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=13.0,Y=-25.0,Z=-5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=13.0,Y=25.0,Z=-5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

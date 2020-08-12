@@ -68,13 +68,21 @@ defaultproperties
     MaxCriticalSpeed=1200.0 // very approximate, not sure about it
     GearRatios(3)=0.67
     GearRatios(4)=0.80
+    GearRatios(0)=-0.25
     TransRatio=0.13
 
-    //Damage
-    //copied from stuart
-    Health=375
-    HealthMax=375.0
-    EngineHealth=200
+    // Damage
+	// pros: 45mm ammorack is less likely to detonate (was an important factor in T-70 survivability and recoverability)
+	// cons:
+	//- 3 men crew, who are quite close to each other
+	//- petrol fuel
+    Health=460
+    HealthMax=460.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.33  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+    TurretDetonationThreshold=3000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=28.0,PointOffset=(X=-73.0,Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

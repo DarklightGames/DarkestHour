@@ -17,4 +17,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
+	
+	AmmoIgnitionProbability=0.65  // 0.75 default
+	
 }

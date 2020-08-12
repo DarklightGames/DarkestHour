@@ -61,8 +61,8 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.95
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3

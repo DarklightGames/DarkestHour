@@ -183,8 +183,16 @@ defaultproperties
      ExitPositions(5)=(X=-160.000000,Y=20.000000,Z=50.000000)
      VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
      SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.hetzer'
-     HealthMax=450.000000
-     Health=450
+	 
+     //Health cons: petrol fuel
+     //4 men crew
+	 Health=525
+     HealthMax=525.0
+	 EngineHealth=260 //slightly overloaded
+	 
+     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+     DisintegrationHealth=-800.0 //petrol
+	 // reduced reliability due to increased weight
      Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_ext'
      Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
      Skins(1)=Texture'axis_vehicles_tex.Treads.Stug3_treads'

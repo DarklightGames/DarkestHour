@@ -61,8 +61,16 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-    Health=525 // was 800 but adjusted to match similar DH vehicles, i.e. Sherman
-    HealthMax=525.0
+	// pros: diesel fuel
+	// cons: cramped turret; fuel tanks in crew compartment
+	// 4 men crew
+    Health=470
+    HealthMax=470
+    EngineHealth=300
+	
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-90.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

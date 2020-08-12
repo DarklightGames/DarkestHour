@@ -2386,12 +2386,13 @@ defaultproperties
     GunDamageChance=1250.0
     TraverseDamageChance=2000.0
     TurretDetonationThreshold=1750.0
+	// above values are misleading: the greater the number, the lower the chance is
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
-    EngineToHullFireChance=0.05
-    PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death
-    FireDetonationChance=0.07
+    EngineToHullFireChance=0.05  //increased to 0.1 on all diesels
+    PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death; reduced to 12 on all diesels
+    FireDetonationChance=0.07  //reduced to 0.045 on all diesels
     bFirstPenetratingHit=true
     VehicleBurningDamType=class'DHVehicleBurningDamageType'
 

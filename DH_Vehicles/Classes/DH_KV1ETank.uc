@@ -13,7 +13,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="KV-1E"
     VehicleTeam=1
-    VehicleMass=16.0 //approximate
+    VehicleMass=16.0 
     ReinforcementCost=11
 
     // Hull mesh
@@ -64,10 +64,19 @@ defaultproperties
     MaxCriticalSpeed=524.0 // ~30 kph
     GearRatios(4)=0.7
     TransRatio=0.072
+	
+	EngineRestartFailChance=0.35 //unreliability of early design +  even more weight
 
     // Damage
-    Health=600
-    HealthMax=600.0
+	// Compared to KV-1: additional armor makes it even heavier, which causes even more reliability problems with engine and transmission
+    Health=565
+    HealthMax=565.0
+	EngineHealth=200
+	
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
+	  // engine health is lowered for above described reason
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

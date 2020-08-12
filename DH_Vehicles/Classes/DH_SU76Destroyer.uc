@@ -76,8 +76,13 @@ defaultproperties
 
 
     // Damage
-    Health=420
-    HealthMax=420.0
+	// pros:
+	// cons: petrol fuel; 
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=driver_player,PointOffset=(X=-13.0,Y=-3.0,Z=-8.0),bPenetrationPoint=true,HitPointType=HP_Driver)
     VehHitpoints(1)=(PointRadius=35.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=25.0,Y=45.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=-80.0,Y=-40.0,Z=5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -95,15 +100,19 @@ defaultproperties
 
 
     // Sounds
-    IdleSound=sound'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    MaxPitchSpeed=450
+	// replaced sounds from ro1's SU-76 to T-60, because ro1 sound for SU76 doesnt really sound authentic for it, SU-76 used the same engine as on T-60 but doubled
+    SoundPitch=32 // half normal pitch = 1 octave lower
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
+    RumbleSoundBone="body"
+    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
+    
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
     LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L09'
     RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R09'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+
 
     // Visual effects
     TreadVelocityScale=85.0

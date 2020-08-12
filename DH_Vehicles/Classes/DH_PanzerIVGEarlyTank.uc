@@ -53,7 +53,13 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-    DisintegrationHealth=-1000.0
+	// pros: 5 men crew
+	// cons: petrol fuel 
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-100.0,Y=0.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-27.0,Z=-10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=27.0,Z=-10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

@@ -3,14 +3,14 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_KV1Tank extends DH_KV1ETank;  //wip class
+class DH_KV1Tank extends DH_KV1ETank;  //WIP class, do not use it yet!
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="KV-1"
     VehicleTeam=1
-    VehicleMass=15.0 //approximate
+    VehicleMass=15.7
     ReinforcementCost=10
 
     // Hull mesh
@@ -52,10 +52,20 @@ defaultproperties
     MaxCriticalSpeed=577.0 // ~34 kph
     GearRatios(4)=0.7
     TransRatio=0.072
+	
+	EngineRestartFailChance=0.2 //unreliability of early design +  weight
 
     // Damage
-    Health=600
-    HealthMax=600.0
+	// pros: diesel fuel; 5 men crew
+	// cons: fuel tanks in crew compartment; 
+    Health=565
+    HealthMax=565.0
+	EngineHealth=240   //reliability problems due to early design ("child problems") and high weight
+	
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
+	
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

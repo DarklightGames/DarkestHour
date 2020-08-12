@@ -12,8 +12,8 @@ defaultproperties
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     TankDamageModifier=0.2
-    APCDamageModifier=0.2
-    VehicleDamageModifier=0.2
+    APCDamageModifier=0.3
+    VehicleDamageModifier=0.4
     TreadDamageModifier=0.3
 
     PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'

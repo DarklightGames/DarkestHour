@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=1300 // about 22 meters, a lot because its powerful and its made from hand grenades with some fragmentation
                       // practically, user has to either throw from cover or run away immediately
    
-   EngineDamageMassThreshold=16.1  //1260 gramms TNT should really penetrate every top armor, EXCEPT may be the jagtiger (which had 40mm top armor to my knowledge), and this tank has VehicleMass set to 16.5
+    EngineDamageMassThreshold=15.1  //1260 gramms TNT should penetrate every top armor, EXCEPT the jagdtiger (~40mm top armor) and KV-1 (30-40mm), which should be problematic
     EngineDamageRadius=240.0
     EngineDamageMax=800.0
 

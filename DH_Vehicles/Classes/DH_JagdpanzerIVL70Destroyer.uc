@@ -20,4 +20,5 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l70'
+
 }
