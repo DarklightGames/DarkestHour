@@ -12,6 +12,8 @@ defaultproperties
 
     //Damage
     ImpactDamage=285  //30 gramms TNT filler
+    Damage=700.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=150.0
 
     //Penetration
     DHPenetrationTable(0)=7.1  // 100m

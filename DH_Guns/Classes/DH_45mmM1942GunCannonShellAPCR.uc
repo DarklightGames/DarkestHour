@@ -12,6 +12,8 @@ defaultproperties
 
     //Damage
     ImpactDamage=240 // just a tungsten slug; no explosive filler
+    Damage=790.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=100.0
 
     //Penetration
     DHPenetrationTable(0)=10.8  // 100m // TODO: confirm penetration

@@ -15,6 +15,8 @@ defaultproperties
 
     //Damage
     ImpactDamage=265 //30 gramms TNT filler
+    Damage=700.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=150.0
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.30
     EngineFireChance=0.55

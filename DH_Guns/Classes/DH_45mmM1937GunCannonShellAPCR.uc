@@ -15,6 +15,8 @@ defaultproperties
 
     //Damage
     ImpactDamage=220 // just a tungsten slug; no explosive filler
+    Damage=790.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=100.0
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     HullFireChance=0.22
     EngineFireChance=0.45

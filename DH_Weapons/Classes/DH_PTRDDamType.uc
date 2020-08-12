@@ -13,7 +13,7 @@ defaultproperties
 
     TankDamageModifier=0.2
     APCDamageModifier=0.3
-    VehicleDamageModifier=0.4
+    VehicleDamageModifier=0.3
     TreadDamageModifier=0.3
 
     PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
