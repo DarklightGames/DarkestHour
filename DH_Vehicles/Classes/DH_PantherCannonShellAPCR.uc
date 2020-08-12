@@ -18,7 +18,7 @@ defaultproperties
     ImpactDamage=540
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.34
-    EngineFireChance=0.62 
+    EngineFireChance=0.65 
 
     //Effects
     bDebugInImperial=false
