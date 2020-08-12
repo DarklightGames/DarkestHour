@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M18 Hellcat"
     VehicleTeam=1
     VehicleMass=11.0
-    ReinforcementCost=8
+    ReinforcementCost=15
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
@@ -84,9 +84,9 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop' // TODO: Hellcat used same gasoline engine as Sherman M4/M4A1, so switch to Sherman sounds
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' 
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="driver_attachment"
