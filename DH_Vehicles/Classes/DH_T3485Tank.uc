@@ -7,6 +7,7 @@ class DH_T3485Tank extends DH_T3476Tank;
 
 defaultproperties
 {
+    ReinforcementCost=16
     VehicleNameString="T34/85"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485CannonPawn')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485MountedMGPawn')

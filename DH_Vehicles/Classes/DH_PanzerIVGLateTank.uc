@@ -9,7 +9,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer IV Ausf.G"
-    ReinforcementCost=4
+    ReinforcementCost=16
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'

@@ -12,7 +12,7 @@ defaultproperties
     VehicleNameString="ZiS-5V"
     VehicleTeam=1
     VehicleMass=2.5
-    ReinforcementCost=2
+    ReinforcementCost=3
     MaxDesireability=0.12
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 

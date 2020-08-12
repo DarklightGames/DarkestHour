@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="T34/76"
     VehicleTeam=1
-    ReinforcementCost=4
+    ReinforcementCost=15
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34_body_ext'

@@ -13,7 +13,7 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=5.0
-    ReinforcementCost=3
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'

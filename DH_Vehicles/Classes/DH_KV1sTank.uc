@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="KV-1S"
     VehicleTeam=1
     VehicleMass=15.2  //should be above 15.1 (or whatever is set in gebalte ladung) so its resistant to gebalte ladung, due to relatively thick top armor (30-40mm) 
-    ReinforcementCost=5
+    ReinforcementCost=23
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_anm.KV1S_body_ext'

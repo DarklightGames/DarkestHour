@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="IS2"
     VehicleTeam=1
-    ReinforcementCost=8
+    ReinforcementCost=22
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-body_ext'
