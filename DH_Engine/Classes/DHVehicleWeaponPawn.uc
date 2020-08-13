@@ -272,27 +272,17 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    //Log("VehWep.CustomPitchDownLimit:" @ VehWep.CustomPitchDownLimit);
-    return (-1) * (65535 - VehWep.CustomPitchDownLimit);
+    local int VehWepMinimummPitch;
+    VehWepMinimummPitch = (-1) * (65535 - VehWep.CustomPitchDownLimit);
+    return class'DHUnits'.static.UnrealToMilliradians(VehWepMinimummPitch);
 }
 
 simulated function int GetGunPitchMax()
 {
-    //Log("VehWep.CustomPitchUpLimit:" @ VehWep.CustomPitchUpLimit);
-    return VehWep.CustomPitchUpLimit;
+    return class'DHUnits'.static.UnrealToMilliradians(VehWep.CustomPitchUpLimit);
 }
 
-final function int GetGunPitchRange()
-{
-    return GetGunPitchMax() - GetGunPitchMin();
-}
-
-final function int GetGunYawRange()
-{
-    return GetGunYawMax() - GetGunYawMin();
-}
-
-    simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
+simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
 {
     local float i, CurrentYaw, StepX, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
@@ -400,8 +390,8 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
     }
 
     CurrentPitch = class'DHUnits'.static.UnrealToMilliradians(GetGunPitch());
-    PitchLowerBound = CurrentPitch - ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
-    PitchUpperBound = CurrentPitch + ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
+    PitchLowerBound = class'UMath'.static.Floor(CurrentPitch, ScaleStep) - ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
+    PitchUpperBound = class'UMath'.static.Floor(CurrentPitch, ScaleStep) + ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
     SegmentCount = (PitchUpperBound - PitchLowerBound) / ScaleStep;
     StepY = (PitchUpperBound - PitchLowerBound) / SegmentCount;
     IndicatorStep = LineSize / VISIBLE_PITCH_SEGMENTS;
@@ -468,17 +458,17 @@ simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optiona
         }
 
         // Draw a strike-through if this segment is below the lower limit.
-        if (i - StepY < class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()))
-        {
-            C.CurY = Y + t * LineSize / SegmentCount;
-            C.DrawVertical(X - 15, IndicatorStep);
-        }
-
-        // Draw a strike-through if this segment is above the upper limit.
-        if (i + StepY > class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()))
+        if (i < class'UMath'.static.Floor(GetGunPitchMin(), ScaleStep))
         {
             C.CurY = Y + t * LineSize / SegmentCount;
             C.DrawVertical(X - 15, -IndicatorStep);
+        }
+
+        // Draw a strike-through if this segment is above the upper limit.
+        if (i > class'UMath'.static.Floor(GetGunPitchMax(), ScaleStep))
+        {
+            C.CurY = Y + t * LineSize / SegmentCount;
+            C.DrawVertical(X - 15, IndicatorStep);
         }
     }
 
