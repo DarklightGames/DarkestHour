@@ -31,29 +31,13 @@ var     float       OverlayCorrectionX;          // scope center correction in p
 var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
-var     int         SpottingScopePositionIndex;
-var     Material    SpottingScopeOverlay;             // texture overlay for gunsight
-var     float       SpottingScopeSize;                // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-var     float       SpottingScopeOverlayCorrectionX;  // scope center correction in pixels, in case an overlay is off-center by pixel or two
-var     float       SpottingScopeOverlayCorrectionY;
+var     class<DHArtilleryCannonHUD>     ArtilleryHud;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
-
-// Range table
-struct SRangeTableRecord
-{
-    var float Mils;     // Pitch, in mils.
-    var float Range;    // Range, in meters.
-    var float TTI;      // Time-to-impact in seconds
-};
-var array<SRangeTableRecord>    RangeTable;
-
-var localized string RangeString;
-var localized string ElevationString;
 
 replication
 {
@@ -218,18 +202,6 @@ simulated function DrawBinocsOverlay(Canvas C)
     }
 }
 
-simulated function DrawSpottingScopeOverlay(Canvas C)
-{
-    // draw range table and pitch/yaw indicators once the scope has zoomed in
-    if(!IsInState('ViewTransition'))
-    {
-        DrawRangeTable(C);
-        DrawPitch(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
-        DrawYaw(C, C.SizeX * 0.5 - 150, C.SizeY * 1.02 + OverlayCorrectionY, 300);
-
-    }
-}
-
 // These values are for easily grabbing the range and current value of pitch and yaw values.
 // Primarily for use in drawing the spotting scope knobs.
 simulated function int GetGunYaw()
@@ -272,268 +244,13 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    local int VehWepMinimummPitch;
-    VehWepMinimummPitch = (-1) * (65535 - VehWep.CustomPitchDownLimit);
-    return class'DHUnits'.static.UnrealToMilliradians(VehWepMinimummPitch);
+    return (-1) * (65535 - VehWep.CustomPitchDownLimit);
 }
 
 simulated function int GetGunPitchMax()
 {
-    return class'DHUnits'.static.UnrealToMilliradians(VehWep.CustomPitchUpLimit);
+    return VehWep.CustomPitchUpLimit;
 }
-
-simulated function DrawYaw(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
-{
-    local float i, CurrentYaw, StepX, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep;
-    local int Shade, Quotient, t;
-    local string Label;
-    const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
-
-    // if ScaleStep was not passed by the caller set it to 1
-    if(ScaleStep == 0.0)
-    {
-        ScaleStep = 1.0;
-    }
-
-    CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    YawLowerBound = CurrentYaw - ScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    YawUpperBound = CurrentYaw + ScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    SegmentCount = (YawUpperBound - YawLowerBound) / ScaleStep;
-    StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
-    IndicatorStep = LineSize / VISIBLE_YAW_SEGMENTS;
-
-    C.Font = C.TinyFont;
-
-    // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = X;
-    C.CurY = Y;
-    C.DrawHorizontal(Y, LineSize);
-
-    // Start drawing scale ticks
-    C.CurY = Y - 5.0;
-
-    for(i = YawLowerBound; i <= YawUpperBound; i = i + StepX)
-    {
-        // Calculate index of the tick in the indicator reference frame 
-        t = (i - YawLowerBound) / StepX;
-
-        // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_YAW_SEGMENTS));
-
-        // Calculate index of the current readout value on the mortar yaw span
-        Quotient = class'UMath'.static.FlooredDivision(i, ScaleStep);
-
-        Label = string(class'UMath'.static.Floor(i, ScaleStep));
-
-        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
-        // text labels completly disappear. I propose to change the color instead of alpha channel
-        // because the background is black anyway. - mimi~
-        C.SetDrawColor(Shade, Shade, Shade, 255);
-
-        C.CurY = Y - 5.0;
-        // 3 is a rough factor to compensate X position of the label with respect to number of letters
-        C.CurX = X + t * LineSize / SegmentCount - Len(Label) * 3;
-
-        if (Quotient % 10 == 0)
-        {
-            //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
-            // Draw long vertical tick & label it
-            C.DrawVertical(X + (t * IndicatorStep), -50.0);
-            C.CurY = Y - 70.0;
-            C.DrawText(Label);
-        }
-        else if (Quotient % 5 == 0)
-        {
-            // Draw middle-sized vertical tick & label it
-            C.DrawVertical(X + (t * IndicatorStep), -30.0);
-            C.CurY = Y - 50.0;
-            C.DrawText(Label);
-        }
-        else
-        {
-            // Smallest granularity - draw short vertical tick (no label)
-            C.DrawVertical(X + (t * IndicatorStep), -20.0);
-        }
-
-        // Draw a strike-through if this segment is beyond the lower or upper limits.
-        if (class'UMath'.static.Floor(i + StepX, ScaleStep) < class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()))
-        {
-            //Log(class'UMath'.static.Floor(i, ScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
-            C.CurX = X + t * LineSize / SegmentCount;
-            C.DrawHorizontal(Y - 15, IndicatorStep);
-        }
-
-        if (class'UMath'.static.Floor(i, ScaleStep) > class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()))
-        {
-            C.CurX = X + t * LineSize / SegmentCount;
-            C.DrawHorizontal(Y - 15, -IndicatorStep);
-        }
-    }
-
-    // Draw current value indicator (middle tick)
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y + 15.0;
-    C.DrawVertical(X + (LineSize / 2), 20.0);
-}
-    
-simulated function DrawPitch(Canvas C, float X, float Y, float LineSize, optional float ScaleStep)
-{
-    local float i, CurrentPitch, StepY, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
-    local int Shade, Quotient, t;
-    local string Label;
-    const VISIBLE_PITCH_SEGMENTS = 40; // total number of ticks on a yaw indicator
-
-    // if ScaleStep was not passed by the caller set it to 1
-    if(ScaleStep == 0.0)
-    {
-        ScaleStep = 1.0;
-    }
-
-    CurrentPitch = class'DHUnits'.static.UnrealToMilliradians(GetGunPitch());
-    PitchLowerBound = class'UMath'.static.Floor(CurrentPitch, ScaleStep) - ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
-    PitchUpperBound = class'UMath'.static.Floor(CurrentPitch, ScaleStep) + ScaleStep * VISIBLE_PITCH_SEGMENTS/2;
-    SegmentCount = (PitchUpperBound - PitchLowerBound) / ScaleStep;
-    StepY = (PitchUpperBound - PitchLowerBound) / SegmentCount;
-    IndicatorStep = LineSize / VISIBLE_PITCH_SEGMENTS;
-
-    C.Font = C.TinyFont;
-
-    // Log("CurrentPitch:" @ CurrentPitch);
-    // Log("class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin())" @ class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()));
-
-    // Start drawing scale ticks
-    for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
-    {
-        // Log("i:" @ i);
-        // Calculate index of the tick in the indicator reference frame 
-        t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / StepY;
-
-        // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_PITCH_SEGMENTS));
-
-        // Calculate index of the current readout value on the mortar yaw span
-        Quotient = class'UMath'.static.FlooredDivision(i, ScaleStep);
-
-        Label = string(class'UMath'.static.Floor(i, ScaleStep));
-
-        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
-        // text labels completly disappear. I propose to change the color instead of alpha channel
-        // because the background is black anyway. - mimi~
-        C.SetDrawColor(Shade, Shade, Shade, 255);
-
-        C.CurX = X - 5.0;
-        C.CurY = Y + t * LineSize / SegmentCount;
-
-        if (Quotient % 10 == 0)
-        {
-            //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
-            // Draw long vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
-
-            // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 60.0 - Len(Label) * 6;
-
-            // Readjust label height so it is on the same level as the tick
-            C.CurY = C.CurY - 5;
-            
-            C.DrawText(Label);
-        }
-        else if (Quotient % 5 == 0)
-        {
-            // Draw middle-sized vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep), -30.0);
-
-            // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 40.0 - Len(Label) * 6;
-            
-            // Readjust label height so it is on the same level as the tick
-            C.CurY = C.CurY - 5;
-
-            C.DrawText(Label);
-        }
-        else
-        {
-            // Smallest granularity - draw short vertical tick (no label)
-            C.DrawHorizontal(Y + (t * IndicatorStep), -20.0);
-        }
-
-        // Draw a strike-through if this segment is below the lower limit.
-        if (i < class'UMath'.static.Floor(GetGunPitchMin(), ScaleStep))
-        {
-            C.CurY = Y + t * LineSize / SegmentCount;
-            C.DrawVertical(X - 15, -IndicatorStep);
-        }
-
-        // Draw a strike-through if this segment is above the upper limit.
-        if (i > class'UMath'.static.Floor(GetGunPitchMax(), ScaleStep))
-        {
-            C.CurY = Y + t * LineSize / SegmentCount;
-            C.DrawVertical(X - 15, IndicatorStep);
-        }
-    }
-
-    // Draw a long horizontal bar that imitates edge of the indicator
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y;
-    C.DrawVertical(X, LineSize);
-
-    // Draw current value indicator (middle tick)
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurX = X + 15.0;
-    C.DrawHorizontal(Y + (LineSize / 2), 20.0);
-}
-
-simulated function DrawRangeTable(Canvas C)
-{
-    local int i;
-    local float X, Y;
-    local float XL, YL;
-    local float TableWidth, TableHeight;
-    const FirstColumn = 45;
-    const SecondColumn = 185;
-
-    if (RangeTable.Length == 0)
-    {
-        return;
-    }
-
-    C.Font = C.TinyFont;
-    C.TextSize("A", XL, YL);
-
-    TableWidth = 280.0;
-    TableHeight = (RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
-
-    Y = (C.SizeY - TableHeight) / 2;
-    X = C.SizeX * 0.75;
-
-    // draw table background
-    C.SetPos(X, Y);
-    C.SetDrawColor(255, 255, 255, 255);
-    C.DrawTile(Texture'Engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
-
-    // draw table header
-    C.SetDrawColor(0, 0, 0, 255);
-    C.SetPos(X + SecondColumn + 7, Y + 3);
-    C.DrawText(RangeString);
-    C.SetPos(X + FirstColumn, Y + 3);
-    C.DrawText(ElevationString);
-    C.SetPos(X, Y);
-    C.DrawVertical(X + TableWidth / 2, TableHeight);
-    C.SetPos(X, Y);
-    Y += YL + 8;
-    C.DrawHorizontal(Y, TableWidth);
-
-    // draw table rows
-    for (i = 0; i < RangeTable.Length; ++i)
-    {
-        Y += YL;
-        C.SetPos(X + FirstColumn, Y);
-        C.DrawText(string(RangeTable[i].Range) $ "m");
-        C.SetPos(X + SecondColumn, Y);
-        C.DrawText(string(RangeTable[i].Mils) $ "mils");
-    }
-}
-
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation
 // Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
 // This is because when we enter a vehicle we now call SetInitialViewRotation(), which is already relative to vehicle
@@ -1872,17 +1589,12 @@ static function StaticPrecache(LevelInfo L)
         default.GunClass.static.StaticPrecache(L);
     }
 
-    if (default.SpottingScopeOverlay != none)
-    {
-        L.AddPrecacheMaterial(default.SpottingScopeOverlay);
-    }
 }
 
 // Modified to add extra material properties (no need to call the Super, as it's only in Actor & only caches the Skins array, which a weapon pawn doesn't have)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(GunsightOverlay);
-    Level.AddPrecacheMaterial(SpottingScopeOverlay);
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
@@ -2116,7 +1828,6 @@ function int LocalLimitPitch(int pitch)
             }
         }
     }
-    Log("Pitch" @ pitch);
 
     return pitch;
 }
@@ -2604,6 +2315,6 @@ defaultproperties
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
-    RangeString="Range"
-    ElevationString="Elevation"
+    // RangeString="Range"
+    // ElevationString="Elevation"
 }

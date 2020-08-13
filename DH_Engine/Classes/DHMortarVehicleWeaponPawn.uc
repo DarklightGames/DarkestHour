@@ -57,7 +57,6 @@ var     class<DHMapMarker>    TargetMarkerClass;
 // mortar periscope & range table handling
 var     int         PeriscopeIndex;
 var     int         ShooterIndex;
-var     texture     PeriscopeOverlay;           // periscope overlay texture
 
 replication
 {
@@ -228,9 +227,9 @@ simulated function DrawHUD(Canvas C)
         HUDScale = C.SizeY / 1280.0;
 
         // Get elevation & traverse
-        Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-        TraverseString = "T: ";
+        // Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
+        // Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
+        // TraverseString = "T: ";
 
         if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
         {
@@ -312,29 +311,25 @@ simulated function DrawHUD(Canvas C)
             C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
 
             // Draw elevation & traverse text
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-            C.DrawText("E:" @ string(Elevation));
+            // C.SetDrawColor(255, 255, 255, 255);
+            // C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
+            // C.DrawText("E:" @ string(Elevation));
 
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-            C.DrawText(TraverseString);
+            // C.SetDrawColor(255, 255, 255, 255);
+            // C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
+            // C.DrawText(TraverseString);
         }
         else {
-            DrawPeriscopeOverlay(C);
-            DrawRangeTable(C);
-            //C.DrawVertical(300.0, -1000.0);
-//            DrawPitch(C,
-//                C.SizeX * 0.27,
-//                C.SizeY * 0.33 + OverlayCorrectionY,
-//                300,
-//                ,
-//                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum - );
-            DrawYaw(C,
-                C.SizeX * 0.4,
-                C.SizeY * 0.93,
-                300,
-                4);
+            ArtilleryHud.static.DrawSpottingScopeOverlay(C);
+            ArtilleryHud.static.DrawRangeTable(C);
+            ArtilleryHud.static.DrawPitch(C,
+                class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()), 
+                class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
+            ArtilleryHud.static.DrawYaw(C,
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
         }
     }
 }
@@ -352,28 +347,6 @@ simulated function int GetGunPitchMin()
 simulated function int GetGunPitchMax()
 {
     return DHMortarVehicleWeapon(VehWep).default.ElevationMaximum;
-}
-
-// New function to draw any textured driver's periscope overlay
-simulated function DrawPeriscopeOverlay(Canvas C)
-{
-    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
-
-    if (PeriscopeOverlay != none)
-    {
-        GunsightSize = 0.4;
-        TextureSize = float(PeriscopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / GunsightSize * 0.955;
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-        //Log("ScreenRation=" @ ScreenRatio @ " C.SizeX=" @ C.SizeX @ " C.SizeY=" @ C.SizeY @ " PeriscopeOverlay.VSize=" @ PeriscopeOverlay.VSize);
-        //C.SetPos(0.0, 0.0);
-        //C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.3, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1061,6 +1034,5 @@ defaultproperties
     TargetMarkerClass=class'DHMapMarker_Ruler'
     ShooterIndex = 0;
     PeriscopeIndex = 1;
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
     OverlayCorrectionY = -60.0;
 }

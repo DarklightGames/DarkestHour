@@ -28,8 +28,6 @@ var     float               RangePositionX;             // X & Y positioning of 
 var     float               RangePositionY;
 var     localized string    RangeText;                  // metres or yards
 var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
-var     float               YawScaleStep;               // how quickly yaw indicator should traverse
-var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -207,7 +205,16 @@ simulated function DrawHUD(Canvas C)
                 else if (DriverPositionIndex == SpottingScopePositionIndex)
                 {
                     // Draw the spotting scope overlay
-                    DrawSpottingScopeOverlay(C);
+                    ArtilleryHud.static.DrawSpottingScopeOverlay(C);
+                    ArtilleryHud.static.DrawRangeTable(C);
+                    ArtilleryHud.static.DrawPitch(C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()), 
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
+                    ArtilleryHud.static.DrawYaw(C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
                 }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {
@@ -307,39 +314,6 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
             C.DrawHorizontal(PosY, PosX - 3.0);
         }
-    }
-}
-
-// Similar to DrawGunsightOverlay, except with the pitch and yaw indicators
-simulated function DrawSpottingScopeOverlay(Canvas C)
-{
-    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
-
-    if (SpottingScopeOverlay != none)
-    {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(SpottingScopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / SpottingScopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - SpottingScopeOverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - SpottingScopeOverlayCorrectionY;
-
-        // Draw the gunsight overlay
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-
-        DrawRangeTable(C);
-        DrawPitch(C, C.SizeX * 0.25, C.SizeY / 2 + OverlayCorrectionY, 300, PitchScaleStep);
-
-        DrawYaw(C,
-            C.SizeX * 0.5 - 150,
-            C.SizeY * 1.02 + OverlayCorrectionY,
-            300,
-            YawScaleStep);
     }
 }
 
@@ -1148,8 +1122,6 @@ defaultproperties
 
     //Periscope overlay
     PeriscopeSize=1.0 //default for most peri's
-    YawScaleStep=1.0
-    PitchScaleStep=1.0
 
     // Turret/cannon movement
     MaxRotateThreshold=1.5
