@@ -202,7 +202,7 @@ simulated function DrawHUD(Canvas C)
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
                 }
-                else if (DriverPositionIndex == SpottingScopePositionIndex)
+                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
                 {
                     // Draw the spotting scope overlay
                     ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);

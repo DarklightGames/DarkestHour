@@ -1590,7 +1590,7 @@ static function StaticPrecache(LevelInfo L)
         default.GunClass.static.StaticPrecache(L);
     }
     
-    if (default.ArtillerySpottingScope.default.SpottingScopeOverlay != none)
+    if (default.ArtillerySpottingScope != none)
     {
         L.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
     }
@@ -1603,7 +1603,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
-    Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    if(default.ArtillerySpottingScope != none)
+        Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
 }
 
 // Modified to call Initialize functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
