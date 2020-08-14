@@ -107,8 +107,8 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     Y = C.SizeY * 0.93;
 
     //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    YawLowerBound = class'UMath'.static.Floor(CurrentYaw, default.PitchScaleStep) - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    YawUpperBound = class'UMath'.static.Floor(CurrentYaw, default.PitchScaleStep) + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawLowerBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawUpperBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
     StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
     IndicatorStep = default.YawIndicatorLength / VISIBLE_YAW_SEGMENTS;
