@@ -11,17 +11,7 @@ class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    local DHPlayer PC;
-    local DHGameReplicationInfo GRI;
-    local vector MapLocation;
-
-    PC =  DHPlayer(InstigatorController);
-    if(PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-        class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
-    }
+    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
     super.Explode(HitLocation, HitNormal);
 }
 

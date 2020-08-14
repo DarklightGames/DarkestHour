@@ -28,11 +28,6 @@ var     float           ShakeOffsetTime;  // how much time to offset view
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
-    local DHPlayer PC;
-    local vector MapLocation;
-    local DHGameReplicationInfo GRI;
-
-    Log("HitLocation: " $ HitLocation);
 
     if (!bDud)
     {
@@ -45,14 +40,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
     }
     
-    // Get info about the shooter and save a hit marker on the shooters machine. 
-    PC =  DHPlayer(InstigatorController);
-    if(PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-        class'DH_Engine.DHMapMarker_ArtilleryHit_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
-    }
+    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
     super.Explode(HitLocation, HitNormal);
 }
 
