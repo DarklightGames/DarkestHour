@@ -107,8 +107,8 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     Y = C.SizeY * 0.93;
 
     //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    YawLowerBound = CurrentYaw - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    YawUpperBound = CurrentYaw + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawLowerBound = class'UMath'.static.Floor(CurrentYaw, default.PitchScaleStep) - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawUpperBound = class'UMath'.static.Floor(CurrentYaw, default.PitchScaleStep) + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
     StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
     IndicatorStep = default.YawIndicatorLength / VISIBLE_YAW_SEGMENTS;
@@ -167,17 +167,17 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
-        if (class'UMath'.static.Floor(i + StepX, default.YawScaleStep) < GunYawMin) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin())
+        if (i < class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin())
         {
             //Log(class'UMath'.static.Floor(i, default.YawScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
             C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
             C.DrawHorizontal(Y - 15, IndicatorStep);
         }
 
-        if (class'UMath'.static.Floor(i, default.YawScaleStep) > GunYawMax) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax())
+        if (i > class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax())
         {
             C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
-            C.DrawHorizontal(Y - 15, -IndicatorStep);
+            C.DrawHorizontal(Y - 15, IndicatorStep);
         }
     }
 
