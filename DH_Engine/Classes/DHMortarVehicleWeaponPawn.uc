@@ -227,9 +227,9 @@ simulated function DrawHUD(Canvas C)
         HUDScale = C.SizeY / 1280.0;
 
         // Get elevation & traverse
-        // Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        // Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-        // TraverseString = "T: ";
+        Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
+        Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
+        TraverseString = "T: ";
 
         if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
         {
@@ -311,13 +311,13 @@ simulated function DrawHUD(Canvas C)
             C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
 
             // Draw elevation & traverse text
-            // C.SetDrawColor(255, 255, 255, 255);
-            // C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-            // C.DrawText("E:" @ string(Elevation));
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
+            C.DrawText("E:" @ string(Elevation));
 
-            // C.SetDrawColor(255, 255, 255, 255);
-            // C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-            // C.DrawText(TraverseString);
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
+            C.DrawText(TraverseString);
         }
         else {
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
