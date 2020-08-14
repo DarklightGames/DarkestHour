@@ -177,7 +177,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         if (i > class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax())
         {
             C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
-            C.DrawHorizontal(Y - 15, IndicatorStep);
+            C.DrawHorizontal(Y - 15, -IndicatorStep);
         }
     }
 
