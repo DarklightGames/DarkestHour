@@ -205,13 +205,13 @@ simulated function DrawHUD(Canvas C)
                 else if (DriverPositionIndex == SpottingScopePositionIndex)
                 {
                     // Draw the spotting scope overlay
-                    ArtilleryHud.static.DrawSpottingScopeOverlay(C);
-                    ArtilleryHud.static.DrawRangeTable(C);
-                    ArtilleryHud.static.DrawPitch(C,
+                    ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+                    ArtillerySpottingScope.static.DrawRangeTable(C);
+                    ArtillerySpottingScope.static.DrawPitch(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()), 
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
-                    ArtilleryHud.static.DrawYaw(C,
+                    ArtillerySpottingScope.static.DrawYaw(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
@@ -1084,14 +1084,6 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
                 BP.StartLocation = BP.Location;
             }
         }
-    }
-}
-
-exec function SetSpottingScopeSize(float NewSize)
-{
-    if (IsDebugModeAllowed())
-    {
-        SpottingScopeSize = NewSize;
     }
 }
 

@@ -31,7 +31,8 @@ var     float       OverlayCorrectionX;          // scope center correction in p
 var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
-var     class<DHArtilleryCannonHUD>     ArtilleryHud;
+var     int         SpottingScopePositionIndex;
+var     class<DHArtillerySpottingScope>     ArtillerySpottingScope;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
@@ -1588,6 +1589,11 @@ static function StaticPrecache(LevelInfo L)
     {
         default.GunClass.static.StaticPrecache(L);
     }
+    
+    if (default.ArtillerySpottingScope.default.SpottingScopeOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 
 }
 
@@ -1598,6 +1604,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
+    Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
 }
 
 // Modified to call Initialize functions to do set up in the related vehicle classes that requires actor references to different vehicle actors

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtilleryCannonHUD extends ROVehicle
+class DHArtillerySpottingScope extends ROVehicle
     abstract;
 
 // Range table
@@ -17,7 +17,7 @@ var array<SRangeTableRecord>    RangeTable;
 
 var     localized string    RangeString;
 var     localized string    ElevationString;
-var     texture             PeriscopeOverlay;           // periscope overlay texture
+var     texture             SpottingScopeOverlay;           // periscope overlay texture
 
 var     DHVehicleWeapon     VehWep;
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
@@ -29,19 +29,19 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
-    if (default.PeriscopeOverlay != none)
+    if (default.SpottingScopeOverlay != none)
     {
-        TextureSize = float(default.PeriscopeOverlay.MaterialUSize());
+        TextureSize = float(default.SpottingScopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / 0.4 * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
         TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);
         TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);
         C.SetPos(0.0, 0.0);
 
-        C.DrawTile(default.PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-        //Log("ScreenRation=" @ ScreenRatio @ " C.SizeX=" @ C.SizeX @ " C.SizeY=" @ C.SizeY @ " default.PeriscopeOverlay.VSize=" @ default.PeriscopeOverlay.VSize);
+        C.DrawTile(default.SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        //Log("ScreenRation=" @ ScreenRatio @ " C.SizeX=" @ C.SizeX @ " C.SizeY=" @ C.SizeY @ " default.SpottingScopeOverlay.VSize=" @ default.SpottingScopeOverlay.VSize);
         //C.SetPos(0.0, 0.0);
-        //C.DrawTile(default.PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(default.PeriscopeOverlay.VSize) * 0.3, default.PeriscopeOverlay.USize, float(default.PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
+        //C.DrawTile(default.SpottingScopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(default.SpottingScopeOverlay.VSize) * 0.3, default.SpottingScopeOverlay.USize, float(default.SpottingScopeOverlay.VSize) * ScreenRatio * 0.85);
     }
 }
 
@@ -286,10 +286,10 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     C.CurX = X + 15.0;
     C.DrawHorizontal(Y + (default.PitchIndicatorLength / 2), 20.0);
 }
-    
+
 defaultproperties 
 {
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
     YawScaleStep = 1.0
     PitchScaleStep = 1.0
 

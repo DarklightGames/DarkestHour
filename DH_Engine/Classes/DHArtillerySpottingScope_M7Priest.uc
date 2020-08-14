@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtilleryCannonHUD_M7Priest extends DHArtilleryCannonHUD
+class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope
     abstract;
 
 defaultproperties 
 {
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
+    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
     
     YawScaleStep=5.0
     PitchScaleStep=5.0

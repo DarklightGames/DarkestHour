@@ -34,10 +34,6 @@ defaultproperties
     // binoculars
     DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
 
-    // Spotting Scope Size
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
-    SpottingScopeSize=0.35
-
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=3
     BinocPositionIndex=4
@@ -54,6 +50,6 @@ defaultproperties
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
-    ArtilleryHud=class'DH_Engine.DHArtilleryCannonHUD_M7Priest'
+    ArtillerySpottingScope=class'DH_Engine.DHArtillerySpottingScope_M7Priest'
 }
 

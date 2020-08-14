@@ -320,13 +320,13 @@ simulated function DrawHUD(Canvas C)
             // C.DrawText(TraverseString);
         }
         else {
-            ArtilleryHud.static.DrawSpottingScopeOverlay(C);
-            ArtilleryHud.static.DrawRangeTable(C);
-            ArtilleryHud.static.DrawPitch(C,
+            ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+            ArtillerySpottingScope.static.DrawRangeTable(C);
+            ArtillerySpottingScope.static.DrawPitch(C,
                 class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()), 
                 class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
-            ArtilleryHud.static.DrawYaw(C,
+            ArtillerySpottingScope.static.DrawYaw(C,
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
