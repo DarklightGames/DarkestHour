@@ -15,6 +15,8 @@ defaultproperties
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_LeIG18_anm.leig18_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     IntermediatePositionIndex=1 // the open sights position (used to play a special 'intermediate' firing anim in that position)
     CameraBone="turret" //changing here since we don't want pitch, only traverse/yaw of gunsight
+    GunsightPositions=-1
+    SpottingScopePositionIndex=0
     RaisedPositionIndex=2
     BinocPositionIndex=3
     DrivePos=(X=0,Y=0.0,Z=60.0)

@@ -10,8 +10,8 @@ defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
     
-    YawScaleStep=1.0
-    PitchScaleStep=1.0
+    YawScaleStep=10.0
+    PitchScaleStep=10.0
 
     // to do: confirm those values are correct!
     RangeTable(0)=(Mils=50,Range=100)
