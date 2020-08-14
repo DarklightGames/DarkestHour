@@ -1594,7 +1594,6 @@ static function StaticPrecache(LevelInfo L)
     {
         L.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
     }
-
 }
 
 // Modified to add extra material properties (no need to call the Super, as it's only in Actor & only caches the Skins array, which a weapon pawn doesn't have)
