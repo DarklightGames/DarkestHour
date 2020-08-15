@@ -543,6 +543,16 @@ function CheckCanBeResupplied()
 //  ******************************* ACTIVITY STATES *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        super.HandleEnter();
+        GotoState('Idle');
+    }
+}
+
+
 // New state where mortar is not busy doing something, so can be fired, exited, undeployed, etc
 simulated state Idle
 {
