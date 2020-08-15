@@ -3,14 +3,28 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_T60Tank_Snow extends DH_T60Tank;  //WIP
+class DH_T60Tank_Snow extends DH_T60Tank; 
+
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin.Material1 = Skins[0];
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.FallbackMaterial = Skins[0];
+    DestroyedSkin.CombineOperation = CO_Multiply;
+    DestroyedMeshSkins[0] = DestroyedSkin;
+
+    super.DestroyAppearance();
+}
 
 defaultproperties
 {
     bIsWinterVariant=true
-    //Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.IS2snow_ext'
-    //Skins(1)=Texture'allies_vehicles_tex.Treads.IS2_treadsnow'
-    //Skins(2)=Texture'allies_vehicles_tex.Treads.IS2_treadsnow'
-    //CannonSkins(0)=Texture'allies_vehicles_tex.ext_vehicles.IS2snow_ext'
-    //DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2snow_ext_dest'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T60_ext_snow'
+    Skins(1)=Texture'allies_vehicles_tex.Treads.SU76_Treadsnow'
+    Skins(2)=Texture'allies_vehicles_tex.Treads.SU76_Treadsnow'  //not entirely "correct" but it looks ok
+    CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.T60_ext_snow'
+
 }
