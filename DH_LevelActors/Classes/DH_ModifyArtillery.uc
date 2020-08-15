@@ -10,38 +10,21 @@
 
 class DH_ModifyArtillery extends DH_ModifyActors;
 
-enum EModifyArtilleryError
+struct SArtilleryStatusModifier
 {
-    ERROR_None,
-    ERROR_Fatal,
-    ERROR_IndexOutOfBounds
+    var() int              ArtilleryTypeIndex; // in DH_Levelnfo.ArtilleryTypes
+    var() StatusModifyType HowToModify;
 };
 
-var() int              ArtilleryTypeIndex; // in DH_Levelnfo.ArtilleryTypes
-var() StatusModifyType HowToModify;
+var() array<SArtilleryStatusModifier> ArtilleryStatusModifiers;
 
 function PostBeginPlay()
 {
-    local DarkestHourGame DHG;
-    local EModifyArtilleryError ErrorType;
-
     super.PostBeginPlay();
 
-    DHG = DarkestHourGame(Level.Game);
-
-    if (DHG == none || DHG.GRI == none)
+    if (ArtilleryStatusModifiers.Length <= 0)
     {
-        ErrorType = ERROR_Fatal;
-    }
-    else if (ArtilleryTypeIndex < 0 ||
-             ArtilleryTypeIndex >= arraycount(DHG.GRI.ArtilleryTypeInfos))
-    {
-        ErrorType = ERROR_IndexOutOfBounds;
-    }
-
-    if (ErrorType != ERROR_None)
-    {
-        Warn(GetModifyArtilleryErrorString(ErrorType) @ "Self-destructing!");
+        Warn("No actions are specified. Self-destructing!");
         Destroy();
     }
 }
@@ -49,51 +32,48 @@ function PostBeginPlay()
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local DarkestHourGame DHG;
-    local EModifyArtilleryError ErrorType;
+    local DHGameReplicationInfo GRI;
+    local int i, TypeIndex;
 
     DHG = DarkestHourGame(Level.Game);
 
-    if (DHG == none || DHG.GRI == none)
+    if (DHG != none)
     {
-        ErrorType = ERROR_Fatal;
-    }
-    else if (ArtilleryTypeIndex < 0 ||
-             ArtilleryTypeIndex >= arraycount(DHG.GRI.ArtilleryTypeInfos))
-    {
-        ErrorType = ERROR_IndexOutOfBounds;
+        GRI = DHG.GRI;
     }
 
-    if (ErrorType != ERROR_None)
+    if (GRI == none || DHG.DHLevelInfo == none)
     {
-        Warn(GetModifyArtilleryErrorString(ErrorType) @ "Failed to trigger!");
+        Warn("Fatal error!");
         return;
     }
 
-    switch (HowToModify)
+    for (i = 0; i < ArtilleryStatusModifiers.Length; ++i)
     {
-        case SMT_Activate:
-            DHG.GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].bIsAvailable = true;
-            break;
+        TypeIndex = ArtilleryStatusModifiers[i].ArtilleryTypeIndex;
 
-        case SMT_Deactivate:
-            DHG.GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].bIsAvailable = false;
-            break;
+        if (TypeIndex < 0 ||
+            TypeIndex >= arraycount(GRI.ArtilleryTypeInfos) ||
+            TypeIndex >= DHG.DHLevelInfo.ArtilleryTypes.Length)
+        {
+            Warn("Failed action [" $ i $ "]: ArtilleryTypeIndex is invalid.");
+            continue;
+        }
 
-        case SMT_Toggle:
-            DHG.GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].bIsAvailable = !DHG.GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].bIsAvailable;
-            break;
-    }
-}
+        switch (ArtilleryStatusModifiers[i].HowToModify)
+        {
+            case SMT_Activate:
+                GRI.ArtilleryTypeInfos[TypeIndex].bIsAvailable = true;
+                break;
 
-static function string GetModifyArtilleryErrorString(EModifyArtilleryError ErrorType)
-{
-    switch (ErrorType)
-    {
-        case ERROR_Fatal:
-            return "Fatal error!";
+            case SMT_Deactivate:
+                GRI.ArtilleryTypeInfos[TypeIndex].bIsAvailable = false;
+                break;
 
-        case ERROR_IndexOutOfBounds:
-            return "Specified artillery type index is out of bounds.";
+            case SMT_Toggle:
+                GRI.ArtilleryTypeInfos[TypeIndex].bIsAvailable = !GRI.ArtilleryTypeInfos[TypeIndex].bIsAvailable;
+                break;
+        }
     }
 }
 
