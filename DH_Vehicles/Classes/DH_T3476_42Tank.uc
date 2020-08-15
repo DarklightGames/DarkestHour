@@ -5,6 +5,20 @@
 
 class DH_T3476_42Tank extends DHArmoredVehicle;
 
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin.Material1 = Skins[0];
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.FallbackMaterial = Skins[0];
+    DestroyedSkin.CombineOperation = CO_Multiply;
+    DestroyedMeshSkins[0] = DestroyedSkin;
+
+    super.DestroyAppearance();
+}
+
 defaultproperties
 {
     // Vehicle properties
@@ -79,9 +93,9 @@ defaultproperties
     DamagedEffectOffset=(X=-105.0,Y=0.0,Z=40.0) // adjusted from original
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
-    DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3476_Destroyed'  //to be replaced
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.T34.T34m42Des'  
+    //DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
+    //DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=215.0,Y=-14.0,Z=50.0)  // driver
