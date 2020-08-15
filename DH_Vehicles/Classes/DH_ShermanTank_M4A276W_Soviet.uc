@@ -31,6 +31,7 @@ defaultproperties
 
 	
     // Hull mesh
+    Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext_alt'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A2_soviet'
 	
     // Movement
