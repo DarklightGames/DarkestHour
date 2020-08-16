@@ -103,7 +103,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     local string Label;
     const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
-    X = C.SizeX * 0.4;
+    X = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     Y = C.SizeY * 0.93;
 
     //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
@@ -195,7 +195,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     const VISIBLE_PITCH_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
     X = C.SizeX * 0.25;
-    Y = C.SizeY / 3;
+    Y = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
     //CurrentPitch = class'DHUnits'.static.UnrealToMilliradians(GetGunPitch());
     PitchLowerBound = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep) - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
