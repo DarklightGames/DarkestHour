@@ -397,11 +397,9 @@ function Undeploy()
 {
     local DHMortarWeapon CarriedMortar;
     local Pawn           MortarOperator;
-    local bool           bLocallyControlled;
 
     if (Role == ROLE_Authority && IsInState('Undeploying') && Driver != none)
     {
-        bLocallyControlled = IsLocallyControlled(); // save this as it will have changed when we need to check it later
         MortarOperator = Driver;
         CarriedMortar = Spawn(WeaponClass, MortarOperator);
 
@@ -411,7 +409,7 @@ function Undeploy()
 
             // Standalone or owning listen server destroys mortar vehicle (& all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
             // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
-            if (bLocallyControlled && DHMortarVehicle(VehicleBase) != none)
+            if (DHMortarVehicle(VehicleBase) != none)
             {
                 DHMortarVehicle(VehicleBase).ServerDestroyMortar();
             }
