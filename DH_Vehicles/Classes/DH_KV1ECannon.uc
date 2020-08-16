@@ -5,14 +5,20 @@
 
 class DH_KV1ECannon extends DH_T3476Cannon; // different turret but shares much in common with T34/76 cannon class
 
+// Modified to lower turret mesh a bit since a small amount of daylight could be seen under/through the lower edge
+simulated function InitializeVehicleBase()
+{
+    WeaponAttachOffset = vect(0.0, -3.0, -6.5);
+
+    super.InitializeVehicleBase();
+}
+
 defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext'
     Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
-    Skins(1)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
-    Skins(2)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
-    Skins(3)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
 
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1b_turret_coll'
 
@@ -50,5 +56,5 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=69.6
-    AltFireOffset=(X=-54.5,Y=12.0,Z=-0.5)
+    AltFireOffset=(X=-86.0,Y=11.5,Z=5.5)
 }

@@ -9,11 +9,11 @@ defaultproperties
 {
 
     //to do: proper hull MG exit hatch (implemented in the animations)
-	
+
     // Vehicle properties
     VehicleNameString="KV-1E"
     VehicleTeam=1
-    VehicleMass=16.0 
+    VehicleMass=16.0
     ReinforcementCost=27
 
     // Hull mesh
@@ -28,17 +28,17 @@ defaultproperties
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1ECannonPawn',WeaponBone="Turret_Placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1MGPawn',WeaponBone="MG_Placement")
-    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-133.0,Y=31.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-133.0,Y=-42.0,Z=98),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drums
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-190.0,Y=-35.0,Z=44.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-190.0,Y=35.0,Z=44.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-133.0,Y=31.0,Z=98),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc")
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_int',DriverTransitionAnim="VKV1_driver_close",TransitionUpAnim="driver_hatch_open",ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_int',DriverTransitionAnim="VKV1_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-11000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(X=10.0,Y=0.0,Z=1.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
-    UnbuttonedPositionIndex=1 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
+    DrivePos=(X=10.0,Y=0.0,Z=2.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
+    UnbuttonedPositionIndex=2 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay' //to be replaced with non "S" version
     HUDOverlayFOV=85.0
@@ -64,19 +64,19 @@ defaultproperties
     MaxCriticalSpeed=524.0 // ~30 kph
     GearRatios(4)=0.7
     TransRatio=0.072
-	
-	EngineRestartFailChance=0.35 //unreliability of early design +  even more weight
+
+    EngineRestartFailChance=0.35 //unreliability of early design +  even more weight
 
     // Damage
-	// Compared to KV-1: additional armor makes it even heavier, which causes even more reliability problems with engine and transmission
+    // Compared to KV-1: additional armor makes it even heavier, which causes even more reliability problems with engine and transmission
     Health=565
     HealthMax=565.0
-	EngineHealth=200
-	
+    EngineHealth=200
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-	  // engine health is lowered for above described reason
+      // engine health is lowered for above described reason
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -86,7 +86,6 @@ defaultproperties
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.KV1_body_dest'
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
     DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
-
 
     // Exit
     ExitPositions(0)=(X=235.0,Y=0.0,Z=50.0)     // driver
@@ -167,7 +166,7 @@ defaultproperties
          BoneName="Steer_Wheel_LF"
          BoneRollAxis=AXIS_Y
          BoneOffset=(X=10.0,Y=-10.0,Z=13.0)
-         WheelRadius=41.0
+         WheelRadius=44.0
          bLeftTrack=true
      End Object
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_KV1ETank.LF_Steering'
@@ -177,7 +176,7 @@ defaultproperties
          BoneName="Steer_Wheel_RF"
          BoneRollAxis=AXIS_Y
          BoneOffset=(X=10.0,Y=10.0,Z=13.0)
-         WheelRadius=41.0
+         WheelRadius=44.0
      End Object
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_KV1ETank.RF_Steering'
      Begin Object Class=SVehicleWheel Name=LR_Steering
