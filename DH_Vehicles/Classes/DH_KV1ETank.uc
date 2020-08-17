@@ -37,11 +37,14 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_int',DriverTransitionAnim="VKV1_driver_close",TransitionUpAnim="driver_hatch_open",ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_int',DriverTransitionAnim="VKV1_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-11000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(X=10.0,Y=0.0,Z=2.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
+    DrivePos=(X=10.0,Y=0.0,Z=5.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
     UnbuttonedPositionIndex=2 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
-    HUDOverlayClass=class'ROVehicles.KV1DriverOverlay' //to be replaced with non "S" version
-    HUDOverlayFOV=85.0
+
+    // Driver overlay
+    HUDOverlayClass=class'ROVehicles.PanzerIVF2DriverOverlay'
+    HUDOverlayOffset=(X=2,Y=0,Z=0)
+    HUDOverlayFOV=85
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=6.5,LocationName="lower") //+25mm shield

@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="KV-1S"
     VehicleTeam=1
-    VehicleMass=15.2  //should be above 15.1 (or whatever is set in gebalte ladung) so its resistant to gebalte ladung, due to relatively thick top armor (30-40mm) 
+    VehicleMass=15.2  //should be above 15.1 (or whatever is set in gebalte ladung) so its resistant to gebalte ladung, due to relatively thick top armor (30-40mm)
     ReinforcementCost=23
 
     // Hull mesh
@@ -38,8 +38,11 @@ defaultproperties
     DrivePos=(X=10.0,Y=0.0,Z=1.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
     UnbuttonedPositionIndex=1 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
+
+    // Driver overlay
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
-    HUDOverlayFOV=85.0
+    HUDOverlayOffset=(X=0,Y=0,Z=0)
+    HUDOverlayFOV=85
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.0,Slope=-25.0,MaxRelativeHeight=6.5,LocationName="lower")
@@ -62,20 +65,20 @@ defaultproperties
     MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(4)=0.7
     TransRatio=0.08
-	
-	EngineRestartFailChance=0.1  //later improved and lightened design
+
+    EngineRestartFailChance=0.1  //later improved and lightened design
 
     // Damage
-	// Compared to KV-1: 
-	// pros: later, more polished design from 1942 that eliminated some of the early reliability problems.
+    // Compared to KV-1:
+    // pros: later, more polished design from 1942 that eliminated some of the early reliability problems.
     Health=565
     HealthMax=565.0
-	EngineHealth=300 // better than on KV-1/KV-1E because its a "lightweight" modification with less stress on engine and transmission
-	
+    EngineHealth=300 // better than on KV-1/KV-1E because its a "lightweight" modification with less stress on engine and transmission
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-	  // more reliable engine and transmission due to lower weight and later, more polished design
+      // more reliable engine and transmission due to lower weight and later, more polished design
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
