@@ -7,6 +7,9 @@ class DH_T3476_42Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
+
+    FireAttachBone="com_attachment"
+	
     // Turret mesh
     Mesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext'
     Skins(0)=Texture'DH_T34_3_tex.Vehicles.T3476_M42_green'
