@@ -12,8 +12,8 @@ defaultproperties
 
     //Driver's positions and anims
     DriverPositions(0)=(ViewLocation=(X=8,Y=-8,Z=5),ViewFOV=30,PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',ViewPitchUpLimit=6000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=false)
-    DriverPositions(1)=(ViewLocation=(X=8.5,Y=47,Z=3),PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',ViewPitchUpLimit=10,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
-    DriverPositions(2)=(ViewLocation=(X=8.5,Y=-12,Z=3),PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionUpAnim=com_open,ViewPitchUpLimit=10,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
+    DriverPositions(1)=(ViewLocation=(X=8.5,Y=45,Z=3),PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',ViewPitchUpLimit=10,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
+    DriverPositions(2)=(ViewLocation=(X=7.4,Y=-9,Z=3),PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionUpAnim=com_open,ViewPitchUpLimit=10,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
     DriverPositions(3)=(PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim=com_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false,bExposed=true)
     DriverPositions(4)=(ViewFOV=12.0,PositionMesh=Mesh'DH_BT7_anm.BT7_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
 
