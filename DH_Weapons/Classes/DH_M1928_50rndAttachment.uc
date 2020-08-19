@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_M1928_50rndAttachment extends DHWeaponAttachment;
+class DH_M1928_50rndAttachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {

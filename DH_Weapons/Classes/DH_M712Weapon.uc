@@ -3,7 +3,36 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_M712Weapon extends DHAutoWeapon;
+class DH_M712Weapon extends DHFastAutoWeapon;
+
+simulated function bool StartFire(int Mode)
+{
+    if (super(DHProjectileWeapon).StartFire(Mode))
+    {
+        if (FireMode[Mode].bMeleeMode)
+        {
+            return true;
+        }
+
+        AnimStopLooping();
+
+        // single
+        if (FireMode[0].bWaitForRelease)
+        {
+            return true;
+        }
+        else // auto
+        {
+            if (!FireMode[Mode].IsInState('FireLoop'))
+            {
+                FireMode[Mode].StartFiring();
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 defaultproperties
 {
