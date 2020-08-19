@@ -9,7 +9,7 @@ defaultproperties
 {
     ItemName="Mosin-Nagant M91/30"
     SwayModifyFactor=0.68 // +0.08
-    SwayBayonetModifier=1.2
+    SwayBayonetModifier=1.33
     FireModeClass(0)=class'DH_Weapons.DH_MN9130Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MN9130MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MN9130Attachment'

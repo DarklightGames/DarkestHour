@@ -14,15 +14,15 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SVT40Attachment'
     PickupClass=class'DH_Weapons.DH_SVT40Pickup'
 
-    Mesh=SkeletalMesh'Allies_Svt40_1st.svt40_mesh'
+    Mesh=SkeletalMesh'DH_Svt40_1st.svt40_1st'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.SVT40_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=25.0
 
-    MaxNumPrimaryMags=9
-    InitialNumPrimaryMags=9
+    MaxNumPrimaryMags=8
+    InitialNumPrimaryMags=8
 
     bHasBayonet=true
     BayonetBoneName="bayonet"

@@ -1707,7 +1707,7 @@ function UpdateSquads()
         SetVisible(C.b_CreateSquad, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
-        SetVisible(C.b_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
+        SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
 
         if (bIsSquadLeader)
@@ -1720,15 +1720,16 @@ function UpdateSquads()
             else
             {
                 C.i_LockSquad.Image = UnlockIcon;
-                C.b_LockSquad.SetHint(default.LockText);
 
                 if (bCanSquadBeLocked)
                 {
                     C.i_LockSquad.ImageColor.A = 255;
+                    C.b_LockSquad.SetHint(default.LockText);
                 }
                 else
                 {
-                    C.i_LockSquad.ImageColor.A = 128;
+                    C.i_LockSquad.ImageColor.A = 64;
+                    C.b_LockSquad.SetHint("Squad can be locked only if it has " $ SRI.SquadLockMemberCountMin $ " or more members");
                 }
             }
         }
