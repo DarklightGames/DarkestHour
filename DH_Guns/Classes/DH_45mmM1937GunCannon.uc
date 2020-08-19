@@ -28,16 +28,16 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'
 
     ProjectileDescriptions(0)="APBC"
-    ProjectileDescriptions(2)="APCR"
+
 
     nProjectileDescriptions(0)="BR-240"
     nProjectileDescriptions(1)="O-240"
-    nProjectileDescriptions(2)="BR-240P"
+
 
 
     InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=4
+    InitialSecondaryAmmo=20
+
     MaxPrimaryAmmo=60
     MaxSecondaryAmmo=30
     MaxTertiaryAmmo=6
@@ -48,13 +48,13 @@ defaultproperties
     EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_04')
+    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire01'
+    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire02'
+    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire03'
+    ReloadStages(0)=(Sound=none)
+    ReloadStages(1)=(Sound=none) //fast reload as its a low caliber AT gun
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
 
     // Cannon range settings
     RangeSettings(0)=0

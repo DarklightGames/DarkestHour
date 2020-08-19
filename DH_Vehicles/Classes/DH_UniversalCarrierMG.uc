@@ -22,7 +22,7 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
-    InitialPrimaryAmmo=60
+    InitialPrimaryAmmo=63
     NumMGMags=15
     FireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'

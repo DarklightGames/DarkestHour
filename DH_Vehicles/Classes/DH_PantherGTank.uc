@@ -15,4 +15,13 @@ defaultproperties
     RightArmor(1)=(Thickness=5.0,Slope=30.0)
     LeftArmor(0)=(Thickness=5.0)
     LeftArmor(1)=(Thickness=5.0,Slope=30.0)
+	
+    // Damage
+	// pros: 5 men crew;
+	// cons: petrol fuel; general unreliability of the panthers; this variant is a later one, so partially fixed and improved
+    Health=565
+    HealthMax=565.0
+	EngineHealth=240  //engine health is lowered for above reason (higher than ausf D)
+	
+    EngineRestartFailChance=0.25 //unreliability
 }

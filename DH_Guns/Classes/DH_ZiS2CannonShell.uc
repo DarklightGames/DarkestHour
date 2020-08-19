@@ -14,14 +14,14 @@ defaultproperties
     BallisticCoefficient=1.14 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=370
+    ImpactDamage=460  //14 gramms TNT filler
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.31
-    EngineFireChance=0.58
-    //^slightly better than AT57, assumed because higher speed and small TNT filler (14 gramms)
+    HullFireChance=0.35
+    EngineFireChance=0.62
+
 
     //Penetration
-    DHPenetrationTable(0)=11.7  // 100m (all same as T34/76)
+    DHPenetrationTable(0)=11.7  // 100m 
     DHPenetrationTable(1)=11.0  // 250m
     DHPenetrationTable(2)=10.3  // 500m
     DHPenetrationTable(3)=9.8

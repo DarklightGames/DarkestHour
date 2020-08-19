@@ -8,10 +8,10 @@ class DH_Sdkfz2341CannonShellDamageAP extends DHShellAPImpactDamageType
 
 defaultproperties
 {
-    TankDamageModifier=0.15
-    APCDamageModifier=0.35
-    VehicleDamageModifier=0.75
-    TreadDamageModifier=0.5
+    TankDamageModifier=0.2    
+    APCDamageModifier=0.3     
+    VehicleDamageModifier=0.4
+    TreadDamageModifier=0.25 
 
     VehicleMomentumScaling=0.05 //minimal movement on vehicles from hits
 

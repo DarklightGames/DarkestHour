@@ -13,7 +13,7 @@ defaultproperties
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
-    ReinforcementCost=3
+    ReinforcementCost=6
     MaxDesireability=1.2
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
@@ -56,8 +56,8 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=10.0
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=35.0) // engine

@@ -13,8 +13,8 @@ defaultproperties
     BallisticCoefficient=3.3 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=775
-    HullFireChance=0.5
+    ImpactDamage=975  //109 gramms TNT filler
+    HullFireChance=0.5 
     EngineFireChance=0.98
 
     //Penetration

@@ -15,11 +15,10 @@ defaultproperties
     SpeedFudgeScale=0.4
 
     //Damage
-    ImpactDamage=475
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    bShatterProne=true
+    ImpactDamage=540
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.34
-    EngineFireChance=0.68
+    EngineFireChance=0.65 
 
     //Effects
     bDebugInImperial=false

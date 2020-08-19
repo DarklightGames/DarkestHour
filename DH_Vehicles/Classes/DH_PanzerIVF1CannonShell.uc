@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=500.0
-    HullFireChance=0.45
-    EngineFireChance=0.85
+    ImpactDamage=500.0  //29 gramms TNT filler
+    HullFireChance=0.40
+    EngineFireChance=0.75
 
     bDebugInImperial=false
 

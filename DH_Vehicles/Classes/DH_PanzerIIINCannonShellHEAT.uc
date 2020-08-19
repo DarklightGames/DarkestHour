@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=650
-    Damage=450.0
-    DamageRadius=200.0
+    ImpactDamage=350   //~~600 gramms TNT
+    Damage=300.0
+    DamageRadius=700.0
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

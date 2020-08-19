@@ -14,4 +14,9 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman105_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman105_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a3_105'
+	
+    // Damage
+	// Compared to M4A375W: 105mm ammo is more likely to explode
+	AmmoIgnitionProbability=0.88  // 0.75 default
+
 }
