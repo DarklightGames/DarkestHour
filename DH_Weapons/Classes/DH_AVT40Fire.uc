@@ -9,12 +9,12 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    FireRate=0.085 // ~700rpm
+    FireRate=0.085 // ~700rpm; TO DO: make a separate fire rate for semi auto mode
     Spread=90.0
     bWaitForRelease=true // set to semi-auto by default
 
     RecoilRate=0.06
-    MaxVerticalRecoilAngle=700
+    MaxVerticalRecoilAngle=700  //keep in mind the first shot gets 0.8 coefficient
     MaxHorizontalRecoilAngle=210
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=4.0,OutVal=1.1),(InVal=12.0,OutVal=1.5),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=2.0

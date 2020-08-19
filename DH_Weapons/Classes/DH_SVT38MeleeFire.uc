@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SVT40MeleeFire extends DHMeleeFire;
+class DH_SVT38MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    BayonetTraceRange=147.0   // +7, SVT-40 was ~100mm longer than k98k
-    DamageType=class'DH_Weapons.DH_SVT40BashDamType'
-    BayonetDamageType=class'DH_Weapons.DH_SVT40BayonetDamType'
+    BayonetTraceRange=155.0   // +15, SVT-38 had a longer bayonet
+    DamageType=class'DH_Weapons.DH_SVT38BashDamType'
+    BayonetDamageType=class'DH_Weapons.DH_SVT38BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

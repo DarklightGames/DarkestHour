@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_AVT40Attachment'
     PickupClass=class'DH_Weapons.DH_AVT40Pickup'
 
-    Mesh=SkeletalMesh'Allies_Svt40_1st.svt40_mesh'
+    Mesh=SkeletalMesh'DH_Svt40_1st.svt40_1st'
     Skins(2)=Texture'Weapons1st_tex.Rifles.svt40_sniper'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
