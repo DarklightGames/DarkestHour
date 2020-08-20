@@ -10,6 +10,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
+		break;
         case ALLIES_TEAM_INDEX:
             if (Context.LevelInfo != none)
             {
