@@ -8,7 +8,7 @@ class DH_VSAssault extends DHGEAssaultRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_VSGreatCoatPawn')
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves' // similar color; to do (?) - make distinct texture
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Volkssturm_sleeve' 
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetOne'
 
