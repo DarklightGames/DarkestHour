@@ -137,7 +137,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.8
     VehicleHudOccupantsX(4)=0.65
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.t60'
 
     // Visible wheels
     // Wheel bones for animation
