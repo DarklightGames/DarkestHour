@@ -3,33 +3,28 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_MP41Weapon extends DHAutoWeapon;
+class DH_MP38Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Maschinenpistole 41"
-    FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
-    PickupClass=class'DH_Weapons.DH_MP41Pickup'
-    AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
+    ItemName="Maschinenpistole 38"
+    FireModeClass(0)=class'DH_Weapons.DH_MP38Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_MP38MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_MP38Attachment'
+    PickupClass=class'DH_Weapons.DH_MP38Pickup'
 
-    Mesh=SkeletalMesh'Axis_Mp40_1st.mp41_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.MP41_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    Mesh=SkeletalMesh'DH_Mp40_1st.mp38-mesh'
+    //HighDetailOverlay=shader'Weapons1st_tex.SMG.MP40_s'
+    bUseHighDetailOverlayIndex=false
 
+    SwayModifyFactor=0.77 // -0.03 for some micro difference from mp40
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=45.0
-    FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
-    bHasSelectFire=true
-    SelectFireAnim="select_fire"
-    SelectFireIronAnim="Iron_select_fire"
-	
     bPlusOneLoading=false
 
     IdleEmptyAnim="idle_empty"

@@ -3,19 +3,19 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_MP41Fire extends DH_MP40Fire;
+class DH_MP38Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MP41Bullet'
+    ProjectileClass=class'DH_Weapons.DH_MP38Bullet'
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.12 // 500rpm
-    Spread=120.0
+    FireRate=0.127 // 470rpm 
+    Spread=122.0
 
     // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=215
-    MaxHorizontalRecoilAngle=66
+    MaxVerticalRecoilAngle=225
+    MaxHorizontalRecoilAngle=70
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.6),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
     RecoilFallOffFactor=14.0
 

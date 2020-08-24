@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_MP40Attachment extends DHWeaponAttachment;
+class DH_MP38Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp40_icon'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mp38_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp38_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
