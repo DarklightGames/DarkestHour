@@ -7,13 +7,27 @@ class DH_Pak38ATGun extends DHATGun;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Pak40_anm.ukx
 
+simulated event DestroyAppearance()
+{
+    local Combiner DestroyedSkin;
+
+    DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+    DestroyedSkin.Material1 = Skins[0];
+    DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+    DestroyedSkin.FallbackMaterial = Skins[0];
+    DestroyedSkin.CombineOperation = CO_Multiply;
+    DestroyedMeshSkins[0] = DestroyedSkin;
+
+    super.DestroyAppearance();
+}
+
 defaultproperties
 {
     VehicleNameString="5.0 cm Pak38 AT gun"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
     Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak38.pak38_dest'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'

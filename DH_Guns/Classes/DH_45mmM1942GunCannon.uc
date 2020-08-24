@@ -12,4 +12,11 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_45mmM1942GunCannonShell'
     TertiaryProjectileClass=class'DH_Guns.DH_45mmM1942GunCannonShellAPCR'
     WeaponFireOffset=42.9
+
+    nProjectileDescriptions(2)="BR-240P"
+    ProjectileDescriptions(2)="APCR"
+
+
+    InitialTertiaryAmmo=3
+    MaxTertiaryAmmo=7
 }

@@ -18,7 +18,7 @@ defaultproperties
     MaxNegativeYaw=-5461
     YawStartConstraint=-6000.0
     YawEndConstraint=6000.0
-    CustomPitchUpLimit=2366 // +13/-5 (should be +25 degrees, but any higher & barrel clips through gun shield)
+    CustomPitchUpLimit=2766 // +16/-5 (should be +25 degrees, but any higher & barrel clips through gun shield)
     CustomPitchDownLimit=64200
 
     // Cannon ammo
@@ -29,11 +29,8 @@ defaultproperties
 
     ProjectileDescriptions(0)="APBC"
 
-
     nProjectileDescriptions(0)="BR-240"
     nProjectileDescriptions(1)="O-240"
-
-
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
