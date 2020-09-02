@@ -7,7 +7,7 @@ class DH_VK98Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Volks Karabiner 98"
+    ItemName="Volkssturmkarabiner 98"
     FireModeClass(0)=class'DH_Weapons.DH_VK98Fire'
     FireModeClass(1)=class'DH_Weapons.DH_VK98MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_VK98Attachment'
