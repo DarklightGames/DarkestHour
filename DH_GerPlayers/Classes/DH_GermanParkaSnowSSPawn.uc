@@ -7,9 +7,9 @@ class DH_GermanParkaSnowSSPawn extends DH_GermanParkaPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaSnow1'
+    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaSnow1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSParkaSnow2'
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.WSSParkaSnow3'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //to do: mix with Texture'DHGermanCharactersTex2.WSS.WSSParkaCam1'
+    BodySkins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //^
 }

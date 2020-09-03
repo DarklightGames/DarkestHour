@@ -14,7 +14,7 @@ defaultproperties
     bReversedSkinsSlots=false
 
     BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_Green'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB2'
     BodySkins(2)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB2'
     BodySkins(3)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB3'
 }
