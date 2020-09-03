@@ -7,9 +7,9 @@ class DH_GermanArtilleryHeerPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_Artillery1'
-
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_Artillery1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_Artillery2'
+    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    //to do: char mesh for artillery epaulets (they are already in the wh_1 texture)
+    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
 
 }

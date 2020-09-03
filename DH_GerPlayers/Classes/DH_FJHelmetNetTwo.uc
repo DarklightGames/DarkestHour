@@ -3,15 +3,6 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_FJHelmetNetTwo extends DHHeadgear;
+class DH_FJHelmetNetTwo extends DH_FJHelmetNetOne;
 
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetNet2');
-}
-
-defaultproperties
-{
-    Mesh=SkeletalMesh'dhgear_anm.Ger_Fallsch_Helmet'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.FJ_HelmetNet2'
-}
+// removed as part of optimization because its too similar
