@@ -7,7 +7,7 @@ class DH_WSSGreatcoatSquadLeader extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="Scharführer"
+    AltName="Scharfuhrer"
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'

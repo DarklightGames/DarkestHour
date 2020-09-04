@@ -8,7 +8,7 @@ class DH_OstTruppenRifleman extends DHGERiflemanRoles;
 defaultproperties
 {
     MyName="Osttruppe Rifleman"
-    AltName="Schütze Osttruppe"
+    AltName="Schutze Osttruppe"
     PluralName="Osttruppe Riflemen"
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'

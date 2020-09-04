@@ -9,7 +9,7 @@ class DHAxisAntiTankRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Tank Hunter"
-    AltName="Panzerjäger"
+    AltName="Panzerjager"
     Article="a "
     PluralName="Tank Hunters"
     Limit=1

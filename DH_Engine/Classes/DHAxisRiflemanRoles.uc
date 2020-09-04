@@ -9,7 +9,7 @@ class DHAxisRiflemanRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="Schütze"
+    AltName="Schutze"
     Article="a "
     PluralName="Riflemen"
     bSpawnWithExtraAmmo=true

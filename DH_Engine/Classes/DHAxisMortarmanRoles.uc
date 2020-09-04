@@ -10,7 +10,7 @@ defaultproperties
 {
     bCanUseMortars=true
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="Werferschutze"
     Article="a "
     PluralName="Mortar Operators"
     Limit=1

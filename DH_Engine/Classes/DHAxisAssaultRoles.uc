@@ -9,7 +9,7 @@ class DHAxisAssaultRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Stoﬂtruppe"
+    AltName="Stosstruppe"
     Article="an "
     PluralName="Assault Troopers"
     Limit=3

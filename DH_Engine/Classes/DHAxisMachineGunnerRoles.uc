@@ -10,7 +10,7 @@ defaultproperties
 {
     bIsGunner=true
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="Maschinengewehrschutze"
     Article="a "
     PluralName="Machine-Gunners"
     Limit=2

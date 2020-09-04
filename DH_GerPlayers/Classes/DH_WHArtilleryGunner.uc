@@ -8,7 +8,7 @@ class DH_WHArtilleryGunner extends DHGETankCrewmanRoles;
 defaultproperties
 {
     MyName="Artillery Gunner"
-    AltName="Artillerie Schütze"
+    AltName="Artillerie Schutze"
     Article="a "
     PluralName="Artillery Gunners"
 

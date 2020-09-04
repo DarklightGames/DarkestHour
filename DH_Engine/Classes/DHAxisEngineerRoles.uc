@@ -9,7 +9,7 @@ class DHAxisEngineerRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Combat Engineer"
-    AltName="Stürmpioniere"
+    AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
     Limit=2
