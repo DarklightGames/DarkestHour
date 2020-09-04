@@ -10,7 +10,7 @@ defaultproperties
     Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1'
 
     BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1' //to do: restore pants/shirt combo
-    BodySkins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4' // same
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam2'
+    BodySkins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam3'
     BodySkins(3)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4'
 }

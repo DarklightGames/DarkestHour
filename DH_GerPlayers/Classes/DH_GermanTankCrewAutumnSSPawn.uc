@@ -7,8 +7,8 @@ class DH_GermanTankCrewAutumnSSPawn extends DH_GermanTankCrewPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_2'
+    Skins(0)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_1'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_2' //to do: restore "1" mix variant
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_1'
     BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_PanzerAutumn_2'
 }

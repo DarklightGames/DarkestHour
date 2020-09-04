@@ -10,6 +10,5 @@ defaultproperties
     Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_3'
 
     BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_3'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_3'
-    //to do(?): combo shirt/pants (this was before the optimization)
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_4'
 }

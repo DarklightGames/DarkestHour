@@ -7,10 +7,10 @@ class DH_GermanSSPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    Skins(1)=Texture'DHGermanCharactersTex.WSS.SS_1'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_1'
     BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_2'  //to do: restore mix
-    BodySkins(3)=Texture'DHGermanCharactersTex.WSS.SS_6'  //^
+    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_3'
+    BodySkins(3)=Texture'DHGermanCharactersTex.WSS.SS_4'
 }

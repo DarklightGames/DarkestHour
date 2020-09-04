@@ -10,5 +10,5 @@ defaultproperties
     Skins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1'
 
     BodySkins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1' //to do: restore mix variant
+    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam2'
 }

@@ -7,8 +7,8 @@ class DH_GermanSmockToqueSSPawn extends DH_GermanSmockToqueHeerPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
-    //to do: mix variant
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
+    Skins(1)=Texture'DHGermanCharactersTex.WSS.WSSSmockSnow1'
+
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.WSSSmockSnow1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSSmockSnow2'
 }
