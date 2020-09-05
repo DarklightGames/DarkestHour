@@ -7,7 +7,7 @@ class DH_WSSSquadLeader_Autumn extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="Scharfuhrer"
+    AltName="Scharführer"
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSSPawn',Weight=1.5)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanAutumnSmockSSPawn',Weight=1.0)
