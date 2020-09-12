@@ -19,8 +19,8 @@ defaultproperties
     MaxNegativeYaw=-1092.0
     YawStartConstraint=-1092.0
     YawEndConstraint=1092.0
-    CustomPitchUpLimit=13289
-    CustomPitchDownLimit=63715
+    CustomPitchUpLimit=6371
+    CustomPitchDownLimit=65535
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
@@ -41,7 +41,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
-    AddedPitch=-15  // TODO: REPLACE
+    AddedPitch=0  // TODO: REPLACE
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'  // TODO: REPLACE
