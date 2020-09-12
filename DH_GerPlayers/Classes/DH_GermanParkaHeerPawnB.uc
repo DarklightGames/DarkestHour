@@ -3,17 +3,17 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanParkaSSPawn extends DH_GermanParkaPawn;
+class DH_GermanParkaHeerPawnB extends DH_GermanParkaPawn;
 
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Parka_mix'
 
-    Skins(2)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1' //shirt
-    Skins(0)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1' //pants
+    Skins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4' //shirt
+    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4' //pants
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4' //black
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.WSSParkaCam1'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1'
     BodySkins(2)=Texture'DHGermanCharactersTex.Heer.HeerSmock1' //green
 
     Skins(1)=Texture'Characters_tex.ger_heads.ger_face01'

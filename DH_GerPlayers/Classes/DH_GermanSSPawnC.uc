@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanSSPawn extends DH_GermanPawn;
+class DH_GermanSSPawnC extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(2)=Texture'DHGermanCharactersTex.WSS.SS_2'  //shirt
+    Skins(2)=Texture'DHGermanCharactersTex.WSS.SS_6'  //shirt
 
     BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_6' //pants
     BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'

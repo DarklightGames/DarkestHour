@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanParkaSnowSSPawn extends DH_GermanParkaPawn;
+class DH_GermanParkaSnowSSPawnB extends DH_GermanParkaPawn;
 
 defaultproperties
 {
-    Skins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //shirt
+    Skins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1' //shirt
     Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //pants
 
     BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1'

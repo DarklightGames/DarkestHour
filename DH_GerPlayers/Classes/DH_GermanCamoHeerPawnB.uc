@@ -3,15 +3,16 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanArtilleryHeerPawn extends DH_GermanPawn;
+class DH_GermanCamoHeerPawnB extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_mix'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_1'
+    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_3'
+    Skins(2)=Texture'DHGermanCharactersTex.Heer.WH_3'
+
+    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_3'
     BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
-	
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_art'  //alternativfe UV for epaulets
 
 }

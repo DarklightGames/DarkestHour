@@ -14,5 +14,5 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.helmet'
+    Skins(0)=Texture'DHGermanCharactersTex.WSS.SS_HGcamoA'
 }

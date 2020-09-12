@@ -7,10 +7,12 @@ class DH_German12thSSPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.WSS.12SS_1'
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_mix'
+	
+    Skins(2)=Texture'DHGermanCharactersTex.WSS.12SS_1'  //shirt
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.12SS_1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.12SS_1' // to do: restore shirt/pants mix
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_2'  //^
-    BodySkins(3)=Texture'DHGermanCharactersTex.WSS.SS_2'  //^
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.12SS_1' //pants
+    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
+    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' //heer pants
+
 }
