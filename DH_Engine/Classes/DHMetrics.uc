@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHMetrics extends Actor
@@ -245,6 +245,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
+    local DHVehicle KillerVehicle, VictimVehicle;
 
     if (Killer == none || Victim == none || DamageType == none || Rounds.Length == 0)
     {
@@ -264,6 +265,13 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     {
         F.KillerLocation = Killer.Pawn.Location;
         F.KillerPawn = Killer.Pawn.Class;
+
+        KillerVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
+
+        if (KillerVehicle != none)
+        {
+            F.KillerVehicle = KillerVehicle.Class;
+        }
     }
 
     // Victim
@@ -274,9 +282,55 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     if (Victim.Pawn != none)
     {
         F.VictimPawn = Victim.Pawn.Class;
+
+        VictimVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Victim.Pawn);
+
+        if (VictimVehicle != none)
+        {
+            F.VictimVehicle = VictimVehicle.Class;
+        }
     }
 
     Rounds[0].Frags[Rounds[0].Frags.Length] = F;
+}
+
+function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int RoundTime)
+{
+    local DHMetricsVehicleFrag F;
+    local DHVehicle KillerVehicle;
+
+    if (Killer == none || Vehicle == none || DamageType == none || Rounds.Length == 0)
+    {
+        return;
+    }
+
+    F = new class'DHMetricsVehicleFrag';
+    F.DamageType = DamageType;
+    F.RoundTime = RoundTime;
+
+    // Killer
+    F.KillerID = Killer.GetPlayerIDHash();
+    F.KillerTeam = Killer.GetTeamNum();
+
+    if (Killer.Pawn != none)
+    {
+        F.KillerLocation = Killer.Pawn.Location;
+        F.KillerPawn = Killer.Pawn.Class;
+
+        KillerVehicle = class'DHVehicle'.static.GetDrivenVehicleBase(Killer.Pawn);
+
+        if (KillerVehicle != none)
+        {
+            F.KillerVehicle = KillerVehicle.Class;
+        }
+    }
+
+    // Destroyed vehicle
+    F.Vehicle = Vehicle.Class;
+    F.VehicleTeam = Vehicle.GetTeamNum();
+    F.VehicleLocation = HitLocation;
+
+    Rounds[0].VehicleFrags[Rounds[0].VehicleFrags.Length] = F;
 }
 
 function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, array<string> PlayerIDs)

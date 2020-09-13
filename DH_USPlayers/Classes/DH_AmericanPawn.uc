@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_AmericanPawn extends DHPawn;
@@ -23,4 +23,5 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_US"
     bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack
+    BinocsClassName="DH_Equipment.DHBinocularsItemAllied"
 }

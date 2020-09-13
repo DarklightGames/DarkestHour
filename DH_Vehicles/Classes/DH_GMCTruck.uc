@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GMCTruck extends DHVehicle
@@ -11,8 +11,8 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="GMC CCKW"
     VehicleTeam=1
-    VehicleMass=2.5
-    ReinforcementCost=2
+    VehicleMass=5.0 //2.5
+    ReinforcementCost=4
     MaxDesireability=0.12
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
@@ -32,30 +32,58 @@ defaultproperties
     DrivePos=(X=6.0,Y=0.0,Z=2.0)
     DriveAnim="VUC_driver_idle_open"
 
-    // Movement
+    // Engine/Transmission
+    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=3.0),(InVal=2000.0,OutVal=0.5)))
     GearRatios(0)=-0.3
-    GearRatios(4)=0.98
+    GearRatios(1)=0.4  //0.2
+    GearRatios(2)=0.65   //0.350000
+    GearRatios(3)=0.85    //0.6
+    GearRatios(4)=1.1    //0.98
     TransRatio=0.18
     ChangeUpPoint=1990.0
-    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=3.0),(InVal=2000.0,OutVal=0.5)))
-    TurnDamping=25.0
+    ChangeDownPoint=1000.0
+
+    // Vehicle properties
+
+    // Vehicle properties
+    WheelSoftness=0.025000
+    WheelPenScale=1.200000
+    WheelPenOffset=0.010000
+    WheelRestitution=0.100000
+    WheelInertia=0.100000
+    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
+    WheelLongSlip=0.001000
+    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
+    WheelLongFrictionScale=1.100000
+    WheelLatFrictionScale=1.55
+    WheelHandbrakeSlip=0.010000
+    WheelHandbrakeFriction=0.100000
+    WheelSuspensionTravel=10.000000
+    WheelSuspensionMaxRenderTravel=5.000000
+    FTScale=0.030000
+    ChassisTorqueScale=0.095
+    MinBrakeFriction=4.000000
+    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
     SteerSpeed=70.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
-    MinBrakeFriction=3.0
-    MaxBrakeTorque=10.0
+    TurnDamping=25.0
+    StopThreshold=100.000000
+    HandbrakeThresh=100.0 //200.000000
+    LSDFactor=1.000000
+    CenterSpringForce="SpringONSSRV"
+
+    //MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxBrakeTorque=20.0 //10.0
     bHasHandbrake=true
-    HandbrakeThresh=100.0
     MaxCriticalSpeed=1077.0 // 64 kph
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
-    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLatFrictionScale=1.0
-    WheelHandbrakeSlip=0.5
+    //WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
+    //WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
+    //WheelLatFrictionScale=1.0
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
@@ -84,13 +112,17 @@ defaultproperties
     ExitPositions(1)=(X=65.0,Y=137.0,Z=25.0)  // front passenger
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
+    SoundPitch=32.0
+    MaxPitchSpeed=10.0 //150.0
+    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
+    RumbleSoundBone=body
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     SteerBoneName="WheelDrive"
 
     // HUD
@@ -112,6 +144,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.RFWheel'
+
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -122,6 +155,7 @@ defaultproperties
         bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LFWheel'
+
     Begin Object Class=SVehicleWheel Name=MRWheel
         bPoweredWheel=true
         BoneName="wheel_MR"
@@ -131,6 +165,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MRWheel'
+
     Begin Object Class=SVehicleWheel Name=MLWheel
         bPoweredWheel=true
         BoneName="wheel_ML"
@@ -141,6 +176,7 @@ defaultproperties
         bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MLWheel'
+
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
@@ -151,6 +187,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.RRWheel'
+
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true

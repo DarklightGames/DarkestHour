@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_KubelwagenCar_WH extends DHVehicle;
@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=2.0
-    ReinforcementCost=1
+    ReinforcementCost=3
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh

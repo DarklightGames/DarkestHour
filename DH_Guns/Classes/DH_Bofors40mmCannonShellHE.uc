@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Bofors40mmCannonShellHE extends DHCannonShellHE;
@@ -13,27 +13,29 @@ defaultproperties
     BallisticCoefficient=0.984 //TODO: pls, check
 
     //Damage
-    ImpactDamage=200
+    ImpactDamage=300
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    Damage=165.0
-    DamageRadius=500.0
+    Damage=165.0   //~90 gramms TNT
+    DamageRadius=540.0
     MyDamageType=class'DH_Engine.DHShellHE37mmATDamageType'
-    HullFireChance=0.20
-    EngineFireChance=0.30
+    HullFireChance=0.50
+    EngineFireChance=0.50
 
     //Effects
-    bHasTracer=true
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
     BlurTime=4.0
     BlurEffectScalar=1.5
-    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
-    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
-    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmHEHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmHEHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmHEHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmHEHitConcreteEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
+
+    //Sound
+    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration slightly better than US 37mm HE

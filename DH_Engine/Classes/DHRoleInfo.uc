@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
@@ -26,6 +26,7 @@ var     bool                bExemptSquadRequirement;// this role will be exempt 
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 
 var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
+var     Material            HandTexture;          // the hand texture this role should use
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -182,6 +183,11 @@ function class<ROHeadgear> GetHeadgear()
     }
 
     return none;
+}
+
+static function Material GetHandTexture()
+{
+    return default.HandTexture;
 }
 
 // New function to check whether a CharacterName for a player record is valid for this role

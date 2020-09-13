@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHGameType_Advance extends DHGameType
@@ -19,8 +19,8 @@ defaultproperties
     bHasTemporarySpawnVehicles=true
     bOmitTimeAttritionForDefender=true
     bTimeCanChangeAtZeroReinf=true
-    bKeepSpawningWithoutReinf=true
-    OutOfReinfRoundTime=120
+    bKeepSpawningWithoutReinf=false
+    OutOfReinfRoundTime=30
     OutOfReinfLimitForTimeChange=50
 
     ObjSpawnMinimumDepth=1

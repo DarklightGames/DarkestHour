@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ISU152CannonShell extends DHSovietCannonShell;
@@ -13,26 +13,28 @@ defaultproperties
     BallisticCoefficient=4.4 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=2750
+    ImpactDamage=3000  //extremely powerful round with 400-600 gramms TNT - should leave nothing alive after penetration
+    Damage=900 //going to treat this like a heavy HE shell when it impacts the ground
+    DamageRadius=850
     HullFireChance=1.0
     EngineFireChance=1.0
 
     //Effects
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    DrawScale=2.1
+    DrawScale=1.5
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     //Penetration
-    DHPenetrationTable(0)=16.5 // 100m
-    DHPenetrationTable(1)=16.0 // 250m
-    DHPenetrationTable(2)=15.2 // 500m
-    DHPenetrationTable(3)=14.5
-    DHPenetrationTable(4)=13.7 // 1000m
-    DHPenetrationTable(5)=13.0
-    DHPenetrationTable(6)=12.4 // 1500m
-    DHPenetrationTable(7)=11.7
-    DHPenetrationTable(8)=11.1  // 2000m
-    DHPenetrationTable(9)=10.0
-    DHPenetrationTable(10)=9.0 // 3000m
+    DHPenetrationTable(0)=14.3  // 100m
+    DHPenetrationTable(1)=14.1  // 250m
+    DHPenetrationTable(2)=13.7  // 500m
+    DHPenetrationTable(3)=13.3
+    DHPenetrationTable(4)=13.0 // 1000m
+    DHPenetrationTable(5)=12.7
+    DHPenetrationTable(6)=12.3  // 1500m
+    DHPenetrationTable(7)=11.9
+    DHPenetrationTable(8)=11.7  // 2000m
+    DHPenetrationTable(9)=11.1
+    DHPenetrationTable(10)=10.5  // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.411)

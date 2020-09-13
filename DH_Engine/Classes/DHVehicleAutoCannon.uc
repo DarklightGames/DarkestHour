@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHVehicleAutoCannon extends DHVehicleCannon;
@@ -230,7 +230,7 @@ defaultproperties
 {
     bUsesMags=true
     Spread=0.003
-    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
+    FlashEmitterClass=class'DH_Effects.DH20mmCannonFireEffect'
     EffectEmitterClass=none
     CannonDustEmitterClass=none
     AIInfo(0)=(RefireRate=0.99)

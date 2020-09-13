@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanM4A3105CannonShellHE extends DHCannonShellHE;
@@ -10,19 +10,19 @@ defaultproperties
     Speed=28486.0
     MaxSpeed=28486.0
     ShellDiameter=10.5
-    BallisticCoefficient=2.96
-    DrawScale=1.3
+    BallisticCoefficient=2.96 //TODO: pls check
 
     //Damage
-    ImpactDamage=650
-    Damage=500.0
+    ImpactDamage=2000  //2.2 KG TNT
+    Damage=1000.0
     DamageRadius=1350.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
     PenetrationMag=1000.0
-    HullFireChance=0.43
-    EngineFireChance=0.65
+    HullFireChance=1.0
+    EngineFireChance=1.0
 
     //Effects
+    DrawScale=1.5
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
     ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
     ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'

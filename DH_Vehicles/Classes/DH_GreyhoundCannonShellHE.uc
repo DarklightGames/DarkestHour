@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GreyhoundCannonShellHE extends DHCannonShellHE;
@@ -14,21 +14,23 @@ defaultproperties
 
     //Damage
     ImpactDamage=185
-    Damage=150.0
-    DamageRadius=800.0
+    Damage=100.0   //39 gramms TNT
+    DamageRadius=400.0
     MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
-    HullFireChance=0.15
-    EngineFireChance=0.20
+    HullFireChance=0.5
+    EngineFireChance=0.5
 
     //Effects
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+
+    //Sound
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'  <why would an explosive shell produce sound of bullet deflection?
+    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=1.2

@@ -1,21 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_AchillesCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53351.0
-    MaxSpeed=53351.0
+    Speed=53346.0 //2900 fps or 884 m/s
+    MaxSpeed=53346.0
     ShellDiameter=7.62
     BallisticCoefficient=2.45
 
     //Damage
-    ImpactDamage=580
-    HullFireChance=0.40
-    EngineFireChance=0.60
+    ImpactDamage=580  //solid shell
+    HullFireChance=0.35
+    EngineFireChance=0.75
 
     //Penetration
     DHPenetrationTable(0)=18.5

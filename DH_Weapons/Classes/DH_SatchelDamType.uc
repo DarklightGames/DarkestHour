@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_SatchelDamType extends DHThrowableExplosiveDamageType
@@ -13,7 +13,7 @@ defaultproperties
 
     VehicleDamageModifier=1.0
     APCDamageModifier=1.0
-    TankDamageModifier=0.15
+    TankDamageModifier=0.25
     TreadDamageModifier=1.0
 
     GibModifier=4.0

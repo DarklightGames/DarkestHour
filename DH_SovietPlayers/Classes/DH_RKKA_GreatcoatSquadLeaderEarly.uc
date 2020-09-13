@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_RKKA_GreatcoatSquadLeaderEarly extends DH_RKKA_GreatcoatSquadLeader;
+class DH_RKKA_GreatcoatSquadLeaderEarly extends DHSOVSergeantRoles;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatBrownSLEarlyPawn',Weight=1.0)
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
 }

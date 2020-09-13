@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_KV1sCannon extends DH_T3476Cannon; // different turret but shares much in common with T34/76 cannon class
@@ -44,6 +44,7 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
+	
 
     // Weapon fire
     WeaponFireOffset=69.6

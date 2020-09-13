@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GreaseGunFire extends DHAutomaticFire;
@@ -10,13 +10,13 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_GreaseGunBullet'
     AmmoClass=class'DH_Weapons.DH_GreaseGunAmmo'
     FireRate=0.15 // 400rpm
-    Spread=178.0
+    Spread=148.0
 
     // Recoil
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=310
-    MaxHorizontalRecoilAngle=120
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=3.0,OutVal=0.6),(InVal=8.0,OutVal=1.2),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=300
+    MaxHorizontalRecoilAngle=100
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=3.0,OutVal=0.8),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=10.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'

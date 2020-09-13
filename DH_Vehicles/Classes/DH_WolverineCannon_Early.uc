@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WolverineCannon_Early extends DH_WolverineCannon;
@@ -15,7 +15,7 @@ defaultproperties
 
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42A1 HE-T"
-    nProjectileDescriptions(2)="M89 WP"
+    nProjectileDescriptions(2)="M88 HC"
 
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=10

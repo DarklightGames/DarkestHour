@@ -1,22 +1,22 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WolverineCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {
-    Speed=62525.0
-    MaxSpeed=62525.0
-    ShellDiameter=7.62
-    BallisticCoefficient=1.65 //TODO: find correct BC
+    Speed=62544.0 // 3400 fps or 1036 m/s
+    MaxSpeed=62544.0
+    ShellDiameter=7.62 // full caliber with windshield (3.8 cm core)
+    BallisticCoefficient=1.87 // Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=450
+    ImpactDamage=460
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
-    HullFireChance=0.3
-    EngineFireChance=0.43
+    HullFireChance=0.31
+    EngineFireChance=0.61
 
     //Penetration
     DHPenetrationTable(0)=19.2

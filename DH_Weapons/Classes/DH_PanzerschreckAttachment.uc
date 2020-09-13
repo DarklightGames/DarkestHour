@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerschreckAttachment extends DHRocketWeaponAttachment;
@@ -10,9 +10,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonPSchreckExhaustFX'
-    mMuzFlashClass=none//class'ROEffects.RO3rdPersonPanzerfaustFX'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
     MuzzleBoneName="Muzzle"
-    ExhaustBoneName="ejector"
+    ExhaustBoneName="dummy_rocket"
 
     WA_Idle="idle_panzerschreck"
     WA_Fire="idle_panzerschreck"

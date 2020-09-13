@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ISU152CannonShell_Late extends DH_ISU152CannonShell;
@@ -10,7 +10,6 @@ defaultproperties
     RoundType=RT_APBC
 
     //Damage
-    ImpactDamage=3000 // has explosive filler - so higher than solid AP round
 
     //Penetration - BR540b
     DHPenetrationTable(0)=14.8  // 100m

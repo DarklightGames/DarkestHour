@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHSpawnPoint extends DHSpawnPointBase
@@ -13,6 +13,7 @@ enum ESpawnPointType
     ESPT_Vehicles,
     ESPT_Mortars,
     ESPT_All,
+    ESPT_VehicleCrewOnly
 };
 
 var()   ESpawnPointType Type;
@@ -148,7 +149,6 @@ simulated function BuildLocationHintsArrays()
             }
         }
     }
-
 }
 
 // Modified to activate/deactivate any linked mine volume, resupply volume or vehicle factories, that get activated/deactivated with this spawn point
@@ -252,7 +252,14 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 
     if (VehicleClass == none)
     {
-        return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
+        if (Type == ESPT_VehicleCrewOnly)
+        {
+            return RI.default.bCanBeTankCrew;
+        }
+        else
+        {
+            return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
+        }
     }
     else
     {

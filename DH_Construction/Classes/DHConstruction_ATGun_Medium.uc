@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHConstruction_ATGun_Medium extends DHConstruction_Vehicle;
@@ -28,6 +28,14 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                 case NATION_Britain:
                 case NATION_Canada:
                     return class'DH_Guns.DH_6PounderGun';
+                case NATION_USSR:
+                    switch (Context.LevelInfo.Weather)
+                    {
+                        case WEATHER_Snowy:
+                            return class'DH_Guns.DH_45mmM1942Gun_Snow';
+                        default:
+                            return class'DH_Guns.DH_45mmM1942Gun';
+                    }
                 default:
                     return class'DH_Guns.DH_AT57Gun';
             }

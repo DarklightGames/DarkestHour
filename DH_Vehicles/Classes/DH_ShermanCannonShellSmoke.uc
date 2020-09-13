@@ -1,16 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_ShermanCannonShellSmoke extends DHCannonShellSmoke;
+class DH_ShermanCannonShellSmoke extends DHCannonShellSmokeWP;
 
 defaultproperties
 {
-    Speed=37357.0
-    MaxSpeed=37357.0
+    Speed=37358.0 // 2030 fps or 619 m/s
+    MaxSpeed=37358.0
     ShellDiameter=7.5
-    BallisticCoefficient=1.19 //TODO: pls check
+    BallisticCoefficient=2.8 //TODO: pls check - this is the APC shell's BC
 
     //Penetration
     DHPenetrationTable(0)=0.2

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -24,6 +24,11 @@ var     bool            bUsesIronsightFOV;
 var     private float   PlayerIronsightFOV;
 var     float           SwayModifyFactor;
 var     float           BobModifyFactor;
+
+// An alternate animation to `SelectAnim` that plays when a weapon is drawn
+// for a first time.
+var()   name            FirstSelectAnim;
+var     bool            bHasBeenDrawn;
 
 replication
 {
@@ -223,9 +228,9 @@ simulated state StartMantle extends Busy
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -370,6 +375,12 @@ simulated state PostFiring
 {
 }
 
+simulated state RaisingWeapon
+{
+Begin:
+    bHasBeenDrawn = true;
+}
+
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
 simulated state AutoLoweringWeapon extends LoweringWeapon
 {
@@ -443,9 +454,9 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(PutDownAnim))
@@ -850,6 +861,64 @@ simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
     }
 }
 
+simulated function name GetSelectAnim()
+{
+    if (FirstSelectAnim != '' && !bHasBeenDrawn)
+    {
+        return FirstSelectAnim;
+    }
+
+    return SelectAnim;
+}
+
+// This function handles sleeve and hand swapping depending on the player's role
+// (overriden to support hand textures).
+simulated function HandleSleeveSwapping()
+{
+    local Material RoleSleeveTexture, RoleHandTexture;
+    local DHRoleInfo RI;
+    local ROPlayer PC;
+
+    // Don't bother with AI players.
+    if (!Instigator.IsHumanControlled() || !Instigator.IsLocallyControlled())
+    {
+        return;
+    }
+
+    PC = ROPlayer(Instigator.Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (RI != none)
+    {
+        RoleSleeveTexture = RI.static.GetSleeveTexture();
+        RoleHandTexture = RI.static.GetHandTexture();
+    }
+
+    if (RoleSleeveTexture != none && SleeveNum >= 0)
+    {
+        Skins[SleeveNum] = RoleSleeveTexture;
+    }
+
+    if (HandNum >= 0)
+    {
+        // We want our hands to look consistent when we change weapons.
+        // Handtex is still supported to preserve the old functionality,
+        // but hand textures defined by roles will take precedence.
+        if (RoleHandTexture != none)
+        {
+            Skins[HandNum] = RoleHandTexture;
+        }
+        else
+        {
+            Skins[HandNum] = Handtex;
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
@@ -860,7 +929,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
-    SwayBayonetModifier=1.02
+    SwayBayonetModifier=1.2
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=0.9

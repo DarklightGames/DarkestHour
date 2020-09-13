@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -151,6 +151,12 @@ var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
 // Replication
 var                         EObjectiveState             OldObjState;
+
+// Danger zone
+var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone) float AxisInfluenceModifier;
+var(DHDangerZone) float AlliesInfluenceModifier;
+var(DHDangerZone) float NeutralInfluenceModifier;
 
 replication
 {
@@ -1459,4 +1465,10 @@ defaultproperties
     bTankersCanCapture=true
     PlayersNeededToCapture=1
     AwardedReinforcementFactor=0.25
+
+    // Danger zone
+    BaseInfluenceModifier=1
+    AxisInfluenceModifier=1
+    AlliesInfluenceModifier=1
+    NeutralInfluenceModifier=1
 }

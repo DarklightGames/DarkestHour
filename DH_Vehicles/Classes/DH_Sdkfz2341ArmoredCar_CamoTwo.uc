@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Sdkfz2341ArmoredCar_CamoTwo extends DH_Sdkfz2341ArmoredCar;

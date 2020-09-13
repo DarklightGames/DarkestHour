@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_HellcatCannonShellHE extends DHCannonShellHE;
@@ -10,15 +10,15 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: pls find correct BC
+    BallisticCoefficient=1.368 //TODO: pls find correct BC, this is terribly wrong
 
     //Damage
     ImpactDamage=450
-    PenetrationMag=780.0
-    Damage=400.0
-    DamageRadius=1140.0
-    HullFireChance=0.32
-    EngineFireChance=0.45
+    Damage=300.0  //410 gramms TNT
+    DamageRadius=1000.0
+    PenetrationMag=620.0
+    HullFireChance=0.8
+    EngineFireChance=0.8
 
     //Penetration
     DHPenetrationTable(0)=4.2
@@ -27,9 +27,9 @@ defaultproperties
     DHPenetrationTable(3)=2.9
     DHPenetrationTable(4)=2.4
     DHPenetrationTable(5)=2.0
-    DHPenetrationTable(6)=1.7
-    DHPenetrationTable(7)=1.3
-    DHPenetrationTable(8)=1.1
-    DHPenetrationTable(9)=1.0
-    DHPenetrationTable(10)=0.8
+    DHPenetrationTable(6)=2.0
+    DHPenetrationTable(7)=2.0
+    DHPenetrationTable(8)=2.0
+    DHPenetrationTable(9)=2.0
+    DHPenetrationTable(10)=2.0
 }

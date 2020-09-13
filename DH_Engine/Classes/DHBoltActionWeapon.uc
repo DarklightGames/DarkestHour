@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHBoltActionWeapon extends DHProjectileWeapon
@@ -33,6 +33,10 @@ var     name            FullReloadAnim;     // full reload animation (takes prec
 
 var     int             NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
 
+var     bool            bShouldSkipBolt;
+
+var     bool            bCanUseUnfiredRounds;
+
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -50,7 +54,7 @@ replication
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    if (bWaitingToBolt && !IsBusy())
+    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
     {
         WorkBolt();
     }
@@ -311,7 +315,7 @@ simulated state Reloading
         // Give back the unfired round that was in the chamber.
         if (Role == ROLE_Authority)
         {
-            if(!bWaitingToBolt)
+            if(!bWaitingToBolt && bCanUseUnfiredRounds)
             {
                 GiveBackAmmo(1);
             }
@@ -492,7 +496,7 @@ simulated state Reloading
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
             {
                 // Give back the unfired round in the chamber.
-                if (!bWaitingToBolt)
+                if (!bWaitingToBolt && bCanUseUnfiredRounds)
                 {
                     GiveBackAmmo(1);
                 }
@@ -636,7 +640,7 @@ simulated function byte GetRoundsToLoad()
         return 0;
     }
 
-    CurrentLoadedRounds = AmmoAmount(0) - int(!bWaitingToBolt);
+    CurrentLoadedRounds = AmmoAmount(0) - int(!bShouldSkipBolt && !bWaitingToBolt);
 
     //ensure we haven't dipped below 0
     CurrentLoadedRounds = Max(0,CurrentLoadedRounds);
@@ -753,4 +757,6 @@ defaultproperties
     AIRating=0.4
     CurrentRating=0.4
     bSniping=true
+
+    bCanUseUnfiredRounds=true
 }

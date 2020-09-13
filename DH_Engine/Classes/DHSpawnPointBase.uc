@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -65,6 +65,9 @@ var bool    bIsLowPriority;                             // When true, this spawn
 // Map icon (used only for showing spotted spawn points)
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
+
+// Danger zone
+var(DHDangerZone) float BaseInfluenceModifier;
 
 replication
 {
@@ -439,4 +442,7 @@ defaultproperties
     bIsActive=false
     bHidden=true
     SpawnRadiusSegmentCount=8
+
+    // Danger zone
+    BaseInfluenceModifier=1
 }

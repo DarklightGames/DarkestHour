@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdpantherTank extends DHArmoredVehicle;
@@ -21,7 +21,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Jagdpanzer V 'Jagdpanther'"
     VehicleMass=14.0
-    ReinforcementCost=8
+    ReinforcementCost=22
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_ext'
@@ -66,8 +66,14 @@ defaultproperties
     MaxCriticalSpeed=1002.0 // 60 kph
 
     // Damage
-    Health=600
-    HealthMax=600.0
+	// pros: 5 men crew
+	// cons: petrol fuel
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.8  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-122.0,Z=-6.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=35.0,Y=-45.0,Z=50.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

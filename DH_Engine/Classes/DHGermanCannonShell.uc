@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHGermanCannonShell extends DHCannonShell
@@ -10,5 +10,6 @@ defaultproperties
 {
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
+    TracerHue=40
 }

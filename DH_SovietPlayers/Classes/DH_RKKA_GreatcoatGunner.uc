@@ -1,12 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_RKKA_GreatcoatGunner extends DHSOVMachineGunnerRoles;
+class DH_RKKA_GreatcoatGunner extends DH_RKKA_GreatcoatGunnerEarly;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+
 }

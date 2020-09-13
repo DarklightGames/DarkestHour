@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_StenMkIIWeapon extends DHAutoWeapon;
@@ -24,6 +24,10 @@ defaultproperties
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
     SelectFireAnim="switch_fire"

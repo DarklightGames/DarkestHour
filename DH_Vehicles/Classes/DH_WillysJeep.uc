@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WillysJeep extends DHVehicle;
@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
     VehicleMass=2.0
-    ReinforcementCost=1
+    ReinforcementCost=3
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
@@ -61,8 +61,8 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.95
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3

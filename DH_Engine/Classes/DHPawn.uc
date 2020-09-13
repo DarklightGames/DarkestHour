@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -29,6 +29,8 @@ var     bool    bReversedSkinsSlots;      // some player meshes have the typical
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
+
+var     string  BinocsClassName;
 
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
@@ -116,6 +118,12 @@ var     class<DamageType>   FireDamageClass;               // the damage type th
 var     int                 BurnTimeLeft;                  // number of seconds remaining for a corpse to burn
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
+
+// Smoke grenades for squad leaders
+var DH_LevelInfo.SNationString SmokeGrenadeClassName;
+var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
+var int RequiredSquadMembersToReceiveSmoke;
+var int RequiredSquadMembersToReceiveColoredSmoke;
 
 // (not) DUMB SHIT
 var     DHATGun             GunToRotate;
@@ -1471,6 +1479,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DarkestHourGame G;
     local DHGameReplicationInfo GRI;
     local int RoundTime;
+    local Controller C;
 
     if (DamageType == none)
     {
@@ -1532,7 +1541,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         SetLimping(FMin(ActualDamage / 5.0, 10.0));
     }
-    else if (DamageType.Name == 'DHBurningDamageType' || DamageType.Name == 'DamTypeVehicleExplosion')
+    else if (DamageType.Name == 'DHBurningDamageType' || DamageType.Name == 'DamTypeVehicleExplosion' || DamageType.Name == 'DHShellSmokeWPDamageType')
     {
         if (ActualDamage <= 0 && bOnFire)
         {
@@ -1604,7 +1613,15 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
             }
 
-            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex, RoundTime);
+            C = Controller;
+
+            // Controller might be possessing a vehicle pawn.
+            if (Controller == none && DrivenVehicle != none && DrivenVehicle.Controller != none)
+            {
+                C = DrivenVehicle.Controller;
+            }
+
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(C), DamageType, HitLocation, HitIndex, RoundTime);
         }
 
         Died(Killer, DamageType, HitLocation);
@@ -3085,6 +3102,7 @@ function AddDefaultInventory()
 
             CheckGiveShovel();
             CheckGiveBinocs();
+            CheckGiveSmoke();
 
             RI = GetRoleInfo();
 
@@ -3209,6 +3227,7 @@ function AddDefaultInventory()
 
             CheckGiveShovel();
             CheckGiveBinocs();
+            CheckGiveSmoke();
         }
     }
 
@@ -3257,14 +3276,128 @@ function CheckGiveBinocs()
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
-    if (Level.Game != none)
+    if (BinocsClassName != "" && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
         if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
         {
-            CreateInventory("DH_Equipment.DHBinocularsItem");
+            CreateInventory(BinocsClassName);
+        }
+    }
+}
+
+// Function used to give smoke grenades to squad leaders (if squad is large enough)
+function CheckGiveSmoke()
+{
+    local DHRoleInfo RI;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local DarkestHourGame DHG;
+    local byte TeamIndex;
+    local int SquadMemberCount;
+    local string ColoredSmokeGrenadeToGive;
+    local string SmokeGrenadeToGive;
+
+    if (Level.Game != none)
+    {
+        RI = GetRoleInfo();
+
+        // Exclude tank crewmen and mortar operators
+        if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
+        {
+            return;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+        PC = DHPlayer(Controller);
+
+        if (GRI == none ||
+            PC == none ||
+            PC.SquadReplicationInfo == none ||
+            PRI == none ||
+            !PRI.IsSquadLeader())
+        {
+            return;
+        }
+
+        TeamIndex = GetTeamNum();
+        SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
+
+        // Not enough people in the squad to receive any smoke
+        if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
+        {
+            return;
+        }
+
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                SmokeGrenadeToGive = SmokeGrenadeClassName.Germany;
+                ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Germany;
+
+                break;
+
+            case ALLIES_TEAM_INDEX:
+                DHG = DarkestHourGame(Level.Game);
+
+                if (DHG == none || DHG.LevelInfo == none)
+                {
+                    return;
+                }
+
+                switch (DHG.DHLevelInfo.AlliedNation)
+                {
+                    case NATION_Canada:
+                        // Falls back to Britain
+                        if (SmokeGrenadeClassName.Canada != "")
+                        {
+                            SmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
+                        }
+                        else
+                        {
+                            SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
+                        }
+
+                        if (ColoredSmokeGrenadeClassName.Canada != "")
+                        {
+                            ColoredSmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
+                        }
+                        else
+                        {
+                            ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
+                        }
+
+                        break;
+
+                    case NATION_Britain:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
+                        break;
+
+                    case NATION_USSR:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
+                        break;
+
+                    default:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.USA;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USA;
+                        break;
+                }
+        }
+
+        if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != "")
+        {
+            CreateInventory(SmokeGrenadeToGive);
+        }
+
+        if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != "")
+        {
+            CreateInventory(ColoredSmokeGrenadeToGive);
         }
     }
 }
@@ -3419,7 +3552,9 @@ state PutWeaponAway
                 }
             }
             // Putting away a pistol, or a shovel that hangs on the player's left hip
-            else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (Weapon.IsA('DHPistolWeapon') ||
+                     Weapon.IsA('DHRevolverWeapon') ||
+                     (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 if (bIsCrawling)
                 {
@@ -3536,7 +3671,9 @@ state PutWeaponAway
             if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
                 // From grenade or binocs, to pistol or shovel from left hip
-                if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                if (Weapon.IsA('DHPistolWeapon') ||
+                    Weapon.IsA('DHRevolverWeapon') ||
+                    (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3572,7 +3709,9 @@ state PutWeaponAway
                     }
                 }
             }
-            else if (SwapWeapon.IsA('DHPistolWeapon') || (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+            else if (SwapWeapon.IsA('DHPistolWeapon') ||
+                     SwapWeapon.IsA('DHRevolverWeapon') ||
+                     (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 // From pistol or shovel that goes on left hip, to grenade or binocs
                 if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
@@ -3587,7 +3726,9 @@ state PutWeaponAway
                     }
                 }
                 // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') ||(Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3626,7 +3767,9 @@ state PutWeaponAway
                     }
                 }
                 // From any other weapon, to pistol or shovel from left hip
-                else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                else if (Weapon.IsA('DHPistolWeapon') ||
+                         Weapon.IsA('DHRevolverWeapon') ||
+                         (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -6363,7 +6506,7 @@ exec function BogeyMan()
         return;
     }
 
-    if (G.IsAdmin(PC) && class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
+    if (G.IsAdmin(PC) || class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
     {
         PC.bGodMode = true;
         bHidden = true;
@@ -6678,7 +6821,7 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int
             SpawnDirection.Yaw = Rotation.Yaw;
             SpawnLocation = Location + (vector(SpawnDirection) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
 
-            // Add the vehicel's desired rotation (90 will be perpendicular)
+            // Add the vehicle's desired rotation (90 will be perpendicular)
             SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
@@ -7206,6 +7349,23 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
+simulated exec function ShellHipOffset(float X, float Y, float Z)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellHipOffset.X = X;
+            WF.ShellHipOffset.Y = Y;
+            WF.ShellHipOffset.Z = Z;
+        }
+    }
+}
+
 simulated exec function ShellIronSightOffset(float X, float Y, float Z)
 {
     local ROWeaponFire WF;
@@ -7249,12 +7409,13 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=40.0
-    StanceChangeStaminaDrain=1.5
-    StaminaRecoveryRate=1.15
-    CrouchStaminaRecoveryRate=1.3
-    ProneStaminaRecoveryRate=1.5
-    SlowStaminaRecoveryRate=0.5
+    Stamina=50.0                        // How many second of stamina the player has
+    StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
+    StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
+    CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching
+    ProneStaminaRecoveryRate=2.5        // How much stamina to recover per second while proning
+    SlowStaminaRecoveryRate=0.75        // How much stamina to recover per second when moving
+    JumpStaminaDrain=2.5                // How much stamina is lost by jumping
 
     // Weapon aim
     IronsightBobAmplitude=1.0
@@ -7281,6 +7442,12 @@ defaultproperties
     DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
     CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
+
+    // Smoke grenades for squad leaders
+    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
+    ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
+    RequiredSquadMembersToReceiveSmoke=4
+    RequiredSquadMembersToReceiveColoredSmoke=6
 
     // Third person player animations
     bShovelHangsOnLeftHip=true

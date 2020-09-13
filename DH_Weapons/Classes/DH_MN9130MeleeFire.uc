@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MN9130MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
+    BayonetTraceRange=155.0   // +15 because 91/30 mosin with bayonet was significantly longer than other rifles
     DamageType=class'DH_Weapons.DH_MN9130BashDamType'
     BayonetDamageType=class'DH_Weapons.DH_MN9130BayonetDamType'
     BayoBackAnim="stab_pullback"

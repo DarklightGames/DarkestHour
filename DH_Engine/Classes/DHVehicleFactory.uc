@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHVehicleFactory extends ROVehicleFactory
@@ -10,6 +10,9 @@ var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified ev
 
 var     bool    bLastVehicle;            // on the last vehicle this factory is meant to spawn
 var     bool    bControlledBySpawnPoint; // flags that this factory is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
+
+var()   bool    bStartsWithDamagedTreadLeft;
+var()   bool    bStartsWithDamagedTreadRight;
 
 // Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
 // And we no longer call StaticPrecache on the VehicleClass from here, as that gets done in our UpdatePrecacheMaterials(), so we don't want to do it twice
@@ -73,6 +76,28 @@ event VehicleDestroyed(Vehicle V)
     }
 }
 
+// Triggered when the vehicle is actually spawned. Allows for custom overrides
+// in subclasses.
+function VehicleSpawned(Vehicle V)
+{
+    local DHArmoredVehicle AV;
+
+    AV = DHArmoredVehicle(V);
+
+    if (AV != none && AV.bHasTreads)
+    {
+        if (bStartsWithDamagedTreadLeft)
+        {
+            AV.DamTrack("L");
+        }
+
+        if (bStartsWithDamagedTreadRight)
+        {
+            AV.DamTrack("R");
+        }
+    }
+}
+
 // Modified to trigger any FactoryDepletedEvent when last vehicle is spawned
 // Also so factory is owner of spawned vehicle, allowing vehicle to access factory's properties during vehicle's initialization (allows use of leveller-specified properties in factory)
 function SpawnVehicle()
@@ -128,6 +153,8 @@ function SpawnVehicle()
             {
                 bLastVehicle = true;
             }
+
+            VehicleSpawned(LastSpawnedVehicle);
         }
         else
         {

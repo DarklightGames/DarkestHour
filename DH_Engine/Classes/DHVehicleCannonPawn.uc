@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
@@ -74,6 +74,16 @@ simulated function PostBeginPlay()
     if (RaisedPositionIndex == -1) // default value -1 signifies match to UPI, just to save having to set it in most vehicles (set RPI in vehicle subclass def props if different)
     {
         RaisedPositionIndex = UnbuttonedPositionIndex;
+    }
+}
+
+exec function SetCamPos(float X, float Y, float Z)
+{
+    if (IsDebugModeAllowed())
+    {
+        FPCamPos.X = X;
+        FPCamPos.Y = Y;
+        FPCamPos.Z = Z;
     }
 }
 
@@ -1113,7 +1123,7 @@ defaultproperties
     RangePositionY=0.2
 
     //Periscope overlay
-    PeriscopeSize=1.0 //default for most peri's
+    PeriscopeSize=0.955 //default for most peri's
 
     // Turret/cannon movement
     MaxRotateThreshold=1.5

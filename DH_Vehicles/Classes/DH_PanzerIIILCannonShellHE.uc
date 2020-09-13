@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIIILCannonShellHE extends DHCannonShellHE;
@@ -13,17 +13,19 @@ defaultproperties
     BallisticCoefficient=1.19
 
     //Damage
-    ImpactDamage=315
-    Damage=260.0
+    ImpactDamage=545
+    Damage=240.0  //~~180 gramms TNT
     DamageRadius=565.0
     MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
     PenetrationMag=565.0
-    HullFireChance=0.25
-    EngineFireChance=0.32
+    HullFireChance=0.6
+    EngineFireChance=0.60
 
     bDebugInImperial=false
 
     //Effects
+    bHasTracer=false
+    bHasShellTrail=false
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'

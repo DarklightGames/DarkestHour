@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHAntiVehicleProjectile extends DHBallisticProjectile
@@ -17,6 +17,7 @@ enum ERoundType
     RT_Smoke,
     RT_AP,    // basic armor-piercing round, without any cap
     RT_APBC,  // with ballistic cap but not armor-piercing cap (used by Soviets)
+    RT_APBULLET // armor-piercing bullet, like PTRD or .50 cal
 };
 
 // Projectile characteristics
@@ -39,15 +40,21 @@ var     class<Emitter>  ShellShatterEffectClass; // effect for this shell shatte
 var     sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
 var     sound           ShatterSound[4];         // sound of the round shattering
 
-// Effects
-var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
-var     class<Effects>  CoronaClass;             // tracer effect class
-var     Effects         Corona;                  // shell tracer
+// Shell Tracer Effects
+var     bool            bHasTracer;
+var     class<Effects>  CoronaClass;             // shell base tracer effect class
+var     Effects         Corona;                  // shell base tracer
+var     bool            bHasShellTrail;
+var     class<Emitter>  ShellTrailClass;     // shell "streak" emitter effect
+var     Emitter         ShellTrail;
+var     int             TracerHue;               // allows custom control of ambient light hue
+var     int             TracerSaturation;        // allows custom control of ambient light saturation
 
-//New Effects
-var     bool                    bHasShellTrail;
-var     class<Emitter>          TankShellTrailClass;         // shell "streak" emitter
-var     Emitter                 ShellTrail;
+// AP Bullet Tracer Effects
+var     class<Emitter>      TracerEffectClass;
+var     Emitter             TracerEffect;
+var     StaticMesh          DeflectedMesh;
+var     float               TracerPullback;
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -83,7 +90,7 @@ var float   EngineFireChance;
 
 // Deflection
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
-var     float           DampenFactor;
+var     float           DampenFactor;               // the smaller the number, the less the projectile will move after deflection
 var     float           DampenFactorParallel;
 
 // Impact sounds
@@ -118,6 +125,17 @@ simulated function PostBeginPlay()
     {
         Velocity *= 0.5;
     }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
+    {
+        Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(ShellTrailClass, self);
+        ShellTrail.SetBase(self);
+    }
 }
 
 // Modified to set InstigatorController (used to attribute radius damage kills correctly) & to move bDebugBallistics stuff here from PostBeginPlay (with bDebugROBallistics option)
@@ -135,6 +153,35 @@ simulated function PostNetBeginPlay()
     if (bDebugROBallistics)
     {
         bDebugBallistics = true;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasTracer)
+    {
+        SetDrawType(DT_StaticMesh);
+        bOrientToVelocity = true;
+
+        if (RoundType == RT_APBULLET)
+        {
+            TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
+        }
+
+        if (Level.bDropDetail)
+        {
+            bDynamicLight = false;
+            LightType = LT_None;
+        }
+        else
+        {
+            bDynamicLight = true;
+            LightType = LT_Steady;
+        }
+
+        LightBrightness = 90.0;
+        LightRadius = 10.0;
+        LightHue = TracerHue;
+        LightSaturation = TracerSaturation;
+        AmbientGlow = 254;
+        LightCone = 16;
     }
 
     if (bDebugBallistics)
@@ -372,7 +419,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
             HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
         }
-        else if (Other.IsA('DHConstruction'))
+        else if (Other.IsA('DHConstruction') || Other.IsA('DHDestroyableStaticMesh'))
         {
             if (Role == ROLE_Authority)
             {
@@ -895,6 +942,9 @@ simulated function DoShakeEffect()
 
             if (Distance < PenetrationMag * 3.0)
             {
+
+                PC.PlaySound(Sound'DH_SundrySounds.shell_shock.shellshock', SLOT_None, 1.0, true, 10.0, 1.0, true); //play shell shock on PC
+
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
                 Scale *= BlurEffectScalar;
 
@@ -1092,12 +1142,14 @@ defaultproperties
     bDebugInImperial=true
     SpeedFudgeScale=0.5
     InitialAccelerationTime=0.2
+
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     ShakeRotTime=3.0
@@ -1107,6 +1159,9 @@ defaultproperties
     BlurTime=3.0
     BlurEffectScalar=1.9
     PenetrationMag=100.0
+
+    TracerHue=45
+    TracerSaturation=128
 
     HullFireChance=0.0
     EngineFireChance=0.0

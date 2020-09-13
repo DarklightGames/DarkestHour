@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WolverineTank_Snow extends DH_WolverineTank;
 
 defaultproperties
 {
+    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow'
     Skins(1)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M10_turret_snow'
     Skins(2)=Texture'DH_VehiclesUS_tex2.Treads.M10_treadsnow'

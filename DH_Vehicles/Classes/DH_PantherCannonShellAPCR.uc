@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PantherCannonShellAPCR extends DHGermanCannonShell;
@@ -15,16 +15,13 @@ defaultproperties
     SpeedFudgeScale=0.4
 
     //Damage
-    ImpactDamage=475
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    bShatterProne=true
+    ImpactDamage=540
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
     HullFireChance=0.34
-    EngineFireChance=0.48
+    EngineFireChance=0.65 
 
     //Effects
     bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
 
     //Penetration
     DHPenetrationTable(0)=25.3

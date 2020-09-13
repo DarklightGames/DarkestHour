@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIVGLateTank extends DHArmoredVehicle;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer IV Ausf.G"
-    ReinforcementCost=4
+    ReinforcementCost=16
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'
@@ -30,7 +30,7 @@ defaultproperties
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-115.0,Y=70.0,Z=55.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=61000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
 
@@ -52,14 +52,20 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-    DisintegrationHealth=-1000.0
+	// pros: 5 men crew
+	// cons: petrol fuel 
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-100.0,Y=0.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-27.0,Z=-10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=27.0,Z=-10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-30.0,Y=25.0,Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=14.0
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
+    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
     DestroyedMeshSkins(2)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanCannon_M4A3105_Howitzer extends DHVehicleCannon;
@@ -45,10 +45,10 @@ defaultproperties
     nProjectileDescriptions(2)="M67 HEAT"
 
     InitialPrimaryAmmo=30
-    InitialSecondaryAmmo=5
+    InitialSecondaryAmmo=4
     InitialTertiaryAmmo=12
     MaxPrimaryAmmo=45
-    MaxSecondaryAmmo=6
+    MaxSecondaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
     MaxTertiaryAmmo=15
     Spread=0.003
     SecondarySpread=0.0036

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -1872,29 +1872,32 @@ defaultproperties
     ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+    // ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_Hedgehog"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
 
     // Guns
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_ATGun_HeavyEarly"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_AAGun_Medium"
 
     // Defenses
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(14)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(21)="DH_Construction.DHConstruction_AntiTankCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Artillery

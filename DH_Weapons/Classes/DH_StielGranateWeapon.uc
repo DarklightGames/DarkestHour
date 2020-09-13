@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_StielGranateWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="Stielhandgranate 39/43"
+    ItemName="Stielhandgranate 39"
     FireModeClass(0)=class'DH_Weapons.DH_StielGranateFire'
     FireModeClass(1)=class'DH_Weapons.DH_StielGranateTossFire'
     AttachmentClass=class'DH_Weapons.DH_StielGranateAttachment'

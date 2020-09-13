@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -367,6 +367,17 @@ event Opened(GUIComponent Sender)
             }
         }
 
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
+        {
+            Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
+
+            if (PlayerOwner().ConsoleCommand("get IpDrv.TcpNetDriver KeepAliveTime") != "0.004")
+            {
+                PlayerOwner().ConsoleCommand("set IpDrv.TcpNetDriver KeepAliveTime 0.004");
+                PlayerOwner().SaveConfig();
+            }
+        }
+
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }
@@ -476,7 +487,7 @@ function GetMOTD()
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    MOTDRequest.Host = "46.101.44.19";
+    MOTDRequest.Host = "api.darklightgames.com";
     MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
@@ -530,7 +541,7 @@ defaultproperties
     i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        Image=Texture'DHEngine_Tex.Transparency.Trans_80'
+        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
         TopPadding=0.25
         LeftPadding=0.1
         BottomPadding=0.25
@@ -788,7 +799,7 @@ defaultproperties
     tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
-        Image=Texture'DHEngine_Tex.Transparency.Trans_70'
+        Image=Texture'DHEngine_Tex.Transparency.Trans_50'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4

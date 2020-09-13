@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_M38Fire extends DH_M44Fire;
@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_M38Bullet'
     AmmoClass=class'DH_Weapons.DH_MN9130Ammo'
     FAProjSpawnOffset=(X=-30.0)
-    Spread=60.0
+    Spread=70.0
     MaxVerticalRecoilAngle=1550
     MaxHorizontalRecoilAngle=200
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'

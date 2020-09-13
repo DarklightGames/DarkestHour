@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ISU152CannonShellHE extends DHCannonShellHE;
@@ -13,31 +13,37 @@ defaultproperties
     BallisticCoefficient=5.5 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=2250
-    Damage=2000.0
-    DamageRadius=3000.0
+    ImpactDamage=3000  //5.3 KG TNT, should destroy anything it penetrates, cripple anything that gets hit.
+    Damage=2200.0
+    DamageRadius=3500.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 152mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     PenetrationMag=1500.0
     HullFireChance=1.0
     EngineFireChance=1.0
 
     //Effects
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    DrawScale=2.1
-    BlurEffectScalar=3.0 // gives this large HE shell more screen blur
-    TransientSoundRadius=3000.0
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    DrawScale=1.5
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
     ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+
+    BlurEffectScalar=3.0 // gives this large HE shell more screen blur
+
+    //Sound
+    TransientSoundRadius=3000.0
+    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
+    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
+    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
+    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
 
     bDebugInImperial=false
 

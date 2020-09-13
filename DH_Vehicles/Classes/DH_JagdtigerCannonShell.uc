@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdtigerCannonShell extends DHGermanCannonShell;
@@ -13,9 +13,14 @@ defaultproperties
     BallisticCoefficient=3.9
 
     //Damage
-    ImpactDamage=950
-    HullFireChance=0.58
-    EngineFireChance=0.95
+    ImpactDamage=3000  //787 gramms TNT filler
+    Damage=1000 //Going to treat this like a powerful HE shell when it hits the ground
+    DamageRadius=900
+    HullFireChance=1.0
+    EngineFireChance=1.0
+
+    //Effects
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     //Penetration
     DHPenetrationTable(0)=26.7

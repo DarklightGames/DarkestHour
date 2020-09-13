@@ -1,30 +1,32 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GreyhoundCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=53291.0
-    MaxSpeed=53291.0
+    Speed=53346.0 //2900 fps or 884 m/s
+    MaxSpeed=53346.0
     ShellDiameter=3.7
-    BallisticCoefficient=0.984 //TODO: find correct BC
+    BallisticCoefficient=1.52 //Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=250
+    ImpactDamage=215  //solid shell
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
-    HullFireChance=0.2
-    EngineFireChance=0.25
+    HullFireChance=0.17
+    EngineFireChance=0.3
 
     //Effects
     bShatterProne=true
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+
+    //Sound
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=7.1

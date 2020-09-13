@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_RKKA_StandardRiflemanEarly extends DH_RKKA_StandardRifleman;
+class DH_RKKA_StandardRiflemanEarly extends DHSOVRiflemanRoles;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicEarlyPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
 }

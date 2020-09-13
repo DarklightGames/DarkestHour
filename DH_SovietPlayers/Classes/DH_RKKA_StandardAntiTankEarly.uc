@@ -1,13 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_RKKA_StandardAntiTankEarly extends DH_RKKA_StandardAntiTank;
+class DH_RKKA_StandardAntiTankEarly extends DHSOVAntiTankRoles;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PTRDWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    Grenades(0)=none
-    GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicEarlyPawn',Weight=1.0)
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
+    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 }

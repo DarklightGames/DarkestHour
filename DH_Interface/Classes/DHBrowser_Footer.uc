@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHBrowser_Footer extends UT2k4Browser_Footer;
@@ -9,9 +9,12 @@ var automated GUIButton b_Main;
 
 function bool InternalOnClick(GUIComponent Sender)
 {
+    local DHPlayer PC;
     if (Sender == b_Main)
     {
         //Open main menu
+        PC = DHPlayer(PlayerOwner());
+        PC.ConsoleCommand("DISCONNECT");
         Controller.CloseAll(false, true);
         Controller.OpenMenu("DH_Interface.DHMainMenu");
         return true;

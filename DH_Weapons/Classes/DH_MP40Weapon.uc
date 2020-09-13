@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
@@ -41,4 +41,7 @@ defaultproperties
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 }

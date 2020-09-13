@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHMapList extends MapList
@@ -10,8 +10,8 @@ var localized string OfficialText;
 var localized string CommunityText;
 var localized string WorkInProgressText;
 
-var protected string OfficialMaps[54];                  // Make sure size matches correctly
-var protected string WorkInProgressMaps[32];            // this one also
+var protected string OfficialMaps[60];                  // Make sure size matches correctly
+var protected string WorkInProgressMaps[28];            // this one also
 
 static function string GetMapSource(string S)
 {
@@ -124,6 +124,12 @@ defaultproperties
     OfficialMaps(51)="DH-Vierville_Push.rom"
     OfficialMaps(52)="DH-Vossenack_Push.rom"
     OfficialMaps(53)="DH-Salaca_River_Clash.rom"
+    OfficialMaps(54)="DH-Ogledow_Clash.rom"
+    OfficialMaps(55)="DH-Rabenheck_Advance.rom"
+    OfficialMaps(56)="DH-San_Valentino_Advance.rom"
+    OfficialMaps(57)="DH-Ten_Aaard_Clash.rom"
+    OfficialMaps(58)="DH-Valko_Advance.rom"
+    OfficialMaps(59)="DH-Danzig_Push.rom"
 
     WorkInProgressMaps(0)="DH-WIP_Arad_Advance.rom"
     WorkInProgressMaps(1)="DH-WIP_Arnhem_Bridge_Push.rom"
@@ -133,27 +139,24 @@ defaultproperties
     WorkInProgressMaps(5)="DH-WIP_Chambois_Push.rom"
     WorkInProgressMaps(6)="DH-WIP_Champs_Advance.rom"
     WorkInProgressMaps(7)="DH-WIP_Cholm_Advance.rom"
-    WorkInProgressMaps(8)="DH-WIP_Danzig_Push.rom"
-    WorkInProgressMaps(9)="DH-WIP_Dom-Pavlova_Advance.rom"
-    WorkInProgressMaps(10)="DH-WIP_Kasserine_Pass_Advance.rom"
-    WorkInProgressMaps(11)="DH-WIP_Klin1941_Advance.rom"
-    WorkInProgressMaps(12)="DH-WIP_Kriegstadt_Advance.rom"
-    WorkInProgressMaps(13)="DH-WIP_Leningrad_Push.rom"
-    WorkInProgressMaps(14)="DH-WIP_Leszinow_Advance.rom"
-    WorkInProgressMaps(15)="DH-WIP_Makhnovo_Advance.rom"
-    WorkInProgressMaps(16)="DH-WIP_Maupertus_Push.rom"
-    WorkInProgressMaps(17)="DH-WIP_MyshkovaRiver_Advance.rom"
-    WorkInProgressMaps(18)="DH-WIP_Odessa_Push.rom"
-    WorkInProgressMaps(19)="DH-WIP_Ogledow_Clash.rom"
-    WorkInProgressMaps(20)="DH-WIP_Pegasus_Bridge_Advance.rom"
-    WorkInProgressMaps(21)="DH-WIP_Pointe_Du_Hoc_Push.rom"
-    WorkInProgressMaps(22)="DH-WIP_Poteau_Ambush_Advance.rom"
-    WorkInProgressMaps(23)="DH-WIP_Prussia_Push.rom"
-    WorkInProgressMaps(24)="DH-WIP_Ramelle_Push.rom"
-    WorkInProgressMaps(25)="DH-WIP_Rhine_River_Clash.rom"
-    WorkInProgressMaps(26)="DH-WIP_San_Valentino_Advance.rom"
-    WorkInProgressMaps(27)="DH-WIP_Schijndel_Advance.rom"
-    WorkInProgressMaps(28)="DH-WIP_Smolensk_Advance.rom"
-    WorkInProgressMaps(29)="DH-WIP_Turqueville_Push.rom"
-    WorkInProgressMaps(30)="DH-WIP_Winter_Stalemate_Clash.rom"
+    WorkInProgressMaps(8)="DH-WIP_Dom-Pavlova_Advance.rom"
+    WorkInProgressMaps(9)="DH-WIP_Kasserine_Pass_Advance.rom"
+    WorkInProgressMaps(10)="DH-WIP_Klin1941_Advance.rom"
+    WorkInProgressMaps(11)="DH-WIP_Kriegstadt_Advance.rom"
+    WorkInProgressMaps(12)="DH-WIP_Leningrad_Push.rom"
+    WorkInProgressMaps(13)="DH-WIP_Leszinow_Advance.rom"
+    WorkInProgressMaps(14)="DH-WIP_Makhnovo_Advance.rom"
+    WorkInProgressMaps(15)="DH-WIP_Maupertus_Push.rom"
+    WorkInProgressMaps(16)="DH-WIP_MyshkovaRiver_Advance.rom"
+    WorkInProgressMaps(17)="DH-WIP_Odessa_Push.rom"
+    WorkInProgressMaps(18)="DH-WIP_Pegasus_Bridge_Advance.rom"
+    WorkInProgressMaps(19)="DH-WIP_Pointe_Du_Hoc_Push.rom"
+    WorkInProgressMaps(20)="DH-WIP_Poteau_Ambush_Advance.rom"
+    WorkInProgressMaps(21)="DH-WIP_Prussia_Push.rom"
+    WorkInProgressMaps(22)="DH-WIP_Ramelle_Push.rom"
+    WorkInProgressMaps(23)="DH-WIP_Rhine_River_Clash.rom"
+    WorkInProgressMaps(24)="DH-WIP_Schijndel_Advance.rom"
+    WorkInProgressMaps(25)="DH-WIP_Smolensk_Advance.rom"
+    WorkInProgressMaps(26)="DH-WIP_Turqueville_Push.rom"
+    WorkInProgressMaps(27)="DH-WIP_Winter_Stalemate_Clash.rom"
 }

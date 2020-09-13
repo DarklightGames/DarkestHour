@@ -1,34 +1,37 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_StuartCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=53291.0
-    MaxSpeed=53291.0
+    Speed=47828.0 // 2600 fps or 793 m/s
+    MaxSpeed=47828.0
     ShellDiameter=3.7
     BallisticCoefficient=0.984 //TODO: double check this
 
     //Damage
     ImpactDamage=185
-    Damage=150.0
-    DamageRadius=800.0
+    Damage=100.0   //39 gramms TNT
+    DamageRadius=400.0
     MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
-    HullFireChance=0.15
-    EngineFireChance=0.20
+    HullFireChance=0.5
+    EngineFireChance=0.5
 
     //Effects
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
+
+    //Sound
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
+    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
 
     //Penetration
     DHPenetrationTable(0)=1.2

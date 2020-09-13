@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Sdkfz2341Cannon extends DHVehicleAutoCannon;
@@ -114,7 +114,7 @@ defaultproperties
 
     // Weapon fire
     FireInterval=0.2
-    WeaponFireOffset=8.5
+    WeaponFireOffset=2.5 // 8.5
     AltFireInterval=0.05
     AltFireOffset=(X=-65.0,Y=-24.0,Z=-3.0)
 

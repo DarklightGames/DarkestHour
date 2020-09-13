@@ -1,19 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH3rdPersonPSchreckExhaustFX extends Emitter;
 
 defaultproperties
 {
-    //AutoDestroy=true
-    //bLightChanged=true
-    //bNoDelete=false
-    //LifeSpan=8.0
-    //Style=STY_Masked
-    //bHardAttach=true
-
     bLightChanged=True
     AutoDestroy=True
     Style=STY_Masked
@@ -24,15 +17,6 @@ defaultproperties
     bNetTemporary=true
     bHardAttach=true
     LifeSpan=8.0
-
-//    bUnlit=False
-//    bNoDelete=False
-//    bHardAttach=True
-//  RemoteRole=ROLE_None
-//  Physics=PHYS_None
-//  bBlockActors=False
-//  CullDistance=20000.0
-//  Style=STY_Additive
 
     bSelected=True
 
@@ -101,51 +85,17 @@ defaultproperties
         StartVelocityRange=(X=(Min=-300.000000),Y=(Min=-30.000000,Max=30.000000),Z=(Min=-30.000000,Max=30.000000))
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
-/*
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-        UseColorScale=True
-        FadeOut=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
-        Acceleration=(X=100.000000)
-        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.500000
-        FadeOutStartTime=0.098000
-        FadeInEndTime=0.080000
-        MaxParticles=8
-        Name="exhaust"
-        StartLocationOffset=(X=-50.000000)
-        StartLocationShape=PTLS_Sphere
-        UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=0.500000,Max=1.000000),Z=(Min=0.500000,Max=1.000000))
-        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=8.000000)
-        StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
-        InitialParticlesPerSecond=5000.000000
-        DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.PTRDmuzzle_2frame'
-        TextureUSubdivisions=1
-        TextureVSubdivisions=2
-        LifetimeRange=(Min=0.200000,Max=0.300000)
-        StartVelocityRange=(X=(Min=-200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
-    End Object
-    Emitters(2)=SpriteEmitter'SpriteEmitter2'
-*/
+
     Begin Object Class=BeamEmitter Name=BeamEmitter0
-        BeamDistanceRange=(Min=2.000000,Max=200.000000)
-        DetermineEndPointBy=PTEP_Velocity
+        BeamDistanceRange=(Min=150.000000,Max=250.000000)
+        DetermineEndPointBy=PTEP_Distance
         RotatingSheets=3
         UseColorScale=True
         FadeOut=True
         FadeIn=True
         RespawnDeadParticles=False
         UniformSize=True
-        StartLocationOffset=(X=20.000000)
+        //StartLocationOffset=(X=0.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.040000
@@ -153,10 +103,10 @@ defaultproperties
         FadeInEndTime=0.0
         MaxParticles=8
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Max=300.000000),Y=(Max=300.000000),Z=(Max=300.000000))
+        StartSizeRange=(X=(Min=150.0,Max=250.000000),Y=(Min=150.0,Max=250.000000),Z=(Min=150.0,Max=250.000000))
         Texture=Texture'DH_FX_Tex.Effects.Spotlight'
-        LifetimeRange=(Min=0.150000,Max=0.300000)
-        StartVelocityRange=(X=(Min=350.000000,Max=500.000000))
+        LifetimeRange=(Min=0.15,Max=0.30)
+        StartVelocityRange=(X=(Min=-50.000000,Max=-100.000000))
     End Object
     Emitters(2)=BeamEmitter'BeamEmitter0'
 }

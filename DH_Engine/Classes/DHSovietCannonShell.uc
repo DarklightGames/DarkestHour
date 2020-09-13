@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHSovietCannonShell extends DHCannonShellAP // a solid shot armor-piercing shell (with no armor-piercing cap or ballistic cap)
@@ -8,7 +8,8 @@ class DHSovietCannonShell extends DHCannonShellAP // a solid shot armor-piercing
 
 defaultproperties
 {
-    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-    StaticMesh=StaticMesh'DH_Tracers.shells.Soviet_shell'
     bDebugInImperial=false
+    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
+    TracerHue=64
 }

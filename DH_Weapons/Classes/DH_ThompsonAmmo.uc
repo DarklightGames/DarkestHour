@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ThompsonAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=31
+    MaxAmmo=30
     InitialAmount=30
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
 }

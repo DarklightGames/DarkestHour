@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHConstruction_ATGun_Heavy extends DHConstruction_Vehicle;
@@ -10,31 +10,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (Context.LevelInfo != none)
-            {
-                switch (Context.LevelInfo.Season)
-                {
-                    case SEASON_Spring:
-                        return class'DH_Guns.DH_Flak88Gun_Green';
-                    case SEASON_Autumn:
-                        return class'DH_Guns.DH_Flak88Gun_Tan';
-                    case SEASON_Winter:
-                        return class'DH_Guns.DH_Flak88Gun_Snow';
-                    default:
-                        break;
-                }
-
-                switch (Context.LevelInfo.Weather)
-                {
-                    case WEATHER_Snowy:
-                        return class'DH_Guns.DH_Flak88Gun';
-                    default:
-                        break;
-                }
-
-                return class'DH_Guns.DH_Flak88Gun';
-            }
-            return class'DH_Guns.DH_Flak88Gun';
+		break;
         case ALLIES_TEAM_INDEX:
             if (Context.LevelInfo != none)
             {

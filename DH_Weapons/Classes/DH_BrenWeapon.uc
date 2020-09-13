@@ -1,17 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_BrenWeapon extends DHBipodAutoWeapon;
-
-// Modified to play the click sound that would usually be played in the select animation (we don't have a select anim for the Bren)
-simulated function ToggleFireMode()
-{
-    super.ToggleFireMode();
-
-    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
-}
 
 defaultproperties
 {
@@ -36,10 +28,11 @@ defaultproperties
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=45.0
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
 
     bHasSelectFire=true
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     SightUpIronBringUp="Deploy"
     SightUpIronPutDown="undeploy"

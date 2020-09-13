@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_CromwellCannon extends DHVehicleCannon;
@@ -41,14 +41,15 @@ defaultproperties
 
     nProjectileDescriptions(0)="M61 APC"
     nProjectileDescriptions(1)="M48 HE-T"
-    nProjectileDescriptions(2)="M89 WP"
+    nProjectileDescriptions(2)="M64 WP"
 
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=13
     InitialTertiaryAmmo=4
     MaxPrimaryAmmo=33
     MaxSecondaryAmmo=26
-    MaxTertiaryAmmo=5
+    MaxTertiaryAmmo=0 //we'll need to find a better solution to limiting WP resupply later
+
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 

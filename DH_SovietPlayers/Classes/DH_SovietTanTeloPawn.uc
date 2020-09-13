@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SovietTanTeloPawn extends DH_SovietPawn;
+class DH_SovietTanTeloPawn extends DH_SovietTanTeloEarlyPawn;  //eventually should be deleted to avoid confusion
 
 defaultproperties
 {
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
+
 }

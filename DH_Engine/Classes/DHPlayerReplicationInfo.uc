@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
@@ -61,6 +61,11 @@ simulated function string GetNamePrefix()
     }
 
     return "";
+}
+
+simulated function bool IsLoggedInAsAdmin()
+{
+    return bAdmin || bSilentAdmin || Level.NetMode == NM_Standalone;
 }
 
 simulated function bool IsSquadLeader()

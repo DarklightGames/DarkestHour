@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanTank_M4A3E2_Jumbo extends DH_ShermanTank_M4A375W;
 
 defaultproperties
 {
+    ReinforcementCost=19
     VehicleNameString="M4A3E2(75)W Sherman"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E2_Jumbo')
     VehicleMass=14.0

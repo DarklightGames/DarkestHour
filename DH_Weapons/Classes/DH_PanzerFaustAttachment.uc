@@ -1,18 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerFaustAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
+    bPanzerfaustAttachment=true
     Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
     Skins(0)=Texture'Weapons3rd_tex.German.Panzerfaust_world'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
-    mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPanzerfaust'
+    mExhFlashClass=class'DH_Effects.DH3rdPersonPFaustExhaustFX'
     MuzzleBoneName="tip"
+    ExhaustBoneName="tip"
 
     PA_MovementAnims(0)="stand_jogF_faust"
     PA_MovementAnims(1)="stand_jogB_faust"

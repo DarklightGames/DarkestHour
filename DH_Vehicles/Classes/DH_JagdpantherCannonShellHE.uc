@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdpantherCannonShellHE extends DHCannonShellHE;
@@ -20,6 +20,10 @@ defaultproperties
     PenetrationMag=1020.0
     HullFireChance=0.4
     EngineFireChance=0.55
+
+    //Effects
+    bHasTracer=false
+    bHasShellTrail=false
 
     //Penetration
     DHPenetrationTable(0)=5.2

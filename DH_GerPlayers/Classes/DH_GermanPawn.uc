@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GermanPawn extends DHPawn;
@@ -32,4 +32,5 @@ defaultproperties
     FaceSkins(14)=Texture'Characters_tex.ger_heads.ger_face15'
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"
+    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
@@ -8,6 +8,7 @@ class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Mosin-Nagant M91/30 PU Sniper"
+    SwayModifyFactor=0.68 // +0.08
     FireModeClass(0)=class'DH_Weapons.DH_MN9130ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_MN9130ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'

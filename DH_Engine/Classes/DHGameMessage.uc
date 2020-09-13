@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHGameMessage extends ROGameMessage;
@@ -19,6 +19,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
 {
     local string S;
     local DHSpawnManager SM;
+
+    SM = DHSpawnManager(OptionalObject);
 
     switch (Switch)
     {
@@ -167,8 +169,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
         default:
             break;
     }
-
-    SM = DHSpawnManager(OptionalObject);
 
     // This is a fairly hacky workaround to the fact that this function can't
     // accept class references as arguments. The remainder of Switch/100

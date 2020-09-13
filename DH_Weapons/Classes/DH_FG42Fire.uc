@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_FG42Fire extends DHAutomaticFire; // TODO: could maybe use DHFastAutoFire/DHHighROFWeaponAttachment as fires at 750 rpm (higher than PPs-43 SMG's 700 rpm, which does use fast auto)
@@ -18,9 +18,9 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.06
-    MaxVerticalRecoilAngle=510
+    MaxVerticalRecoilAngle=620
     MaxHorizontalRecoilAngle=240
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.6),(InVal=3.0,OutVal=0.7),(InVal=4.0,OutVal=1.5),(InVal=10.0,OutVal=2.5),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 

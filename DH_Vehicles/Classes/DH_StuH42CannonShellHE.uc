@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_StuH42CannonShellHE extends DHCannonShellHE;
@@ -11,18 +11,20 @@ defaultproperties
     MaxSpeed=29874.0
     ShellDiameter=10.5
     BallisticCoefficient=2.96 //find correct BC - this is likely wrong
-    DrawScale=1.3
 
     //Damage
-    ImpactDamage=650
-    Damage=500.0
+    ImpactDamage=650  //1.75 KG TNT
+    Damage=700.0
     DamageRadius=1250.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
     PenetrationMag=1000.0
-    HullFireChance=0.43
-    EngineFireChance=0.65
+    HullFireChance=1.0
+    EngineFireChance=1.0
 
     //Effects
+    DrawScale=1.5
+    bHasTracer=false
+    bHasShellTrail=false
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
@@ -30,6 +32,7 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
 
+    //Sound
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
     ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
     ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'

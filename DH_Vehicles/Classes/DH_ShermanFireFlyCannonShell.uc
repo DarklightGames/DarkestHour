@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanFireFlyCannonShell extends DHCannonShell;
@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.45 //TODO: pls check
 
     //Damage
-    ImpactDamage=580
-    HullFireChance=0.40
-    EngineFireChance=0.60
+    ImpactDamage=580  //solid shot
+    HullFireChance=0.31
+    EngineFireChance=0.62
 
     //Penetration
     DHPenetrationTable(0)=18.5

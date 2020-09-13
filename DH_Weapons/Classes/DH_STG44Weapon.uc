@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_STG44Weapon extends DHAutoWeapon;
@@ -23,8 +23,12 @@ defaultproperties
     ZoomOutTime=0.1
     FreeAimRotationSpeed=7.0
 
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=7
+    InitialNumPrimaryMags=7
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
     SelectFireAnim="select_fire"

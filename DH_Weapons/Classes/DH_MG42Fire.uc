@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_MG42Fire extends DHMGAutomaticFire;
@@ -12,7 +12,7 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_MG42Ammo'
     FireRate=0.05
     TracerFrequency=7
-    Spread=70.0
+    Spread=80.0
     RecoilRate=0.03125
 
     // Recoil

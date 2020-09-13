@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PPS43Weapon extends DHFastAutoWeapon;
@@ -8,20 +8,25 @@ class DH_PPS43Weapon extends DHFastAutoWeapon;
 defaultproperties
 {
     ItemName="PPS-43"
+    SwayModifyFactor=0.65 // -0.15 because its a light SMG
     FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
     FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
     PickupClass=class'DH_Weapons.DH_PPS43Pickup'
 
-    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-Meshnew'
+    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-1st'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPS43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=50.0
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

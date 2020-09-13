@@ -1,23 +1,23 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanM4A176WCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    Speed=47799.0
-    MaxSpeed=47799.0
+    Speed=47828.0 // 2600 fps or 792 m/s
+    MaxSpeed=47828.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.627 //TODO: pls check
+    BallisticCoefficient=3.21 // Correct - verified on range at 1000 yards
 
     //Damage
     bShatterProne=true
-    ImpactDamage=580
+    ImpactDamage=700  //64 gramms TNT filler
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
-    HullFireChance=0.3
-    EngineFireChance=0.58
+    HullFireChance=0.5
+    EngineFireChance=0.88
 
     //Penetration
     DHPenetrationTable(0)=12.5

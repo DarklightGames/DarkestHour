@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ZiS3Cannon extends DHATGunCannon;
@@ -37,18 +37,19 @@ defaultproperties
 
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=20
-    InitialTertiaryAmmo=4
+    InitialTertiaryAmmo=0 
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=60
-    MaxTertiaryAmmo=6
+    MaxTertiaryAmmo=0  //no APCR for zis3 because the gun is available since 1942, but APCR was only adopted in 1943. 
+	//Ideally it should be available on `43-`45 maps but i dont know a proper way to do this, so zis2 kinda "replaces" 76mm APCR shells in terms of gameplay for now
     SecondarySpread=0.002
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(0)=(Sound=none) //faster 3 sec reload for an AT gun
+    ReloadStages(1)=(Sound=none)
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
 

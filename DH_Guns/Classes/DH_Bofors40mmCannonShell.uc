@@ -1,35 +1,41 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_Bofors40mmCannonShell extends DHBullet_ArmorPiercing;
+class DH_Bofors40mmCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    bNetTemporary=true
+
     Speed=53170.0
     MaxSpeed=53170.0
     ShellDiameter=4.0
     BallisticCoefficient=0.984 // TODO: try to find an accurate BC (this is same as US 37mm)
 
     //Damage
-    ImpactDamage=265
+    ImpactDamage=180 //solid shell, i assume because didnt find any info
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.23
-    EngineFireChance=0.35
+    HullFireChance=0.14
+    EngineFireChance=0.23
 
     bShatterProne=true
 
     //Effects
-    bHasTracer=true
-    DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
-    DeflectedMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
+    CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
+    ShellTrailClass=class'DH_Effects.DH20mmShellTrail_Red'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    TracerEffectClass=class'DH_Effects.DHBulletTracer_RedLarge'
+    ShellHitVehicleEffectClass=class'DH_Effects.DH20mmAPHitPenetrate'
+    ShellHitDirtEffectClass=class'DH_Effects.DH20mmAPHitDirtEffect'
+    ShellHitSnowEffectClass=class'DH_Effects.DH20mmAPHitSnowEffect'
+    ShellHitWoodEffectClass=class'DH_Effects.DH20mmAPHitWoodEffect'
+    ShellHitRockEffectClass=class'DH_Effects.DH20mmAPHitConcreteEffect'
+    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
+
+    //Sound
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Penetration
     DHPenetrationTable(0)=6.0  // 100m // TODO: try to get some accurate penetration data (this uses reported penetration at 100, 500, 1k & 2k ranges, with the gaps then estimated)

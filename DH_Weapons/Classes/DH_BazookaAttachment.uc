@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_BazookaAttachment extends DHRocketWeaponAttachment;
@@ -11,7 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
-    ExhaustBoneName="ejector"
+    ExhaustBoneName="dummy_rocket"
     MuzzleBoneName="Muzzle"
 
     WA_Idle="idle_bazooka"

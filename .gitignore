@@ -9,6 +9,7 @@
 *.int
 *.u
 *.DS_Store
+*.blend1
 .idea
 Red Orchestra.app
 /Animations/
@@ -101,9 +102,8 @@ XWebAdmin/
 /DH-AllSourceCode/
 /DarkestHourDev/Notes/
 /DarkestHourDev/Maps/Archive/
+/tools/umodel/UmodelExport/
 */UCPP
 UserLogs
 *.rus
-.vs/VSWorkspaceState.json
-.vs/slnx.sqlite
-.vs/red orchestra/v16/.suo
+.vs/

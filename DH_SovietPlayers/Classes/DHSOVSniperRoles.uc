@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHSOVSniperRoles extends DHAlliedSniperRoles
@@ -9,7 +9,7 @@ class DHSOVSniperRoles extends DHAlliedSniperRoles
 defaultproperties
 {
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedWeapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'

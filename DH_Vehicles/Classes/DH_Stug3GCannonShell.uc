@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Stug3GCannonShell extends DHGermanCannonShell;
@@ -10,12 +10,13 @@ defaultproperties
     Speed=45270.0
     MaxSpeed=45270.0
     ShellDiameter=7.5
+    BallisticCoefficient=2.52 //compare to other 75mm Pzgr39
 
     //Damage
-    ImpactDamage=650
-    BallisticCoefficient=2.52 //compare to other 75mm Pzgr39
+    ImpactDamage=700  //29 gramms TNT filler
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.45
-    EngineFireChance=0.65
+    EngineFireChance=0.85
 
     //Penetration
     DHPenetrationTable(0)=13.5

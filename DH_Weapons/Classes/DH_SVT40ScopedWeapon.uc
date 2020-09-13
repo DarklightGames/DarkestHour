@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_SVT40ScopedWeapon extends DHSniperWeapon;
@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SVT40ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_SVT40ScopedPickup'
 
-    Mesh=SkeletalMesh'Allies_Svt40_1st.svt40_scoped_mesh'
+    Mesh=SkeletalMesh'DH_Svt40_1st.svt40_scoped_1st'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -33,6 +33,6 @@ defaultproperties
 
     LensMaterialID=4
 
-    InitialNumPrimaryMags=6
-    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=7
+    MaxNumPrimaryMags=7
 }

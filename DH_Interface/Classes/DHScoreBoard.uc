@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHScoreBoard extends ROScoreBoard;
@@ -670,17 +670,37 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
     for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
     {
-        DHDrawCell(C,
-            GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]),
-            ScoreboardColumns[ScoreboardColumnIndices[i]].Justification,
-            X,
-            Y,
-            CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
-            LineHeight,
-            true,
-            class'UColor'.default.White,
-            TeamColor,
-            ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial);
+        if (ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial != none)
+        {
+            DHDrawCell(C,
+                GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]),
+                ScoreboardColumns[ScoreboardColumnIndices[i]].Justification,
+                X,
+                Y,
+                CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
+                LineHeight,
+                true,
+                class'UColor'.default.White,
+                TeamColor,
+                ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial,
+                0.0,
+                0.0,
+                ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial.MaterialUSize() - 1,
+                ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial.MaterialVSize() - 1);
+        }
+        else
+        {
+            DHDrawCell(C,
+                GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]),
+                ScoreboardColumns[ScoreboardColumnIndices[i]].Justification,
+                X,
+                Y,
+                CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
+                LineHeight,
+                true,
+                class'UColor'.default.White,
+                TeamColor);
+        }
 
         X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
     }

@@ -1,16 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_RKKA_TanTelogreikaAntiTank extends DHSOVAntiTankRoles;
+class DH_RKKA_TanTelogreikaAntiTank extends DH_RKKA_TanTelogreikaAntiTankEarly; //should eventually be deleted to avoid confusion
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    HeadgearProbabilities(0)=0.5
-    HeadgearProbabilities(1)=0.5
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+ 
 }

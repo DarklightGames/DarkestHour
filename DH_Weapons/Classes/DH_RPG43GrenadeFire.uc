@@ -1,14 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_RPG43GrenadeFire extends DHThrownExplosiveFire;
-
-// Emptied out to remove use of fuze times
-event ModeTick(float DeltaTime)
-{
-}
 
 defaultproperties
 {
@@ -17,4 +12,8 @@ defaultproperties
     MaxHoldTime=60.0 // why hold a grenade for more than a minute?
     bSplashDamage=false
     bRecommendSplashDamage=false
+    AddedFuseTime=9.0  // should be enough for the grenade to fly and land somewhere, so if it doesnt explode for some reason it will few seconds after
+    MinimumThrowSpeed=400.0
+    MaximumThrowSpeed=780.0
+    SpeedFromHoldingPerSec=600.0
 }

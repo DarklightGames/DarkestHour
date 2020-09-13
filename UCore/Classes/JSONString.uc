@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class JSONString extends JSONValue;
@@ -36,7 +36,7 @@ function bool AsBoolean()
     return false;
 }
 
-static function JSONString Create(string Value)
+static function JSONString Create(coerce string Value)
 {
     local JSONString S;
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -38,6 +38,11 @@ enum EWeather
     WEATHER_Clear,
     WEATHER_Rainy,
     WEATHER_Snowy
+};
+
+struct SNationString
+{
+    var string Germany, USA, Britain, Canada, USSR;
 };
 
 struct ArtilleryType

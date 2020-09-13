@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_SVT40Fire extends DHSemiAutoFire;
@@ -9,9 +9,10 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_SVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    Spread=100.0
-    MaxVerticalRecoilAngle=1000
+    Spread=70.0
+    MaxVerticalRecoilAngle=550
     MaxHorizontalRecoilAngle=210
+    FireRate=0.215
 
     FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'
     FireSounds(1)=Sound'Inf_Weapons.svt40.svt40_fire02'

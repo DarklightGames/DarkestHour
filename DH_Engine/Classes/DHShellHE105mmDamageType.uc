@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHShellHE105mmDamageType extends DHShellExplosionDamageType
@@ -8,6 +8,7 @@ class DHShellHE105mmDamageType extends DHShellExplosionDamageType
 
 defaultproperties
 {
+    TankDamageModifier=0.2 //increased from the standard 0.05
     TreadDamageModifier=0.5
     VehicleMomentumScaling=1.7
     KDamageImpulse=7000.0

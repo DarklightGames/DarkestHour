@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
@@ -32,6 +32,7 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
+     ReinforcementCost=11
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
      FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=9.900000,LocationName="lower")
      FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")
@@ -89,7 +90,7 @@ defaultproperties
      ExhaustPipes(0)=(ExhaustPosition=(X=-140.000000,Y=-23.000000,Z=23.000000),ExhaustRotation=(Yaw=34000))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_HetzerCannonPawn',WeaponBone="Turret_placement")
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_HetzerMountedMGPawn',WeaponBone="Mg_placement")
-     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
+     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'  //KV sound for pz38(t)?? this definitely needs to be changed
      StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
      DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc.Destroyed.Hetzer_destroyed'
@@ -183,8 +184,16 @@ defaultproperties
      ExitPositions(5)=(X=-160.000000,Y=20.000000,Z=50.000000)
      VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
      SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.hetzer'
-     HealthMax=450.000000
-     Health=450
+	 
+     //Health cons: petrol fuel
+     //4 men crew
+	 Health=525
+     HealthMax=525.0
+	 EngineHealth=260 //slightly overloaded
+	 
+     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+     DisintegrationHealth=-800.0 //petrol
+	 // reduced reliability due to increased weight
      Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_ext'
      Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
      Skins(1)=Texture'axis_vehicles_tex.Treads.Stug3_treads'

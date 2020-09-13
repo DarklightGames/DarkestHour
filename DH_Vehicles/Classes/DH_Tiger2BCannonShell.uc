@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Tiger2BCannonShell extends DHGermanCannonShell;
@@ -12,9 +12,9 @@ defaultproperties
     ShellDiameter=8.8
     BallisticCoefficient=3.8 //TODO: find correct BC
 
-    ImpactDamage=775
+    ImpactDamage=1150  //109 gramms TNT filler
     HullFireChance=0.5
-    EngineFireChance=0.78
+    EngineFireChance=0.98
 
     //Penetration
     DHPenetrationTable(0)=25.7

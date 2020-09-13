@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_WolverineTank extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds
@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M10 Wolverine"
     VehicleTeam=1
     VehicleMass=13.0
-    ReinforcementCost=5
+    ReinforcementCost=13
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
@@ -60,8 +60,14 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-    Health=500
-    HealthMax=500.0
+	// Compared to M4A2 (soviet) Sherman: No wet storage?
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+	
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-90.0,Z=-35.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

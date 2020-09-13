@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_JagdpanzerIVL70Destroyer_Snow extends DH_JagdpanzerIVL70Destroyer;
 
 defaultproperties
 {
+    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
     Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow'
     Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_wheels_snow'

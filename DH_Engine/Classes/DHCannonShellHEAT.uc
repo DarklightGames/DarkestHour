@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DHCannonShellHEAT extends DHCannonShell
@@ -286,6 +286,15 @@ defaultproperties
     bExplodesOnHittingWater=true
     bAlwaysDoShakeEffect=true
     ShellImpactDamage=class'DH_Engine.DHShellHEATImpactDamageType'
+
+    HullFireChance=0.3
+    EngineFireChance=0.8
+	// Hull fire chance is a bit lower than average APCR, because HEAT post-armor effect is a powerful, concentrated jet of molten metal, that goes in a single straight line.
+	// This means that this powerful jet destroys anything it directly hits, but on another hand everything that does not get hit by this straight line remains (mostly) unharmed,
+	// as HEAT spalling effects are even smaller than the ones from APCR (from what i know. Although to be fair, high caliber HEAT may cause more spalling just by the powerful explosion outside) 
+    // This is why Hull fire chance is quite low, as a HEAT shell has to hit components directly in order to damage them even more so than APCR
+	// but Engine fire chance is increased, because a concentrated powerful jet of molten metal is more likely to critically damage it even than the APCR
+	
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
@@ -300,7 +309,7 @@ defaultproperties
     BlurTime=6.0
     BlurEffectScalar=2.1
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
     DamageRadius=300.0
     MyDamageType=class'DH_Engine.DHShellHEATDamageType'

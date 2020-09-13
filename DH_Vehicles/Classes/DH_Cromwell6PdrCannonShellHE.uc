@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShellHE extends DHCannonShellHE;
@@ -13,16 +13,16 @@ defaultproperties
     BallisticCoefficient=1.19 //TODO: pls, check
 
     //Damage
-    ImpactDamage=295
-    Damage=250.0
-    DamageRadius=600.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
-    PenetrationMag=630.0
-    HullFireChance=0.25
-    EngineFireChance=0.40
+    ImpactDamage=350
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    Damage=260.0  //couldnt find any information, so copied from ZIS-2
+    DamageRadius=650.0
+    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    PenetrationMag=690.0
+    HullFireChance=0.5
+    EngineFireChance=0.50
 
     //Effects
-    bHasTracer=true
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'

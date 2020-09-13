@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_GreaseGunWeapon extends DHAutoWeapon;
@@ -8,6 +8,7 @@ class DH_GreaseGunWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M3 Grease Gun"
+    SwayModifyFactor=0.75 // -0.05
     FireModeClass(0)=class'DH_Weapons.DH_GreaseGunFire'
     FireModeClass(1)=class'DH_Weapons.DH_GreaseGunMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_GreaseGunAttachment'

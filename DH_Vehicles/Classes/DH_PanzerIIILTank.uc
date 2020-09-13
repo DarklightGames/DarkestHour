@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_PanzerIIILTank extends DHArmoredVehicle;
@@ -8,13 +8,13 @@ class DH_PanzerIIILTank extends DHArmoredVehicle;
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Panzer III Ausf.M"
+    VehicleNameString="Panzer III Ausf.L"
     VehicleMass=11.5
-    ReinforcementCost=4
+    ReinforcementCost=13
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.panzer3_ext'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(3)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
@@ -35,11 +35,12 @@ defaultproperties
 
     // Driver
     UnbuttonedPositionIndex=3
-    DriverPositions(0)=(ViewFOV=70.0,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
+    PeriscopeOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
+    PeriscopeSize=0.765 //65° FOV 1x magnification KFF2 driver's scope
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-20.0,MaxRelativeHeight=5.7,LocationName="lower nose")
@@ -60,8 +61,15 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-    Health=475
-    HealthMax=475.0
+	// pros: 5 men crew
+	// cons: petrol fuel 
+    Health=560
+    HealthMax=560.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.6  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+    TurretDetonationThreshold=2000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=30.0,PointHeight=32.0,PointOffset=(X=-70.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -146,7 +154,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -155,7 +163,7 @@ defaultproperties
         BoneOffset=(X=40.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -165,7 +173,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -174,7 +182,7 @@ defaultproperties
         BoneOffset=(X=-5.0,Y=5.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -183,7 +191,7 @@ defaultproperties
         WheelRadius=30.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
@@ -191,5 +199,5 @@ defaultproperties
         BoneOffset=(X=10.0,Z=7.0)
         WheelRadius=30.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIIJTank.Right_Drive_Wheel'
 }

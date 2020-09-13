@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_ShermanMountedMGPawn extends DHVehicleMGPawn;
@@ -23,6 +23,68 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 }
 
+// Modified to draw pericope texture over the mesh gun overlay
+simulated function DrawHUD(Canvas C)
+{
+    local PlayerController PC;
+    local vector           GunOffset;
+    local float            SavedOpacity;
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView)
+    {
+        // Player is in a position where an overlay should be drawn
+        if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
+        {
+            // Draw any gun HUD overlay
+            if (HUDOverlay != none && DriverPositionIndex != BinocPositionIndex)
+            {
+                if (!Level.IsSoftwareRendering())
+                {
+                    GunOffset = HUDOverlayOffset + (PC.ShakeOffset * FirstPersonGunShakeScale);
+
+                    // This makes the first person gun appear lower if player raises his head above the gun
+                    if (FirstPersonGunRefBone != '' && Gun != none)
+                    {
+                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
+                    }
+
+                    HUDOverlay.SetLocation(PC.CalcViewLocation);
+                    C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, PC.CalcViewRotation, PC.ShakeRot * FirstPersonGunShakeScale, -GunOffset);
+                }
+            }
+
+            // Draw any texture overlay
+            if (!PC.bBehindView)
+            {
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = C.ColorModulate.W;
+                C.ColorModulate.W = 1.0;
+                C.DrawColor.A = 255;
+                C.Style = ERenderStyle.STY_Alpha;
+
+                if (DriverPositionIndex == BinocPositionIndex)
+                {
+                    DrawBinocsOverlay(C);
+                }
+                else
+                {
+                    DrawGunsightOverlay(C);
+                }
+
+                C.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
+            }
+        }
+
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
+        }
+    }
+}
+
 // Modified to use this function to draw the co-driver's periscope overlay, through which this MG is aimed
 simulated function DrawGunsightOverlay(Canvas C)
 {
@@ -38,8 +100,12 @@ simulated function DrawGunsightOverlay(Canvas C)
 
 defaultproperties
 {
+    //This class is for M4A1 Shermans; need to create custom views for each type of Sherman and Stuart -- one size does not fit all!
     GunClass=class'DH_Vehicles.DH_ShermanMountedMG'
+
+    WeaponFOV=72.0
     GunsightOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
+    GunsightSize=0.75 //size of texture overlay
 
 //  This bow MG did not have a sight or even a peephole to aim through, & was instead aimed using co-driver's overhead periscope
 //  Looking through that view (or while unbuttoned but that's not modelled in game), co-driver had to aim by walking tracers or round impacts onto target
@@ -49,5 +115,9 @@ defaultproperties
 //  Otherwise he has to open fire not knowing which way the gun is aimed, & only then can he correct the aim (so he may hit friendlies)
 //  In real life he would know where the MG was pointing because he would be holding it in his hands
 //  So this camera adjustment is just an effective form of substitute feedback about where the gun is pointing
-    FPCamPos=(X=-20.0,Y=0.0,Z=20.0)
+    FPCamPos=(X=-10.0,Y=0.0,Z=8.0)
+    //CameraBone="T34_mg"
+    //HUDOverlayClass=class'DH_Vehicles.DH_30Cal_VehHUDOverlay'
+    //HUDOverlayOffset=(X=20,Y=0,Z=-20) //distance from your face
+    //HUDOverlayFOV=45 //size of MG mesh in your face
 }

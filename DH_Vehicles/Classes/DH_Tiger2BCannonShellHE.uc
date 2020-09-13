@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_Tiger2BCannonShellHE extends DHCannonShellHE;
@@ -13,14 +13,17 @@ defaultproperties
     BallisticCoefficient=3.25 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=550
-
-    Damage=475.0
+    ImpactDamage=1000
+    Damage=475.0   // 1002 gramms TNT
     DamageRadius=1550.0
     MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
     PenetrationMag=1020.0
-    HullFireChance=0.4
-    EngineFireChance=0.55
+    HullFireChance=1.0
+    EngineFireChance=1.0
+
+    //Effects
+    bHasTracer=false
+    bHasShellTrail=false
 
     bDebugInImperial=false
 

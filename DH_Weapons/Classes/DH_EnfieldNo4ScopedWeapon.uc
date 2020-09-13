@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
@@ -8,6 +8,7 @@ class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Scoped Enfield No.4"
+    SwayModifyFactor=0.65 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
@@ -39,8 +40,8 @@ defaultproperties
     HandNum=1
     SleeveNum=0
 
-    MaxNumPrimaryMags=13
-    InitialNumPrimaryMags=13
+    MaxNumPrimaryMags=8
+    InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
     bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
@@ -56,7 +57,6 @@ defaultproperties
     MagPartialReloadAnim="reload_half"
 
     PreReloadAnim="reload_start"
-    PostReloadAnim="reload_end"
+    PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
 }
-
