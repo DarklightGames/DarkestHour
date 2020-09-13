@@ -9,9 +9,9 @@ class DHMapMarker extends Object
 // EScopeType replaces DHMapMarker.bIsSquadSpecific and DHMapMarker.bIsVisibleToTeam.
 enum EScopeType
 {
-    PERSONAL,                                   // marker is coupled with a player (saved in DHPlayer.PersonalMapMarkers)
-    SQUAD,                                      // marker is coupled with a squad
-    TEAM                                        // marker is 
+    PERSONAL,
+    SQUAD,
+    TEAM
 };
 var EScopeType          Scope;
 
@@ -22,7 +22,7 @@ enum EOverwritingRule
     UNIQUE,                                     // there will always be exactly one or zero such marker
     OFF                                        // this marker can be drawn in any number on the map
 };
-var EOverwritingRule    OverwritingRule;        // 
+var EOverwritingRule    OverwritingRule;
 
 var localized string    MarkerName;
 var Material            IconMaterial;
