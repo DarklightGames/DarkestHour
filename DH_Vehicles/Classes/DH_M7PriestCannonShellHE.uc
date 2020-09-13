@@ -17,6 +17,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     defaultproperties
 {
+    ShellImpactDamage=class'DH_Engine.DHArtilleryGunDamageType'
     Speed=8962.5         // 198m/s x 75%
     MaxSpeed=8962.5
     LifeSpan=20.0

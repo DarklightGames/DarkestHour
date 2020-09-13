@@ -22,7 +22,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=455
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHArtilleryGunDamageType'
     PenetrationMag=1000.0
     Damage=415.0
     DamageRadius=1350.0
