@@ -7,6 +7,9 @@ class DH_LeIG18CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
+  
+    MyDamageType=class'DH_Engine.DHArtilleryGunDamageType'
+    ShellImpactDamage=class'DH_Engine.DHArtilleryGunDamageType'
     Speed=12674.0      // 210 m/s
     MaxSpeed=12674.0
     SpeedFudgeScale=1.0

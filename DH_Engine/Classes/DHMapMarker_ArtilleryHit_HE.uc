@@ -15,7 +15,8 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole() && DHPlayer(PRI.Owner).HEHitInfo.bIsHitVisible;
+    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole() 
+            && DHPlayer(PRI.Owner).HEHitInfo.bIsWithinRadius;
 }
 
 defaultproperties

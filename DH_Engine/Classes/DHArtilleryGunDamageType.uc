@@ -14,8 +14,6 @@ defaultproperties
     MaleSuicide="%o was careless with his own artillery shell."
     FemaleSuicide="%o was careless with her own artillery shell."
 
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.Strike'
-
     GibModifier=4.0
 
     bDetonatesGoop=true

@@ -43,7 +43,8 @@ struct ArtilleryHitInfo
 {
     var int         ClosestArtilleryRequestIndex;       // position in the markers array
     var vector      ClosestArtilleryRequestLocation;    // world location of the closest artillery request
-    var bool        bIsHitVisible;                      // was the hit within the radius of the closest artillery request?
+    var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
+    var int         ExpiryTime;
 };
 var     ArtilleryHitInfo        HEHitInfo, SmokeHitInfo;
 

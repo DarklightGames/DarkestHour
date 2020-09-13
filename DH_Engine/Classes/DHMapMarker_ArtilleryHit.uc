@@ -54,10 +54,16 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
         }
     }
     HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    HitInfo.bIsHitVisible = (MinimumDistance < RequestClass.default.HitVisibilityRadius);
-    if(ClosestArtilleryRequest != -1 && MinimumDistance < RequestClass.default.HitVisibilityRadius)
+    HitInfo.bIsWithinRadius = (MinimumDistance < RequestClass.default.HitVisibilityRadius);
+    if(ClosestArtilleryRequest != -1 && HitInfo.bIsWithinRadius)
     {
         HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
+        HitInfo.ExpiryTime = MapMarkers[ClosestArtilleryRequest].ExpiryTime;
+    }
+    else 
+    {
+        // to do: handle it in a better way?
+        HitInfo.ExpiryTime = 0;
     }
 }
 

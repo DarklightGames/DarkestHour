@@ -2076,14 +2076,19 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         {
             Killed.PlayerReplicationInfo.Deaths += 1.0;
         }
+        DHKilled = DHPlayer(Killed);
+        DHKiller = DHPlayer(Killer);
+        
+        if (class<DHArtilleryGunDamageType>(DamageType) != none
+            && DHKiller.HEHitInfo.ExpiryTime > Level.TimeSeconds)
+        {
+            DamageType =  class'DHArtilleryKillDamageType';
+        }
 
         // Special handling if this was a spawn kill
         // Suiciding won't count as a spawn kill - did this because suiciding after a combat spawn will not act the same way & thus is not intuitive
         if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).IsSpawnKillProtected() && Killer != Killed)
         {
-            DHKilled = DHPlayer(Killed);
-            DHKiller = DHPlayer(Killer);
-
             DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
 
             if (DHKiller != none && DHKilled != none) // only relevant to player vs player spawn kills
