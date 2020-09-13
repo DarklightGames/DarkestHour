@@ -7,7 +7,7 @@ class DH_GermanSpringSmockSSPawnC extends DH_GermanSmockHeerPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Smock_mix'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Smock_mix'
 	
     Skins(2)=Texture'DHGermanCharactersTex.WSS.WSSSmockSpringPlanetree1' //shirt
 

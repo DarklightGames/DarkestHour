@@ -7,5 +7,5 @@ class DH_GermanRadioHeerPawn extends DH_GermanHeerPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Heer_Radioman'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Heer_Radioman'
 }

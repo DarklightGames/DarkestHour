@@ -7,8 +7,8 @@ class DH_German12thSSPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_mix'
-	
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
+
     Skins(2)=Texture'DHGermanCharactersTex.WSS.12SS_1'  //shirt
 
     BodySkins(0)=Texture'DHGermanCharactersTex.WSS.12SS_1' //pants

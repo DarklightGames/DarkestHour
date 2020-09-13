@@ -7,5 +7,5 @@ class DH_USTrenchcoatScarfPawn extends DH_USTrenchcoatPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_TrenchcoatS'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.USWinter_TrenchcoatS'
 }

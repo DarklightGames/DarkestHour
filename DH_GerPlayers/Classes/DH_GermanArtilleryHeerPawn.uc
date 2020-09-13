@@ -12,6 +12,6 @@ defaultproperties
     BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_1'
     BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
 	
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_art'  //alternativfe UV for epaulets
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_art'  //alternativfe UV for epaulets
 
 }

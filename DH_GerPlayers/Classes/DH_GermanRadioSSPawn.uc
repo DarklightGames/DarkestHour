@@ -7,7 +7,7 @@ class DH_GermanRadioSSPawn extends DH_GermanSSPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Heer_Radioman'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Heer_Radioman'
 
     BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_6'
 }

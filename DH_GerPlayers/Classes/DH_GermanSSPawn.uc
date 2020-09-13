@@ -13,5 +13,5 @@ defaultproperties
     BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
     BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' //heer pants
 
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_mix'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }

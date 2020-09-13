@@ -7,7 +7,7 @@ class DH_GermanFJPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Fallschirmjager'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Fallschirmjager'
     Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_Green'
     Skins(1)=Texture'Characters_tex.ger_heads.ger_face01'
 

@@ -7,5 +7,5 @@ class DH_USOfficer1stPawn extends DH_US1stPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_Officer'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_Officer'
 }

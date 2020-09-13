@@ -11,5 +11,5 @@ defaultproperties
 
     BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' //standart pants and SS insignia
 
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat_mix'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }

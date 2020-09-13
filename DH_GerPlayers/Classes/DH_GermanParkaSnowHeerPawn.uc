@@ -7,7 +7,7 @@ class DH_GermanParkaSnowHeerPawn extends DH_GermanParkaPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Parka_mix'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Parka_mix'
 
     Skins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //shirt
     Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaSnow1' //pants

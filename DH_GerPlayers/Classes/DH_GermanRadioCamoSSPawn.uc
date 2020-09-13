@@ -12,5 +12,5 @@ defaultproperties
     BodySkins(0)=Texture'DHGermanCharactersTex.WSS.SS_Autumn'
     BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_Autumn'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Heer_Radioman'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Heer_Radioman'
 }
