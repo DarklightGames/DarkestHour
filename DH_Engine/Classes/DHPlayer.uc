@@ -5274,7 +5274,7 @@ function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation
 
 simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
 {
-    local PersonalMapMarker ParadropMarker;
+    local DHGameReplicationInfo.MapMarker ParadropMarker;
 
     ParadropMarker = FindPersonalMarker(ParadropMarkerClass);
 

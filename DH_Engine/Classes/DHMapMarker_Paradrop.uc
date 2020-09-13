@@ -23,6 +23,6 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    bIsUnique=true
-    bIsPersonal=true
+    OverwritingRule=UNIQUE
+    Scope=PERSONAL
 }

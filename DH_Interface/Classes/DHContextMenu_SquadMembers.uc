@@ -186,7 +186,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             return;
 
         case 5:
-            if (!SelectedPRI.IsAssistantLeader())
+            if (!SelectedPRI.IsASL())
             {
                 PC.ServerSquadMakeAssistant(SelectedPRI);
             }
@@ -194,7 +194,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             return;
 
         case 6:
-            if (SelectedPRI.IsAssistantLeader())
+            if (SelectedPRI.IsASL())
             {
                 PC.ServerSquadMakeAssistant(none);
             }
