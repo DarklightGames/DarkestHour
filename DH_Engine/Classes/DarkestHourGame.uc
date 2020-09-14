@@ -2050,6 +2050,15 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     }
 }
 
+function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
+{
+    return DHKiller.IsArtilleryRole() 
+          && (class<DHMortarDamageType>(DamageType) != none
+           || class<DHShellHE105mmDamageType>(DamageType) != none             // M7 Priest explosion
+           || class<DHShellHE75mmATDamageType>(DamageType) != none            // LeIG18 explosion
+           || ClassIsChildOf(DamageType, class'DHShellHEImpactDamageType'));  // M7 Priest and LeIG18 impact damage types)
+}
+
 // Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
 // IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
@@ -2079,7 +2088,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
         
-        if (class<DHArtilleryGunDamageType>(DamageType) != none
+        if (IsArtilleryKill(DHKiller, DamageType)
             && DHKiller.HEHitInfo.ExpiryTime > Level.TimeSeconds)
         {
             DamageType =  class'DHArtilleryKillDamageType';
@@ -5417,7 +5426,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="Gï¿½nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5426,10 +5435,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton Mï¿½ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans Grï¿½schke"
+    GermanNames(12)="Wilhelm Krï¿½ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"

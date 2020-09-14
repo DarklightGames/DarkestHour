@@ -22,7 +22,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=700
-    ShellImpactDamage=class'DH_Engine.DHArtilleryGunDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     PenetrationMag=800.0
     Damage=380.0   //700 gramms TNT
     DamageRadius=1050.0

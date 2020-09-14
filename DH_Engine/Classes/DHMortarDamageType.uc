@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DHMortarDamageType extends DHArtilleryGunDamageType
+class DHMortarDamageType extends ROWeaponDamageType
     abstract;
 
 defaultproperties
