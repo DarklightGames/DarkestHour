@@ -228,7 +228,9 @@ simulated function DrawHUD(Canvas C)
 
         // Get elevation & traverse
         Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
+
+        // without multiplying yaw by (-1) below the yaw readout is reversed
+        Traverse = (-1) * class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
         TraverseString = "T: ";
 
         if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
@@ -327,7 +329,8 @@ simulated function DrawHUD(Canvas C)
                 GetGunPitchMin(),
                 GetGunPitchMax());
             ArtillerySpottingScope.static.DrawYaw(C,
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
+                // without multiplying yaw by (-1) below the yaw readout is reversed
+                class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()), 
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
         }
