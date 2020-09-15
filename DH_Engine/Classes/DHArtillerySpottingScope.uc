@@ -9,8 +9,8 @@ class DHArtillerySpottingScope extends ROVehicle
 // Range table
 struct SRangeTableRecord
 {
-    var int Degrees;                                    // Pitch, in degrees.
-    var int Range;                                      // Range, in meters.
+    var int Pitch;                                      // in degrees or milliradians
+    var int Range;                                      // in meters
 };
 var array<SRangeTableRecord>    RangeTable;
 
@@ -73,7 +73,7 @@ simulated static function DrawRangeTable(Canvas C)
         C.DrawText(string(default.RangeTable[i].Range) $ "m");
         C.SetPos(X + SecondColumn, Y);
         C.SetDrawColor(255, 255, 255, 255);
-        C.DrawText("| " $ string(default.RangeTable[i].Degrees) $ default.AngleUnit);
+        C.DrawText("| " $ string(default.RangeTable[i].Pitch) $ default.AngleUnit);
     }
 }
 

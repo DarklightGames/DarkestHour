@@ -14,7 +14,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
 
-    if (PRI != none)
+    if (PRI == none)
     {
         return false;
     }
