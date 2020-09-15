@@ -9,21 +9,22 @@ class DHArtillerySpottingScope extends ROVehicle
 // Range table
 struct SRangeTableRecord
 {
-    var float Mils;     // Pitch, in mils.
-    var float Range;    // Range, in meters.
-    var float TTI;      // Time-to-impact in seconds
+    var int Degrees;                                    // Pitch, in degrees.
+    var int Range;                                      // Range, in meters.
 };
 var array<SRangeTableRecord>    RangeTable;
 
 var     localized string    RangeString;
 var     localized string    ElevationString;
-var     texture             SpottingScopeOverlay;           // periscope overlay texture
+var     texture             SpottingScopeOverlay;       // periscope overlay texture
 
 var     DHVehicleWeapon     VehWep;
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
 var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
 var     float               PitchIndicatorLength;
 var     float               YawIndicatorLength;
+var     int                 StrikeThroughThickness;
+var     string              AngleUnit;
 
 simulated static function DrawSpottingScopeOverlay(Canvas C)
 {
@@ -39,9 +40,6 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
         C.SetPos(0.0, 0.0);
 
         C.DrawTile(default.SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-        //Log("ScreenRation=" @ ScreenRatio @ " C.SizeX=" @ C.SizeX @ " C.SizeY=" @ C.SizeY @ " default.SpottingScopeOverlay.VSize=" @ default.SpottingScopeOverlay.VSize);
-        //C.SetPos(0.0, 0.0);
-        //C.DrawTile(default.SpottingScopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(default.SpottingScopeOverlay.VSize) * 0.3, default.SpottingScopeOverlay.USize, float(default.SpottingScopeOverlay.VSize) * ScreenRatio * 0.85);
     }
 }
 
@@ -50,9 +48,9 @@ simulated static function DrawRangeTable(Canvas C)
     local int i;
     local float X, Y;
     local float XL, YL;
-    local float TableWidth, TableHeight;
-    const FirstColumn = 45;
-    const SecondColumn = 185;
+    local float TableHeight;
+    const FirstColumn = 0;
+    const SecondColumn = 35;
 
     if (default.RangeTable.Length == 0)
     {
@@ -61,38 +59,21 @@ simulated static function DrawRangeTable(Canvas C)
 
     C.Font = C.TinyFont;
     C.TextSize("A", XL, YL);
-
-    TableWidth = 280.0;
     TableHeight = (default.RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
 
     Y = (C.SizeY - TableHeight) / 2;
-    X = C.SizeX * 0.75;
-
-    // draw table background
-    C.SetPos(X, Y);
-    C.SetDrawColor(255, 255, 255, 255);
-    C.DrawTile(Texture'Engine.WhiteSquareTexture', TableWidth, TableHeight, 0, 0, 2, 2);
-
-    // draw table header
-    C.SetDrawColor(0, 0, 0, 255);
-    C.SetPos(X + SecondColumn + 7, Y + 3);
-    C.DrawText(default.RangeString);
-    C.SetPos(X + FirstColumn, Y + 3);
-    C.DrawText(default.ElevationString);
-    C.SetPos(X, Y);
-    C.DrawVertical(X + TableWidth / 2, TableHeight);
-    C.SetPos(X, Y);
-    Y += YL + 8;
-    C.DrawHorizontal(Y, TableWidth);
+    X = C.SizeX * 0.85;
 
     // draw table rows
     for (i = 0; i < default.RangeTable.Length; ++i)
     {
         Y += YL;
         C.SetPos(X + FirstColumn, Y);
+        C.SetDrawColor(0, 128, 64, 255);
         C.DrawText(string(default.RangeTable[i].Range) $ "m");
         C.SetPos(X + SecondColumn, Y);
-        C.DrawText(string(default.RangeTable[i].Mils) $ "mils");
+        C.SetDrawColor(255, 255, 255, 255);
+        C.DrawText("| " $ string(default.RangeTable[i].Degrees) $ default.AngleUnit);
     }
 }
 
@@ -167,17 +148,16 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
-        if (i < class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin())
+        C.CurY = Y - 20;
+        if (i < class'UMath'.static.Floor(GunYawMin, default.YawScaleStep))
         {
-            //Log(class'UMath'.static.Floor(i, default.YawScaleStep) @ "is below " @ class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()));
             C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
-            C.DrawHorizontal(Y - 15, IndicatorStep);
+            C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
-        if (i > class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)) // class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax())
-        {
+        if (i > class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)){
             C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
-            C.DrawHorizontal(Y - 15, -IndicatorStep);
+            C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
         }
     }
 
@@ -262,17 +242,17 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         }
 
         // Draw a strike-through if this segment is below the lower limit.
+        C.CurX = X - 20;
         if (i < class'UMath'.static.Floor(GunPitchMin, default.PitchScaleStep))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
-            C.DrawVertical(X - 15, -IndicatorStep);
+            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
         }
-
         // Draw a strike-through if this segment is above the upper limit.
         if (i > class'UMath'.static.Floor(GunPitchMax, default.PitchScaleStep))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
-            C.DrawVertical(X - 15, IndicatorStep);
+            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
         }
     }
 
@@ -295,5 +275,6 @@ defaultproperties
 
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
-
+    StrikeThroughThickness = 10
+    AngleUnit = "degs"
 }
