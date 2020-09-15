@@ -89,7 +89,7 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    OverwritingRule = UNIQUE
+    OverwritingRule = UNIQUE_PER_GROUP
     Scope=SQUAD
     LifetimeSeconds=180 // 3 minutes
     HitVisibilityRadius=3000.0
