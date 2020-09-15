@@ -13,7 +13,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP41Pickup'
     AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
 
-    Mesh=SkeletalMesh'Axis_Mp40_1st.mp41_Mesh'
+    Mesh=SkeletalMesh'DH_Mp40_1st.mp41_Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.MP41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
