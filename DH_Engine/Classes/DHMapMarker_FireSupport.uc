@@ -91,6 +91,6 @@ defaultproperties
     bShouldShowOnCompass=false
     OverwritingRule = UNIQUE_PER_GROUP
     Scope=SQUAD
-    LifetimeSeconds=180 // 3 minutes
+    LifetimeSeconds=-1            // artillery requests never expire
     HitVisibilityRadius=3000.0
 }
