@@ -276,5 +276,5 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "degs"
+    AngleUnit = "°"
 }
