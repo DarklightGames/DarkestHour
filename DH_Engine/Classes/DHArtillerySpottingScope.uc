@@ -77,9 +77,10 @@ simulated static function DrawRangeTable(Canvas C)
     }
 }
 
-simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax)
+
+  simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<float> ArtilleryRequestYaws)
 {
-    local float i, StepX, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep;
+    local float i, StepX, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Accumulator;
     local int Shade, Quotient, t;
     local string Label;
     const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
@@ -102,7 +103,21 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.DrawHorizontal(Y, default.YawIndicatorLength);
 
     // Start drawing scale ticks
-    C.CurY = Y - 5.0;
+    C.CurY = Y + 5.0;
+    //Log("CurrentYaw:" @ CurrentYaw);
+
+    for(i = 0; i < ArtilleryRequestYaws.Length; i = i + 1)
+    {
+        if(ArtilleryRequestYaws[i] > YawUpperBound || ArtilleryRequestYaws[i] < YawLowerBound)
+            continue;
+        Accumulator = (ArtilleryRequestYaws[i] - YawLowerBound) / StepX;
+
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(Accumulator / VISIBLE_YAW_SEGMENTS));
+        //Log("yaw:" @ ArtilleryRequestYaws[i] @ ", accumulator:" @ Accumulator @ ", shade:" @ Shade);
+        C.SetDrawColor(Shade, 0, 0, 255);
+        C.DrawVertical(X + Accumulator * IndicatorStep, +5.0);
+    }
+    C.CurY = Y - 10.0;
 
     for(i = YawLowerBound; i <= YawUpperBound; i = i + StepX)
     {
@@ -276,5 +291,5 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "Â°"
+    AngleUnit = "°"
 }

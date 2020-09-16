@@ -208,8 +208,12 @@ simulated function DrawHUD(Canvas C)
     local int              SizeX, SizeY, RoundIndex, Traverse;
     local byte             Quotient, Remainder;
     local string           TraverseString;
+    local array<float>     Yaws;
 
     PC = PlayerController(Controller);
+    Yaws[0] = 30;
+    Yaws[1] = -30;
+    Yaws[2] = 50;
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
     {
@@ -332,7 +336,8 @@ simulated function DrawHUD(Canvas C)
                 // without multiplying yaw by (-1) below the yaw readout is reversed
                 class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()), 
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                Yaws);
         }
     }
 }

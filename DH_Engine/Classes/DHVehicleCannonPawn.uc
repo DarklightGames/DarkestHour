@@ -191,8 +191,12 @@ simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local float            SavedOpacity;
+    local array<float>     Yaws;
 
     PC = PlayerController(Controller);
+    Yaws[0] = 30;
+    Yaws[1] = -30;
+    Yaws[2] = 50;
 
     if (PC != none && !PC.bBehindView)
     {
@@ -224,7 +228,8 @@ simulated function DrawHUD(Canvas C)
                     ArtillerySpottingScope.static.DrawYaw(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()));
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                        Yaws);
                 }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {
