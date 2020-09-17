@@ -6959,6 +6959,58 @@ exec function IpFuzz(int Iterations)
     }
 }
 
+function array<DHArtillerySpottingScope.STargetInfo> GetArtilleryTargets()
+{
+  local vector                                        PlayerLocation;
+  local int                                           Distance, i;
+  local vector                                        WorldLocation;
+  local DHGameReplicationInfo                         GRI;
+  local array<DHGameReplicationInfo.MapMarker>        PublicMapMarkers;
+  local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
+  local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+  local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+  local string                                        SquadName;
+  local DHGameReplicationInfo.MapMarker               MapMarker;
+  
+  if (Pawn == none)
+  {
+    return Targets;
+  }
+
+  // Select only fire requests & ruler markers
+  GRI = DHGameReplicationInfo(GameReplicationInfo);
+  GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
+  for(i = 0; i < PersonalMapMarkerClasses.Length - 1; i++)
+  {
+    if(ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
+      TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+  }
+  for(i = 0; i < PublicMapMarkers.Length - 1; i++)
+  {
+    if(ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+      TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
+  }
+
+  // Prepare target information for each marker
+  for(i = 0; i < TargetMapMarkers.Length - 1; i++)
+  {
+    MapMarker = TargetMapMarkers[i];
+    WorldLocation = MapMarker.WorldLocation;
+    PlayerLocation = Pawn.Location;
+    PlayerLocation.Z = 0.0;
+    WorldLocation.Z = 0.0;
+    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
+    SquadName = SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+    
+    TargetInfo.Distance       = Distance;
+    TargetInfo.SquadName      = SquadName;
+    TargetInfo.YawCorrection  = 30;
+    TargetInfo.Type           = MapMarker.MapMarkerClass;
+    Targets[Targets.Length] = TargetInfo;
+  }
+  return Targets;
+}
+
 defaultproperties
 {
     CorpseStayTime=15

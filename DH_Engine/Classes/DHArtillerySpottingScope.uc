@@ -170,7 +170,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         Color.R = Max(1, int(Color.R) * Shade);
         Color.G = Max(1, int(Color.G) * Shade);
         Color.B = Max(1, int(Color.B) * Shade);
-        Log("yaw:" @ Targets[i].YawCorrection @ ", accumulator:" @ Accumulator@  ", shade:" @ string(Shade) @ ", R:" @ string(Color.R) @ ", G:" @ string(Color.G) @ ", B:" @ string(Color.B));
+        //Log("yaw:" @ Targets[i].YawCorrection @ ", accumulator:" @ Accumulator@  ", shade:" @ string(Shade) @ ", R:" @ string(Color.R) @ ", G:" @ string(Color.G) @ ", B:" @ string(Color.B));
         C.SetDrawColor(Color.R, Color.G, Color.B, 255);
         // Draw target tick on the yaw indicator
         C.DrawVertical(X + Accumulator * IndicatorStep, 5.0);
@@ -347,7 +347,7 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "°"
+    AngleUnit = "ï¿½"
     
     WidgetsPanelX = 50
     WidgetsPanelY = 30

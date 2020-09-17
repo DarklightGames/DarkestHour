@@ -208,26 +208,14 @@ simulated function DrawHUD(Canvas C)
     local int                                           SizeX, SizeY, RoundIndex, Traverse;
     local byte                                          Quotient, Remainder;
     local string                                        TraverseString;
-    local array<DHArtillerySpottingScope.STargetInfo>   Yaws;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          Asdf;
+    local DHPlayer                                      Player;
 
     PC = PlayerController(Controller);
-    // replace it with the correct targets list
-    Asdf.Distance = 100;
-    Asdf.YawCorrection = 30;
-    Asdf.SquadName = "Able";
-    Asdf.Type = class'DHMapMarker_FireSupport_HE';
-    Yaws[0] = Asdf;
-    Asdf.Distance = 150;
-    Asdf.YawCorrection = -50;
-    Asdf.SquadName = "";
-    Asdf.Type = class'DHMapMarker_Ruler';
-    Yaws[1] = Asdf;
-    Asdf.Distance = 250;
-    Asdf.YawCorrection = 50;
-    Asdf.SquadName = "Baker";
-    Asdf.Type = class'DHMapMarker_FireSupport_Smoke';
-    Yaws[2] = Asdf;
+    Player = DHPlayer(PC);
+
+    Targets = Player.GetArtilleryTargets();
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
     {
@@ -351,7 +339,7 @@ simulated function DrawHUD(Canvas C)
                 class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()), 
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                Yaws);
+                Targets);
         }
     }
 }
