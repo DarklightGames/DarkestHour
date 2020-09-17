@@ -185,22 +185,64 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers)
+{
+  local vector                                        WeaponLocation, Target;
+  local rotator                                       WeaponRotation;
+  local int                                           Distance, Deflection,  i;
+  local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+  local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+  local string                                        SquadName;
+  local DHGameReplicationInfo.MapMarker               MapMarker;
+  local DHPlayer                                      Player;
+  local PlayerController                              PC;
+
+  PC = PlayerController(Controller);
+  Player = DHPlayer(PC);
+
+  if(PC == none || Player == none)
+    return Targets;
+
+  WeaponLocation.X = VehWep.Location.X;
+  WeaponLocation.Y = VehWep.Location.Y;
+  WeaponLocation.Z = 0.0;
+  WeaponRotation = Gun.CurrentAim;
+  WeaponRotation.Yaw = WeaponRotation.Yaw;
+  WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+  WeaponRotation.Roll = 0;
+  WeaponRotation.Pitch = 0;
+
+  // Prepare target information for each marker
+  for(i = 0; i < MapMarkers.Length; i++)
+  {
+    MapMarker = MapMarkers[i];
+    Target = MapMarker.WorldLocation - WeaponLocation;
+
+    Deflection = -class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
+    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Target)));
+    SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+    
+    TargetInfo.Distance       = Distance;
+    TargetInfo.SquadName      = SquadName;
+    TargetInfo.YawCorrection  = Deflection;
+    TargetInfo.Type           = MapMarker.MapMarkerClass;
+    Targets[Targets.Length] = TargetInfo;
+  }
+  return Targets;
+}
+
 // Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 // Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController                              PC;
     local float                                         SavedOpacity;
-    local array<DHArtillerySpottingScope.STargetInfo>   Yaws;
-    local DHArtillerySpottingScope.STargetInfo          Asdf;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
+    local DHPlayer                                      Player;
 
     PC = PlayerController(Controller);
-    // replace it with the correct targets list
-    Asdf.Distance = 100;
-    Asdf.YawCorrection = 30;
-    Asdf.SquadName = "Able";
-    Asdf.Type = class'DHMapMarker_ArtilleryHit_Smoke';
-    Yaws[0] = Asdf;
+    Player = DHPlayer(PC);
 
     if (PC != none && !PC.bBehindView)
     {
@@ -222,6 +264,9 @@ simulated function DrawHUD(Canvas C)
                 }
                 else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
                 {
+                    TargetMapMarkers = Player.GetArtilleryMapMarkers();
+                    Targets = PrepareTargetInfo(TargetMapMarkers);
+
                     // Draw the spotting scope overlay
                     ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
                     ArtillerySpottingScope.static.DrawRangeTable(C);
@@ -233,7 +278,7 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                        Yaws);
+                        Targets);
                 }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {

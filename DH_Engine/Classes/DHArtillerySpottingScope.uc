@@ -91,7 +91,8 @@ simulated static function DrawRangeTable(Canvas C)
 
 simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
-  local string CorrectionString;
+  local string  CorrectionString;
+  local int     Index;
 
   C.SetDrawColor(0, 255, 128, 255);
   if(class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
@@ -100,7 +101,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     C.CurY = Y;
     C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Type).default.TypeName $ ")");
   }
-  else if(ClassIsChildOf(TargetInfo.Type, class'DHMapMarker_Ruler')) {
+  else if(class<DHMapMarker_Ruler>(TargetInfo.Type) != none) {
     C.CurX = X;
     C.CurY = Y;
     C.DrawText("Your marker");
@@ -114,12 +115,13 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
   C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
   C.CurY = Y + 20;
   C.CurX = X;
-  if(TargetInfo.YawCorrection < 0)
-    CorrectionString = class'UMath'.static.Floor(-TargetInfo.YawCorrection, default.YawScaleStep) $ "mils left";
-  if(TargetInfo.YawCorrection == 0)
+  Index = class'UMath'.static.Floor(abs(TargetInfo.YawCorrection), default.YawScaleStep);
+  if(Index < 0)
+    CorrectionString = Index $ "mils left";
+  if(Index == 0)
     CorrectionString = "0mils";
   else
-    CorrectionString = class'UMath'.static.Floor(TargetInfo.YawCorrection, default.YawScaleStep) $ "mils right";
+    CorrectionString = Index $ "mils right";
   C.DrawText("Correction:" @ CorrectionString);
   C.CurX = X - 40;
   C.CurY = Y;  

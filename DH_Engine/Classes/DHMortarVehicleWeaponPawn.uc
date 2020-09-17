@@ -216,30 +216,28 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
   if(PC == none || Player == none)
     return Targets; 
 
-  // Prepare target information for each marker
+  WeaponLocation.X = VehWep.Location.X;
+  WeaponLocation.Y = VehWep.Location.Y;
+  WeaponLocation.Z = 0.0;
+  WeaponRotation = Gun.CurrentAim;
+  WeaponRotation.Yaw = -WeaponRotation.Yaw;
+  WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+  WeaponRotation.Roll = 0;
+  WeaponRotation.Pitch = 0;
+  
   for(i = 0; i < MapMarkers.Length; i++)
   {
     MapMarker = MapMarkers[i];
-    WeaponLocation.X = VehWep.Location.X;
-    WeaponLocation.Y = VehWep.Location.Y;
-    WeaponLocation.Z = 0.0;
-    WeaponRotation = Gun.CurrentAim;
-    WeaponRotation.Yaw = -WeaponRotation.Yaw;
-    WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
-    WeaponRotation.Roll = 0;
-    WeaponRotation.Pitch = 0;
     Target = MapMarker.WorldLocation - WeaponLocation;
-
-    // calculate distance
+    Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
     Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Target)));
     SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
-    Deflection = -class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
     
-    TargetInfo.Distance       = Distance;
-    TargetInfo.SquadName      = SquadName;
-    TargetInfo.YawCorrection  = Deflection;
-    TargetInfo.Type           = MapMarker.MapMarkerClass;
-    Targets[Targets.Length] = TargetInfo;
+    TargetInfo.Distance      = Distance;
+    TargetInfo.SquadName     = SquadName;
+    TargetInfo.YawCorrection = Deflection;
+    TargetInfo.Type          = MapMarker.MapMarkerClass;
+    Targets[Targets.Length]  = TargetInfo;
   }
   return Targets;
 }
@@ -256,7 +254,6 @@ simulated function DrawHUD(Canvas C)
     local string                                        TraverseString;
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHArtillerySpottingScope.STargetInfo          Asdf;
     local DHPlayer                                      Player;
 
     PC = PlayerController(Controller);
