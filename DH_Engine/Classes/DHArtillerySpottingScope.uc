@@ -170,7 +170,6 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         Color.R = Max(1, int(Color.R) * Shade);
         Color.G = Max(1, int(Color.G) * Shade);
         Color.B = Max(1, int(Color.B) * Shade);
-        //Log("yaw:" @ ArtilleryRequestYaws[i] @ ", accumulator:" @ Accumulator @ ", shade:" @ Shade);
         Log("yaw:" @ Targets[i].YawCorrection @ ", accumulator:" @ Accumulator@  ", shade:" @ string(Shade) @ ", R:" @ string(Color.R) @ ", G:" @ string(Color.G) @ ", B:" @ string(Color.B));
         C.SetDrawColor(Color.R, Color.G, Color.B, 255);
         // Draw target tick on the yaw indicator
@@ -203,7 +202,6 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
         if (Quotient % 10 == 0)
         {
-            //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
             // Draw long vertical tick & label it
             C.DrawVertical(X + (t * IndicatorStep), -50.0);
             C.CurY = Y - 70.0;
@@ -252,7 +250,6 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     X = C.SizeX * 0.25;
     Y = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
-    //CurrentPitch = class'DHUnits'.static.UnrealToMilliradians(GetGunPitch());
     PitchLowerBound = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep) - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
     PitchUpperBound = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep) + default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
     SegmentCount = (PitchUpperBound - PitchLowerBound) / default.PitchScaleStep;
@@ -285,7 +282,6 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Quotient % 10 == 0)
         {
-            //Log("i="@i@"Quotient="@Quotient@"Label="@Label);
             // Draw long vertical tick & label it
             C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
 
