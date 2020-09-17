@@ -198,6 +198,52 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers)
+{
+  local vector                                        WeaponLocation, Target;
+  local rotator                                       WeaponRotation;
+  local int                                           Distance, Deflection,  i;
+  local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+  local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+  local string                                        SquadName;
+  local DHGameReplicationInfo.MapMarker               MapMarker;
+  local DHPlayer                                      Player;
+  local PlayerController                              PC;
+
+  PC = PlayerController(Controller);
+  Player = DHPlayer(PC);
+
+  if(PC == none || Player == none)
+    return Targets; 
+
+  // Prepare target information for each marker
+  for(i = 0; i < MapMarkers.Length; i++)
+  {
+    MapMarker = MapMarkers[i];
+    WeaponLocation.X = VehWep.Location.X;
+    WeaponLocation.Y = VehWep.Location.Y;
+    WeaponLocation.Z = 0.0;
+    WeaponRotation = Gun.CurrentAim;
+    WeaponRotation.Yaw = -WeaponRotation.Yaw;
+    WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+    WeaponRotation.Roll = 0;
+    WeaponRotation.Pitch = 0;
+    Target = MapMarker.WorldLocation - WeaponLocation;
+
+    // calculate distance
+    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Target)));
+    SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+    Deflection = -class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
+    
+    TargetInfo.Distance       = Distance;
+    TargetInfo.SquadName      = SquadName;
+    TargetInfo.YawCorrection  = Deflection;
+    TargetInfo.Type           = MapMarker.MapMarkerClass;
+    Targets[Targets.Length] = TargetInfo;
+  }
+  return Targets;
+}
+
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
@@ -208,14 +254,13 @@ simulated function DrawHUD(Canvas C)
     local int                                           SizeX, SizeY, RoundIndex, Traverse;
     local byte                                          Quotient, Remainder;
     local string                                        TraverseString;
+    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          Asdf;
     local DHPlayer                                      Player;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
-
-    Targets = Player.GetArtilleryTargets();
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
     {
@@ -328,6 +373,8 @@ simulated function DrawHUD(Canvas C)
             C.DrawText(TraverseString);
         }
         else {
+            TargetMapMarkers = Player.GetArtilleryMapMarkers();
+            Targets = PrepareTargetInfo(TargetMapMarkers);
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C);
             ArtillerySpottingScope.static.DrawPitch(C,

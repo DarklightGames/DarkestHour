@@ -111,13 +111,15 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
   C.SetDrawColor(255, 255, 255, 255);
   C.CurY = Y + 10;
   C.CurX = X;
-  C.DrawText("Distance:" @ TargetInfo.Distance);
+  C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
   C.CurY = Y + 20;
   C.CurX = X;
-  if(TargetInfo.YawCorrection - CurrentYaw < 0)
-    CorrectionString = string(int(abs(TargetInfo.YawCorrection - CurrentYaw))) $ "mils left";
+  if(TargetInfo.YawCorrection < 0)
+    CorrectionString = class'UMath'.static.Floor(-TargetInfo.YawCorrection, default.YawScaleStep) $ "mils left";
+  if(TargetInfo.YawCorrection == 0)
+    CorrectionString = "0mils";
   else
-    CorrectionString = TargetInfo.YawCorrection - CurrentYaw $ "mils right";
+    CorrectionString = class'UMath'.static.Floor(TargetInfo.YawCorrection, default.YawScaleStep) $ "mils right";
   C.DrawText("Correction:" @ CorrectionString);
   C.CurX = X - 40;
   C.CurY = Y;  
@@ -154,7 +156,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     for(i = 0; i < Targets.Length; i = i + 1)
     {
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
-        if(Targets[i].YawCorrection > YawUpperBound || Targets[i].YawCorrection < YawLowerBound)
+        if(Targets[i].YawCorrection + CurrentYaw > YawUpperBound || Targets[i].YawCorrection + CurrentYaw < YawLowerBound)
         {
           // target is not within bounds of the yaw indicator
           // skip drawing it on the yaw indicator
@@ -162,7 +164,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
         C.CurY = Y + 5.0;
         C.CurX = X;
-        Accumulator = (Targets[i].YawCorrection - YawLowerBound) / StepX;
+        Accumulator = class'UMath'.static.Floor(Targets[i].YawCorrection - YawLowerBound + CurrentYaw, default.YawScaleStep) / StepX;
 
         Shade = class'UInterp'.static.Mimi(Accumulator / VISIBLE_YAW_SEGMENTS);
 
@@ -347,7 +349,7 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "ï¿½"
+    AngleUnit = "°"
     
     WidgetsPanelX = 50
     WidgetsPanelY = 30
