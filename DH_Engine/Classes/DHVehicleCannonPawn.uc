@@ -189,14 +189,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 // Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController PC;
-    local float            SavedOpacity;
-    local array<float>     Yaws;
+    local PlayerController                              PC;
+    local float                                         SavedOpacity;
+    local array<DHArtillerySpottingScope.STargetInfo>   Yaws;
+    local DHArtillerySpottingScope.STargetInfo          Asdf;
 
     PC = PlayerController(Controller);
-    Yaws[0] = 30;
-    Yaws[1] = -30;
-    Yaws[2] = 50;
+    // replace it with the correct targets list
+    Asdf.Distance = 100;
+    Asdf.YawCorrection = 30;
+    Asdf.SquadName = "Able";
+    Asdf.Type = class'DHMapMarker_ArtilleryHit_Smoke';
+    Yaws[0] = Asdf;
 
     if (PC != none && !PC.bBehindView)
     {

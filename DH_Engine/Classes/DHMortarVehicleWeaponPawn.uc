@@ -202,18 +202,32 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController PC;
-    local vector           Loc;
-    local float            HUDScale, Elevation;
-    local int              SizeX, SizeY, RoundIndex, Traverse;
-    local byte             Quotient, Remainder;
-    local string           TraverseString;
-    local array<float>     Yaws;
+    local PlayerController                              PC;
+    local vector                                        Loc;
+    local float                                         HUDScale, Elevation;
+    local int                                           SizeX, SizeY, RoundIndex, Traverse;
+    local byte                                          Quotient, Remainder;
+    local string                                        TraverseString;
+    local array<DHArtillerySpottingScope.STargetInfo>   Yaws;
+    local DHArtillerySpottingScope.STargetInfo          Asdf;
 
     PC = PlayerController(Controller);
-    Yaws[0] = 30;
-    Yaws[1] = -30;
-    Yaws[2] = 50;
+    // replace it with the correct targets list
+    Asdf.Distance = 100;
+    Asdf.YawCorrection = 30;
+    Asdf.SquadName = "Able";
+    Asdf.Type = class'DHMapMarker_FireSupport_HE';
+    Yaws[0] = Asdf;
+    Asdf.Distance = 150;
+    Asdf.YawCorrection = -50;
+    Asdf.SquadName = "";
+    Asdf.Type = class'DHMapMarker_Ruler';
+    Yaws[1] = Asdf;
+    Asdf.Distance = 250;
+    Asdf.YawCorrection = 50;
+    Asdf.SquadName = "Baker";
+    Asdf.Type = class'DHMapMarker_FireSupport_Smoke';
+    Yaws[2] = Asdf;
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
     {
