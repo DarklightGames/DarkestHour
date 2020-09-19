@@ -130,7 +130,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
-    local float i, StepX, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Accumulator, Shade;
+    local float i, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Accumulator, Shade;
     local int Quotient, t;
     local string Label;
     local color Color;
@@ -143,7 +143,6 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     YawLowerBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
     YawUpperBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
-    StepX = (YawUpperBound - YawLowerBound) / SegmentCount;
     IndicatorStep = default.YawIndicatorLength / VISIBLE_YAW_SEGMENTS;
 
     C.Font = C.TinyFont;
@@ -165,7 +164,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
         C.CurY = Y + 5.0;
         C.CurX = X;
-        Accumulator = (Targets[i].YawCorrection - YawLowerBound + CurrentYaw) / StepX;
+        Accumulator = (Targets[i].YawCorrection - YawLowerBound + CurrentYaw) / default.YawScaleStep;
         Accumulator = Round(Accumulator);
 //        Log("Accumulator:" @ Accumulator @ ", Floor:" @ class'UMath'.static.Floor(Accumulator, default.YawScaleStep));
         // if(Accumulator - class'UMath'.static.Floor(Accumulator, default.YawScaleStep) > default.YawScaleStep/2)
@@ -187,10 +186,10 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
     // Start drawing scale ticks
     C.CurY = Y - 5.0;
-    for(i = YawLowerBound; i <= YawUpperBound; i = i + StepX)
+    for(i = YawLowerBound; i <= YawUpperBound; i = i + default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame 
-        t = (i - YawLowerBound) / StepX;
+        t = (i - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_YAW_SEGMENTS));
@@ -251,7 +250,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax)
 {
-    local float i, StepY, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
+    local float i, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
     local string Label;
     const VISIBLE_PITCH_SEGMENTS = 40; // total number of ticks on a yaw indicator
@@ -262,16 +261,15 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     PitchLowerBound = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep) - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
     PitchUpperBound = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep) + default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
     SegmentCount = (PitchUpperBound - PitchLowerBound) / default.PitchScaleStep;
-    StepY = (PitchUpperBound - PitchLowerBound) / SegmentCount;
     IndicatorStep = default.PitchIndicatorLength / VISIBLE_PITCH_SEGMENTS;
 
     C.Font = C.TinyFont;
 
     // Start drawing scale ticks
-    for(i = PitchLowerBound; i <= PitchUpperBound; i = i + StepY)
+    for(i = PitchLowerBound; i <= PitchUpperBound; i = i + default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame 
-        t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / StepY;
+        t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / default.PitchScaleStep;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_PITCH_SEGMENTS));
