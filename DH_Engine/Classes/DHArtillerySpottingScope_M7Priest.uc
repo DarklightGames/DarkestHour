@@ -11,7 +11,7 @@ defaultproperties
     // to do: replace with some cool American overlay
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
     
-    YawScaleStep=20.0
+    YawScaleStep=5.0
     PitchScaleStep=5.0
 
     RangeTable(0)=(Pitch=0,Range=115)

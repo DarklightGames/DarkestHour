@@ -90,48 +90,50 @@ simulated static function DrawRangeTable(Canvas C)
 
 simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
-  local string  CorrectionString;
-  local int     Index;
+    local string  CorrectionString;
+    local int Deflection;
 
-  C.SetDrawColor(0, 255, 128, 255);
-  if(class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
-  {
+    CurrentYaw = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep);
+
+    C.SetDrawColor(0, 255, 128, 255);
+    if(class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
+    {
+        C.CurX = X;
+        C.CurY = Y;
+        C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Type).default.TypeName $ ")");
+    }
+    else if(class<DHMapMarker_Ruler>(TargetInfo.Type) != none) {
+        C.CurX = X;
+        C.CurY = Y;
+        C.DrawText("Your marker");
+    }
+    else {
+        Log("This code shouldn't be reached :(");
+    }
+    C.SetDrawColor(255, 255, 255, 255);
+    C.CurY = Y + 10;
     C.CurX = X;
-    C.CurY = Y;
-    C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Type).default.TypeName $ ")");
-  }
-  else if(class<DHMapMarker_Ruler>(TargetInfo.Type) != none) {
+    C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
+    C.CurY = Y + 20;
     C.CurX = X;
-    C.CurY = Y;
-    C.DrawText("Your marker");
-  }
-  else {
-    Log("This code shouldn't be reached :(");
-  }
-  C.SetDrawColor(255, 255, 255, 255);
-  C.CurY = Y + 10;
-  C.CurX = X;
-  C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
-  C.CurY = Y + 20;
-  C.CurX = X;
-  Index = class'UMath'.static.Floor(abs(TargetInfo.YawCorrection), default.YawScaleStep);
-  if(Index < 0)
-    CorrectionString = Index $ "mils left";
-  if(Index == 0)
-    CorrectionString = "0mils";
-  else
-    CorrectionString = Index $ "mils right";
-  C.DrawText("Correction:" @ CorrectionString);
-  C.CurX = X - 40;
-  C.CurY = Y;  
-  C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
-  C.DrawTile(TargetInfo.Type.default.IconMaterial, 32.0, 32.0, 0.0, 0.0, TargetInfo.Type.default.IconMaterial.MaterialUSize(), TargetInfo.Type.default.IconMaterial.MaterialVSize());
+    Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
+    if(Deflection > 0)
+        CorrectionString = Deflection $ "mils left";
+    else if(Deflection == 0)
+        CorrectionString = "0mils";
+    else
+        CorrectionString = -Deflection $ "mils right";
+    C.DrawText("Correction:" @ CorrectionString);
+    C.CurX = X - 40;
+    C.CurY = Y;  
+    C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
+    C.DrawTile(TargetInfo.Type.default.IconMaterial, 32.0, 32.0, 0.0, 0.0, TargetInfo.Type.default.IconMaterial.MaterialUSize(), TargetInfo.Type.default.IconMaterial.MaterialVSize());
 }
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float i, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Accumulator, Shade;
-    local int Quotient, t;
+    local int Quotient, Index;
     local string Label;
     local color Color;
     const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
@@ -140,8 +142,9 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     Y = C.SizeY * 0.93;
 
     //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-    YawLowerBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    YawUpperBound = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep) + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    CurrentYaw = class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep);
+    YawLowerBound = CurrentYaw - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawUpperBound = CurrentYaw + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
     IndicatorStep = default.YawIndicatorLength / VISIBLE_YAW_SEGMENTS;
 
@@ -155,33 +158,26 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     // Draw target widgets
     for(i = 0; i < Targets.Length; i = i + 1)
     {
+        Index = VISIBLE_YAW_SEGMENTS/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
-        if(Targets[i].YawCorrection + CurrentYaw > YawUpperBound || Targets[i].YawCorrection + CurrentYaw < YawLowerBound)
+        
+        // draw a tick on the yaw dial if the target is within bounds of the yaw indicator
+        if(Index < VISIBLE_YAW_SEGMENTS && Index >= 0)
         {
-          // target is not within bounds of the yaw indicator
-          // skip drawing it on the yaw indicator
-          continue;
+            C.CurY = Y + 5.0;
+            C.CurX = X;
+
+            Shade = class'UInterp'.static.Mimi((Index) / VISIBLE_YAW_SEGMENTS);
+    
+            Color = Targets[i].Type.default.IconColor;
+            Color.R = Max(1, int(Color.R) * Shade);
+            Color.G = Max(1, int(Color.G) * Shade);
+            Color.B = Max(1, int(Color.B) * Shade);
+            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+            
+            // Draw a target tick on the yaw indicator
+            C.DrawVertical(X + Index * IndicatorStep, 5.0);
         }
-        C.CurY = Y + 5.0;
-        C.CurX = X;
-        Accumulator = (Targets[i].YawCorrection - YawLowerBound + CurrentYaw) / default.YawScaleStep;
-        Accumulator = Round(Accumulator);
-//        Log("Accumulator:" @ Accumulator @ ", Floor:" @ class'UMath'.static.Floor(Accumulator, default.YawScaleStep));
-        // if(Accumulator - class'UMath'.static.Floor(Accumulator, default.YawScaleStep) > default.YawScaleStep/2)
-        //     Accumulator = class'UMath'.static.Floor(Accumulator + default.YawScaleStep, default.YawScaleStep);
-        // else
-        //     Accumulator = class'UMath'.static.Floor(Accumulator, default.YawScaleStep);
-
-        Shade = class'UInterp'.static.Mimi(Accumulator / VISIBLE_YAW_SEGMENTS);
-
-        Color = Targets[i].Type.default.IconColor;
-        Color.R = Max(1, int(Color.R) * Shade);
-        Color.G = Max(1, int(Color.G) * Shade);
-        Color.B = Max(1, int(Color.B) * Shade);
-        Log("CurrentYaw:" @ CurrentYaw @ ", YawCorrection:" @ Targets[i].YawCorrection @ ", YawLowerBound:" @ YawLowerBound @ ", accumulator:" @ Accumulator);
-        C.SetDrawColor(Color.R, Color.G, Color.B, 255);
-        // Draw target tick on the yaw indicator
-        C.DrawVertical(X + Accumulator * IndicatorStep, 5.0);
     }
 
     // Start drawing scale ticks
@@ -189,10 +185,10 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     for(i = YawLowerBound; i <= YawUpperBound; i = i + default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame 
-        t = (i - YawLowerBound) / default.YawScaleStep;
+        Index = (i - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_YAW_SEGMENTS));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VISIBLE_YAW_SEGMENTS));
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = class'UMath'.static.FlooredDivision(i, default.YawScaleStep);
@@ -206,38 +202,38 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
         C.CurY = Y - 5.0;
         // 3 is a rough factor to compensate X position of the label with respect to number of letters
-        C.CurX = X + t * default.YawIndicatorLength / SegmentCount - Len(Label) * 3;
+        C.CurX = X + Index * default.YawIndicatorLength / SegmentCount - Len(Label) * 3;
 
         if (Quotient % 10 == 0)
         {
             // Draw long vertical tick & label it
-            C.DrawVertical(X + (t * IndicatorStep), -50.0);
+            C.DrawVertical(X + (Index * IndicatorStep), -50.0);
             C.CurY = Y - 70.0;
             C.DrawText(Label);
         }
         else if (Quotient % 5 == 0)
         {
             // Draw middle-sized vertical tick & label it
-            C.DrawVertical(X + (t * IndicatorStep), -30.0);
+            C.DrawVertical(X + (Index * IndicatorStep), -30.0);
             C.CurY = Y - 50.0;
             C.DrawText(Label);
         }
         else
         {
             // Smallest granularity - draw short vertical tick (no label)
-            C.DrawVertical(X + (t * IndicatorStep), -20.0);
+            C.DrawVertical(X + (Index * IndicatorStep), -20.0);
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
         C.CurY = Y - 20;
         if (i < class'UMath'.static.Floor(GunYawMin, default.YawScaleStep))
         {
-            C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
+            C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
         if (i > class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)){
-            C.CurX = X + t * default.YawIndicatorLength / SegmentCount;
+            C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
         }
     }
