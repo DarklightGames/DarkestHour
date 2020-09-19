@@ -198,46 +198,49 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
-simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers)
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers, int YawScaleStep)
 {
-  local vector                                        WeaponLocation, Target;
-  local rotator                                       WeaponRotation;
-  local int                                           Distance, Deflection,  i;
-  local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-  local DHArtillerySpottingScope.STargetInfo          TargetInfo;
-  local string                                        SquadName;
-  local DHGameReplicationInfo.MapMarker               MapMarker;
-  local DHPlayer                                      Player;
-  local PlayerController                              PC;
+    local vector                                        WeaponLocation, Delta;
+    local rotator                                       WeaponRotation;
+    local int                                           Distance, Deflection,  i;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHPlayer                                      Player;
+    local PlayerController                              PC;
 
-  PC = PlayerController(Controller);
-  Player = DHPlayer(PC);
+    PC = PlayerController(Controller);
+    Player = DHPlayer(PC);
 
-  if(PC == none || Player == none)
-    return Targets; 
+    if(PC == none || Player == none)
+    return Targets;
 
-  WeaponLocation.X = VehWep.Location.X;
-  WeaponLocation.Y = VehWep.Location.Y;
-  WeaponLocation.Z = 0.0;
-  WeaponRotation = Gun.CurrentAim;
-  WeaponRotation.Yaw = -WeaponRotation.Yaw;
-  WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
-  WeaponRotation.Roll = 0;
-  WeaponRotation.Pitch = 0;
+    WeaponLocation = VehWep.Location;
+    WeaponLocation.Z = 0.0;
+    WeaponRotation.Yaw = -CustomAim.Yaw; // mortars need to have their yaw inverted!
+    // WeaponRotation.Yaw = class'UUnits'.static.MilsToUnreal(
+    //     class'UMath'.static.Floor(
+    //     class'UUnits'.static.UnrealToMils(CustomAim.Yaw), YawScaleStep));
+    WeaponRotation.Roll = 0;
+    WeaponRotation.Pitch = 0;
   
   for(i = 0; i < MapMarkers.Length; i++)
   {
     MapMarker = MapMarkers[i];
-    Target = MapMarker.WorldLocation - WeaponLocation;
-    Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
-    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Target)));
+    Delta = MapMarker.WorldLocation - WeaponLocation;
+    Delta.Z = 0;
+
+    Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(WeaponRotation), vect(0, 0, 1)));
+    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
     SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
-    
-    TargetInfo.Distance      = Distance;
-    TargetInfo.SquadName     = SquadName;
-    TargetInfo.YawCorrection = Deflection;
-    TargetInfo.Type          = MapMarker.MapMarkerClass;
-    Targets[Targets.Length]  = TargetInfo;
+
+    TargetInfo.Distance       = Distance;
+    TargetInfo.SquadName      = SquadName;
+    TargetInfo.YawCorrection  = -Deflection;
+    //TargetInfo.YawCorrection  = -class'UMath'.static.Floor(Deflection, YawScaleStep);
+    TargetInfo.Type           = MapMarker.MapMarkerClass;
+    Targets[Targets.Length] = TargetInfo;
   }
   return Targets;
 }
@@ -371,7 +374,7 @@ simulated function DrawHUD(Canvas C)
         }
         else {
             TargetMapMarkers = Player.GetArtilleryMapMarkers();
-            Targets = PrepareTargetInfo(TargetMapMarkers);
+            Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C);
             ArtillerySpottingScope.static.DrawPitch(C,

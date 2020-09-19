@@ -26,7 +26,6 @@ var     localized string    RangeString;
 var     localized string    ElevationString;
 var     texture             SpottingScopeOverlay;       // periscope overlay texture
 
-var     DHVehicleWeapon     VehWep;
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
 var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
 var     float               PitchIndicatorLength;
@@ -166,7 +165,13 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
         C.CurY = Y + 5.0;
         C.CurX = X;
-        Accumulator = class'UMath'.static.Floor(Targets[i].YawCorrection - YawLowerBound + CurrentYaw, default.YawScaleStep) / StepX;
+        Accumulator = (Targets[i].YawCorrection - YawLowerBound + CurrentYaw) / StepX;
+        Accumulator = Round(Accumulator);
+//        Log("Accumulator:" @ Accumulator @ ", Floor:" @ class'UMath'.static.Floor(Accumulator, default.YawScaleStep));
+        // if(Accumulator - class'UMath'.static.Floor(Accumulator, default.YawScaleStep) > default.YawScaleStep/2)
+        //     Accumulator = class'UMath'.static.Floor(Accumulator + default.YawScaleStep, default.YawScaleStep);
+        // else
+        //     Accumulator = class'UMath'.static.Floor(Accumulator, default.YawScaleStep);
 
         Shade = class'UInterp'.static.Mimi(Accumulator / VISIBLE_YAW_SEGMENTS);
 
@@ -174,7 +179,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         Color.R = Max(1, int(Color.R) * Shade);
         Color.G = Max(1, int(Color.G) * Shade);
         Color.B = Max(1, int(Color.B) * Shade);
-        //Log("yaw:" @ Targets[i].YawCorrection @ ", accumulator:" @ Accumulator@  ", shade:" @ string(Shade) @ ", R:" @ string(Color.R) @ ", G:" @ string(Color.G) @ ", B:" @ string(Color.B));
+        Log("CurrentYaw:" @ CurrentYaw @ ", YawCorrection:" @ Targets[i].YawCorrection @ ", YawLowerBound:" @ YawLowerBound @ ", accumulator:" @ Accumulator);
         C.SetDrawColor(Color.R, Color.G, Color.B, 255);
         // Draw target tick on the yaw indicator
         C.DrawVertical(X + Accumulator * IndicatorStep, 5.0);
