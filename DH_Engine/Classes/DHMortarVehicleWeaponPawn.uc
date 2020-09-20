@@ -616,15 +616,29 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false) && DriverPositionIndex == ShooterIndex)
+        if (DriverPositionIndex == ShooterIndex)
         {
-            GotoState('Firing');
+            if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+            {
+                GotoState('Firing');
+            }
+        }
+        else
+        {
+            PrevWeapon();
         }
     }
 
     simulated exec function Deploy()
     {
-        GotoState('Undeploying');
+        if (DriverPositionIndex == ShooterIndex)
+        {
+            GotoState('Undeploying');
+        }
+        else
+        {
+            PrevWeapon();
+        }
     }
 
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
@@ -662,7 +676,9 @@ simulated state Busy
     simulated function Fire(optional float F) { }
     simulated exec function SwitchFireMode() { }
     exec function Deploy() { }
-    function bool KDriverLeave(bool bForceLeave) {return false;}
+    function bool KDriverLeave(bool bForceLeave) { return false; }
+    simulated function NextWeapon() { }
+    simulated function PrevWeapon() { }
 }
 
 // New state where player's hand is raising to traverse adjustment knob
@@ -855,6 +871,10 @@ Begin:
 // New state where player's hand is moving from traverse adjustment knob to fire the mortar
 simulated state KnobRaisedToFire extends Busy
 {
+    simulated function PrevWeapon() {
+        global.PrevWeapon();
+    }
+
 Begin:
     if (HUDOverlay != none)
     {
@@ -862,7 +882,14 @@ Begin:
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
     }
 
-    GotoState('Firing');
+    if (DriverPositionIndex == ShooterIndex)
+    {
+        GotoState('Firing');
+    }
+    else
+    {
+        PrevWeapon();
+    }
 }
 
 // New state where player's hand is moving from traverse adjustment knob to undeploy the mortar
@@ -1063,6 +1090,11 @@ simulated function SwitchWeapon(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
 simulated exec function ToggleVehicleLock();
 function ServerToggleVehicleLock();
+
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return true;
+}
 
 defaultproperties
 {
