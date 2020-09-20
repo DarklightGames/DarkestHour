@@ -60,8 +60,11 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     local DHSquadReplicationInfo SRI;
     local int TeamIndex, SquadIndex;
     local string SquadName;
+    local vector PlayerLocation;
+    local int Distance;
+    local vector WorldLocation;
 
-    if (PC == none)
+    if (PC == none || PC.Pawn == none)
     {
         return "";
     }
@@ -74,11 +77,18 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         return "";
     }
 
+    // shamefully copied from DHMapMarker_Ruler
+    WorldLocation = Marker.WorldLocation;
+    PlayerLocation = PC.Pawn.Location;
+    PlayerLocation.Z = 0.0;
+    WorldLocation.Z = 0.0;
+    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
+
     TeamIndex = PRI.Team.TeamIndex;
     SquadIndex = Marker.SquadIndex;
     SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
 
-    return default.TypeName $ " request (" $ SquadName $ ")";
+    return SquadName $ " (" $ (Distance / 5) * 5 $ "m)" ;
 }
 
 defaultproperties
