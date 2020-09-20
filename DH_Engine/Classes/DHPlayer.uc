@@ -1071,7 +1071,7 @@ simulated function bool IsInArtilleryVehicle()
 
     if (V != none)
     {
-        return V.bIsArtilleryVehicle;
+        return (V.IsA('DH_LeIG18Gun') || V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self.Pawn));
     }
 
     return false;
@@ -2166,7 +2166,7 @@ function bool IsArtilleryRole()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return RI != none && RI.bCanUseMortars || IsInArtilleryVehicle() && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self.Pawn);
+    return RI != none && RI.bCanUseMortars || IsInArtilleryVehicle();
 }
 
 // Modified to allow mortar operator to make a resupply request
