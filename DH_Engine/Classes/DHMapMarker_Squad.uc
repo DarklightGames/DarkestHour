@@ -11,7 +11,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     return PRI != none && PRI.IsSquadLeader();
 }
-    
+
 // Only allow squad leader to remove squad orders.
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
@@ -28,6 +28,6 @@ defaultproperties
 {
     Scope=SQUAD
     GroupIndex=0
-    OverwritingRule = UNIQUE_PER_GROUP
+    OverwritingRule=UNIQUE_PER_GROUP
     bShouldShowOnCompass=true
 }

@@ -11,7 +11,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
 }
-    
+
 // allow only artillery roles to remove a Ruler marker
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
@@ -56,7 +56,6 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4
     bShouldShowOnCompass=true
-    OverwritingRule = UNIQUE
+    OverwritingRule=UNIQUE
     Scope=PERSONAL
 }
-

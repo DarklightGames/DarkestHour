@@ -1352,7 +1352,7 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
     return true;
 }
 
-// Trying to refactor this function to access AxisMapMarkers and AlliesMapMarkers directly from other objects 
+// Trying to refactor this function to access AxisMapMarkers and AlliesMapMarkers directly from other objects
 // will most likely cause "Context expression: Variable is too large (480 bytes, 255 max)" compilation error.
 // You can't access big static arrays of structs from outside of the given object; you have to
 // use a proxy function like this one to retrive elements of a static array as a dynamic array.
@@ -1393,7 +1393,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
     M.WorldLocation = GetWorldCoords(MapLocation.X, MapLocation.Y);
 
-    if(MapMarkerClass.default.Scope==SQUAD)
+    if (MapMarkerClass.default.Scope == SQUAD)
     {
         M.SquadIndex = PRI.SquadIndex;
     }
@@ -1414,7 +1414,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     switch (PRI.Team.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            switch(MapMarkerClass.default.OverwritingRule)
+            switch (MapMarkerClass.default.OverwritingRule)
             {
                 case UNIQUE_PER_GROUP:
                     for (i = 0; i < arraycount(AxisMapMarkers); ++i)
@@ -1429,12 +1429,13 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                         }
                     }
                     break;
+
                 case UNIQUE:
                     for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
                         if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                            (MapMarkerClass.default.Scope==TEAM
-                            || (MapMarkerClass.default.Scope==SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                            (MapMarkerClass.default.Scope == TEAM ||
+                             (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AxisMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1449,7 +1450,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             {
                 if (AxisMapMarkers[i].MapMarkerClass == none ||
                     (AxisMapMarkers[i].ExpiryTime != -1 &&
-                    AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
+                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AxisMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1477,8 +1478,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
                         if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                            (MapMarkerClass.default.Scope==TEAM
-                            || (MapMarkerClass.default.Scope==SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                            (MapMarkerClass.default.Scope == TEAM ||
+                             (MapMarkerClass.default.Scope == SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AlliesMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1493,7 +1494,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             {
                 if (AlliesMapMarkers[i].MapMarkerClass == none ||
                     (AlliesMapMarkers[i].ExpiryTime != -1 &&
-                    AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
+                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
                 {
                     AlliesMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);

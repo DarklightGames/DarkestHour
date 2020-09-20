@@ -424,10 +424,10 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if(PersonalMapMarkers[i].MapMarkerClass != none
-            && (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime)
-            && PersonalMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PersonalMapMarkers[i])
-            && IsMarkerUnderCursor(float(PersonalMapMarkers[i].LocationX) / 255.0, float(PersonalMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+        if(PersonalMapMarkers[i].MapMarkerClass != none &&
+           (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
+           PersonalMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PersonalMapMarkers[i]) &&
+           IsMarkerUnderCursor(float(PersonalMapMarkers[i].LocationX) / 255.0, float(PersonalMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
         {
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
@@ -441,10 +441,10 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     {
         for (i = 0; i < MapMarkers.Length; ++i)
         {
-            if(MapMarkers[i].MapMarkerClass != none
-                && (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime)
-                && MapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, MapMarkers[i])
-                && IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            if (MapMarkers[i].MapMarkerClass != none &&
+                (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime) &&
+                MapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, MapMarkers[i]) &&
+                IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
                 bRemoveMapMarker = true;
                 MapMarkerIndexToRemove = i;
@@ -829,4 +829,3 @@ defaultproperties
     ViewportInterpDuration=0.33
     Viewport=(Min=(X=0,Y=0),Max=(X=1,Y=1))
 }
-

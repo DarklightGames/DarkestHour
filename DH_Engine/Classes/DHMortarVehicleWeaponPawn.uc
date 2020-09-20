@@ -126,7 +126,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     }
 }
 
-
 simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
 {
     local int Deflection;
@@ -244,7 +243,7 @@ simulated function DrawHUD(Canvas C)
 
         TraverseString $= string(Traverse) @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $ GetDeflectionAdjustmentString(DHPlayer(PC));
 
-        if(DriverPositionIndex == ShooterIndex)
+        if (DriverPositionIndex == ShooterIndex)
         {
             // Draw mortar
             C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
@@ -325,18 +324,20 @@ simulated function DrawHUD(Canvas C)
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
             C.DrawText(TraverseString);
         }
-        else {
+        else
+        {
             TargetMapMarkers = Player.GetArtilleryMapMarkers();
             Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
+
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C);
             ArtillerySpottingScope.static.DrawPitch(C,
-                DHMortarVehicleWeapon(VehWep).Elevation, 
+                DHMortarVehicleWeapon(VehWep).Elevation,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawYaw(C,
                 // without multiplying yaw by (-1) below the yaw readout is reversed
-                class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()), 
+                class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                 Targets);
@@ -544,7 +545,6 @@ simulated state EnteringVehicle
     }
 }
 
-
 // New state where mortar is not busy doing something, so can be fired, exited, undeployed, etc
 simulated state Idle
 {
@@ -553,7 +553,7 @@ simulated state Idle
         PlayFirstPersonAnimation(OverlayIdleAnim, true);
     }
 
-        simulated function Fire(optional float F)
+    simulated function Fire(optional float F)
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -810,9 +810,10 @@ Begin:
 // New state where player's hand is moving from traverse adjustment knob to fire the mortar
 simulated state KnobRaisedToFire extends Busy
 {
-simulated function PrevWeapon() {
-    global.PrevWeapon();
-}
+    simulated function PrevWeapon()
+    {
+        global.PrevWeapon();
+    }
 
 Begin:
     if (HUDOverlay != none)
@@ -821,7 +822,7 @@ Begin:
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
     }
 
-        if (DriverPositionIndex == ShooterIndex)
+    if (DriverPositionIndex == ShooterIndex)
     {
         GotoState('Firing');
     }
@@ -1066,7 +1067,7 @@ defaultproperties
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
-    ShooterIndex = 0;
-    PeriscopeIndex = 1;
-    OverlayCorrectionY = -60.0;
+    ShooterIndex=0;
+    PeriscopeIndex=1;
+    OverlayCorrectionY=-60.0;
 }

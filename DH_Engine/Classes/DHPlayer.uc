@@ -1089,7 +1089,7 @@ simulated function bool IsSLorASL()
 
 simulated function bool IsSL()
 {
-return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSL();
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSL();
 }
 
 simulated function bool IsASL()
@@ -6961,29 +6961,36 @@ exec function IpFuzz(int Iterations)
 
 function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
 {
-  local int                                           i;
-  local DHGameReplicationInfo                         GRI;
-  local array<DHGameReplicationInfo.MapMarker>        PublicMapMarkers, TargetMapMarkers;
-  
-  if (Pawn == none)
-  {
-    return TargetMapMarkers;
-  }
+    local int                                    i;
+    local DHGameReplicationInfo                  GRI;
+    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers, TargetMapMarkers;
 
-  // Select only fire requests & ruler markers
-  GRI = DHGameReplicationInfo(GameReplicationInfo);
-  GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
-  for(i = 0; i < PublicMapMarkers.Length; i++)
-  {
-    if(ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
-      TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
-  }
-  for(i = 0; i < PersonalMapMarkers.Length; i++)
-  {
-    if(ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
-      TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
-  }
-  return TargetMapMarkers;
+    if (Pawn == none)
+    {
+        return TargetMapMarkers;
+    }
+
+    // Select only fire requests & ruler markers
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
+
+    for (i = 0; i < PublicMapMarkers.Length; i++)
+    {
+        if (ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
+        }
+    }
+
+    for (i = 0; i < PersonalMapMarkers.Length; i++)
+    {
+        if (ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+        }
+    }
+
+    return TargetMapMarkers;
 }
 
 defaultproperties

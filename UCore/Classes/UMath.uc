@@ -43,8 +43,11 @@ static final function byte SwapFirstPair(byte Num)
 // See more on https://en.wikipedia.org/wiki/Modulo_operation
 static final function float FlooredDivision(float Value, float Divisor)
 {
-    if(Value%Divisor < 0)
+    if (Value%Divisor < 0)
+    {
         return (Value - Divisor) / Divisor;
+    }
+
     return Value/Divisor;
 }
 
@@ -54,4 +57,3 @@ static final function float Floor(float Value, float Divisor)
     return Value - Value%Divisor;
     // Log("Value:" @ Value @ ", Divisor:" @ Divisor @ ", Value%Divisor:" @ Value%Divisor);
 }
-        

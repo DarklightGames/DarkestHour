@@ -2052,11 +2052,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 {
-    return DHKiller.IsArtilleryRole() 
-          && (class<DHMortarDamageType>(DamageType) != none
-           || class<DHShellHE105mmDamageType>(DamageType) != none             // M7 Priest explosion
-           || class<DHShellHE75mmATDamageType>(DamageType) != none            // LeIG18 explosion
-           || ClassIsChildOf(DamageType, class'DHShellHEImpactDamageType'));  // M7 Priest and LeIG18 impact damage types)
+    return DHKiller.IsArtilleryRole() &&
+           (class<DHMortarDamageType>(DamageType) != none ||
+            class<DHShellHE105mmDamageType>(DamageType) != none ||          // M7 Priest explosion
+            class<DHShellHE75mmATDamageType>(DamageType) != none ||         // LeIG18 explosion
+            ClassIsChildOf(DamageType, class'DHShellHEImpactDamageType'));  // M7 Priest and LeIG18 impact damage types)
 }
 
 // Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
@@ -2085,11 +2085,12 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         {
             Killed.PlayerReplicationInfo.Deaths += 1.0;
         }
+
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
-        
-        if (IsArtilleryKill(DHKiller, DamageType)
-            && DHKiller.HEHitInfo.ExpiryTime > Level.TimeSeconds)
+
+        if (IsArtilleryKill(DHKiller, DamageType) &&
+            DHKiller.HEHitInfo.ExpiryTime > Level.TimeSeconds)
         {
             DamageType =  class'DHArtilleryKillDamageType';
         }

@@ -6,11 +6,11 @@
 class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope
     abstract;
 
-defaultproperties 
+defaultproperties
 {
     // to do: replace with some cool American overlay
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
-    
+
     YawScaleStep=5.0
     PitchScaleStep=0.5
 

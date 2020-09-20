@@ -6,11 +6,11 @@
 class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope
     abstract;
 
-defaultproperties 
+defaultproperties
 {
     // to do: replace with some cool American overlay
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
-    
+
     YawScaleStep=5.0
     PitchScaleStep=5.0
 
@@ -36,5 +36,5 @@ defaultproperties
     RangeTable(19)=(Pitch=475,Range=1750)
     RangeTable(20)=(Pitch=500,Range=1800)
     RangeTable(21)=(Pitch=525,Range=1850)
-    AngleUnit = "mils"
+    AngleUnit="mils"
 }

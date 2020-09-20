@@ -69,7 +69,7 @@ struct SArtilleryHitLocation
     var int ElapsedTime;
 };
 
-var     SArtilleryHitLocation       ArtilleryHitLocation;
+var SArtilleryHitLocation    ArtilleryHitLocation;
 
 struct SRangeTableRecord
 {
@@ -78,7 +78,7 @@ struct SRangeTableRecord
     var float TTI;      // Time-to-impact in seconds
 };
 
-var array<SRangeTableRecord>    RangeTable;
+var array<SRangeTableRecord> RangeTable;
 
 replication
 {

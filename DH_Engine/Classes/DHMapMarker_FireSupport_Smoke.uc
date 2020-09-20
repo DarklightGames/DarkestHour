@@ -9,8 +9,7 @@ class DHMapMarker_FireSupport_Smoke extends DHMapMarker_FireSupport
 defaultproperties
 {
     MarkerName="Fire Support (smoke)"
-    TypeName = "Smoke"
+    TypeName="Smoke"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attention'
     IconColor=(R=220,G=220,B=220,A=255) // gray
 }
-

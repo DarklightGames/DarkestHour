@@ -3817,23 +3817,23 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
     for (i = 0; i < MapMarkers.Length; ++i)
     {
-        if(MapMarkers[i].MapMarkerClass != none 
-            && (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime)
-            && MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+        if (MapMarkers[i].MapMarkerClass != none &&
+            (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime) &&
+            MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
         {
             L.X = float(MapMarkers[i].LocationX) / 255.0;
             L.Y = float(MapMarkers[i].LocationY) / 255.0;
             L = DHGRI.GetWorldCoords(L.X, L.Y);
 
             DrawMapMarkerOnMap(C,
-                            SubCoords,
-                            MyMapScale,
-                            MapCenter,
-                            Viewport,
-                            MapMarkers[i].MapMarkerClass,
-                            L,
-                            PC.Pawn,
-                            MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
+                               SubCoords,
+                               MyMapScale,
+                               MapCenter,
+                               Viewport,
+                               MapMarkers[i].MapMarkerClass,
+                               L,
+                               PC.Pawn,
+                               MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
         }
     }
 
@@ -3842,19 +3842,19 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if(PersonalMapMarkers[i].MapMarkerClass != none 
-            && (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime)
-            && PersonalMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PersonalMapMarkers[i]))
+        if (PersonalMapMarkers[i].MapMarkerClass != none &&
+            (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
+            PersonalMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PersonalMapMarkers[i]))
         {
             DrawMapMarkerOnMap(C,
-                                SubCoords,
-                                MyMapScale,
-                                MapCenter,
-                                Viewport,
-                                PersonalMapMarkers[i].MapMarkerClass,
-                                PersonalMapMarkers[i].WorldLocation,
-                                PC.Pawn,
-                                PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
+                               SubCoords,
+                               MyMapScale,
+                               MapCenter,
+                               Viewport,
+                               PersonalMapMarkers[i].MapMarkerClass,
+                               PersonalMapMarkers[i].WorldLocation,
+                               PC.Pawn,
+                               PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
         }
     }
 }

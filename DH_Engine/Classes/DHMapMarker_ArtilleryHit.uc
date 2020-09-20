@@ -19,9 +19,9 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
 }
 
 static function CalculateHitMarkerVisibility(out DHPlayer PC,
-                                            out DHPlayer.ArtilleryHitInfo HitInfo, 
-                                            class<DHMapMarker_FireSupport> RequestClass,
-                                            vector WorldLocation)
+                                             out DHPlayer.ArtilleryHitInfo HitInfo,
+                                             class<DHMapMarker_FireSupport> RequestClass,
+                                             vector WorldLocation)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHGameReplicationInfo GRI;
@@ -37,31 +37,35 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     ElapsedTime = GRI.ElapsedTime;
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
-    for(i = 0; i < MapMarkers.Length; i++)
+    for (i = 0; i < MapMarkers.Length; ++i)
     {
         Marker = MapMarkers[i];
-        if(Marker.MapMarkerClass == RequestClass
-            && (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime)
-            && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-            && !(Marker.SquadIndex == PC.GetSquadIndex() && PC.IsSL())) // disable viewing hits on own marker
+
+        if (Marker.MapMarkerClass == RequestClass &&
+            (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime) &&
+            Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker) &&
+            !(Marker.SquadIndex == PC.GetSquadIndex() && PC.IsSL())) // disable viewing hits on own marker
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
-            if(MinimumDistance > Distance)
+
+            if (MinimumDistance > Distance)
             {
                 ClosestArtilleryRequest = i;
                 MinimumDistance = Distance;
             }
         }
     }
+
     HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
     HitInfo.bIsWithinRadius = (MinimumDistance < RequestClass.default.HitVisibilityRadius);
-    if(ClosestArtilleryRequest != -1 && HitInfo.bIsWithinRadius)
+
+    if (ClosestArtilleryRequest != -1 && HitInfo.bIsWithinRadius)
     {
         HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
         HitInfo.ExpiryTime = MapMarkers[ClosestArtilleryRequest].ExpiryTime;
     }
-    else 
+    else
     {
         // to do: handle it in a better way?
         HitInfo.ExpiryTime = 0;

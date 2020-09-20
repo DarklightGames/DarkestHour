@@ -1744,8 +1744,11 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
-    if(default.ArtillerySpottingScope != none)
+
+    if (default.ArtillerySpottingScope != none)
+    {
         Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to call Initialize functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
@@ -2291,8 +2294,10 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 
     Player = DHPlayer(Controller);
 
-    if(Player == none)
+    if (Player == none)
+    {
         return Targets;
+    }
 
     VehicleLocation = VehWep.Location;
     VehicleLocation.Z = 0.0;
@@ -2302,12 +2307,12 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
     VehicleRotation.Pitch = 0;
 
     // Prepare target information for each marker
-    for(i = 0; i < MapMarkers.Length; i++)
+    for (i = 0; i < MapMarkers.Length; i++)
     {
         MapMarker = MapMarkers[i];
         Delta = MapMarker.WorldLocation - VehicleLocation;
         Delta.Z = 0;
-        
+
         // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
         Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
         SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
@@ -2319,6 +2324,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
         TargetInfo.Type           = MapMarker.MapMarkerClass;
         Targets[Targets.Length]   = TargetInfo;
     }
+
     return Targets;
 }
 

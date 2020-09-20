@@ -5,11 +5,11 @@
 
 class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport
     abstract;
+
 defaultproperties
 {
     MarkerName="Fire Support (HE)"
-    TypeName = "HE"
+    TypeName="HE"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
     IconColor=(R=255,G=0,B=0,A=255)
 }
-

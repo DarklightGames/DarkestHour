@@ -225,11 +225,11 @@ simulated function DrawHUD(Canvas C)
                     ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
                     ArtillerySpottingScope.static.DrawRangeTable(C);
                     ArtillerySpottingScope.static.DrawPitch(C,
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()), 
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
                     ArtillerySpottingScope.static.DrawYaw(C,
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()), 
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                         Targets);

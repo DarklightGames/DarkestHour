@@ -6,10 +6,10 @@
 class DHArtillerySpottingScope_AxisMortar extends DHArtillerySpottingScope
     abstract;
 
-defaultproperties 
+defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
-    
+
     YawScaleStep=5.0
     PitchScaleStep=0.5
 

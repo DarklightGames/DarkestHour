@@ -39,7 +39,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             VT.Destroy();
         }
     }
-    
+
     SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
     super.Explode(HitLocation, HitNormal);
 }

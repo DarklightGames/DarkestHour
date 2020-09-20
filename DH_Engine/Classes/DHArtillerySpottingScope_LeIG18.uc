@@ -6,10 +6,10 @@
 class DHArtillerySpottingScope_LeIG18 extends DHArtillerySpottingScope
     abstract;
 
-defaultproperties 
+defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
-    
+
     YawScaleStep=10.0
     PitchScaleStep=10.0
 
@@ -27,5 +27,5 @@ defaultproperties
     RangeTable(11)=(Pitch=550,Range=1155)
     RangeTable(12)=(Pitch=600,Range=1205)
     RangeTable(13)=(Pitch=650,Range=1250)
-    AngleUnit = "mils"
+    AngleUnit="mils"
 }

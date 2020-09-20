@@ -20,8 +20,9 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
 
-    PC =  DHPlayer(InstigatorController);
-    if(PC != none)
+    PC = DHPlayer(InstigatorController);
+
+    if (PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
@@ -59,4 +60,3 @@ function SetHitLocation(vector HitLocation)
 defaultproperties
 {
 }
-

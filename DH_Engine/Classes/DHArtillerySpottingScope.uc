@@ -16,10 +16,10 @@ var array<SRangeTableRecord>    RangeTable;
 
 struct STargetInfo
 {
-  var int                               Distance;       // distance between the player and the target
-  var int                               YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction 
-  var string                            SquadName;      // name of the squad that requests fire support
-  var class<DHMapMarker>                Type;           // Fire_Support or Ruler
+    var int                               Distance;       // distance between the player and the target
+    var int                               YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
+    var string                            SquadName;      // name of the squad that requests fire support
+    var class<DHMapMarker>                Type;           // Fire_Support or Ruler
 };
 
 var     localized string    RangeString;
@@ -97,36 +97,49 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
 
     C.SetDrawColor(0, 255, 128, 255);
-    if(class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
+
+    if (class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
     {
         C.CurX = X;
         C.CurY = Y;
         C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Type).default.TypeName $ ")");
     }
-    else if(class<DHMapMarker_Ruler>(TargetInfo.Type) != none) {
+    else if (class<DHMapMarker_Ruler>(TargetInfo.Type) != none)
+    {
         C.CurX = X;
         C.CurY = Y;
         C.DrawText("Your marker");
     }
-    else {
+    else
+    {
         Log("This code shouldn't be reached :(");
     }
+
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = Y + 10;
     C.CurX = X;
     C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
     C.CurY = Y + 20;
     C.CurX = X;
+
     Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
-    if(Deflection > 0)
+
+    if (Deflection > 0)
+    {
         CorrectionString = Deflection $ "mils left";
-    else if(Deflection == 0)
+    }
+    else if (Deflection == 0)
+    {
         CorrectionString = "0mils";
+    }
     else
+    {
         CorrectionString = -Deflection $ "mils right";
+    }
+
     C.DrawText("Correction:" @ CorrectionString);
     C.CurX = X - 40;
-    C.CurY = Y;  
+    C.CurY = Y;
     C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
     C.DrawTile(TargetInfo.Type.default.IconMaterial, 32.0, 32.0, 0.0, 0.0, TargetInfo.Type.default.IconMaterial.MaterialUSize(), TargetInfo.Type.default.IconMaterial.MaterialVSize());
 }
@@ -157,28 +170,28 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.DrawHorizontal(Y, default.YawIndicatorLength);
 
     // Draw target widgets & target ticks
-    for(i = 0; i < Targets.Length; i = i + 1)
+    for (i = 0; i < Targets.Length; i = i + 1)
     {
         // Always draw a target widget on the left panel
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
-        
+
         // Which tick on the dial does this target correspond to
         Index = VISIBLE_YAW_SEGMENTS/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
-        if(Index < VISIBLE_YAW_SEGMENTS && Index >= 0)
+        if (Index < VISIBLE_YAW_SEGMENTS && Index >= 0)
         {
             C.CurY = Y + 5.0;
             C.CurX = X;
 
             Shade = class'UInterp'.static.Mimi((Index) / VISIBLE_YAW_SEGMENTS);
-    
+
             Color = Targets[i].Type.default.IconColor;
             Color.R = Max(1, int(Color.R) * Shade);
             Color.G = Max(1, int(Color.G) * Shade);
             Color.B = Max(1, int(Color.B) * Shade);
             C.SetDrawColor(Color.R, Color.G, Color.B, 255);
-            
+
             // Draw a target tick on the yaw indicator
             C.DrawVertical(X + Index * IndicatorStep, 5.0);
         }
@@ -186,9 +199,9 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
     // Start drawing scale ticks
     C.CurY = Y - 5.0;
-    for(i = YawLowerBound; i <= YawUpperBound; i = i + default.YawScaleStep)
+    for (i = YawLowerBound; i <= YawUpperBound; i = i + default.YawScaleStep)
     {
-        // Calculate index of the tick in the indicator reference frame 
+        // Calculate index of the tick in the indicator reference frame
         Index = (i - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
@@ -232,13 +245,15 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
         C.CurY = Y - 20;
+
         if (i < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
         {
             C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
-        if (i > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep))) {
+        if (i > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
+        {
             C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
         }
@@ -249,7 +264,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.CurY = Y + 15.0;
     C.DrawVertical(X + (default.YawIndicatorLength / 2), 20.0);
 }
-    
+
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax)
 {
     local float i, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
@@ -269,9 +284,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     C.Font = C.TinyFont;
 
     // Start drawing scale ticks
-    for(i = PitchLowerBound; i <= PitchUpperBound; i = i + default.PitchScaleStep)
+    for (i = PitchLowerBound; i <= PitchUpperBound; i = i + default.PitchScaleStep)
     {
-        // Calculate index of the tick in the indicator reference frame 
+        // Calculate index of the tick in the indicator reference frame
         t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / default.PitchScaleStep;
 
         // Calculate color of the current indicator tick
@@ -300,7 +315,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
             // Readjust label height so it is on the same level as the tick
             C.CurY = C.CurY - 5;
-            
+
             C.DrawText(Label);
         }
         else if (Quotient % 5 == 0)
@@ -312,7 +327,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
             // 3 is a rough factor to compensate X position of the label with respect to number of letters
             C.CurX = X - 40.0 - Len(Label) * 6;
-            
+
             // Readjust label height so it is on the same level as the tick
             C.CurY = C.CurY - 5;
 
@@ -350,18 +365,18 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     C.DrawHorizontal(Y + (default.PitchIndicatorLength / 2), 20.0);
 }
 
-defaultproperties 
+defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
-    YawScaleStep = 1.0
-    PitchScaleStep = 1.0
+    YawScaleStep=1.0
+    PitchScaleStep=1.0
 
-    PitchIndicatorLength = 300.0
-    YawIndicatorLength = 300.0
-    StrikeThroughThickness = 10
-    AngleUnit = "ï¿½"
-    
-    WidgetsPanelX = 50
-    WidgetsPanelY = 30
-    WidgetsPanelEntryHeight = 60
+    PitchIndicatorLength=300.0
+    YawIndicatorLength=300.0
+    StrikeThroughThickness=10
+    AngleUnit="°"
+
+    WidgetsPanelX=50
+    WidgetsPanelY=30
+    WidgetsPanelEntryHeight=60
 }
