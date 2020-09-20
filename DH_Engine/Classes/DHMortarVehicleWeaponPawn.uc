@@ -202,7 +202,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 {
     local vector                                        WeaponLocation, Delta;
     local rotator                                       WeaponRotation;
-    local int                                           Distance, Deflection,  i;
+    local int                                           Distance, Deflection, i;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          TargetInfo;
     local string                                        SquadName;
@@ -218,31 +218,29 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 
     WeaponLocation = VehWep.Location;
     WeaponLocation.Z = 0.0;
-    WeaponRotation.Yaw = -CustomAim.Yaw; // mortars need to have their yaw inverted!
-    // WeaponRotation.Yaw = class'UUnits'.static.MilsToUnreal(
-    //     class'UMath'.static.Floor(
-    //     class'UUnits'.static.UnrealToMils(CustomAim.Yaw), YawScaleStep));
+
+    WeaponRotation.Yaw = VehWep.Rotation.Yaw;
     WeaponRotation.Roll = 0;
     WeaponRotation.Pitch = 0;
-  
-  for(i = 0; i < MapMarkers.Length; i++)
-  {
-    MapMarker = MapMarkers[i];
-    Delta = MapMarker.WorldLocation - WeaponLocation;
-    Delta.Z = 0;
 
-    Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(WeaponRotation), vect(0, 0, 1)));
-    Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
-    SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+    // Prepare target information for each marker
+    for(i = 0; i < MapMarkers.Length; i++)
+    {
+        MapMarker = MapMarkers[i];
+        Delta = MapMarker.WorldLocation - WeaponLocation;
+        Delta.Z = 0;
+        
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(WeaponRotation), vect(0, 0, 1)));
+        SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
 
-    TargetInfo.Distance       = Distance;
-    TargetInfo.SquadName      = SquadName;
-    TargetInfo.YawCorrection  = -Deflection;
-    //TargetInfo.YawCorrection  = -class'UMath'.static.Floor(Deflection, YawScaleStep);
-    TargetInfo.Type           = MapMarker.MapMarkerClass;
-    Targets[Targets.Length] = TargetInfo;
-  }
-  return Targets;
+        TargetInfo.Distance       = Distance;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;
+        TargetInfo.Type           = MapMarker.MapMarkerClass;
+        Targets[Targets.Length] = TargetInfo;
+    }
+    return Targets;
 }
 
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo

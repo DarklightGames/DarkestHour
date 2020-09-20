@@ -189,7 +189,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 {
     local vector                                        WeaponLocation, Delta;
     local rotator                                       WeaponRotation;
-    local int                                           Distance, Deflection, Yaw, i;
+    local int                                           Distance, Deflection, i;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          TargetInfo;
     local string                                        SquadName;

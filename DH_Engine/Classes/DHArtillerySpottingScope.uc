@@ -132,7 +132,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
-    local float i, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Accumulator, Shade;
+    local float i, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Shade;
     local int Quotient, Index;
     local string Label;
     local color Color;
@@ -350,7 +350,7 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "°"
+    AngleUnit = "ï¿½"
     
     WidgetsPanelX = 50
     WidgetsPanelY = 30
