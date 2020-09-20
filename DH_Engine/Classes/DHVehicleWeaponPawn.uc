@@ -2288,12 +2288,10 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
     local string                                        SquadName;
     local DHGameReplicationInfo.MapMarker               MapMarker;
     local DHPlayer                                      Player;
-    local PlayerController                              PC;
 
-    PC = PlayerController(Controller);
-    Player = DHPlayer(PC);
+    Player = DHPlayer(Controller);
 
-    if(PC == none || Player == none)
+    if(Player == none)
         return Targets;
 
     VehicleLocation = VehWep.Location;
