@@ -42,7 +42,8 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
         Marker = MapMarkers[i];
         if(Marker.MapMarkerClass == RequestClass
             && (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime)
-            && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
+            && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+            && !(Marker.SquadIndex == PC.GetSquadIndex() && PC.IsSL())) // disable viewing hits on own marker
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
