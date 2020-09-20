@@ -16,10 +16,10 @@ var array<SRangeTableRecord>    RangeTable;
 
 struct STargetInfo
 {
-  var int                   Distance;
-  var int                   YawCorrection;
-  var string                SquadName;
-  var class<DHMapMarker>    Type;
+  var int                               Distance;       // distance between the player and the target
+  var int                               YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction 
+  var string                            SquadName;      // name of the squad that requests fire support
+  var class<DHMapMarker>                Type;           // Fire_Support or Ruler
 };
 
 var     localized string    RangeString;
@@ -88,6 +88,7 @@ simulated static function DrawRangeTable(Canvas C)
     }
 }
 
+// A helper function to draw a single widget on the left panel in spotting scope view
 simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
     local string  CorrectionString;
@@ -155,13 +156,16 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.CurY = Y;
     C.DrawHorizontal(Y, default.YawIndicatorLength);
 
-    // Draw target widgets
+    // Draw target widgets & target ticks
     for(i = 0; i < Targets.Length; i = i + 1)
     {
-        Index = VISIBLE_YAW_SEGMENTS/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
+        // Always draw a target widget on the left panel
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
         
-        // draw a tick on the yaw dial if the target is within bounds of the yaw indicator
+        // Which tick on the dial does this target correspond to
+        Index = VISIBLE_YAW_SEGMENTS/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
+
+        // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if(Index < VISIBLE_YAW_SEGMENTS && Index >= 0)
         {
             C.CurY = Y + 5.0;
