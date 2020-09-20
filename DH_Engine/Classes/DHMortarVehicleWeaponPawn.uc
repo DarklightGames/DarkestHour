@@ -331,9 +331,9 @@ simulated function DrawHUD(Canvas C)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C);
             ArtillerySpottingScope.static.DrawPitch(C,
-                GetGunPitch(), 
-                GetGunPitchMin(),
-                GetGunPitchMax());
+                DHMortarVehicleWeapon(VehWep).Elevation, 
+                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawYaw(C,
                 // without multiplying yaw by (-1) below the yaw readout is reversed
                 class'DHUnits'.static.UnrealToMilliradians((-1)*GetGunYaw()), 
@@ -343,22 +343,6 @@ simulated function DrawHUD(Canvas C)
         }
     }
 }
-
-simulated function int GetGunPitch()
-{
-    return DHMortarVehicleWeapon(VehWep).Elevation;
-}
-
-simulated function int GetGunPitchMin()
-{
-    return DHMortarVehicleWeapon(VehWep).default.ElevationMinimum;
-}
-
-simulated function int GetGunPitchMax()
-{
-    return DHMortarVehicleWeapon(VehWep).default.ElevationMaximum;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************ MORTAR ENTRY, UNDEPLYING & EXIT *********************** //
 ///////////////////////////////////////////////////////////////////////////////////////
