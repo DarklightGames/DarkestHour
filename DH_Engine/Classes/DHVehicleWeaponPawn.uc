@@ -254,7 +254,7 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    return (-1) * (65535 - VehWep.CustomPitchDownLimit);
+    return VehWep.CustomPitchDownLimit - 65535;
 }
 
 simulated function int GetGunPitchMax()
@@ -2307,7 +2307,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
     VehicleRotation.Pitch = 0;
 
     // Prepare target information for each marker
-    for (i = 0; i < MapMarkers.Length; i++)
+    for (i = 0; i < MapMarkers.Length; ++i)
     {
         MapMarker = MapMarkers[i];
         Delta = MapMarker.WorldLocation - VehicleLocation;

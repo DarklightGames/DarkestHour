@@ -146,8 +146,8 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
-    local float i, X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Shade;
-    local int Quotient, Index;
+    local float X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Shade;
+    local int i, Quotient, Index;
     local string Label;
     local color Color;
     const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
@@ -170,7 +170,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.DrawHorizontal(Y, default.YawIndicatorLength);
 
     // Draw target widgets & target ticks
-    for (i = 0; i < Targets.Length; i = i + 1)
+    for (i = 0; i < Targets.Length; ++i)
     {
         // Always draw a target widget on the left panel
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
@@ -199,7 +199,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
     // Start drawing scale ticks
     C.CurY = Y - 5.0;
-    for (i = YawLowerBound; i <= YawUpperBound; i = i + default.YawScaleStep)
+    for (i = YawLowerBound; i <= YawUpperBound; i += default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
         Index = (i - YawLowerBound) / default.YawScaleStep;
@@ -284,7 +284,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     C.Font = C.TinyFont;
 
     // Start drawing scale ticks
-    for (i = PitchLowerBound; i <= PitchUpperBound; i = i + default.PitchScaleStep)
+    for (i = PitchLowerBound; i <= PitchUpperBound; i += default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
         t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / default.PitchScaleStep;

@@ -6974,7 +6974,7 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
 
-    for (i = 0; i < PublicMapMarkers.Length; i++)
+    for (i = 0; i < PublicMapMarkers.Length; ++i)
     {
         if (ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
         {
@@ -6982,7 +6982,7 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
         }
     }
 
-    for (i = 0; i < PersonalMapMarkers.Length; i++)
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
         if (ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
         {
