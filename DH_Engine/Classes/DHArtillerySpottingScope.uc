@@ -350,7 +350,7 @@ defaultproperties
     PitchIndicatorLength = 300.0
     YawIndicatorLength = 300.0
     StrikeThroughThickness = 10
-    AngleUnit = "ï¿½"
+    AngleUnit = "°"
     
     WidgetsPanelX = 50
     WidgetsPanelY = 30

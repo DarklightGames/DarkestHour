@@ -185,51 +185,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
-simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers, int YawScaleStep)
-{
-    local vector                                        WeaponLocation, Delta;
-    local rotator                                       WeaponRotation;
-    local int                                           Distance, Deflection, i;
-    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
-    local string                                        SquadName;
-    local DHGameReplicationInfo.MapMarker               MapMarker;
-    local DHPlayer                                      Player;
-    local PlayerController                              PC;
-
-    PC = PlayerController(Controller);
-    Player = DHPlayer(PC);
-
-    if(PC == none || Player == none)
-    return Targets;
-
-    WeaponLocation = VehWep.Location;
-    WeaponLocation.Z = 0.0;
-
-    WeaponRotation.Yaw = VehWep.Rotation.Yaw;
-    WeaponRotation.Roll = 0;
-    WeaponRotation.Pitch = 0;
-
-    // Prepare target information for each marker
-    for(i = 0; i < MapMarkers.Length; i++)
-    {
-        MapMarker = MapMarkers[i];
-        Delta = MapMarker.WorldLocation - WeaponLocation;
-        Delta.Z = 0;
-        
-        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(WeaponRotation), vect(0, 0, 1)));
-        SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
-
-        TargetInfo.Distance       = Distance;
-        TargetInfo.SquadName      = SquadName;
-        TargetInfo.YawCorrection  = Deflection / YawScaleStep;
-        TargetInfo.Type           = MapMarker.MapMarkerClass;
-        Targets[Targets.Length] = TargetInfo;
-    }
-    return Targets;
-}
-
 // Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 // Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)

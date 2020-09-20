@@ -2277,6 +2277,51 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
     }
 }
 
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers, int YawScaleStep)
+{
+    local vector                                        WeaponLocation, Delta;
+    local rotator                                       WeaponRotation;
+    local int                                           Distance, Deflection, i;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHPlayer                                      Player;
+    local PlayerController                              PC;
+
+    PC = PlayerController(Controller);
+    Player = DHPlayer(PC);
+
+    if(PC == none || Player == none)
+    return Targets;
+
+    WeaponLocation = VehWep.Location;
+    WeaponLocation.Z = 0.0;
+
+    WeaponRotation.Yaw = VehWep.Rotation.Yaw;
+    WeaponRotation.Roll = 0;
+    WeaponRotation.Pitch = 0;
+
+    // Prepare target information for each marker
+    for(i = 0; i < MapMarkers.Length; i++)
+    {
+        MapMarker = MapMarkers[i];
+        Delta = MapMarker.WorldLocation - WeaponLocation;
+        Delta.Z = 0;
+        
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(WeaponRotation), vect(0, 0, 1)));
+        SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+
+        TargetInfo.Distance       = Distance;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;
+        TargetInfo.Type           = MapMarker.MapMarkerClass;
+        Targets[Targets.Length]   = TargetInfo;
+    }
+    return Targets;
+}
+
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
