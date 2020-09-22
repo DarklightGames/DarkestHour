@@ -42,7 +42,7 @@ defaultproperties
     DriveAnim="crouch_idle_binoc"
     bManualTraverseOnly=true
     bHasAltFire=false
-    OverlayCorrectionY=-80
+    OverlayCorrectionY=0
     OverlayCorrectionX=0
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
     GunsightSize=0.40
