@@ -35,6 +35,10 @@ var color               SubmenuColor;
 
 var DHGameReplicationInfo GRI;
 
+var bool                bShouldHideOnLeftMouseRelease;
+
+delegate                OnHidden();
+
 event Initialized()
 {
     super.Initialized();
@@ -49,6 +53,11 @@ event Initialized()
 function Hide()
 {
     GotoState('FadeOut');
+}
+
+function bool IsHiding()
+{
+    return IsInState('FadeOut');
 }
 
 // Programmatically create the materials used for each option.
@@ -192,6 +201,8 @@ state FadeOut
             }
 
             ViewportOwner.InteractionMaster.RemoveInteraction(self);
+
+            OnHidden();
         }
     }
 
@@ -288,6 +299,7 @@ function PostRender(Canvas C)
 
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
+    C.DrawColor.A = byte(255 * (MenuAlpha));
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     // Draw outer "beauty" ring
@@ -446,8 +458,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
-    local Actor A, HitActor;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -478,6 +488,24 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     break;
             }
             break;
+        case IST_Release:
+            switch (Key)
+            {
+                case IK_LeftMouse:
+                    if (bShouldHideOnLeftMouseRelease)
+                    {
+                        if (SelectedIndex >= 0)
+                        {
+                            OnSelect(SelectedIndex, GetTraceLocation());
+                        }
+
+                        Hide();
+
+                        return true;
+                    }
+                    break;
+            }
+            break;
         case IST_Press:
             switch (Key)
             {
@@ -486,38 +514,12 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // guessing that 99.9% of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
-                    TraceStart = PC.CalcViewLocation;
-                    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
-
-                    foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
-                    {
-                        if (A == PC.Pawn ||
-                            A.IsA('ROBulletWhipAttachment') ||
-                            A.IsA('Volume'))
-                        {
-                            continue;
-                        }
-
-                        HitActor = A;
-
-                        break;
-                    }
-
-                    if (HitActor == none)
-                    {
-                        HitLocation = TraceEnd;
-                    }
-
-                    OnSelect(SelectedIndex, HitLocation);
+                    OnSelect(SelectedIndex, GetTraceLocation());
 
                     return true;
                 case IK_RightMouse:
                     PlaySound(Sound'ROMenuSounds.CharFade');
-
-                    if (Menus.Size() > 1)
-                    {
-                        PopMenu();
-                    }
+                    PopMenu();
                     return true;
                 default:
                     break;
@@ -528,6 +530,44 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     }
 
     return false;
+}
+
+function vector GetTraceLocation()
+{
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Actor A, HitActor;
+    local DHPlayer PC;
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC == none || PC.Pawn == none)
+    {
+        return vect(0, 0, 0);
+    }
+
+    TraceStart = PC.CalcViewLocation;
+    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
+
+    foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (A == PC.Pawn ||
+            A.IsA('ROBulletWhipAttachment') ||
+            A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        HitActor = A;
+
+        break;
+    }
+
+    if (HitActor == none)
+    {
+        HitLocation = TraceEnd;
+    }
+
+    return HitLocation;
 }
 
 function OnSelect(int OptionIndex, optional vector Location)

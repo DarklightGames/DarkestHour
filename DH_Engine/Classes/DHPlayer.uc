@@ -5928,10 +5928,21 @@ exec function SquadMenu()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
-function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject)
+function OnCommandInteractionHidden()
+{
+    CommandInteraction = none;
+}
+
+function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject, optional bool bShouldHideOnLeftMouseRelease)
 {
     CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
-    CommandInteraction.PushMenu(MenuClassName, MenuObject);
+
+    if (CommandInteraction != none)
+    {
+        CommandInteraction.OnHidden = OnCommandInteractionHidden;
+        CommandInteraction.bShouldHideOnLeftMouseRelease = bShouldHideOnLeftMouseRelease;
+        CommandInteraction.PushMenu(MenuClassName, MenuObject);
+    }
 }
 
 exec function ShowOrderMenu()
@@ -5945,7 +5956,7 @@ exec function ShowOrderMenu()
     }
 }
 
-// Returns the menu that should be displayed when ShowCommandMenu is called.
+// Returns the menu that should be displayed when ShowOrderMenu is called.
 function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
 {
     local DHPawn OtherPawn, P;
@@ -6060,7 +6071,6 @@ exec function HideOrderMenu()
     if (CommandInteraction != none)
     {
         CommandInteraction.Hide();
-        CommandInteraction = none;
     }
 }
 

@@ -6,8 +6,6 @@
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
 var localized string   InEnemyTerritory;
-var localized string   FireSupportText;
-var           Material FireSupportIcon;
 
 function bool IsPlayerInSight()
 {
@@ -23,12 +21,6 @@ function bool IsPlayerInSight()
 function Setup()
 {
     super.Setup();
-
-    if (Options.Length >= 4 && !IsPlayerInSight())
-    {
-        Options[3].ActionText = FireSupportText;
-        Options[3].Material = FireSupportIcon;
-    }
 }
 
 function OnSelect(int Index, vector Location)
@@ -84,11 +76,6 @@ function OnSelect(int Index, vector Location)
                     Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageNonMember", MenuObject);
                 }
             }
-            else
-            {
-                // Fire Support
-                Interaction.PushMenu("DH_Engine.DHCommandMenu_FireSupport");
-            }
 
             return;
         case 4:
@@ -130,7 +117,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoColor = class'UColor'.default.Yellow;
             }
             break;
-        case 3: // Player Menu / Fire Support
+        case 3: // Player Menu
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
                 ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
@@ -169,8 +156,6 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     InEnemyTerritory="In enemy territory"
-    FireSupportText="Fire Support"
-    FireSupportIcon=Texture'DH_InterfaceArt2_tex.Icons.fire' // TODO: !
     Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')

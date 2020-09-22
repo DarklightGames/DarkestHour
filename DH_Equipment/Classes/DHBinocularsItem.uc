@@ -5,18 +5,15 @@
 
 class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
 
-#exec OBJ LOAD FILE=Weapon_overlays.utx
-#exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
-
 var     texture     BinocsOverlay;
 var     float       BinocsOverlaySize;
 
 // Functions emptied out or returning false, as binoculars aren't a real weapon
-simulated function bool IsFiring() {return false;}
-simulated event ClientStartFire(int Mode) {return;}
-simulated event StopFire(int Mode) {return;}
-simulated function bool IsBusy() {return false;}
-function bool FillAmmo() {return false;}
+simulated function bool IsFiring() { return false; }
+simulated event ClientStartFire(int Mode) { return; }
+simulated event StopFire(int Mode) { return; }
+simulated function bool IsBusy() { return false; }
+function bool FillAmmo() { return false; }
 
 // Modified to ignore InventoryGroup, so this item can be picked up regardless if its group is occupied
 function bool HandlePickupQuery(Pickup Item)
@@ -117,7 +114,7 @@ simulated function Fire(float F)
 
         if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
         {
-            PC.ServerSaveArtilleryPosition();
+            PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
         }
     }
 }
