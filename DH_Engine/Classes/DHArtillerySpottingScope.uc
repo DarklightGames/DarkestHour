@@ -265,7 +265,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.DrawVertical(X + (default.YawIndicatorLength / 2), 20.0);
 }
 
-simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax)
+simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float i, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
@@ -275,9 +275,11 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     X = C.SizeX * 0.25;
     Y = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
+    CurrentPitch += GunPitchOffset;
+
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
-    PitchLowerBound = CurrentPitch - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
-    PitchUpperBound = CurrentPitch + default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS/2;
+    PitchLowerBound = CurrentPitch - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS / 2;
+    PitchUpperBound = CurrentPitch + default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS / 2;
     SegmentCount = (PitchUpperBound - PitchLowerBound) / default.PitchScaleStep;
     IndicatorStep = default.PitchIndicatorLength / VISIBLE_PITCH_SEGMENTS;
 
@@ -341,13 +343,15 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         // Draw a strike-through if this segment is below the lower limit.
         C.CurX = X - 20;
-        if (i < int(class'UMath'.static.Floor(GunPitchMin, default.PitchScaleStep)))
+
+        if (i < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
         }
+
         // Draw a strike-through if this segment is above the upper limit.
-        if (i > int(class'UMath'.static.Floor(GunPitchMax, default.PitchScaleStep)))
+        if (i > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);

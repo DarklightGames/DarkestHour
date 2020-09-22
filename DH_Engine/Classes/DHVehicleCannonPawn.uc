@@ -118,6 +118,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         // TODO: set the camera location and LOCK the camera pitch to zero, somehow
         bOnGunsight = true;
         CameraRotation = VehWep.GetBoneRotation(VehWep.YawBone);
+        CameraRotation.Pitch = 0;
     }
     // Or if camera is locked during a current transition, use PlayerCameraBone for camera rotation
     else if (bLockCameraDuringTransition && IsInState('ViewTransition'))
@@ -227,7 +228,8 @@ simulated function DrawHUD(Canvas C)
                     ArtillerySpottingScope.static.DrawPitch(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
                     ArtillerySpottingScope.static.DrawYaw(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),

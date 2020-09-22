@@ -24,8 +24,9 @@ defaultproperties
     RangeTable(7)=(Pitch=400,Range=940)
     RangeTable(8)=(Pitch=450,Range=1020)
     RangeTable(9)=(Pitch=500,Range=1095)
-    RangeTable(11)=(Pitch=550,Range=1155)
-    RangeTable(12)=(Pitch=600,Range=1205)
-    RangeTable(13)=(Pitch=650,Range=1250)
+    RangeTable(10)=(Pitch=550,Range=1155)
+    RangeTable(11)=(Pitch=600,Range=1205)
+    RangeTable(12)=(Pitch=650,Range=1250)
+
     AngleUnit="mils"
 }
