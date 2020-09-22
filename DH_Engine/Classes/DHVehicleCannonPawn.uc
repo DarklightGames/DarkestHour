@@ -1107,6 +1107,24 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
+exec function CorrectX(float NewValue)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Name @ "OverlayCorrectionX =" @ NewValue @ "(was" @ OverlayCorrectionX $ ")");
+        OverlayCorrectionX = NewValue;
+    }
+}
+
+exec function CorrectY(float NewValue)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
+        OverlayCorrectionY = NewValue;
+    }
+}
+
 defaultproperties
 {
     // Positions & entry
