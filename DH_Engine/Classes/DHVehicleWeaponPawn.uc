@@ -41,6 +41,9 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
+// Debug
+var     DHDebugFireCalibration DebugFireCalibration;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2452,6 +2455,100 @@ exec function SetShake(float RotMag, float RotRate, float RotTime, float OffMag,
         Gun.ShakeOffsetMag.Z = OffMag;
         Gun.ShakeOffsetRate.Z = OffRate;
         Gun.ShakeOffsetTime = OffTime;
+    }
+}
+
+exec function CalibrateFire(int RangeStepInMeters, optional string PitchUnit)
+{
+    local float MinPitch, MaxPitch, PitchStep, Pitch, UnrealPitch;
+    local DHBallisticProjectile BP;
+    local int i;
+    local DHMortarVehicleWeapon MortarVehWep;
+
+    if (Level.NetMode != NM_Standalone)
+    {
+        return;
+    }
+
+    DebugFireCalibration = Spawn(class'DHDebugFireCalibration', self);
+
+    if (DebugFireCalibration == none)
+    {
+        Warn("Failed to spawn calibration actor.");
+        return;
+    }
+
+    MortarVehWep = DHMortarVehicleWeapon(VehWep);
+
+    if (MortarVehWep != none)
+    {
+        MinPitch = MortarVehWep.ElevationMinimum;
+        MaxPitch = MortarVehWep.ElevationMaximum;
+        PitchStep = MortarVehWep.ElevationStride;
+        DebugFireCalibration.PitchStep = class'UUnits'.static.DegreesToUnreal(PitchStep);
+
+        Log("FIRING:" @ MinPitch $ "-" $ MaxPitch @ "@" @ PitchStep @ PitchUnit);
+    }
+    else
+    {
+        MinPitch = VehicleBase.Rotation.Pitch;
+        MaxPitch = VehicleBase.Rotation.Pitch + VehWep.CustomPitchUpLimit;
+        PitchStep = class'UUnits'.static.DegreesToUnreal(1);
+        DebugFireCalibration.PitchStep = PitchStep;
+
+        Log("FIRING:" @
+            class'DHUnits'.static.UnrealToMilliradians(MinPitch) $
+            "-" $
+            class'DHUnits'.static.UnrealToMilliradians(MaxPitch) @
+            "@" @
+            class'DHUnits'.static.UnrealToMilliradians(PitchStep) @
+            PitchUnit);
+    }
+
+    switch (PitchUnit)
+    {
+        case "deg":
+            DebugFireCalibration.PitchUnit = UNIT_Degree;
+            break;
+        case "mil":
+            DebugFireCalibration.PitchUnit = UNIT_Mil;
+            break;
+    }
+
+    DebugFireCalibration.RangeStep = class'DHUnits'.static.MetersToUnreal(RangeStepInMeters);
+    DebugFireCalibration.StartingLocation = VehWep.GetProjectileFireLocation(VehWep.ProjectileClass);
+
+    MortarVehWep = DHMortarVehicleWeapon(VehWep);
+
+    for (Pitch = MinPitch; Pitch <= MaxPitch; Pitch += PitchStep)
+    {
+        if (MortarVehWep != none)
+        {
+            MortarVehWep.Elevation = Pitch;
+            UnrealPitch = class'UUnits'.static.DegreesToUnreal(Pitch);
+        }
+        else
+        {
+            VehWep.CurrentAim.Pitch = Pitch;
+            UnrealPitch = Pitch;
+        }
+
+        VehWep.CalcWeaponFire(false);
+
+        BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
+
+        if (BP != none)
+        {
+            BP.DebugFireCalibration = DebugFireCalibration;
+            BP.DebugIndex = i++;
+
+            if (MortarVehWep != none)
+            {
+                DebugFireCalibration.AddProjectile(BP, UnrealPitch);
+            }
+
+            DebugFireCalibration.StartingLocation = BP.Location;
+        }
     }
 }
 

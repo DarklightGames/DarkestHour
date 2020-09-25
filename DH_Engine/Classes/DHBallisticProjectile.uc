@@ -9,10 +9,8 @@ class DHBallisticProjectile extends ROBallisticProjectile
 var DHVehicleWeapon VehicleWeapon;
 
 // debugging stuff
-var bool bIsCalibrating;
-var float LifeStart;
-var vector StartLocation;
-var float DebugMils;
+var DHDebugFireCalibration DebugFireCalibration;
+var int                    DebugIndex;
 
 simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
@@ -41,18 +39,14 @@ simulated function BlowUp(vector HitLocation)
 // New function to set hit location in team's artillery targets so it's marked on the map for mortar crew
 function SetHitLocation(vector HitLocation)
 {
-    local float Distance;
-
     if (VehicleWeapon != none)
     {
         VehicleWeapon.ArtilleryHitLocation.HitLocation = HitLocation;
         VehicleWeapon.ArtilleryHitLocation.ElapsedTime = Level.Game.GameReplicationInfo.ElapsedTime;
 
-        if (bIsCalibrating)
+        if (DebugFireCalibration != none)
         {
-            Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
-
-            Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
+            DebugFireCalibration.RecordDataPoint(self);
         }
     }
 }

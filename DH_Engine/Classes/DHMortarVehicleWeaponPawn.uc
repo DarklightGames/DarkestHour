@@ -171,30 +171,23 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     return DeflectionSign $ string(Deflection);
 }
 
-exec function CalibrateFire(int MilsMin, int MilsMax)
+exec function CalibrateFire(int RangeStepInMeters, optional string PitchUnit)
 {
-    local int Mils;
-    local DHBallisticProjectile BP;
+    local DHMortarVehicleWeapon MortarVehWep;
+    local bool bSavedDebugNoSpread;
 
-    if (Level.NetMode == NM_Standalone)
+    MortarVehWep = DHMortarVehicleWeapon(VehWep);
+
+    if (MortarVehWep == none)
     {
-        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
-        {
-            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
-            VehWep.CurrentAim.Yaw = 0;
-
-            VehWep.CalcWeaponFire(false);
-            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
-
-            if (BP != none)
-            {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
-                BP.StartLocation = BP.Location;
-            }
-        }
+        return;
     }
+
+    // Disable the spread during calibration.
+    bSavedDebugNoSpread = MortarVehWep.bDebugNoSpread;
+    MortarVehWep.bDebugNoSpread = true;
+    super.CalibrateFire(RangeStepInMeters, PitchUnit);
+    MortarVehWep.bDebugNoSpread = bSavedDebugNoSpread;
 }
 
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
