@@ -9,7 +9,16 @@ class DHMapMarker_ArtilleryHit extends DHMapMarker
 // Only allow artillery roles to place artillery hits.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryRole();
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PC != none && PC.IsArtilleryRole();
 }
 
 // Disable for everyone - artillery hits can't be removed from the map.
@@ -30,10 +39,22 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     local float MinimumDistance, Distance;
     local DHPlayerReplicationInfo PRI;
 
+    if (PC == none)
+    {
+        return;
+    }
+
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none)
+    {
+        return;
+    }
+
     ClosestArtilleryRequest = -1;
     MinimumDistance = class'UFloat'.static.Infinity();
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
     ElapsedTime = GRI.ElapsedTime;
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
@@ -44,7 +65,9 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
         if (Marker.MapMarkerClass == RequestClass &&
             (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime) &&
             Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker) &&
-            !(Marker.SquadIndex == PC.GetSquadIndex() && PC.IsSL())) // disable viewing hits on own marker
+            !(PRI.Level.NetMode != NM_Standalone &&
+              Marker.SquadIndex == PC.GetSquadIndex() &&
+              PC.IsSL())) // disable viewing hits on own marker
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
