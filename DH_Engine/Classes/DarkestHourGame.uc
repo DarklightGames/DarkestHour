@@ -2052,7 +2052,8 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 {
-    return DHKiller.IsArtilleryRole() &&
+    return DHKiller != none &&
+           DHKiller.IsArtilleryRole() &&
            (class<DHMortarDamageType>(DamageType) != none ||
             class<DHShellHE105mmDamageType>(DamageType) != none ||          // M7 Priest explosion
             class<DHShellHE75mmATDamageType>(DamageType) != none ||         // LeIG18 explosion
