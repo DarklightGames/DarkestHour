@@ -329,8 +329,11 @@ simulated function DrawHUD(Canvas C)
             TargetMapMarkers = Player.GetArtilleryMapMarkers();
             Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
 
+            // to do: refactor to separate variables (calculate once)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-            ArtillerySpottingScope.static.DrawRangeTable(C);
+            ArtillerySpottingScope.static.DrawRangeTable(C,
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawPitch(C,
                 DHMortarVehicleWeapon(VehWep).Elevation,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,

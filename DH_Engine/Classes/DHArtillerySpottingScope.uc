@@ -37,6 +37,9 @@ var     int                 WidgetsPanelX;
 var     int                 WidgetsPanelY;
 var     int                 WidgetsPanelEntryHeight;
 
+var     int                 VisiblePitchSegmentsNumber;
+var     int                 VisibleYawSegmentsNumber;
+
 simulated static function DrawSpottingScopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
@@ -54,14 +57,14 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
     }
 }
 
-simulated static function DrawRangeTable(Canvas C)
+simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBoundPitch)
 {
     local int i;
     local float X, Y;
     local float XL, YL;
     local float TableHeight;
     const FirstColumn = 0;
-    const SecondColumn = 35;
+    const SecondColumn = 45;
 
     if (default.RangeTable.Length == 0)
     {
@@ -79,12 +82,24 @@ simulated static function DrawRangeTable(Canvas C)
     for (i = 0; i < default.RangeTable.Length; ++i)
     {
         Y += YL;
-        C.SetPos(X + FirstColumn, Y);
-        C.SetDrawColor(0, 128, 64, 255);
-        C.DrawText(string(default.RangeTable[i].Range) $ "m");
-        C.SetPos(X + SecondColumn, Y);
-        C.SetDrawColor(255, 255, 255, 255);
-        C.DrawText("| " $ string(default.RangeTable[i].Pitch) $ default.AngleUnit);
+        if(default.RangeTable[i].Pitch >= ActiveLowerBoundPitch && default.RangeTable[i].Pitch <= ActiveUpperBoundPitch)
+        {
+            C.SetPos(X + FirstColumn, Y);
+            C.SetDrawColor(0, 128, 64, 255);
+            C.DrawText(string(default.RangeTable[i].Range) $ "m");
+            C.SetPos(X + SecondColumn, Y);
+            C.SetDrawColor(255, 255, 255, 255);
+            C.DrawText("| " $ string(default.RangeTable[i].Pitch) $ default.AngleUnit);
+        }
+        else
+        {
+            C.SetPos(X + FirstColumn, Y);
+            C.SetDrawColor(0, 80, 32, 255);
+            C.DrawText(string(default.RangeTable[i].Range) $ "m");
+            C.SetPos(X + SecondColumn, Y);
+            C.SetDrawColor(128, 128, 128, 255);
+            C.DrawText("| " $ string(default.RangeTable[i].Pitch) $ default.AngleUnit);
+        }
     }
 }
 
@@ -150,17 +165,16 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     local int i, Quotient, Index;
     local string Label;
     local color Color;
-    const VISIBLE_YAW_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
     X = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     Y = C.SizeY * 0.93;
 
     //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
-    YawLowerBound = CurrentYaw - default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
-    YawUpperBound = CurrentYaw + default.YawScaleStep * VISIBLE_YAW_SEGMENTS/2;
+    YawLowerBound = CurrentYaw - default.YawScaleStep * default.VisibleYawSegmentsNumber/2;
+    YawUpperBound = CurrentYaw + default.YawScaleStep * default.VisibleYawSegmentsNumber/2;
     SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
-    IndicatorStep = default.YawIndicatorLength / VISIBLE_YAW_SEGMENTS;
+    IndicatorStep = default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
 
     C.Font = C.TinyFont;
 
@@ -176,15 +190,15 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
 
         // Which tick on the dial does this target correspond to
-        Index = VISIBLE_YAW_SEGMENTS/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
+        Index = default.VisibleYawSegmentsNumber/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
-        if (Index < VISIBLE_YAW_SEGMENTS && Index >= 0)
+        if (Index < default.VisibleYawSegmentsNumber && Index >= 0)
         {
             C.CurY = Y + 5.0;
             C.CurX = X;
 
-            Shade = class'UInterp'.static.Mimi((Index) / VISIBLE_YAW_SEGMENTS);
+            Shade = class'UInterp'.static.Mimi((Index) / default.VisibleYawSegmentsNumber);
 
             Color = Targets[i].Type.default.IconColor;
             Color.R = Max(1, int(Color.R) * Shade);
@@ -205,7 +219,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         Index = (i - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VISIBLE_YAW_SEGMENTS));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / default.VisibleYawSegmentsNumber));
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(i, default.YawScaleStep));
@@ -265,12 +279,21 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.DrawVertical(X + (default.YawIndicatorLength / 2), 20.0);
 }
 
+simulated static function float GetPitchLowerBound(float CurrentPitch)
+{
+    return CurrentPitch - default.PitchScaleStep * default.VisiblePitchSegmentsNumber / 2;
+}
+
+simulated static function float  GetPitchUpperBound(float CurrentPitch)
+{
+    return CurrentPitch + default.PitchScaleStep * default.VisiblePitchSegmentsNumber / 2;
+}
+
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float i, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
     local string Label;
-    const VISIBLE_PITCH_SEGMENTS = 40; // total number of ticks on a yaw indicator
 
     X = C.SizeX * 0.25;
     Y = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
@@ -278,10 +301,10 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     CurrentPitch += GunPitchOffset;
 
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
-    PitchLowerBound = CurrentPitch - default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS / 2;
-    PitchUpperBound = CurrentPitch + default.PitchScaleStep * VISIBLE_PITCH_SEGMENTS / 2;
+    PitchLowerBound = GetPitchLowerBound(CurrentPitch);
+    PitchUpperBound = GetPitchUpperBound(CurrentPitch);
     SegmentCount = (PitchUpperBound - PitchLowerBound) / default.PitchScaleStep;
-    IndicatorStep = default.PitchIndicatorLength / VISIBLE_PITCH_SEGMENTS;
+    IndicatorStep = default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
 
     C.Font = C.TinyFont;
 
@@ -289,10 +312,10 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     for (i = PitchLowerBound; i <= PitchUpperBound; i += default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
-        t = VISIBLE_PITCH_SEGMENTS - (i - PitchLowerBound) / default.PitchScaleStep;
+        t = default.VisiblePitchSegmentsNumber - (i - PitchLowerBound) / default.PitchScaleStep;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / VISIBLE_PITCH_SEGMENTS));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / default.VisiblePitchSegmentsNumber));
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = class'UMath'.static.FlooredDivision(i, default.PitchScaleStep);
@@ -383,4 +406,7 @@ defaultproperties
     WidgetsPanelX=50
     WidgetsPanelY=30
     WidgetsPanelEntryHeight=60
+
+    VisiblePitchSegmentsNumber = 40
+    VisibleYawSegmentsNumber = 40
 }

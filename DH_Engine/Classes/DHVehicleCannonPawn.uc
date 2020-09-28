@@ -223,8 +223,11 @@ simulated function DrawHUD(Canvas C)
                     Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
 
                     // Draw the spotting scope overlay
+                    // to do: refactor to separate variables (calculate once)
                     ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-                    ArtillerySpottingScope.static.DrawRangeTable(C);
+                    ArtillerySpottingScope.static.DrawRangeTable(C,
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
                     ArtillerySpottingScope.static.DrawPitch(C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
