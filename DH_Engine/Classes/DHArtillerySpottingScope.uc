@@ -9,10 +9,13 @@ class DHArtillerySpottingScope extends ROVehicle
 // Range table
 struct SRangeTableRecord
 {
-    var string Pitch;                                     // in degrees or milliradians
+    var float  Pitch;                                     // in degrees or milliradians
     var int    Range;                                     // in meters
+    var string PitchString;                               // calculated on first use!
 };
 var array<SRangeTableRecord>    RangeTable;
+
+var int PitchDecimals;
 
 struct STargetInfo
 {
@@ -57,6 +60,26 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
     }
 }
 
+simulated static function CreatePitchStrings()
+{
+    local int i;
+
+    if (default.RangeTable.Length == 0 || default.RangeTable[0].PitchString != "")
+    {
+        return;
+    }
+
+    for (i = 0; i < default.RangeTable.Length; ++i)
+    {
+        default.RangeTable[i].PitchString = GetPitchString(default.RangeTable[i].Pitch);
+    }
+}
+
+simulated static function string GetPitchString(float Pitch)
+{
+    return class'UFloat'.static.Format(Pitch, default.PitchDecimals);
+}
+
 simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBoundPitch)
 {
     local int i;
@@ -71,6 +94,8 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
         return;
     }
 
+    CreatePitchStrings();
+
     C.Font = C.TinyFont;
     C.TextSize("A", XL, YL);
     TableHeight = (default.RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
@@ -82,31 +107,28 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
     for (i = 0; i < default.RangeTable.Length; ++i)
     {
         Y += YL;
+
         if(default.RangeTable[i].Pitch >= ActiveLowerBoundPitch && default.RangeTable[i].Pitch <= ActiveUpperBoundPitch)
         {
-            C.SetPos(X + FirstColumn, Y);
             C.SetDrawColor(0, 128, 64, 255);
-            C.DrawText(string(default.RangeTable[i].Range) $ "m");
-            C.SetPos(X + SecondColumn, Y);
-            C.SetDrawColor(255, 255, 255, 255);
-            C.DrawText("| " $ default.RangeTable[i].Pitch $ default.AngleUnit);
         }
         else
         {
-            C.SetPos(X + FirstColumn, Y);
             C.SetDrawColor(0, 80, 32, 255);
-            C.DrawText(string(default.RangeTable[i].Range) $ "m");
-            C.SetPos(X + SecondColumn, Y);
-            C.SetDrawColor(128, 128, 128, 255);
-            C.DrawText("| " $ default.RangeTable[i].Pitch $ default.AngleUnit);
         }
+
+        C.SetPos(X + FirstColumn, Y);
+        C.DrawText(string(default.RangeTable[i].Range) $ "m");
+        C.SetPos(X + SecondColumn, Y);
+        C.SetDrawColor(255, 255, 255, 255);
+        C.DrawText("| " $ default.RangeTable[i].PitchString $ default.AngleUnit);
     }
 }
 
 // A helper function to draw a single widget on the left panel in spotting scope view
 simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
-    local string  CorrectionString;
+    local string CorrectionString;
     local int Deflection;
 
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
@@ -162,7 +184,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Shade;
-    local int i, Quotient, Index;
+    local int i, Yaw, Quotient, Index;
     local string Label;
     local color Color;
 
@@ -213,16 +235,16 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
     // Start drawing scale ticks
     C.CurY = Y - 5.0;
-    for (i = YawLowerBound; i <= YawUpperBound; i += default.YawScaleStep)
+    for (Yaw = YawLowerBound; Yaw <= YawUpperBound; Yaw += default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
-        Index = (i - YawLowerBound) / default.YawScaleStep;
+        Index = (Yaw - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / default.VisibleYawSegmentsNumber));
 
         // Calculate index of the current readout value on the mortar yaw span
-        Quotient = int(class'UMath'.static.FlooredDivision(i, default.YawScaleStep));
+        Quotient = int(class'UMath'.static.FlooredDivision(Yaw, default.YawScaleStep));
 
         // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
         // text labels completly disappear. I propose to change the color instead of alpha channel
@@ -235,7 +257,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
         if (Quotient % 10 == 0)
         {
-            Label = string(int(class'UMath'.static.Floor(i, default.YawScaleStep)));
+            Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
 
             // Draw long vertical tick & label it
             C.DrawVertical(X + (Index * IndicatorStep), -50.0);
@@ -244,7 +266,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         }
         else if (Quotient % 5 == 0)
         {
-            Label = string(int(class'UMath'.static.Floor(i, default.YawScaleStep)));
+            Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
 
             // Draw middle-sized vertical tick & label it
             C.DrawVertical(X + (Index * IndicatorStep), -30.0);
@@ -260,13 +282,13 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         // Draw a strike-through if this segment is beyond the lower or upper limits.
         C.CurY = Y - 20;
 
-        if (i < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
+        if (Yaw < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
         {
             C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
-        if (i > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
+        if (Yaw > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
         {
             C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
@@ -291,7 +313,7 @@ simulated static function float  GetPitchUpperBound(float CurrentPitch)
 
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
-    local float i, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
+    local float Pitch, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
     local int Shade, Quotient, t;
     local string Label;
 
@@ -309,16 +331,16 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     C.Font = C.TinyFont;
 
     // Start drawing scale ticks
-    for (i = PitchLowerBound; i <= PitchUpperBound; i += default.PitchScaleStep)
+    for (Pitch = PitchLowerBound; Pitch <= PitchUpperBound; Pitch += default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
-        t = default.VisiblePitchSegmentsNumber - (i - PitchLowerBound) / default.PitchScaleStep;
+        t = default.VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / default.VisiblePitchSegmentsNumber));
 
         // Calculate index of the current readout value on the mortar yaw span
-        Quotient = class'UMath'.static.FlooredDivision(i, default.PitchScaleStep);
+        Quotient = class'UMath'.static.FlooredDivision(Pitch, default.PitchScaleStep);
 
         // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
         // text labels completly disappear. I propose to change the color instead of alpha channel
@@ -330,7 +352,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Quotient % 10 == 0)
         {
-            Label = string(i);
+            Label = GetPitchString(Pitch);
 
             // Draw long vertical tick & label it
             C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
@@ -345,7 +367,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         }
         else if (Quotient % 5 == 0)
         {
-            Label = string(i);
+            Label = GetPitchString(Pitch);
 
             // Draw middle-sized vertical tick & label it
             C.DrawHorizontal(Y + (t * IndicatorStep), -30.0);
@@ -367,14 +389,14 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         // Draw a strike-through if this segment is below the lower limit.
         C.CurX = X - 20;
 
-        if (i < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
+        if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
         }
 
         // Draw a strike-through if this segment is above the upper limit.
-        if (i > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
+        if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
             C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
