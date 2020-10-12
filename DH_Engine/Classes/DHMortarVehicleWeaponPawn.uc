@@ -58,6 +58,9 @@ var     class<DHMapMarker>    TargetMarkerClass;
 var     int         PeriscopeIndex;
 var     int         ShooterIndex;
 
+var     bool        bWantsToUndeploy;
+var     bool        bWantsToFire;
+
 replication
 {
     // Variables the server will replicate to all clients except the one that owns this actor
@@ -551,6 +554,20 @@ simulated state EnteringVehicle
 // New state where mortar is not busy doing something, so can be fired, exited, undeployed, etc
 simulated state Idle
 {
+    simulated function Tick(float DeltaTime)
+    {
+        if (bWantsToFire && DriverPositionIndex == ShooterIndex)
+        {
+            Fire();
+            bWantsToFire = false;
+        }
+        else if (bWantsToUndeploy && DriverPositionIndex == ShooterIndex && !bTraversing)
+        {
+            Deploy();
+            bWantsToUndeploy = false;
+        }
+    }
+
     simulated function BeginState()
     {
         PlayFirstPersonAnimation(OverlayIdleAnim, true);
@@ -568,6 +585,7 @@ simulated state Idle
         else
         {
             PrevWeapon();
+            bWantsToFire = true;
         }
     }
 
@@ -580,6 +598,7 @@ simulated state Idle
         else
         {
             PrevWeapon();
+            bWantsToUndeploy = true;
         }
     }
 
@@ -639,6 +658,20 @@ Begin:
 // New state where player's hand is raised on traverse adjustment knob
 simulated state KnobRaised
 {
+    simulated function Tick(float DeltaTime)
+    {
+        if (bWantsToUndeploy && DriverPositionIndex == ShooterIndex && !bTraversing)
+        {
+            bWantsToUndeploy = false;
+            Deploy();
+        }
+        else if (bWantsToFire && !ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        {
+            bWantsToFire = false;
+            GotoState('KnobRaisedToFire');
+        }
+    }
+
     simulated function BeginState()
     {
         PlayFirstPersonAnimation(OverlayKnobIdleAnim, true);
@@ -646,7 +679,12 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        if (DriverPositionIndex != ShooterIndex)
+        {
+            PrevWeapon();
+            bWantsToFire  = true;
+        }
+        else if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -654,9 +692,17 @@ simulated state KnobRaised
 
     simulated exec function Deploy()
     {
-        if (!bTraversing)
+        if (DriverPositionIndex == ShooterIndex)
         {
-            GotoState('KnobRaisedToUndeploy');
+            if (!bTraversing)
+            {
+                GotoState('KnobRaisedToUndeploy');
+            }
+        }
+        else
+        {
+            PrevWeapon();
+            bWantsToUndeploy = true;
         }
     }
 
