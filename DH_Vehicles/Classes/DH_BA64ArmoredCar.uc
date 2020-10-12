@@ -27,7 +27,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement) 
+    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
 
     // Driver
     DriverAttachmentBone=driver_attachment
@@ -112,7 +112,7 @@ defaultproperties
     EngineRPMSoundRange=5000.000000
     RevMeterScale=4000.000000
     //GroundSpeed=325.000000
-	//^ for some reason this line makes it slow as hell, and it doesnt exist on gaz67 so i removed it
+    //^ for some reason this line makes it slow as hell, and it doesnt exist on gaz67 so i removed it
 
     // Damage
     Health=1500.0
@@ -147,7 +147,9 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
 
     // HUD
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.BA64_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.BA64_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BA64_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BA64_turret_look'
     VehicleHudEngineX=0.5
     VehicleHudEngineY=0.3
     VehicleHudOccupantsX(0)=0.5
