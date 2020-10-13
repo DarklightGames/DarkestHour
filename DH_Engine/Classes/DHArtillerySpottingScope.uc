@@ -155,7 +155,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = Y + 10;
     C.CurX = X;
-    C.DrawText("Distance:" @ TargetInfo.Distance $ "m");
+    C.DrawText("Distance:" @ (TargetInfo.Distance / 5) * 5 $ "m");
     C.CurY = Y + 20;
     C.CurX = X;
 

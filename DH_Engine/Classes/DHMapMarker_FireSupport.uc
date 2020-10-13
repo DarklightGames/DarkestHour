@@ -77,7 +77,6 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         return "";
     }
 
-    // shamefully copied from DHMapMarker_Ruler
     WorldLocation = Marker.WorldLocation;
     PlayerLocation = PC.Pawn.Location;
     PlayerLocation.Z = 0.0;
@@ -88,7 +87,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     SquadIndex = Marker.SquadIndex;
     SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
 
-    return SquadName $ " (" $ (Distance / 5) * 5 $ "m)" ;
+    return "" $ (Distance / 5) * 5 $ "m" ;
 }
 
 defaultproperties
@@ -99,7 +98,7 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    OverwritingRule = UNIQUE_PER_GROUP
+    OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     LifetimeSeconds=-1            // artillery requests never expire
     HitVisibilityRadius=3000.0
