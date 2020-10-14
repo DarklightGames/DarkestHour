@@ -4544,6 +4544,13 @@ function DrawCaptureBar(Canvas Canvas)
 
             if (WpnPwn != none)
             {
+                if (DHVehicleWeaponPawn(WpnPwn) != none &&
+                    DHVehicleWeaponPawn(WpnPwn).DriverPositionIndex == DHVehicleWeaponPawn(WpnPwn).SpottingScopePositionIndex)
+                {
+                    // Don't draw the capture bar if we are on the spotting scope!
+                    return;
+                }
+
                 ObjectiveIndex = WpnPwn.CurrentCapArea;
 
                 if (ObjectiveIndex != 255)
