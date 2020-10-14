@@ -30,9 +30,11 @@ function OnSelect(int Index, vector Location)
             PC.DHServerSaveArtilleryPosition(Location);
             break;
         case 1: // Fire request (Smoke)
+            PC.ConsoleCommand("SPEECH SUPPORT 8");
             PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
             break;
         case 2: // Fire request (HE)
+            PC.ConsoleCommand("SPEECH SUPPORT 8");
             PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
             break;
     }
