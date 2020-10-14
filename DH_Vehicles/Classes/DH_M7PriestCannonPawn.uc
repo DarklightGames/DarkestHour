@@ -24,7 +24,7 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestCannon'
     // gunsight
-    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)// kneeling
+    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     // spotting scope
     DriverPositions(1)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=60.0,bDrawOverlays=true,bExposed=true)
     // kneeling
@@ -35,9 +35,9 @@ defaultproperties
     DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
 
     UnbuttonedPositionIndex=0
+    SpottingScopePositionIndex=1
     RaisedPositionIndex=3
     BinocPositionIndex=4
-    SpottingScopePositionIndex=1
 
     DriveAnim="crouch_idle_binoc"
     bManualTraverseOnly=true

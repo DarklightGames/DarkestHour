@@ -32,10 +32,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=60  // TODO: REPLACE
-    InitialSecondaryAmmo=25  // TODO: REPLACE
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=15
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=15
     Spread=0.005
     SecondarySpread=0.00125  // TODO: REPLACE
 
@@ -48,8 +48,8 @@ defaultproperties
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'  // TODO: REPLACE
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'  // TODO: REPLACE
     ReloadStages(0)=(Sound=none)
-    ReloadStages(1)=(Sound=none) //fast reload for an AT gun
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
 
     bIsArtillery=true
