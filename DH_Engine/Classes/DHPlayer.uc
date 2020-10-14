@@ -39,14 +39,14 @@ var     globalconfig bool       bDynamicFogRatio;    // client option to have th
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
 
 // Artillery hits - only for artillery roles
-struct ArtilleryHitInfo
+struct SArtilleryHitInfo
 {
     var int         ClosestArtilleryRequestIndex;       // position in the markers array
     var vector      ClosestArtilleryRequestLocation;    // world location of the closest artillery request
     var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
     var int         ExpiryTime;
 };
-var     ArtilleryHitInfo        HEHitInfo, SmokeHitInfo;
+var     SArtilleryHitInfo       ArtilleryHitInfo;
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
@@ -2150,7 +2150,7 @@ simulated function ResetSwayAfterBolt()
     SwayTime = 0.0;
 }
 
-function bool IsArtilleryRole()
+simulated function bool IsArtilleryRole()
 {
     local DHRoleInfo RI;
 
@@ -5583,7 +5583,7 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -5597,7 +5597,7 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
 
     if (GRI != none)
     {
-        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
+        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation, OptionalObject);
     }
 }
 
@@ -5653,7 +5653,7 @@ function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
     }
 }
 
-function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
 {
     local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker PMM;
@@ -5693,6 +5693,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
+    PMM.OptionalObject = OptionalObject;
     PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
     PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
     PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
@@ -7062,15 +7063,15 @@ simulated function bool CanUseFireSupportMenu()
     return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
 }
 
-function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY)
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
 {
     if (MarkerClass.default.Scope == PERSONAL)
     {
-        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY);
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, OptionalObject);
     }
     else
     {
-        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY);
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, OptionalObject);
     }
 }
 

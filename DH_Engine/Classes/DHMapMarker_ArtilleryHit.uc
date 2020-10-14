@@ -28,8 +28,6 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
 }
 
 static function CalculateHitMarkerVisibility(out DHPlayer PC,
-                                             out DHPlayer.ArtilleryHitInfo HitInfo,
-                                             class<DHMapMarker_FireSupport> RequestClass,
                                              vector WorldLocation)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
@@ -38,6 +36,7 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     local int i, ClosestArtilleryRequest, ElapsedTime;
     local float MinimumDistance, Distance;
     local DHPlayerReplicationInfo PRI;
+    local bool bIsMarkerAlive;
 
     if (PC == none)
     {
@@ -62,12 +61,11 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     {
         Marker = MapMarkers[i];
 
-        if (Marker.MapMarkerClass == RequestClass &&
-            (Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime) &&
-            Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker) &&
-            !(PRI.Level.NetMode != NM_Standalone &&
-              Marker.SquadIndex == PC.GetSquadIndex() &&
-              PC.IsSL())) // disable viewing hits on own marker
+        bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime;
+
+        if ((Marker.MapMarkerClass == class'DHMapMarker_FireSupport_HE' || Marker.MapMarkerClass == class'DHMapMarker_FireSupport_Smoke') &&
+            bIsMarkerAlive &&
+            Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
@@ -80,29 +78,47 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
         }
     }
 
-    HitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    HitInfo.bIsWithinRadius = (MinimumDistance < RequestClass.default.HitVisibilityRadius);
+    PC.ArtilleryHitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
+    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHMapMarker_FireSupport'.default.HitVisibilityRadius);
 
-    if (ClosestArtilleryRequest != -1 && HitInfo.bIsWithinRadius)
+    if (ClosestArtilleryRequest != -1 && PC.ArtilleryHitInfo.bIsWithinRadius)
     {
-        HitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
-        HitInfo.ExpiryTime = MapMarkers[ClosestArtilleryRequest].ExpiryTime;
+        PC.ArtilleryHitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
+        PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[ClosestArtilleryRequest].ExpiryTime;
     }
     else
     {
         // to do: handle it in a better way?
-        HitInfo.ExpiryTime = 0;
+        PC.ArtilleryHitInfo.ExpiryTime = 0;
     }
+}
+
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    CalculateHitMarkerVisibility(PC, Marker.WorldLocation);
+}
+
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PC != none && PC.IsArtilleryRole() && PC.ArtilleryHitInfo.bIsWithinRadius && Marker.OptionalObject == PC;
 }
 
 defaultproperties
 {
-    MarkerName="Artillery hit"
     IconMaterial=MaterialSequence'DH_InterfaceArt2_tex.Artillery.HitMarker'
     IconColor=(R=255,G=165,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=6
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
-    LifetimeSeconds=30 // 30 seconds
+    LifetimeSeconds=15 // 30 seconds
 }

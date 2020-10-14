@@ -146,6 +146,7 @@ struct MapMarker
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
     var int ExpiryTime;                     // The expiry time, relative to ElapsedTime in GRI
     var vector WorldLocation;               // World location of the marker
+    var Object OptionalObject;              // Optional object to be used
 };
 
 // This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
@@ -1376,7 +1377,7 @@ simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, i
     }
 }
 
-function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation)
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation, optional Object OptionalObject)
 {
     local int i;
     local MapMarker M;
@@ -1387,6 +1388,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     }
 
     M.MapMarkerClass = MapMarkerClass;
+    M.OptionalObject = OptionalObject;
 
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
@@ -1502,6 +1504,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 }
             }
     }
+
     return -1;
 }
 

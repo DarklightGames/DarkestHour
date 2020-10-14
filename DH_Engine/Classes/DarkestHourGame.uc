@@ -2091,7 +2091,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKiller = DHPlayer(Killer);
 
         if (IsArtilleryKill(DHKiller, DamageType) &&
-            DHKiller.HEHitInfo.ExpiryTime > Level.TimeSeconds)
+            DHKiller.ArtilleryHitInfo.ExpiryTime > Level.TimeSeconds)
         {
             DamageType =  class'DHArtilleryKillDamageType';
         }
