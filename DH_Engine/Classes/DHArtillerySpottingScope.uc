@@ -15,7 +15,8 @@ struct SRangeTableRecord
 };
 var array<SRangeTableRecord>    RangeTable;
 
-var int PitchDecimals;
+var int PitchDecimalsTable;
+var int PitchDecimalsDial;
 
 struct STargetInfo
 {
@@ -42,6 +43,12 @@ var     int                 WidgetsPanelEntryHeight;
 
 var     int                 VisiblePitchSegmentsNumber;
 var     int                 VisibleYawSegmentsNumber;
+
+var     float               PitchStepMinor;
+var     float               PitchStepMajor;
+
+var     float               YawStepMinor;
+var     float               YawStepMajor;
 
 simulated static function DrawSpottingScopeOverlay(Canvas C)
 {
@@ -71,13 +78,8 @@ simulated static function CreatePitchStrings()
 
     for (i = 0; i < default.RangeTable.Length; ++i)
     {
-        default.RangeTable[i].PitchString = GetPitchString(default.RangeTable[i].Pitch);
+        default.RangeTable[i].PitchString = class'UFloat'.static.Format(default.RangeTable[i].Pitch, default.PitchDecimalsTable);
     }
-}
-
-simulated static function string GetPitchString(float Pitch)
-{
-    return class'UFloat'.static.Format(Pitch, default.PitchDecimals);
 }
 
 simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBoundPitch)
@@ -255,7 +257,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         // 3 is a rough factor to compensate X position of the label with respect to number of letters
         C.CurX = X + Index * default.YawIndicatorLength / SegmentCount - Len(Label) * 3;
 
-        if (Quotient % 10 == 0)
+        if (default.YawStepMajor != -1 && Quotient % default.YawStepMajor == 0)
         {
             Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
 
@@ -264,7 +266,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
             C.CurY = Y - 70.0;
             C.DrawText(Label);
         }
-        else if (Quotient % 5 == 0)
+        else if (default.YawStepMinor != -1 && Quotient % default.YawStepMinor == 0)
         {
             Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
 
@@ -350,9 +352,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         C.CurX = X - 5.0;
         C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
 
-        if (Quotient % 10 == 0)
+        if (default.PitchStepMajor != -1 && Quotient % default.PitchStepMajor == 0)
         {
-            Label = GetPitchString(Pitch);
+            Label = class'UFloat'.static.Format(Pitch, default.PitchDecimalsDial);
 
             // Draw long vertical tick & label it
             C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
@@ -365,9 +367,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
             C.DrawText(Label);
         }
-        else if (Quotient % 5 == 0)
+        else if (default.PitchStepMinor != -1 && Quotient % default.PitchStepMinor == 0)
         {
-            Label = GetPitchString(Pitch);
+            Label = class'UFloat'.static.Format(Pitch, default.PitchDecimalsDial);
 
             // Draw middle-sized vertical tick & label it
             C.DrawHorizontal(Y + (t * IndicatorStep), -30.0);
@@ -429,6 +431,12 @@ defaultproperties
     WidgetsPanelY=30
     WidgetsPanelEntryHeight=60
 
-    VisiblePitchSegmentsNumber = 40
-    VisibleYawSegmentsNumber = 40
+    VisiblePitchSegmentsNumber=40
+    VisibleYawSegmentsNumber=40
+
+    PitchStepMajor=10.0
+    PitchStepMinor=5.0
+
+    YawStepMajor=10.0
+    YawStepMinor=5.0
 }
