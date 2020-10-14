@@ -515,11 +515,11 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 
     if (bRemoveMapMarker && ClickIndex == 0)
     {
-        MenuItemObjects[ClickIndex].static.RemoveMarker(PC, MapMarkerIndexToRemove);
+        PC.RemoveMarker(MenuItemObjects[ClickIndex], MapMarkerIndexToRemove);
     }
     else
     {
-        MenuItemObjects[ClickIndex].static.AddMarker(PC, MapClickLocation.X, MapClickLocation.Y);
+        PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
     }
 }
 

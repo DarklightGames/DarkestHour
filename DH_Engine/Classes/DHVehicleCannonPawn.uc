@@ -383,6 +383,22 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
+    local DHPlayer PC;
+
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
+    {
+        if (DriverPositionIndex == BinocPositionIndex)
+        {
+            PC = DHPlayer(Controller);
+
+            if (PC != none && PC.CanUseFireSupportMenu())
+            {
+                PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
+                return;
+            }
+        }
+    }
+
     if (!CanFire() || ArePlayersWeaponsLocked() || Cannon == none || Cannon.bDebugRangeAutomatically)
     {
         return;

@@ -53,7 +53,7 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
 {
     return false;
 }
-    
+
 // Override this function to determine if this map marker can be displayed on the map by
 // the provided player.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -68,37 +68,6 @@ static function color GetBeeLineColor()
 
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
-
-// Override these 2 functions to determine how the marker should be handled when
-// added/removed.
-static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
-{
-    if (default.Scope == PERSONAL)
-    {
-        PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
-    }
-    else
-    {
-        PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
-    }
-}
-
-static function RemoveMarker(DHPlayer PC, optional int Index)
-{
-    if (Index < 0)
-    {
-        return;
-    }
-
-    if (default.Scope == PERSONAL)
-    {
-        PC.RemovePersonalMarker(Index);
-    }
-    else
-    {
-        PC.ServerRemoveMapMarker(Index);
-    }
-}
 
 // Override this to have a caption accompany the marker.
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)

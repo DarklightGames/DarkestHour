@@ -56,38 +56,33 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHSquadReplicationInfo SRI;
-    local int TeamIndex, SquadIndex;
-    local string SquadName;
-    local vector PlayerLocation;
     local int Distance;
-    local vector WorldLocation;
+    local vector PlayerLocation, WorldLocation;
 
     if (PC == none || PC.Pawn == none)
     {
         return "";
     }
 
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    SRI = PC.SquadReplicationInfo;
-
-    if (PRI == none || SRI == none)
-    {
-        return "";
-    }
-
     WorldLocation = Marker.WorldLocation;
+    WorldLocation.Z = 0.0;
+
     PlayerLocation = PC.Pawn.Location;
     PlayerLocation.Z = 0.0;
-    WorldLocation.Z = 0.0;
+
     Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
 
-    TeamIndex = PRI.Team.TeamIndex;
-    SquadIndex = Marker.SquadIndex;
-    SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
-
     return "" $ (Distance / 5) * 5 $ "m" ;
+}
+
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    if (PC == none || PC.Pawn == none)
+    {
+        return;
+    }
+
+    PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, Marker.MapMarkerClass);
 }
 
 defaultproperties

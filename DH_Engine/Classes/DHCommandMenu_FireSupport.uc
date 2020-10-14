@@ -27,17 +27,67 @@ function OnSelect(int Index, vector Location)
     switch (Index)
     {
         case 0: // Artillery barrage
-            PC.ServerSaveArtilleryPosition();
+            PC.DHServerSaveArtilleryPosition(Location);
             break;
         case 1: // Fire request (HE)
-            class'DH_Engine.DHMapMarker_FireSupport_HE'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
+            PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
             break;
         case 2: // Fire request (Smoke)
-            class'DH_Engine.DHMapMarker_FireSupport_Smoke'.static.AddMarker(PC, MapLocation.X, MapLocation.Y);
+            PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
             break;
     }
 
     Interaction.Hide();
+}
+
+function OnPush()
+{
+    local DHPlayer PC;
+
+    PC = GetPlayerController();
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    if (PC.SpottingMarker != none)
+    {
+        PC.SpottingMarker.Destroy();
+    }
+
+    PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
+}
+
+function OnPop()
+{
+    local DHPlayer PC;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.SpottingMarker.Destroy();
+}
+
+function Tick()
+{
+    local DHPlayer PC;
+    local vector HitLocation, HitNormal;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.GetEyeTraceLocation(HitLocation, HitNormal);
+    PC.SpottingMarker.SetLocation(HitLocation);
+    PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
 }
 
 defaultproperties
@@ -46,4 +96,6 @@ defaultproperties
     Options(0)=(ActionText="Artillery Barrage",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(1)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+
+    bShouldTick=true
 }

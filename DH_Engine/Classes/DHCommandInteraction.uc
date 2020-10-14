@@ -37,6 +37,8 @@ var DHGameReplicationInfo GRI;
 
 var bool                bShouldHideOnLeftMouseRelease;
 
+var Pawn                InstigatorPawn;
+
 delegate                OnHidden();
 
 event Initialized()
@@ -46,6 +48,7 @@ event Initialized()
     Menus = new class'Stack_Object';
 
     GRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
+    InstigatorPawn = ViewportOwner.Actor.Pawn;
 
     GotoState('FadeIn');
 }
@@ -223,10 +226,15 @@ function Tick(float DeltaTime)
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu())
+    if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu() || PC.Pawn != InstigatorPawn)
     {
         Hide();
         return;
+    }
+
+    if (Menu.bShouldTick)
+    {
+        Menu.Tick();
     }
 
     // Clamp cursor
@@ -458,6 +466,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
+    local vector HitLocation, HitNormal;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -496,12 +505,13 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     {
                         if (SelectedIndex >= 0)
                         {
-                            OnSelect(SelectedIndex, GetTraceLocation());
+                            PC.GetEyeTraceLocation(HitLocation, HitNormal);
+                            OnSelect(SelectedIndex, HitLocation);
                         }
 
                         Hide();
 
-                        return true;
+                        return false;
                     }
                     break;
             }
@@ -514,7 +524,8 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // guessing that 99.9% of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
-                    OnSelect(SelectedIndex, GetTraceLocation());
+                    PC.GetEyeTraceLocation(HitLocation, HitNormal);
+                    OnSelect(SelectedIndex, HitLocation);
 
                     return true;
                 case IK_RightMouse:
@@ -530,44 +541,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     }
 
     return false;
-}
-
-function vector GetTraceLocation()
-{
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
-    local Actor A, HitActor;
-    local DHPlayer PC;
-
-    PC = DHPlayer(ViewportOwner.Actor);
-
-    if (PC == none || PC.Pawn == none)
-    {
-        return vect(0, 0, 0);
-    }
-
-    TraceStart = PC.CalcViewLocation;
-    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
-
-    foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
-    {
-        if (A == PC.Pawn ||
-            A.IsA('ROBulletWhipAttachment') ||
-            A.IsA('Volume'))
-        {
-            continue;
-        }
-
-        HitActor = A;
-
-        break;
-    }
-
-    if (HitActor == none)
-    {
-        HitLocation = TraceEnd;
-    }
-
-    return HitLocation;
 }
 
 function OnSelect(int OptionIndex, optional vector Location)

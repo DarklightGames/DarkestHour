@@ -166,6 +166,9 @@ var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
+// Spotting
+var     DHSpottingMarker        SpottingMarker;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -1000,50 +1003,37 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 }
 
 // Modified to require player to be an arty officer instead of RO's bIsLeader role, to remove check that map contains a radio, & to optimise
-function ServerSaveArtilleryPosition()
+function DHServerSaveArtilleryPosition(vector ArtilleryLocation)
 {
     local DHRoleInfo   RI;
     local DHVolumeTest VT;
-    local DHPawn P;
     local DHPlayerReplicationInfo PRI;
-    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local bool         bValidTarget;
 
-    if (Pawn == none || Pawn.Weapon == none || !Pawn.Weapon.IsA('DHBinocularsItem'))
+    if (Pawn == none || Pawn.Health <= 0)
     {
         return;
     }
 
-    P = DHPawn(Pawn);
+    RI = DHRoleInfo(GetRoleInfo());
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (P == none)
-    {
-        return;
-    }
-
-    RI = P.GetRoleInfo();
-    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
 
     if (RI != none && RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
     {
-        TraceStart = Pawn.Location + Pawn.EyePosition();
-        TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+        VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
 
-        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none && HitNormal != vect(0.0, 0.0, -1.0))
+        if (VT != none)
         {
-            VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-            if (VT != none)
-            {
-                bValidTarget = !VT.IsInNoArtyVolume();
-                VT.Destroy();
-            }
+            bValidTarget = !VT.IsInNoArtyVolume();
+            VT.Destroy();
         }
 
         if (bValidTarget)
         {
             ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
-            SavedArtilleryCoords = HitLocation;
+            SavedArtilleryCoords = ArtilleryLocation;
         }
         else
         {
@@ -7001,6 +6991,104 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
     }
 
     return TargetMapMarkers;
+}
+
+simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal)
+{
+    local vector TraceStart, TraceEnd;
+    local Actor A, HitActor;
+
+    if (Pawn == none)
+    {
+        HitLocation = vect(0, 0, 0);
+    }
+
+    TraceStart = CalcViewLocation;
+    TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (A == Pawn ||
+            A.IsA('ROBulletWhipAttachment') ||
+            A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        HitActor = A;
+
+        break;
+    }
+
+    if (HitActor == none)
+    {
+        HitLocation = TraceEnd;
+    }
+}
+
+simulated function bool CanUseFireSupportMenu()
+{
+    local DHPawn P;
+    local DHRoleInfo RI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (Pawn == none)
+    {
+        return false;
+    }
+
+    if (Pawn.IsA('Vehicle'))
+    {
+        P = DHPawn(Vehicle(Pawn).Driver);
+    }
+    else
+    {
+        P = DHPawn(Pawn);
+    }
+
+    if (P == none)
+    {
+        return false;
+    }
+
+    RI = DHRoleInfo(GetRoleInfo());
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (RI == none || PRI == none)
+    {
+        return false;
+    }
+
+    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+}
+
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY)
+{
+    if (MarkerClass.default.Scope == PERSONAL)
+    {
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY);
+    }
+    else
+    {
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY);
+    }
+}
+
+function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
+{
+    if (Index < 0)
+    {
+        return;
+    }
+
+    if (MarkerClass.default.Scope == PERSONAL)
+    {
+        RemovePersonalMarker(Index);
+    }
+    else
+    {
+        ServerRemoveMapMarker(Index);
+    }
 }
 
 defaultproperties

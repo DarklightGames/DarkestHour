@@ -89,30 +89,13 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified to add fire button functionality for artillery observer or artillery officer roles to mark targets
 simulated function Fire(float F)
 {
-    local DHRoleInfo RI;
     local DHPlayer   PC;
-    local DHPlayerReplicationInfo PRI;
-    local DHPawn P;
 
     if (bUsingSights && Instigator != none && Instigator.IsLocallyControlled())
     {
-        P = DHPawn(Instigator);
-
-        if (P == none)
-        {
-            return;
-        }
-
-        RI = P.GetRoleInfo();
-        PRI = DHPlayerReplicationInfo(Instigator.PlayerReplicationInfo);
         PC = DHPlayer(Instigator.Controller);
 
-        if (RI == none || PRI == none || PC == none)
-        {
-            return;
-        }
-
-        if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
+        if (PC != none && PC.CanUseFireSupportMenu())
         {
             PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
         }
