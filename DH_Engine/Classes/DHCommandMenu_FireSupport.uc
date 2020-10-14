@@ -29,11 +29,11 @@ function OnSelect(int Index, vector Location)
         case 0: // Artillery barrage
             PC.DHServerSaveArtilleryPosition(Location);
             break;
-        case 1: // Fire request (HE)
-            PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
-            break;
-        case 2: // Fire request (Smoke)
+        case 1: // Fire request (Smoke)
             PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
+            break;
+        case 2: // Fire request (HE)
+            PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
             break;
     }
 
@@ -94,8 +94,8 @@ defaultproperties
 {
     // TODO: Icons
     Options(0)=(ActionText="Artillery Barrage",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(1)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(2)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(1)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(2)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
 
     bShouldTick=true
 }

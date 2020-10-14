@@ -96,5 +96,5 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     LifetimeSeconds=-1            // artillery requests never expire
-    HitVisibilityRadius=3000.0
+    HitVisibilityRadius=12070.4   // 200 meters
 }

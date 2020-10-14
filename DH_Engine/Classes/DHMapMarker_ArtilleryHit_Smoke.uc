@@ -24,5 +24,5 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 defaultproperties
 {
     MarkerName="Artillery hit (smoke)"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.move'
+    IconColor=(R=250,G=250,B=250,A=255)
 }

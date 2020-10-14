@@ -98,11 +98,11 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
 defaultproperties
 {
     MarkerName="Artillery hit"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.Attack'
-    IconColor=(R=204,G=255,B=0,A=255)
+    IconMaterial=MaterialSequence'DH_InterfaceArt2_tex.Artillery.HitMarker'
+    IconColor=(R=255,G=165,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=6
-    OverwritingRule = UNIQUE_PER_GROUP
+    OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
     LifetimeSeconds=30 // 30 seconds
 }
