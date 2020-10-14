@@ -182,6 +182,22 @@ simulated function SetInitialViewRotation()
 // Modified to add dry-fire effects if trying to fire empty MG (but not if actively reloading)
 function Fire(optional float F)
 {
+    local DHPlayer PC;
+
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
+    {
+        if (DriverPositionIndex == BinocPositionIndex)
+        {
+            PC = DHPlayer(Controller);
+
+            if (PC != none && PC.CanUseFireSupportMenu())
+            {
+                PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
+                return;
+            }
+        }
+    }
+
     if (CanFire() && !ArePlayersWeaponsLocked())
     {
         super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
