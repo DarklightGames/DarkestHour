@@ -7,6 +7,7 @@ class DH_T3485Tank extends DH_T3476Tank;
 
 defaultproperties
 {
+    ReinforcementCost=16
     VehicleNameString="T34/85"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485CannonPawn')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485MountedMGPawn')
@@ -23,4 +24,17 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_85_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_85_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.T34_85'
+	
+    // Damage
+	// pros: diesel fuel; 5 men crew
+	// cons: fuel tanks in crew compartment
+    Health=525
+    HealthMax=525
+    EngineHealth=300
+	
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
+    AmmoIgnitionProbability=0.8 // 0.75 default
+
 }

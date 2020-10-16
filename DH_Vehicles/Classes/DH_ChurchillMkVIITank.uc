@@ -43,7 +43,7 @@ defaultproperties
     VehicleNameString="Churchill Mk.VII"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=8
+    ReinforcementCost=28
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_ext'
@@ -94,6 +94,14 @@ defaultproperties
     TransRatio=0.078 // gives top speed on the flat of 15 mph (approx 24 kph) // TODO: may need to reduce this slightly for the Mk.VII as think it was a little slower
 
     // Damage
+	// pros: 5 men crew, who are separated by a relatively large space
+	// cons: petrol fuel
+    Health=570
+    HealthMax=570.0
+	EngineHealth=270
+	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Y=0.0,Z=65.0))
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier

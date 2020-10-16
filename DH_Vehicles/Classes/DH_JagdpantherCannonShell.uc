@@ -13,7 +13,8 @@ defaultproperties
     BallisticCoefficient=3.8 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=775
+    ImpactDamage=975  //109 gramms TNT filler
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.5
     EngineFireChance=0.98
 

@@ -10,9 +10,6 @@ defaultproperties
     RoundType=RT_APBC
 
     //Damage
-    ImpactDamage=3000 // has explosive filler - so higher than solid AP round
-    Damage=900 //going to treat this like a heavy HE shell when it impacts the ground
-    DamageRadius=850
 
     //Penetration - BR540b
     DHPenetrationTable(0)=14.8  // 100m

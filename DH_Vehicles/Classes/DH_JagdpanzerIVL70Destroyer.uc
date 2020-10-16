@@ -7,6 +7,7 @@ class DH_JagdpanzerIVL70Destroyer extends DH_JagdpanzerIVL48Destroyer;
 
 defaultproperties
 {
+    ReinforcementCost=14
     VehicleNameString="Jagdpanzer IV/70(V)"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonPawn')
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_body_ext'
@@ -20,4 +21,5 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l70'
+
 }

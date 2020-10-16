@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=1.19 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=350
+    ImpactDamage=390  //solid shell
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.30
-    EngineFireChance=0.55
+    HullFireChance=0.25
+    EngineFireChance=0.45
 
     bShatterProne=true
 

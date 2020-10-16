@@ -12,11 +12,11 @@ defaultproperties
     ShellDiameter=8.8
     BallisticCoefficient=3.8 //TODO: pls, check
 
-    //Damage
-    ImpactDamage=775
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    //Damage	
+	ImpactDamage=1150  //109 gramms TNT filler
     HullFireChance=0.5
     EngineFireChance=0.98
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
 
     //Penetration
     DHPenetrationTable(0)=25.7

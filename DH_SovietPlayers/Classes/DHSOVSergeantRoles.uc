@@ -9,8 +9,9 @@ class DHSOVSergeantRoles extends DHAlliedSergeantRoles
 defaultproperties
 {
     AltName="Komandir otdeleniya"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_SVT38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')

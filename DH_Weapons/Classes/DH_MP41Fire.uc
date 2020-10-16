@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP41Bullet'
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.13 // 460rpm
+    FireRate=0.12 // 500rpm
     Spread=120.0
 
     // Recoil

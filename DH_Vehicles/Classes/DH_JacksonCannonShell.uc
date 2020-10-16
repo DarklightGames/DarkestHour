@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=3.95 //Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=700
-    HullFireChance=0.45
-    EngineFireChance=0.90
+    ImpactDamage=1040  //137 gramms TNT filler - late M82 shot i assume?
+    HullFireChance=0.55
+    EngineFireChance=0.98
 
     //Penetration
     DHPenetrationTable(0)=16.9

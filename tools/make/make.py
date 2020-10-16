@@ -202,7 +202,7 @@ def main():
         sys.exit(1)
 
 
-    # read the default config 
+    # read the default config
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
     if os.path.isfile(default_config_path):
         config = ConfigParserMultiOpt()
@@ -419,8 +419,12 @@ def main():
         len(up_to_date_packages),
     ))
 
+    # exit with an error code if the build fails
+    if not did_build_succeed:
+        sys.exit(1)
+
     # create build snapshot
-    if args.snapshot and did_build_succeed:
+    if args.snapshot:
         # TODO: make sure that all of the necessary files are here
         zf = zipfile.ZipFile(os.path.join(mod_dir, '{}.zip'.format(args.mod)), mode='w')
         zf.write(manifest_path, os.path.relpath(manifest_path, mod_dir))

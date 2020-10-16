@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M4A1(75) Sherman"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=4
+    ReinforcementCost=15
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_ext'
@@ -56,6 +56,14 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
+	// pros: 5 men crew
+	// cons: petrol fuel
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)

@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Marder III Ausf.M"
     VehicleMass=11.0
-    ReinforcementCost=4
+    ReinforcementCost=9
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
@@ -58,8 +58,14 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-    Health=400
-    HealthMax=400.0
+	// cons: petrol fuel
+	// note: 4 men crew
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
+	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

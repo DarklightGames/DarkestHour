@@ -44,6 +44,7 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
+	
 
     // Weapon fire
     WeaponFireOffset=69.6

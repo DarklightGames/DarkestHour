@@ -1,7 +1,8 @@
-//-----------------------------------------------------------
+//==============================================================================
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2020
-//-----------------------------------------------------------
+//==============================================================================
+
 class DHDangerZone extends Object
     abstract;
 
@@ -26,6 +27,11 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
     local float Intensity, AxisIntensity, AlliedIntensity, NeutralIntensity, NeutralMagnitude;
     local int AxisCount, AlliedCount, NeutralCount, TeamModifier, i;
     local vector V1, V2;
+
+    if (GRI == none)
+    {
+        return 0.0;
+    }
 
     V2.X = PointerX;
     V2.Y = PointerY;
@@ -100,7 +106,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 
 static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float PointerY, byte TeamIndex)
 {
-    if (!GRI.IsDangerZoneEnabled())
+    if (GRI == none || !GRI.IsDangerZoneEnabled())
     {
         return false;
     }
@@ -205,6 +211,11 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
     local array<vector> Segments, Contour;
     local array<InterpCurve> LineStringsX;
     local array<InterpCurve> LineStringsY;
+
+    if (GRI == none)
+    {
+        return Contour;
+    }
 
     Resolution = Clamp(Resolution, 2, 128);
     SubResolution = Max(2, SubResolution);

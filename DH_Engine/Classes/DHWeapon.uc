@@ -871,6 +871,54 @@ simulated function name GetSelectAnim()
     return SelectAnim;
 }
 
+// This function handles sleeve and hand swapping depending on the player's role
+// (overriden to support hand textures).
+simulated function HandleSleeveSwapping()
+{
+    local Material RoleSleeveTexture, RoleHandTexture;
+    local DHRoleInfo RI;
+    local ROPlayer PC;
+
+    // Don't bother with AI players.
+    if (!Instigator.IsHumanControlled() || !Instigator.IsLocallyControlled())
+    {
+        return;
+    }
+
+    PC = ROPlayer(Instigator.Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (RI != none)
+    {
+        RoleSleeveTexture = RI.static.GetSleeveTexture();
+        RoleHandTexture = RI.static.GetHandTexture();
+    }
+
+    if (RoleSleeveTexture != none && SleeveNum >= 0)
+    {
+        Skins[SleeveNum] = RoleSleeveTexture;
+    }
+
+    if (HandNum >= 0)
+    {
+        // We want our hands to look consistent when we change weapons.
+        // Handtex is still supported to preserve the old functionality,
+        // but hand textures defined by roles will take precedence.
+        if (RoleHandTexture != none)
+        {
+            Skins[HandNum] = RoleHandTexture;
+        }
+        else
+        {
+            Skins[HandNum] = Handtex;
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
@@ -881,7 +929,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
-    SwayBayonetModifier=1.1
+    SwayBayonetModifier=1.2
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=0.9
