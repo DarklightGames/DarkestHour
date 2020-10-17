@@ -212,7 +212,6 @@ simulated function DrawHUD(Canvas C)
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
-    local float                                         TextWidth, TextHeight, TextLocationX, TextLocationY;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
@@ -275,7 +274,7 @@ simulated function DrawHUD(Canvas C)
             }
 
             // Draw current round type quantity
-            C.SetPos(320.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
+            C.SetPos(256.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
 
             if (VehWep.MainAmmoCharge[RoundIndex] < 10)
             {
@@ -305,10 +304,7 @@ simulated function DrawHUD(Canvas C)
 
               // Draw current round type name
               C.SetDrawColor(255, 255, 255, 255);
-              C.StrLen(VehWep.ProjectileClass.default.Tag, TextWidth, TextHeight);
-              TextLocationX = C.CurX - (C.CurX - 320.0 * HUDScale)/2 - TextWidth/2;
-              TextLocationY = C.CurY - 20.0 + SizeY;
-              C.SetPos(TextLocationX, TextLocationY);
+              C.SetPos(256.0 * HUDScale, C.CurY + 50.0);
               C.DrawText(VehWep.ProjectileClass.default.Tag);
         }
         else
