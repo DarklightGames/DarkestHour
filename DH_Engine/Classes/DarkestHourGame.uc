@@ -5477,10 +5477,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=9
-        Minor=9
+        Major=10
+        Minor=0
         Patch=0
-        Prerelease="beta.1"
+        Prerelease="artillery-beta"
     End Object
     Version=VersionObject
 
