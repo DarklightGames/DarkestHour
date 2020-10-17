@@ -54,6 +54,9 @@ var     float               YawStepMajor;
 var     bool                bIsTableInitialized;
 var     DHDataTable         RenderTable;
 
+var     localized string    RangeHeaderString;
+var     localized string    PitchHeaderString;
+
 simulated static function CreateRenderTable(Canvas C)
 {
     local int i;
@@ -68,12 +71,12 @@ simulated static function CreateRenderTable(Canvas C)
     default.RenderTable.Font = C.MedFont;
     default.RenderTable.Columns.Insert(0, 2);
 
-    default.RenderTable.Columns[0].Header = "Range (" $ default.DistanceUnit $ ")";
+    default.RenderTable.Columns[0].Header = default.RangeHeaderString @  "(" $ default.DistanceUnit $ ")";
     default.RenderTable.Columns[0].TextColor = class'UColor'.default.White;
     default.RenderTable.Columns[0].Width = 80;
     default.RenderTable.Columns[0].HeaderJustification = 2;
     default.RenderTable.Columns[0].RowJustification = 2;
-    default.RenderTable.Columns[1].Header = "Pitch (" $ default.AngleUnit $ ")";
+    default.RenderTable.Columns[1].Header = default.PitchHeaderString @ "(" $ default.AngleUnit $ ")";
     default.RenderTable.Columns[1].TextColor = class'UColor'.default.White;
     default.RenderTable.Columns[1].Width = 80;
     default.RenderTable.Columns[1].HeaderJustification = 0;
@@ -445,4 +448,8 @@ defaultproperties
 
     YawStepMajor=10.0
     YawStepMinor=5.0
+
+    RangeHeaderString="Range"
+    PitchHeaderString="Pitch"
 }
+
