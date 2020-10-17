@@ -5,21 +5,6 @@
 
 class DH_LeIG18CannonPawn extends DHATGunCannonPawn;
 
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local DHPlayer DHP;
-
-    DHP = DHPlayer(PC);
-
-    if (DHP != none)
-    {
-        // queue the hint for artillery scopes
-        DHP.QueueHint(49, false);
-    }
-
-    super.ClientKDriverEnter(PC);
-}
-
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_LeIG18Cannon'

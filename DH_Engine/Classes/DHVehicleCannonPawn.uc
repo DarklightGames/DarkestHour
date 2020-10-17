@@ -627,11 +627,25 @@ function KDriverEnter(Pawn P)
     }
 }
 
+simulated function bool HasSpottingScope()
+{
+    return SpottingScopePositionIndex != -1;
+}
+
 // Modified so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
 // and so net client autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
+
+    if (HasSpottingScope())
+    {
+        if (DHPlayer(PC) != none)
+        {
+            // Queue the hint for spotting scopes
+            DHPlayer(PC).QueueHint(49, false);
+        }
+    }
 
     if (Cannon != none)
     {
