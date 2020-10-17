@@ -75,16 +75,6 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     return "" $ (Distance / 5) * 5 $ "m" ;
 }
 
-static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
-{
-    if (PC == none || PC.Pawn == none)
-    {
-        return;
-    }
-
-    PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, Marker.MapMarkerClass);
-}
-
 defaultproperties
 {
     MarkerName="Fire Support"

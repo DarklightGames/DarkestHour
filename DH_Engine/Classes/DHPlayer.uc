@@ -46,7 +46,9 @@ struct SArtilleryHitInfo
     var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
     var int         ExpiryTime;
 };
-var     SArtilleryHitInfo       ArtilleryHitInfo;
+var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
+var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
+var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
@@ -1065,6 +1067,23 @@ simulated function bool IsInArtilleryVehicle()
     }
 
     return false;
+}
+
+simulated function LockArtilleryRequests(int Seconds)
+{
+    local DHGameReplicationInfo DHGRI;
+
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    
+    if(GameReplicationInfo != none)
+    {
+        self.ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+    }
+}
+
+simulated function bool IsArtilleryRequestingLocked()
+{
+    return self.ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
 }
 
 simulated function bool IsInSquad()
@@ -7161,4 +7180,7 @@ defaultproperties
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
     PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+
+    ArtilleryRequestsUnlockTime = 0
+    ArtilleryLockingPeriod = 10
 }
