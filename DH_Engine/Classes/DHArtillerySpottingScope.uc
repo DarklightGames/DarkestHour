@@ -163,7 +163,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     }
     else
     {
-        Log("This code shouldn't be reached :(");
+        Warn("This code shouldn't be reached :(");
     }
 
     C.SetDrawColor(255, 255, 255, 255);
@@ -199,6 +199,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index;
+    local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
 
@@ -224,7 +225,15 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
 
         // Which tick on the dial does this target correspond to
-        Index = default.VisibleYawSegmentsNumber/2 - Targets[i].YawCorrection - int(CurrentYaw/default.YawScaleStep);
+        Index = (default.VisibleYawSegmentsNumber / 2) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
+
+        Shade = class'UInterp'.static.Mimi(FClamp(Index / default.VisibleYawSegmentsNumber, 0.25, 0.75));
+
+        Color = Targets[i].Type.default.IconColor;
+        Color.R = Max(1, int(Color.R) * Shade);
+        Color.G = Max(1, int(Color.G) * Shade);
+        Color.B = Max(1, int(Color.B) * Shade);
+        C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < default.VisibleYawSegmentsNumber && Index >= 0)
@@ -232,16 +241,28 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
             C.CurY = IndicatorTopLeftCornerY + 5.0;
             C.CurX = IndicatorTopLeftCornerX;
 
-            Shade = class'UInterp'.static.Mimi((Index) / default.VisibleYawSegmentsNumber);
-
-            Color = Targets[i].Type.default.IconColor;
-            Color.R = Max(1, int(Color.R) * Shade);
-            Color.G = Max(1, int(Color.G) * Shade);
-            Color.B = Max(1, int(Color.B) * Shade);
-            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
-
             // Draw a target tick on the yaw indicator
-            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, 5.0);
+            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, 8.0);
+        }
+        else
+        {
+            // Draw stacking horizontal target markers that are off of the dial
+            if (Index < 0)
+            {
+                // Left side
+                C.SetPos(IndicatorTopLeftCornerX - 10, IndicatorTopLeftCornerY);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, 8);
+
+                ++TargetTickCountLeft;
+            }
+            else
+            {
+                // Right side
+                C.SetPos(IndicatorTopLeftCornerX + default.YawIndicatorLength + 2, IndicatorTopLeftCornerY);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, 8);
+
+                ++TargetTickCountRight;
+            }
         }
     }
 
