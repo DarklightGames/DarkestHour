@@ -50,6 +50,11 @@ var     float               PitchStepMajor;
 
 var     float               YawStepMinor;
 var     float               YawStepMajor;
+var     float               SmallSizeTickLength;
+var     float               MiddleSizeTickLength;
+var     float               LargeSizeTickLength;
+var     float               LabelOffset;
+var     float               IndicatorMiddleTickOffset;
 
 var     bool                bIsTableInitialized;
 var     DHDataTable         RenderTable;
@@ -192,27 +197,25 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
-    local float X, Y, YawUpperBound, YawLowerBound, SegmentCount, IndicatorStep, Shade;
+    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index;
     local string Label;
     local color Color;
 
-    X = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
-    Y = C.SizeY * 0.93;
+    IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
+    IndicatorTopLeftCornerY = C.SizeY * 0.93;
 
-    //CurrentYaw = class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
     YawLowerBound = CurrentYaw - default.YawScaleStep * default.VisibleYawSegmentsNumber/2;
     YawUpperBound = CurrentYaw + default.YawScaleStep * default.VisibleYawSegmentsNumber/2;
-    SegmentCount = (YawUpperBound - YawLowerBound) / default.YawScaleStep;
     IndicatorStep = default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
 
     C.Font = C.TinyFont;
 
     // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = X;
-    C.CurY = Y;
-    C.DrawHorizontal(Y, default.YawIndicatorLength);
+    C.CurX = IndicatorTopLeftCornerX;
+    C.CurY = IndicatorTopLeftCornerY;
+    C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
 
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)
@@ -226,8 +229,8 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < default.VisibleYawSegmentsNumber && Index >= 0)
         {
-            C.CurY = Y + 5.0;
-            C.CurX = X;
+            C.CurY = IndicatorTopLeftCornerY + 5.0;
+            C.CurX = IndicatorTopLeftCornerX;
 
             Shade = class'UInterp'.static.Mimi((Index) / default.VisibleYawSegmentsNumber);
 
@@ -238,12 +241,12 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
             C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
             // Draw a target tick on the yaw indicator
-            C.DrawVertical(X + Index * IndicatorStep, 5.0);
+            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, 5.0);
         }
     }
 
     // Start drawing scale ticks
-    C.CurY = Y - 5.0;
+    C.CurY = IndicatorTopLeftCornerY - 5.0;
     for (Yaw = YawLowerBound; Yaw <= YawUpperBound; Yaw += default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
@@ -260,54 +263,64 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         // because the background is black anyway. - mimi~
         C.SetDrawColor(Shade, Shade, Shade, 255);
 
-        C.CurY = Y - 5.0;
-        // 3 is a rough factor to compensate X position of the label with respect to number of letters
-        C.CurX = X + Index * default.YawIndicatorLength / SegmentCount - Len(Label) * 3;
+        Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
 
+        // Get the label's length
+        C.StrLen(Label, TextWidth, TextHeight);
+
+        C.CurY = IndicatorTopLeftCornerY - 5.0;
+        C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
+            
         if (default.YawStepMajor != -1 && Quotient % default.YawStepMajor == 0)
         {
-            Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
+            // large granularity - draw the long tick
+            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
 
-            // Draw long vertical tick & label it
-            C.DrawVertical(X + (Index * IndicatorStep), -50.0);
-            C.CurY = Y - 70.0;
+            // align the label with the tick...
+            C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
+            C.CurX = C.CurX - TextWidth/2;
+            
+            /// draw the label
             C.DrawText(Label);
         }
         else if (default.YawStepMinor != -1 && Quotient % default.YawStepMinor == 0)
-        {
-            Label = string(int(class'UMath'.static.Floor(Yaw, default.YawScaleStep)));
+        {            
+            // moderate granularity - draw the middle-size tick
+            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.MiddleSizeTickLength);
 
-            // Draw middle-sized vertical tick & label it
-            C.DrawVertical(X + (Index * IndicatorStep), -30.0);
-            C.CurY = Y - 50.0;
+            // align the label with the tick...
+            C.CurY = C.CurY - default.MiddleSizeTickLength - TextHeight - default.LabelOffset;
+            C.CurX = C.CurX - TextWidth/2;
+
+            // draw the label
             C.DrawText(Label);
         }
         else
         {
-            // Smallest granularity - draw short vertical tick (no label)
-            C.DrawVertical(X + (Index * IndicatorStep), -20.0);
+            // smallest granularity - draw the short vertical tick without a label
+            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
-        C.CurY = Y - 20;
+        C.CurY = IndicatorTopLeftCornerY - default.SmallSizeTickLength;
 
         if (Yaw < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
         {
-            C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
+            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
         if (Yaw > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
         {
-            C.CurX = X + Index * default.YawIndicatorLength / SegmentCount;
+            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
         }
     }
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y + 15.0;
-    C.DrawVertical(X + (default.YawIndicatorLength / 2), 20.0);
+    C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
+    C.DrawVertical(IndicatorTopLeftCornerX + (default.YawIndicatorLength / 2), default.SmallSizeTickLength);
 }
 
 simulated static function float GetPitchLowerBound(float CurrentPitch)
@@ -322,19 +335,18 @@ simulated static function float  GetPitchUpperBound(float CurrentPitch)
 
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
-    local float Pitch, X, Y, PitchUpperBound, PitchLowerBound, SegmentCount, IndicatorStep;
+    local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
     local int Shade, Quotient, t;
     local string Label;
 
-    X = C.SizeX * 0.25;
-    Y = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
+    IndicatorTopLeftCornerX = C.SizeX * 0.25;
+    IndicatorTopLeftCornerY = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
     CurrentPitch += GunPitchOffset;
 
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
-    SegmentCount = (PitchUpperBound - PitchLowerBound) / default.PitchScaleStep;
     IndicatorStep = default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
 
     C.Font = C.TinyFont;
@@ -356,71 +368,67 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         // because the background is black anyway. - mimi~
         C.SetDrawColor(Shade, Shade, Shade, 255);
 
-        C.CurX = X - 5.0;
-        C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
+        Label = class'UFloat'.static.Format(Pitch, default.PitchDecimalsDial);
+
+        // Get the label's length
+        C.StrLen(Label, TextWidth, TextHeight);
+
+        C.CurX = IndicatorTopLeftCornerX - 5.0;
+        C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
 
         if (default.PitchStepMajor != -1 && Quotient % default.PitchStepMajor == 0)
         {
-            Label = class'UFloat'.static.Format(Pitch, default.PitchDecimalsDial);
-
             // Draw long vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep), -50.0);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.LargeSizeTickLength);
 
-            // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 60.0 - Len(Label) * 6;
-
-            // Readjust label height so it is on the same level as the tick
-            C.CurY = C.CurY - 5;
+            // align the label with the tick
+            C.CurX = IndicatorTopLeftCornerX - default.LargeSizeTickLength - TextWidth - default.LabelOffset;
+            C.CurY = C.CurY - TextHeight * 0.5;
 
             C.DrawText(Label);
         }
         else if (default.PitchStepMinor != -1 && Quotient % default.PitchStepMinor == 0)
         {
-            Label = class'UFloat'.static.Format(Pitch, default.PitchDecimalsDial);
-
             // Draw middle-sized vertical tick & label it
-            C.DrawHorizontal(Y + (t * IndicatorStep), -30.0);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.MiddleSizeTickLength);
 
-            // 3 is a rough factor to compensate X position of the label with respect to number of letters
-            C.CurX = X - 40.0 - Len(Label) * 6;
-
-            // Readjust label height so it is on the same level as the tick
-            C.CurY = C.CurY - 5;
-
+            // align the label with the tick
+            C.CurX = IndicatorTopLeftCornerX - default.MiddleSizeTickLength - TextWidth - default.LabelOffset;
+            C.CurY = C.CurY - TextHeight * 0.5;
             C.DrawText(Label);
         }
         else
         {
             // Smallest granularity - draw short vertical tick (no label)
-            C.DrawHorizontal(Y + (t * IndicatorStep), -20.0);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.SmallSizeTickLength);
         }
 
         // Draw a strike-through if this segment is below the lower limit.
-        C.CurX = X - 20;
+        C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
 
         if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
+            C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
         }
 
         // Draw a strike-through if this segment is above the upper limit.
         if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = Y + t * default.PitchIndicatorLength / SegmentCount;
+            C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
         }
     }
 
     // Draw a long horizontal bar that imitates edge of the indicator
     C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y;
-    C.DrawVertical(X, default.PitchIndicatorLength);
+    C.CurY = IndicatorTopLeftCornerY;
+    C.DrawVertical(IndicatorTopLeftCornerX, default.PitchIndicatorLength);
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
-    C.CurX = X + 15.0;
-    C.DrawHorizontal(Y + (default.PitchIndicatorLength / 2), 20.0);
+    C.CurX = IndicatorTopLeftCornerX + default.IndicatorMiddleTickOffset;
+    C.DrawHorizontal(IndicatorTopLeftCornerY + (default.PitchIndicatorLength / 2), default.SmallSizeTickLength);
 }
 
 defaultproperties
@@ -433,7 +441,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="°"
+    AngleUnit="ï¿½"
     DistanceUnit="m"
 
     WidgetsPanelX=50
@@ -451,5 +459,11 @@ defaultproperties
 
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
+
+    LargeSizeTickLength = 50.0
+    MiddleSizeTickLength = 30.0
+    SmallSizeTickLength = 20.0
+    LabelOffset = 10.0
+    IndicatorMiddleTickOffset = 15.0
 }
 
