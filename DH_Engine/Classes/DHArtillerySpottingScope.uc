@@ -11,7 +11,6 @@ struct SRangeTableRecord
 {
     var float  Pitch;                                     // in degrees or milliradians
     var int    Range;                                     // in meters
-    var string PitchString;                               // calculated on first use!
 };
 var array<SRangeTableRecord>    RangeTable;
 
@@ -35,7 +34,9 @@ var     float               PitchScaleStep;             // how quickly pitch ind
 var     float               PitchIndicatorLength;
 var     float               YawIndicatorLength;
 var     int                 StrikeThroughThickness;
+
 var     string              AngleUnit;
+var     string              DistanceUnit;
 
 var     int                 WidgetsPanelX;
 var     int                 WidgetsPanelY;
@@ -49,6 +50,46 @@ var     float               PitchStepMajor;
 
 var     float               YawStepMinor;
 var     float               YawStepMajor;
+
+var     bool                bIsTableInitialized;
+var     DHDataTable         RenderTable;
+
+simulated static function CreateRenderTable(Canvas C)
+{
+    local int i;
+
+    if (default.RenderTable != none)
+    {
+        return;
+    }
+
+    default.RenderTable = new class'DHDataTable';
+
+    default.RenderTable.Font = C.MedFont;
+    default.RenderTable.Columns.Insert(0, 2);
+
+    default.RenderTable.Columns[0].Header = "Range (" $ default.DistanceUnit $ ")";
+    default.RenderTable.Columns[0].TextColor = class'UColor'.default.White;
+    default.RenderTable.Columns[0].Width = 80;
+    default.RenderTable.Columns[0].HeaderJustification = 2;
+    default.RenderTable.Columns[0].RowJustification = 2;
+    default.RenderTable.Columns[1].Header = "Pitch (" $ default.AngleUnit $ ")";
+    default.RenderTable.Columns[1].TextColor = class'UColor'.default.White;
+    default.RenderTable.Columns[1].Width = 80;
+    default.RenderTable.Columns[1].HeaderJustification = 0;
+    default.RenderTable.Columns[1].RowJustification = 0;
+
+    default.RenderTable.Rows.Insert(0, default.RangeTable.Length);
+
+    for (i = 0; i < default.RangeTable.Length; ++i)
+    {
+        default.RenderTable.Rows[i].Columns.Insert(0, 2);
+        default.RenderTable.Rows[i].Columns[0].Value = string(default.RangeTable[i].Range);
+        default.RenderTable.Rows[i].Columns[0].TextColor = class'UColor'.default.Green;
+        default.RenderTable.Rows[i].Columns[1].Value = class'UFloat'.static.Format(default.RangeTable[i].Pitch, default.PitchDecimalsTable);
+        default.RenderTable.Rows[i].Columns[1].TextColor = class'UColor'.default.White;
+    }
+}
 
 simulated static function DrawSpottingScopeOverlay(Canvas C)
 {
@@ -67,64 +108,27 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
     }
 }
 
-simulated static function CreatePitchStrings()
+simulated static function UpdateTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBoundPitch)
 {
-    local int i;
-
-    if (default.RangeTable.Length == 0 || default.RangeTable[0].PitchString != "")
+    if (!default.bIsTableInitialized)
     {
-        return;
+        CreateRenderTable(C);
+        default.bIsTableInitialized = true;
     }
 
-    for (i = 0; i < default.RangeTable.Length; ++i)
-    {
-        default.RangeTable[i].PitchString = class'UFloat'.static.Format(default.RangeTable[i].Pitch, default.PitchDecimalsTable);
-    }
+    // TODO: update colors of table values
 }
 
 simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBoundPitch)
 {
-    local int i;
     local float X, Y;
-    local float XL, YL;
-    local float TableHeight;
-    const FirstColumn = 0;
-    const SecondColumn = 45;
 
-    if (default.RangeTable.Length == 0)
-    {
-        return;
-    }
+    UpdateTable(C, ActiveLowerBoundPitch, ActiveUpperBoundPitch);
 
-    CreatePitchStrings();
+    Y = (C.ClipY - default.RenderTable.GetHeight(C)) * 0.5;
+    X = (C.ClipX * 0.85) - (default.RenderTable.GetWidth() / 2);
 
-    C.Font = C.TinyFont;
-    C.TextSize("A", XL, YL);
-    TableHeight = (default.RangeTable.Length + 3) * YL;     // plus 3 because of table header and to have pretty spacing
-
-    Y = (C.SizeY - TableHeight) / 2;
-    X = C.SizeX * 0.85;
-
-    // draw table rows
-    for (i = 0; i < default.RangeTable.Length; ++i)
-    {
-        Y += YL;
-
-        if(default.RangeTable[i].Pitch >= ActiveLowerBoundPitch && default.RangeTable[i].Pitch <= ActiveUpperBoundPitch)
-        {
-            C.SetDrawColor(0, 128, 64, 255);
-        }
-        else
-        {
-            C.SetDrawColor(0, 80, 32, 255);
-        }
-
-        C.SetPos(X + FirstColumn, Y);
-        C.DrawText(string(default.RangeTable[i].Range) $ "m");
-        C.SetPos(X + SecondColumn, Y);
-        C.SetDrawColor(255, 255, 255, 255);
-        C.DrawText("| " $ default.RangeTable[i].PitchString $ default.AngleUnit);
-    }
+    default.RenderTable.DrawTable(C, X, Y);
 }
 
 // A helper function to draw a single widget on the left panel in spotting scope view
@@ -425,7 +429,9 @@ defaultproperties
     PitchIndicatorLength=300.0
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
+
     AngleUnit="°"
+    DistanceUnit="m"
 
     WidgetsPanelX=50
     WidgetsPanelY=30
