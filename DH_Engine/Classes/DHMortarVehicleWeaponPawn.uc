@@ -377,6 +377,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     if (DHP != none)
     {
+        DHP.QueueHint(49, false);
         DHP.QueueHint(7, false);
         DHP.QueueHint(8, false);
         DHP.QueueHint(9, false);

@@ -20,6 +20,21 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    local DHPlayer DHP;
+
+    DHP = DHPlayer(PC);
+
+    if (DHP != none)
+    {
+        // queue the hint for artillery scopes
+        DHP.QueueHint(49, false);
+    }
+
+    super.ClientKDriverEnter(PC);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestCannon'
