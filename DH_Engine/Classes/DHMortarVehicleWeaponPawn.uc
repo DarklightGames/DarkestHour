@@ -205,7 +205,6 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController                              PC;
-    local vector                                        Loc;
     local float                                         HUDScale, Elevation;
     local int                                           SizeX, SizeY, RoundIndex, Traverse;
     local byte                                          Quotient, Remainder;
@@ -213,6 +212,7 @@ simulated function DrawHUD(Canvas C)
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
+    local float                                         TextWidth, TextHeight, TextLocationX, TextLocationY;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
@@ -263,7 +263,7 @@ simulated function DrawHUD(Canvas C)
                 C.SetDrawColor(128, 128, 128, 255);
             }
 
-            C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
+            C.SetPos(HUDScale * 128.0, C.SizeY - HUDScale * 256.0);
 
             if (RoundIndex == 0)
             {
@@ -275,7 +275,7 @@ simulated function DrawHUD(Canvas C)
             }
 
             // Draw current round type quantity
-            C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
+            C.SetPos(320.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
 
             if (VehWep.MainAmmoCharge[RoundIndex] < 10)
             {
@@ -303,29 +303,13 @@ simulated function DrawHUD(Canvas C)
                 C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
             }
 
-            // Draw current round type name
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(VehWep.ProjectileClass.default.Tag);
-
-            // Draw the elevation indicator icon
-            C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
-            C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-
-            HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
-            Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-            Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-            C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
-            C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
-
-            // Draw elevation & traverse text
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-            C.DrawText("E:" @ string(Elevation));
-
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-            C.DrawText(TraverseString);
+              // Draw current round type name
+              C.SetDrawColor(255, 255, 255, 255);
+              C.StrLen(VehWep.ProjectileClass.default.Tag, TextWidth, TextHeight);
+              TextLocationX = C.CurX - (C.CurX - 320.0 * HUDScale)/2 - TextWidth/2;
+              TextLocationY = C.CurY - 20.0 + SizeY;
+              C.SetPos(TextLocationX, TextLocationY);
+              C.DrawText(VehWep.ProjectileClass.default.Tag);
         }
         else
         {
