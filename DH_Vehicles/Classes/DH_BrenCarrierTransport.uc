@@ -28,7 +28,6 @@ defaultproperties
     bHasTreads=true
     bSpecialTankTurning=true // because Bren Carrier is fully tracked
     VehicleMass=5.0
-    ReinforcementCost=5
     MaxDesireability=1.2
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1

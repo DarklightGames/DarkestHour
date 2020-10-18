@@ -92,7 +92,6 @@ simulated function DestroyAttachments()
 
 defaultproperties
 {
-    ReinforcementCost=17
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
     VehicleNameString="Sherman M4A3E8"
 

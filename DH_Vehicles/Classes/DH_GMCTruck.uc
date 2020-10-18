@@ -12,7 +12,6 @@ defaultproperties
     VehicleNameString="GMC CCKW"
     VehicleTeam=1
     VehicleMass=5.0 //2.5
-    ReinforcementCost=4
     MaxDesireability=0.12
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 

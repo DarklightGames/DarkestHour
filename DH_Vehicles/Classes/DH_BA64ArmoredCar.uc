@@ -14,7 +14,6 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=3.0
-    ReinforcementCost=5
 
     bMustBeTankCommander=false
 
