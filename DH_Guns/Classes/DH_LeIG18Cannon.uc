@@ -36,18 +36,18 @@ defaultproperties
     InitialSecondaryAmmo=15
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=15
-    Spread=0.005
-    SecondarySpread=0.00125  // TODO: REPLACE
+    Spread=0.020
+    SecondarySpread=0.00125
 
     // Weapon fire
-    WeaponFireOffset=16.0  // TODO: REPLACE
-    AddedPitch=0  // TODO: REPLACE
+    WeaponFireOffset=16.0
+    AddedPitch=0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'  // TODO: REPLACE
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'  // TODO: REPLACE
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'  // TODO: REPLACE
-    ReloadStages(0)=(Sound=none)
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
