@@ -7,7 +7,7 @@ class DH_LWP_StandardRiflemanLate extends DHPOLRiflemanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicBackpackLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
 
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SovietAmoebaUrbanPawn extends DH_SovietPawn;
+class DH_SovietAmoebaUrbanPawn extends DH_SovietPawn;  //actually "sand"
 
 defaultproperties
 {

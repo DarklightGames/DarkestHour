@@ -7,7 +7,7 @@ class DH_RKKA_GreatcoatFireteamLeaderLate extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatBrownBagLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatBrownSLLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
 
