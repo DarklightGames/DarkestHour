@@ -9,9 +9,9 @@ defaultproperties
 {
     // Don't have a bone for the Pak40 attachment, so this offsets from the hull's 'body' bone to fit correctly onto the pedestal mount
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
-    Mesh=SkeletalMesh'DH_Stummel.Ger_251_9_verD'
+    Mesh=SkeletalMesh'DH_Stummel.stummel_ext'
     // WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
-    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Ger_2519_Stummel_verD_01'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
     InitialPrimaryAmmo=12
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=12
@@ -22,4 +22,7 @@ defaultproperties
     YawEndConstraint=2600
     CustomPitchUpLimit=3400
     CustomPitchDownLimit=65275
+
+    PrimaryProjectileClass=class'DH_PanzerIVCannonShell'
+    SecondaryProjectileClass=class'DH_PanzerIVCannonShellHE'
 }

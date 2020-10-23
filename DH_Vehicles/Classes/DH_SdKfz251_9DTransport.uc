@@ -22,7 +22,7 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    //standart health (same as marder)
+    //standard health (same as marder)
     Health=525
     HealthMax=525.0
     EngineHealth=300
@@ -32,7 +32,7 @@ defaultproperties
     //^ "unknown property"
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
     VehicleNameString="Sd.Kfz.251/9D Halftrack"
-    PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
+    PassengerWeapons(0)=(WeaponBone="mg_base") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
@@ -50,4 +50,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     //AmmoIgnitionProbability=0.75  // 0.75 default
     //^ "unknown property"
+
+    // STUMMEL TODO:
+    //CollisionAttachments
 }
