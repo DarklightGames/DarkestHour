@@ -257,9 +257,13 @@ state Responding extends Busy
 {
     function BeginState()
     {
+        local int Index;
+        local float X, Y;
         local SoundGroup ResponseSound;
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
+        local DHGameReplicationInfo GRI;
+        local vector MapLocation;
 
         super.BeginState();
 
@@ -276,7 +280,16 @@ state Responding extends Busy
         // Determine the response sound from the response type.
         if (Response.Type == RESPONSE_OK)
         {
+            GRI = DHGameReplicationInfo(Request.Sender.GameReplicationInfo);
+            GRI.GetMapCoords(Request.Sender.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
+            
             // "Artillery strike confirmed."
+            Log("trying to remove barrage request:");
+            Request.Sender.RemovePersonalMarker(Index);
+            Log("removed barrage request");
+            Log("trying to add ongoing barrage in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Request.Sender.SavedArtilleryCoords $ "<");
+            Request.Sender.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_OngoingBarrage', MapLocation.X, MapLocation.Y);
+            Log("added ongoing barrage");
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
             ResponseSound = GetConfirmSound(LI);
         }

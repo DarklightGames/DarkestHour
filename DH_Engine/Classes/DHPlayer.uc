@@ -5736,6 +5736,19 @@ function RemovePersonalMarker(int Index)
     PersonalMapMarkers.Remove(Index, 1);
 }
 
+function int GetPersonalMarkerClassIndex(class<DHMapMarker> MarkerClass)
+{
+    local int i;
+
+    for(i = 0; i < PersonalMapMarkers.Length; i++)
+    {
+        Log("i = " $ i $ ", marker: " $ PersonalMapMarkers[i].MapMarkerClass);
+        if(PersonalMapMarkers[i].MapMarkerClass == MarkerClass)
+            return i;
+    }
+    return -1;
+}
+
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 {
     local int i;

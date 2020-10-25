@@ -27,33 +27,16 @@ function OnSelect(int Index, vector Location)
     switch (Index)
     {
         case 0: // Artillery barrage
+            Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
             PC.DHServerSaveArtilleryPosition(Location);
+            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
+//            self.NotifyRadioman();
             break;
         case 1: // Fire request (Smoke)
-            if(PC.IsArtilleryRequestingLocked())
-            {
-                PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
-            }
-            else
-            {
-                PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
-                PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_Smoke', MapLocation.X, MapLocation.Y);
-                PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
-                PC.ConsoleCommand("SPEECH SUPPORT 8");
-            }
+            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
             break;
         case 2: // Fire request (HE)
-            if(PC.IsArtilleryRequestingLocked())
-            {
-              PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
-            }
-            else
-            {
-                PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
-                PC.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_HE', MapLocation.X, MapLocation.Y);
-                PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, class'DH_Engine.DHMapMarker_FireSupport_HE');
-                PC.ConsoleCommand("SPEECH SUPPORT 8");
-            }
+            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
             break;
     }
 
@@ -108,6 +91,43 @@ function Tick()
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
     PC.SpottingMarker.SetLocation(HitLocation);
     PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
+}
+
+function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMarkerClass)
+{
+    if(PC.IsArtilleryRequestingLocked())
+    {
+      PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
+    }
+    else
+    {
+        PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
+        PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
+        PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+        PC.ConsoleCommand("SPEECH SUPPORT 8");
+    }
+}
+
+function NotifyRadioman(DHPlayer PC)
+{
+    local int                   TeamIndex;
+    local Controller            C;
+    local DHPlayer              OtherPlayerController;
+    local DHRoleInfo            DRI;
+
+    TeamIndex = PC.GetTeamNum();
+    for (C = PC.Level.ControllerList; C != none; C = C.NextController)
+    {
+        OtherPlayerController = DHPlayer(C);
+        if(OtherPlayerController != none)
+        {
+            DRI = DHRoleInfo(OtherPlayerController.GetRoleInfo());
+            if(DRI != none && DRI.bCarriesRadio && OtherPlayerController.GetTeamNum() == TeamIndex)
+            {
+                
+            }
+        }
+    }
 }
 
 defaultproperties

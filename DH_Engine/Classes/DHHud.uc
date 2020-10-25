@@ -3424,14 +3424,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         // Draw the marked arty strike
         Temp = Player.SavedArtilleryCoords;
 
-        if (Temp != vect(0.0, 0.0, 0.0))
-        {
-            Widget = MapIconArtyStrike;
-            Widget.Tints[0].A = 125;
-            Widget.Tints[1].A = 125;
-            DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, Temp, MapCenter, Viewport);
-        }
-
         // Draw the destroyable/destroyed targets
         if (Player.Destroyables.Length != 0)
         {
@@ -3468,19 +3460,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         {
             UpdateDangerZoneOverlay();
             DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
-        }
-
-        // Draw artillery
-        for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
-        {
-            if (DHGRI.DHArtillery[i] != none &&
-                DHGRI.DHArtillery[i].GetTeamIndex() == OwnerTeam)
-            {
-                MapIconArtyStrike.WidgetTexture = DHGRI.DHArtillery[i].default.MapIcon;
-                MapIconArtyStrike.TextureCoords = DHGRI.DHArtillery[i].default.MapIconTextureCoords;
-
-                DHDrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.DHArtillery[i].Location, MapCenter, Viewport);
-            }
         }
 
         // Draw radios
