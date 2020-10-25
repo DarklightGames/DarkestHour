@@ -11,7 +11,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Opel Blitz"
     VehicleMass=3.0
-    ReinforcementCost=4
     MaxDesireability=0.12
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 

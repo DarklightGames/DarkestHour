@@ -32,7 +32,6 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-     ReinforcementCost=11
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
      FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=9.900000,LocationName="lower")
      FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")

@@ -23,7 +23,6 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="T-IV mod.G"
-    ReinforcementCost=4
     VehicleTeam=1
 
     // Hull mesh

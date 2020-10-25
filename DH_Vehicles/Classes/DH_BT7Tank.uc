@@ -10,7 +10,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="BT-7"
     VehicleTeam=1
-    ReinforcementCost=8
     VehicleMass=7.0
 
     // Hull mesh
@@ -72,14 +71,14 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-	// pros: 45mm ammorack is less likely to detonate (was an important factor in T-70 survivability and recoverability)
-	// cons:
-	//- 3 men crew, who are quite close to each other
-	//- petrol fuel
+    // pros: 45mm ammorack is less likely to detonate (was an important factor in T-70 survivability and recoverability)
+    // cons:
+    //- 3 men crew, who are quite close to each other
+    //- petrol fuel
     Health=460
     HealthMax=460.0
-	EngineHealth=300
-	AmmoIgnitionProbability=0.33  // 0.75 default
+    EngineHealth=300
+    AmmoIgnitionProbability=0.33  // 0.75 default
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     TurretDetonationThreshold=3000.0 // increased from 1750
@@ -123,9 +122,9 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
 
     // HUD
-    VehicleHudImage=Texture 'InterfaceArt_ahz_tex.Tank_Hud.BT7_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_ahz_tex.Tank_Hud.BT7_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_ahz_tex.Tank_Hud.BT7_turret_look'
+    VehicleHudImage=Texture 'DH_InterfaceArt_tex.Tank_Hud.BT7_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BT7_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.BT7_turret_look'
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.52

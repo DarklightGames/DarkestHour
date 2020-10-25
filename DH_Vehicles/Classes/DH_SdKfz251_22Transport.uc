@@ -26,7 +26,6 @@ defaultproperties
     Health=525
     HealthMax=525.0
     EngineHealth=300
-    ReinforcementCost=8
 
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"

@@ -12,7 +12,6 @@ defaultproperties
     VehicleNameString="SU-76M"
     VehicleTeam=1
     VehicleMass=8.0
-    ReinforcementCost=8
 
     // Hull mesh
     Mesh=Mesh'allies_su76_anm.SU76_body_ext'
@@ -76,11 +75,11 @@ defaultproperties
 
 
     // Damage
-	// pros:
-	// cons: petrol fuel; 
+    // pros:
+    // cons: petrol fuel;
     Health=525
     HealthMax=525.0
-	EngineHealth=300
+    EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=driver_player,PointOffset=(X=-13.0,Y=-3.0,Z=-8.0),bPenetrationPoint=true,HitPointType=HP_Driver)
@@ -100,14 +99,14 @@ defaultproperties
 
 
     // Sounds
-	// replaced sounds from ro1's SU-76 to T-60, because ro1 sound for SU76 doesnt really sound authentic for it, SU-76 used the same engine as on T-60 but doubled
+    // replaced sounds from ro1's SU-76 to T-60, because ro1 sound for SU76 doesnt really sound authentic for it, SU-76 used the same engine as on T-60 but doubled
     SoundPitch=32 // half normal pitch = 1 octave lower
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
     RumbleSoundBone="body"
     RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
-    
+
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
     LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L09'
@@ -125,9 +124,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.SU76_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.SU76_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.SU76_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.SU76_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.SU76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.SU76_turret_look'
 
     VehicleHudEngineX=0.45
     VehicleHudEngineY=0.67
