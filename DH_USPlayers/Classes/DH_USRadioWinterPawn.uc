@@ -7,5 +7,5 @@ class DH_USRadioWinterPawn extends DH_USWinterPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GI_radioman'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.USWinter_GI_radioman'
 }

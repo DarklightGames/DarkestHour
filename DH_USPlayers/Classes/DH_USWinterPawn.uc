@@ -17,7 +17,7 @@ defaultproperties
 {
     Species=class'DH_USPlayers.DH_American'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GI'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.USWinter_GI'
     Skins(0)=Texture'DHUSCharactersTex.us_heads.WinterFace2'
     Skins(1)=Texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
 

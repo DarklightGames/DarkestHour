@@ -7,7 +7,7 @@ class DH_RKKA_AmoebaUrbanAntiTankLate extends DHSOVAntiTankRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaUrbanPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaUrbanLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
     HeadgearProbabilities(0)=0.5
