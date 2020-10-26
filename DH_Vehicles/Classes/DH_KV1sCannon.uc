@@ -15,7 +15,7 @@ defaultproperties
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1S_turret_collision'
 
     // Turret armor
-    FrontArmorFactor=8.2  
+    FrontArmorFactor=8.2
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=7.5
@@ -45,7 +45,6 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
-	
 
     // Weapon fire
     WeaponFireOffset=69.6
