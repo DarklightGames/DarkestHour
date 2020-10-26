@@ -19,6 +19,7 @@ defaultproperties
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=7.5
+    FrontArmorSlope=5.0  // to do: spherical shape that has different slope depending on elevation
     LeftArmorSlope=15.0
     RightArmorSlope=15.0
     RearArmorSlope=15.0
@@ -44,7 +45,6 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
-	
 
     // Weapon fire
     WeaponFireOffset=69.6
