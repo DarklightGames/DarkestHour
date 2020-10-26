@@ -15,10 +15,11 @@ defaultproperties
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1S_turret_collision'
 
     // Turret armor
-    FrontArmorFactor=8.2
+    FrontArmorFactor=8.2  
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=7.5
+    FrontArmorSlope=5.0  // to do: spherical shape that has different slope depending on elevation
     LeftArmorSlope=15.0
     RightArmorSlope=15.0
     RearArmorSlope=15.0
