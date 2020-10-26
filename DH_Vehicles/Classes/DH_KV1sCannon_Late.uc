@@ -12,4 +12,9 @@ defaultproperties
 	MaxTertiaryAmmo=6
     nProjectileDescriptions(2)="BR-350P"
     ProjectileDescriptions(2)="APCR"
+	
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    ProjectileDescriptions(0)="APBC"
+    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
+
 }
