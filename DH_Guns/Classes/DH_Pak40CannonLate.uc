@@ -9,6 +9,6 @@ defaultproperties
 {
     InitialPrimaryAmmo=15
     InitialSecondaryAmmo=3
-	InitialTertiaryAmmo=0
-	MaxTertiaryAmmo=2
+    InitialTertiaryAmmo=0
+    MaxTertiaryAmmo=2
 }

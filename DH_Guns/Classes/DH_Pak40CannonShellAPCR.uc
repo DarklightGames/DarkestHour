@@ -12,7 +12,7 @@ defaultproperties
     ShellDiameter=5.0 //sub-caliber round
     BallisticCoefficient=1.52 //TODO: pls, check
     SpeedFudgeScale=0.4
-	
+
     //Damage
     ImpactDamage=490  //solid tungsten
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'

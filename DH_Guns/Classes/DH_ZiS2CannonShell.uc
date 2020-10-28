@@ -19,7 +19,6 @@ defaultproperties
     HullFireChance=0.35
     EngineFireChance=0.62
 
-
     //Penetration
     DHPenetrationTable(0)=12.1  // 100m  (from Bird & Livingstone, estimate between rolled homogenous and face hardened armor)
     DHPenetrationTable(1)=11.6  // 250m
