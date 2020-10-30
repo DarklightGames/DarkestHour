@@ -7,5 +7,5 @@ class DH_USRadio2ndRPawn extends DH_US2ndRPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_Radioman'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_Radioman'
 }

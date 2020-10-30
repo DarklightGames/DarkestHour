@@ -7,6 +7,6 @@ class DH_USBeachVest29thPawn extends DH_AmericanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_vest_Beach'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_vest_Beach'
     Skins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
 }
