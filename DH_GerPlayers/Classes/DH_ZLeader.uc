@@ -4,7 +4,7 @@
 //==============================================================================
 // Halloween Special 2020
 
-class DH_ZLeader extends DHGESergeantRoles;
+class DH_ZLeader extends DHAxisRoles;
 
 defaultproperties
 {
@@ -19,6 +19,5 @@ defaultproperties
     HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
     SleeveTexture=Texture'DHEventCharactersTex.Arms.h_sleeves_zombie'
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ViSWeapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
 }
