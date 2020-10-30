@@ -10,7 +10,8 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieRadioHeerPawn')
 
-    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
+    HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
+    SleeveTexture=Texture'DHEventCharactersTex.Arms.german_sleeves_zombie'
 
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
