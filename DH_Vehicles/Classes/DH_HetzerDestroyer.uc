@@ -33,6 +33,7 @@ simulated event DestroyAppearance()
 defaultproperties
 {
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
+     ReinforcementCost=4
      FrontArmor(0)=(Thickness=6.000000,Slope=-40.000000,MaxRelativeHeight=9.900000,LocationName="lower")
      FrontArmor(1)=(Thickness=6.000000,Slope=60.000000,LocationName="upper")
      RightArmor(0)=(Thickness=2.000000,Slope=-15.000000,MaxRelativeHeight=13.000000,LocationName="lower")
@@ -183,13 +184,13 @@ defaultproperties
      ExitPositions(5)=(X=-160.000000,Y=20.000000,Z=50.000000)
      VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
      SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.hetzer'
-	 
+
      //Health cons: petrol fuel
      //4 men crew
 	 Health=525
      HealthMax=525.0
 	 EngineHealth=260 //slightly overloaded
-	 
+
      EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
      DisintegrationHealth=-800.0 //petrol
 	 // reduced reliability due to increased weight
