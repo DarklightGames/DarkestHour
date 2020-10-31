@@ -10,6 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=2.0
+    ReinforcementCost=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
