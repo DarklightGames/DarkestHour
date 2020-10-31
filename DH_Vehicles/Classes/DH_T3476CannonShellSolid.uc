@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_T3476CannonShell extends DHSovietCannonShell;  //BR-350B
+class DH_T3476CannonShellSolid extends DHSovietCannonShell; //BR-350BSP
 
 defaultproperties
 {
@@ -14,23 +14,23 @@ defaultproperties
     BallisticCoefficient=1.55 //TODO: pls, check
 
     //Damage
-    ImpactDamage=670  //109 gramms TNT filler
+    ImpactDamage=530  //solid shell - no filler
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    HullFireChance=0.55
-    EngineFireChance=0.91
+    HullFireChance=0.26
+    EngineFireChance=0.66
 
     //Penetration
-    DHPenetrationTable(0)=8.2  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity, in between rolled homogenous and face hardened armor)
-    DHPenetrationTable(1)=7.9  // 250m
-    DHPenetrationTable(2)=7.4  // 500m
-    DHPenetrationTable(3)=7.1
-    DHPenetrationTable(4)=6.7  // 1000m
-    DHPenetrationTable(5)=6.4
-    DHPenetrationTable(6)=6.0  // 1500m
-    DHPenetrationTable(7)=5.6
-    DHPenetrationTable(8)=5.3  // 2000m
-    DHPenetrationTable(9)=4.7
-    DHPenetrationTable(10)=4.2 // 3000m
+    DHPenetrationTable(0)=8.6  // 100m  // +4mm relatively to BR-350B (info on this shell is rather obscure, Bird & Livingstone suggest 1.06 modifier)
+    DHPenetrationTable(1)=8.3  // 250m
+    DHPenetrationTable(2)=7.8  // 500m
+    DHPenetrationTable(3)=7.5
+    DHPenetrationTable(4)=7.2  // 1000m
+    DHPenetrationTable(5)=6.8
+    DHPenetrationTable(6)=6.4  // 1500m
+    DHPenetrationTable(7)=6.1
+    DHPenetrationTable(8)=5.7  // 2000m
+    DHPenetrationTable(9)=5.2
+    DHPenetrationTable(10)=4.6 // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.410)

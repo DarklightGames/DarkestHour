@@ -12,6 +12,7 @@ defaultproperties
     VehicleNameString="SU-76M"
     VehicleTeam=1
     VehicleMass=8.0
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=Mesh'allies_su76_anm.SU76_body_ext'

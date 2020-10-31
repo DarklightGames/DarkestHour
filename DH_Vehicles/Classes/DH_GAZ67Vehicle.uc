@@ -11,6 +11,7 @@ defaultproperties
     VehicleNameString="GAZ-67"
     VehicleTeam=1
     VehicleMass=3.5
+    ReinforcementCost=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh

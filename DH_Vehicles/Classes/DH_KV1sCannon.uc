@@ -46,6 +46,9 @@ defaultproperties
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
 
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellSolid'
+    nProjectileDescriptions(0)="BR-350BSP" // 1942 solid shell, after A and before the "proper" B
+
     // Weapon fire
     WeaponFireOffset=69.6
     AltFireOffset=(X=-54.5,Y=12.0,Z=-0.5)

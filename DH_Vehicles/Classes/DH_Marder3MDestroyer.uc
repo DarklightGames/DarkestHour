@@ -10,6 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Marder III Ausf.M"
     VehicleMass=11.0
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'

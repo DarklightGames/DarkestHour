@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSSPawnC',Weight=1.5)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSpringSmockSSPawnC',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve' //closest looking; to do: proper sleeve texture
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.DotGreenSleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
 }
