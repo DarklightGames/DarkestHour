@@ -14,6 +14,9 @@ defaultproperties
     PluralName=""
     Limit=1
 
+    bIsLeader=true
+    bRequiresSL=true
+
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieLeaderPawn',Weight=1.0)
 
     HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
