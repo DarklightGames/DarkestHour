@@ -13,6 +13,7 @@ defaultproperties
     VehicleNameString="T-60 Light Tank"
     VehicleTeam=1
     VehicleMass=6.5
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T60_anm.T60_body_ext'
