@@ -24,6 +24,7 @@ var     bool                bSpawnWithExtraAmmo;    // role spawns with extra am
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
+var     bool                bRequiresSL;
 
 var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
 var     Material            HandTexture;          // the hand texture this role should use
