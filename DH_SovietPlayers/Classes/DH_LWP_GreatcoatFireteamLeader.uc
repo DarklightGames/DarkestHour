@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatBrownSLPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
 
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
