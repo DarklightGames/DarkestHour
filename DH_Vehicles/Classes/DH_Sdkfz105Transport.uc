@@ -27,6 +27,7 @@ defaultproperties
     VehicleNameString="Sd.Kfz. 10/5"
     bHasTreads=true
     VehicleMass=6.5
+    ReinforcementCost=2
     MaxDesireability=1.2
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'

@@ -8,7 +8,7 @@ class DH_RKKA_AmoebaSniperEarly extends DHSOVSniperRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaGreenSleeves'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedWeapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')

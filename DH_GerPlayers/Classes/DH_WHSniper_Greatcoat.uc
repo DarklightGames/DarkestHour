@@ -11,6 +11,6 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
     DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
+    Headgear(0)=class'ROInventory.ROGermanHat'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
 }

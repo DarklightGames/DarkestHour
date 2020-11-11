@@ -7,5 +7,5 @@ class DH_USRadio29thPawn extends DH_US29thPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_Radioman'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_Radioman'
 }

@@ -7,5 +7,8 @@ if %ERRORLEVEL% GEQ 1 (
     exit /b %ERRORLEVEL%
 )
 
+echo Clearing WindowPositions...
+python ..\tools\scripts\clear-windowpositions.py ..\DarkestHourDev\System\DarkestHourDevUser.ini
+
 echo Launching DHEd...
 start ROEdLAA.exe %* -mod=DarkestHourDev -nogamma

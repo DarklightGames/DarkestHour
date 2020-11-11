@@ -186,6 +186,12 @@ function Timer()
 
     super.Timer();
 
+    if (bDeleteMe)
+    {
+        // Rally point is already slated to be deleted.
+        return;
+    }
+
     GetPlayerCountsWithinRadius(OverrunRadiusInMeters,,, OverrunningEnemiesCount);
 
     // Destroy the rally point immediately if there are enemies within a

@@ -9,7 +9,7 @@ defaultproperties
 {
     Species=class'DH_BritishPlayers.DH_British'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry'
+    Mesh=SkeletalMesh'DHCharactersBRIT_anm.Brit_Infantry'
     Skins(0)=Texture'DHBritishCharactersTex.PBI.British_Infantry'
     Skins(1)=Texture'DHBritishCharactersTex.Faces.BritParaFace1'
 
