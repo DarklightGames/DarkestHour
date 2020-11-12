@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_LWPTunicSLLatePawn extends DH_SovietPawn;
+class DH_LWPTunicSLLatePawn extends DH_LWPPawn;
 
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_SL_late'
     Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
 
     bReversedSkinsSlots=true
 }
