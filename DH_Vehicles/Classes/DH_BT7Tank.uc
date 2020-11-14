@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="BT-7"
     VehicleTeam=1
-    ReinforcementCost=8
+    ReinforcementCost=3
     VehicleMass=7.0
 
     // Hull mesh

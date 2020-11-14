@@ -13,7 +13,7 @@ defaultproperties
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
-    ReinforcementCost=6
+    ReinforcementCost=3
     MaxDesireability=1.2
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'

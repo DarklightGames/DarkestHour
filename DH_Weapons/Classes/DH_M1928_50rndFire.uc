@@ -16,7 +16,7 @@ defaultproperties
     RecoilRate=0.05
     MaxVerticalRecoilAngle=245
     MaxHorizontalRecoilAngle=115
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.66),(InVal=9.0,OutVal=1.2),(InVal=20.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=2.0,OutVal=0.6),(InVal=5.0,OutVal=0.7),(InVal=9.0,OutVal=1.2),(InVal=20.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=12.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'

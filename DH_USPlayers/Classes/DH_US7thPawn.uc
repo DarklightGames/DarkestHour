@@ -7,7 +7,7 @@ class DH_US7thPawn extends DH_AmericanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_Beach'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_Beach'
     Skins(1)=Texture'DHUSCharactersTex.7thNaval.US_7thNaval_1'
 
     BodySkins(0)=Texture'DHUSCharactersTex.7thNaval.US_7thNaval_1'

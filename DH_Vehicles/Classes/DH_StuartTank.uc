@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M5 Stuart"
     VehicleTeam=1
     VehicleMass=7.0
-    ReinforcementCost=8
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'

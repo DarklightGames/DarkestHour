@@ -9,18 +9,22 @@ class DHVoiceSayMessage extends DHLocalMessage
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
     local color ConsoleColor, NameColor;
-    local DHPlayerReplicationInfo MyPRI, OtherPRI;
+    local DHPlayerReplicationInfo MyPRI;
+    local string SquadMemberID;
 
     if (RelatedPRI_1 == none || RelatedPRI_1.PlayerName == "")
     {
         return "";
     }
 
-    MyPRI = DHPlayerReplicationInfo(myHUD.PlayerOwner.PlayerReplicationInfo);
-    OtherPRI = DHPlayerReplicationInfo(RelatedPRI_1);
     ConsoleColor = GetDHConsoleColor(RelatedPRI_1, 0, false);
 
-    if (MyPRI != none && OtherPRI != none && MyPRI.SquadIndex != -1 && MyPRI.SquadIndex == OtherPRI.SquadIndex)
+    if (myHUD != none && myHUD.PlayerOwner != none)
+    {
+        MyPRI = DHPlayerReplicationInfo(myHUD.PlayerOwner.PlayerReplicationInfo);
+    }
+
+    if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
     {
         NameColor = class'DHColor'.default.SquadColor;
     }
@@ -29,7 +33,16 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         NameColor = ConsoleColor;
     }
 
-    return default.MessagePrefix @ class'GameInfo'.static.MakeColorCode(NameColor) $ RelatedPRI_1.PlayerName $ class'GameInfo'.static.MakeColorCode(ConsoleColor) @ ":" @ MessageString;
+    SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
+    if (SquadMemberID != "") SquadMemberID $= " ";
+
+    return default.MessagePrefix @
+           class'GameInfo'.static.MakeColorCode(NameColor) $
+           SquadMemberID $
+           RelatedPRI_1.PlayerName $
+           class'GameInfo'.static.MakeColorCode(ConsoleColor) @
+           ":" @
+           MessageString;
 }
 
 defaultproperties
@@ -38,4 +51,3 @@ defaultproperties
     bComplexString=true
     bBeep=true
 }
-

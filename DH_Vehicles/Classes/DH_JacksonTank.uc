@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M36 Jackson"
     VehicleTeam=1
     VehicleMass=13.0
-    ReinforcementCost=21
+    ReinforcementCost=7
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_ext'

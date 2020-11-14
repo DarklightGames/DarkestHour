@@ -69,4 +69,11 @@ static final function rotator RDeceleration(float T, rotator A, rotator B)
     return RLinear(Deceleration(T, 0.0, 1.0), A, B);
 }
 
+// Shading function for yaw & pitch indicators
+// This function is a bell curve with the following characteristics:
+// f(0) = 0, f(1/2) = 1, f(1) = 0
+static final function float Mimi(float T)
+{
+    return 16 * (T ** 2) * ((T - 1) ** 2);
+}
 

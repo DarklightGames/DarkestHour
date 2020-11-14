@@ -92,9 +92,9 @@ simulated function DestroyAttachments()
 
 defaultproperties
 {
-    ReinforcementCost=17
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
     VehicleNameString="Sherman M4A3E8"
+    ReinforcementCost=8
 
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
     LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
@@ -248,4 +248,3 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8.Right_Drive_Wheel'
 }
-

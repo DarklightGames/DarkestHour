@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
     VehicleMass=2.0
-    ReinforcementCost=3
+    ReinforcementCost=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh

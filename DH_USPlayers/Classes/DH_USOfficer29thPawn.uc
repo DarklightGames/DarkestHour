@@ -7,5 +7,5 @@ class DH_USOfficer29thPawn extends DH_US29thPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_Officer'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_Officer'
 }

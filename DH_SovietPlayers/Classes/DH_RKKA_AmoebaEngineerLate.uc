@@ -7,7 +7,7 @@ class DH_RKKA_AmoebaEngineerLate extends DH_RKKA_AmoebaEngineerEarly;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaLatePawn',Weight=1.0)
 
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')

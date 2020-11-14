@@ -9,7 +9,7 @@ defaultproperties
 {
     Species=class'DH_SovietPlayers.DH_Soviet'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
     Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
 

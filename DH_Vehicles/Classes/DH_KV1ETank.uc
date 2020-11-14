@@ -14,7 +14,7 @@ defaultproperties
     VehicleNameString="KV-1E"
     VehicleTeam=1
     VehicleMass=16.0
-    ReinforcementCost=27
+    ReinforcementCost=11
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_ext'

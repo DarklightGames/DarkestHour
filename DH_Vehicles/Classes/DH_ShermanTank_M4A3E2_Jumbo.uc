@@ -7,8 +7,8 @@ class DH_ShermanTank_M4A3E2_Jumbo extends DH_ShermanTank_M4A375W;
 
 defaultproperties
 {
-    ReinforcementCost=19
     VehicleNameString="M4A3E2(75)W Sherman"
+    ReinforcementCost=8
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E2_Jumbo')
     VehicleMass=14.0
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_ext'
