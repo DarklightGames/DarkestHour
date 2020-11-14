@@ -27,14 +27,13 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
     {
         NameColor = class'DHColor'.default.SquadColor;
+        SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
+        if (SquadMemberID != "") SquadMemberID $= " ";
     }
     else
     {
         NameColor = ConsoleColor;
     }
-
-    SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
-    if (SquadMemberID != "") SquadMemberID $= " ";
 
     return default.MessagePrefix @
            class'GameInfo'.static.MakeColorCode(NameColor) $
