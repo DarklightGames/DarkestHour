@@ -122,12 +122,13 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NotQualified;
     }
 
-    if (PC.SavedArtilleryCoords == vect(0, 0, 0))
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (PC.GetPersonalMarkerClassIndex(class'DHMapMarker_FireSupport_BarrageRequest') == -1 
+      && GRI.GetActiveArtilleryStrikesNumber() == 0)
     {
         return ERROR_NoTarget;
     }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
     {
@@ -166,6 +167,7 @@ simulated function bool IsPlayerQualified(DHPlayer PC)
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
 {
     local DHPlayer PC;
+    local DHGameReplicationInfo.MapMarker ArtilleryRequestMapMarker; 
 
     PC = DHPlayer(Sender.Controller);
 
@@ -174,11 +176,13 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
         return;
     }
 
+    ArtilleryRequestMapMarker = PC.FindPersonalMarker(class'DHMapMarker_FireSupport_BarrageRequest');
+
     Request = new class'DHArtilleryRequest';
     Request.TeamIndex = PC.GetTeamNum();
     Request.Sender = PC;
     Request.ArtilleryTypeIndex = ArtilleryTypeIndex;
-    Request.Location = PC.SavedArtilleryCoords;
+    Request.Location = ArtilleryRequestMapMarker.WorldLocation;
 
     GotoState('Requesting');
 }
@@ -210,6 +214,7 @@ state Requesting extends Busy
     {
         local SoundGroup RequestSound;
         local DH_LevelInfo LI;
+        local DHPlayer PC;
 
         super.BeginState();
 
@@ -222,13 +227,19 @@ state Requesting extends Busy
 
         if (Request == none ||
             Request.Sender == none ||
-            Request.Location == vect(0, 0, 0) ||
             Request.ArtilleryTypeIndex < 0 ||
             Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass == none ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum())
         {
             Warn("Invalid request parameters.");
+            Log("Request" @ Request);
+            Log("Request.Sender" @ Request.Sender);
+            Log("Request.ArtilleryTypeIndex" @ Request.ArtilleryTypeIndex);
+            Log("Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length" @ Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length);
+            Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass);
+            Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum()" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum());
+            
             return;
         }
 
@@ -236,15 +247,15 @@ state Requesting extends Busy
         Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
-        RequestSound = GetRequestSound(LI);
+        //RequestSound = GetRequestSound(LI);
 
         if (Request.Sender.Pawn != none)
         {
-            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+            //Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
         }
 
         // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
+        SetTimer(ResponseDelaySeconds, false);
     }
 
     function Timer()
@@ -281,17 +292,15 @@ state Responding extends Busy
         if (Response.Type == RESPONSE_OK)
         {
             GRI = DHGameReplicationInfo(Request.Sender.GameReplicationInfo);
-            GRI.GetMapCoords(Request.Sender.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
+            GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
             
             // "Artillery strike confirmed."
-            Log("trying to remove barrage request:");
-            Request.Sender.RemovePersonalMarker(Index);
-            Log("removed barrage request");
-            Log("trying to add ongoing barrage in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Request.Sender.SavedArtilleryCoords $ "<");
-            Request.Sender.AddMarker(class'DH_Engine.DHMapMarker_FireSupport_OngoingBarrage', MapLocation.X, MapLocation.Y);
-            Log("added ongoing barrage");
+            // Log("trying to remove barrage request:");
+            // Index = 
+            // Request.Sender.RemovePersonalMarker(Index);
+            // Log("removed barrage request");
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
-            ResponseSound = GetConfirmSound(LI);
+            //ResponseSound = GetConfirmSound(LI);
         }
         else
         {
@@ -310,6 +319,10 @@ state Responding extends Busy
                     // "Invalid target location for {name}."
                     Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 6,,, Request.GetArtilleryClass());
                     break;
+                case RESPONSE_NoTarget:
+                    // "No target location."
+                    Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 9,,, Request.GetArtilleryClass());
+                    break;
                 case RESPONSE_TooSoon:
                     // "{name}s are currently in use, try again soon."
                     Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 3,,, Request.GetArtilleryClass());
@@ -323,11 +336,11 @@ state Responding extends Busy
                     break;
             }
 
-            ResponseSound = GetDenySound(LI);
+            //ResponseSound = GetDenySound(LI);
         }
 
         // Play the response sound.
-        PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
+        //PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
 
         // Wait for the duration of the response sound, then move to the Idle state.
         SetTimer(FMax(1.0, GetSoundDuration(ResponseSound)), false);

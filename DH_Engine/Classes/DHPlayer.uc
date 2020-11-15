@@ -1005,7 +1005,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 }
 
 // Modified to require player to be an arty officer instead of RO's bIsLeader role, to remove check that map contains a radio, & to optimise
-function DHServerSaveArtilleryPosition(vector ArtilleryLocation)
+function bool CheckArtilleryRequestValidity(vector ArtilleryLocation)
 {
     local DHRoleInfo   RI;
     local DHVolumeTest VT;
@@ -1014,7 +1014,7 @@ function DHServerSaveArtilleryPosition(vector ArtilleryLocation)
 
     if (Pawn == none || Pawn.Health <= 0)
     {
-        return;
+        return false;
     }
 
     RI = DHRoleInfo(GetRoleInfo());
@@ -1035,13 +1035,15 @@ function DHServerSaveArtilleryPosition(vector ArtilleryLocation)
         if (bValidTarget)
         {
             ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
-            SavedArtilleryCoords = ArtilleryLocation;
+            return true;
         }
         else
         {
             ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
+            return false;
         }
     }
+    return false;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
@@ -1106,15 +1108,6 @@ simulated function bool IsASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
 }
 
-// Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
-// The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
-function ServerArtyStrike()
-{
-    if (Spawn(class'DHArtillerySpawner', self,, SavedArtilleryCoords, rotator(PhysicsVolume.Gravity)) == none)
-    {
-        Log("Error spawning artillery shell spawner!");
-    }
-}
 
 // Modified to use any distance fog setting for the zone we're in
 simulated function float GetMaxViewDistance()
@@ -5649,6 +5642,7 @@ function array<DHGameReplicationInfo.MapMarker> GetPersonalMarkers()
 function DHGameReplicationInfo.MapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
 {
     local int i;
+    local DHGameReplicationInfo.MapMarker Marker;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
@@ -5657,6 +5651,8 @@ function DHGameReplicationInfo.MapMarker FindPersonalMarker(class<DHMapMarker> M
             return PersonalMapMarkers[i];
         }
     }
+
+    return Marker; // dummy marker
 }
 
 function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
@@ -5744,7 +5740,9 @@ function int GetPersonalMarkerClassIndex(class<DHMapMarker> MarkerClass)
     {
         Log("i = " $ i $ ", marker: " $ PersonalMapMarkers[i].MapMarkerClass);
         if(PersonalMapMarkers[i].MapMarkerClass == MarkerClass)
+        {
             return i;
+        }
     }
     return -1;
 }

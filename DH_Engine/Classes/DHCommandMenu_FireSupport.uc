@@ -24,22 +24,23 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    switch (Index)
+    if(PC.CheckArtilleryRequestValidity(Location))
     {
-        case 0: // Artillery barrage
-            Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
-            PC.DHServerSaveArtilleryPosition(Location);
-            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
-//            self.NotifyRadioman();
-            break;
-        case 1: // Fire request (Smoke)
-            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
-            break;
-        case 2: // Fire request (HE)
-            self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
-            break;
+        switch (Index)
+        {
+            case 0: // Artillery barrage
+                Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
+                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
+//              self.NotifyRadioman();
+                break;
+            case 1: // Fire request (Smoke)
+                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
+                break;
+            case 2: // Fire request (HE)
+                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
+                break;
+        }
     }
-
     Interaction.Hide();
 }
 
@@ -97,7 +98,7 @@ function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMa
 {
     if(PC.IsArtilleryRequestingLocked())
     {
-      PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
+        PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
     }
     else
     {

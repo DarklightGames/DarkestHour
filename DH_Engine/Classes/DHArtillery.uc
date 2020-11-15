@@ -10,13 +10,13 @@ class DHArtillery extends Actor
 var protected localized string  MenuName;
 var Material                    MenuIcon;
 
-var Material                    MapIcon;
-var IntBox                      MapIconTextureCoords;
-
 var protected int               TeamIndex;
 var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
+
+var class<DHMapMarker_FireSupport>  BarrageRequestMarkerClass;
+var class<DHMapMarker_ArtilleryHit> OngoingBarrageMarkerClass;
 
 replication
 {
@@ -115,9 +115,6 @@ defaultproperties
     bAlwaysRelevant=true
 
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
-
-    MapIcon=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
-    MapIconTextureCoords=(X1=0,Y1=64,X2=63,Y2=127)
 
     bCanBeCancelled=true
 }

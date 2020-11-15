@@ -25,7 +25,11 @@ var DHGameReplicationInfo GRI;
 function PostBeginPlay()
 {
     local DH_LevelInfo LI;
-    local float StrikeDelay, MaxSalvoDuration;
+    local float                           StrikeDelay, MaxSalvoDuration;
+    local DHPlayer                        PC;
+    local vector                          MapLocation;
+    local int                             Index;
+    local DHGameReplicationInfo.MapMarker RequestMapMarker;
 
     super.PostBeginPlay();
 
@@ -63,11 +67,31 @@ function PostBeginPlay()
     // This actor's LifeSpan is set to the maximum possible length of the strike, assuming the max random time between shells & salvoes
     MaxSalvoDuration = 1.5 * (BatterySize - 1);
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
+    
+    PC = DHPlayer(Owner);
+    if(PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        if(GRI != none)
+        {
+            // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
+            RequestMapMarker = PC.FindPersonalMarker(self.BarrageRequestMarkerClass);
+            Log("trying to add an ongoing barrage marker");
+            GRI.GetMapCoords(RequestMapMarker.WorldLocation, MapLocation.X, MapLocation.Y);
+            PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y);
+            Log("added an ongoing barrage marker");
+        }
+        else
+        {
+            Error("could not add a barrage marker :(");
+        }
+    }
 }
 
 // From deprecated ROArtillerySpawner
 function Destroyed()
 {
+    local DHPlayer              PC;
     // TODO: this is retarded
     if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
     {
@@ -77,6 +101,15 @@ function Destroyed()
     {
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
+    
+    // new marking system - remove the hit marker after artillery is finished
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    Log("trying to invalidate the barrage marker");
+    if(GRI == none || !GRI.InvalidateBarrageMarker(TeamIndex, self.OngoingBarrageMarkerClass))
+    {
+        Warn("Could not invalidate a target marker");
+    }
+    PC = DHPlayer(Owner);
 
     LastSpawnedShell = none;
 }
@@ -210,3 +243,8 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
     return LI.GetStrikeInterval(TeamIndex) * 2.0;
 }
 
+defaultproperties
+{
+    BarrageRequestMarkerClass=class'DHMapMarker_FireSupport_BarrageRequest'
+    OngoingBarrageMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
+}

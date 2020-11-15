@@ -106,6 +106,7 @@ enum EArtilleryResponseType
     RESPONSE_Unavailable,
     RESPONSE_Exhausted,
     RESPONSE_BadLocation,
+    RESPONSE_NoTarget,
     RESPONSE_NotQualified,
     RESPONSE_TooSoon,
     RESPONSE_BadRequest
@@ -1983,7 +1984,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0); // stops arty co-ords remaining on player's map if he stops being an arty officer
                     SetCharacter(aPlayer);
                 }
             }
@@ -3879,7 +3879,6 @@ function PlayerLeftTeam(PlayerController P)
         PC.GrenadeWeapon = -1;
         PC.DesiredGrenade = 0;
         PC.bWeaponsSelected = false;
-        PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
         PC.SpawnPointIndex = -1;
         PC.bSpawnPointInvalidated = true;
 
@@ -5325,6 +5324,10 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
     }
+    else if(Request.Location == vect(0,0,0))
+    {
+        Response.Type = RESPONSE_NoTarget;
+    }
     else
     {
         // Don't let the player call in an artillery strike on a location that has
@@ -5428,7 +5431,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="Gï¿½nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5437,10 +5440,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton Mï¿½ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans Grï¿½schke"
+    GermanNames(12)="Wilhelm Krï¿½ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
