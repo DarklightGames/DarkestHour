@@ -18,7 +18,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsArtilleryRole();
+    return PC != none && PC.IsArtilleryOperator();
 }
 
 // Disable for everyone - artillery hits can't be removed from the map.
@@ -109,7 +109,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsArtilleryRole() && PC.ArtilleryHitInfo.bIsWithinRadius && Marker.OptionalObject == PC;
+    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius && Marker.OptionalObject == PC;
 }
 
 defaultproperties

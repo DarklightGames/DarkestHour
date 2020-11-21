@@ -24,13 +24,14 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    if(PC.CheckIfTargetIsValid(Location))
+    if(PC.IsArtillerySpotter() && PC.CheckIfTargetIsValid(Location))
     {
         switch (Index)
         {
             case 0: // Artillery barrage
                 Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
+                PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
 //              self.NotifyRadioman();
                 break;
             case 1: // Fire request (Smoke)
@@ -40,6 +41,10 @@ function OnSelect(int Index, vector Location)
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
                 break;
         }
+    }
+    else
+    {
+        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
     }
     Interaction.Hide();
 }
@@ -96,7 +101,7 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-    if(PC.CheckIfArtilleryIsAllowed(HitLocation))
+    if(PC.CheckIfTargetIsValid(HitLocation))
     {
         C.G = 255;
         PC.SpottingMarker.SetColor(C);

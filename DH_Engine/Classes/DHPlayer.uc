@@ -1004,12 +1004,10 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     }
 }
 
-// This function checks if the player can call artilelry on the selected target.
+// This function checks if the player can call artillery on the selected target.
 function bool CheckIfTargetIsValid(vector ArtilleryLocation)
 {
-    local DHRoleInfo   RI;
     local DHVolumeTest VT;
-    local DHPlayerReplicationInfo PRI;
     local bool         bValidTarget;
 
     if (Pawn == none || Pawn.Health <= 0)
@@ -1017,29 +1015,19 @@ function bool CheckIfTargetIsValid(vector ArtilleryLocation)
         return false;
     }
 
-    RI = DHRoleInfo(GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
     // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
 
-    if (RI != none && RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
+    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+
+    if (VT != none)
     {
-        VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+        bValidTarget = !VT.IsInNoArtyVolume();
+        VT.Destroy();
+    }
 
-        if (VT != none)
-        {
-            bValidTarget = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
-
-        if (bValidTarget)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+    if (bValidTarget)
+    {
+        return true;
     }
     return false;
 }
@@ -2160,13 +2148,22 @@ simulated function ResetSwayAfterBolt()
     SwayTime = 0.0;
 }
 
-simulated function bool IsArtilleryRole()
+simulated function bool IsArtilleryOperator()
 {
     local DHRoleInfo RI;
 
     RI = DHRoleInfo(GetRoleInfo());
 
     return RI != none && RI.bCanUseMortars || IsInArtilleryVehicle();
+}
+
+simulated function bool IsArtillerySpotter()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+
+    return (RI.bIsArtilleryOfficer || self.IsSL());
 }
 
 // Modified to allow mortar operator to make a resupply request
