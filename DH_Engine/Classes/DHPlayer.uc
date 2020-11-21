@@ -2186,7 +2186,7 @@ function ServerNotifyRadioman()
             if(DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
             {
                 Log("trying to notify the radioman");
-                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,,, self);
+                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,, PlayerReplicationInfo, OtherPlayer);
             }
         }
     }

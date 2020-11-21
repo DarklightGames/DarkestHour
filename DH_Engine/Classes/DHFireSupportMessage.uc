@@ -16,12 +16,13 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    local class<DHMapMarker_FireSupport> MapMarkerClass;
-    local int  Seconds;
-    local DHGameReplicationInfo GRI;
-    local DHPlayer PC;
-    local string SquadName;
-    local DHSquadReplicationInfo SRI;
+    local class<DHMapMarker_FireSupport>  MapMarkerClass;
+    local int                             Seconds;
+    local DHGameReplicationInfo           GRI;
+    local DHPlayerReplicationInfo         PRI;
+    local DHSquadReplicationInfo          SRI;
+    local DHPlayer                        PC;
+    local string                          SquadName;
 
     switch (Switch)
     {
@@ -46,16 +47,14 @@ static function string GetString(
             }
             break;
         case 2:
-            Log("radioman notification");
-            PC = DHPlayer(OptionalObject);
-            Log("PC != none" $ PC != none);
-            Log("PC.GameReplicationInfo != none" $ PC.GameReplicationInfo != none);
-            if (PC != none && PC.GameReplicationInfo != none)
+            PC = DHPlayer(OptionalObject);                // radioman
+            PRI = DHPlayerReplicationInfo(RelatedPRI_2);  // artillery spotter
+            
+            
+            if (PRI != none && PC != none)
             {
-                GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
                 SRI = PC.SquadReplicationInfo;
-                SquadName = SRI.GetSquadName(PC.GetTeamNum(), PC.GetSquadIndex());
-                Log("sending notification...");
+                SquadName = SRI.GetSquadName(PRI.Team.TeamIndex, PRI.SquadIndex);
                 return Repl(default.RadiomanNotification, "{squad}", SquadName);
             }
     }
