@@ -74,7 +74,6 @@ function PostBeginPlay()
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         if(GRI != none)
         {
-            // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
             RequestMapMarker = PC.FindPersonalMarker(self.BarrageRequestMarkerClass);
             Log("trying to add an ongoing barrage marker");
             GRI.GetMapCoords(RequestMapMarker.WorldLocation, MapLocation.X, MapLocation.Y);

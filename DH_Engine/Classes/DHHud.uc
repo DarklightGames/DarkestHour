@@ -3811,13 +3811,17 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
             (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
             PersonalMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PersonalMapMarkers[i]))
         {
+            L.X = float(PersonalMapMarkers[i].LocationX) / 255.0;
+            L.Y = float(PersonalMapMarkers[i].LocationY) / 255.0;
+            L = DHGRI.GetWorldCoords(L.X, L.Y);
+            
             DrawMapMarkerOnMap(C,
                                SubCoords,
                                MyMapScale,
                                MapCenter,
                                Viewport,
                                PersonalMapMarkers[i].MapMarkerClass,
-                               PersonalMapMarkers[i].WorldLocation,
+                               L,
                                PC.Pawn,
                                PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
         }
