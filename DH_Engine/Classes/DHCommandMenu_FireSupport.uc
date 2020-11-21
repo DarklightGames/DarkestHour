@@ -31,8 +31,7 @@ function OnSelect(int Index, vector Location)
             case 0: // Artillery barrage
                 Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
-                PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
-//              self.NotifyRadioman();
+                PC.NotifyRadioman();
                 break;
             case 1: // Fire request (Smoke)
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
@@ -127,28 +126,6 @@ function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMa
         PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
         PC.ConsoleCommand("SPEECH SUPPORT 8");
-    }
-}
-
-function NotifyRadioman(DHPlayer PC)
-{
-    local int                   TeamIndex;
-    local Controller            C;
-    local DHPlayer              OtherPlayerController;
-    local DHRoleInfo            DRI;
-
-    TeamIndex = PC.GetTeamNum();
-    for (C = PC.Level.ControllerList; C != none; C = C.NextController)
-    {
-        OtherPlayerController = DHPlayer(C);
-        if(OtherPlayerController != none)
-        {
-            DRI = DHRoleInfo(OtherPlayerController.GetRoleInfo());
-            if(DRI != none && DRI.bCarriesRadio && OtherPlayerController.GetTeamNum() == TeamIndex)
-            {
-                
-            }
-        }
     }
 }
 

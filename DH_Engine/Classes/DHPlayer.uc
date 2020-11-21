@@ -2166,6 +2166,31 @@ simulated function bool IsArtillerySpotter()
     return (RI.bIsArtilleryOfficer || self.IsSL());
 }
 
+function NotifyRadioman()
+{
+    local int                   TeamIndex;
+    local Controller            C;
+    local DHPlayer              Radioman;
+    local DHRoleInfo            DRI;
+
+    TeamIndex = GetTeamNum();
+    Log("for controllerlist");
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        Log("Controller" $ C);
+        Radioman = DHPlayer(C);
+        if(Radioman != none)
+        {
+            Log("trying to notify the radioman");
+            DRI = DHRoleInfo(Radioman.GetRoleInfo());
+            if(DRI != none && DRI.bCarriesRadio && Radioman.GetTeamNum() == TeamIndex)
+            {
+                Radioman.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,,, self);
+            }
+        }
+    }
+}
+
 // Modified to allow mortar operator to make a resupply request
 function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
 {
