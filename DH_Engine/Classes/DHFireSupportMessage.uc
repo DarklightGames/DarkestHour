@@ -46,12 +46,16 @@ static function string GetString(
             }
             break;
         case 2:
+            Log("radioman notification");
             PC = DHPlayer(OptionalObject);
+            Log("PC != none" $ PC != none);
+            Log("PC.GameReplicationInfo != none" $ PC.GameReplicationInfo != none);
             if (PC != none && PC.GameReplicationInfo != none)
             {
                 GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
                 SRI = PC.SquadReplicationInfo;
                 SquadName = SRI.GetSquadName(PC.GetTeamNum(), PC.GetSquadIndex());
+                Log("sending notification...");
                 return Repl(default.RadiomanNotification, "{squad}", SquadName);
             }
     }

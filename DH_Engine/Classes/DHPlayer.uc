@@ -2171,22 +2171,22 @@ function ServerNotifyRadioman()
 {
     local int                   TeamIndex;
     local Controller            C;
-    local DHPlayer              Radioman;
+    local DHPlayer              OtherPlayer;
     local DHRoleInfo            DRI;
 
     TeamIndex = GetTeamNum();
     Log("for controllerlist");
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        Log("Controller" $ C);
-        Radioman = DHPlayer(C);
-        if(Radioman != none)
+        OtherPlayer = DHPlayer(C);
+        if(OtherPlayer != none)
         {
-            Log("trying to notify the radioman");
-            DRI = DHRoleInfo(Radioman.GetRoleInfo());
-            if(DRI != none && DRI.bCarriesRadio && Radioman.GetTeamNum() == TeamIndex)
+            Log("Controller" $ C);
+            DRI = DHRoleInfo(OtherPlayer.GetRoleInfo());
+            if(DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
             {
-                Radioman.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,,, self);
+                Log("trying to notify the radioman");
+                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,,, self);
             }
         }
     }
