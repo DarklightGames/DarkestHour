@@ -200,7 +200,8 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam;
+        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
+        ServerNotifyRadioman;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2166,7 +2167,7 @@ simulated function bool IsArtillerySpotter()
     return (RI.bIsArtilleryOfficer || self.IsSL());
 }
 
-function NotifyRadioman()
+function ServerNotifyRadioman()
 {
     local int                   TeamIndex;
     local Controller            C;

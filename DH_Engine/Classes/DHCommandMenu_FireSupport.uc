@@ -31,7 +31,7 @@ function OnSelect(int Index, vector Location)
             case 0: // Artillery barrage
                 Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
-                PC.NotifyRadioman();
+                PC.ServerNotifyRadioman();
                 break;
             case 1: // Fire request (Smoke)
                 self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
