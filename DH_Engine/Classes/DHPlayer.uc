@@ -1004,8 +1004,8 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     }
 }
 
-// Modified to require player to be an arty officer instead of RO's bIsLeader role, to remove check that map contains a radio, & to optimise
-function bool CheckArtilleryRequestValidity(vector ArtilleryLocation)
+// This function checks if the player can call artilelry on the selected target.
+function bool CheckIfTargetIsValid(vector ArtilleryLocation)
 {
     local DHRoleInfo   RI;
     local DHVolumeTest VT;
@@ -1034,12 +1034,10 @@ function bool CheckArtilleryRequestValidity(vector ArtilleryLocation)
 
         if (bValidTarget)
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
             return true;
         }
         else
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
             return false;
         }
     }

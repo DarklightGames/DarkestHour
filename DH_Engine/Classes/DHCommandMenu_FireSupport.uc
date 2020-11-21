@@ -24,7 +24,7 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    if(PC.CheckArtilleryRequestValidity(Location))
+    if(PC.CheckIfTargetIsValid(Location))
     {
         switch (Index)
         {
@@ -81,6 +81,12 @@ function Tick()
 {
     local DHPlayer PC;
     local vector HitLocation, HitNormal;
+    local Color C;
+
+    C.R = 0;
+    C.G = 0;
+    C.B = 0;
+    C.A = 0;
 
     PC = GetPlayerController();
 
@@ -90,6 +96,16 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
+    if(PC.CheckIfArtilleryIsAllowed(HitLocation))
+    {
+        C.G = 255;
+        PC.SpottingMarker.SetColor(C);
+    }
+    else
+    {
+        C.R = 255;
+        PC.SpottingMarker.SetColor(C);
+    }
     PC.SpottingMarker.SetLocation(HitLocation);
     PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
 }
