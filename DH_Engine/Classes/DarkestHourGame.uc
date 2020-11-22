@@ -2065,6 +2065,7 @@ function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
     local DHPlayer   DHKilled, DHKiller;
+    local DHGameReplicationInfo GRI;
     local Controller P;
     local float      FFPenalty;
     local int        i;
@@ -2089,9 +2090,10 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
+        GRI = DHGameReplicationInfo(DHKilled.GameReplicationInfo);
 
         if (IsArtilleryKill(DHKiller, DamageType) &&
-            DHKiller.ArtilleryHitInfo.ExpiryTime > Level.TimeSeconds)
+            (DHKiller.ArtilleryHitInfo.ExpiryTime == -1 || DHKiller.ArtilleryHitInfo.ExpiryTime > GRI.ElapsedTime))
         {
             DamageType =  class'DHArtilleryKillDamageType';
         }
@@ -2331,6 +2333,13 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     }
 
     KilledPRI = Killed.PlayerReplicationInfo;
+
+    if (class<DHArtilleryKillDamageType>(DamageType) != none && Killer != none && Killed != none)
+    {
+        // broadcast artillery kill feed to the artillery operator
+        DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        return;
+    }
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
     // (If message mode is OnDeath or Personal) AND DamageType is not type DHInstantObituaryDamageTypes
