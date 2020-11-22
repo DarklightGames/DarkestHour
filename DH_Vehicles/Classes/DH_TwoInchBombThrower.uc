@@ -7,7 +7,7 @@ class DH_TwoInchBombThrower extends DHVehicleSmokeLauncher; // British 2 inch bo
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Vehicles.DH_TwoInchSmokeBomb'
+    ProjectileTypes(0)=class'DH_Vehicles.DH_TwoInchSmokeBomb'
     InitialAmmo=20
     FireRotation(0)=(Pitch=8192) // assumed 45 degrees as can't find any references
     FireSound=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'

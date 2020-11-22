@@ -7,7 +7,7 @@ class DH_Nahverteidigungswaffe extends DHVehicleSmokeLauncher; // German 'close 
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Vehicles.DH_GermanSmokeCandleProjectile'
+    ProjectileTypes(0)=class'DH_Vehicles.DH_GermanSmokeCandleProjectile'
     InitialAmmo=12
     FireRotation(0)=(Pitch=9284) // 51 degrees from horizontal
     FireSound=SoundGroup'DH_WeaponSounds.SmokeLaunchers.8cmFireSG'

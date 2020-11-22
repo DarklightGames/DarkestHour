@@ -57,6 +57,7 @@ var     byte                SmokeLauncherAdjustmentSetting;   // current setting
 var     EReloadState        SmokeLauncherReloadState;         // the stage of smoke launcher reload or readiness
 var     bool                bSmokeLauncherReloadPaused;       // a smoke launcher reload has started but was paused, as no longer had a player in a valid reloading position
 var     bool                bNewOrResumedSmokeLauncherReload; // tells Timer we're starting new smoke launcher reload or resuming paused reload, stopping it from advancing to next reload stage
+var     int                 LauncherSelectedAmmoTypeIndex;
 
 // Aiming & movement
 var     float               ManualRotationsPerSecond;  // turret/cannon rotation speed when turned by hand
@@ -83,7 +84,8 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerManualReload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
+        ServerManualReload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher,
+        ServerNextLauncherAmmo, ServerPrevLauncherAmmo;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -507,6 +509,60 @@ simulated function AttemptFireSmokeLauncher()
     }
 }
 
+simulated function int GetLauncherAmmoIndex()
+{
+    if (SmokeLauncherClass == none ||
+        SmokeLauncherClass.default.ProjectileTypes.Length <= 0 ||
+        LauncherSelectedAmmoTypeIndex <= 0)
+    {
+        return SMOKELAUNCHER_AMMO_INDEX;
+    }
+
+    return Min(SMOKELAUNCHER_AMMO_INDEX + LauncherSelectedAmmoTypeIndex,
+               SMOKELAUNCHER_AMMO_INDEX + SmokeLauncherClass.default.ProjectileTypes.Length - 1);
+}
+
+simulated function int GetLauncherMaxAmmoIndex()
+{
+    if (SmokeLauncherClass == none ||
+        SmokeLauncherClass.default.ProjectileTypes.Length <= 0)
+    {
+        return SMOKELAUNCHER_AMMO_INDEX;
+    }
+
+    return SMOKELAUNCHER_AMMO_INDEX + SmokeLauncherClass.default.ProjectileTypes.Length - 1;
+}
+
+simulated function SelectLauncherAmmo(int TypeIndex)
+{
+    if (SmokeLauncherClass != none && SmokeLauncherClass.default.ProjectileTypes.Length > 0)
+    {
+        LauncherSelectedAmmoTypeIndex = Clamp(TypeIndex,
+                                        0,
+                                        SmokeLauncherClass.default.ProjectileTypes.Length - 1);
+    }
+}
+
+function NextLauncherAmmo()
+{
+    ServerNextLauncherAmmo();
+}
+
+function PrevLauncherAmmo()
+{
+    ServerPrevLauncherAmmo();
+}
+
+protected function ServerNextLauncherAmmo()
+{
+    SelectLauncherAmmo(LauncherSelectedAmmoTypeIndex + 1);
+}
+
+protected function ServerPrevLauncherAmmo()
+{
+    SelectLauncherAmmo(LauncherSelectedAmmoTypeIndex - 1);
+}
+
 // New serverside function to fire the turret smoke launcher & start a reload
 // In effect, this is a cross between a normal weapon's native AttemptFire() event & the SpawnProjectile() function, which are all serverside
 function ServerFireSmokeLauncher()
@@ -540,7 +596,10 @@ function ServerFireSmokeLauncher()
         FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
 
         // Spawn the smoke projectile
-        Projectile = Spawn(SmokeLauncherClass.default.ProjectileClass, none,, FireLocation, FireRotation);
+        Projectile = Spawn(SmokeLauncherClass.static.GetProjectileType(LauncherSelectedAmmoTypeIndex),
+                           none,,
+                           FireLocation,
+                           FireRotation);
 
         if (Projectile != none)
         {

@@ -7,7 +7,7 @@ class DH_ExternalSmokeCandleDischarger extends DHVehicleSmokeLauncher;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Vehicles.DH_GermanSmokeCandleProjectile'
+    ProjectileTypes(0)=class'DH_Vehicles.DH_GermanSmokeCandleProjectile'
     InitialAmmo=6
     ProjectilesPerFire=2
     FireSound=SoundGroup'DH_WeaponSounds.SmokeLaunchers.8cmFireSG'
