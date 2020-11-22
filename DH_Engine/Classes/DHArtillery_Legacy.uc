@@ -67,12 +67,12 @@ function PostBeginPlay()
     // This actor's LifeSpan is set to the maximum possible length of the strike, assuming the max random time between shells & salvoes
     MaxSalvoDuration = 1.5 * (BatterySize - 1);
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
-    
+
     PC = DHPlayer(Owner);
-    if(PC != none)
+    if (PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        if(GRI != none)
+        if (GRI != none)
         {
             RequestMapMarker = PC.FindPersonalMarker(self.BarrageRequestMarkerClass);
             Log("trying to add an ongoing barrage marker");
@@ -100,11 +100,11 @@ function Destroyed()
     {
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
-    
+
     // new marking system - remove the hit marker after artillery is finished
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     Log("trying to invalidate the barrage marker");
-    if(GRI == none || !GRI.InvalidateBarrageMarker(TeamIndex, self.OngoingBarrageMarkerClass))
+    if (GRI == none || !GRI.InvalidateBarrageMarker(TeamIndex, self.OngoingBarrageMarkerClass))
     {
         Warn("Could not invalidate a target marker");
     }

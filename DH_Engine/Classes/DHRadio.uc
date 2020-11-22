@@ -124,7 +124,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (PC.GetPersonalMarkerClassIndex(class'DHMapMarker_FireSupport_BarrageRequest') == -1 
+    if (PC.GetPersonalMarkerClassIndex(class'DHMapMarker_FireSupport_BarrageRequest') == -1
       && GRI.GetActiveArtilleryStrikesNumber() == 0)
     {
         return ERROR_NoTarget;
@@ -167,7 +167,7 @@ simulated function bool IsPlayerQualified(DHPlayer PC)
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
 {
     local DHPlayer PC;
-    local DHGameReplicationInfo.MapMarker ArtilleryRequestMapMarker; 
+    local DHGameReplicationInfo.MapMarker ArtilleryRequestMapMarker;
 
     PC = DHPlayer(Sender.Controller);
 
@@ -212,9 +212,7 @@ state Requesting extends Busy
 {
     function BeginState()
     {
-        local SoundGroup RequestSound;
         local DH_LevelInfo LI;
-        local DHPlayer PC;
 
         super.BeginState();
 
@@ -239,7 +237,7 @@ state Requesting extends Busy
             Log("Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length" @ Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length);
             Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass);
             Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum()" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum());
-            
+
             return;
         }
 
@@ -268,8 +266,6 @@ state Responding extends Busy
 {
     function BeginState()
     {
-        local int Index;
-        local float X, Y;
         local SoundGroup ResponseSound;
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
@@ -293,10 +289,10 @@ state Responding extends Busy
         {
             GRI = DHGameReplicationInfo(Request.Sender.GameReplicationInfo);
             GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
-            
+
             // "Artillery strike confirmed."
             // Log("trying to remove barrage request:");
-            // Index = 
+            // Index =
             // Request.Sender.RemovePersonalMarker(Index);
             // Log("removed barrage request");
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());

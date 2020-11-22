@@ -47,7 +47,7 @@ function InternalOnOpen()
 {
     super.InternalOnOpen();
 
-    if(!bDidShowNoBotsWarning)
+    if (!bDidShowNoBotsWarning)
     {
         Controller.ShowQuestionDialog(default.NoBotsWarningText, QBTN_OK, QBTN_OK);
         bDidShowNoBotsWarning = true;

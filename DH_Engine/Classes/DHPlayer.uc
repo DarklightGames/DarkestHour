@@ -1063,8 +1063,8 @@ simulated function LockArtilleryRequests(int Seconds)
     local DHGameReplicationInfo DHGRI;
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-    
-    if(GameReplicationInfo != none)
+
+    if (GameReplicationInfo != none)
     {
         self.ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
     }
@@ -1216,7 +1216,7 @@ auto state PlayerWaiting
         {
             SetTimer(0, false);
         }
-        else if(Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
+        else if (Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
         {
             bPendingMapDisplay = false;
             SetTimer(0, false);
@@ -2103,7 +2103,7 @@ function ServerUse()
                 EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
 
                 // End AT Rotation action if player is currently preforming one
-                if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+                if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
                 {
                     DHPawn(Pawn).GunToRotate.ServerExitRotation();
                     DHPawn(Pawn).SwitchToLastWeapon();
@@ -2175,17 +2175,15 @@ function ServerNotifyRadioman()
     local DHRoleInfo            DRI;
 
     TeamIndex = GetTeamNum();
-    Log("for controllerlist");
+
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         OtherPlayer = DHPlayer(C);
-        if(OtherPlayer != none)
+        if (OtherPlayer != none)
         {
-            Log("Controller" $ C);
             DRI = DHRoleInfo(OtherPlayer.GetRoleInfo());
-            if(DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
+            if (DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
             {
-                Log("trying to notify the radioman");
                 OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,, PlayerReplicationInfo, OtherPlayer);
             }
         }
@@ -5757,10 +5755,9 @@ function int GetPersonalMarkerClassIndex(class<DHMapMarker> MarkerClass)
 {
     local int i;
 
-    for(i = 0; i < PersonalMapMarkers.Length; i++)
+    for (i = 0; i < PersonalMapMarkers.Length; i++)
     {
-        Log("i = " $ i $ ", marker: " $ PersonalMapMarkers[i].MapMarkerClass);
-        if(PersonalMapMarkers[i].MapMarkerClass == MarkerClass)
+        if (PersonalMapMarkers[i].MapMarkerClass == MarkerClass)
         {
             return i;
         }
@@ -6015,7 +6012,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
     {
         return false;
     }

@@ -1583,7 +1583,7 @@ function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_Artillery
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if(AlliesMapMarkers[i].ExpiryTime == -1 && AlliesMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
+                if (AlliesMapMarkers[i].ExpiryTime == -1 && AlliesMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                     return true;
@@ -1593,7 +1593,7 @@ function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_Artillery
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if(AxisMapMarkers[i].ExpiryTime == -1 && AxisMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
+                if (AxisMapMarkers[i].ExpiryTime == -1 && AxisMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                     return true;

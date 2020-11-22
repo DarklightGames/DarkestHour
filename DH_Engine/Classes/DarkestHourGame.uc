@@ -5324,7 +5324,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
     }
-    else if(Request.Location == vect(0,0,0))
+    else if (Request.Location == vect(0,0,0))
     {
         Response.Type = RESPONSE_NoTarget;
     }

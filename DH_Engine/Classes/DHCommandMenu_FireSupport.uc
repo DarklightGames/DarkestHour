@@ -24,7 +24,7 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    if(PC.IsArtillerySpotter() && PC.CheckIfTargetIsValid(Location))
+    if (PC.IsArtillerySpotter() && PC.CheckIfTargetIsValid(Location))
     {
         switch (Index)
         {
@@ -100,7 +100,7 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-    if(PC.CheckIfTargetIsValid(HitLocation))
+    if (PC.CheckIfTargetIsValid(HitLocation))
     {
         C.G = 255;
         PC.SpottingMarker.SetColor(C);
@@ -116,7 +116,7 @@ function Tick()
 
 function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMarkerClass)
 {
-    if(PC.IsArtilleryRequestingLocked())
+    if (PC.IsArtilleryRequestingLocked())
     {
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
     }

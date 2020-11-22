@@ -128,11 +128,11 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
     checkFlag = 1;
 
     // While we still have icon, and we can fit another one in.
-    for (k=0; (k<Icons.Length) && (IconPosX < CellLeft + CellWidth); k++)
+    for (k = 0; k < Icons.Length && IconPosX < CellLeft + CellWidth; k++)
     {
         if (Icons[k] != none)
         {
-            if((flags & checkFlag) != 0)
+            if ((flags & checkFlag) != 0)
             {
                 DrawX = Min(14, (CellLeft + CellWidth) - IconPosX);
 
@@ -143,46 +143,55 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
 
                 IconPosX += 14;
             }
-
         }
+
         checkFlag = checkFlag << 1;
     }
 
     // Server Name
-    GetCellLeftWidth( 1, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, Servers[SortData[i].SortItem].ServerName, FontScale );
+    GetCellLeftWidth(1, CellLeft, CellWidth);
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, Servers[SortData[i].SortItem].ServerName, FontScale);
 
     // Server Health
-    GetCellLeftWidth( 2, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, HealthString, FontScale );
+    GetCellLeftWidth(2, CellLeft, CellWidth);
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, HealthString, FontScale);
 
     // Location
-    GetCellLeftWidth( 3, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, LocationString, FontScale );
+    GetCellLeftWidth(3, CellLeft, CellWidth);
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, LocationString, FontScale);
 
     // Version
-    GetCellLeftWidth( 4, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, VersionString, FontScale );
+    GetCellLeftWidth(4, CellLeft, CellWidth);
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, VersionString, FontScale);
 
     // Map
-    GetCellLeftWidth( 5, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, Servers[SortData[i].SortItem].MapName, FontScale );
+    GetCellLeftWidth(5, CellLeft, CellWidth);
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, Servers[SortData[i].SortItem].MapName, FontScale);
 
     // Players
-    GetCellLeftWidth( 6, CellLeft, CellWidth );
-    if( Servers[SortData[i].SortItem].CurrentPlayers>0 || Servers[SortData[i].SortItem].MaxPlayers>0 )
-        DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, string(Servers[SortData[i].SortItem].CurrentPlayers)$"/"$string((Servers[SortData[i].SortItem].MaxPlayers&255)), FontScale );
+    GetCellLeftWidth(6, CellLeft, CellWidth);
+    if (Servers[SortData[i].SortItem].CurrentPlayers > 0 || Servers[SortData[i].SortItem].MaxPlayers > 0)
+    {
+        DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, string(Servers[SortData[i].SortItem].CurrentPlayers) $ "/" $ string((Servers[SortData[i].SortItem].MaxPlayers & 255)), FontScale);
+    }
 
     // Ping
-    GetCellLeftWidth( 7, CellLeft, CellWidth );
-    if( Servers[SortData[i].SortItem].Ping == 9999 )
+    GetCellLeftWidth(7, CellLeft, CellWidth);
+
+    if (Servers[SortData[i].SortItem].Ping == 9999)
+    {
         Ping = "?";
-    else
-    if( Servers[SortData[i].SortItem].Ping > 9999 )
+    }
+    else if (Servers[SortData[i].SortItem].Ping > 9999)
+    {
         Ping = "N/A";
+    }
     else
+    {
         Ping = string(Servers[SortData[i].SortItem].Ping);
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, Ping, FontScale );
+    }
+
+    DStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, Ping, FontScale);
 }
 
 defaultproperties

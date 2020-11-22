@@ -424,7 +424,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if(PersonalMapMarkers[i].MapMarkerClass != none &&
+        if (PersonalMapMarkers[i].MapMarkerClass != none &&
            (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
            PersonalMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PersonalMapMarkers[i]) &&
            IsMarkerUnderCursor(float(PersonalMapMarkers[i].LocationX) / 255.0, float(PersonalMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
