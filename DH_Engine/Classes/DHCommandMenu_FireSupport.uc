@@ -29,15 +29,13 @@ function OnSelect(int Index, vector Location)
         switch (Index)
         {
             case 0: // Artillery barrage
-                Log("trying to add barrage request in " $ MapLocation.X $ " and " $ MapLocation.Y $ " - >" $ Location $ "<");
-                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
-                PC.ServerNotifyRadioman();
+                self.AddNewArtilleryRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
                 break;
             case 1: // Fire request (Smoke)
-                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
+                self.AddNewArtilleryRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
                 break;
             case 2: // Fire request (HE)
-                self.AddNewRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
+                self.AddNewArtilleryRequest(PC, MapLocation, class'DH_Engine.DHMapMarker_FireSupport_HE');
                 break;
         }
     }
@@ -114,7 +112,7 @@ function Tick()
     PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
 }
 
-function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMarkerClass)
+function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker_FireSupport> MapMarkerClass)
 {
     if (PC.IsArtilleryRequestingLocked())
     {
@@ -124,6 +122,14 @@ function AddNewRequest(DHPlayer PC, vector MapLocation, class<DHMapMarker> MapMa
     {
         PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
         PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
+        if (class<DHMapMarker_FireSupport_BarrageRequest>(MapMarkerClass) != none)
+        {
+            PC.ServerNotifyRadioman();
+        }
+        else
+        {
+            PC.ServerNotifyArtilleryOperators(MapMarkerClass);
+        }
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
         PC.ConsoleCommand("SPEECH SUPPORT 8");
     }

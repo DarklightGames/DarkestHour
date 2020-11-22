@@ -201,7 +201,7 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2185,6 +2185,28 @@ function ServerNotifyRadioman()
             if (DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
             {
                 OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,, PlayerReplicationInfo, OtherPlayer);
+            }
+        }
+    }
+}
+
+
+function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
+{
+    local int                   TeamIndex;
+    local Controller            C;
+    local DHPlayer              OtherPlayer;
+
+    TeamIndex = GetTeamNum();
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        OtherPlayer = DHPlayer(C);
+        if (OtherPlayer != none)
+        {
+            if (OtherPlayer.IsArtilleryOperator() && OtherPlayer.GetTeamNum() == TeamIndex)
+            {
+                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 3,,, MapMarkerClass);
             }
         }
     }
