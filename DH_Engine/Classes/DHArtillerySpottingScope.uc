@@ -25,6 +25,25 @@ struct STargetInfo
     var class<DHMapMarker>                Type;           // Fire_Support or Ruler
 };
 
+enum EShapePrimitive
+{
+    ShortTick,
+    MediumLengthTick,
+    LongTick
+};
+var EShapePrimitive                      MiddleTick;
+var EShapePrimitive                      CurrentValueIndicator;
+
+struct SSegmentTick
+{
+    var EShapePrimitive                   Shape;
+    var bool                              DrawLabel;
+};
+
+var array<SSegmentTick>                   SegmentSchema;
+var int                                   NumberOfYawSegments;
+var int                                   NumberOfPitchSegments;
+
 var     localized string    RangeString;
 var     localized string    ElevationString;
 var     texture             SpottingScopeOverlay;       // periscope overlay texture
@@ -42,14 +61,7 @@ var     int                 WidgetsPanelX;
 var     int                 WidgetsPanelY;
 var     int                 WidgetsPanelEntryHeight;
 
-var     int                 VisiblePitchSegmentsNumber;
-var     int                 VisibleYawSegmentsNumber;
 
-var     float               PitchStepMinor;
-var     float               PitchStepMajor;
-
-var     float               YawStepMinor;
-var     float               YawStepMajor;
 var     float               SmallSizeTickLength;
 var     float               MiddleSizeTickLength;
 var     float               LargeSizeTickLength;
@@ -198,7 +210,7 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
-    local int i, Yaw, Quotient, Index;
+    local int i, Yaw, Quotient, Index, SegmentSchemaIndex, VisibleYawSegmentsNumber;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
@@ -206,10 +218,11 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     IndicatorTopLeftCornerY = C.SizeY * 0.93;
 
+    VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.SegmentSchema.Length;
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
-    YawLowerBound = CurrentYaw - default.YawScaleStep * default.VisibleYawSegmentsNumber * 0.5;
-    YawUpperBound = CurrentYaw + default.YawScaleStep * default.VisibleYawSegmentsNumber * 0.5;
-    IndicatorStep = default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
+    YawLowerBound = CurrentYaw - default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
+    YawUpperBound = CurrentYaw + default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
+    IndicatorStep = default.YawIndicatorLength / VisibleYawSegmentsNumber;
 
     C.Font = C.TinyFont;
 
@@ -225,9 +238,9 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
 
         // Which tick on the dial does this target correspond to
-        Index = (default.VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
+        Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
-        Shade = class'UInterp'.static.Mimi(FClamp(Index / default.VisibleYawSegmentsNumber, 0.25, 0.75));
+        Shade = class'UInterp'.static.Mimi(FClamp(Index / VisibleYawSegmentsNumber, 0.25, 0.75));
 
         Color = Targets[i].Type.default.IconColor;
         Color.R = Max(1, int(Color.R) * Shade);
@@ -236,7 +249,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
-        if (Index < default.VisibleYawSegmentsNumber && Index >= 0)
+        if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
             C.CurY = IndicatorTopLeftCornerY + 5.0;
             C.CurX = IndicatorTopLeftCornerX;
@@ -274,7 +287,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         Index = (Yaw - YawLowerBound) / default.YawScaleStep;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / default.VisibleYawSegmentsNumber));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber));
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(Yaw, default.YawScaleStep));
@@ -290,36 +303,37 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         C.StrLen(Label, TextWidth, TextHeight);
 
         C.CurY = IndicatorTopLeftCornerY - 5.0;
-        C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
+        C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
 
-        if (default.YawStepMajor != -1 && Quotient % default.YawStepMajor == 0)
+        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
+        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
         {
-            // large granularity - draw the long tick
-            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
-
-            // align the label with the tick...
-            C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
-            C.CurX = C.CurX - TextWidth * 0.5;
-
-            /// draw the label
-            C.DrawText(Label);
+            case ShortTick:
+                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
+                break;
+            case MediumLengthTick:
+                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.MiddleSizeTickLength);
+                break;
+            case LongTick:
+                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
+                break;
         }
-        else if (default.YawStepMinor != -1 && Quotient % default.YawStepMinor == 0)
+        if (default.SegmentSchema[SegmentSchemaIndex].DrawLabel)
         {
-            // moderate granularity - draw the middle-size tick
-            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.MiddleSizeTickLength);
-
-            // align the label with the tick...
-            C.CurY = C.CurY - default.MiddleSizeTickLength - TextHeight - default.LabelOffset;
+            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            {
+                case ShortTick:
+                    C.CurY = C.CurY - default.SmallSizeTickLength - TextHeight - default.LabelOffset;
+                    break;
+                case MediumLengthTick:
+                    C.CurY = C.CurY - default.MiddleSizeTickLength - TextHeight - default.LabelOffset;
+                    break;
+                case LongTick:
+                    C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
+                    break;
+            }
             C.CurX = C.CurX - TextWidth * 0.5;
-
-            // draw the label
             C.DrawText(Label);
-        }
-        else
-        {
-            // smallest granularity - draw the short vertical tick without a label
-            C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
         }
 
         // Draw a strike-through if this segment is beyond the lower or upper limits.
@@ -327,17 +341,16 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
         if (Yaw < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
         {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
+            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
         }
 
         if (Yaw > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
         {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / default.VisibleYawSegmentsNumber;
+            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
         }
     }
-
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
@@ -346,29 +359,30 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
 
 simulated static function float GetPitchLowerBound(float CurrentPitch)
 {
-    return CurrentPitch - default.PitchScaleStep * default.VisiblePitchSegmentsNumber * 0.5;
+    return CurrentPitch - default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
 }
 
 simulated static function float  GetPitchUpperBound(float CurrentPitch)
 {
-    return CurrentPitch + default.PitchScaleStep * default.VisiblePitchSegmentsNumber * 0.5;
+    return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
 }
 
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
-    local int Shade, Quotient, t;
+    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, SegmentSchemaIndex;
     local string Label;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
     IndicatorTopLeftCornerY = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
     CurrentPitch += GunPitchOffset;
+    VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.SegmentSchema.Length;
 
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
-    IndicatorStep = default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
+    IndicatorStep = default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
 
     C.Font = C.TinyFont;
 
@@ -376,12 +390,12 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     for (Pitch = PitchLowerBound; Pitch <= PitchUpperBound; Pitch += default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
-        t = default.VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
+        Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
 
         // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(t) / default.VisiblePitchSegmentsNumber));
+        Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber));
 
-        // Calculate index of the current readout value on the mortar yaw span
+        // Calculate index of the current readout value on the mortar pitch span
         Quotient = class'UMath'.static.FlooredDivision(Pitch, default.PitchScaleStep);
 
         // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
@@ -395,33 +409,37 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         C.StrLen(Label, TextWidth, TextHeight);
 
         C.CurX = IndicatorTopLeftCornerX - 5.0;
-        C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
+        C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
 
-        if (default.PitchStepMajor != -1 && Quotient % default.PitchStepMajor == 0)
+        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
+        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
         {
-            // Draw long vertical tick & label it
-            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.LargeSizeTickLength);
-
-            // align the label with the tick
-            C.CurX = IndicatorTopLeftCornerX - default.LargeSizeTickLength - TextWidth - default.LabelOffset;
-            C.CurY = C.CurY - TextHeight * 0.5;
-
-            C.DrawText(Label);
+            case ShortTick:
+                C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.SmallSizeTickLength);
+                break;
+            case MediumLengthTick:
+                C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.MiddleSizeTickLength);
+                break;
+            case LongTick:
+                C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.LargeSizeTickLength);
+                break;
         }
-        else if (default.PitchStepMinor != -1 && Quotient % default.PitchStepMinor == 0)
+        if (default.SegmentSchema[SegmentSchemaIndex].DrawLabel)
         {
-            // Draw middle-sized vertical tick & label it
-            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.MiddleSizeTickLength);
-
-            // align the label with the tick
-            C.CurX = IndicatorTopLeftCornerX - default.MiddleSizeTickLength - TextWidth - default.LabelOffset;
+            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            {
+                case ShortTick:
+                    C.CurX = C.CurX - default.SmallSizeTickLength - TextWidth - default.LabelOffset;
+                    break;
+                case MediumLengthTick:
+                    C.CurX = C.CurX - default.MiddleSizeTickLength - TextWidth - default.LabelOffset;
+                    break;
+                case LongTick:
+                    C.CurX = C.CurX - default.LargeSizeTickLength - TextWidth - default.LabelOffset;
+                    break;
+            }
             C.CurY = C.CurY - TextHeight * 0.5;
             C.DrawText(Label);
-        }
-        else
-        {
-            // Smallest granularity - draw short vertical tick (no label)
-            C.DrawHorizontal(IndicatorTopLeftCornerY + (t * IndicatorStep), -default.SmallSizeTickLength);
         }
 
         // Draw a strike-through if this segment is below the lower limit.
@@ -429,14 +447,14 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
+            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
         }
 
         // Draw a strike-through if this segment is above the upper limit.
         if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + t * default.PitchIndicatorLength / default.VisiblePitchSegmentsNumber;
+            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
             C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
         }
     }
@@ -469,15 +487,6 @@ defaultproperties
     WidgetsPanelY=30
     WidgetsPanelEntryHeight=60
 
-    VisiblePitchSegmentsNumber=40
-    VisibleYawSegmentsNumber=40
-
-    PitchStepMajor=10.0
-    PitchStepMinor=5.0
-
-    YawStepMajor=10.0
-    YawStepMinor=5.0
-
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
 
@@ -486,4 +495,16 @@ defaultproperties
     SmallSizeTickLength = 20.0
     LabelOffset = 10.0
     IndicatorMiddleTickOffset = 15.0
+    SegmentSchema(0)=(Shape=LongTick,DrawLabel=true)
+    SegmentSchema(1)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(2)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(3)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(4)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(5)=(Shape=MediumLengthTick,DrawLabel=true)
+    SegmentSchema(6)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(7)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(8)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(9)=(Shape=ShortTick,DrawLabel=false)
+    NumberOfYawSegments = 6;
+    NumberOfPitchSegments = 6;
 }

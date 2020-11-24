@@ -35,6 +35,4 @@ defaultproperties
     YawScaleStep=5.0
     PitchScaleStep=0.5
     PitchDecimalsTable=1
-    PitchStepMajor=10.0
-    PitchStepMinor=2.0
 }
