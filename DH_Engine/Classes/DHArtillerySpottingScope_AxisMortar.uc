@@ -29,4 +29,18 @@ defaultproperties
     YawScaleStep=5.0
     PitchScaleStep=0.5
     PitchDecimalsTable=1
+    
+    SegmentSchema(0)=(Shape=LongTick,DrawLabel=true)
+    SegmentSchema(1)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(2)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(3)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(4)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(5)=(Shape=LongTick,DrawLabel=true)
+    SegmentSchema(6)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(7)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(8)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(9)=(Shape=MediumLengthTick,DrawLabel=false)
+    
+    NumberOfYawSegments = 4;
+    NumberOfPitchSegments = 4;
 }

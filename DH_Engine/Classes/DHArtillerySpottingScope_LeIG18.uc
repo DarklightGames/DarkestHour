@@ -39,4 +39,18 @@ defaultproperties
     RangeTable(22)=(Pitch=593,Range=1200)
 
     AngleUnit="mils"
+    
+    SegmentSchema(0)=(Shape=LongTick,DrawLabel=true)
+    SegmentSchema(1)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(2)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(3)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(4)=(Shape=LongTick,DrawLabel=false)
+    SegmentSchema(5)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(6)=(Shape=ShortTick,DrawLabel=false)s
+    SegmentSchema(7)=(Shape=MediumLengthTick,DrawLabel=false)
+    SegmentSchema(8)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(9)=(Shape=MediumLengthTick,DrawLabel=false)
+    
+    NumberOfYawSegments = 4;
+    NumberOfPitchSegments = 6;
 }

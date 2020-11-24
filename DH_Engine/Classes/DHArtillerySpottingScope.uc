@@ -480,7 +480,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="°"
+    AngleUnit="ï¿½"
     DistanceUnit="m"
 
     WidgetsPanelX=50
@@ -495,16 +495,6 @@ defaultproperties
     SmallSizeTickLength = 20.0
     LabelOffset = 10.0
     IndicatorMiddleTickOffset = 15.0
-    SegmentSchema(0)=(Shape=LongTick,DrawLabel=true)
-    SegmentSchema(1)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(2)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(3)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(4)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(5)=(Shape=MediumLengthTick,DrawLabel=true)
-    SegmentSchema(6)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(7)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(8)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(9)=(Shape=ShortTick,DrawLabel=false)
     NumberOfYawSegments = 6;
     NumberOfPitchSegments = 6;
 }
