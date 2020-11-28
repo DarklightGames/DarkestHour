@@ -2190,7 +2190,6 @@ function ServerNotifyRadioman()
     }
 }
 
-
 function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
 {
     local int                   TeamIndex;

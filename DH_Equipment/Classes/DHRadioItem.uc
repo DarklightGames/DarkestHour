@@ -42,6 +42,8 @@ simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perha
 simulated function PostBeginPlay()
 {
     local DHPawn P;
+    local DHRoleInfo RI;
+    local DHPlayer PC;
 
     P = DHPawn(Instigator);
 
@@ -51,6 +53,22 @@ simulated function PostBeginPlay()
     }
 
     super.PostBeginPlay();
+
+    if (P != none)
+    {        
+        PC = DHPlayer(Instigator.Controller);
+        if(PC != none)
+        {
+            RI = DHRoleInfo(PC.GetRoleInfo());
+            if(RI != none && RI.bCarriesRadio)
+            {
+                Log("myk myk");
+                Log("DHI != none" @ RI != none);
+                Log("DHI.bCarriesRadio" @ RI.bCarriesRadio);
+                PC.QueueHint(13, false);
+            }
+        }
+    }
 }
 
 function AttachToPawn(Pawn P)
