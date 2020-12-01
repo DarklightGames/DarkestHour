@@ -7581,6 +7581,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     return RER_Enabled;
 }
 
+simulated exec function ListVehicles()
+{
+    class'DHVehicleRegistry'.static.DumpToLog(self);
+}
+
 defaultproperties
 {
     CorpseStayTime=15
