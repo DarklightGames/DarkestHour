@@ -7383,12 +7383,23 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
-simulated exec function DebugGiveWeapon(string ClassName)
+simulated exec function Give(string WeaponName)
 {
-    if (IsDebugModeAllowed())
+    local string ClassName;
+
+    if (!IsDebugModeAllowed())
     {
-        GiveWeapon(ClassName);
+        return;
     }
+
+    ClassName = class'DHWeaponRegistry'.static.GetClassNameFromWeaponName(WeaponName);
+
+    if (ClassName == "")
+    {
+        ClassName = WeaponName;
+    }
+
+    GiveWeapon(ClassName);
 }
 
 defaultproperties
