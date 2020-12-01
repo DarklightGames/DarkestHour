@@ -10,6 +10,7 @@ struct SWeaponRecord
 {
     var array<string> WeaponNames;
     var string ClassName;
+    var bool bShouldExcludeFromGiveAll;
 };
 
 var array<SWeaponRecord> Records;
@@ -79,14 +80,14 @@ defaultproperties
     Records(20)=(ClassName="DH_Weapons.DH_Kar98NoCoverWeapon",WeaponNames=("k98nohood"))
     Records(21)=(ClassName="DH_Weapons.DH_Kar98ScopedWeapon",WeaponNames=("k98scoped", "kar98scoped"))
     Records(22)=(ClassName="DH_Weapons.DH_KorovinWeapon",WeaponNames=("korovin"))
-    Records(23)=(ClassName="DH_Weapons.DH_Kz8cmGrW42Weapon",WeaponNames=("grw42"))
+    Records(23)=(ClassName="DH_Weapons.DH_Kz8cmGrW42Weapon",bShouldExcludeFromGiveAll=true,WeaponNames=("grw42"))
     Records(24)=(ClassName="DH_Weapons.DH_M1928_20rndWeapon",WeaponNames=("m1928-20"))
     Records(25)=(ClassName="DH_Weapons.DH_M1928_30rndWeapon",WeaponNames=("m1928-30"))
     Records(26)=(ClassName="DH_Weapons.DH_M1928_50rndWeapon",WeaponNames=("m1928-50", "m1928"))
     Records(27)=(ClassName="DH_Weapons.DH_M1CarbineWeapon",WeaponNames=("carbine"))
     Records(28)=(ClassName="DH_Weapons.DH_M1GarandWeapon",WeaponNames=("garand"))
     Records(29)=(ClassName="DH_Weapons.DH_M1GrenadeWeapon",WeaponNames=("frag"))
-    Records(30)=(ClassName="DH_Weapons.DH_M2MortarWeapon",WeaponNames=("m2mortar"))
+    Records(30)=(ClassName="DH_Weapons.DH_M2MortarWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("m2mortar"))
     Records(31)=(ClassName="DH_Weapons.DH_M34GrenadeWeapon",WeaponNames=("m34"))
     Records(32)=(ClassName="DH_Weapons.DH_M38Weapon",WeaponNames=("m38"))
     Records(33)=(ClassName="DH_Weapons.DH_M44Weapon",WeaponNames=("m44"))
@@ -126,5 +127,19 @@ defaultproperties
     Records(67)=(ClassName="DH_Weapons.DH_ViSWeapon",WeaponNames=("vis"))
     Records(68)=(ClassName="DH_Weapons.DH_VK98Weapon",WeaponNames=("vk98", "vkar98"))
     Records(69)=(ClassName="DH_Weapons.DH_Winchester1897Weapon",WeaponNames=("shotgun", "1897", "winchester"))
+    Records(70)=(ClassName="DH_Equipment.DHBinocularsItemAllied",WeaponNames=("binocs", "binocs_us"))
+    Records(71)=(ClassName="DH_Equipment.DHBinocularsItemGerman",WeaponNames=("binocs_ger"))
+    Records(72)=(ClassName="DH_Equipment.DHBinocularsItemSoviet",WeaponNames=("binocs_sov"))
+    Records(73)=(ClassName="DH_Equipment.DHRadioItem",WeaponNames=("radio"))
+    Records(74)=(ClassName="DH_Equipment.DHShovelItem_US",WeaponNames=("shovel", "shovel_us"))
+    Records(75)=(ClassName="DH_Equipment.DHShovelItem_German",WeaponNames=("shovel_ger"))
+    Records(76)=(ClassName="DH_Equipment.DHShovelItem_Russian",WeaponNames=("shovel_sov"))
+    Records(77)=(ClassName="DH_Equipment.DHWireCuttersItem",WeaponNames=("wirecutters", "snips"))
+    Records(78)=(ClassName="DH_Equipment.DH_NebelGranate39Weapon",WeaponNames=("gersmoke", "nb38", "nb", "nebel"))
+    Records(79)=(ClassName="DH_Equipment.DH_OrangeSmokeWeapon",WeaponNames=("orangesmoke"))
+    Records(80)=(ClassName="DH_Equipment.DH_ParachuteItem",bShouldExcludeFromGiveAll=true,WeaponNames=("parachute"))
+    Records(81)=(ClassName="DH_Equipment.DH_RDG1SmokeGrenadeItem",WeaponNames=("rdg", "rdg1", "sovsmoke"))
+    Records(82)=(ClassName="DH_Equipment.DH_RedSmokeWeapon",WeaponNames=("redsmoke"))
+    Records(83)=(ClassName="DH_Equipment.DH_USSmokeGrenadeWeapon",WeaponNames=("smoke", "ussmoke"))
 }
 

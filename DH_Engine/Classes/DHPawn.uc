@@ -7386,9 +7386,25 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
 simulated exec function Give(string WeaponName)
 {
     local string ClassName;
+    local int i;
 
     if (!IsDebugModeAllowed())
     {
+        return;
+    }
+
+    if (WeaponName ~= "ALL")
+    {
+        for (i = 0; i < class'DHWeaponRegistry'.default.Records.Length; ++i)
+        {
+            if (class'DHWeaponRegistry'.default.Records[i].bShouldExcludeFromGiveAll)
+            {
+                continue;
+            }
+
+            GiveWeapon(class'DHWeaponRegistry'.default.Records[i].ClassName);
+        }
+
         return;
     }
 
