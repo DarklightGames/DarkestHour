@@ -7073,6 +7073,11 @@ simulated exec function ListWeapons()
     class'DHWeaponRegistry'.static.DumpToLog(self);
 }
 
+simulated exec function ListVehicles()
+{
+    class'DHVehicleRegistry'.static.DumpToLog(self);
+}
+
 defaultproperties
 {
     CorpseStayTime=15
