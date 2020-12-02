@@ -98,6 +98,18 @@ simulated function bool IsPatron()
     return PatronTier != PATRON_None;
 }
 
+simulated function bool IsRadioman()
+{
+    local DHRoleInfo RI;
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    if(PC != none)
+    {
+        return PC.IsRadioman();
+    }
+    return false;
+}
+
 // Will return true if passed two players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {

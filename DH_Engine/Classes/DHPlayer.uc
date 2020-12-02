@@ -2167,6 +2167,18 @@ simulated function bool IsArtillerySpotter()
     return (RI.bIsArtilleryOfficer || self.IsSL());
 }
 
+simulated function bool IsRadioman()
+{
+    local DHRoleInfo RI;
+    RI = DHRoleInfo(GetRoleInfo());
+
+    if(RI != none)
+    {
+        return RI.bCarriesRadio;
+    }
+    return false;
+}
+
 function ServerNotifyRadioman()
 {
     local int                   TeamIndex;

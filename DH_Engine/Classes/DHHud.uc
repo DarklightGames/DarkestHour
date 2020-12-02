@@ -3949,6 +3949,30 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
         SRI = PC.SquadReplicationInfo;
     }
 
+    // Draw other squad leaders on map
+    if (PRI.IsSLorASL() || PRI.IsRadioman())
+    {
+        for (i = 0; i < SRI.GetTeamSquadLimit(PC.GetTeamNum()); ++i)
+        {
+            if (i == PRI.SquadIndex || PC.SquadLeaderLocations[i] == 0)
+            {
+                continue;
+            }
+
+            class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
+            PlayerLocation = DHGRI.GetWorldCoords(X, Y);
+
+            SquadMemberColor = class'DHColor'.default.FriendlyColor;
+            SquadMemberColor.A = 160;
+
+            IconScale = PlayerIconScale;
+
+            SquadNameAbbreviation = Caps(Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1));
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
+        }
+    }
+
     // Draw squad members on map
     if (PRI != none && PRI.IsInSquad() && SRI != none)
     {
@@ -4009,29 +4033,6 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
             }
 
             DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
-        }
-
-        if (PRI.IsSLorASL())
-        {
-            for (i = 0; i < SRI.GetTeamSquadLimit(PC.GetTeamNum()); ++i)
-            {
-                if (i == PRI.SquadIndex || PC.SquadLeaderLocations[i] == 0)
-                {
-                    continue;
-                }
-
-                class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
-                PlayerLocation = DHGRI.GetWorldCoords(X, Y);
-
-                SquadMemberColor = class'DHColor'.default.FriendlyColor;
-                SquadMemberColor.A = 160;
-
-                IconScale = PlayerIconScale;
-
-                SquadNameAbbreviation = Caps(Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1));
-
-                DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
-            }
         }
     }
 
