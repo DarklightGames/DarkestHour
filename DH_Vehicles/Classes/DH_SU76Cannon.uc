@@ -61,10 +61,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire03'
-    ReloadStages(0)=(Sound=none) //fast 3 seconds reload, according to books it could be even faster. Comfortable opened loader space allows that.
-    ReloadStages(1)=(Sound=none)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload, according to books it could be even faster. Comfortable opened loader space allows that.
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
     // View shake
 

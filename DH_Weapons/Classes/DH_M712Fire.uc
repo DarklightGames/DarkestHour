@@ -16,7 +16,7 @@ defaultproperties
     RecoilRate=0.05
     MaxVerticalRecoilAngle=275
     MaxHorizontalRecoilAngle=120
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=3.0,OutVal=0.66),(InVal=6.0,OutVal=1.3),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=2.0,OutVal=0.7),(InVal=6.0,OutVal=1.3),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=10.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.c96.C96_FireLoop01'

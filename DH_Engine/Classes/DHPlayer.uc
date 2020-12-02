@@ -107,11 +107,14 @@ var     int                     WeaponLockViolations;       // the number of vio
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
-var     bool                    bIgnoreSquadLeaderAssistantVolunteerPrompts;
 var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
 var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
+
+// Squad assistant volunteers
+var         bool                           bIgnoreSquadLeaderAssistantVolunteerPrompts;
+var private array<DHPlayerReplicationInfo> SquadAssistantVolunteers;
 
 var     DHCommandInteraction    CommandInteraction;
 
@@ -5428,13 +5431,56 @@ simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadInde
 
 simulated function ClientSquadAssistantVolunteerPrompt(int TeamIndex, int SquadIndex, DHPlayerReplicationInfo VolunteerPRI)
 {
-    if (!bIgnoreSquadLeaderAssistantVolunteerPrompts)
+    local int VolunteerIndex, i;
+
+    if (bIgnoreSquadLeaderAssistantVolunteerPrompts)
     {
-        class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
-        class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
-        class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerPRI = VolunteerPRI;
-        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderAssistantVolunteerInteraction", Player);
+        return;
     }
+
+    VolunteerIndex = SquadAssistantVolunteers.Length;
+
+    for (i = 0; i < SquadAssistantVolunteers.Length; ++i)
+    {
+        if (SquadAssistantVolunteers[i] == none)
+        {
+            VolunteerIndex = i;
+        }
+    }
+
+    SquadAssistantVolunteers[VolunteerIndex] = VolunteerPRI;
+
+    class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
+    class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
+    class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerIndex = VolunteerIndex;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderAssistantVolunteerInteraction", Player);
+}
+
+simulated function DHPlayerReplicationInfo GetSquadAssistantVolunteer(int VolunteerIndex)
+{
+    if (VolunteerIndex >= 0 && VolunteerIndex < SquadAssistantVolunteers.Length)
+    {
+        return SquadAssistantVolunteers[VolunteerIndex];
+    }
+}
+
+simulated function RemoveSquadAssistantVolunteer(int VolunteerIndex)
+{
+    local int i;
+
+    if (VolunteerIndex >= 0 && VolunteerIndex < SquadAssistantVolunteers.Length)
+    {
+        SquadAssistantVolunteers[VolunteerIndex] = none;
+    }
+
+    // Clear up the volunteer array if needed
+    for (i = 0; i < SquadAssistantVolunteers.Length; ++i)
+    {
+        if (SquadAssistantVolunteers[i] != none) return;
+    }
+
+    SquadAssistantVolunteers.Length = 0;
 }
 
 exec function Speak(string ChannelTitle)
