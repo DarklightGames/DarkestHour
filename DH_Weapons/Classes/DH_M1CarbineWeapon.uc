@@ -5,6 +5,15 @@
 
 class DH_M1CarbineWeapon extends DHSemiAutoWeapon;
 
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // The M1 and M1/T17 share a mesh, but the fire switch only exists on the
+    // M1/T17, therefore we hide the switch in code here.
+    SetBoneScale(0, 0.0, 'Fireswitch');
+}
+
 defaultproperties
 {
     ItemName="M1 Carbine"
@@ -16,7 +25,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine_mesh'
     Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Carbine'
-	Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.M1CarbineExtra'
+    Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.M1CarbineExtra'
 
     bUseHighDetailOverlayIndex=false
 
@@ -31,5 +40,5 @@ defaultproperties
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
 
-	MuzzleBone="MuzzleNew2"
+    MuzzleBone="MuzzleNew2"
 }

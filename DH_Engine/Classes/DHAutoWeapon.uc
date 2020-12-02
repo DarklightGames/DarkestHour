@@ -14,6 +14,11 @@ var     name    SightUpSelectFireIronAnim; // animation for selecting the firing
 var     sound   SelectFireSound;
 var     float   SelectFireVolume;
 
+// Fire select switch
+var     name            FireSelectSwitchBoneName;
+var     rotator         FireSelectSemiRotation;
+var     rotator         FireSelectAutoRotation;
+
 replication
 {
     // Functions a client can call on the server
@@ -28,6 +33,33 @@ simulated exec function SwitchFireMode()
     {
         GotoState('SwitchingFireMode');
     }
+}
+
+simulated function UpdateFireSelectSwitchRotation()
+{
+    if (FireSelectSwitchBoneName != '')
+    {
+        if (FireMode[0].bWaitForRelease)
+        {
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectAutoRotation);
+        }
+        else
+        {
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectSemiRotation);
+        }
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    UpdateFireSelectSwitchRotation();
+}
+
+simulated event ToggleFireSelectSwitch()
+{
+    UpdateFireSelectSwitchRotation();
 }
 
 simulated state SwitchingFireMode extends WeaponBusy

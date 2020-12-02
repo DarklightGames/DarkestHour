@@ -36,5 +36,9 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
+
+    FireSelectSwitchBoneName="Fireswitch"
+    FireSelectAutoRotation=(Yaw=-4000)
+    FireSelectSemiRotation=(Yaw=4000)
 }
 
