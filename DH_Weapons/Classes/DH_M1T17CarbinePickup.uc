@@ -9,5 +9,5 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_M1T17CarbineWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Carbine'
-    DrawScale=0.9
+    //DrawScale=0.9
 }

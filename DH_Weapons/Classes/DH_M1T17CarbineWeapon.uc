@@ -7,7 +7,7 @@ class DH_M1T17CarbineWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="M1/T17 Carbine"
+    ItemName="M1/T17 Automatic Carbine"
     SwayModifyFactor=0.55 // -0.35  because it was a very light carbine
     FireModeClass(0)=class'DH_Weapons.DH_M1T17CarbineFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1T17CarbineMeleeFire'
@@ -21,7 +21,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
 
     IronSightDisplayFOV=45.0
-    DisplayFOV=90.0
+    DisplayFOV=80.0
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=12
@@ -31,7 +31,7 @@ defaultproperties
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
 
-    MuzzleBone="MuzzleNew"
+    MuzzleBone="MuzzleNew2"
 
     bHasSelectFire=true
     SelectFireAnim="select_fire"

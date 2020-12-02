@@ -20,7 +20,7 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 
-    IronSightDisplayFOV=50.0
+    IronSightDisplayFOV=45.0
     DisplayFOV=90.0
     FreeAimRotationSpeed=7.0
 
@@ -31,5 +31,5 @@ defaultproperties
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
 
-	MuzzleBone="MuzzleNew"
+	MuzzleBone="MuzzleNew2"
 }

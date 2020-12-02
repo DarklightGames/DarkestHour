@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_M1CarbinePickup extends DHWeaponPickup;
+class DH_M1A1CarbinePickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_M1CarbineWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Carbine'
+    InventoryType=class'DH_Weapons.DH_M1A1CarbineWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1A1_Carbine'
     //DrawScale=0.9
 }
