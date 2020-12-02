@@ -19,8 +19,8 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 
-    IronSightDisplayFOV=48.0
-    DisplayFOV=89.0
+    IronSightDisplayFOV=45.0
+    DisplayFOV=90.0
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=12
@@ -29,10 +29,10 @@ defaultproperties
     PutDownAnim="put_away"
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-	
-	MuzzleBone="MuzzleNew"
+
+    MuzzleBone="MuzzleNew"
     FirstSelectAnim="Draw2"
-	
-	sleevenum=1
-	handnum=2
+
+    sleevenum=1
+    handnum=2
 }
