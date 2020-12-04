@@ -3,24 +3,23 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_ColtM1911Weapon extends DHPistolWeapon;
+class DH_ColtM1914Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="Colt M1911A1"
-    FireModeClass(0)=class'DH_Weapons.DH_ColtM1911Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_ColtM1911MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'
-    PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
+    ItemName="Kongsberg Colten M/1914"
+    FireModeClass(0)=class'DH_Weapons.DH_ColtM1914Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_ColtM1914MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_ColtM1914Attachment'
+    PickupClass=class'DH_Weapons.DH_ColtM1914Pickup'
 
-    Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
-    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
-    bUseHighDetailOverlayIndex=true
+    Mesh=SkeletalMesh'DH_Colt1911_1st.Colt1914'
+    bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
     HandNum=0
     SleeveNum=1
 
-    Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+    Skins(0)=Texture'DH_ColtM1911_tex.ColtM1911.1914_Colt'
 
     DisplayFOV=70.0
     IronSightDisplayFOV=64.0
