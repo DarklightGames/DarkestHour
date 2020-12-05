@@ -13,4 +13,6 @@ defaultproperties
     DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
+	
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 }
