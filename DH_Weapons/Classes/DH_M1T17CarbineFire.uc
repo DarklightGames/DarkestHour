@@ -11,7 +11,7 @@ defaultproperties
 	
     ProjectileClass=class'DH_Weapons.DH_M1T17CarbineBullet'
     AmmoClass=class'DH_Weapons.DH_M1T17CarbineAmmo'
-    Spread=90.0
+    Spread=75.0
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'

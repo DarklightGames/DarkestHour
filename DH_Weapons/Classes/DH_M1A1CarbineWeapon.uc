@@ -22,6 +22,7 @@ defaultproperties
     IronSightDisplayFOV=45.0
     DisplayFOV=90.0
     FreeAimRotationSpeed=7.0
+    Spread=75.0
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
