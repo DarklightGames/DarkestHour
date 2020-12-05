@@ -12,7 +12,7 @@ defaultproperties
     AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
     FireRate=0.070588
     TracerFrequency=7
-    Spread=78.0
+    Spread=88.0
     RecoilRate=0.04
     PctHipMGPenalty=1.0
 

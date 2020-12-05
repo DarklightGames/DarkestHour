@@ -12,7 +12,7 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.14
 
-    Spread=95.0
+    Spread=65.0
 
     // Recoil
     RecoilRate=0.07

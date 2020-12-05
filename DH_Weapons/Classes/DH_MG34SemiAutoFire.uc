@@ -11,7 +11,7 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
     TracerFrequency=7
-    Spread=65.0
+    Spread=75.0
     RecoilRate=0.04
     PctHipMGPenalty=0.6
 
