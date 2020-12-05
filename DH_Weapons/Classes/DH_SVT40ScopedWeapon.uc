@@ -17,19 +17,24 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.svt40_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+	
+    ScopeOverlaySize=0.29
 
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
     bUsesIronsightFOV=false
 
-    IronSightDisplayFOV=60.0
-    IronSightDisplayFOVHigh=60.0
+    IronSightDisplayFOV=63.5
+    IronSightDisplayFOVHigh=63.5
+	
+    PlayerIronsightFOV=60.0
 
-    PlayerFOVZoom=24.0 // 3.5x
+    PlayerFOVZoom=17.143 // 3.5x
 
-    ScopePortalFOV=7.0 // 3.5x
-    ScopePortalFOVHigh=7.0
+    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.4
 
     LensMaterialID=4
 

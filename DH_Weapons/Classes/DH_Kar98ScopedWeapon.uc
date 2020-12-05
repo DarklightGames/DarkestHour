@@ -21,14 +21,19 @@ defaultproperties
     bHasScope=true
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
+	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
     DisplayFOV=70.0
-    IronSightDisplayFOV=45.0
-    IronSightDisplayFOVHigh=45.0
-    PlayerFOVZoom=22.5
-    ScopePortalFOV=6.0
-    ScopePortalFOVHigh=6.0
+    IronSightDisplayFOV=21.7
+    IronSightDisplayFOVHigh=21.7
+    PlayerFOVZoom=15.0
+    ScopePortalFOV=9.0
+    ScopePortalFOVHigh=9.0  //very hard to find information on ZF39's field of view, but some places mention 160mm which is roughly 9 degrees
     LensMaterialID=5
     bUsesIronsightFOV=false
+	
+    PlayerIronsightFOV=60.0
+	
+    ScopeOverlaySize=0.62
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
