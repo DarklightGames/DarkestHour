@@ -55,6 +55,28 @@ simulated function BringUp(optional Weapon PrevWeapon)
     super.BringUp(PrevWeapon);
 
     UpdateFireSelectSwitchRotation();
+    UpdateFireRate();
+}
+
+simulated function UpdateFireRate()
+{
+    local DHAutomaticFire AF;
+
+    AF = DHAutomaticFire(FireMode[0]);
+
+    if (AF == none)
+    {
+        return;
+    }
+
+    if (UsingAutoFire() || !AF.bHasSemiAutoFireRate)
+    {
+        FireMode[0].FireRate = FireMode[0].default.FireRate;
+    }
+    else if (AF.bHasSemiAutoFireRate)
+    {
+        FireMode[0].FireRate = AF.default.SemiAutoFireRate;
+    }
 }
 
 simulated event ToggleFireSelectSwitch()
@@ -106,6 +128,8 @@ simulated function ToggleFireMode()
         }
 
         FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+
+        UpdateFireRate();
     }
 }
 

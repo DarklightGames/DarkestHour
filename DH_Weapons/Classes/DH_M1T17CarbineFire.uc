@@ -8,7 +8,7 @@ class DH_M1T17CarbineFire extends DHAutomaticFire;
 defaultproperties
 {
     bWaitForRelease=true // set to semi-auto by default
-	
+
     ProjectileClass=class'DH_Weapons.DH_M1T17CarbineBullet'
     AmmoClass=class'DH_Weapons.DH_M1T17CarbineAmmo'
     Spread=75.0
@@ -33,6 +33,8 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=2.0,OutVal=0.99),(InVal=4.0,OutVal=1.2),(InVal=10.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
-    FireRate=0.08   // 750rpm
+    FireRate=0.08
+    bHasSemiAutoFireRate=true
+    SemiAutoFireRate=0.2
 }
 

@@ -12,6 +12,9 @@ var     name    BipodDeployFireAnim;
 var     name    BipodDeployFireLoopAnim;
 var     name    BipodDeployFireEndAnim;
 
+var     bool    bHasSemiAutoFireRate;
+var     float   SemiAutoFireRate;
+
 // Modified to make the player stop firing if they are sprinting or switching to or from ironsights
 simulated function bool AllowFire()
 {
@@ -173,5 +176,7 @@ defaultproperties
 
     AimError=1200.0
     BotRefireRate=0.99
+
+    SemiAutoFireRate=0.18
 }
 
