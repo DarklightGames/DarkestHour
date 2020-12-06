@@ -35,6 +35,6 @@ defaultproperties
 
     FireRate=0.08
     bHasSemiAutoFireRate=true
-    SemiAutoFireRate=0.2
+    SemiAutoFireRate=0.18
 }
 
