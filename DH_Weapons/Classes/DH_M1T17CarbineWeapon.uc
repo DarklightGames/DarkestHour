@@ -20,8 +20,8 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 
-    IronSightDisplayFOV=45.0
-    DisplayFOV=80.0
+    IronSightDisplayFOV=40.0
+    DisplayFOV=90.0
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=12
@@ -38,7 +38,7 @@ defaultproperties
     SelectFireIronAnim="Iron_select_fire"
 
     FireSelectSwitchBoneName="Fireswitch"
-    FireSelectAutoRotation=(Yaw=-4000)
-    FireSelectSemiRotation=(Yaw=4000)
+    FireSelectAutoRotation=(Yaw=2000)
+    FireSelectSemiRotation=(Yaw=0)
 }
 

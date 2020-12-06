@@ -17,4 +17,6 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
     ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
+	
+    FireRate=0.18
 }

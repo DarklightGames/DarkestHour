@@ -20,7 +20,7 @@ defaultproperties
 
     //FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
-    FireEndAnim="Shoot_End"
+    //FireEndAnim="Shoot_End"  <that just doesnt work correctly at all
     FireIronLoopAnim="Iron_Shoot"
     //FireIronEndAnim="Iron_Shoot_End"
 
