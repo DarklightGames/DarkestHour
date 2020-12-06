@@ -41,11 +41,11 @@ simulated function UpdateFireSelectSwitchRotation()
     {
         if (FireMode[0].bWaitForRelease)
         {
-            SetBoneRotation(FireSelectSwitchBoneName, FireSelectAutoRotation);
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectSemiRotation);
         }
         else
         {
-            SetBoneRotation(FireSelectSwitchBoneName, FireSelectSemiRotation);
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectAutoRotation);
         }
     }
 }
