@@ -38,7 +38,7 @@ defaultproperties
     SelectFireIronAnim="Iron_select_fire"
 
     FireSelectSwitchBoneName="Fireswitch"
-    FireSelectAutoRotation=(Yaw=2000)
-    FireSelectSemiRotation=(Yaw=0)
+    FireSelectAutoRotation=(Yaw=300)
+    FireSelectSemiRotation=(Yaw=-3000)
 }
 
