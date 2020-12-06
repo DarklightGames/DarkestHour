@@ -141,5 +141,7 @@ defaultproperties
     Records(81)=(ClassName="DH_Equipment.DH_RDG1SmokeGrenadeItem",WeaponNames=("rdg", "rdg1", "sovsmoke"))
     Records(82)=(ClassName="DH_Equipment.DH_RedSmokeWeapon",WeaponNames=("redsmoke"))
     Records(83)=(ClassName="DH_Equipment.DH_USSmokeGrenadeWeapon",WeaponNames=("smoke", "ussmoke"))
+    Records(84)=(ClassName="DH_Weapons.DH_M1A1CarbineWeapon",WeaponNames=("m1a1", "carbinepara"))
+    Records(85)=(ClassName="DH_Weapons.DH_M1T17CarbineWeapon",WeaponNames=("m1t17", "t17"))
 }
 
