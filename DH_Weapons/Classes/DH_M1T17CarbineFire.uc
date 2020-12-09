@@ -27,10 +27,10 @@ defaultproperties
     FireAnim="Shoot"
     FireIronAnim="Iron_Shoot"
 
-    RecoilRate=0.07
+    RecoilRate=0.06
     MaxVerticalRecoilAngle=510  //keep in mind the first shot gets 0.8 coefficient
     MaxHorizontalRecoilAngle=120
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=2.0,OutVal=0.99),(InVal=4.0,OutVal=1.2),(InVal=10.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=4.0,OutVal=1.1),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
     FireRate=0.08
