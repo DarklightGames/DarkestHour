@@ -10,6 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_FG42Bullet'
     AmmoClass=class'DH_Weapons.DH_FG42Ammo'
     FireRate=0.08
+	SemiAutoFireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
     // Spread
