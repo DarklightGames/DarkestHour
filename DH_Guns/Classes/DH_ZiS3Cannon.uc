@@ -25,7 +25,7 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
+    //TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
 
 
     ProjectileDescriptions(0)="APBC"
