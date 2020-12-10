@@ -56,7 +56,7 @@ function AddNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
     }
 
     // Disallow multiple nominations from the same player
-    for (i = 0; i < Nomations.Length; ++i)
+    for (i = 0; i < Nominations.Length; ++i)
     {
         if (Nominations[i].Player == Player && Nominations[i].VoteClass == VoteClass)
         {
