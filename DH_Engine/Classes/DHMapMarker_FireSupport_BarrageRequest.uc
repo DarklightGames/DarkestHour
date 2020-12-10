@@ -6,8 +6,6 @@
 class DHMapMarker_FireSupport_BarrageRequest extends DHMapMarker_FireSupport
     abstract;
 
-  
-
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return "";

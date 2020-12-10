@@ -29,7 +29,6 @@ function PostBeginPlay()
     local DHPlayer                        PC;
     local vector                          MapLocation;
     local int                             Index;
-    local DHGameReplicationInfo.MapMarker RequestMapMarker;
 
     super.PostBeginPlay();
 
@@ -74,9 +73,8 @@ function PostBeginPlay()
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         if (GRI != none)
         {
-            RequestMapMarker = PC.FindPersonalMarker(self.BarrageRequestMarkerClass);
+            GRI.GetMapCoords(PC.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
             Log("trying to add an ongoing barrage marker");
-            GRI.GetMapCoords(RequestMapMarker.WorldLocation, MapLocation.X, MapLocation.Y);
             PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y);
             Log("added an ongoing barrage marker");
         }

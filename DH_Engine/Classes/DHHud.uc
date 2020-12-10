@@ -3421,7 +3421,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
     if (Player != none)
     {
-
         // Draw the destroyable/destroyed targets
         if (Player.Destroyables.Length != 0)
         {

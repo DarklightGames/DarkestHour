@@ -201,7 +201,7 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1005,8 +1005,13 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     }
 }
 
+function ServerSaveArtilleryTarget(vector Location)
+{
+    SavedArtilleryCoords = Location;
+}
+
 // This function checks if the player can call artillery on the selected target.
-function bool CheckIfTargetIsValid(vector ArtilleryLocation)
+function bool IsArtilleryTargetValid(vector ArtilleryLocation)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
@@ -5782,20 +5787,6 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 function RemovePersonalMarker(int Index)
 {
     PersonalMapMarkers.Remove(Index, 1);
-}
-
-function int GetPersonalMarkerClassIndex(class<DHMapMarker> MarkerClass)
-{
-    local int i;
-
-    for (i = 0; i < PersonalMapMarkers.Length; i++)
-    {
-        if (PersonalMapMarkers[i].MapMarkerClass == MarkerClass)
-        {
-            return i;
-        }
-    }
-    return -1;
 }
 
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)

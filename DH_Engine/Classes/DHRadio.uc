@@ -124,7 +124,8 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (PC.GetPersonalMarkerClassIndex(class'DHMapMarker_FireSupport_BarrageRequest') == -1
+    // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
+    if (PC.SavedArtilleryCoords == vect(0, 0, 0)
       && GRI.GetActiveArtilleryStrikesNumber() == 0)
     {
         return ERROR_NoTarget;
@@ -167,7 +168,6 @@ simulated function bool IsPlayerQualified(DHPlayer PC)
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
 {
     local DHPlayer PC;
-    local DHGameReplicationInfo.MapMarker ArtilleryRequestMapMarker;
 
     PC = DHPlayer(Sender.Controller);
 
@@ -176,13 +176,11 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
         return;
     }
 
-    ArtilleryRequestMapMarker = PC.FindPersonalMarker(class'DHMapMarker_FireSupport_BarrageRequest');
-
     Request = new class'DHArtilleryRequest';
     Request.TeamIndex = PC.GetTeamNum();
     Request.Sender = PC;
     Request.ArtilleryTypeIndex = ArtilleryTypeIndex;
-    Request.Location = ArtilleryRequestMapMarker.WorldLocation;
+    Request.Location = PC.SavedArtilleryCoords;
 
     GotoState('Requesting');
 }
@@ -230,14 +228,6 @@ state Requesting extends Busy
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass == none ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum())
         {
-            Warn("Invalid request parameters.");
-            Log("Request" @ Request);
-            Log("Request.Sender" @ Request.Sender);
-            Log("Request.ArtilleryTypeIndex" @ Request.ArtilleryTypeIndex);
-            Log("Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length" @ Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length);
-            Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass);
-            Log("LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum()" @ LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum());
-
             return;
         }
 

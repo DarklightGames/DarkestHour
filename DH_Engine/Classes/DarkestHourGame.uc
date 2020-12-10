@@ -1984,6 +1984,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
+                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
                     SetCharacter(aPlayer);
                 }
             }
@@ -3888,6 +3889,7 @@ function PlayerLeftTeam(PlayerController P)
         PC.GrenadeWeapon = -1;
         PC.DesiredGrenade = 0;
         PC.bWeaponsSelected = false;
+        PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
         PC.SpawnPointIndex = -1;
         PC.bSpawnPointInvalidated = true;
 
@@ -5303,6 +5305,9 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
     local int Interval;
+
+    Log("RequestArtillery -> Request.Location:" @ Request.Location);
+    Log("RequestArtillery -> Request.Sender.SavedArtilleryCoords:" @ Request.Sender.SavedArtilleryCoords);
 
     if (Request == none ||
         Request.ArtilleryTypeIndex < 0 ||
