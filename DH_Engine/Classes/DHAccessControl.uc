@@ -157,4 +157,5 @@ defaultproperties
     Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
     Patrons(3)=(ROID="76561198048993064",Tier="lead") // Ches217
     Patrons(4)=(ROID="76561197981301331",Tier="lead") // Monni
+    Patrons(5)=(ROID="76561198256117403",Tier="lead") // Vic
 }
