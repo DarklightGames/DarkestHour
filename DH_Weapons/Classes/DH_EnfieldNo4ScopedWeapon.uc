@@ -37,7 +37,8 @@ defaultproperties
     ScopePortalFOVHigh=9.9  //~8.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=3
 	
-    PlayerIronsightFOV=57.0
+    PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 
     HandNum=1
     SleeveNum=0
@@ -45,7 +46,6 @@ defaultproperties
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
-    bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85
 

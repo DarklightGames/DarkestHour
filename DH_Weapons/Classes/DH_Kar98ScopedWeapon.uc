@@ -29,9 +29,9 @@ defaultproperties
     ScopePortalFOV=9.0
     ScopePortalFOVHigh=9.0  //very hard to find information on ZF39's field of view, but some places mention 160mm which is roughly 9 degrees
     LensMaterialID=5
-    bUsesIronsightFOV=false
-	
+    	
     PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 	
     ScopeOverlaySize=0.62
 

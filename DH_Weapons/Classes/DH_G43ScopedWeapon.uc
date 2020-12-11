@@ -31,9 +31,7 @@ defaultproperties
     LensMaterialID=4
 	
     PlayerIronsightFOV=60.0
-
-    bUsesIronsightFOV=false
-
+    bUsesIronsightFOV=true
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
 

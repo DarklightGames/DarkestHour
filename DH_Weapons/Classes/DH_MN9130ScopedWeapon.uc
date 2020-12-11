@@ -35,11 +35,10 @@ defaultproperties
     ScopePortalFOV=5.4
     ScopePortalFOVHigh=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=5
+    bUsesIronsightFOV=true
 
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
-
-    bUsesIronsightFOV=false
 
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"

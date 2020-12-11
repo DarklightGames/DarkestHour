@@ -35,9 +35,9 @@ defaultproperties
     ScopePortalFOV=6.77  // "24.1  ft @ 100 yards" for M73 scope, which is about 4.5 degrees
     ScopePortalFOVHigh=6.77  //however, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=4
-    bUsesIronsightFOV=false
 	
     PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

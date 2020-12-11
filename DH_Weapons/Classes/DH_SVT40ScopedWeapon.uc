@@ -24,8 +24,6 @@ defaultproperties
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
 	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
-    bUsesIronsightFOV=false
-
     IronSightDisplayFOV=63.5
     IronSightDisplayFOVHigh=63.5
 	
@@ -35,6 +33,7 @@ defaultproperties
 
     ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     ScopePortalFOVHigh=5.4
+    bUsesIronsightFOV=true
 
     LensMaterialID=4
 
