@@ -51,8 +51,8 @@ defaultproperties
     RearArmor(2)=(Thickness=1.7,Slope=78.0,MaxRelativeHeight=43.3,LocationName="deck")
     RearArmor(3)=(Thickness=3.0,LocationName="superstructure")
 
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
+    FrontLeftAngle=315.0
+    FrontRightAngle=45.0
     RearRightAngle=150.0
     RearLeftAngle=210.0
 
