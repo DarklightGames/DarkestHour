@@ -17,7 +17,8 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
     ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
-
+	
+    MuzzleBone="MuzzleNew2"
     //FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="idle"  //that just doesnt work correctly at all

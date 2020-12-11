@@ -19,4 +19,5 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 	
     FireRate=0.18
+    MuzzleBone="MuzzleNew2"
 }
