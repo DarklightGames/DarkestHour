@@ -104,6 +104,9 @@ simulated state RaisingWeapon
     // Modified to remove firing stuff, to reset stamina, & to add a parachute hint
     simulated function BeginState()
     {
+        local Inventory Inv;
+        local DHWeapon W;
+
         // If player is falling, this resets stamina to full (stamina removed when chute deploys in ParachuteStaticLine)
         if (Instigator != none && Instigator.Physics == PHYS_Falling)
         {
@@ -128,6 +131,20 @@ simulated state RaisingWeapon
         if (DHPlayer(Instigator.Controller) != none)
         {
             DHPlayer(Instigator.Controller).QueueHint(2, true); // parachute hint
+        }
+
+        for (Inv = Instigator.Inventory; Inv != none; Inv = Inv.Inventory)
+        {
+            W =  DHWeapon(Inv);
+
+            Log(W);
+
+            if (W == none)
+            {
+                continue;
+            }
+
+            W.bHasBeenDrawn = false;
         }
     }
 
