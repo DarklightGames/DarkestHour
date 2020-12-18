@@ -5652,7 +5652,7 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -5666,7 +5666,7 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
 
     if (GRI != none)
     {
-        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation, OptionalObject);
+        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
     }
 }
 
@@ -5725,7 +5725,7 @@ function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
     }
 }
 
-function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
     local DHGameReplicationInfo.MapMarker PMM;
@@ -5765,7 +5765,6 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
-    PMM.OptionalObject = OptionalObject;
     PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
     PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
     PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
@@ -7135,15 +7134,15 @@ simulated function bool CanUseFireSupportMenu()
     return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
 }
 
-function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional Object OptionalObject)
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY)
 {
     if (MarkerClass.default.Scope == PERSONAL)
     {
-        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, OptionalObject);
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY);
     }
     else
     {
-        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, OptionalObject);
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY);
     }
 }
 

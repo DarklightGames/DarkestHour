@@ -100,7 +100,6 @@ simulated function bool IsPatron()
 
 simulated function bool IsRadioman()
 {
-    local DHRoleInfo RI;
     local DHPlayer PC;
     PC = DHPlayer(Owner);
     if(PC != none)

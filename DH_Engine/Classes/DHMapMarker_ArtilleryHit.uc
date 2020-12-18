@@ -109,7 +109,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius && Marker.OptionalObject == PC;
+    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius;
 }
 
 defaultproperties
