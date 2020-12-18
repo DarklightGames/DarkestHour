@@ -1392,7 +1392,7 @@ simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, i
     }
 }
 
-function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation)
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation, vector WorldLocation)
 {
     local int i;
     local MapMarker M;
@@ -1407,7 +1407,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
-    M.WorldLocation = GetWorldCoords(MapLocation.X, MapLocation.Y);
+    M.WorldLocation = WorldLocation;
 
     if (MapMarkerClass.default.Scope == SQUAD)
     {

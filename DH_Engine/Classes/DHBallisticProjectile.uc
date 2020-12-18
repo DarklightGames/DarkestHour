@@ -26,7 +26,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-        PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y);
+        PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
     }
 }
 

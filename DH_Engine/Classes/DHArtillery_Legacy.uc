@@ -75,7 +75,7 @@ function PostBeginPlay()
         {
             GRI.GetMapCoords(PC.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
             Log("trying to add an ongoing barrage marker");
-            PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y);
+            PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y, PC.SavedArtilleryCoords);
             Log("added an ongoing barrage marker");
         }
         else
