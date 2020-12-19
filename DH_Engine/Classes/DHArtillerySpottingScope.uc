@@ -480,7 +480,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="�"
+    AngleUnit="°"
     DistanceUnit="m"
 
     WidgetsPanelX=50

@@ -228,74 +228,82 @@ function Timer()
                 V.bTouchingResupply = true;
             }
 
-            if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
+            if (P != none && CanResupplyType(RT_Players))
             {
-                if (P != none && CanResupplyType(RT_Players))
+                //Resupply weapons
+                for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
                 {
-                    //Resupply weapons
-                    for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+                    recvr_weapon = ROWeapon(recvr_inv);
+
+                    if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
                     {
-                        recvr_weapon = ROWeapon(recvr_inv);
-
-                        if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
-                        {
-                            continue;
-                        }
-
-                        if (recvr_weapon.FillAmmo())
-                        {
-                            bResupplied = true;
-                        }
+                        continue;
                     }
 
-                    if (RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+                    if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime) && recvr_weapon.FillAmmo())
                     {
+                        Log("weapon ammo 1");
+                        bResupplied = true;
+                    }
+                }
+
+                if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime) 
+                  && RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+                {
+                    Log("weapon ammo 2");
+                    P.bUsedCarriedMGAmmo = false;
+                    bResupplied = true;
+                }
+            }
+
+            if (V != none && CanResupplyType(RT_Vehicles) && !V.IsA('DHMortarVehicle'))
+            {
+                // Resupply vehicles
+                if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime) 
+                  && V.ResupplyAmmo())
+                {
+                    Log("vehicle ammo");
+                    bResupplied = true;
+                }
+            }
+
+            //Mortar specific resupplying.
+            if (CanResupplyType(RT_Mortars))
+            {
+                // Resupply player carrying a mortar
+                if (P != none)
+                {
+                    if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime) 
+                      && RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition())
+                    {
+                        Log("mortar ammo 1");
+                        bResupplied = true;
+                    }
+
+                    if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
+                      && CanResupplyType(RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+                    {
+                        Log("mortar ammo 2");
                         P.bUsedCarriedMGAmmo = false;
                         bResupplied = true;
                     }
                 }
-
-                if (V != none && CanResupplyType(RT_Vehicles) && !V.IsA('DHMortarVehicle'))
+                // Resupply deployed mortar
+                else if ((Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
+                  && DHMortarVehicle(V) != none && V.ResupplyAmmo())
                 {
-                    // Resupply vehicles
-                    if (V.ResupplyAmmo())
-                    {
-                        bResupplied = true;
-                    }
+                    Log("mortar ammo 3");
+                    bResupplied = true;
                 }
+            }
 
-                //Mortar specific resupplying.
-                if (CanResupplyType(RT_Mortars))
-                {
-                    // Resupply player carrying a mortar
-                    if (P != none)
-                    {
-                        if (RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition())
-                        {
-                            bResupplied = true;
-                        }
+            //Play sound if applicable
+            if (bResupplied)
+            {
+                recvr.LastResupplyTime = Level.TimeSeconds;
+                recvr.ClientResupplied();
 
-                        if (CanResupplyType(RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
-                        {
-                            P.bUsedCarriedMGAmmo = false;
-                            bResupplied = true;
-                        }
-                    }
-                    // Resupply deployed mortar
-                    else if (DHMortarVehicle(V) != none && V.ResupplyAmmo())
-                    {
-                        bResupplied = true;
-                    }
-                }
-
-                //Play sound if applicable
-                if (bResupplied)
-                {
-                    recvr.LastResupplyTime = Level.TimeSeconds;
-                    recvr.ClientResupplied();
-
-                    OnPawnResupplied(recvr);
-                }
+                OnPawnResupplied(recvr);
             }
         }
     }
