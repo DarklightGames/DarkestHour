@@ -46,10 +46,6 @@ function PostBeginPlay()
         return;
     }
 
-    // Record the team that called this arty strike
-    // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
-    GRI.ArtyStrikeLocation[TeamIndex] = Location;
-
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
     BatterySize = LI.GetBatterySize(TeamIndex);
@@ -73,6 +69,10 @@ function PostBeginPlay()
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         if (GRI != none)
         {
+            // Record the team that called this arty strike
+            // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
+            // DH_Legacy.TeamIndex does not work (it's always 0) that's why we have to use PC.PlayerReplicationInfo.Team
+            GRI.ArtyStrikeLocation[PC.PlayerReplicationInfo.Team.TeamIndex] = Location;
             GRI.GetMapCoords(PC.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
             Log("trying to add an ongoing barrage marker");
             PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y, PC.SavedArtilleryCoords);

@@ -11,6 +11,25 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     return "";
 }
 
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    PC.ServerSaveArtilleryTarget(Marker.WorldLocation);
+}
+
+static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    PC.ServerSaveArtilleryTarget(vect(0,0,0));
+}
+
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+
+    return DHGameReplicationInfo(PC.GameReplicationInfo).ArtyStrikeLocation[PRI.Team.TeamIndex] == vect(0,0,0);
+}
+
 defaultproperties
 {
     MarkerName="Barrage Request"

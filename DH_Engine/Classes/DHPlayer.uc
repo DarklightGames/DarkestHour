@@ -5687,6 +5687,7 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
 
     if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanRemoveMarker(PRI, MM))
     {
+        MM.MapMarkerClass.static.OnMapMarkerRemoved(self, MM);
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
 }
@@ -5785,6 +5786,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 
 function RemovePersonalMarker(int Index)
 {
+    PersonalMapMarkers[Index].MapMarkerClass.static.OnMapMarkerRemoved(self, PersonalMapMarkers[Index]);
     PersonalMapMarkers.Remove(Index, 1);
 }
 

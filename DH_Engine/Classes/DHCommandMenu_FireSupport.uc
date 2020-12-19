@@ -30,8 +30,6 @@ function OnSelect(int Index, vector Location)
         {
             case 0: // Artillery barrage
                 self.AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
-                PC.ServerSaveArtilleryTarget(Location);
-                Log("Saving SavedArtilleryCoords:" @ PC.SavedArtilleryCoords);
                 break;
             case 1: // Fire request (Smoke)
                 self.AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
