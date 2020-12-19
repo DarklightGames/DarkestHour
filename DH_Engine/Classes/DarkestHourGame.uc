@@ -5305,10 +5305,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
     local int Interval;
-
-    Log("RequestArtillery -> Request.Location:" @ Request.Location);
-    Log("RequestArtillery -> Request.Sender.SavedArtilleryCoords:" @ Request.Sender.SavedArtilleryCoords);
-
+    
     if (Request == none ||
         Request.ArtilleryTypeIndex < 0 ||
         Request.ArtilleryTypeIndex >= DHLevelInfo.ArtilleryTypes.Length ||
@@ -5445,7 +5442,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="G�nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5454,10 +5451,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton M�ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Gr�schke"
-    GermanNames(12)="Wilhelm Kr�ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
