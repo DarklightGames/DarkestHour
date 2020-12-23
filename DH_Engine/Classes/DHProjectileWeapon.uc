@@ -541,6 +541,12 @@ exec function CorrectY(float NewValue)
     OverlayCorrectionY = NewValue;
 }
 
+exec function EmptyMags()
+{
+    local int i;
+    PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);
+}
+
 function SetServerOrientation(rotator NewRotation)
 {
     local rotator WeaponRotation;

@@ -1158,6 +1158,15 @@ exec function CorrectY(float NewValue)
     }
 }
 
+exec function SetPrimaryAmmo(int Value)
+{
+    if (IsDebugModeAllowed() && Cannon != none)
+    {
+        Cannon.MainAmmoChargeExtra[0] = Value;
+        Log(Cannon.Tag @ ".MainAmmoChargeExtra[0] =" @ Cannon.MainAmmoChargeExtra[0]);
+    }
+}
+
 defaultproperties
 {
     // Positions & entry
