@@ -14,7 +14,7 @@ enum EResupplyType
     RT_Mortars
 };
 
-var int UpdateTime;
+var float UpdateTime;
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -34,16 +34,61 @@ static function bool CanResupplyType(EResupplyType SourceType, EResupplyType Tar
     }
 }
 
-static function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSeconds)
+static function float GetResupplyInterval(Actor Receiver, bool PrintDebug)
+{
+    local DHWeapon            DHW;
+    local DHVehicleWeapon     DHVW;
+    local DHVehicleWeaponPawn DHVWP;
+    local DHVehicle           DHV;
+    local DHMortarWeapon      DHMW;
+    PrintDebug=false;
+
+    DHW = DHWeapon(Receiver);
+    if (DHW != none)
+    {
+        // Log("DHWeapon" @ Receiver);
+        return DHW.default.ResupplyInterval;
+    }
+    DHVW = DHVehicleWeapon(Receiver);
+    if (DHVW != none)
+    {
+        // Log("DHVehicleWeapon" @ Receiver);
+        return DHVW.default.ResupplyInterval;
+    }
+    DHVWP = DHVehicleWeaponPawn(Receiver);
+    if (DHVWP != none)
+    {
+        // Log("DHVehicleWeaponPawn" @ Receiver);
+        return DHVWP.default.ResupplyInterval;
+    }
+    DHV = DHVehicle(Receiver);
+    if (DHVW != none)
+    {
+        // Log("DHVehicle" @ Receiver);
+        return DHV.default.ResupplyInterval;
+    }
+    DHMW = DHMortarWeapon(Receiver);
+    if (DHMW != none)
+    {
+        // Log("DHMortarWeapon" @ Receiver);
+        return DHMW.default.ResupplyInterval;
+    }
+
+    // default fallback
+    // Log("default" @ Receiver);
+    return default.UpdateTime;
+}
+
+static function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSeconds, bool PrintDebug)
 {
     local inventory recvr_inv;
-    local ROWeapon recvr_weapon;
     local bool bResupplied;
     local DHPawn P;
     local Vehicle V;
-    local DHWeapon DHW;
     local DHVehicle DHV;
     local DHRoleInfo RI;
+    local ROWeapon recvr_weapon;
+    local float ResupplyInterval;
 
     // Log("entered HandleResupply");
 
@@ -55,37 +100,36 @@ static function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int Ti
         RI = P.GetRoleInfo();
     }
 
+    // Resupply weapons
     if (P != none && CanResupplyType(SourceType, RT_Players))
     {
-        //Resupply weapons
         for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
         {
             recvr_weapon = ROWeapon(recvr_inv);
-            DHW = DHWeapon(recvr_inv);
 
             if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
             {
                 continue;
             }
 
-            // DHWeapon
-            if(DHW != none && (TimeSeconds - recvr.LastResupplyTime >= DHW.ResupplyInterval) && recvr_weapon.FillAmmo())
+            ResupplyInterval = GetResupplyInterval(recvr_inv, PrintDebug);
+
+            if (TimeSeconds - recvr.LastResupplyTime >= ResupplyInterval)
             {
-                // Log("DHWeapon");
-                bResupplied = true;
-            }
-            // ROWeapon
-            else if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime) && recvr_weapon.FillAmmo())
-            {
-                // Log("ROWeapon");
-                bResupplied = true;
+                if(PrintDebug)
+                {
+                    Log("weapon" @ ", ResupplyInterval:" @ ResupplyInterval);
+                }
+                bResupplied = bResupplied || recvr_weapon.FillAmmo();
             }
         }
 
-        if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime) 
+        ResupplyInterval = GetResupplyInterval(recvr, PrintDebug);
+        if ((TimeSeconds - recvr.LastResupplyTime >= ResupplyInterval) 
           && RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
         {
-            // Log("weapon carries ammo");
+            if(PrintDebug)
+                Log("weapon carries ammo");
             P.bUsedCarriedMGAmmo = false;
             bResupplied = true;
         }
@@ -93,51 +137,41 @@ static function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int Ti
 
     V = Vehicle(recvr);
 
+    // Resupply vehicles and deployed mortars
     if (V != none && CanResupplyType(SourceType, RT_Vehicles) && !V.IsA('DHMortarVehicle'))
     {
-        // Resupply vehicles
-        
-        DHV = DHVehicle(V);
+        ResupplyInterval = GetResupplyInterval(V, PrintDebug);
 
-        if(DHV != none && (TimeSeconds - recvr.LastResupplyTime >= DHV.ResupplyInterval) && V.ResupplyAmmo())
+        if ((TimeSeconds - recvr.LastResupplyTime >= ResupplyInterval))
         {
-            // Log("DHVehicle");
-            bResupplied = true;
-        }
-        else if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime) && V.ResupplyAmmo())
-        {
-            // Log("ROVehicle");
-            bResupplied = true;
+            if(PrintDebug)
+            {
+                Log("Vehicle:" @ V @ ", ResupplyInterval:" @ ResupplyInterval);
+            }
+            bResupplied = bResupplied || V.ResupplyAmmo();
         }
     }
 
-    //Mortar specific resupplying.
+    // Resupply player carrying a mortar
     if (CanResupplyType(SourceType, RT_Mortars))
     {
-        // Resupply player carrying a mortar
         if (P != none)
         {
-            if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime) 
-              && RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition())
+            ResupplyInterval = GetResupplyInterval(P, PrintDebug);
+            if ((TimeSeconds - recvr.LastResupplyTime >= ResupplyInterval) && RI != none && RI.bCanUseMortars)
             {
-                // Log("Mortar");
-                bResupplied = true;
+                if(PrintDebug)
+                    Log("mortar");
+                bResupplied = bResupplied || P.ResupplyMortarAmmunition();
             }
 
-            if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
-              && CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+            if (TimeSeconds - recvr.LastResupplyTime >= ResupplyInterval)
             {
-                // Log("mortar ammo");
+                if(PrintDebug)
+                    Log("mortar ammo");
                 P.bUsedCarriedMGAmmo = false;
-                bResupplied = true;
+                bResupplied = bResupplied || (CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo);
             }
-        }
-        // Resupply deployed mortar
-        else if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
-          && DHMortarVehicle(V) != none && V.ResupplyAmmo())
-        {
-            // Log("deployed mortar");
-            bResupplied = true;
         }
     }
 

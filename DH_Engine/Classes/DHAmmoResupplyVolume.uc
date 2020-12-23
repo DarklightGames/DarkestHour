@@ -72,7 +72,7 @@ function Timer()
             continue;
         }
 
-        ResupplyStrategy.static.HandleResupply(P, ResupplyType, Level.TimeSeconds);
+        ResupplyStrategy.static.HandleResupply(P, ResupplyType, Level.TimeSeconds, false);
     }
 }
 

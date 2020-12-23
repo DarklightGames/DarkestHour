@@ -25,6 +25,8 @@ var     bool                bUsesMags;          // main weapon uses magazines or
 var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 
+var     float       ResupplyInterval;
+
 // MG weapon (hull mounted or coaxial)
 const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
 var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
@@ -1248,4 +1250,6 @@ defaultproperties
     FireIntervalAimLock=0.0 // also means AimLockReleaseTime is deprecated
     bShowAimCrosshair=false
     bInheritVelocity=false
+    
+    ResupplyInterval=10.0
 }

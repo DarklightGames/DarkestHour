@@ -19,6 +19,7 @@ var     class<DHMapIconAttachment> MapIconAttachmentClass;
 var     DHMapIconAttachment        MapIconAttachment;
 
 var     class<DHResupplyStrategy>  ResupplyStrategy;
+var     bool                       DebugFlag;
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -205,7 +206,7 @@ function Timer()
                 V.bTouchingResupply = true;
             }
 
-            if(ResupplyStrategy.static.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
+            if(ResupplyStrategy.static.HandleResupply(recvr, ResupplyType, Level.TimeSeconds, false))
             {
                 OnPawnResupplied(recvr);
             }
@@ -303,4 +304,5 @@ defaultproperties
     CollisionRadius=300
     CollisionHeight=100
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Resupply'
+    DebugFlag=false
 }

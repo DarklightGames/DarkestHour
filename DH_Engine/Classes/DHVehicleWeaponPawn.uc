@@ -41,6 +41,8 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
+var     float       ResupplyInterval;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2517,4 +2519,5 @@ defaultproperties
 
     // RangeString="Range"
     // ElevationString="Elevation"
+    ResupplyInterval=20.0
 }

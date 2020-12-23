@@ -32,10 +32,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=30
-    InitialSecondaryAmmo=15
-    MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=15
+    InitialPrimaryAmmo=6
+    InitialSecondaryAmmo=4
+    MaxPrimaryAmmo=6
+    MaxSecondaryAmmo=4
     Spread=0.020
     SecondarySpread=0.00125
 

@@ -41,4 +41,5 @@ defaultproperties
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
     ArtillerySpottingScope=class'DH_Engine.DHArtillerySpottingScope_LeIG18'
+    ResupplyInterval=20.0
 }
