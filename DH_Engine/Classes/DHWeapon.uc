@@ -30,6 +30,8 @@ var     float           BobModifyFactor;
 var()   name            FirstSelectAnim;
 var     bool            bHasBeenDrawn;
 
+var     float           ResupplyInterval;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -948,4 +950,6 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=true
 
     bUsesIronsightFOV=true
+
+    ResupplyInterval=2.5
 }
