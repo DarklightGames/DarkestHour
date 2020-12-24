@@ -547,9 +547,7 @@ exec function CorrectY(float NewValue)
 }
 
 exec function EmptyMags()
-{
-    local int i;
-    
+{    
     if (IsDebugModeAllowed())
     {
         PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);

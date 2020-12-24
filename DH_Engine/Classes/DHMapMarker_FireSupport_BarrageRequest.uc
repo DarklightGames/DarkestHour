@@ -38,7 +38,4 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
     IconColor=(R=255,G=255,B=255,A=128)
-
-    Scope=PERSONAL
-    OverwritingRule=UNIQUE
 }

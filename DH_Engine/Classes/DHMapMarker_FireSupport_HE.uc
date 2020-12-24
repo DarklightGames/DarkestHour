@@ -10,6 +10,7 @@ defaultproperties
 {
     MarkerName="Fire Support (HE)"
     TypeName="HE"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
+    IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
+    IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     IconColor=(R=255,G=0,B=0,A=255)
 }

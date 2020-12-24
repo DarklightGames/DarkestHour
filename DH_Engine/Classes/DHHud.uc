@@ -39,10 +39,6 @@ var     TextWidget          PlayerNumberText;
 var     SpriteWidget        MapIconCarriedRadio;
 var     SpriteWidget        MapAxisFlagIcon;
 var     SpriteWidget        MapAlliesFlagIcons[4];
-var     SpriteWidget        MapIconMortarHETarget;
-var     SpriteWidget        MapIconMortarSmokeTarget;
-var     SpriteWidget        MapIconMortarArrow;
-var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapIconObjectiveStatusIcon;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
@@ -253,7 +249,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconsFastFlash);
     Level.AddPrecacheMaterial(MapIconsAltFlash);
     Level.AddPrecacheMaterial(MapIconsAltFastFlash);
-    Level.AddPrecacheMaterial(MapIconMortarArrow.WidgetTexture);
 
     // TODO: Remove this as it's not necessary
     Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.fire_pulse');
@@ -5997,10 +5992,6 @@ defaultproperties
     MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     MapIconRally(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     MapIconRally(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMortarHETarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=127,Y1=0,X2=192,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconMortarSmokeTarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
