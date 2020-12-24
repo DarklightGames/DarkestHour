@@ -139,7 +139,8 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
-var     globalconfig int    MinPromptPacketLoss;    // client option used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
+var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
+var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -1457,11 +1458,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-            if (Passenger == none)
+            if (bShowVehicleVisionCone && Passenger == none)
             {
                 VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
                 VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
-                VehicleVisionConeIcon.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
 
                 TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
                 DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
@@ -1511,7 +1511,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-            if (WP == Passenger)
+            if (bShowVehicleVisionCone && WP == Passenger)
             {
                 VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
                 VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -5995,7 +5995,9 @@ defaultproperties
     ConsoleFontSize=6
     MessageFontOffset=0
     bShowIndicators=true
-    MinPromptPacketLoss=9
+    MinPromptPacketLoss=10
+
+    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true
