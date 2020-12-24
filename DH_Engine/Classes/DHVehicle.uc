@@ -177,8 +177,6 @@ var     DHSpawnPointBase        SpawnPoint;           // the spawn point that wa
 // Debugging
 var     bool        bDebuggingText;
 
-var     float       ResupplyInterval;
-
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -4291,5 +4289,4 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //bDebuggingText=true
-    ResupplyInterval=2.5
 }

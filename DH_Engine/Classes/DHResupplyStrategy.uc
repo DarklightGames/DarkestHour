@@ -39,8 +39,6 @@ static function float GetResupplyInterval(Actor Receiver, bool PrintDebug)
     local DHWeapon            DHW;
     local DHVehicleWeapon     DHVW;
     local DHVehicleWeaponPawn DHVWP;
-    local DHVehicle           DHV;
-    local DHMortarWeapon      DHMW;
     PrintDebug=false;
 
     DHW = DHWeapon(Receiver);
@@ -60,18 +58,6 @@ static function float GetResupplyInterval(Actor Receiver, bool PrintDebug)
     {
         // Log("DHVehicleWeaponPawn" @ Receiver);
         return DHVWP.default.ResupplyInterval;
-    }
-    DHV = DHVehicle(Receiver);
-    if (DHVW != none)
-    {
-        // Log("DHVehicle" @ Receiver);
-        return DHV.default.ResupplyInterval;
-    }
-    DHMW = DHMortarWeapon(Receiver);
-    if (DHMW != none)
-    {
-        // Log("DHMortarWeapon" @ Receiver);
-        return DHMW.default.ResupplyInterval;
     }
 
     // default fallback
