@@ -18,8 +18,7 @@ var     float           UpdateTime;     // How often this thing needs to do it's
 var     class<DHMapIconAttachment> MapIconAttachmentClass;
 var     DHMapIconAttachment        MapIconAttachment;
 
-var     class<DHResupplyStrategy>  ResupplyStrategy;
-var     bool                       DebugFlag;
+var     class<DHResupplyStrategy>  ResupplyStrategy; 
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -167,13 +166,8 @@ function ProcessActorLeave()
 function Timer()
 {
     local Pawn recvr;
-    local inventory recvr_inv;
-    local ROWeapon recvr_weapon;
-    local bool bResupplied;
     local DHPawn P;
     local Vehicle V;
-    local DHWeapon DHW;
-    local DHVehicle DHV;
     local DHRoleInfo RI;
 
     ProcessActorLeave();
@@ -206,7 +200,7 @@ function Timer()
                 V.bTouchingResupply = true;
             }
 
-            if(ResupplyStrategy.static.HandleResupply(recvr, ResupplyType, Level.TimeSeconds, false))
+            if(ResupplyStrategy.static.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
             {
                 OnPawnResupplied(recvr);
             }
@@ -304,5 +298,4 @@ defaultproperties
     CollisionRadius=300
     CollisionHeight=100
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Resupply'
-    DebugFlag=false
 }

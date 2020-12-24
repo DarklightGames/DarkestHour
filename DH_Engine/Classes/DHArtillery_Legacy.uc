@@ -28,7 +28,6 @@ function PostBeginPlay()
     local float                           StrikeDelay, MaxSalvoDuration;
     local DHPlayer                        PC;
     local vector                          MapLocation;
-    local int                             Index;
 
     super.PostBeginPlay();
 

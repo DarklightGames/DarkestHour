@@ -20,7 +20,6 @@ function PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ResupplyAttachment = Spawn(ResupplyAttachmentClass, self);
-        ResupplyAttachment.DebugFlag = true;
 
         if (ResupplyAttachment != none)
         {

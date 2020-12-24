@@ -159,6 +159,7 @@ var     int                                     SupplyDropCountMax;         // H
 var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
+var     float                                   ResupplyInterval;
 
 var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
@@ -4289,4 +4290,5 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //bDebuggingText=true
+    ResupplyInterval=2.5
 }

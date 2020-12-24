@@ -53,12 +53,6 @@ function Reset()
 function Timer()
 {
     local Pawn P;
-    local Inventory I;
-    local ROWeapon W;
-    local bool bResupplied;
-    local DHPawn DHP;
-    local Vehicle V;
-    local DHRoleInfo RI;
 
     if (!bActive)
     {
@@ -72,7 +66,7 @@ function Timer()
             continue;
         }
 
-        ResupplyStrategy.static.HandleResupply(P, ResupplyType, Level.TimeSeconds, false);
+        ResupplyStrategy.static.HandleResupply(P, ResupplyType, Level.TimeSeconds);
     }
 }
 
