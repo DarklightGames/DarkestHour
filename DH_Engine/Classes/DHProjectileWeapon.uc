@@ -524,6 +524,11 @@ simulated event StopFire(int Mode)
     }
 }
 
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // Debug execs to enable sight debugging and calibration, to make sure textured sight overlay is exactly centred
 exec function DebugSights()
 {
@@ -544,7 +549,11 @@ exec function CorrectY(float NewValue)
 exec function EmptyMags()
 {
     local int i;
-    PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);
+    
+    if (IsDebugModeAllowed())
+    {
+        PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);
+    }
 }
 
 function SetServerOrientation(rotator NewRotation)
