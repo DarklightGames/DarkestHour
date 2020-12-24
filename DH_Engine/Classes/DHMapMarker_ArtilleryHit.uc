@@ -6,6 +6,8 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
+var class<DHMapMarker_FireSupport> RequestMarkerClass;
+
 // Only allow artillery roles to place artillery hits.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
@@ -57,15 +59,16 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     ElapsedTime = GRI.ElapsedTime;
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
+    // Look for the closest marker that corresponds to the given RequestMarkerClass
     for (i = 0; i < MapMarkers.Length; ++i)
     {
         Marker = MapMarkers[i];
 
         bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime;
 
-        if ((Marker.MapMarkerClass == class'DHMapMarker_FireSupport_HE' || Marker.MapMarkerClass == class'DHMapMarker_FireSupport_Smoke') &&
-            bIsMarkerAlive &&
-            Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
+        if ((Marker.MapMarkerClass == default.RequestMarkerClass) 
+          && bIsMarkerAlive
+          && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
@@ -115,7 +118,6 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 defaultproperties
 {
     IconMaterial=MaterialSequence'DH_InterfaceArt2_tex.Artillery.HitMarker'
-    IconColor=(R=255,G=165,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=6
     OverwritingRule=UNIQUE_PER_GROUP
