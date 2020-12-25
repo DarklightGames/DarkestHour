@@ -7,9 +7,8 @@ class DH_T3476_42Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-
     FireAttachBone="com_attachment"
-	
+
     // Turret mesh
     Mesh=SkeletalMesh'DH_T34_2_anm.T34m42_turret_ext'
     Skins(0)=Texture'DH_T34_3_tex.Vehicles.T3476_M42_green'
@@ -41,11 +40,11 @@ defaultproperties
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellSolid'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
 
-    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
+    nProjectileDescriptions(0)="BR-350BSP" // 1942 solid shell, after A and before the "proper" B
     nProjectileDescriptions(1)="OF-350"
 
     InitialPrimaryAmmo=25

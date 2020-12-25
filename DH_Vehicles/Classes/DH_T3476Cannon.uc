@@ -21,7 +21,7 @@ defaultproperties
     LeftArmorFactor=4.5
     RightArmorFactor=4.5
     RearArmorFactor=4.5
-    FrontArmorSlope=15.0
+    FrontArmorSlope=8.0  // to do: spherical shape that has different slope depending on elevation
     LeftArmorSlope=30.0
     RightArmorSlope=30.0
     RearArmorSlope=30.0

@@ -14,7 +14,7 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=3.0
-    ReinforcementCost=5
+    ReinforcementCost=2
 
     bMustBeTankCommander=false
 
@@ -95,14 +95,14 @@ defaultproperties
     SteeringScaleFactor=4.0
 
     bHasHandbrake=True
-    TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=200,OutVal=0.75),(InVal=1500,OutVal=2.0),(InVal=2200,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=1500,OutVal=2.0),(InVal=3000,OutVal=0.0)))
     GearRatios(0)=-0.20
-    GearRatios(1)=0.20
-    GearRatios(2)=0.42
-    GearRatios(3)=0.80
-    GearRatios(4)=1.05
+    GearRatios(1)=0.14
+    GearRatios(2)=0.32
+    GearRatios(3)=0.5
+    GearRatios(4)=0.65
     TransRatio=0.16
-    ChangeUpPoint=1990.000000
+    ChangeUpPoint=2200.000000
     ChangeDownPoint=1000.000000
     EngineBrakeFactor=0.000100
     EngineBrakeRPMScale=0.100000
@@ -111,12 +111,10 @@ defaultproperties
     IdleRPM=500.000000
     EngineRPMSoundRange=5000.000000
     RevMeterScale=4000.000000
-    //GroundSpeed=325.000000
-    //^ for some reason this line makes it slow as hell, and it doesnt exist on gaz67 so i removed it
 
     // Damage
-    Health=1500.0
-    HealthMax=1500.0
+    Health=1200.0
+    HealthMax=1200.0
     DirectHEImpactDamageMult=8.0
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=22.0,PointHeight=0.0,PointScale=1.0,PointBone=engine,PointOffset=(X=60.0,Y=0.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)

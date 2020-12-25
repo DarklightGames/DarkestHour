@@ -7,8 +7,8 @@ class DH_JagdpanzerIVL70Destroyer extends DH_JagdpanzerIVL48Destroyer;
 
 defaultproperties
 {
-    ReinforcementCost=14
     VehicleNameString="Jagdpanzer IV/70(V)"
+    ReinforcementCost=7
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonPawn')
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_body_ext'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest70'

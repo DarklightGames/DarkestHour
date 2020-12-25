@@ -75,7 +75,7 @@ defaultproperties
     VehicleNameString="M22 Locust **WIP**"
     VehicleTeam=1
     VehicleMass=8.0
-    ReinforcementCost=8
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_body'

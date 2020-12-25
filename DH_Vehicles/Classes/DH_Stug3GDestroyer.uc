@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="StuG III Ausf.G"
     VehicleMass=12.0
-    ReinforcementCost=11
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
@@ -51,8 +51,8 @@ defaultproperties
     RearArmor(2)=(Thickness=1.7,Slope=78.0,MaxRelativeHeight=43.3,LocationName="deck")
     RearArmor(3)=(Thickness=3.0,LocationName="superstructure")
 
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
+    FrontLeftAngle=315.0
+    FrontRightAngle=45.0
     RearRightAngle=150.0
     RearLeftAngle=210.0
 

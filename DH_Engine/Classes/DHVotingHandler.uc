@@ -13,6 +13,8 @@ var localized string    SwapAndRestartText;
 var config    float     MapVoteIntervalDuration;
 var config    bool      bUseSwapVote;
 
+var private bool        bIsReapplyingVotes; // HACK: Flag to stop admin votes from force-switching the map upon reapplication of votes
+
 // Deprecated functions
 function SaveAccVotes(int WinningMapIndex, int WinningGameIndex){}
 function SubmitKickVote(int PlayerID, Actor Voter){}
@@ -287,7 +289,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    if (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
+    if (!bIsReapplyingVotes && PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
     {
         TextMessage = lmsgAdminMapChange;
         TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
@@ -724,6 +726,8 @@ function ReapplyMapVotes()
 {
     local int i, x;
 
+    bIsReapplyingVotes = true;
+
     // Reapply votes
     for (i = 0; i < MVRI.Length; ++i)
     {
@@ -739,6 +743,8 @@ function ReapplyMapVotes()
             }
         }
     }
+
+    bIsReapplyingVotes = false;
 }
 
 // Override to add additional vote options

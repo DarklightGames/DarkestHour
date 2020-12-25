@@ -7,9 +7,9 @@ class DH_RKKA_AmoebaFireteamLeaderLate extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietAmoebaLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaSleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.AmoebaGreenSleeves'
 
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')

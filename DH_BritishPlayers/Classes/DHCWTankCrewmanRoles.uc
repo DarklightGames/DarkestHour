@@ -13,4 +13,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
+    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
 }
