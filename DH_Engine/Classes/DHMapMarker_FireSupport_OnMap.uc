@@ -35,6 +35,10 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
+    Log("PC != none" @ PC != none);
+    Log("PC.IsArtilleryOperator()" @ PC.IsArtilleryOperator());
+    Log("PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex" @ PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex);
+
     return PC != none && (PC.IsArtilleryOperator() || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex);
 }
 
@@ -62,9 +66,9 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 defaultproperties
 {
     MarkerName="Fire Support"
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
+    IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconColor=(R=204,G=,B=255,A=255)
-    IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
+    IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
     bShouldShowOnCompass=false
     OverwritingRule=UNIQUE_PER_GROUP

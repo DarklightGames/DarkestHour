@@ -3742,7 +3742,6 @@ function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapS
     MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
     MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.default.IconColor;
-    //Log("Drawing MapMarkerClass" $ MapMarkerClass $ " in location: (" $ Target.X $ ", " $ Target.Y $ ")");
 
     DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
 

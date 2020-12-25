@@ -73,9 +73,7 @@ function PostBeginPlay()
             // DH_Legacy.TeamIndex does not work (it's always 0) that's why we have to use PC.PlayerReplicationInfo.Team
             GRI.ArtyStrikeLocation[PC.PlayerReplicationInfo.Team.TeamIndex] = Location;
             GRI.GetMapCoords(PC.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
-            Log("trying to add an ongoing barrage marker");
             PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y, PC.SavedArtilleryCoords);
-            Log("added an ongoing barrage marker");
         }
         else
         {

@@ -5768,14 +5768,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     PMM.MapMarkerClass = MapMarkerClass;
     PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
     PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
-    if(WorldLocation == vect(0,0,0))
-    {
-        PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
-    }
-    else
-    {
-        PMM.WorldLocation = WorldLocation;
-    }
+    PMM.WorldLocation = WorldLocation;
 
     if (MapMarkerClass.default.LifetimeSeconds != -1)
     {
@@ -7142,16 +7135,44 @@ simulated function bool CanUseFireSupportMenu()
 
     return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
 }
-
 function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector WorldLocation)
 {
-    if (MarkerClass.default.Scope == PERSONAL)
+    local vector Location;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if(GRI != none && WorldLocation == vect(0,0,0))
     {
-        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
+        Location = GRI.GetWorldCoords(MapLocationX, MapLocationY);
     }
     else
     {
-        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
+        Location = WorldLocation;
+    }
+
+    if (MarkerClass.default.Scope == PERSONAL)
+    {
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, Location);
+    }
+    else
+    {
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, Location);
+    }
+}
+
+exec function DebugAddMapMarker(string MapMarkerClassName, int x, int y)
+{
+    local class<DHMapMarker> MapMarkerClass;
+    local float xx, yy;
+
+    if (IsDebugModeAllowed())
+    {
+        xx = float(x)/10;
+        yy = float(y)/10;
+        MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, class'Class'));
+        Log("adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ xx @ "," @ yy);
+        AddMarker(MapMarkerClass, xx, yy);
     }
 }
 

@@ -204,7 +204,14 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     C.CurX = X - 40;
     C.CurY = Y;
     C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
-    C.DrawTile(TargetInfo.Type.default.IconMaterial, 32.0, 32.0, 0.0, 0.0, TargetInfo.Type.default.IconMaterial.MaterialUSize(), TargetInfo.Type.default.IconMaterial.MaterialVSize());
+    C.DrawTile(
+      TargetInfo.Type.default.IconMaterial, 
+      32.0, 
+      32.0, 
+      TargetInfo.Type.default.IconCoords.X1, 
+      TargetInfo.Type.default.IconCoords.Y1, 
+      TargetInfo.Type.default.IconCoords.X2, 
+      TargetInfo.Type.default.IconCoords.Y2);
 }
 
 simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
