@@ -63,11 +63,11 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-	// pros: 20mm ammo is very unlikely to explode
-	// cons: 2 men crew; petrol fuel
+    // pros: 20mm ammo is very unlikely to explode
+    // cons: 2 men crew; petrol fuel
     Health=400
     HealthMax=400.0
-	AmmoIgnitionProbability=0.2  // 0.75 default
+    AmmoIgnitionProbability=0.2  // 0.75 default
     TurretDetonationThreshold=5000.0 // increased from 1750
     EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
@@ -120,8 +120,8 @@ defaultproperties
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.T60_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.T60_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.T60_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.35
     VehicleHudTreadsPosX(1)=0.66
