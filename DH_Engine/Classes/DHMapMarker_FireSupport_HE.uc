@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport
+class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport_OnMap
     abstract;
 
 defaultproperties

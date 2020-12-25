@@ -69,6 +69,7 @@ static function color GetBeeLineColor()
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
 
+// Override to run specific logic when this marker is removed.
 static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
 
 // Override this to have a caption accompany the marker.

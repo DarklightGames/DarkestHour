@@ -6,7 +6,7 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-var class<DHMapMarker_FireSupport> RequestMarkerClass;
+var class<DHMapMarker_FireSupport_OnMap> RequestMarkerClass;
 
 // Only allow artillery roles to place artillery hits.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
@@ -82,7 +82,7 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     }
 
     PC.ArtilleryHitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHMapMarker_FireSupport'.default.HitVisibilityRadius);
+    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < default.RequestMarkerClass.default.HitVisibilityRadius);
 
     if (ClosestArtilleryRequest != -1 && PC.ArtilleryHitInfo.bIsWithinRadius)
     {
