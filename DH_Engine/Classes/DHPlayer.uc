@@ -7181,29 +7181,29 @@ simulated function bool CanUseFireSupportMenu()
 
     return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
 }
-function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector WorldLocation)
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)
 {
-    local vector Location;
     local DHGameReplicationInfo GRI;
+    local vector                WorldLocation;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(GRI != none && WorldLocation == vect(0,0,0))
+    if(GRI != none && L == vect(0,0,0))
     {
-        Location = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+        WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
     }
     else
     {
-        Location = WorldLocation;
+        WorldLocation = L;
     }
 
     if (MarkerClass.default.Scope == PERSONAL)
     {
-        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, Location);
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
     }
     else
     {
-        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, Location);
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
     }
 }
 
@@ -7237,6 +7237,8 @@ function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
     {
         ServerRemoveMapMarker(Index);
     }
+}
+
 simulated exec function ListWeapons()
 {
     class'DHWeaponRegistry'.static.DumpToLog(self);

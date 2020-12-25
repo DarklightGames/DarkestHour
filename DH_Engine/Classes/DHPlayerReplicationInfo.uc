@@ -73,19 +73,24 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
-simulated function bool IsASL()
+simulated function bool IsSL()
+{
+    return IsSquadLeader();
+}
+
+simulated function bool IsAssistantLeader()
 {
     return IsInSquad() && bIsSquadAssistant;
+}
+
+simulated function bool IsASL()
+{
+    return IsAssistantLeader();
 }
 
 simulated function bool IsSLorASL()
 {
     return IsSL() || IsASL();
-}
-
-simulated function bool IsSL()
-{
-    return IsInSquad() && SquadMemberIndex == 0;
 }
 
 simulated function bool IsInSquad()
