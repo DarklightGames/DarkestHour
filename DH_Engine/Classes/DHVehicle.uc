@@ -160,6 +160,7 @@ var     int                                     SupplyLoadCountMax;         // H
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
 var     float                                   ResupplyInterval;
+var     int                                     LastResupplyTimestamp;
 
 var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
@@ -3547,11 +3548,19 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    bDidResupply = super.ResupplyAmmo();
-
-    if (SupplyAttachment != none && SupplyAttachment.Resupply())
+    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        bDidResupply = true;
+        bDidResupply = super.ResupplyAmmo();
+
+        if (SupplyAttachment != none && SupplyAttachment.Resupply())
+        {
+            bDidResupply = true;
+        }
+    }
+
+    if (bDidResupply)
+    {
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidResupply;

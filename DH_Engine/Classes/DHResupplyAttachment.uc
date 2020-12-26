@@ -18,7 +18,7 @@ var     float           UpdateTime;     // How often this thing needs to do it's
 var     class<DHMapIconAttachment> MapIconAttachmentClass;
 var     DHMapIconAttachment        MapIconAttachment;
 
-var     class<DHResupplyStrategy>  ResupplyStrategy; 
+var     DHResupplyStrategy ResupplyStrategy; 
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -27,6 +27,8 @@ function OnTeamIndexChanged();
 function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
+
+    ResupplyStrategy = new class'DHResupplyStrategy';
 
     SetTimer(1.0, true);
 }
@@ -200,7 +202,7 @@ function Timer()
                 V.bTouchingResupply = true;
             }
 
-            if(ResupplyStrategy.static.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
+            if(ResupplyStrategy.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
             {
                 OnPawnResupplied(recvr);
             }
@@ -288,7 +290,6 @@ event UnTouch(Actor Other)
 defaultproperties
 {
     RemoteRole=ROLE_DumbProxy
-    ResupplyStrategy=class'DHResupplyStrategy'
 
     TeamIndex=-1
     SquadIndex=-1

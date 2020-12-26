@@ -31,6 +31,7 @@ var()   name            FirstSelectAnim;
 var     bool            bHasBeenDrawn;
 
 var     float           ResupplyInterval;
+var     int             LastResupplyTimestamp;
 
 replication
 {
@@ -337,11 +338,14 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified so resupply point gradually replenishes ammo (no full resupply in one go)
 function bool FillAmmo()
 {
-    if (AmmoAmount(0) < MaxAmmo(0))
+    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        AddAmmo(1, 0);
-
-        return true;
+        if (AmmoAmount(0) < MaxAmmo(0))
+        {
+            AddAmmo(1, 0);
+            LastResupplyTimestamp = Level.TimeSeconds;
+            return true;
+        }
     }
 
     return false;

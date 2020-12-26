@@ -7244,6 +7244,28 @@ simulated exec function ListWeapons()
     class'DHWeaponRegistry'.static.DumpToLog(self);
 }
 
+exec function DebugStartRound()
+{
+    local DHGameReplicationInfo GRI;
+    local DHSetupPhaseManager SPM;
+    
+    if (IsDebugModeAllowed())
+    {
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        if (GRI == none || !GRI.bIsInSetupPhase)
+        {
+            return;
+        }
+
+        GRI.SpawningEnableTime = 0;
+
+        foreach AllActors(class'DHSetupPhaseManager', SPM)
+        {
+            SPM.ModifySetupPhaseDuration(3, true);
+        }
+    }
+}
+
 defaultproperties
 {
     CorpseStayTime=15

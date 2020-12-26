@@ -32,9 +32,9 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=10
+    InitialPrimaryAmmo=6
     InitialSecondaryAmmo=4
-    MaxPrimaryAmmo=10
+    MaxPrimaryAmmo=6
     MaxSecondaryAmmo=4
     Spread=0.020
     SecondarySpread=0.00125
@@ -53,5 +53,5 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1.0)
 
     bIsArtillery=true
-    ResupplyInterval=25.0
+    ResupplyInterval=40.0
 }

@@ -1101,6 +1101,4 @@ defaultproperties
     ShooterIndex=0;
     PeriscopeIndex=1;
     OverlayCorrectionY=-60.0;
-
-    ResupplyInterval=10.0
 }

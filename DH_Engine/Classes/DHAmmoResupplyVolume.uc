@@ -21,12 +21,14 @@ var     float           UpdateTime;              // how often this thing needs t
 var     bool            bActive;                 // whether this ammo resupply volume is active
 var     bool            bControlledBySpawnPoint; // flags that this resupply is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
-var     class<DHResupplyStrategy>  ResupplyStrategy;
+var     DHResupplyStrategy ResupplyStrategy;
 
 // Modified so doesn't activate if controlled by a DH spawn point, as well as if linked to an RO spawn area
 function PostBeginPlay()
 {
     super.PostBeginPlay();
+    
+    ResupplyStrategy = new class'DHResupplyStrategy';
 
     UpdateTime = default.UpdateTime; // force UpdateTime to be default (no overriding it in the editor)
 
@@ -66,7 +68,7 @@ function Timer()
             continue;
         }
 
-        ResupplyStrategy.static.HandleResupply(P, ResupplyType, Level.TimeSeconds);
+        ResupplyStrategy.HandleResupply(P, ResupplyType, Level.TimeSeconds);
     }
 }
 
@@ -126,7 +128,6 @@ event UnTouch(Actor Other)
 
 defaultproperties
 {
-    ResupplyStrategy=class'DHResupplyStrategy'
     Team=OWNER_Neutral
     ResupplyType=RT_All
     bStatic=false

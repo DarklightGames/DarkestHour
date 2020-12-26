@@ -26,6 +26,7 @@ var     bool                bIsArtillery;       // report our hits to be tracked
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 
 var     float       ResupplyInterval;
+var     int         LastResupplyTimestamp;
 
 // MG weapon (hull mounted or coaxial)
 const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
@@ -1251,5 +1252,5 @@ defaultproperties
     bShowAimCrosshair=false
     bInheritVelocity=false
     
-    ResupplyInterval=10.0
+    ResupplyInterval=2.5
 }

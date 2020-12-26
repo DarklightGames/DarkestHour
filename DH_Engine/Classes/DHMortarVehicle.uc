@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DHMortarVehicle extends ROVehicle
+class DHMortarVehicle extends DHVehicle
     abstract;
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
