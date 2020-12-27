@@ -281,12 +281,8 @@ state Responding extends Busy
             GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
 
             // "Artillery strike confirmed."
-            // Log("trying to remove barrage request:");
-            // Index =
-            // Request.Sender.RemovePersonalMarker(Index);
-            // Log("removed barrage request");
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
-            //ResponseSound = GetConfirmSound(LI);
+            ResponseSound = GetConfirmSound(LI);
         }
         else
         {
@@ -322,11 +318,11 @@ state Responding extends Busy
                     break;
             }
 
-            //ResponseSound = GetDenySound(LI);
+            ResponseSound = GetDenySound(LI);
         }
 
         // Play the response sound.
-        //PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
+        PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
 
         // Wait for the duration of the response sound, then move to the Idle state.
         SetTimer(FMax(1.0, GetSoundDuration(ResponseSound)), false);

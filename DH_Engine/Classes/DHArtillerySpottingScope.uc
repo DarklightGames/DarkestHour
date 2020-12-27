@@ -491,7 +491,7 @@ defaultproperties
     DistanceUnit="m"
 
     WidgetsPanelX=50
-    WidgetsPanelY=30
+    WidgetsPanelY=100
     WidgetsPanelEntryHeight=60
 
     RangeHeaderString="Range"

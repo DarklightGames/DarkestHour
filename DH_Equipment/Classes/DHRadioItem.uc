@@ -62,9 +62,6 @@ simulated function PostBeginPlay()
             RI = DHRoleInfo(PC.GetRoleInfo());
             if(RI != none && RI.bCarriesRadio)
             {
-                Log("myk myk");
-                Log("DHI != none" @ RI != none);
-                Log("DHI.bCarriesRadio" @ RI.bCarriesRadio);
                 PC.QueueHint(13, false);
             }
         }
