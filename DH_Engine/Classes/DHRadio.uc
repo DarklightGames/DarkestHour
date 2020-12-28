@@ -235,11 +235,11 @@ state Requesting extends Busy
         Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
-        //RequestSound = GetRequestSound(LI);
+        RequestSound = GetRequestSound(LI);
 
         if (Request.Sender.Pawn != none)
         {
-            //Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
         }
 
         // Wait for duration of request sound plus delay, then move to Responding state.
