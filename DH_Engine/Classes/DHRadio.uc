@@ -211,6 +211,7 @@ state Requesting extends Busy
     function BeginState()
     {
         local DH_LevelInfo LI;
+        local Sound RequestSound;
 
         super.BeginState();
 
