@@ -13,7 +13,7 @@ defaultproperties
     FireRate=0.1
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)
-    Spread=80.0
+    Spread=70.0
 
 
     // Recoil

@@ -26,14 +26,18 @@ defaultproperties
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
     ScriptedScopeTexture=Texture'DH_Springfield_tex.Scopes.Scope3D'
     OverlayCorrectionX=-0.5
+    ScopeOverlaySize=0.222
+	
     DisplayFOV=70.0
-    IronSightDisplayFOV=45.0
-    IronSightDisplayFOVHigh=45.0
-    PlayerFOVZoom=36.0 // 2.5x
-    ScopePortalFOV=15.0  // worse zoom than kar98k
-    ScopePortalFOVHigh=15.0
+    IronSightDisplayFOV=65.0 
+    IronSightDisplayFOVHigh=65.0
+    PlayerFOVZoom=24.0 // 2.5x
+    ScopePortalFOV=6.77  // "24.1  ft @ 100 yards" for M73 scope, which is about 4.5 degrees
+    ScopePortalFOVHigh=6.77  //however, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=4
-    bUsesIronsightFOV=false
+	
+    PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

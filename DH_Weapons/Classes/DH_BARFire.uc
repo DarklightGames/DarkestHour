@@ -24,7 +24,7 @@ defaultproperties
 
     // Spread
     HipSpreadModifier=6.0
-    Spread=80.0
+    Spread=65.0
 
     // Recoil
     RecoilRate=0.1

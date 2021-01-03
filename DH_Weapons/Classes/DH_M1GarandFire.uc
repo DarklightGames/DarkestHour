@@ -102,7 +102,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
     FireRate=0.25  //higher than SVT or G43 for... balance reasons
-    Spread=70.0
+    Spread=50.0
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'

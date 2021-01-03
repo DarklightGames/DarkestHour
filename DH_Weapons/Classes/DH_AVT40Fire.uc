@@ -12,7 +12,7 @@ defaultproperties
     FireRate=0.085 // ~700rpm
     bHasSemiAutoFireRate=true
     SemiAutoFireRate=0.215
-    Spread=90.0
+    Spread=60.0
     bWaitForRelease=true // set to semi-auto by default
 
     RecoilRate=0.06
