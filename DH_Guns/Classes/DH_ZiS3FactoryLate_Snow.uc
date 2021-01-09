@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanArdennesFJPawn extends DH_GermanFJPawn;
+class DH_ZiS3FactoryLate_Snow extends DH_ZiS3FactoryLate;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
-
-    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
+    VehicleClass=class'DH_Guns.DH_ZiS3GunLate_Snow'
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun_winter'
 }
