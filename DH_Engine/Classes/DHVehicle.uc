@@ -132,6 +132,8 @@ var     TexRotator          VehicleHudTurretLook;
 var     float               VehicleHudTreadsPosX[2]; // 0.0 to 1.0 X positioning of tread damage indicators (index 0 = left, 1 = right)
 var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
+var     bool                bShouldDrawPositionDots;
+var     bool                bShouldDrawOccupantList;
 
 // Map icon
 var     class<DHMapIconAttachment>  MapIconAttachmentClass;
@@ -4245,6 +4247,8 @@ defaultproperties
     VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.65
+    bShouldDrawPositionDots=true
+    bShouldDrawOccupantList=true
 
     // Engine
     bEngineOff=true

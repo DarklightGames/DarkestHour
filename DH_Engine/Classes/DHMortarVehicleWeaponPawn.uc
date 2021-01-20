@@ -3,15 +3,9 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
+class DHMortarVehicleWeaponPawn extends DHVehicleCannonPawn
     abstract
     dependson(DHPlayer);
-
-struct DigitSet
-{
-    var material    DigitTexture;
-    var IntBox      TextureCoords[11];
-};
 
 // Deploying, aiming & firing
 var     class<DHMortarWeapon>   WeaponClass;  // the weapon class for the carried mortar inventory item
@@ -49,7 +43,8 @@ var     texture     HUDArcTexture;           // the elevation display
 var     TexRotator  HUDArrowTexture;         // indicator icon for current elevation
 var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
 var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
-var     DigitSet    Digits;                  // numerals for showing ammo count
+var     ROHud.NumericWidget AmmoAmount;
+var     ROHud.SpriteWidget AmmoIcon;
 
 // Fire adjustment info
 var     class<DHMapMarker>    TargetMarkerClass;
@@ -205,10 +200,6 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController                              PC;
-    local float                                         HUDScale, Elevation;
-    local int                                           SizeX, SizeY, RoundIndex, Traverse;
-    local byte                                          Quotient, Remainder;
-    local string                                        TraverseString;
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
@@ -216,96 +207,14 @@ simulated function DrawHUD(Canvas C)
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none || PC.myHud == none || PC.myHud.bHideHud)
     {
-        // Draw HUDOverlay
-        HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
-        HUDOverlay.SetRotation(PC.CalcViewRotation);
-
-        if (PC.myHUD == none || PC.myHUD.bHideHUD)
-        {
-            return;
-        }
-
-        // Set drawing font & scale
-        C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
-        HUDScale = C.SizeY / 1280.0;
-
-        // Get elevation & traverse
-        Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-
-        // without multiplying yaw by (-1) below the yaw readout is reversed
-        Traverse = -class'DHUnits'.static.UnrealToMilliradians(GetGunYaw());
-        TraverseString = "T: ";
-
-        if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
-        {
-            TraverseString $= "+";
-        }
-
-        TraverseString $= string(Traverse) @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $ GetDeflectionAdjustmentString(DHPlayer(PC));
-
         if (DriverPositionIndex == ShooterIndex)
         {
             // Draw mortar
+            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+            HUDOverlay.SetRotation(PC.CalcViewRotation);
             C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-
-            // Draw current round type icon
-            RoundIndex = VehWep.GetAmmoIndex();
-
-            if (VehWep.HasAmmo(RoundIndex))
-            {
-                C.SetDrawColor(255, 255, 255, 255);
-            }
-            else
-            {
-                C.SetDrawColor(128, 128, 128, 255);
-            }
-
-            C.SetPos(HUDScale * 128.0, C.SizeY - HUDScale * 256.0);
-
-            if (RoundIndex == 0)
-            {
-                C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-            }
-            else
-            {
-                C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-            }
-
-            // Draw current round type quantity
-            C.SetPos(256.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-
-            if (VehWep.MainAmmoCharge[RoundIndex] < 10)
-            {
-                Quotient = VehWep.MainAmmoCharge[RoundIndex];
-
-                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
-                    Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
-            }
-            else
-            {
-                Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
-                Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
-
-                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
-
-                SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
-                SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
-            }
-
-              // Draw current round type name
-              C.SetDrawColor(255, 255, 255, 255);
-              C.SetPos(256.0 * HUDScale, C.CurY + 50.0);
-              C.DrawText(VehWep.ProjectileClass.default.Tag);
         }
         else
         {
@@ -328,6 +237,27 @@ simulated function DrawHUD(Canvas C)
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                 Targets);
         }
+
+        ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
+        AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
+
+        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
+
+        // TODO: holy crap this is bad
+        switch (VehWep.GetAmmoIndex())
+        {
+            case 0:
+                AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
+                break;
+            case 1:
+                AmmoIcon.WidgetTexture = HUDSmokeTexture;
+                break;
+            default:
+            break;
+        }
+
+
+        ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -463,7 +393,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
 // New keybound function to toggle the selected ammo type
 exec function SwitchFireMode()
 {
-    Log("DriverPositions.Length=" @ DriverPositions.Length @ ".");
     if (DHMortarVehicleWeapon(Gun) != none && Gun.bMultipleRoundTypes)
     {
         DHMortarVehicleWeapon(Gun).ToggleRoundType();
@@ -1037,11 +966,6 @@ static function StaticPrecache(LevelInfo L)
     {
         L.AddPrecacheMaterial(default.HUDSmokeTexture);
     }
-
-    if (default.Digits.DigitTexture != none)
-    {
-        L.AddPrecacheMaterial(default.Digits.DigitTexture);
-    }
 }
 
 // Modified to add extra material properties
@@ -1053,7 +977,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(HUDArrowTexture);
     Level.AddPrecacheMaterial(HUDHighExplosiveTexture);
     Level.AddPrecacheMaterial(HUDSmokeTexture);
-    Level.AddPrecacheMaterial(Digits.DigitTexture);
 }
 
 // Functions emptied out as not relevant to a mortar:
@@ -1078,7 +1001,6 @@ defaultproperties
     CameraBone="Camera"
     HUDOverlayFOV=90.0
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
-    Digits=(DigitTexture=Texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
     TPCamDistance=128.0
     TPCamDistRange=(Min=128.0,Max=128.0)
     TPCamLookat=(X=0.0,Y=0.0,Z=16.0)
@@ -1101,4 +1023,7 @@ defaultproperties
     ShooterIndex=0;
     PeriscopeIndex=1;
     OverlayCorrectionY=-60.0;
+
+    AmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    AmmoAmount=(TextureScale=0.25,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=135,OffsetY=-130,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 }

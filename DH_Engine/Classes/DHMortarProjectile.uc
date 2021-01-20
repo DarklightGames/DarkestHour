@@ -35,6 +35,8 @@ var     vector  DebugRight;
 var     vector  DebugLocation;
 var     bool    bDebug;
 
+var     Texture HudTexture;
+
 replication
 {
     // Variables the server will replicate to all clients

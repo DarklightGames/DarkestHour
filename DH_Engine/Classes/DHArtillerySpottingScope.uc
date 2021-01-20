@@ -124,6 +124,7 @@ simulated static function DrawSpottingScopeOverlay(Canvas C)
         TileStartPosV = ((TextureSize - TilePixelHeight) * 0.5);
         C.SetPos(0.0, 0.0);
 
+        C.DrawColor = class'UColor'.default.White;
         C.DrawTile(default.SpottingScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
 }
@@ -205,12 +206,12 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     C.CurY = Y;
     C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
     C.DrawTile(
-      TargetInfo.Type.default.IconMaterial, 
-      32.0, 
-      32.0, 
-      TargetInfo.Type.default.IconCoords.X1, 
-      TargetInfo.Type.default.IconCoords.Y1, 
-      TargetInfo.Type.default.IconCoords.X2, 
+      TargetInfo.Type.default.IconMaterial,
+      32.0,
+      32.0,
+      TargetInfo.Type.default.IconCoords.X1,
+      TargetInfo.Type.default.IconCoords.Y1,
+      TargetInfo.Type.default.IconCoords.X2,
       TargetInfo.Type.default.IconCoords.Y2);
 }
 
@@ -487,7 +488,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="Â°"
+    AngleUnit="°"
     DistanceUnit="m"
 
     WidgetsPanelX=50
@@ -497,11 +498,11 @@ defaultproperties
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
 
-    LargeSizeTickLength = 50.0
-    MiddleSizeTickLength = 30.0
-    SmallSizeTickLength = 20.0
-    LabelOffset = 10.0
-    IndicatorMiddleTickOffset = 15.0
-    NumberOfYawSegments = 6;
-    NumberOfPitchSegments = 6;
+    LargeSizeTickLength=50.0
+    MiddleSizeTickLength=30.0
+    SmallSizeTickLength=20.0
+    LabelOffset=10.0
+    IndicatorMiddleTickOffset=15.0
+    NumberOfYawSegments=6
+    NumberOfPitchSegments=6
 }
