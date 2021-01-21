@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARAmmo extends DHAmmunition;
+class DH_BARNoBipodPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    MaxAmmo=20
-    InitialAmount=20
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_ammo'
+    InventoryType=class'DH_Weapons.DH_BARNoBipodWeapon'
+    //StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BARNoBipod'
 }
+

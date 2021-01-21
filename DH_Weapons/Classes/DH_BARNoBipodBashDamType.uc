@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARAmmo extends DHAmmunition;
+class DH_BARNoBipodBashDamType extends DHWeaponBashDamageType
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=20
-    InitialAmount=20
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_ammo'
+    WeaponClass=class'DH_Weapons.DH_BARNoBipodWeapon'
 }

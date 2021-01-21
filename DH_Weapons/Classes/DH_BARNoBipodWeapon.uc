@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARWeapon extends DHBipodAutoWeapon;
+class DH_BARNoBipodWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
@@ -31,14 +31,14 @@ simulated function bool UsingAutoFire()
 
 defaultproperties
 {
-    SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
+    SwayModifyFactor=1.0 //-0.1 from full variant 
 
     ItemName="Browning Automatic Rifle"
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BARFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BARAttachment'
-    PickupClass=class'DH_Weapons.DH_BARPickup'
+    FireModeClass(0)=class'DH_Weapons.DH_BARNoBipodFire'
+    FireModeClass(1)=class'DH_Weapons.DH_BARNoBipodMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_BARNoBipodAttachment'
+    PickupClass=class'DH_Weapons.DH_BARNoBipodPickup'
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_BARBarrel'
@@ -62,15 +62,15 @@ defaultproperties
     bSlowFireRate=true
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
-    SightUpSelectFireIronAnim="fireswitch_aim"
+    //SightUpSelectFireIronAnim="fireswitch_aim"
 	
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
 	
-    SightUpIronBringUp="bipod_in"
-    SightUpIronPutDown="bipod_out"
-    SightUpIronIdleAnim="iron_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    SightUpMagPartialReloadAnim="bipod_reload_half" 
+    //SightUpIronBringUp="bipod_in"
+    //SightUpIronPutDown="bipod_out"
+    //SightUpIronIdleAnim="iron_idle"
+    //SightUpMagEmptyReloadAnim="bipod_reload_empty"
+    //SightUpMagPartialReloadAnim="bipod_reload_half" 
 	
 }

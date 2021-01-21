@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARFire extends DHAutomaticFire;
+class DH_BARNoBipodFire extends DHAutomaticFire;
 
 function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
 {
@@ -17,7 +17,7 @@ function ModeTick(float DeltaTime) // TODO: why is this tick override only added
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_BARBullet'
+    ProjectileClass=class'DH_Weapons.DH_BARNoBipodBullet'
     AmmoClass=class'DH_Weapons.DH_BARAmmo'
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
@@ -28,11 +28,11 @@ defaultproperties
     HipSpreadModifier=6.0
     Spread=65.0
 
-    // Recoil
+    // Recoil //adjusted from full variant
     RecoilRate=0.1
-    MaxVerticalRecoilAngle=650
-    MaxHorizontalRecoilAngle=160
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=3.0,OutVal=0.8),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.33),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=670
+    MaxHorizontalRecoilAngle=140
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=3.0,OutVal=0.8),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.15),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 

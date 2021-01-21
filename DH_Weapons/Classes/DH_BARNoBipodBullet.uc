@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARAmmo extends DHAmmunition;
+class DH_BARNoBipodBullet extends DHBullet;
 
 defaultproperties
 {
-    MaxAmmo=20
-    InitialAmount=20
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_ammo'
+    Speed=48583.0
+    BallisticCoefficient=0.41
+    Damage=115.0
+    MyDamageType=class'DH_Weapons.DH_BARNoBipodDamType'
 }

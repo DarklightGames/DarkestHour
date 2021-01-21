@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_BARAttachment extends DHWeaponAttachment;
+class DH_BARNoBipodAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BAR_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BARNoBipod_3rd'
+    //MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BARNoBipod_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Tip"
