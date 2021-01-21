@@ -3,11 +3,15 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanArdennesFJPawn extends DH_GermanFJPawn;
+class DH_ZiS3CannonLate extends DH_ZiS3Cannon; //added APCR
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
+    TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
+    ProjectileDescriptions(2)="APCR"
+	nProjectileDescriptions(2)="BR-350P"
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
+    InitialTertiaryAmmo=2 
+    MaxTertiaryAmmo=4
+
 }

@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanArdennesFJPawn extends DH_GermanFJPawn;
+class DH_ZiS3GunLate extends DH_ZiS3Gun; //added APCR
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
-
-    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawnLate')
 }

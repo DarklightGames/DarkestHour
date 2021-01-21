@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_GermanArdennesFJPawn extends DH_GermanFJPawn;
+class DH_ZiS3CannonPawnLate extends DH_ZiS3CannonPawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
-
-    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_TanAndWater'
+    GunClass=class'DH_Guns.DH_ZiS3CannonLate'
 }
