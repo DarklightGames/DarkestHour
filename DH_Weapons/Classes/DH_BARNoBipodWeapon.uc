@@ -29,6 +29,14 @@ simulated function bool UsingAutoFire()
     return !bSlowFireRate;
 }
 
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // removing the bipod
+    SetBoneScale(0, 0.0, 'Bipod');
+}
+
 defaultproperties
 {
     SwayModifyFactor=1.0 //-0.1 from full variant 
@@ -57,6 +65,9 @@ defaultproperties
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
+	
+    SelectAnim="Draw"
+    PutDownAnim="Put_away"
 
     bHasSelectFire=true
     bSlowFireRate=true

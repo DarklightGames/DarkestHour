@@ -64,6 +64,9 @@ defaultproperties
     SelectFireIronAnim="fireswitch_aim"
     SightUpSelectFireIronAnim="fireswitch_aim"
 	
+    SelectAnim="Draw"
+    PutDownAnim="Put_away"
+	
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
 	
@@ -72,5 +75,8 @@ defaultproperties
     SightUpIronIdleAnim="iron_idle"
     SightUpMagEmptyReloadAnim="bipod_reload_empty"
     SightUpMagPartialReloadAnim="bipod_reload_half" 
+	
+    //BipodHipToDeploy="aim_to_Bipod"
+	//to do: fix the above
 	
 }
