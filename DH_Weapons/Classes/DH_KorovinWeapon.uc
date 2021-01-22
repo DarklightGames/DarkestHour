@@ -21,7 +21,8 @@ defaultproperties
     SleeveNum=3
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=50.0
+    IronSightDisplayFOV=60
+	DisplayFOV=85
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7

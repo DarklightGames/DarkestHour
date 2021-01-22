@@ -17,5 +17,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Ppd40_1st.PPD-40-1st'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPD40_1_S'
 
-    IronSightDisplayFOV=50.0
+    IronSightDisplayFOV=60.0
+    DisplayFOV=85.0
 }

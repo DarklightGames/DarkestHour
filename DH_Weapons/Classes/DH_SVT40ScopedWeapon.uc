@@ -24,8 +24,10 @@ defaultproperties
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
 	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
-    IronSightDisplayFOV=63.5
-    IronSightDisplayFOVHigh=63.5
+    IronSightDisplayFOV=44.4
+    IronSightDisplayFOVHigh=44.4
+
+	DisplayFOV=85.0
 	
     PlayerIronsightFOV=60.0
 

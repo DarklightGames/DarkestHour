@@ -53,7 +53,7 @@ defaultproperties
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=75.0
-    DisplayFOV=80.0
+    DisplayFOV=85.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5

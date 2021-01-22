@@ -25,5 +25,6 @@ defaultproperties
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
+    DisplayFOV=80.0
 }
 

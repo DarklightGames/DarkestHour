@@ -24,8 +24,8 @@ defaultproperties
 
     SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
 
-    DisplayFOV=75.0
-    IronSightDisplayFOV=70
+	DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12

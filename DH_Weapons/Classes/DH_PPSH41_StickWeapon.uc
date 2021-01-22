@@ -51,7 +51,8 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'
     handnum=2
 
-    IronSightDisplayFOV=67
+    IronSightDisplayFOV=62
+	DisplayFOV=82
 
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'

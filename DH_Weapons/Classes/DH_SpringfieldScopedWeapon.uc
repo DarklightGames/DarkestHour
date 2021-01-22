@@ -28,9 +28,9 @@ defaultproperties
     OverlayCorrectionX=-0.5
     ScopeOverlaySize=0.222
 	
-    DisplayFOV=70.0
-    IronSightDisplayFOV=65.0 
-    IronSightDisplayFOVHigh=65.0
+    DisplayFOV=80.0
+    IronSightDisplayFOV=46.8
+    IronSightDisplayFOVHigh=46.8
     PlayerFOVZoom=24.0 // 2.5x
     ScopePortalFOV=6.77  // "24.1  ft @ 100 yards" for M73 scope, which is about 4.5 degrees
     ScopePortalFOVHigh=6.77  //however, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here

@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MillsBombAttachment'
     PickupClass=class'DH_Weapons.DH_MillsBombPickup'
     Mesh=SkeletalMesh'DH_MillsBomb.MillsBomb'
-    DisplayFOV=90.0
+    DisplayFOV=80.0
     FuzeLength=4.0
     bHasReleaseLever=true
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'

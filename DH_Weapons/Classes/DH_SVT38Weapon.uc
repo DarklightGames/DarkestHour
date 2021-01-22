@@ -20,7 +20,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=32.0
+	DisplayFOV=85.0
 
     MaxNumPrimaryMags=6
     InitialNumPrimaryMags=6 //lower than on SVT-40, mostly because i dont want this weapon to appear superior - realistically it has lower recoil, but there is no way to represent unreliability issues (yet) 

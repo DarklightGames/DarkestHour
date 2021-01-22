@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
 
-    Mesh=SkeletalMesh'Allies_Nagantscope_1st.Mosin-Nagant-9130-Scoped-Mesh'
+    Mesh=SkeletalMesh'DH_Nagantscope_1st.mosinscoped_mesh'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -24,7 +24,7 @@ defaultproperties
 	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay' //to do: proper 3d scope texture
 
     ScopeOverlaySize=0.29 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-    DisplayFOV=70.0        
+    DisplayFOV=82.0        
 
     IronSightDisplayFOV=42.5
     IronSightDisplayFOVHigh=42.5

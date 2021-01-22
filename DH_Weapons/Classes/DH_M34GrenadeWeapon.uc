@@ -17,4 +17,5 @@ defaultproperties
     handnum=1
     sleevenum=2
     GroupOffset=4
+    DisplayFOV=80.0
 }

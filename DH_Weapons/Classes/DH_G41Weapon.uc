@@ -25,12 +25,13 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_G41Attachment'
     PickupClass=class'DH_Weapons.DH_G41Pickup'
 
-    Mesh=SkeletalMesh'Axis_G41_1st.G41_mesh'
+    Mesh=SkeletalMesh'DH_G41_1st.G41_mesh'
     HighDetailOverlay=shader'Weapons1st_tex2.Rifles.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=20.0
+    IronSightDisplayFOV=33.0
+    DisplayFOV=85.0
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=11

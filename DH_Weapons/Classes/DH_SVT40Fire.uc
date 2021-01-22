@@ -14,9 +14,9 @@ defaultproperties
     MaxHorizontalRecoilAngle=210
     FireRate=0.215
 
-    FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'
-    FireSounds(1)=Sound'Inf_Weapons.svt40.svt40_fire02'
-    FireSounds(2)=Sound'Inf_Weapons.svt40.svt40_fire03'
+    FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
+    FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
+    FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)

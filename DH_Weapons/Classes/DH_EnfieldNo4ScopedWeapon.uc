@@ -29,12 +29,12 @@ defaultproperties
     ScopeOverlaySize=0.54 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5
     //OverlayCorrectionY=6    //pixel value scope overaly correction // removed, because it moved the 0 meters mark above the center (which isnt only wrong, but also inconsistent with the 3d scope)
-    DisplayFOV=70.0         // idk
-    IronSightDisplayFOV=24.0
-    IronSightDisplayFOVHigh=24.0
+    DisplayFOV=85.0  
+    IronSightDisplayFOV=33.5
+    IronSightDisplayFOVHigh=33.5
     PlayerFOVZoom=17.143 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
-    ScopePortalFOV=9.9
-    ScopePortalFOVHigh=9.9  //~8.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOV=9.4   //~8.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=9.4  //also it is reduced so that 3d scope takes slightly less space on the screen
     LensMaterialID=3
 	
     PlayerIronsightFOV=60.0

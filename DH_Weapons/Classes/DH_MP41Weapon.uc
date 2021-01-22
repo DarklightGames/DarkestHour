@@ -19,7 +19,8 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=45.0
+    IronSightDisplayFOV=55.0
+	DisplayFOV=85.0
     FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 

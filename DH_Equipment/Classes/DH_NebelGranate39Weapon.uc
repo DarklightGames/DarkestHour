@@ -18,4 +18,5 @@ defaultproperties
     InventoryGroup=4
     GroupOffset=0
     Priority=2
+    DisplayFOV=80.0
 }

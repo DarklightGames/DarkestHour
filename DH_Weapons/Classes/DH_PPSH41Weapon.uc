@@ -49,7 +49,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=40.0
+    IronSightDisplayFOV=65.0
+	DisplayFOV=85
 
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'

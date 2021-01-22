@@ -21,6 +21,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42' // TODO: there is no specularity mask for this weapon
 
     IronSightDisplayFOV=50.0
+	DisplayFOV=85.0
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11

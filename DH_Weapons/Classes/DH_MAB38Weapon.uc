@@ -22,7 +22,7 @@ defaultproperties
     handnum=1
     sleevenum=2
 
-    DisplayFOV=75
+    DisplayFOV=90
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=40.0
     ZoomOutTime=0.1
