@@ -51,7 +51,6 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-10240)
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
-    ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     bReverseShellSpawnDirection=true
 
     ShakeRotMag=(X=45.0,Y=30.0,Z=120.0)
