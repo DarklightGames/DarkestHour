@@ -7,6 +7,8 @@ class DH_BARWeapon extends DHBipodAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
+var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
+
 // Modified as BAR switches between slow/fast auto fire
 simulated function ToggleFireMode()
 {
@@ -27,6 +29,39 @@ simulated function ToggleFireMode()
 simulated function bool UsingAutoFire()
 {
     return !bSlowFireRate;
+}
+
+// ============================
+// REMOVE THIS LATER
+simulated exec function PArmLength(float V)
+{
+    BipodPhysicsSimulation.ArmLength = V;
+}
+
+simulated exec function PDamping(float V)
+{
+    BipodPhysicsSimulation.AngularDamping = V;
+}
+
+simulated exec function PYawFactor(float V)
+{
+    BipodPhysicsSimulation.YawDeltaFactor = V;
+}
+
+simulated exec function PFg(float G)
+{
+    BipodPhysicsSimulation.GravityScale = G;
+}
+// ============================
+
+simulated event WeaponTick(float DeltaTime)
+{
+    super.WeaponTick(DeltaTime);
+
+    if (BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.PhysicsTick(self, DeltaTime);
+    }
 }
 
 defaultproperties
@@ -50,7 +85,6 @@ defaultproperties
 	sleevenum=2
 	Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
 
-
 	DisplayFOV=86.0
     IronSightDisplayFOV=45.0
     FreeAimRotationSpeed=2.0
@@ -63,20 +97,26 @@ defaultproperties
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
     SightUpSelectFireIronAnim="fireswitch_aim"
-	
+
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-	
+
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-	
+
     SightUpIronBringUp="bipod_in"
     SightUpIronPutDown="bipod_out"
     SightUpIronIdleAnim="iron_idle"
     SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    SightUpMagPartialReloadAnim="bipod_reload_half" 
-	
+    SightUpMagPartialReloadAnim="bipod_reload_half"
+
     //BipodHipToDeploy="aim_to_Bipod"
 	//to do: fix the above
-	
+
+    Begin Object Class=DHBipodPhysicsSimulation Name=DH_BARWeapon_BipodPhysicsSimulation
+        BarrelBoneName="MuzzleNew"
+        BipodBoneName="bipod"
+    End Object
+    BipodPhysicsSimulation=DH_BARWeapon_BipodPhysicsSimulation
 }
+
