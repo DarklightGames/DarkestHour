@@ -64,6 +64,23 @@ simulated event WeaponTick(float DeltaTime)
     }
 }
 
+simulated function BipodDeploy(bool bNewDeployedStatus)
+{
+    super.BipodDeploy(bNewDeployedStatus);
+
+    if (BipodPhysicsSimulation != none)
+    {
+        if (bNewDeployedStatus)
+        {
+            BipodPhysicsSimulation.LockBipod(self, 0, 0.5);
+        }
+        else
+        {
+            BipodPhysicsSimulation.UnlockBipod();
+        }
+    }
+}
+
 defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness

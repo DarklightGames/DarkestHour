@@ -4,6 +4,9 @@
 //==============================================================================
 // A simple pendulum simulation to allow bipods to wobble around realistically.
 // All angles are in radians.
+//
+// BUGS:
+// * Simulation runs faster at higher FPS
 //==============================================================================
 
 class DHBipodPhysicsSimulation extends Object;
@@ -20,8 +23,8 @@ var float LockStartTimeSeconds;
 var float LockEndTimeSeconds;
 
 var float Angle;
-var float MinAngle;
-var float MaxAngle;
+var float AngleMin;
+var float AngleMax;
 var float ArmLength;
 var float AngularAcceleration;
 var float AngularDamping;
@@ -30,6 +33,7 @@ var float GravityScale;
 var float YawDeltaFactor;
 var float InstantaneousAngularAcceleration;
 var float AngularVelocityThreshold;    // The angular velocity must be greater than or equal to this value in order for the bipod to move.
+var float CoefficientOfRestitution;
 
 var bool    bDebugPhysicsSimulation;
 var float   NextDebugPrintTimeSeconds;
@@ -46,8 +50,7 @@ function Impulse(float ImpulseAngularAcceleration)
     InstantaneousAngularAcceleration += ImpulseAngularAcceleration;
 }
 
-/*
-function LockBipod(float LockAngle, float DurationSeconds)
+function LockBipod(Weapon Weapon, float LockAngle, float DurationSeconds)
 {
     if (bIsLocked || bIsLocking)
     {
@@ -60,7 +63,6 @@ function LockBipod(float LockAngle, float DurationSeconds)
     LockStartTimeSeconds = Weapon.Level.TimeSeconds;
     LockEndTimeSeconds = LockStartTimeSeconds + DurationSeconds;
 }
-*/
 
 function UnlockBipod()
 {
@@ -74,9 +76,11 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     local Controller Controller;
     local float InstigatorYaw;
     local float YawDeltaAngularAcceleration;
-    local float BarrelAngle;
+    local float BarrelRoll;
+    local float BarrelPitch;
     local float PendulumForce;
     local float T;
+    local float AngleExcess;
 
     if (Weapon == none || Weapon.Instigator == none || bIsLocked)
     {
@@ -109,18 +113,35 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
     // Get the barrel bone roll (so that we know which way is down!)
     BarrelBoneRotation = Weapon.GetBoneRotation(BarrelBoneName);
-    BarrelAngle = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Roll - 16384);
+    BarrelRoll = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Roll - 16384);
+    BarrelPitch = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Pitch);
+    BarrelPitch = FClamp(BarrelPitch, class'UUnits'.static.DegreesToRadians(-90), class'UUnits'.static.DegreesToRadians(90));
 
-    PendulumForce = (-1 * GravityScale / ArmLength) * Sin(Angle - BarrelAngle);
+    PendulumForce = (-1 * GravityScale / ArmLength) * Sin(Angle - BarrelRoll) * Cos(BarrelPitch);
 
     AngularAcceleration = PendulumForce + YawDeltaAngularAcceleration + InstantaneousAngularAcceleration;
 
     AngularVelocity += AngularAcceleration;
 
     // Damp the angular velocity.
-    AngularVelocity = Damp(AngularVelocity, 1.0 - AngularDamping, DeltaTime);
+    AngularVelocity = Damp(AngularVelocity, AngularDamping, DeltaTime);
 
     Angle += AngularVelocity;
+
+    // Collision Bounciness (this is technically wrong!!)
+    // Clamp the angle and apply
+    if (Angle < AngleMin)
+    {
+        AngleExcess = Angle - AngleMin;
+        Angle = AngleMin - AngleExcess;
+        AngularVelocity = -AngleExcess * CoefficientOfRestitution;
+    }
+    else if (Angle > AngleMax)
+    {
+        AngleExcess = Angle - AngleMax;
+        Angle = AngleMax - AngleExcess;
+        AngularVelocity = -AngleExcess * CoefficientOfRestitution;
+    }
 
     // Reset instantaneous angular acceleration.
     InstantaneousAngularAcceleration = 0;
@@ -133,8 +154,6 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     {
         if (Weapon.Level.TimeSeconds > NextDebugPrintTimeSeconds)
         {
-            Log("BarrelAngle" @ class'UUnits'.static.RadiansToDegrees(BarrelAngle));
-
             NextDebugPrintTimeSeconds = Weapon.Level.TimeSeconds + 0.5f;
         }
     }
@@ -144,7 +163,7 @@ defaultproperties
 {
     Angle=0
     AngularVelocity=0
-    AngularDamping=0.98
+    AngularDamping=0.01
     GravityScale=1.0
     AngularVelocityThreshold=0.0
     ArmLength=125.0
@@ -157,4 +176,10 @@ defaultproperties
 
     bIsLocking=false
     bIsLocked=false
+
+    // 25 degrees either way
+    AngleMin=-0.436332
+    AngleMax=0.436332
+    CoefficientOfRestitution=0.5
 }
+
