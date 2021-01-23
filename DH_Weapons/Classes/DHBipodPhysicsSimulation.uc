@@ -126,6 +126,11 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     // Damp the angular velocity.
     AngularVelocity = Damp(AngularVelocity, AngularDamping, DeltaTime);
 
+    if (Abs(AngularVelocity) < AngularVelocityThreshold)
+    {
+        AngularVelocity = 0;
+    }
+
     Angle += AngularVelocity;
 
     // Collision Bounciness (this is technically wrong!!)

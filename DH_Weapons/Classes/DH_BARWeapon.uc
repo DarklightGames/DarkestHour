@@ -9,6 +9,19 @@ var     bool    bSlowFireRate; // flags that the slower firing rate is currently
 
 var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
 
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Instigator.IsLocallyControlled())
+    {
+        // TODO: in future, move this to the super-class!
+        BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
+        BipodPhysicsSimulation.BarrelBoneName = 'MuzzleNew';
+        BipodPhysicsSimulation.BipodBoneName = 'bipod';
+    }
+}
+
 // Modified as BAR switches between slow/fast auto fire
 simulated function ToggleFireMode()
 {
@@ -31,29 +44,6 @@ simulated function bool UsingAutoFire()
     return !bSlowFireRate;
 }
 
-// ============================
-// REMOVE THIS LATER
-simulated exec function PArmLength(float V)
-{
-    BipodPhysicsSimulation.ArmLength = V;
-}
-
-simulated exec function PDamping(float V)
-{
-    BipodPhysicsSimulation.AngularDamping = V;
-}
-
-simulated exec function PYawFactor(float V)
-{
-    BipodPhysicsSimulation.YawDeltaFactor = V;
-}
-
-simulated exec function PFg(float G)
-{
-    BipodPhysicsSimulation.GravityScale = G;
-}
-// ============================
-
 simulated event WeaponTick(float DeltaTime)
 {
     super.WeaponTick(DeltaTime);
@@ -75,6 +65,31 @@ simulated function BipodDeploy(bool bNewDeployedStatus)
             BipodPhysicsSimulation.LockBipod(self, 0, 0.5);
         }
         else
+        {
+            BipodPhysicsSimulation.UnlockBipod();
+        }
+    }
+}
+
+simulated state Reloading
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        // Since we have a custom animation for the bipod during reload, we'll
+        // lock the sim to zero and then unlock it after it's done.
+        if (BipodPhysicsSimulation != none)
+        {
+            BipodPhysicsSimulation.LockBipod(self, 0, 0.25);
+        }
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if (BipodPhysicsSimulation != none && !Instigator.bBipodDeployed)
         {
             BipodPhysicsSimulation.UnlockBipod();
         }
@@ -129,11 +144,5 @@ defaultproperties
 
     //BipodHipToDeploy="aim_to_Bipod"
 	//to do: fix the above
-
-    Begin Object Class=DHBipodPhysicsSimulation Name=DH_BARWeapon_BipodPhysicsSimulation
-        BarrelBoneName="MuzzleNew"
-        BipodBoneName="bipod"
-    End Object
-    BipodPhysicsSimulation=DH_BARWeapon_BipodPhysicsSimulation
 }
 

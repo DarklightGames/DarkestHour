@@ -21,8 +21,8 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_BARAmmo'
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
-	
-	MuzzleBone=MuzzleNew
+
+    MuzzleBone=MuzzleNew
 
     // Spread
     HipSpreadModifier=6.0
@@ -47,6 +47,8 @@ defaultproperties
     FireIronAnim=Iron_fire
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEmitBone=ejector2
+    ShellRotOffsetHip=(Pitch=-10240)
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
