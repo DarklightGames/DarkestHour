@@ -901,10 +901,12 @@ simulated function HandleSleeveSwapping()
 
         RoleSleeveTexture = RI.static.GetSleeveTexture();
 
+        /*
         if (RI.static.GetHandTexture() == none)
         {
             Warn("Hand texture for role info" @ RI @ "is not set!");
         }
+        */
 
         RoleHandTexture = RI.static.GetHandTexture();
     }
