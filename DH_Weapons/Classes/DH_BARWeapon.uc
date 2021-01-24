@@ -96,6 +96,36 @@ simulated state Reloading
     }
 }
 
+simulated function PAL(float V)
+{
+    BipodPhysicsSimulation.ArmLength = V;
+}
+
+simulated function PAD(float V)
+{
+    BipodPhysicsSimulation.AngularDamping = V;
+}
+
+simulated function PGS(float V)
+{
+    BipodPhysicsSimulation.GravityScale = V;
+}
+
+simulated function PYDF(float V)
+{
+    BipodPhysicsSimulation.YawDeltaFactor = V;
+}
+
+simulated function PAVT(float V)
+{
+    BipodPhysicsSimulation.AngularVelocityThreshold = V;
+}
+
+simulated function PCOR(float V)
+{
+    BipodPhysicsSimulation.CoefficientOfRestitution = V;
+}
+
 defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
