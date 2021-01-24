@@ -43,6 +43,7 @@ function ModeTick(float DeltaTime)
 // Modified to handle different bipod firing animations
 function PlayFiring()
 {
+    // TODO: there is a HUGE amount of redundancy here, we should be able to roll all of this into DHProjectileFire at some point
     local name Anim;
 
     if (Weapon != none)
@@ -84,9 +85,20 @@ function PlayFiring()
                     {
                         Anim = BipodDeployFireAnim;
                     }
+                    else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                    {
+                        Anim = FireIronLastAnim;
+                    }
                     else if (Weapon.HasAnim(FireIronAnim))
                     {
                         Anim = FireIronAnim;
+                    }
+                }
+                else
+                {
+                    if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                    {
+                        Anim = FireLastAnim;
                     }
                 }
 
