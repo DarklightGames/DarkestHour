@@ -96,32 +96,32 @@ simulated state Reloading
     }
 }
 
-simulated function PAL(float V)
+simulated exec function PAL(float V)
 {
     BipodPhysicsSimulation.ArmLength = V;
 }
 
-simulated function PAD(float V)
+simulated exec function PAD(float V)
 {
     BipodPhysicsSimulation.AngularDamping = V;
 }
 
-simulated function PGS(float V)
+simulated exec function PGS(float V)
 {
     BipodPhysicsSimulation.GravityScale = V;
 }
 
-simulated function PYDF(float V)
+simulated exec function PYDF(float V)
 {
     BipodPhysicsSimulation.YawDeltaFactor = V;
 }
 
-simulated function PAVT(float V)
+simulated exec function PAVT(float V)
 {
     BipodPhysicsSimulation.AngularVelocityThreshold = V;
 }
 
-simulated function PCOR(float V)
+simulated exec function PCOR(float V)
 {
     BipodPhysicsSimulation.CoefficientOfRestitution = V;
 }
