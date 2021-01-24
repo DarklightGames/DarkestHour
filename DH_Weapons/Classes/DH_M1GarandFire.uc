@@ -6,8 +6,6 @@
 class DH_M1GarandFire extends DHSemiAutoFire;
 
 var     array<sound>    FirePingSounds;   // an array of the last round firing sound with ping
-var     name            FireLastAnim;     // last round animation
-var     name            FireIronlastAnim; // iron last round animation
 var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
 // Modified to play firing sound including a clip eject ping when firing last round
