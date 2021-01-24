@@ -30,7 +30,6 @@ simulated function ToggleFireMode()
     if (bSlowFireRate)
     {
         FireMode[0].FireRate = 0.2;  // slow rate 300rpm
-
     }
     else
     {
