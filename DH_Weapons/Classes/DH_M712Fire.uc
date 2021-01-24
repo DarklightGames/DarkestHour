@@ -28,7 +28,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
 	
-	//FireIronLastAnim="iron_shoot_last"
-	//FireLastAnim="shoot_last"	
-	//TO DO: make these work!
+	FireIronLastAnim="iron_shoot_last"
+	FireLastAnim="shoot_last"	
+
 }

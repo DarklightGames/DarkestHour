@@ -41,7 +41,7 @@ defaultproperties
 {
     SwayModifyFactor=1.0 //-0.1 from full variant 
 
-    ItemName="Browning Automatic Rifle M1918A2"
+    ItemName="Browning Automatic Rifle  M1918A2 "
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BARNoBipodFire'
     FireModeClass(1)=class'DH_Weapons.DH_BARNoBipodMeleeFire'
