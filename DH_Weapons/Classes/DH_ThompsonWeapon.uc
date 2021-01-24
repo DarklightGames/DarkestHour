@@ -16,8 +16,8 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson' // TODO: there is no specularity mask for this weapon
 
-    PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=75.0
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=68.0
 	
     DisplayFOV=79.0
 

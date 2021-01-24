@@ -30,6 +30,7 @@ simulated function ToggleFireMode()
     if (bSlowFireRate)
     {
         FireMode[0].FireRate = 0.2;  // slow rate 300rpm
+
     }
     else
     {
@@ -129,7 +130,7 @@ defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
 
-    ItemName="Browning Automatic Rifle"
+    ItemName="Browning Automatic Rifle M1918A2"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
     FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
@@ -157,7 +158,7 @@ defaultproperties
     bSlowFireRate=true
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
-    SightUpSelectFireIronAnim="fireswitch_aim"
+    SightUpSelectFireIronAnim="fireswitch_bipod"
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"

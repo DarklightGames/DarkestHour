@@ -82,4 +82,5 @@ defaultproperties
 
     MagEmptyReloadAnim="reload_empty_mp41r"
     MagPartialReloadAnim="reload_half_mp41r"
+	
 }

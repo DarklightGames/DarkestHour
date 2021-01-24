@@ -19,4 +19,5 @@ defaultproperties
 
     IronSightDisplayFOV=60.0
     DisplayFOV=85.0
+	
 }

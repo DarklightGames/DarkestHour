@@ -25,4 +25,7 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+	
+	FireIronLastAnim="iron_idle_empty"
+	FireLastAnim="shoot_last"
 }

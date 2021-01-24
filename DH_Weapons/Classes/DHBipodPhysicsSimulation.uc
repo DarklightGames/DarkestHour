@@ -163,8 +163,8 @@ defaultproperties
     AngularVelocity=0
     AngularDamping=0.01
     GravityScale=100.0
-    AngularVelocityThreshold=0.0
-    ArmLength=125.0
+    AngularVelocityThreshold=0.06
+    ArmLength=155.0
     YawDeltaFactor=2.0
 
     BarrelBoneName='Muzzle'
@@ -175,9 +175,9 @@ defaultproperties
     bIsLocking=false
     bIsLocked=false
 
-    // 25 degrees either way
-    AngleMin=-0.436332
-    AngleMax=0.436332
+    // ~35 degrees either way
+    AngleMin=-0.60
+    AngleMax=0.60
     CoefficientOfRestitution=0.5
 }
 

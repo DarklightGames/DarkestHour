@@ -45,9 +45,9 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1928_50rnd'
 
-    PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=75.0
-    DisplayFOV=84.0
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=68.0
+    DisplayFOV=83.0
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
