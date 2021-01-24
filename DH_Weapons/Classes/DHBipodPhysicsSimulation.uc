@@ -40,11 +40,6 @@ var float   NextDebugPrintTimeSeconds;
 
 var float OldInstigatorYaw;
 
-function float Damp(float Source, float Smoothing, float DeltaTime)
-{
-    return Source * (Smoothing ** DeltaTime);
-}
-
 function Impulse(float ImpulseAngularAcceleration)
 {
     InstantaneousAngularAcceleration += ImpulseAngularAcceleration;
@@ -106,7 +101,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     InstigatorYaw = class'UUnits'.static.UnrealToRadians(Controller.Rotation.Yaw);
 
     // Angular acceleration imparted by the weapon's rotation in the world
-    YawDeltaAngularAcceleration = -1.0 * ((InstigatorYaw - OldInstigatorYaw) * YawDeltaFactor * DeltaTime);
+    YawDeltaAngularAcceleration = -1.0 * ((InstigatorYaw - OldInstigatorYaw) * YawDeltaFactor);
 
     // Update the instigator yaw for the next frame
     OldInstigatorYaw = InstigatorYaw;
@@ -123,15 +118,13 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
     AngularVelocity += AngularAcceleration;
 
-    // Damp the angular velocity.
-    AngularVelocity = Damp(AngularVelocity, AngularDamping, DeltaTime);
-
     if (Abs(AngularVelocity) < AngularVelocityThreshold)
     {
         AngularVelocity = 0;
     }
 
-    Angle += AngularVelocity;
+    Angle += AngularVelocity * ((AngularDamping ** DeltaTime) - 1.0) / Loge(AngularDamping);
+    AngularVelocity *= AngularDamping ** DeltaTime;
 
     // Collision Bounciness (this is technically wrong!!)
     // Clamp the angle and apply
@@ -169,7 +162,7 @@ defaultproperties
     Angle=0
     AngularVelocity=0
     AngularDamping=0.01
-    GravityScale=1.0
+    GravityScale=100.0
     AngularVelocityThreshold=0.0
     ArmLength=125.0
     YawDeltaFactor=2.0
