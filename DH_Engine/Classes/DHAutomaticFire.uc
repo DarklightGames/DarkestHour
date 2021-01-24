@@ -59,9 +59,20 @@ function PlayFiring()
                     {
                         Anim = BipodDeployFireLoopAnim;
                     }
+                    else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                    {
+                        Anim = FireIronLastAnim;
+                    }
                     else if (Weapon.HasAnim(FireIronLoopAnim))
                     {
                         Anim = FireIronLoopAnim;
+                    }
+                }
+                else
+                {
+                    if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                    {
+                        Anim = FireLastAnim;
                     }
                 }
 
@@ -129,6 +140,8 @@ function PlayFireEnd()
 {
     local name Anim;
 
+    Log("YEP");
+
     if (Weapon != none && Weapon.Mesh != none)
     {
         if (!IsPlayerHipFiring())
@@ -137,9 +150,20 @@ function PlayFireEnd()
             {
                 Anim = BipodDeployFireEndAnim;
             }
+            else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+            {
+                Anim = FireIronLastAnim;
+            }
             else if (Weapon.HasAnim(FireIronEndAnim))
             {
                 Anim = FireIronEndAnim;
+            }
+        }
+        else
+        {
+            if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+            {
+                Anim = FireLastAnim;
             }
         }
 
