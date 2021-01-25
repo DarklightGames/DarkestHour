@@ -41,4 +41,3 @@ defaultproperties
     FireSelectAutoRotation=(Yaw=-3000)
     FireSelectSemiRotation=(Yaw=300)
 }
-

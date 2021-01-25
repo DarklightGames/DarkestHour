@@ -143,11 +143,11 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
     bUseHighDetailOverlayIndex=false
-	handnum=0
-	sleevenum=2
-	Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
+    HandNum=0
+    SleeveNum=2
+    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
 
-	DisplayFOV=86.0
+    DisplayFOV=86.0
     IronSightDisplayFOV=45.0
     FreeAimRotationSpeed=2.0
 
@@ -173,6 +173,5 @@ defaultproperties
     SightUpMagPartialReloadAnim="bipod_reload_half"
 
     //BipodHipToDeploy="aim_to_Bipod"
-	//to do: fix the above
+    //to do: fix the above
 }
-

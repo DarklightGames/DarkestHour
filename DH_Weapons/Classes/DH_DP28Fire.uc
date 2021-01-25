@@ -15,7 +15,6 @@ defaultproperties
     FAProjSpawnOffset=(X=-20.0)
     Spread=70.0
 
-
     // Recoil
     RecoilRate=0.05
     MaxVerticalRecoilAngle=510

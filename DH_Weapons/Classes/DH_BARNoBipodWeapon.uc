@@ -39,7 +39,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 defaultproperties
 {
-    SwayModifyFactor=1.0 //-0.1 from full variant 
+    SwayModifyFactor=1.0 //-0.1 from full variant
 
     ItemName="Browning Automatic Rifle  M1918A2 "
     TeamIndex=1
@@ -54,18 +54,17 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
     bUseHighDetailOverlayIndex=false
-	handnum=0
-	sleevenum=2
-	Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
+    HandNum=0
+    SleeveNum=2
+    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.BAR'
 
-
-	DisplayFOV=86.0
+    DisplayFOV=86.0
     IronSightDisplayFOV=45.0
     FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
-	
+
     SelectAnim="Draw"
     PutDownAnim="Put_away"
 
@@ -74,14 +73,13 @@ defaultproperties
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
     //SightUpSelectFireIronAnim="fireswitch_aim"
-	
+
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-	
+
     //SightUpIronBringUp="bipod_in"
     //SightUpIronPutDown="bipod_out"
     //SightUpIronIdleAnim="iron_idle"
     //SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    //SightUpMagPartialReloadAnim="bipod_reload_half" 
-	
+    //SightUpMagPartialReloadAnim="bipod_reload_half"
 }

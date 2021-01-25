@@ -22,7 +22,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=60
-	DisplayFOV=85
+    DisplayFOV=85
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
@@ -42,5 +42,4 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-    
 }

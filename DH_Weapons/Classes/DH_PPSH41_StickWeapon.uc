@@ -52,7 +52,7 @@ defaultproperties
     handnum=2
 
     IronSightDisplayFOV=62
-	DisplayFOV=82
+    DisplayFOV=82
 
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
@@ -79,5 +79,4 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
 }

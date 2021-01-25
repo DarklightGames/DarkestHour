@@ -22,7 +22,7 @@ defaultproperties
 
     Skins(2)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
 
-	DisplayFOV=85.0
+    DisplayFOV=85.0
     IronSightDisplayFOV=75.0
 
     MaxNumPrimaryMags=5

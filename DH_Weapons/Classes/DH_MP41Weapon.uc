@@ -20,7 +20,7 @@ defaultproperties
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=55.0
-	DisplayFOV=85.0
+    DisplayFOV=85.0
     FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 
@@ -30,7 +30,7 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
-	
+
     bPlusOneLoading=false
 
     IdleEmptyAnim="idle_empty"
@@ -45,7 +45,7 @@ defaultproperties
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
-    PutDownEmptyAnim="put_away_empty"	
+    PutDownEmptyAnim="put_away_empty"
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'

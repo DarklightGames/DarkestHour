@@ -26,8 +26,7 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)
-	
-	FireIronLastAnim="iron_idle_empty"
-	FireLastAnim="shoot_last"	
 
+    FireIronLastAnim="iron_idle_empty"
+    FireLastAnim="shoot_last"
 }

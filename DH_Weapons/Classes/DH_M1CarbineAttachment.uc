@@ -11,7 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
-    MuzzleBoneName="tipnew" 
+    MuzzleBoneName="tipnew"
     ShellEjectionBoneName="ejector"
     bRapidFire=false
 

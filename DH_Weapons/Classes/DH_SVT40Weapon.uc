@@ -8,7 +8,7 @@ class DH_SVT40Weapon extends DHSemiAutoWeapon;
 defaultproperties
 {
     ItemName="SVT-40"
-    SwayModifyFactor=0.72 // -0.08 
+    SwayModifyFactor=0.72 // -0.08
     FireModeClass(0)=class'DH_Weapons.DH_SVT40Fire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT40MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SVT40Attachment'
@@ -20,7 +20,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=32.0
-	DisplayFOV=85.0
+    DisplayFOV=85.0
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8

@@ -33,6 +33,6 @@ defaultproperties
     MuzzleBone="MuzzleNew"
     FirstSelectAnim="Draw2"
 
-    sleevenum=1
-    handnum=2
+    SleeveNum=1
+    HandNum=2
 }

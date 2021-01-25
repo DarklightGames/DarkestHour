@@ -18,7 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-	DisplayFOV=85.0
+    DisplayFOV=85.0
     IronSightDisplayFOV=75.0
     ZoomOutTime=0.4
 

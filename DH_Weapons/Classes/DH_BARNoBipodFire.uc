@@ -21,8 +21,8 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_BARAmmo'
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
-	
-	MuzzleBone=MuzzleNew
+
+    MuzzleBone=MuzzleNew
 
     // Spread
     HipSpreadModifier=6.0
@@ -45,7 +45,7 @@ defaultproperties
     //BipodDeployFireEndAnim="SightUp_iron_shoot_end"
     FireAnim=fire
     FireIronAnim=Iron_fire
-	ShellEmitBone=ejector3
+    ShellEmitBone=ejector3
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)

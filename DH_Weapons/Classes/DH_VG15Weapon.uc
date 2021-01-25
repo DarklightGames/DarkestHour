@@ -18,11 +18,11 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=40.0
-	DisplayFOV=90.0
+    DisplayFOV=90.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
-	
+
     MagEmptyReloadAnim="reload_empty_vg"
     MagPartialReloadAnim="reload_half_vg"
     MuzzleBone="MuzzleNew"

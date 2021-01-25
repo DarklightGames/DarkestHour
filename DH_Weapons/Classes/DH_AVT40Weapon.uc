@@ -21,7 +21,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=32.0
-	DisplayFOV=85.0
+    DisplayFOV=85.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
