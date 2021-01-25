@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHConstruction_ATGun_HeavyEarly extends DHConstruction_Vehicle; //this is done so that germans can access 88 guns on 1941 maps without breaking historical limits of other heavy guns

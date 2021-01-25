@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Nagant1895Weapon extends DHRevolverWeapon;
@@ -20,7 +20,8 @@ defaultproperties
     HandNum=1
     SleeveNum=2
 
-    IronSightDisplayFOV=65.0
+    DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
 
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10

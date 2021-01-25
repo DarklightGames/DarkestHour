@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_DP28Weapon extends DHMGWeapon;
@@ -19,7 +19,7 @@ simulated function PostNetBeginPlay()
 
 defaultproperties
 {
-    ItemName="DP28 Machine Gun"
+    ItemName="DP27 Machine Gun"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_DP28Fire'
     AttachmentClass=class'DH_Weapons.DH_DP28Attachment'

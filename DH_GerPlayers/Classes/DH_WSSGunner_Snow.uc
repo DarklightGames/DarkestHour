@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WSSGunner_Snow extends DHGEMachineGunnerRoles;
@@ -12,4 +12,6 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve' //to do
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetSnow'
     HeadgearProbabilities(0)=1.0
+	
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_RDG1SmokeGrenadeWeapon extends DHExplosiveWeapon;
@@ -18,4 +18,5 @@ defaultproperties
     InventoryGroup=4
     GroupOffset=1
     Priority=2
+    DisplayFOV=80.0
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz251Factory_SnowTwo extends DH_Sdkfz251Factory; // snow topped version of camo pattern very similar to CamoFour

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PPSh41_StickWeapon extends DHFastAutoWeapon;
@@ -51,7 +51,8 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'
     handnum=2
 
-    IronSightDisplayFOV=67
+    IronSightDisplayFOV=62
+    DisplayFOV=82
 
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'

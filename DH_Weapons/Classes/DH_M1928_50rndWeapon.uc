@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M1928_50rndWeapon extends DHFastAutoWeapon;
@@ -45,8 +45,9 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1928_50rnd'
 
-    PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=60.0
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=68.0
+    DisplayFOV=83.0
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3

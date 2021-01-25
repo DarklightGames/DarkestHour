@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MP41RWeapon extends DHFastAutoWeapon;
@@ -52,10 +52,11 @@ defaultproperties
     Skins(1)=Texture'Weapons1st_tex.Arms.hands'
     Skins(2)=Shader'Weapons1st_tex.SMG.MP40_s'
     //Skins(3)=shader'Weapons1st_tex.SMG.PPSH41_S'
-    handnum=1
-    sleevenum=0
+    HandNum=1
+    SleeveNum=0
 
-    IronSightDisplayFOV=60
+    IronSightDisplayFOV=62
+    DisplayFOV=82
 
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'

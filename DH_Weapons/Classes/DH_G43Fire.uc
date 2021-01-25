@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_G43Fire extends DHSemiAutoFire;
@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_G43Bullet'
     AmmoClass=class'ROAmmo.G43Ammo'
-    Spread=60.0
+    Spread=45.0
     MaxVerticalRecoilAngle=740
     MaxHorizontalRecoilAngle=170
     FireRate=0.22

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -901,10 +901,12 @@ simulated function HandleSleeveSwapping()
 
         RoleSleeveTexture = RI.static.GetSleeveTexture();
 
+        /*
         if (RI.static.GetHandTexture() == none)
         {
             Warn("Hand texture for role info" @ RI @ "is not set!");
         }
+        */
 
         RoleHandTexture = RI.static.GetHandTexture();
     }

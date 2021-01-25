@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -101,7 +101,7 @@ defaultproperties
     Records(41)=(ClassName="DH_Weapons.DH_MP40Weapon",WeaponNames=("mp40"))
     Records(42)=(ClassName="DH_Weapons.DH_MP41Weapon",WeaponNames=("mp41"))
     Records(43)=(ClassName="DH_Weapons.DH_MP41RWeapon",WeaponNames=("mp41r"))
-    Records(44)=(ClassName="DH_Weapons.DH_Nagant1895Weapon",WeaponNames=("n1895", "sovrevolver"))
+    Records(44)=(ClassName="DH_Weapons.DH_Nagant1895Weapon",WeaponNames=("n1895", "sovrevolver", "m1895"))
     Records(45)=(ClassName="DH_Weapons.DH_P08LugerWeapon",WeaponNames=("p08", "luger"))
     Records(46)=(ClassName="DH_Weapons.DH_P38Weapon",WeaponNames=("p38"))
     Records(47)=(ClassName="DH_Weapons.DH_PanzerfaustWeapon",WeaponNames=("pfaust", "panzerfaust"))
@@ -141,5 +141,9 @@ defaultproperties
     Records(81)=(ClassName="DH_Equipment.DH_RDG1SmokeGrenadeItem",WeaponNames=("rdg", "rdg1", "sovsmoke"))
     Records(82)=(ClassName="DH_Equipment.DH_RedSmokeWeapon",WeaponNames=("redsmoke"))
     Records(83)=(ClassName="DH_Equipment.DH_USSmokeGrenadeWeapon",WeaponNames=("smoke", "ussmoke"))
+    Records(84)=(ClassName="DH_Weapons.DH_M1A1CarbineWeapon",WeaponNames=("m1a1", "carbinepara"))
+    Records(85)=(ClassName="DH_Weapons.DH_M1T17CarbineWeapon",WeaponNames=("m1t17", "t17"))
+    Records(86)=(ClassName="DH_Weapons.DH_VG15Weapon",WeaponNames=("vg15"))
+    Records(87)=(ClassName="DH_Weapons.DH_BARNoBipodWeapon",WeaponNames=("barnobipod"))
 }
 

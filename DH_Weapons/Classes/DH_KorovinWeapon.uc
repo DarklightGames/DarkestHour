@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_KorovinWeapon extends DHAutoWeapon;
@@ -21,7 +21,8 @@ defaultproperties
     SleeveNum=3
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=50.0
+    IronSightDisplayFOV=60
+    DisplayFOV=85
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ThompsonWeapon extends DHAutoWeapon;
@@ -16,8 +16,10 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson' // TODO: there is no specularity mask for this weapon
 
-    PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=65.0
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=68.0
+	
+    DisplayFOV=79.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9

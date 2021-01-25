@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 // Base class for solid shot armor-piercing shells
 // (with no armor-piercing cap or ballistic cap)
