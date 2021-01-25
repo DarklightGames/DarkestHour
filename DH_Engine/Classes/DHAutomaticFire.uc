@@ -140,8 +140,6 @@ function PlayFireEnd()
 {
     local name Anim;
 
-    Log("YEP");
-
     if (Weapon != none && Weapon.Mesh != none)
     {
         if (!IsPlayerHipFiring())
