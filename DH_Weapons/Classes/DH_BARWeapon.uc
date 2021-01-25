@@ -98,22 +98,34 @@ simulated state Reloading
 
 simulated exec function PAL(float V)
 {
-    BipodPhysicsSimulation.ArmLength = V;
+    if (Level.NetMode == NM_Standalone)
+    {
+        BipodPhysicsSimulation.ArmLength = V;
+    }
 }
 
 simulated exec function PAD(float V)
 {
-    BipodPhysicsSimulation.AngularDamping = V;
+    if (Level.NetMode == NM_Standalone)
+    {
+        BipodPhysicsSimulation.AngularDamping = V;
+    }
 }
 
 simulated exec function PGS(float V)
 {
-    BipodPhysicsSimulation.GravityScale = V;
+    if (Level.NetMode == NM_Standalone)
+    {
+        BipodPhysicsSimulation.GravityScale = V;
+    }
 }
 
 simulated exec function PYDF(float V)
 {
-    BipodPhysicsSimulation.YawDeltaFactor = V;
+    if (Level.NetMode == NM_Standalone)
+    {
+        BipodPhysicsSimulation.YawDeltaFactor = V;
+    }
 }
 
 simulated exec function PAVT(float V)
@@ -172,6 +184,6 @@ defaultproperties
     SightUpMagEmptyReloadAnim="bipod_reload_empty"
     SightUpMagPartialReloadAnim="bipod_reload_half"
 
-    //BipodHipToDeploy="aim_to_Bipod"
+    //BipodDeployFromHipAnim="aim_to_Bipod"
     //to do: fix the above
 }
