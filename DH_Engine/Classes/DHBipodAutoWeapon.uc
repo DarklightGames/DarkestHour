@@ -15,6 +15,8 @@ var     name    SightUpMagPartialReloadAnim;
 var     name    IdleToBipodDeployEmpty; // anim for bipod rest state to deployed empty state
 var     name    BipodDeployToIdleEmpty; // anim for bipod deployed state to rest empty state
 
+var     name    IronBipodDeployAnim;    // anim for deploying bipod from ironsights
+
 replication
 {
     // Functions a client can call on the server
@@ -308,9 +310,9 @@ simulated state DeployingBipod extends WeaponBusy
     {
         local name Anim;
 
-        if (bUsingSights)
+        if (bUsingSights && HasAnim(IronBipodDeployAnim))
         {
-            Anim = SightUpIronBringUp;
+            Anim = IronBipodDeployAnim;
         }
         else if (AmmoAmount(0) < 1 && HasAnim(IdleToBipodDeployEmpty))
         {

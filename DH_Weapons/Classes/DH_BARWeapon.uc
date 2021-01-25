@@ -184,6 +184,5 @@ defaultproperties
     SightUpMagEmptyReloadAnim="bipod_reload_empty"
     SightUpMagPartialReloadAnim="bipod_reload_half"
 
-    //BipodDeployFromHipAnim="aim_to_Bipod"
-    //to do: fix the above
+    IronBipodDeployAnim="aim_to_Bipod"
 }
