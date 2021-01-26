@@ -7,11 +7,8 @@ class DH_BARNoBipodWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
-// Modified as BAR switches between slow/fast auto fire
-simulated function ToggleFireMode()
+simulated function UpdateFireRate()
 {
-    bSlowFireRate = !bSlowFireRate;
-
     if (bSlowFireRate)
     {
         FireMode[0].FireRate = 0.2;  // slow rate 300rpm
@@ -21,6 +18,14 @@ simulated function ToggleFireMode()
     {
         FireMode[0].FireRate = 0.12; // fast rate 500rpm
     }
+}
+
+// Modified as BAR switches between slow/fast auto fire
+simulated function ToggleFireMode()
+{
+    bSlowFireRate = !bSlowFireRate;
+
+    UpdateFireRate();
 }
 
 // Modified as BAR switches between slow/fast auto fire, so the HUD ammo icon needs to display based on that (not the usual semi/full auto fire)
