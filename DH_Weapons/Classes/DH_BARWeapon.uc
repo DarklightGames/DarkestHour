@@ -13,7 +13,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Instigator.IsLocallyControlled())
+    if (Level.NetMode != NM_DedicatedServer)
     {
         // TODO: in future, move this to the super-class!
         BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
