@@ -1511,7 +1511,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-            if (bShowVehicleVisionCone && WP == Passenger)
+            if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
             {
                 VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
                 VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
