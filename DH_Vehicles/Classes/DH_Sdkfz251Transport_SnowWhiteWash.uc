@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_Sdkfz251Transport_SnowWhiteWash extends DH_Sdkfz251Transport; //
+class DH_Sdkfz251Transport_SnowWhiteWash extends DH_Sdkfz251Transport;
 
 defaultproperties
 {
