@@ -152,8 +152,8 @@ defaultproperties
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
     DeveloperIDs(3)="76561198024186247" // AAZ
-    DeveloperIDs(4)="76561197960644559" // dolas
-    DeveloperIDs(5)="76561198043869714" // Patison
+    DeveloperIDs(4)="76561198050059841" // dolas
+    DeveloperIDs(5)="76561198066643021" // Patison
 
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
