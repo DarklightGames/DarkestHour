@@ -55,7 +55,7 @@ defaultproperties
     HandNum=1
     SleeveNum=0
 
-    IronSightDisplayFOV=62
+    IronSightDisplayFOV=65
     DisplayFOV=82
 
     bHasSelectFire=true

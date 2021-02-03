@@ -57,6 +57,10 @@ defaultproperties
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+    
+    //alternative reloads
+    //reload_emptyB
+    //reload_emptyC
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'

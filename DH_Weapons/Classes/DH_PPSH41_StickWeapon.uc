@@ -51,7 +51,7 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'
     handnum=2
 
-    IronSightDisplayFOV=62
+    IronSightDisplayFOV=65
     DisplayFOV=82
 
     bHasSelectFire=true
@@ -59,6 +59,9 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+    
+    //alternative reload
+    //reload_emptyB
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
