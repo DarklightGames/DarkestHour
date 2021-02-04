@@ -145,7 +145,7 @@ auto state Constructing
             EstablishmentCounter -= 1;
         }
 
-        if (EstablishmentCounter >= default.EstablishmentCounterThreshold)
+        if (EstablishmentCounter >= EstablishmentCounterThreshold)
         {
             // Rally point exceeded the Establishment counter threshold. This
             // rally point is now established!
@@ -441,7 +441,19 @@ function UpdateAppearance()
 
 function OnTeamIndexChanged()
 {
+    local bool bIsInFriendlyTerritory;
+
     UpdateAppearance();
+
+    if (IsInState('Constructing'))
+    {
+        bIsInFriendlyTerritory = GRI.IsInDangerZone(Location.X, Location.Y, int(!bool(GetTeamIndex())));
+
+        if (bIsInFriendlyTerritory)
+        {
+            EstablishmentCounterThreshold = default.EstablishmentCounterThreshold / 2;
+        }
+    }
 }
 
 simulated function string GetMapText()
