@@ -1197,12 +1197,6 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
             return 0;
         }
 
-        // If the instigator has weapons locked, return no damage
-        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).AreWeaponsLocked(true)) // passing true suppresses usual screen message if locked
-        {
-            return 0;
-        }
-
         // Check if the player is in a spawn area and is protected
         if (LevelInfo.bUseSpawnAreas && Injured.PlayerReplicationInfo.Team != none && ROPlayerReplicationInfo(Injured.PlayerReplicationInfo) != none)
         {
