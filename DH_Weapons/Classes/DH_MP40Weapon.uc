@@ -27,6 +27,11 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
+    
+    //alternative reload
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_empty"
+    MagEmptyReloadAnims(3)="reload_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"

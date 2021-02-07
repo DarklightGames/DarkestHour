@@ -59,10 +59,14 @@ defaultproperties
     DisplayFOV=82
 
     bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+    
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    //="fireswitch_empty"
+    //="Iron_fireswitch_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
