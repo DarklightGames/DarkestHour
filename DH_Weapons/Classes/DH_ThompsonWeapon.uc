@@ -18,7 +18,7 @@ defaultproperties
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=68.0
-	
+
     DisplayFOV=79.0
 
     MaxNumPrimaryMags=9
@@ -33,6 +33,6 @@ defaultproperties
     SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
 
-    MagEmptyReloadAnim="reload_m1a1"
-    MagPartialReloadAnim="reload_m1a1"
+    MagEmptyReloadAnims(0)="reload_m1a1"
+    MagPartialReloadAnims(0)="reload_m1a1"
 }

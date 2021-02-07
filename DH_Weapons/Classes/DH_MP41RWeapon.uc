@@ -80,6 +80,6 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
-    MagEmptyReloadAnim="reload_empty_mp41r"
-    MagPartialReloadAnim="reload_half_mp41r"
+    MagEmptyReloadAnims(0)="reload_empty_mp41r"
+    MagPartialReloadAnims(0)="reload_half_mp41r"
 }

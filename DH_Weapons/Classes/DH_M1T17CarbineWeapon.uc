@@ -28,8 +28,8 @@ defaultproperties
     InitialNumPrimaryMags=12
 
     PutDownAnim="put_away"
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     MuzzleBone="MuzzleNew2"
 

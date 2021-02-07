@@ -59,9 +59,9 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
-    
+
     //alternative reload
-    //reload_emptyB
+    MagEmptyReloadAnims(1)="reload_emptyB"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
