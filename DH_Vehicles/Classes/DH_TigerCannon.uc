@@ -16,7 +16,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Turret armor
-    FrontArmorFactor=17.1
+    FrontArmorFactor=12.5
     RightArmorFactor=8.7
     LeftArmorFactor=8.7
     RearArmorFactor=8.7
