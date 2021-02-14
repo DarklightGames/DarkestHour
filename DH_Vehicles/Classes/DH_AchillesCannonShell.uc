@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=53346.0
     ShellDiameter=7.62
     BallisticCoefficient=2.45
-    
+
     // Damage
     ImpactDamage=580  //solid shell
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
