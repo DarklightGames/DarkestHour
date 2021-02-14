@@ -752,7 +752,7 @@ defaultproperties
     PostFireIronIdleAnim="Iron_idlerest"
     BoltHipAnim="bolt"
     BoltIronAnim="iron_boltrest"
-    MagEmptyReloadAnim="Reload"
+    MagEmptyReloadAnims(0)="Reload"
 
     AIRating=0.4
     CurrentRating=0.4

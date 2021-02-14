@@ -28,6 +28,11 @@ defaultproperties
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
+    
+    //alternative reload (this is the "normal")
+    MagPartialReloadAnims(1)="reload_halfB"
+    MagPartialReloadAnims(2)="reload_halfB"
+    MagPartialReloadAnims(3)="reload_halfB"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

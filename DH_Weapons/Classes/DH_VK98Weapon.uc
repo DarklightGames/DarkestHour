@@ -18,7 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=45.0
+    IronSightDisplayFOV=47.0
     DisplayFOV=85.0
 
     MaxNumPrimaryMags=8

@@ -39,6 +39,6 @@ defaultproperties
 
     bTwoMagsCapacity=true
     bPlusOneLoading=false
-    MagEmptyReloadAnim="reload_striper_empty"
-    MagPartialReloadAnim="reload_striper"
+    MagEmptyReloadAnims(0)="reload_striper_empty"
+    MagPartialReloadAnims(0)="reload_striper"
 }

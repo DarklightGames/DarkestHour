@@ -23,7 +23,7 @@ defaultproperties
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
 
-    MagEmptyReloadAnim="reload_empty_vg"
-    MagPartialReloadAnim="reload_half_vg"
+    MagEmptyReloadAnims(0)="reload_empty_vg"
+    MagPartialReloadAnims(0)="reload_half_vg"
     MuzzleBone="MuzzleNew"
 }
