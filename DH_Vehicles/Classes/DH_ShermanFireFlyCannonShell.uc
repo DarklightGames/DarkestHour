@@ -12,10 +12,11 @@ defaultproperties
     ShellDiameter=7.62
     BallisticCoefficient=2.45 //TODO: pls check
 
-    //Damage
-    ImpactDamage=580  //solid shot
-    HullFireChance=0.31
-    EngineFireChance=0.62
+    // Damage
+    ImpactDamage=580  //solid shell
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    HullFireChance=0.35
+    EngineFireChance=0.75
 
     //Penetration
     DHPenetrationTable(0)=18.5
