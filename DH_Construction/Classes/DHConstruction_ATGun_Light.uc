@@ -48,5 +48,5 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     Stages(0)=(Progress=0)
-    ProgressMax=10
+    ProgressMax=8
 }
