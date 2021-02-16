@@ -16,7 +16,8 @@ enum EAlliedNation
     NATION_USA,
     NATION_Britain,
     NATION_Canada,
-    NATION_USSR
+    NATION_USSR,
+    NATION_Poland
 };
 
 enum ESpawnMode

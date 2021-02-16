@@ -288,6 +288,9 @@ function Timer()
                 case 3: // USSR
                     i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
                     break;
+                case 4: // Poland
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
+                    break;
             }
 
             // This bullshit is used by RO code to circumvent the
