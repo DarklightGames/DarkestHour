@@ -22,6 +22,7 @@ static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context
             case NATION_Canada:
                 return StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box';
             case NATION_USSR:
+            case NATION_Poland:
                 return StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box';
             default:
                 break;
