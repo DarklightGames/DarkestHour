@@ -77,6 +77,7 @@ var(DHObjectiveCapture) int         LockDownOnCaptureTime;      // time to preve
 var(DHObjectiveCapture) int         AlliesAddedLockDown;        // added time to lock down if Allies take the objective
 var(DHObjectiveCapture) int         AxisAddedLockDown;          // added time to lock down if Axis takle the objective
 var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
+var(DHObjectiveCapture) bool        bLockDownNeverControlled;   // Lock objectives on capture regardless of whether they were recently controlled or not
 var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 
 // Requirements
@@ -590,7 +591,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
-            if (bLockDownOnCapture && bRecentlyControlledByAllies)
+            if (bLockDownOnCapture && (bLockDownNeverControlled || bRecentlyControlledByAllies))
             {
                 UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime + AxisAddedLockDown;
             }
@@ -651,7 +652,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
-            if (bLockDownOnCapture && bRecentlyControlledByAxis)
+            if (bLockDownOnCapture && (bLockDownNeverControlled || bRecentlyControlledByAxis))
             {
                 UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime + AlliesAddedLockDown;
             }
