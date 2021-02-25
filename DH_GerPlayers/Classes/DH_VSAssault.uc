@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_VSAssault extends DHGEAssaultRoles;
@@ -13,6 +13,6 @@ defaultproperties
     Headgear(1)=class'ROInventory.ROGermanHat'
 
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch') //to be replaced with mp3008
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_VG15weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch') //to do: mp3008
     PrimaryWeapons(1)=(Item=none,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
 }

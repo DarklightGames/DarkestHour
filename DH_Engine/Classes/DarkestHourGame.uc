@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
@@ -1193,12 +1193,6 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
 
         // Check if the vehicle has protection
         if (DHVehicle(Injured) != none && DHVehicle(Injured).IsSpawnProtected())
-        {
-            return 0;
-        }
-
-        // If the instigator has weapons locked, return no damage
-        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).AreWeaponsLocked(true)) // passing true suppresses usual screen message if locked
         {
             return 0;
         }
@@ -5474,8 +5468,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=9
-        Patch=2
+        Minor=10
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject
@@ -5499,7 +5493,7 @@ defaultproperties
     SurrenderCooldownSeconds=300
     SurrenderEndRoundDelaySeconds=15
     SurrenderRoundTimeRequiredSeconds=900
-    SurrenderReinforcementsRequiredPercent=0.50
+    SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
     SurrenderNominationsThresholdPercent=0.15
     SurrenderVotesThresholdPercent=0.5
 }

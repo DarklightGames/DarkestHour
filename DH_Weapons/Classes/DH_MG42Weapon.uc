@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MG42Weapon extends DHMGWeapon;
@@ -42,7 +42,7 @@ defaultproperties
     BarrelChangeAnim="Bipod_Barrel_Change"
 
     PutDownAnim="putaway"
-    MagPartialReloadAnim="Reload"
+    MagPartialReloadAnims(0)="Reload"
 
     BeltBulletClass=class'ROInventory.MG42BeltRound'
     MGBeltBones(0)="Case09"

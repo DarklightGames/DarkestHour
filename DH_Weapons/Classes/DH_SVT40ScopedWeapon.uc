@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SVT40ScopedWeapon extends DHSniperWeapon;
@@ -18,18 +18,20 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    ScopeOverlaySize=0.29
+
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
-    bUsesIronsightFOV=false
-
-    IronSightDisplayFOV=60.0
-    IronSightDisplayFOVHigh=60.0
-
-    PlayerFOVZoom=24.0 // 3.5x
-
-    ScopePortalFOV=7.0 // 3.5x
-    ScopePortalFOVHigh=7.0
+    IronSightDisplayFOV=44.4
+    IronSightDisplayFOVHigh=44.4
+    DisplayFOV=85.0
+    PlayerIronsightFOV=60.0
+    PlayerFOVZoom=17.143 // 3.5x
+    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.4
+    bUsesIronsightFOV=true
 
     LensMaterialID=4
 

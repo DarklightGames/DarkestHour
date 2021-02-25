@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHBoltActionWeapon extends DHProjectileWeapon
@@ -752,7 +752,7 @@ defaultproperties
     PostFireIronIdleAnim="Iron_idlerest"
     BoltHipAnim="bolt"
     BoltIronAnim="iron_boltrest"
-    MagEmptyReloadAnim="Reload"
+    MagEmptyReloadAnims(0)="Reload"
 
     AIRating=0.4
     CurrentRating=0.4

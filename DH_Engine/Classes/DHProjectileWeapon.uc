@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
@@ -25,8 +25,8 @@ var         bool        bCanBeResupplied;           // the weapon can be resuppl
 var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
 
 // Animations
-var         name        MagEmptyReloadAnim;         // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
-var         name        MagPartialReloadAnim;       // anim for reloads when a weapon still has ammo in magazine/box
+var         array<name> MagEmptyReloadAnims;        // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
+var         array<name> MagPartialReloadAnims;      // anim for reloads when a weapon still has ammo in magazine/box
 
 var         name        IronIdleAnim;               // anim for weapon idling while in iron sight view
 var         name        IronBringUp;                // anim for weapon being brought up to iron sight view
@@ -1787,11 +1787,11 @@ simulated function PlayReload()
 {
     if (AmmoAmount(0) > 0 || (bTwoMagsCapacity && CurrentMagCount < 2))
     {
-        PlayAnimAndSetTimer(MagPartialReloadAnim, 1.0, 0.1);
+        PlayAnimAndSetTimer(MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)], 1.0, 0.1);
     }
     else
     {
-        PlayAnimAndSetTimer(MagEmptyReloadAnim, 1.0, 0.1);
+        PlayAnimAndSetTimer(MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)], 1.0, 0.1);
     }
 }
 

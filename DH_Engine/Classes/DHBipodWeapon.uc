@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHBipodWeapon extends DHProjectileWeapon
@@ -366,13 +366,13 @@ Begin:
             SmoothZoom(false);
         }
 
-        if (AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnim))
+        if (AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnims[0]))
         {
-            Sleep(GetAnimDuration(MagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+            Sleep(GetAnimDuration(MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)], 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
         else
         {
-            Sleep(GetAnimDuration(MagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+            Sleep(GetAnimDuration(MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)], 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
         SetPlayerFOV(PlayerDeployFOV);
@@ -408,7 +408,7 @@ defaultproperties
     IronIdleAnim="Bipod_Idle"
     IdleToBipodDeploy="Rest_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
-    MagEmptyReloadAnim="Reload"
+    MagEmptyReloadAnims(0)="Reload"
 
     AIRating=0.4
     CurrentRating=0.4

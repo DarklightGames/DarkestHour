@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_TT33Weapon extends DHPistolWeapon;
@@ -18,7 +18,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=65.0
+    DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
 
     InitialNumPrimaryMags=5
     MaxNumPrimaryMags=5

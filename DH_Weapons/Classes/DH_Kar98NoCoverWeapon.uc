@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Kar98NoCoverWeapon extends DHBoltActionWeapon;
@@ -14,11 +14,13 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Kar98NoCoverPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_mesh_nocover'
+    Skins(5)=Texture'Weapons1st_tex.Rifles.k98'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=47.0
+    DisplayFOV=85.0
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
@@ -35,4 +37,3 @@ defaultproperties
     PostReloadAnim="single_close"
     FullReloadAnim="reload"
 }
-

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_DP28Weapon extends DHMGWeapon;
@@ -19,7 +19,7 @@ simulated function PostNetBeginPlay()
 
 defaultproperties
 {
-    ItemName="DP28 Machine Gun"
+    ItemName="DP27 Machine Gun"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_DP28Fire'
     AttachmentClass=class'DH_Weapons.DH_DP28Attachment'
@@ -49,6 +49,6 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
     BipodHipToDeploy="Hip_2_Bipod"
-    MagEmptyReloadAnim="Bipod_Reload"
-    MagPartialReloadAnim="Bipod_Reload_Half"
+    MagEmptyReloadAnims(0)="Bipod_Reload"
+    MagPartialReloadAnims(0)="Bipod_Reload_Half"
 }

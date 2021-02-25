@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M1GarandFire extends DHSemiAutoFire;
 
 var     array<sound>    FirePingSounds;   // an array of the last round firing sound with ping
-var     name            FireLastAnim;     // last round animation
-var     name            FireIronlastAnim; // iron last round animation
 var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
 // Modified to play firing sound including a clip eject ping when firing last round
@@ -102,7 +100,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
     FireRate=0.25  //higher than SVT or G43 for... balance reasons
-    Spread=70.0
+    Spread=50.0
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'

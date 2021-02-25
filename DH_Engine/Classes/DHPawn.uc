@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -7383,12 +7383,39 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
-simulated exec function DebugGiveWeapon(string ClassName)
+simulated exec function Give(string WeaponName)
 {
-    if (IsDebugModeAllowed())
+    local string ClassName;
+    local int i;
+
+    if (!IsDebugModeAllowed())
     {
-        GiveWeapon(ClassName);
+        return;
     }
+
+    if (WeaponName ~= "ALL")
+    {
+        for (i = 0; i < class'DHWeaponRegistry'.default.Records.Length; ++i)
+        {
+            if (class'DHWeaponRegistry'.default.Records[i].bShouldExcludeFromGiveAll)
+            {
+                continue;
+            }
+
+            GiveWeapon(class'DHWeaponRegistry'.default.Records[i].ClassName);
+        }
+
+        return;
+    }
+
+    ClassName = class'DHWeaponRegistry'.static.GetClassNameFromWeaponName(WeaponName);
+
+    if (ClassName == "")
+    {
+        ClassName = WeaponName;
+    }
+
+    GiveWeapon(ClassName);
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHHud extends ROHud
@@ -79,6 +79,7 @@ var     NumericWidget       VehicleSmokeLauncherAmmoAmount;     // ammo quantity
 var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
 var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
+var     SpriteWidget        VehicleVisionConeIcon;
 
 // Supply Points
 var     SpriteWidget        SupplyPointIcon;
@@ -138,7 +139,8 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
-var     globalconfig int    MinPromptPacketLoss;    // client option used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
+var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
+var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -1456,6 +1458,15 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
+            if (bShowVehicleVisionCone && Passenger == none)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
+
             PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
             PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
             PlayerNumberText.text = string(i + 1);
@@ -1499,6 +1510,15 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
 
             PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
             PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -5975,7 +5995,9 @@ defaultproperties
     ConsoleFontSize=6
     MessageFontOffset=0
     bShowIndicators=true
-    MinPromptPacketLoss=9
+    MinPromptPacketLoss=10
+
+    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true
@@ -6134,6 +6156,8 @@ defaultproperties
     VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.OverheadMap.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
     VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    VehicleVisionConeIcon=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Soliton_rot',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,OffsetX=0,OffsetY=0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255)))
 
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

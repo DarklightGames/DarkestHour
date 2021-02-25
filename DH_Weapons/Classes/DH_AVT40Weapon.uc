@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_AVT40Weapon extends DHAutoWeapon;
@@ -20,7 +20,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=48.0
+    DisplayFOV=90.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9

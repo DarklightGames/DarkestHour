@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M34GrenadeWeapon extends DHExplosiveWeapon;
@@ -17,4 +17,5 @@ defaultproperties
     handnum=1
     sleevenum=2
     GroupOffset=4
+    DisplayFOV=80.0
 }

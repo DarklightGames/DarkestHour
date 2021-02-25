@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
@@ -145,7 +145,7 @@ auto state Constructing
             EstablishmentCounter -= 1;
         }
 
-        if (EstablishmentCounter >= default.EstablishmentCounterThreshold)
+        if (EstablishmentCounter >= EstablishmentCounterThreshold)
         {
             // Rally point exceeded the Establishment counter threshold. This
             // rally point is now established!
@@ -441,7 +441,19 @@ function UpdateAppearance()
 
 function OnTeamIndexChanged()
 {
+    local bool bIsInFriendlyTerritory;
+
     UpdateAppearance();
+
+    if (IsInState('Constructing'))
+    {
+        bIsInFriendlyTerritory = GRI.IsInDangerZone(Location.X, Location.Y, int(!bool(GetTeamIndex())));
+
+        if (bIsInFriendlyTerritory)
+        {
+            EstablishmentCounterThreshold = default.EstablishmentCounterThreshold * 0.5;
+        }
+    }
 }
 
 simulated function string GetMapText()

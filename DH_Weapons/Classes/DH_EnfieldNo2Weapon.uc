@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_EnfieldNo2Weapon extends DHRevolverWeapon;
@@ -18,7 +18,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=70.0
+    DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9

@@ -1,50 +1,57 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSquadLeaderAssistantVolunteerInteraction extends DHPromptInteraction;
 
 var int TeamIndex;
 var int SquadIndex;
-var DHPlayerReplicationInfo VolunteerPRI;
+var int VolunteerIndex;
 
 function Tick(float DeltaTime)
 {
     local DHPlayer PC;
+    local DHPlayerReplicationInfo VolunteerPRI;
 
-    PC = DHPlayer(ViewportOwner.Actor);
-
-    if (PC == none ||
-        PC.GameReplicationInfo == none ||
-        PC.GetTeamNum() != TeamIndex ||
-        PC.GetSquadIndex() != SquadIndex ||
-        VolunteerPRI == none ||
-        VolunteerPRI.Team == none ||
-        VolunteerPRI.Team.TeamIndex != TeamIndex ||
-        VolunteerPRI.SquadIndex != SquadIndex ||
-        VolunteerPRI.bIsSquadAssistant)
+    if (ViewportOwner != none)
     {
-        Master.RemoveInteraction(self);
+        PC = DHPlayer(ViewportOwner.Actor);
+
+        if (PC != none)
+        {
+            VolunteerPRI = PC.GetSquadAssistantVolunteer(VolunteerIndex);
+
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo), VolunteerPRI) &&
+                !VolunteerPRI.bIsSquadAssistant)
+            {
+                return;
+            }
+        }
     }
+
+    Master.RemoveInteraction(self);
 }
 
 function OnOptionSelected(int Index)
 {
     local DHPlayer PC;
 
-    PC = DHPlayer(ViewportOwner.Actor);
-
-    if (PC != none)
+    if (ViewportOwner != none)
     {
-        switch (Index)
+        PC = DHPlayer(ViewportOwner.Actor);
+
+        if (PC != none)
         {
-            case 0:
-                PC.ServerSquadMakeAssistant(VolunteerPRI);
-                break;
-            case 2:
-                PC.bIgnoreSquadLeaderAssistantVolunteerPrompts = true;
-                break;
+            switch (Index)
+            {
+                case 0:
+                    PC.ServerSquadMakeAssistant(PC.GetSquadAssistantVolunteer(VolunteerIndex));
+                    break;
+                case 2:
+                    PC.bIgnoreSquadLeaderAssistantVolunteerPrompts = true;
+                    break;
+            }
         }
     }
 
@@ -55,8 +62,20 @@ function OnOptionSelected(int Index)
 function string GetPromptText()
 {
     local string S;
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo VolunteerPRI;
 
     S = PromptText;
+
+    if (ViewportOwner != none)
+    {
+        PC = DHPlayer(ViewportOwner.Actor);
+
+        if (PC != none)
+        {
+            VolunteerPRI = PC.GetSquadAssistantVolunteer(VolunteerIndex);
+        }
+    }
 
     if (VolunteerPRI != none)
     {
@@ -66,6 +85,23 @@ function string GetPromptText()
     return S;
 }
 
+function RemoveInteraction()
+{
+    local DHPlayer PC;
+
+    if (ViewportOwner != none)
+    {
+        PC = DHPlayer(ViewportOwner.Actor);
+
+        if (PC != none)
+        {
+            PC.RemoveSquadAssistantVolunteer(VolunteerIndex);
+        }
+    }
+
+    Master.RemoveInteraction(self);
+}
+
 defaultproperties
 {
     PromptText="{volunteer} has volunteered to be the squad's assistant."
@@ -73,5 +109,5 @@ defaultproperties
     Options(1)=(Key=IK_F2,Text="Decline")
     Options(2)=(Key=IK_F3,Text="Ignore All")
     bRequiresTick=true
+    VolunteerIndex=-1
 }
-

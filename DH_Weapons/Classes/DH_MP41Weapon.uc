@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MP41Weapon extends DHAutoWeapon;
@@ -19,7 +19,8 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=45.0
+    IronSightDisplayFOV=55.0
+    DisplayFOV=85.0
     FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 
@@ -29,8 +30,13 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
-	
+    
+    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
+
     bPlusOneLoading=false
+    
+    //alternative reload
+    MagEmptyReloadAnims(1)="reload_emptyB"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"

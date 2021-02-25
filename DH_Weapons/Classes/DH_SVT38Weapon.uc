@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SVT38Weapon extends DHSemiAutoWeapon;
@@ -8,8 +8,8 @@ class DH_SVT38Weapon extends DHSemiAutoWeapon;
 defaultproperties
 {
     ItemName="SVT-38"
-    //SwayModifyFactor=0.8 //heavier than SVT-40 
-    SwayBayonetModifier=1.26	
+    //SwayModifyFactor=0.8 //heavier than SVT-40
+    SwayBayonetModifier=1.26
     FireModeClass(0)=class'DH_Weapons.DH_SVT38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT38MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SVT38Attachment'
@@ -20,10 +20,11 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=48.0
+    DisplayFOV=90.0
 
     MaxNumPrimaryMags=6
-    InitialNumPrimaryMags=6 //lower than on SVT-40, mostly because i dont want this weapon to appear superior - realistically it has lower recoil, but there is no way to represent unreliability issues (yet) 
+    InitialNumPrimaryMags=6 //lower than on SVT-40, mostly because i dont want this weapon to appear superior - realistically it has lower recoil, but there is no way to represent unreliability issues (yet)
 
     bHasBayonet=true
     BayonetBoneName="bayonet"

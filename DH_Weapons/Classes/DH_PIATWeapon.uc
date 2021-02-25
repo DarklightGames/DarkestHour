@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PIATWeapon extends DHRocketWeapon;
@@ -76,8 +76,8 @@ defaultproperties
     MuzzleBone="Warhead"
     InitialNumPrimaryMags=2
     NumMagsToResupply=2
-    MagEmptyReloadAnim="Reload"
-    MagPartialReloadAnim="Reload"
+    MagEmptyReloadAnims(0)="Reload"
+    MagPartialReloadAnims(0)="Reload"
 
     RangeSettings(0)=(FirePitch=85,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
     RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")

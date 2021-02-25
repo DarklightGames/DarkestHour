@@ -1,23 +1,23 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHTab_Hud extends ROTab_Hud;
-
-var automated moNumericEdit     nu_MinPacketLoss;
-var int                         NumMinPacketLoss;
 
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
+var automated moCheckBox    ch_ShowVehicleVisionCone;
 var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
+
 var bool bSimpleColours;
 var bool bShowChatMessages;
 var bool bShowDeathMessages;
 var bool bShowIndicators;
+var bool bShowVehicleVisionCone;
 var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
 
@@ -33,7 +33,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
-    i_BG1.ManageComponent(nu_MinPacketLoss);
+    i_BG1.ManageComponent(ch_ShowVehicleVisionCone);
     i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
 }
 
@@ -62,17 +62,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bShowIndicators = class'DHHud'.default.bShowIndicators;
             }
             ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
-            break;
-        case nu_MinPacketLoss:
-            if (H != none)
-            {
-                NumMinPacketLoss = H.MinPromptPacketLoss;
-            }
-            else
-            {
-                NumMinPacketLoss = class'DHHud'.default.MinPromptPacketLoss;
-            }
-            nu_MinPacketLoss.SetComponentValue(NumMinPacketLoss, true);
             break;
         case ch_SimpleColours:
             if (H != none)
@@ -183,6 +172,17 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             HintLevelD = HintLevel;
             co_Hints.SilentSetIndex(HintLevel);
             break;
+        case ch_ShowVehicleVisionCone:
+            if (H != none)
+            {
+                bShowVehicleVisionCone = H.bShowVehicleVisionCone;
+            }
+            else
+            {
+                bShowVehicleVisionCone = class'DHHud'.default.bShowVehicleVisionCone;
+            }
+            ch_ShowVehicleVisionCone.SetComponentValue(bShowVehicleVisionCone, true);
+            break;
         default:
             super(UT2K4Tab_HudSettings).InternalOnLoadINI(sender, s);
     }
@@ -282,10 +282,10 @@ function SaveSettings()
             bSave = true;
         }
 
-        if (H.MinPromptPacketLoss != NumMinPacketLoss)
+        if (H.bShowVehicleVisionCone != bShowVehicleVisionCone)
         {
-            H.MinPromptPacketLoss = NumMinPacketLoss;
-            PC.ConsoleCommand("set DH_Engine.DHHud MinPromptPacketLoss" @ NumMinPacketLoss);
+            H.bShowVehicleVisionCone = bShowVehicleVisionCone;
+            PC.ConsoleCommand("set DH_Engine.DHHud bShowVehicleVisionCone" @ string(bShowVehicleVisionCone));
             bSave = true;
         }
 
@@ -324,7 +324,6 @@ function SaveSettings()
             bSave = true;
         }
 
-
         if (bSave)
         {
             H.SaveConfig();
@@ -334,7 +333,7 @@ function SaveSettings()
     {
         class'DHHud'.default.bShowCompass = bShowCompass;
         class'DHHud'.default.bShowIndicators = bShowIndicators;
-        class'DHHud'.default.MinPromptPacketLoss = NumMinPacketLoss;
+        class'DHHud'.default.bShowVehicleVisionCone = bShowVehicleVisionCone;
         class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
@@ -349,6 +348,9 @@ function InternalOnChange(GUIComponent Sender)
     {
         case ch_ShowIndicators:
             bShowIndicators = ch_ShowIndicators.IsChecked();
+            break;
+        case ch_ShowVehicleVisionCone:
+            bShowVehicleVisionCone = ch_ShowVehicleVisionCone.IsChecked();
             break;
         case ch_ShowChatMessages:
             bShowChatMessages = ch_ShowChatMessages.IsChecked();
@@ -365,9 +367,6 @@ function InternalOnChange(GUIComponent Sender)
         case nu_MsgCount:
             iCount = nu_MsgCount.GetValue();
             ch_ShowChatMessages.SetComponentValue(bool(iCount),true);
-            break;
-        case nu_MinPacketLoss:
-            NumMinPacketLoss = int(nu_MinPacketLoss.GetComponentValue());
             break;
         case ch_SimpleColours:
             bSimpleColours = ch_SimpleColours.IsChecked();
@@ -394,7 +393,7 @@ defaultproperties
         Caption="Simple HUD Colours"
         OnCreateComponent=GameHudSimpleColours.InternalOnCreateComponent
         IniOption="@Internal"
-        Hint="Red/Blue team HUD colours only, for colourblind players."
+        Hint="Red/Blue team HUD colours only, for colorblind players."
         WinTop=0.043906
         WinLeft=0.379297
         WinWidth=0.196875
@@ -403,6 +402,22 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_SimpleColours=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudSimpleColours'
+
+    Begin Object Class=DHmoCheckBox Name=GameHudShowVehicleVisionCone
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Show Vehicle Vision Cone"
+        OnCreateComponent=GameHudShowVehicleVisionCone.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.822959
+        WinLeft=0.555313
+        WinWidth=0.373749
+        WinHeight=0.034156
+        TabOrder=29
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+    End Object
+    ch_ShowVehicleVisionCone=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowVehicleVisionCone'
 
     Begin Object Class=DHmoCheckBox Name=ShowChatMessages
         ComponentJustification=TXTA_Left
@@ -440,7 +455,7 @@ defaultproperties
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
         Caption="Show Packet Loss Indicator"
-        OnCreateComponent=GameHudShowDeathMessages.InternalOnCreateComponent
+        OnCreateComponent=GameHudShowIndicators.InternalOnCreateComponent
         IniOption="@Internal"
         WinTop=0.822959
         WinLeft=0.555313
@@ -451,27 +466,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowIndicators=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowIndicators'
-
-    Begin Object class=DHmoNumericEdit Name=MinPacketLoss_NU
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Packet Loss Indicator Threshold"
-        Hint="Used by Packet Loss Indicator to determine when to begin prompting for packet loss"
-        INIOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.5
-        WinHeight=0.034156
-        OnCreateComponent=MinPacketLoss_NU.InternalOnCreateComponent
-        MinValue=1
-        MaxValue=90
-        Step=1
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-        bAutoSizeCaption=true
-        TabOrder=30
-    End Object
-    nu_MinPacketLoss=MinPacketLoss_NU
 
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left

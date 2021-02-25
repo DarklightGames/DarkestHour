@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PTRDWeapon extends DHBipodWeapon;
@@ -90,8 +90,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=35.0
-    ZoomOutTime=0.35
+    DisplayFOV=85.0
+    IronSightDisplayFOV=55
 
     bCanHaveInitialNumMagsChanged=false
     MaxNumPrimaryMags=20
