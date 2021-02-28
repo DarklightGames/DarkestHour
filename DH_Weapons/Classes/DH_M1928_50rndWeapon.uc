@@ -61,8 +61,8 @@ defaultproperties
     SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
 
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     HandNum=1
     SleeveNum=0

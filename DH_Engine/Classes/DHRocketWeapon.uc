@@ -492,8 +492,8 @@ defaultproperties
     bCanBeResupplied=true
     NumMagsToResupply=1
 
-    MagEmptyReloadAnim="Reloads"
-    MagPartialReloadAnim="Reloads"
+    MagEmptyReloadAnims(0)="Reloads"
+    MagPartialReloadAnims(0)="Reloads"
     AssistedMagEmptyReloadAnim="reloadA"
     AssistedMagPartialReloadAnim="reloadA"
     PutDownAnim="putaway"

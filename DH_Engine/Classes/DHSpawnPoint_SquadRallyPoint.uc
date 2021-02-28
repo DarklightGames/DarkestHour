@@ -459,7 +459,7 @@ function OnTeamIndexChanged()
 
         if (bIsInFriendlyTerritory)
         {
-            EstablishmentCounterThreshold = default.EstablishmentCounterThreshold / 2;
+            EstablishmentCounterThreshold = default.EstablishmentCounterThreshold * 0.5;
         }
     }
 }
