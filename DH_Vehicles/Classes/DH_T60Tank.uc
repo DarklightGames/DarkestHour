@@ -65,8 +65,8 @@ defaultproperties
     // Damage
     // pros: 20mm ammo is very unlikely to explode
     // cons: 2 men crew; petrol fuel
-    Health=400
-    HealthMax=400.0
+    Health=300
+    HealthMax=300.0
     AmmoIgnitionProbability=0.2  // 0.75 default
     TurretDetonationThreshold=5000.0 // increased from 1750
     EngineHealth=300
