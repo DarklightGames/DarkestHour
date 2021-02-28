@@ -5468,9 +5468,9 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=10
-        Patch=1
-        Prerelease=""
+        Minor=11
+        Patch=0
+        Prerelease="lwp-preview"
     End Object
     Version=VersionObject
 
