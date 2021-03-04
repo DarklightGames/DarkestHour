@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_G41Weapon extends DHSemiAutoWeapon;
+class DH_G41Weapon extends DHBoltActionWeapon; 
 
 // Modified to add hint about weapon's two clip loading capacity
 simulated function BringUp(optional Weapon PrevWeapon)
@@ -29,16 +29,46 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex2.Rifles.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+    
+    Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
 
-    IronSightDisplayFOV=33.0
-    DisplayFOV=85.0
+    IronSightDisplayFOV=57.0
+    DisplayFOV=82.0
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
 
-    bTwoMagsCapacity=true
+    bShouldSkipBolt=true  //is semi-auto
+    bHasBayonet=true
+    //bTwoMagsCapacity=true
     bPlusOneLoading=false
-    MagEmptyReloadAnims(0)="reload_striper_empty"
-    MagPartialReloadAnims(0)="reload_striper"
+    bCanUseUnfiredRounds=false
+    PreReloadAnim="reload_start"
+    PostReloadAnim="reload_end"
+    SingleReloadAnim="reload_single"
+    StripperReloadAnim="reload_stripper"
+    //reload_start_empty
+    //TO DO: ^
+    
+    BayonetBoneName="Muzzle_Slave"
+    
+    BayoAttachAnim="Bayonet_on"
+    BayoDetachAnim="Bayonet_off"
+    
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="iron_idle_empty"
+    IronBringUpEmpty="iron_in_empty"
+    IronPutDownEmpty="iron_out_empty"
+    SprintStartEmptyAnim="sprint_start_empty"
+    SprintLoopEmptyAnim="sprint_middle_empty"
+    SprintEndEmptyAnim="sprint_end_empty"
+
+    CrawlForwardEmptyAnim="crawlF_empty"
+    CrawlBackwardEmptyAnim="crawlB_empty"
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+
+    SelectEmptyAnim="draw_empty"
+    PutDownEmptyAnim="put_away_empty"
 }

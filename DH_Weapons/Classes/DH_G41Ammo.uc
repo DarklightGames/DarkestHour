@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_M1GarandAmmo extends DHAmmunition;
+class DH_G41Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=8
-    InitialAmount=8
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.garand_ammo'
+    MaxAmmo=10
+    InitialAmount=10
+    IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
 }
