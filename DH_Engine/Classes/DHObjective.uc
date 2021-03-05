@@ -1396,7 +1396,7 @@ simulated function byte GetTeamIndex()
 
 simulated function bool IsInGroup()
 {
-    return GroupTag != '' && ObjectiveGroup != none;
+    return ObjectiveGroupTag != '' && ObjectiveGroup != none;
 }
 
 // Clients/Server can run this function very fast because of the hashtable
