@@ -15,7 +15,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-        break;
+            break;
         case ALLIES_TEAM_INDEX:
             switch (Context.LevelInfo.AlliedNation)
             {
