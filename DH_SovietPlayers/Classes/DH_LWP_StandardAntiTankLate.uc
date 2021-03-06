@@ -7,10 +7,12 @@ class DH_LWP_StandardAntiTankLate extends DHPOLAntiTankRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=3.0)
+    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawnM35',Weight=1.0)
+    RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatGreyPawn',Weight=2.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPHelmet'
 
-    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
 
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"

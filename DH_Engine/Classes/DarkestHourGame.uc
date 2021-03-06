@@ -17,6 +17,7 @@ var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 
 const   OBJECTIVES_MAX = 32;
 var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
+var     array<DHObjectiveGroup>     ObjectiveGroups;
 
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
@@ -2569,6 +2570,8 @@ state RoundInPlay
     {
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
         local float AttRateAllies, AttRateAxis;
+        local int OwnedGroupsCount[2];
+        local int GroupsCount;
 
         // TODO: re-factor this out to an "UpdateAttritionRates" function.
         for (i = 0; i < arraycount(DHObjectives); ++i)
@@ -2587,7 +2590,11 @@ state RoundInPlay
                 }
 
                 // Add up objective based attrition
-                AttRateAllies += DHObjectives[i].AxisOwnedAttritionRate;
+                if (!DHObjectives[i].IsInGroup())
+                {
+                    AttRateAllies += DHObjectives[i].AxisOwnedAttritionRate;
+                    OwnedGroupsCount[AXIS_TEAM_INDEX]++;
+                }
             }
             else if (DHObjectives[i].IsAllies())
             {
@@ -2599,7 +2606,11 @@ state RoundInPlay
                 }
 
                 // Add up objective based attrition
-                AttRateAxis += DHObjectives[i].AlliedOwnedAttritionRate;
+                if (!DHObjectives[i].IsInGroup())
+                {
+                    AttRateAxis += DHObjectives[i].AlliedOwnedAttritionRate;
+                    OwnedGroupsCount[ALLIES_TEAM_INDEX]++;
+                }
             }
 
             if (DHObjectives[i].bRequired)
@@ -2608,13 +2619,41 @@ state RoundInPlay
             }
 
             NumObj++;
+
+            if (!DHObjectives[i].IsInGroup())
+            {
+                GroupsCount++;
+            }
+        }
+
+        for (i = 0; i < ObjectiveGroups.Length; ++i)
+        {
+            if (ObjectiveGroups[i] == none ||
+                !ObjectiveGroups[i].IsValid())
+            {
+                continue;
+            }
+
+            switch (ObjectiveGroups[i].GetOwnerTeamIndex())
+            {
+                case AXIS_TEAM_INDEX:
+                    AttRateAllies += ObjectiveGroups[i].GetOwnedAttritionRate(AXIS_TEAM_INDEX);
+                    OwnedGroupsCount[AXIS_TEAM_INDEX]++;
+                    break;
+
+                case ALLIES_TEAM_INDEX:
+                    AttRateAxis += ObjectiveGroups[i].GetOwnedAttritionRate(ALLIES_TEAM_INDEX);
+                    OwnedGroupsCount[ALLIES_TEAM_INDEX]++;
+            }
+
+            GroupsCount++;
         }
 
         if (NumObj > 0)
         {
             // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
-            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
-            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
+            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, Max(0, (OwnedGroupsCount[ALLIES_TEAM_INDEX] - OwnedGroupsCount[AXIS_TEAM_INDEX])) / GroupsCount);
+            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, Max(0, (OwnedGroupsCount[AXIS_TEAM_INDEX] - OwnedGroupsCount[ALLIES_TEAM_INDEX])) / GroupsCount);
 
             // Update the calculated attrition rate.
             if (bIsAttritionEnabled)

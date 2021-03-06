@@ -8,7 +8,7 @@ class DHPOLAntiTankRoles extends DHAlliedAntiTankRoles
 
 defaultproperties
 {
-    AltName="Strzelec Przeciwpancerny"
+    AltName="Strzelec przeciwpancerny"
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
     //removed m38 as an option because this is usually a strategically important role, if someone will take it and "waste" by taking non-PTRD weapon, this will damage the whole team

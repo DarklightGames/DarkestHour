@@ -150,6 +150,10 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
+// New group system
+var()       name             ObjectiveGroupTag;
+var         DHObjectiveGroup ObjectiveGroup;
+
 // Replication
 var                         EObjectiveState             OldObjState;
 
@@ -170,6 +174,7 @@ simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
+    local DHObjectiveGroup      ObjectiveGroupFound;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -206,6 +211,18 @@ simulated function PostBeginPlay()
         if (DarkestHourGame(Level.Game) != none)
         {
             DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+
+            foreach AllActors(class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
+            {
+                if (ObjectiveGroup != none)
+                {
+                    Warn("Objective group already assigned (possible duplicate tag)");
+                    break;
+                }
+
+                ObjectiveGroup = ObjectiveGroupFound;
+                ObjectiveGroup.AddObjective(self);
+            }
         }
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -1375,6 +1392,11 @@ simulated function byte GetTeamIndex()
         default:
             return -1;
     }
+}
+
+simulated function bool IsInGroup()
+{
+    return ObjectiveGroupTag != '' && ObjectiveGroup != none;
 }
 
 // Clients/Server can run this function very fast because of the hashtable

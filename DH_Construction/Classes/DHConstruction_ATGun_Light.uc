@@ -15,7 +15,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
 
-        case AXIS_TEAM_INDEX: 
+        case AXIS_TEAM_INDEX:
             switch (Context.LevelInfo.Season)
             {
                 default:
@@ -29,6 +29,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                 //case NATION_Canada:
                     //return class'DH_Guns.DH_6PounderGun'; // Need the 2 Pounder from MN
                 case NATION_USSR:
+                case NATION_Poland:
                     switch (Context.LevelInfo.Weather)
                     {
                         case WEATHER_Snowy:

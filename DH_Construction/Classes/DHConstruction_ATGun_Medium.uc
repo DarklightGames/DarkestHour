@@ -29,6 +29,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                 case NATION_Canada:
                     return class'DH_Guns.DH_6PounderGun';
                 case NATION_USSR:
+                case NATION_Poland:
                     switch (Context.LevelInfo.Weather)
                     {
                         case WEATHER_Snowy:
