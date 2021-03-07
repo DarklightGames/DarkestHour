@@ -399,8 +399,10 @@ function UpdateAppearance()
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established';
                 break;
             case NATION_USSR:
-            case NATION_Poland:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established';
+                break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established';
                 break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
@@ -427,8 +429,10 @@ function UpdateAppearance()
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
                 break;
             case NATION_USSR:
-            case NATION_Poland:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
+                break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack';
                 break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
@@ -440,11 +444,6 @@ function UpdateAppearance()
     }
 
     SetStaticMesh(NewStaticMesh);
-
-    if (GetTeamIndex() == ALLIES_TEAM_INDEX && AlliedNation == NATION_Poland)
-    {
-        Skins[0] = Texture'DH_Construction_tex.Backpacks.POL_bag';
-    }
 }
 
 function OnTeamIndexChanged()
