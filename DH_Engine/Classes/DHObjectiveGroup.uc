@@ -100,5 +100,6 @@ function float GetOwnedAttritionRate(byte OwnerTeamIndex)
 
 defaultproperties
 {
+    Texture=Texture'DHEngine_Tex.ObjectiveGroup'
     GroupIndex=-1
 }
