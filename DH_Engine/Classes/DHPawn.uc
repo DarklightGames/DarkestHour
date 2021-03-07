@@ -3383,6 +3383,11 @@ function CheckGiveSmoke()
                         ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
                         break;
 
+                    case NATION_Poland:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
+                        break;
+
                     default:
                         SmokeGrenadeToGive = SmokeGrenadeClassName.USA;
                         ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USA;
@@ -7471,7 +7476,7 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
+    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
     ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6
