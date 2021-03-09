@@ -78,7 +78,7 @@ defaultproperties
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
-    DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
+    DamagedEffectOffset=(X=40.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
 
     // Vehicle destruction
@@ -174,7 +174,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=-0.5) // default is zero
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.5) // default is zero
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
