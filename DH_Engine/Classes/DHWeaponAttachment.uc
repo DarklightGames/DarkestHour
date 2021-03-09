@@ -408,6 +408,7 @@ defaultproperties
     bNetNotify=true
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
+    SplashEffect=class'DHBulletHitWaterEffect'
 
     // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
     // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")
