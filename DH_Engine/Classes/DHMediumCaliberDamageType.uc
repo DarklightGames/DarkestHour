@@ -9,5 +9,4 @@ class DHMediumCaliberDamageType extends DHWeaponProjectileDamageType
 defaultproperties
 {
     PawnDamageEmitter=class'DH_Effects.DHBloodPuffMediumCaliber'
-
 }

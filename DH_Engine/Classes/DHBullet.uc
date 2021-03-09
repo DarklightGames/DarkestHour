@@ -143,17 +143,18 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(Other) != none)
-    {
-        CheckForSplash(Location);
-    }
 
     // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
     // This is so a collision static mesh gets handled properly in ProcessTouch, as it will have bBlockHitPointTraces=false
     if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) || !Other.bBlockHitPointTraces)
     {
         return;
+    }
+
+    // Added splash if projectile hits a fluid surface
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
@@ -486,6 +487,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
         Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
+        //Spawn(ImpactFlashEffect, self,, Location, rotator(-HitNormal)); //Spawn a brief flash of light on impact
     }
 
     if (!bHasDeflected)
@@ -712,7 +714,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        Velocity *= 0.5;
+        Velocity *= 0.1;
         CheckForSplash(Location);
     }
 }
@@ -783,10 +785,10 @@ defaultproperties
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffect'
     VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
-    VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehicleDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffect'
     VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
@@ -807,5 +809,5 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    SplashEffect=class'DH_Effects.DHBulletHitWaterEffect'
 }

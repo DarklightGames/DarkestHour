@@ -185,7 +185,7 @@ simulated event ThirdPersonEffects()
 simulated function SpawnHitEffect()
 {
     local PlayerController   PC;
-    local ROVehicleHitEffect VehEffect;
+    local DHVehicleHitEffect VehEffect;
 
     OldSpawnHitCount = SpawnHitCount;
 
@@ -199,7 +199,7 @@ simulated function SpawnHitEffect()
     {
         if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
         {
-            VehEffect = Spawn(class'ROVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            VehEffect = Spawn(class'DHVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
             VehEffect.InitHitEffects(mHitLocation, mHitNormal);
         }
         else
