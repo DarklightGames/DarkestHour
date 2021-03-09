@@ -15,20 +15,21 @@ defaultproperties
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
+    Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
+    Skins(0)=Texture'DH_Jeep_tex.body.jeep_body_ext'
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Passengers
-    PassengerPawns(0)=(AttachBone="passenger2",DrivePos=(X=5.0,Y=0.0,Z=11.0),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="Passenger3",DrivePos=(X=0.0,Y=0.0,Z=7.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(2)=(AttachBone="Passenger4",DrivePos=(X=0.0,Y=0.0,Z=7.0),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-30.0,Y=25.0,Z=50.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-90,Y=-20,Z=55.0),DriveRot=(Yaw=2048),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-90,Y=20,Z=55.0),DriveRot=(Yaw=-2048),DriveAnim="VHalftrack_Rider2_idle")
 
     // Driver
     bMultiPosition=false
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(X=3.0,Y=0.0,Z=15.0)
+    DrivePos=(X=-30.0,Y=-25.0,Z=50.0)
+    DriverAttachmentBone=body
     DriveAnim="Vhalftrack_driver_idle"
 
     // Movement
@@ -58,6 +59,7 @@ defaultproperties
     WheelHandbrakeFriction=0.6
     WheelHandbrakeSlip=0.05
     WheelSuspensionTravel=10.0
+    WheelSuspensionOffset=-4.0
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
@@ -67,10 +69,10 @@ defaultproperties
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.R.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.R.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.125
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
@@ -100,8 +102,9 @@ defaultproperties
     RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-120.0,Y=30.0,Z=-5.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-40.0,Y=50,Z=22.0),ExhaustRotation=(Pitch=-2048,Yaw=24000))
     SteerBoneName="Steer_Wheel"
+    SteerBoneAxis=AXIS_Z
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
@@ -116,15 +119,20 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.66
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jeep'
 
+    // Attachments
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Jeep_stc.Roof.jeep_roof_down',AttachBone="Body")
+
+    // Shadow
+    ShadowZOffset=40
+
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         bPoweredWheel=true
-        BoneName="LeftFrontWheel"
+        BoneName="wheel.L.F"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=0.0,Y=9.0,Z=1.0)
-        WheelRadius=25.0
-        SupportBoneName="RightFrontSusp00"
+        WheelRadius=22
+        SupportBoneName="suspension.L.F"
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
@@ -132,22 +140,20 @@ defaultproperties
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         bPoweredWheel=true
-        BoneName="RightFrontWheel"
+        BoneName="wheel.R.F"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=0.0,Y=-9.0,Z=1.0)
-        WheelRadius=25.0
-        SupportBoneName="LeftFrontSusp00"
+        WheelRadius=22
+        SupportBoneName="suspension.R.F"
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RFWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
-        BoneName="LeftRearWheel"
+        BoneName="wheel.L.B"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=0.0,Y=9.0,Z=1.0)
-        WheelRadius=25.0
-        SupportBoneName="LeftRearAxle"
+        WheelRadius=22
+        SupportBoneName="suspension.L.B"
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
@@ -155,11 +161,10 @@ defaultproperties
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         bHandbrakeWheel=true
-        BoneName="RightRearWheel"
+        BoneName="wheel.R.B"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=0.0,Y=-9.0,Z=1.0)
-        WheelRadius=25.0
-        SupportBoneName="RightRearAxle"
+        WheelRadius=22
+        SupportBoneName="suspension.R.B"
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RRWheel'
@@ -169,7 +174,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=-0.2) // default is zero
+        KCOMOffset=(X=0.0,Y=0.0,Z=-0.5) // default is zero
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -184,3 +189,4 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
 }
+
