@@ -43,7 +43,7 @@ enum EWeather
 
 struct SNationString
 {
-    var string Germany, USA, Britain, Canada, USSR;
+    var string Germany, USA, Britain, Canada, USSR, Poland;
 };
 
 struct ArtilleryType
