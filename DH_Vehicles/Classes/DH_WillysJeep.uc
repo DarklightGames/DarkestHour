@@ -79,7 +79,7 @@ defaultproperties
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=40.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
+    DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.Destroyed.jeep_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
