@@ -107,17 +107,17 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
+    VehicleHudImage=Texture'DH_Jeep_tex.HUD.jeep_body1'
     VehicleHudEngineY=0.28
-    VehicleHudOccupantsX(0)=0.44
-    VehicleHudOccupantsX(1)=0.57
-    VehicleHudOccupantsX(2)=0.41
-    VehicleHudOccupantsX(3)=0.6
-    VehicleHudOccupantsY(0)=0.53
-    VehicleHudOccupantsY(1)=0.53
-    VehicleHudOccupantsY(2)=0.66
-    VehicleHudOccupantsY(3)=0.66
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jeep'
+    VehicleHudOccupantsX(0)=0.42
+    VehicleHudOccupantsY(0)=0.57
+    VehicleHudOccupantsX(1)=0.58
+    VehicleHudOccupantsY(1)=0.57
+    VehicleHudOccupantsX(2)=0.45
+    VehicleHudOccupantsY(2)=0.76
+    VehicleHudOccupantsX(3)=0.55
+    VehicleHudOccupantsY(3)=0.76
+    SpawnOverlay(0)=Material'DH_Jeep_tex.HUD.profile'
 
     // Attachments
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Jeep_stc.Roof.jeep_roof_down',AttachBone="Body")
