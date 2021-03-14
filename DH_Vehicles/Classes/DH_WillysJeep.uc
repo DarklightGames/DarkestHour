@@ -16,7 +16,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
-    Skins(0)=Texture'DH_Jeep_tex.body.jeep_body_ext'
+    Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_OD'
+    Skins(1)=Texture'DH_Jeep_tex.body.Willys_Wheels_OD'
+    Skins(2)=Texture'DH_Jeep_tex.body.Willys_Gear_OD'
+    Skins(3)=Texture'DH_ShermanM4A3E8_tex.hull_stowage_01'
+
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Passengers
@@ -68,7 +72,7 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.95
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3
-    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=35.0,Y=0.0,Z=50.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.R.F",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.L.B",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -80,6 +84,9 @@ defaultproperties
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=40.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.Destroyed.jeep_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.body.Willys_Body_OD_Destroyed'
+    DestroyedMeshSkins(1)=Combiner'DH_Jeep_tex.body.Willys_Wheels_OD_Destroyed'
+    DestroyedMeshSkins(2)=Combiner'DH_Jeep_tex.body.Willys_Gear_OD_Destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -93,6 +100,7 @@ defaultproperties
     ExitPositions(1)=(X=-3.0,Y=107.0,Z=30.0)   // front passenger
     ExitPositions(2)=(X=-64.0,Y=-109.0,Z=30.0) // rear passenger left
     ExitPositions(3)=(X=-71.0,Y=109.0,Z=30.0)  // rear passenger right
+    ExitPositions(4)=(X=-200.00,Y=0.00,Z=30.00)// rear (failsafe)
 
     // Sounds
     MaxPitchSpeed=350.0
@@ -124,6 +132,9 @@ defaultproperties
 
     // Shadow
     ShadowZOffset=40
+
+    // Camera
+    TPCamLookat=(X=0.0,Y=0.0,Z=50.0)
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
