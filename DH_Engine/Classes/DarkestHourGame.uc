@@ -2972,6 +2972,7 @@ state ResetGameCountdown
             if (GRI != none)
             {
                 GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
+                GRI.DangerZoneUpdated();
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
@@ -3548,6 +3549,122 @@ exec function MidGameVote()
     if (VH != none)
     {
         VH.MidGameVote();
+    }
+}
+
+// Debug function that changes Danger Zone influence for objectives AND
+// main spawns.
+//
+// Influence types (short types): all (a), allies (al), axis (ax), base (b), neutral (n),
+// spawn (s).
+//
+// NOTE: Run ShowDebugMap beforehand to display objective/spawn indices and current values
+// on the map.
+exec function SetInfluence(string InfluenceType, int Index, float Value)
+{
+    local float ClampedValue;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    ClampedValue = FMax(0.0, Value);
+
+    if (InfluenceType == "spawn" || InfluenceType == "s")
+    {
+        if (Index < 0 ||
+            Index >= arraycount(GRI.SpawnPoints))
+        {
+            Log("Spawn index [" $ Index $ "] out of range!");
+            return;
+        }
+
+        if (GRI.SpawnPoints[Index].bMainSpawn)
+        {
+            Log("Spawn [" $ Index $ "] is not a main spawn!");
+            return;
+        }
+
+        GRI.SpawnPoints[Index].BaseInfluenceModifier = ClampedValue;
+    }
+    else
+    {
+        if (Index < 0 ||
+            Index >= arraycount(GRI.DHObjectives)||
+            GRI.DHObjectives[Index] == none)
+        {
+            Log("Objective index out of range or does not exist [" $ Index $ "]!");
+            return;
+        }
+
+        switch (InfluenceType)
+        {
+            case "a":
+            case "all":
+                GRI.DHObjectives[Index].BaseInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].NeutralInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].AxisInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].AlliesInfluenceModifier = ClampedValue;
+                break;
+            case "b":
+            case "base":
+                GRI.DHObjectives[Index].BaseInfluenceModifier = ClampedValue;
+                break;
+            case "n":
+            case "neutral":
+                GRI.DHObjectives[Index].NeutralInfluenceModifier = ClampedValue;
+                break;
+            case "ax":
+            case "axis":
+                GRI.DHObjectives[Index].AxisInfluenceModifier = ClampedValue;
+                break;
+            case "al":
+            case "allies":
+                GRI.DHObjectives[Index].AlliesInfluenceModifier = ClampedValue;
+                break;
+            default:
+                Log("Incorrect influence type for objective. Use 'allies', 'axis', 'base', or 'neutral'.");
+                return;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
+exec function LogInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] == none)
+        {
+            continue;
+        }
+
+        Log("[" $ i $ ":" $ GRI.DHObjectives[i].ObjName $ "]");
+
+        if (GRI.DHObjectives[i].AlliesInfluenceModifier !=
+            GRI.DHObjectives[i].default.AlliesInfluenceModifier)
+            Log("AlliesInfluenceMoifier=" $ GRI.DHObjectives[i].AlliesInfluenceModifier);
+
+        if (GRI.DHObjectives[i].AxisInfluenceModifier !=
+            GRI.DHObjectives[i].default.AxisInfluenceModifier)
+            Log("AxisInfluenceMoifier=" $ GRI.DHObjectives[i].AxisInfluenceModifier);
+
+        if (GRI.DHObjectives[i].BaseInfluenceModifier !=
+            GRI.DHObjectives[i].default.BaseInfluenceModifier)
+            Log("BaseInfluenceMoifier=" $ GRI.DHObjectives[i].BaseInfluenceModifier);
+
+        if (GRI.DHObjectives[i].NeutralInfluenceModifier !=
+            GRI.DHObjectives[i].default.NeutralInfluenceModifier)
+            Log("NeutralInfluenceMoifier=" $ GRI.DHObjectives[i].NeutralInfluenceModifier);
     }
 }
 

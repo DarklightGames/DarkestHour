@@ -3763,7 +3763,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             Widget = MapIconNeutral;
         }
 
-        if (!DHGRI.DHObjectives[i].bActive)
+        if (!DHGRI.DHObjectives[i].bActive && !bShowDebugInfoOnMap)
         {
             Widget.Tints[0] = GrayColor;
             Widget.Tints[1] = GrayColor;
@@ -3783,6 +3783,15 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         else
         {
             ObjLabel = DHGRI.DHObjectives[i].ObjName;
+        }
+
+        if (bShowDebugInfoOnMap)
+        {
+            ObjLabel @= "[" $ i $ "]" @
+                        "Al" @  DHGRI.DHObjectives[i].AlliesInfluenceModifier @
+                        "Ax" @  DHGRI.DHObjectives[i].AxisInfluenceModifier @
+                        "B" @  DHGRI.DHObjectives[i].BaseInfluenceModifier @
+                        "N" @  DHGRI.DHObjectives[i].NeutralInfluenceModifier;
         }
 
         // Draw flashing icon if objective is disputed
