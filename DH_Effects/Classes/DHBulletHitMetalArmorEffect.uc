@@ -170,7 +170,33 @@ defaultproperties
     End Object
     Emitters(5)=SparkEmitter'SparkEmitter1'
 
+    Begin Object Class=SparkEmitter Name=SparkEmitter2
+        LineSegmentsRange=(Min=0.000000,Max=0.000000)
+        TimeBetweenSegmentsRange=(Min=0.030000,Max=0.075000)
+        UseColorScale=True
+        FadeOut=True
+        RespawnDeadParticles=False
+        UseSizeScale=True
+        UseRegularSizeScale=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        Acceleration=(Z=-250.000000)
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        FadeOutStartTime=0.070000
+        MaxParticles=40
+        StartLocationShape=PTLS_Sphere
+        SphereRadiusRange=(Min=2.000000,Max=5.000000)
+        SizeScale(0)=(RelativeSize=1.000000)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.25)
+        InitialParticlesPerSecond=1000.000000
+        UseRotationFrom=PTRS_Actor
+        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        LifetimeRange=(Min=0.25,Max=0.45)
+        StartVelocityRange=(X=(Min=20.000000,Max=100.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-100.000000,Max=100.000000))
+    End Object
+    Emitters(6)=SparkEmitter'SparkEmitter2'
+
     Autodestroy=true
     bnodelete=false
-    //bUnlit=false
 }

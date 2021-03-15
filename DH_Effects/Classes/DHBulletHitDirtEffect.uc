@@ -7,37 +7,29 @@ class DHBulletHitDirtEffect extends emitter;
 
 defaultproperties
 {
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-        UseCollision=True
-        UseColorScale=True
-        FadeOut=True
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         RespawnDeadParticles=False
-        SpinParticles=True
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        Acceleration=(Z=-50.000000)
-        ColorScale(0)=(Color=(B=62,G=98,R=119,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
-        FadeOutStartTime=0.500000
-
-        UseRotationFrom=PTRS_Normal
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.600000
+        MaxParticles=1
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=25.000000,Max=50.000000),Y=(Min=25.000000,Max=50.000000),Z=(Min=25.000000,Max=50.000000))
-        InitialParticlesPerSecond=1000.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.dirtcloud'
+        StartSizeRange=(X=(Min=4.000000,Max=6.000000))
+        InitialParticlesPerSecond=500.000000
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=0.750000,Max=1.250000)
-        StartVelocityRange=(Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+        LifetimeRange=(Min=0.100000,Max=0.100000)
     End Object
-    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter1'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-        UseColorScale=True
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=True
         FadeIn=True
         RespawnDeadParticles=False
@@ -46,65 +38,35 @@ defaultproperties
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
         UseVelocityScale=True
-        Acceleration=(Z=-200.000000)
-        ColorScale(0)=(Color=(B=62,G=98,R=119,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=210,G=210,R=210,A=255))
+        UseColorScale=True
+        BlendBetweenSubdivisions=True
+        UseRandomSubdivision=True
+        Acceleration=(Z=-250.000000)
+        ColorScale(0)=(Color=(B=65,G=86,R=95,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=95,G=116,R=125,A=255))
         FadeOutStartTime=0.500000
-        FadeInEndTime=0.280000
-
+        FadeInEndTime=0.150000
+        MaxParticles=2
+        //StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
+        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
+        StartSpinRange=(X=(Min=0.025000,Max=0.750000))
         SizeScale(0)=(RelativeSize=0.500000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=50.000000,Max=50.000000))
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.300000)
+        StartSizeRange=(X=(Min=30.000000,Max=40.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.dirtcloud'
+        Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=1.500000,Max=2.000000)
-        StartVelocityRange=(X=(Min=50.000000,Max=100.000000),Y=(Min=-25.000000,Max=25.000000),Z=(Min=-25.000000,Max=25.000000))
+        LifetimeRange=(Min=1.500000,Max=2.0)
+        StartVelocityRange=(X=(Min=150.000000,Max=225.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-100.000000,Max=100.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(1)=SpriteEmitter'SpriteEmitter1'
-
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-        UseColorScale=True
-        FadeOut=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
-        UseVelocityScale=True
-        ColorScale(0)=(Color=(B=62,G=98,R=119,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
-        FadeOutStartTime=0.500000
-        MaxParticles=20
-
-        UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
-        SizeScale(0)=(RelativeSize=0.500000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=30.000000,Max=40.000000))
-        InitialParticlesPerSecond=1000.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.dirtcloud'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=2
-        LifetimeRange=(Min=1.500000,Max=2.000000)
-        StartVelocityRange=(X=(Min=75.000000,Max=200.000000),Y=(Min=-25.000000,Max=25.000000),Z=(Min=-25.000000,Max=25.000000))
-        VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
-        VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
-        VelocityScale(2)=(RelativeTime=1.000000)
-    End Object
-    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+    Emitters(1)=SpriteEmitter'SpriteEmitter6'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         UseCollision=True
@@ -118,51 +80,112 @@ defaultproperties
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        Acceleration=(Z=-1000.000000)
+        Acceleration=(X=100.0,Z=-1000.000000)
         DampingFactorRange=(X=(Min=0.150000,Max=0.250000),Y=(Min=0.150000,Max=0.250000),Z=(Min=0.150000,Max=0.250000))
         ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
         FadeOutStartTime=0.500000
-        MaxParticles=25
-
-        StartLocationOffset=(X=20.000000)
+        MaxParticles=150
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         RotationDampingFactorRange=(X=(Min=1.000000,Max=1.000000),Y=(Min=1.000000,Max=1.000000),Z=(Min=1.000000,Max=1.000000))
-        StartSizeRange=(X=(Min=1.000000,Max=1.500000))
+        StartSizeRange=(X=(Min=0.5,Max=1.5))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.dirtchunks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Max=6.000000)
-        StartVelocityRange=(X=(Min=50.000000,Max=500.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=50.000000))
+        LifetimeRange=(Min=0.1,Max=2.0)
+        StartVelocityRange=(X=(Min=200.000000,Max=500.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-150.000000,Max=150.000000))
     End Object
-    Emitters(3)=SpriteEmitter'SpriteEmitter3'
+    Emitters(2)=SpriteEmitter'SpriteEmitter3'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter0
-        BeamDistanceRange=(Min=5.000000,Max=10.000000)
+        FadeOut=True
+        FadeIn=True
+        BeamDistanceRange=(Min=25.000000,Max=60.000000)
+        //DetermineEndPointBy=PTEP_Distance
         RotatingSheets=1
         UseColorScale=True
         RespawnDeadParticles=False
         AutoDestroy=True
-        UseRegularSizeScale=False
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=65,G=86,R=95,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=65,G=86,R=95,A=255))
+        FadeOutStartTime=0.15
+        FadeInEndTime=0.1
+        Opacity=0.5
+        MaxParticles=8
+        UseRotationFrom=PTRS_Actor
+        StartSizeRange=(X=(Min=15.000000,Max=20.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=25.000000,Max=40.000000))
+        InitialParticlesPerSecond=200.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        LifetimeRange=(Min=0.75,Max=1.250000)
+        StartVelocityRange=(X=(Min=50.000000,Max=75.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+    End Object
+    Emitters(3)=BeamEmitter'BeamEmitter0'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter4
+        UseCollision=True
+        UseMaxCollisions=True
+        UseColorScale=True
+        FadeOut=True
+        FadeIn=True
+        RespawnDeadParticles=False
+        SpinParticles=True
+        DampRotation=True
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        ColorScale(0)=(Color=(B=24,G=36,R=44,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=35,G=53,R=65,A=255))
-        Opacity=0.30
+        Acceleration=(Z=-150.000000)
+        DampingFactorRange=(X=(Min=0.150000,Max=0.250000),Y=(Min=0.150000,Max=0.250000),Z=(Min=0.150000,Max=0.250000))
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
+        FadeOutStartTime=0.500000
+        MaxParticles=350
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=4.000000,Max=8.000000),Y=(Min=4.000000,Max=8.000000),Z=(Min=4.000000,Max=8.000000))
+        StartLocationShape=PTLS_Sphere
+        SphereRadiusRange=(Min=2.000000,Max=5.000000)
+        SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
+        StartSpinRange=(X=(Min=0.500000,Max=0.500000))
+        RotationDampingFactorRange=(X=(Min=1.000000,Max=1.000000),Y=(Min=1.000000,Max=1.000000),Z=(Min=1.000000,Max=1.000000))
+        StartSizeRange=(X=(Min=0.5,Max=1.0))
+        InitialParticlesPerSecond=10000.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'Effects_Tex.BulletHits.dirtchunks'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=0.5,Max=1.0)
+        StartVelocityRange=(X=(Min=5.000000,Max=10.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+    End Object
+    Emitters(4)=SpriteEmitter'SpriteEmitter4'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter1
+        BeamDistanceRange=(Min=25.000000,Max=60.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=1
+        UseColorScale=True
+        RespawnDeadParticles=False
+        AutoDestroy=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=65,G=86,R=95,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=65,G=86,R=95,A=255))
+        StartLocationOffset=(X=-10.000000)
+        Opacity=0.8
+        MaxParticles=8//15
+        UseRotationFrom=PTRS_Actor
+        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=15.000000,Max=30.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
+        Texture=Texture'DH_FX_Tex.Effects.Impact01'
         LifetimeRange=(Min=0.100000,Max=0.100000)
-        StartVelocityRange=(X=(Min=100.000000,Max=600.000000))
+        StartVelocityRange=(X=(Min=100.000000,Max=600.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
-    Emitters(4)=BeamEmitter'BeamEmitter0'
+    Emitters(5)=BeamEmitter'BeamEmitter1'
 
     Autodestroy=true
     bnodelete=false

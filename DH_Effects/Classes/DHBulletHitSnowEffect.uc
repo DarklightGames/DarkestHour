@@ -86,7 +86,6 @@ defaultproperties
         FadeOutStartTime=0.500000
         FadeInEndTime=0.150000
         MaxParticles=2
-
         StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -123,7 +122,6 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=15
-
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -154,7 +152,6 @@ defaultproperties
         FadeOutStartTime=0.150000
         FadeInEndTime=0.100000
         MaxParticles=4
-
         StartLocationRange=(X=(Min=-5.000000,Max=-10.000000))
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=5.000000,Max=8.000000),Y=(Min=5.000000,Max=8.000000),Z=(Min=35.000000,Max=75.000000))
@@ -182,7 +179,6 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=30
-
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
