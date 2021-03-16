@@ -5714,6 +5714,7 @@ function DrawRallyPointStatus(Canvas C)
             ErrorIcon = default.RallyPointIconCooldown;
             ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
             break;
+        case ERROR_BehindEnemyLines:
         case ERROR_InUncontrolledObjective:
             ErrorIcon = default.RallyPointIconFlag;
             IconColor = class'UColor'.default.Red;
@@ -5790,7 +5791,7 @@ function DrawRallyPointStatus(Canvas C)
         }
     }
 
-    if (Result.bIsInDangerZone)
+    if (SRI.bAllowRallyPointsBehindEnemyLines && Result.bIsInDangerZone)
     {
         GlobalCoors.PosX = BaseX;
         GlobalCoors.PosY = BaseY;
