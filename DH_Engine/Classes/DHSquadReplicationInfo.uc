@@ -41,7 +41,7 @@ var float                           RallyPointSquadmatePlacementRadiusInMeters;
 var int                             RallyPointInitialSpawnsMinimum;
 var float                           RallyPointInitialSpawnsMemberFactor;
 var float                           RallyPointInitialSpawnsDangerZoneFactor;
-var config private bool             bAllowRallyPointsBehindEnemyLines;
+var config  bool                    bAllowRallyPointsBehindEnemyLines;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private byte                    AlliesAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
