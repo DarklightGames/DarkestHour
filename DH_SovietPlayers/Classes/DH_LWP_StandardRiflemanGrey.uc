@@ -8,6 +8,7 @@ class DH_LWP_StandardRiflemanGrey extends DHPOLRiflemanRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicBackpackGreyPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicGreyPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
     Headgear(1)=class'DH_SovietPlayers.DH_LWPHelmet'
     HeadgearProbabilities(0)=0.5
