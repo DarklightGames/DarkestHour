@@ -183,6 +183,9 @@ var     Material            RallyPointIconBadLocation;
 var     Material            RallyPointIconMissingSquadmate;
 var     Material            RallyPointIconKey;
 
+var     SpriteWidget        IQIconWidget;
+var     TextWidget          IQTextWidget;
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
@@ -860,6 +863,7 @@ function DrawHudPassC(Canvas C)
     local rotator               CameraRotation;
     local Actor                 ViewActor;
     local DHPawn                P;
+    local DHPlayer              PC;
     local DHVehicle             V;
 
     if (PawnOwner == none)
@@ -1041,6 +1045,12 @@ function DrawHudPassC(Canvas C)
     {
         DrawRallyPointStatus(C);
     }
+
+    // Rally
+
+    // IQ Widget
+    PC = DHPlayer(PlayerOwner);
+    DrawIQWidget(C);
 
     // Player names
     DrawPlayerNames(C);
@@ -5602,6 +5612,57 @@ function bool ShouldShowRallyPointIndicator()
     return PC.SquadReplicationInfo.bAreRallyPointsEnabled;
 }
 
+function DrawIQWidget(Canvas C)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+    local AbsoluteCoordsInfo GlobalCoords;
+    local color IQWidgetColor;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || PC.IQManager == none || !PC.IQManager.IsManaged())
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    GlobalCoords.Width = C.ClipX;
+    GlobalCoords.Height = C.ClipY;
+
+    DrawSpriteWidgetClipped(C, IQIconWidget, GlobalCoords, false);
+
+    if (PRI.PlayerIQ >= PC.IQManager.MinIQToGrowHead * 2)
+    {
+        IQWidgetColor = class'UColor'.default.Red;
+    }
+    else if (PRI.PlayerIQ > PC.IQManager.MinIQToGrowHead)
+    {
+        IQWidgetColor = class'UColor'.default.Yellow;
+    }
+    else
+    {
+        IQWidgetColor = class'UColor'.default.White;
+    }
+
+    IQIconWidget.Tints[0] = IQWidgetColor;
+    IQIconWidget.Tints[1] = IQWidgetColor;
+
+    IQTextWidget.Tints[0] = IQWidgetColor;
+    IQTextWidget.Tints[1] = IQWidgetColor;
+
+    IQTextWidget.Text = string(PRI.PlayerIQ);
+
+    C.Font = GetSmallerMenuFont(C);
+    DrawTextWidgetClipped(C, IQTextWidget, GlobalCoords);
+}
+
 function DrawRallyPointStatus(Canvas C)
 {
     local DHPlayer PC;
@@ -6226,4 +6287,8 @@ defaultproperties
     DangerZoneOverlaySubResolution=57
     bDangerZoneOverlayUpdatePending=true
     DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
+
+    // IQ
+    IQIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
+    IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=-55,OffsetY=-118)
 }

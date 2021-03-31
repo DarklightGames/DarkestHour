@@ -167,6 +167,8 @@ var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
+var DHIQManager IQManager;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -259,6 +261,11 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ScoreManager = Spawn(class'DHScoreManager', self);
+
+        if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
+        {
+            IQManager = Spawn(class'DHIQManager', self);
+        }
     }
 }
 
@@ -3174,6 +3181,11 @@ state Dead
             if (GRI != none)
             {
                 LastKilledTime = GRI.ElapsedTime;
+            }
+
+            if (IQManager != none)
+            {
+                IQManager.OnDeath();
             }
 
             // Apply personal message from server strings
@@ -6657,9 +6669,17 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
-    if (Role == ROLE_Authority && ScoreManager != none)
+    if (Role == ROLE_Authority)
     {
-        ScoreManager.Destroy();
+        if (ScoreManager != none)
+        {
+            ScoreManager.Destroy();
+        }
+
+        if (IQManager != none)
+        {
+            IQManager.Destroy();
+        }
     }
 }
 

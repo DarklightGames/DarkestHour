@@ -100,6 +100,8 @@ var()   config float                SurrenderReinforcementsRequiredPercent; // H
 var()   config float                SurrenderNominationsThresholdPercent;   // Nominations needed to start the vote
 var()   config float                SurrenderVotesThresholdPercent;         // "Yes" votes needed for the vote to pass
 
+var()   config bool                 bBigBalloony;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -5307,6 +5309,11 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
+                if (C.IQManager != none)
+                {
+                    C.IQManager.OnSpawn();
+                }
+
                 return C.Pawn; // exit as we used old spawn system & don't need to do anything else in this function
             }
             else
@@ -5344,6 +5351,11 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     AddDefaultInventory(C.Pawn);
+
+    if (C.IQManager != none)
+    {
+        C.IQManager.OnSpawn();
+    }
 
     return C.Pawn;
 }
