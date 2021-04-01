@@ -37,7 +37,7 @@ var private      float ScaleMultiplier;
 
 function OnSpawn() { GoToState('Pending'); }
 function OnDeath() { GoToState(''); }
-function bool IsManaged() { return IsInState('Managed') || IsInState('Pending'); }
+// function bool IsManaged() { return IsInState('Managed') || IsInState('Pending'); }
 // function DebugLog(string Msg) { if (bDebugIQManager) Log(Msg); }
 
 function PostBeginPlay()
@@ -56,6 +56,8 @@ function PostBeginPlay()
     {
         Warn("No PRI.");
     }
+
+    PC.MinIQToGrowHead = MinIQToGrowHead;
 }
 
 function bool ResetPlayerIQ()
@@ -96,6 +98,7 @@ state Pending
             return;
         }
 
+        PC.bIQManaged = true;
         SetTimer(SpawnDelay, false);
     }
 
@@ -114,6 +117,8 @@ state Managed
             GotoState('');
             return;
         }
+
+        PC.bIQManaged = true;
 
         // DebugLog("Spawned:" @ PC);
 

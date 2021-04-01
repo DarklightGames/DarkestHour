@@ -5621,7 +5621,7 @@ function DrawIQWidget(Canvas C)
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none || PC.IQManager == none || !PC.IQManager.IsManaged())
+    if (PC == none || !PC.bIQManaged)
     {
         return;
     }
@@ -5638,11 +5638,11 @@ function DrawIQWidget(Canvas C)
 
     DrawSpriteWidgetClipped(C, IQIconWidget, GlobalCoords, false);
 
-    if (PRI.PlayerIQ >= PC.IQManager.MinIQToGrowHead * 2)
+    if (PRI.PlayerIQ >= PC.MinIQToGrowHead * 2)
     {
         IQWidgetColor = class'UColor'.default.Red;
     }
-    else if (PRI.PlayerIQ > PC.IQManager.MinIQToGrowHead)
+    else if (PRI.PlayerIQ > PC.MinIQToGrowHead)
     {
         IQWidgetColor = class'UColor'.default.Yellow;
     }

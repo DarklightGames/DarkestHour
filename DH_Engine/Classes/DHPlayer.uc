@@ -167,7 +167,9 @@ var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
-var DHIQManager IQManager;
+var     DHIQManager             IQManager;
+var     int                     MinIQToGrowHead;
+var     bool                    bIQManaged;
 
 replication
 {
@@ -179,7 +181,10 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered;
+        bSurrendered, bIQManaged;
+
+    reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
+        MinIQToGrowHead;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -7162,4 +7167,6 @@ defaultproperties
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
     PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+
+    MinIQToGrowHead=100
 }
