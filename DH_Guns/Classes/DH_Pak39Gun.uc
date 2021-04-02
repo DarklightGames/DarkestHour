@@ -11,12 +11,12 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak39CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_body'
     Skins(0)=Texture'DH_Pak39_tex.body.pak39_body'
-    //DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_static_dest'
-    VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.flak38_body_static'
-    VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
-    ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
-    MapIconAttachmentClass=class'DHMapIconAttachment_ATGun_Rotating'
+    DestroyedVehicleMesh=StaticMesh'DH_Pak39_stc.Destroyed.pak39_destroyed'
+    VehicleHudImage=Texture'DH_Pak39_tex.interface.pak39_body_hud'
+    VehicleHudTurret=TexRotator'DH_Pak39_tex.interface.pak39_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak39_tex.interface.pak39_turret_look'
+    ExitPositions(0)=(X=-115.00,Y=0.00,Z=60.00)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Static'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

@@ -16,9 +16,9 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Pak39_anm.pak39_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
     DriveAnim="crouch_idlehold_bayo"
-    DrivePos=(X=0.0,Y=0,Z=0)
+    DrivePos=(X=0.0,Y=0,Z=25.0)
     DriveRot=(Yaw=-4096)
-    CameraBone="camera_com"
+    FPCamPos=(X=40.0,Y=20,Z=0)
 
     //Gunsight
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
