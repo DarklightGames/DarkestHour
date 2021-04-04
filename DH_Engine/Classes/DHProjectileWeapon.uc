@@ -35,6 +35,8 @@ var         name        IronPutDown;                // anim for weapon being low
 
 var         name        BayoAttachAnim;             // anim for attaching the bayonet
 var         name        BayoDetachAnim;             // anim for detaching the bayonet
+var         name        BayoAttachEmptyAnim;        // anim for attaching the bayonet when empty
+var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
 
@@ -1085,7 +1087,14 @@ simulated state AttachingBayonet extends WeaponBusy
             ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
         }
 
-        PlayAnimAndSetTimer(BayoAttachAnim, 1.0, 0.1);
+        if (AmmoAmount(0) == 0 && HasAnim(BayoAttachEmptyAnim))
+        {
+            PlayAnimAndSetTimer(BayoAttachEmptyAnim, 1.0, 0.1);
+        }
+        else
+        {
+            PlayAnimAndSetTimer(BayoAttachAnim, 1.0, 0.1);
+        }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
@@ -1127,7 +1136,14 @@ simulated state DetachingBayonet extends WeaponBusy
             ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
         }
 
-        PlayAnimAndSetTimer(BayoDetachAnim, 1.0, 0.1);
+        if (AmmoAmount(0) == 0 && HasAnim(BayoDetachEmptyAnim))
+        {
+            PlayAnimAndSetTimer(BayoDetachEmptyAnim, 1.0, 0.1);
+        }
+        else
+        {
+            PlayAnimAndSetTimer(BayoDetachAnim, 1.0, 0.1);
+        }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {

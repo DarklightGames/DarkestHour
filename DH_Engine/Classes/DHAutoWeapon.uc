@@ -6,9 +6,12 @@
 class DHAutoWeapon extends DHProjectileWeapon
     abstract;
 
-var     name    SelectFireAnim;            // animation for selecting the firing mode
-var     name    SelectFireIronAnim;        // animation for selecting the firing mode in ironsights
-var     name    SightUpSelectFireIronAnim; // animation for selecting the firing mode in ironsights
+var     name    SelectFireAnim;
+var     name    SelectFireEmptyAnim;
+var     name    SelectFireIronAnim;
+var     name    SelectFireIronEmptyAnim;
+var     name    SelectFireBipodIronAnim;
+var     name    SelectFireBipodIronEmptyAnim;
 
 // Sound effect for the fire selector switch (in case it's not handled by the animation).
 var     sound   SelectFireSound;
@@ -92,9 +95,9 @@ simulated state SwitchingFireMode extends WeaponBusy
 
         if (bUsingSights || Instigator.bBipodDeployed)
         {
-            if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
+            if (Instigator.bBipodDeployed && HasAnim(SelectFireBipodIronAnim))
             {
-                Anim = SightUpSelectFireIronAnim;
+                Anim = SelectFireBipodIronAnim;
             }
             else
             {

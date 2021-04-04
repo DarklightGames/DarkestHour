@@ -21,6 +21,7 @@ var     bool            bInterruptReload;   // set when one-by-one reload is sto
 
 var     name            PreReloadAnim;      // one-off anim when starting to reload
 var     name            PreReloadHalfAnim;  // same as above, but when there are one or more rounds in the chamber
+var     name            PreReloadEmptyAnim; // same as above, but when the weapon is empty
 
 var     name            SingleReloadAnim;       // looping anim for inserting a single round
 var     name            SingleReloadHalfAnim;   // same as above, but when there are one or more rounds in the chamber
@@ -435,7 +436,7 @@ simulated state Reloading
             GetAnimParams(0, Anim, Frame, Rate);
 
             // Just finished playing pre-reload anim so now load 1st round
-            if (Anim == PreReloadAnim || Anim == PreReloadHalfAnim)
+            if (Anim == PreReloadAnim || Anim == PreReloadHalfAnim || Anim == PreReloadEmptyAnim)
             {
                 PostPreReload();
                 return;
@@ -578,12 +579,18 @@ simulated function PlayPreReload()
 
 simulated function name GetPreReloadAnim()
 {
-    if (AmmoAmount(0) > 0 && HasAnim(PreReloadHalfAnim))
+    if (AmmoAmount(0) == 0 && HasAnim(PreReloadEmptyAnim))
+    {
+        return PreReloadEmptyAnim;
+    }
+    else if (AmmoAmount(0) > 0 && HasAnim(PreReloadHalfAnim))
     {
         return PreReloadHalfAnim;
     }
-
-    return PreReloadAnim;
+    else
+    {
+        return PreReloadAnim;
+    }
 }
 
 simulated function name GetSingleReloadAnim()

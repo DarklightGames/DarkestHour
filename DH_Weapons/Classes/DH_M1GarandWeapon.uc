@@ -46,8 +46,8 @@ defaultproperties
 
     Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand'
     Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Garand_extra'
-    handnum=0
-    sleevenum=3
+    HandNum=0
+    SleeveNum=3
 
     IronSightDisplayFOV=57.0
     DisplayFOV=82.0
