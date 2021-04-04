@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_M1GarandWeapon extends DHBoltActionWeapon;
+class DH_M1GarandWeapon extends DHSemiAutoWeapon;
 
 var     bool    bIsLastRound;
 
@@ -56,14 +56,10 @@ defaultproperties
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
     bPlusOneLoading=false
-    bCanUseUnfiredRounds=false
 
-    bShouldSkipBolt=true  //is semi-auto
-    PreReloadAnim="reload_half1"
-    PostReloadAnim="reload_half2"
-    SingleReloadAnim="reload_half_moment"
-    FullReloadAnim="reload"
-    //reload_sticky
+    MagEmptyReloadAnims(0)="reload"
+    MagEmptyReloadAnims(1)="reload_sticky"
+    MagPartialReloadAnims(0)="reload_half_A"
 
     bHasBayonet=true
 
@@ -71,6 +67,8 @@ defaultproperties
 
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
+    BayoAttachEmptyAnim="bayonet_on_empty"
+    BayoDetachEmptyAnim="bayonet_off_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
@@ -88,4 +86,6 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
+    UnloadedMunitionsPolicy=UMP_Consolidate
 }
+

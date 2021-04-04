@@ -717,6 +717,38 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 }
 
+exec function SetMuzzleOffset(int X, int Y, int Z)
+{
+    local int i;
+    local DHWeaponFire WF;
+    local vector V;
+
+    V.X = X;
+    V.Y = Y;
+    V.Z = Z;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        for (i = 0; i < arraycount(FireMode); ++i)
+        {
+            WF = DHWeaponFire(FireMode[i]);
+
+            if (WF != none)
+            {
+                if (WF.FlashEmitter != none)
+                {
+                    WF.FlashEmitter.SetRelativeLocation(V);
+                }
+
+                if (WF.SmokeEmitter != none)
+                {
+                    WF.SmokeEmitter.SetRelativeLocation(V);
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {

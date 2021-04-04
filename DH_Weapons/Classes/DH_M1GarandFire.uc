@@ -113,4 +113,5 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     FireLastAnim="shoot_last"
     FireIronLastAnim="Iron_Shoot_Last"
+    MuzzleOffset=(X=10)
 }

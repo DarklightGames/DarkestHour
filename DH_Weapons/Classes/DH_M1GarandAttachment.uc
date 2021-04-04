@@ -5,8 +5,6 @@
 
 class DH_M1GarandAttachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=InterfaceArt2_tex.utx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Garand_3rd'
@@ -17,26 +15,18 @@ defaultproperties
 
     WA_Idle="idle_kar98"
     WA_Fire="fire"
-    WA_Reload="idle_kar98"
-    WA_ProneReload="idle_kar98"
-    WA_ReloadEmpty="reload_garand"
-    WA_ProneReloadEmpty="prone_reload_garand"
-    WA_PreReload="reload_STRbolt"
-    WA_PostReload="close_kar98scope"
+    WA_Reload="reload_STRbolt"
+    WA_ProneReload="prone_reload_STRbolt"
     WA_BayonetIdle="idle_kar98_bayo"
     WA_BayonetFire="fire_bayo"
-    WA_BayonetReload="idle_kar98_bayo"
-    WA_BayonetReloadEmpty="reload_reload_bayo"
-    WA_BayonetProneReload="idle_kar98_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_garand_bayo"
-    WA_BayonetPreReload="reload_STRbolt_bayo"
-    WA_BayonetPostReload="close_kar98scope"
+    WA_BayonetReload="reload_STRbolt_bayo"
+    WA_BayonetProneReload="prone_reload_STRbolt_bayo"
     WA_BayonetAttach="stand_bayattach_kar98"
     WA_BayonetDetach="stand_bayremove_kar98"
     WA_BayonetAttachProne="prone_bayattach_kar98"
     WA_BayonetDetachProne="prone_bayremove_kar98"
-    WA_WorkBolt="idle_kar98"
-    WA_BayonetWorkBolt="idle_kar98_bayo"
+    WA_ReloadEmpty="reload_garand"
+    WA_ProneReloadEmpty="prone_reload_garand"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -103,22 +93,15 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_kar"
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
-
-    PA_ReloadAnim="stand_idle_kar"
+    PA_ReloadAnim="stand_reload_kar"
     PA_ReloadEmptyAnim="stand_reload_garand"
-    PA_ProneReloadAnim="prone_idle_kar"
+    PA_ProneReloadAnim="prone_reload_kar"
     PA_ProneReloadEmptyAnim="prone_reload_garand"
-    PA_PreReloadAnim="stand_reload_kar"
-    PA_PronePreReloadAnim="prone_reload_kar"
-    PA_PostReloadAnim="stand_idle_kar"
-    PA_PronePostReloadAnim="prone_idle_kar"
-
     PA_ProneIdleRestAnim="prone_idle_kar"
     PA_BayonetAttachAnim="stand_bayattach_kar"
     PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
     PA_BayonetDetachAnim="stand_bayremove_kar"
     PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
-    PA_CrouchIronBoltActionAnim="crouch_bolt_kar"
     PA_Fire="stand_shoothip_kar"
     PA_IronFire="stand_shootiron_kar"
     PA_CrouchFire="crouch_shoot_kar"
@@ -166,3 +149,4 @@ defaultproperties
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
 }
+

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_G41Weapon extends DHBoltActionWeapon; 
+class DH_G41Weapon extends DHBoltActionWeapon;
 
 // Modified to add hint about weapon's two clip loading capacity
 simulated function BringUp(optional Weapon PrevWeapon)
@@ -29,7 +29,7 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex2.Rifles.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    
+
     Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
 
     IronSightDisplayFOV=57.0
@@ -41,7 +41,6 @@ defaultproperties
 
     bShouldSkipBolt=true  //is semi-auto
     bHasBayonet=true
-    //bTwoMagsCapacity=true
     bPlusOneLoading=false
     bCanUseUnfiredRounds=false
     PreReloadAnim="reload_start"
@@ -50,12 +49,12 @@ defaultproperties
     StripperReloadAnim="reload_stripper"
     //reload_start_empty
     //TO DO: ^
-    
+
     BayonetBoneName="Muzzle_Slave"
-    
+
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"
