@@ -1742,6 +1742,32 @@ simulated state Reloading extends WeaponBusy
         bWaitingToBolt = false;
     }
 
+    // This is overridden because the normal PlayIdle function will play the
+    // "empty" animations after a reload because the client hasn't gotten
+    // the message about the updated ammo count yet.
+    simulated function PlayIdle()
+    {
+        local name Anim;
+
+        if (Instigator.bBipodDeployed)
+        {
+            if (AmmoAmount(0) == 0 && HasAnim(IronIdleEmptyAnim))
+            {
+                Anim = IronIdleEmptyAnim;
+            }
+            else if (HasAnim(IronIdleAnim))
+            {
+                Anim = IronIdleAnim;
+            }
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            Anim = IdleAnim;
+        }
+
+        LoopAnim(Anim, IdleAnimRate, 0.2);
+    }
+
 // Take the player out of ironsights
 Begin:
     if (bUsingSights)
@@ -1876,6 +1902,7 @@ function PerformReload(optional int Count)
 
     if (UnloadedMunitionsPolicy == UMP_Consolidate)
     {
+        // Consolidate saved rounds into a new magazine.
         while (SavedRoundCount >= FireMode[0].AmmoClass.default.InitialAmount)
         {
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
