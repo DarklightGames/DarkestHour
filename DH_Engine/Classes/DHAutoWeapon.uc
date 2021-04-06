@@ -156,9 +156,16 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease) // adds check that isn't animating
     {
-        PlayIdle();
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
+        else
+        {
+            FireMode[Mode].PlayFireEnd();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;
