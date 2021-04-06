@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHBloodPuffMediumCaliber extends Emitter;
+class DHBulletHitFleshEffect extends emitter;
 
 defaultproperties
 {
@@ -201,51 +201,6 @@ defaultproperties
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter26'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter45
-        FadeOut=True
-        FadeIn=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        UseColorScale=true
-        AutomaticInitialSpawning=False
-        BlendBetweenSubdivisions=True
-        UseRandomSubdivision=True
-        UseVelocityScale=True
-        Acceleration=(Z=-100.000000)
-        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.8
-        FadeOutStartTime=0.35
-        FadeInEndTime=0.150000
-        MaxParticles=2
-        //StartLocationOffset=(X=15.000000)
-        UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
-        StartSpinRange=(X=(Min=0.025000,Max=0.750000))
-        SizeScale(0)=(RelativeSize=0.500000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
-        StartSizeRange=(X=(Min=30.000000,Max=40.000000))
-        InitialParticlesPerSecond=100.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=2
-        LifetimeRange=(Min=0.75,Max=1.0)
-        StartVelocityRange=(X=(Min=50.000000,Max=100.000000),Y=(Min=100.000000,Max=150.000000),Z=(Min=100.000000,Max=150.000000))
-        VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
-        VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
-        VelocityScale(2)=(RelativeTime=1.000000)
-    End Object
-    Emitters(6)=SpriteEmitter'SpriteEmitter45'
-
-    AutoDestroy=true
-    Style=STY_Alpha
-    bNoDelete=false
-    bHardAttach=true // test
-    RemoteRole=ROLE_DumbProxy  //required because this is spawned on server during netplay.
-    bNetInitialRotation=true
-    LifeSpan=4.0
+    Autodestroy=true
+    bnodelete=false
 }

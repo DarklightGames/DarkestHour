@@ -118,13 +118,14 @@ defaultproperties
         FadeInEndTime=0.1
         Opacity=0.5
         MaxParticles=8
+        name="fan"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=15.000000,Max=20.000000),Y=(Min=15.000000,Max=20.000000),Z=(Min=25.000000,Max=40.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.Impact01'
         LifetimeRange=(Min=0.75,Max=1.250000)
-        StartVelocityRange=(X=(Min=50.000000,Max=75.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+        StartVelocityRange=(X=(Min=45.000000,Max=75.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
     Emitters(3)=BeamEmitter'BeamEmitter0'
 
@@ -164,7 +165,7 @@ defaultproperties
     Emitters(4)=SpriteEmitter'SpriteEmitter4'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter1
-        BeamDistanceRange=(Min=25.000000,Max=60.000000)
+        BeamDistanceRange=(Min=50.000000,Max=85.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=1
         UseColorScale=True
@@ -178,12 +179,12 @@ defaultproperties
         Opacity=0.8
         MaxParticles=8//15
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=15.000000,Max=30.000000))
+        StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=50.000000,Max=100.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        Texture=Texture'DH_FX_Tex.Effects.Impact03'
         LifetimeRange=(Min=0.100000,Max=0.100000)
-        StartVelocityRange=(X=(Min=100.000000,Max=600.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+        StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
     Emitters(5)=BeamEmitter'BeamEmitter1'
 
