@@ -65,8 +65,8 @@ defaultproperties
     
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="Iron_fireswitch"
-    //="fireswitch_empty"
-    //="Iron_fireswitch_empty"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
