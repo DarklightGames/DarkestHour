@@ -44,16 +44,17 @@ defaultproperties
     bPlusOneLoading=false
     bCanUseUnfiredRounds=false
     PreReloadAnim="reload_start"
+    PreReloadEmptyAnim="reload_start_empty"
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"
     StripperReloadAnim="reload_stripper"
-    //reload_start_empty
-    //TO DO: ^
 
     BayonetBoneName="Muzzle_Slave"
 
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
+    BayoAttachEmptyAnim="bayonet_on_empty"
+    BayoDetachEmptyAnim="bayonet_off_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
