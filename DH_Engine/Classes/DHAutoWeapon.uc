@@ -101,12 +101,26 @@ simulated state SwitchingFireMode extends WeaponBusy
             }
             else
             {
-                Anim = SelectFireIronAnim;
+                if (AmmoAmount(0) == 0 && HasAnim(SelectFireIronEmptyAnim))
+                {
+                    Anim = SelectFireIronEmptyAnim;
+                }
+                else
+                {
+                    Anim = SelectFireIronAnim;
+                }
             }
         }
         else
         {
-            Anim = SelectFireAnim;
+            if (AmmoAmount(0) == 0 && HasAnim(SelectFireEmptyAnim))
+            {
+                Anim = SelectFireEmptyAnim;
+            }
+            else
+            {
+                Anim = SelectFireAnim;
+            }
         }
 
         PlayAnimAndSetTimer(Anim, 1.0);
