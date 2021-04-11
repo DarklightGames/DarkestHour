@@ -50,7 +50,7 @@ defaultproperties
     SleeveNum=3
 
     IronSightDisplayFOV=55.0
-    DisplayFOV=82.0
+    DisplayFOV=85.0
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=11
@@ -60,8 +60,9 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload"
     MagEmptyReloadAnims(1)="reload_sticky"
     MagEmptyReloadAnims(2)="reloadB"
-    MagPartialReloadAnims(0)="reload_half_A"
     MagEmptyReloadAnims(3)="reload"
+    MagEmptyReloadAnims(4)="reload"
+    MagPartialReloadAnims(0)="reload_half_A"
 
     bHasBayonet=true
 

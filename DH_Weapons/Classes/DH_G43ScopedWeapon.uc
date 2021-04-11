@@ -23,8 +23,8 @@ defaultproperties
     //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
 
     DisplayFOV=83.0
-    IronSightDisplayFOV=50.3
-    IronSightDisplayFOVHigh=50.3
+    IronSightDisplayFOV=44.1
+    IronSightDisplayFOVHigh=44.1
     PlayerFOVZoom=15.0
     ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     ScopePortalFOVHigh=5.4
