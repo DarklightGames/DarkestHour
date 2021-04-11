@@ -61,6 +61,7 @@ defaultproperties
     MagEmptyReloadAnims(1)="reload_sticky"
     MagEmptyReloadAnims(2)="reloadB"
     MagPartialReloadAnims(0)="reload_half_A"
+    MagEmptyReloadAnims(3)="reload"
 
     bHasBayonet=true
 

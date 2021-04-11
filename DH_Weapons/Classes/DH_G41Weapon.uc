@@ -32,7 +32,7 @@ defaultproperties
 
     Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
 
-    IronSightDisplayFOV=57.0
+    IronSightDisplayFOV=55.0
     DisplayFOV=82.0
     FreeAimRotationSpeed=7.5
 
