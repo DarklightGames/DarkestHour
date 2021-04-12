@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_EnfieldNo2Weapon extends DHSemiAutoWeapon;
+class DH_EnfieldNo2Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
