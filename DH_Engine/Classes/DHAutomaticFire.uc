@@ -145,6 +145,12 @@ function PlayFireEnd()
         return;
     }
 
+    if (Weapon.GetFireMode(ThisModeNum).bWaitForRelease)
+    {
+        // The weapon is firing in single-fire mode, so do not play this end-fire animation.
+        return;
+    }
+
     if (!IsPlayerHipFiring())
     {
         if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
