@@ -113,8 +113,8 @@ defaultproperties
     RevMeterScale=4000.000000
 
     // Damage
-    Health=1200.0
-    HealthMax=1200.0
+    Health=300.0
+    HealthMax=300.0
     DirectHEImpactDamageMult=8.0
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=22.0,PointHeight=0.0,PointScale=1.0,PointBone=engine,PointOffset=(X=60.0,Y=0.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
