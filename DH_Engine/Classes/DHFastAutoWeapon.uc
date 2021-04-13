@@ -33,7 +33,7 @@ simulated function AnimEnd(int Channel)
 {
     if (!FireMode[0].IsInState('FireLoop'))
     {
-        super(DHProjectileWeapon).AnimEnd(channel);
+        super.AnimEnd(channel);
     }
 }
 
