@@ -5,6 +5,8 @@
 
 class DHBrowser_ServerListPageInternet extends ROUT2k4Browser_ServerListPageInternet;
 
+var array<string> ServerBlacklist; // Hide unwanted servers
+
 function InitServerList()
 {
     li_Server = new(none) class'DH_Interface.DHBrowser_ServersList';
@@ -16,6 +18,22 @@ function InitServerList()
     li_Server.OnChange = ServerListChanged;
     li_Server.bPresort = true;
     lb_Server.SetAnchor(self);
+}
+
+function MyOnReceivedServer(GameInfo.ServerResponseLine s)
+{
+    local int i;
+
+    for (i = 0; i < ServerBlacklist.Length; ++i)
+    {
+        if (ServerBlacklist[i] == s.IP)
+        {
+            SetTimer(1.0);
+            return;
+        }
+    }
+
+    super.MyOnReceivedServer(s);
 }
 
 defaultproperties
@@ -38,4 +56,6 @@ defaultproperties
     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
     bStandardized=true
     StandardHeight=0.8
+
+    ServerBlacklist(0)="81.169.151.184"
 }

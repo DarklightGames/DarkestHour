@@ -7,6 +7,7 @@ class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
     notplaceable;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
+#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
@@ -400,6 +401,9 @@ function UpdateAppearance()
             case NATION_USSR:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established';
                 break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established';
+                break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
                 break;
@@ -426,6 +430,9 @@ function UpdateAppearance()
                 break;
             case NATION_USSR:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
+                break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack';
                 break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
