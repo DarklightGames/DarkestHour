@@ -41,6 +41,14 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                             default:
                                 return class'DH_Guns.DH_ZiS3Gun';
                         }
+                    case NATION_Poland:
+                        switch (Context.LevelInfo.Weather)
+                        {
+                            case WEATHER_Snowy:
+                                return class'DH_Guns.DH_ZiS3GunLate_Snow';
+                            default:
+                                return class'DH_Guns.DH_ZiS3GunLate';
+                        }
                     default:
                         break;
                 }

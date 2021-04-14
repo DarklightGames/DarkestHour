@@ -154,6 +154,7 @@ defaultproperties
     DeveloperIDs(3)="76561198024186247" // AAZ
     DeveloperIDs(4)="76561198050059841" // dolas
     DeveloperIDs(5)="76561198066643021" // Patison
+    DeveloperIDs(6)="76561198046844470" // Matty
 
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros

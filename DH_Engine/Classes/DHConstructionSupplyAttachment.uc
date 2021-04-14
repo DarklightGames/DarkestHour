@@ -156,6 +156,7 @@ static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
                 case NATION_Britain:
                 case NATION_Canada:
                 case NATION_USSR:
+                case NATION_Poland:
                     return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
             }
         }

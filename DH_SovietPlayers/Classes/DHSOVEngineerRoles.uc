@@ -16,5 +16,5 @@ defaultproperties
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
-    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
 }

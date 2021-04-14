@@ -44,6 +44,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                     case NATION_Canada:
                     case NATION_USA:
                     case NATION_USSR:
+                    case NATION_Poland:
                     default:
                         break;
                 }

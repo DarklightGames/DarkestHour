@@ -392,6 +392,9 @@ function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
                 case NATION_USSR:
                     VoicePackClassName = "DH_SovietPlayers.DHSovietVoice";
                     break;
+                case NATION_Poland:
+                    VoicePackClassName = "DH_SovietPlayers.DHPolishVoice";
+                    break;
             }
     }
 

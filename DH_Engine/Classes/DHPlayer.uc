@@ -167,6 +167,10 @@ var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
+var     DHIQManager             IQManager;
+var     int                     MinIQToGrowHead;
+var     bool                    bIQManaged;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -177,7 +181,10 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered;
+        bSurrendered, bIQManaged;
+
+    reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
+        MinIQToGrowHead;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -259,6 +266,11 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ScoreManager = Spawn(class'DHScoreManager', self);
+
+        if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
+        {
+            IQManager = Spawn(class'DHIQManager', self);
+        }
     }
 }
 
@@ -3174,6 +3186,11 @@ state Dead
             if (GRI != none)
             {
                 LastKilledTime = GRI.ElapsedTime;
+            }
+
+            if (IQManager != none)
+            {
+                IQManager.OnDeath();
             }
 
             // Apply personal message from server strings
@@ -6657,9 +6674,17 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
-    if (Role == ROLE_Authority && ScoreManager != none)
+    if (Role == ROLE_Authority)
     {
-        ScoreManager.Destroy();
+        if (ScoreManager != none)
+        {
+            ScoreManager.Destroy();
+        }
+
+        if (IQManager != none)
+        {
+            IQManager.Destroy();
+        }
     }
 }
 
@@ -7142,4 +7167,6 @@ defaultproperties
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
     PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+
+    MinIQToGrowHead=100
 }
