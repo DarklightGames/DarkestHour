@@ -28,6 +28,29 @@ var     bool                bRequiresSLorASL;       // player must be a SL or AS
 var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
 var     Material            HandTexture;          // the hand texture this role should use
 
+// BETA TEST STUFF!
+// Gives every role an M1 Garand.
+simulated function PreBeginPlay()
+{
+    local ItemData TestWeapon;
+    local int i;
+
+    TestWeapon.Item = class<Inventory>(DynamicLoadObject("DH_Weapons.DH_M1GarandWeapon", class'class'));
+    TestWeapon.AssociatedAttachment = class<ROAmmoPouch>(DynamicLoadObject("DH_Weapons.DH_M1GarandAmmoPouch", class'class'));
+
+    for (i = 0; i < arraycount(PrimaryWeapons); ++i)
+    {
+        if (PrimaryWeapons[i].Item == TestWeapon.Item)
+        {
+            super.PreBeginPlay();
+            return;
+        }
+    }
+
+    PrimaryWeapons[Max(0, arraycount(PrimaryWeapons) - 1)] = TestWeapon;
+    super.PreBeginPlay();
+}
+
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
 simulated function HandlePrecache()
