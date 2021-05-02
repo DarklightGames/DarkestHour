@@ -68,7 +68,7 @@ defaultproperties
     HitEffects(11)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'ROBulletHitGravelEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Gravel')     // Gravel
     HitEffects(12)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'DHBulletHitConcreteEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Asphalt')    // Concrete
     HitEffects(13)=(HitDecal=class'BulletHoleWood',HitEffect=class'ROBulletHitWoodEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Wood')       // HollowWood
-    HitEffects(14)=(HitDecal=class'BulletHoleSnow',HitEffect=class'ROBulletHitMudEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Mud')        // Mud
+    HitEffects(14)=(HitDecal=class'BulletHoleSnow',HitEffect=class'DHBulletHitMudEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Mud')        // Mud
     HitEffects(15)=(HitDecal=class'BulletHoleMetalArmor',HitEffect=class'DHBulletHitMetalArmorEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Metal')     // MetalArmor
     HitEffects(16)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'ROBulletHitPaperEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Wood')       // Paper
     HitEffects(17)=(HitDecal=class'BulletHoleCloth',HitEffect=class'ROBulletHitClothEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')       // Cloth
