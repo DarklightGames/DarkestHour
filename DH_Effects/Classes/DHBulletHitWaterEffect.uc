@@ -226,7 +226,7 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter32'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter5
-        BeamDistanceRange=(Min=40.000000,Max=60.000000)
+        BeamDistanceRange=(Min=40.000000,Max=85.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=1
         FadeOut=True
@@ -241,7 +241,7 @@ defaultproperties
         MaxParticles=1
         StartLocationOffset=(X=-5.000000)
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=45.000000,Max=65.000000))
+        StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=45.000000))
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.WaterImpact01'

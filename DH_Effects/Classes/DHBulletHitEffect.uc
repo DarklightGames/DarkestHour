@@ -54,7 +54,7 @@ simulated function PostNetBeginPlay()
 
 defaultproperties
 {
-    HitEffects(0)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitRockEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')        // Default (Dirt?)
+    HitEffects(0)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitDefaultEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')        // Default (Dirt?)
     HitEffects(1)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'DHBulletHitRockEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Asphalt')     // Rock
     HitEffects(2)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitDirtEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')        // Dirt
     HitEffects(3)=(HitDecal=class'BulletHoleMetal',HitEffect=class'DHBulletHitMetalEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Metal')      // Metal

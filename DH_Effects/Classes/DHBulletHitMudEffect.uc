@@ -109,33 +109,6 @@ defaultproperties
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
 
-    Begin Object Class=BeamEmitter Name=BeamEmitter6
-        BeamDistanceRange=(Min=50.000000,Max=85.000000)
-        DetermineEndPointBy=PTEP_Distance
-        RotatingSheets=1
-        UseColorScale=True
-        FadeOut=True
-        RespawnDeadParticles=False
-        AutoDestroy=True
-        AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
-        ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=44,G=56,R=61,A=255))
-        Opacity=0.85
-        FadeOutStartTime=0.150000
-        MaxParticles=16
-        name="sidespray"
-        StartLocationOffset=(X=-10.000000)
-        UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
-        InitialParticlesPerSecond=200.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
-        LifetimeRange=(Min=0.200000,Max=0.400000)
-        StartVelocityRange=(X=(Min=75.000000,Max=150.000000),Y=(Min=-175.000000,Max=185.000000),Z=(Min=-185.000000,Max=175.000000))
-    End Object
-    Emitters(3)=BeamEmitter'BeamEmitter6'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter19
         FadeOut=True
         RespawnDeadParticles=False
@@ -171,7 +144,7 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(4)=SpriteEmitter'SpriteEmitter19'
+    Emitters(3)=SpriteEmitter'SpriteEmitter19'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter78
         FadeOut=True
@@ -206,7 +179,7 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(5)=SpriteEmitter'SpriteEmitter78'
+    Emitters(4)=SpriteEmitter'SpriteEmitter78'
 
     Autodestroy=true
     bnodelete=false
