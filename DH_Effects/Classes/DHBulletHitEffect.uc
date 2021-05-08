@@ -5,6 +5,9 @@
 
 class DHBulletHitEffect extends ROBulletHitEffect;
 
+//overwritten from ROHitEffect to expand array to 50 from 20
+var()   HitEffectData       HitEffects[50];
+
 simulated function PostNetBeginPlay()
 {
     local ESurfaceTypes ST;
@@ -74,4 +77,9 @@ defaultproperties
     HitEffects(17)=(HitDecal=class'BulletHoleCloth',HitEffect=class'ROBulletHitClothEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')       // Cloth
     HitEffects(18)=(HitDecal=class'BulletHoleMetal',HitEffect=class'ROBulletHitRubberEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')       // Rubber
     HitEffects(19)=(HitDecal=class'BulletHoleDirt',HitEffect=class'ROBulletHitMudEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Mud')        // Poop
+
+    //DH Custom impacts
+    HitEffects(21)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitSandEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Gravel') // Sand EST_Custom01
+    HitEffects(22)=(HitDecal=class'BulletHoleCloth',HitEffect=class'DHBulletHitDirtEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt') //Sand Bags EST_Custom02
+
 }
