@@ -176,6 +176,86 @@ simulated function SetPlayerFOV(float PlayerFOV)
     }
 }
 
+// Re-implemented to fix a long-standing bug where picking up a weapon while
+// reloading an empty weapon would trigger a latent weapon change upon firing
+// the currently held weapon.
+function GiveTo(Pawn Other, optional Pickup Pickup)
+{
+    local ROWeaponPickup Pick;
+    local int m;
+    local weapon w;
+    local bool bPossiblySwitch, bJustSpawned;
+    local ROWeapon ROW;
+
+    if (Pickup != none)
+    {
+        Pick = ROWeaponPickup(Pickup);
+
+        if (Pick != none)
+        {
+            bBayonetMounted = Pick.bHasBayonetMounted;
+        }
+    }
+
+    Instigator = Other;
+    W = Weapon(Instigator.FindInventoryType(Class));
+
+    if (W == none || W.Class != Class)
+    {
+        bJustSpawned = true;
+
+        super(Inventory).GiveTo(Other);
+
+        bPossiblySwitch = true;
+
+        W = self;
+    }
+    else if (!W.HasAmmo())
+    {
+        bPossiblySwitch = true;
+    }
+
+    if (Pickup == none)
+    {
+        bPossiblySwitch = true;
+    }
+
+    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    {
+        if (FireMode[m] != none)
+        {
+            FireMode[m].Instigator = Instigator;
+
+            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+        }
+    }
+
+    // MODIFICATION:
+    // Do not switch to this weapon if the user cannot switch from their current
+    // weapon!
+    ROW = ROWeapon(Instigator.Inventory);
+
+    if (ROW != none && !ROW.WeaponCanSwitch())
+    {
+        bPossiblySwitch = false;
+    }
+
+    if (Instigator.Weapon != W)
+    {
+        W.ClientWeaponSet(bPossiblySwitch);
+    }
+
+    if (!bJustSpawned)
+    {
+        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        {
+            Ammo[m] = none;
+        }
+
+        Destroy();
+    }
+}
+
 // Modified to remove resetting DefaultFOV to hard coded RO value of 85
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
