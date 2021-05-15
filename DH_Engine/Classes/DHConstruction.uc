@@ -35,6 +35,7 @@ enum EConstructionErrorType
     ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
     ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
     ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
+    ERROR_Exhausted,                // Your team cannot place any more of these this round.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -297,6 +298,33 @@ simulated function PostBeginPlay()
     }
 }
 
+// Called when this construction is spawned by a player
+function OnSpawnedByPlayer()
+{
+    local DHGameReplicationInfo GRI;
+    local int i;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+        {
+            if (GRI.TeamConstructions[i].ConstructionClass == none)
+            {
+                break;
+            }
+
+            if (GRI.TeamConstructions[i].ConstructionClass == Class &&
+                GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
+            {
+                GRI.TeamConstructions[i].Limit -= 1;
+                break;
+            }
+        }
+    }
+}
+
 // Terrain poking is wacky. Here's a few things you should know before using
 // this system. First off, it's incredibly finicky. For starts, if the Radius
 // is too low, it decreases the chance of a PokeTerrain success. Secondly,
@@ -412,6 +440,9 @@ auto simulated state Constructing
         local int i;
         local int OldStageIndex;
         local int SuppliesRefunded;
+        local DHGameReplicationInfo GRI;
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (bCanDieOfStagnation)
         {
@@ -425,6 +456,24 @@ auto simulated state Constructing
                 (NEUTRAL_TEAM_INDEX == TeamIndex || Instigator.GetTeamNum() == TeamIndex))
             {
                 SuppliesRefunded = DHPawn(Instigator).RefundSupplies(GetSupplyCost(GetContext()));
+            }
+
+            if (GRI != none && NEUTRAL_TEAM_INDEX != TeamIndex && Instigator.GetTeamNum() == TeamIndex)
+            {
+                for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+                {
+                    if (GRI.TeamConstructions[i].ConstructionClass == none)
+                    {
+                        break;
+                    }
+
+                    if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
+                        GRI.TeamConstructions[i].ConstructionClass == Class)
+                    {
+                        GRI.TeamConstructions[i].Limit += 1;
+                        break;
+                    }
+                }
             }
 
             if (Owner == none)
@@ -829,6 +878,7 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     local DHPlayerReplicationInfo PRI;
     local DHSquadReplicationInfo SRI;
     local ConstructionError E;
+    local DHGameReplicationInfo GRI;
 
     if (Context.PlayerController == none)
     {
@@ -873,8 +923,9 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
 
     SRI = Context.PlayerController.SquadReplicationInfo;
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(Context.PlayerController.GameReplicationInfo);
 
-    if (PRI == none || SRI == none || !IsPlaceableByPlayer(PRI))
+    if (PRI == none || SRI == none || GRI == none || !IsPlaceableByPlayer(PRI))
     {
         E.Type = ERROR_Fatal;
         return E;
@@ -890,6 +941,12 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
     {
         E.Type = ERROR_InsufficientSupply;
+        return E;
+    }
+
+    if (GRI.GetTeamConstructionLimit(Context.TeamIndex, default.Class) == 0)
+    {
+        E.Type = ERROR_Exhausted;
         return E;
     }
 

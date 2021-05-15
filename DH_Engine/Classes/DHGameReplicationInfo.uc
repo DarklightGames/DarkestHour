@@ -143,6 +143,15 @@ var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
+struct STeamConstruction
+{
+    var class<DHConstruction> ConstructionClass;
+    var byte TeamIndex;
+    var byte Limit;
+};
+
+var array<STeamConstruction> TeamConstructions[16];
+
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
@@ -245,7 +254,8 @@ replication
         DangerZoneBalance,
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
-        SurrenderVotesInProgress;
+        SurrenderVotesInProgress,
+        TeamConstructions;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -315,7 +325,35 @@ simulated function PostBeginPlay()
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
+
+        for (i = 0; i < LI.TeamConstructions.Length; ++i)
+        {
+            TeamConstructions[i].TeamIndex = LI.TeamConstructions[i].TeamIndex;
+            TeamConstructions[i].ConstructionClass = LI.TeamConstructions[i].ConstructionClass;
+            TeamConstructions[i].Limit = LI.TeamConstructions[i].Limit;
+        }
     }
+}
+
+simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(TeamConstructions); ++i)
+    {
+        if (TeamConstructions[i].ConstructionClass == none)
+        {
+            continue;
+        }
+
+        if (TeamConstructions[i].TeamIndex == TeamIndex &&
+            TeamConstructions[i].ConstructionClass == ConstructionClass)
+        {
+            return TeamConstructions[i].Limit;
+        }
+    }
+
+    return -1;
 }
 
 simulated function PostNetBeginPlay()
@@ -1988,10 +2026,8 @@ defaultproperties
     ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
     ConstructionClassNames(18)="DH_Construction.DHConstruction_Watchtower"
     ConstructionClassNames(19)="DH_Construction.DHConstruction_GrenadeCrate"
-    //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
     ConstructionClassNames(20)="DH_Construction.DHConstruction_DragonsTooth"
     ConstructionClassNames(21)="DH_Construction.DHConstruction_AntiTankCrate"
-    //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

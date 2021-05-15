@@ -99,7 +99,13 @@ var() material              LoadingScreenRef;        // Used to stop loading scr
 
 var const bool              bDHDebugMode;            // flag for whether debug commands can be run
 
-
+struct STeamConstruction
+{
+    var() class<DHConstruction> ConstructionClass;
+    var() int TeamIndex;
+    var() int Limit;
+};
+var(DH_Constructions) array<STeamConstruction> TeamConstructions;
 
 singular static function bool DHDebugMode()
 {
