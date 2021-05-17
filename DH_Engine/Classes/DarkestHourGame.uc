@@ -2471,6 +2471,14 @@ state RoundInPlay
             GRI.AxisHelpRequests[i].RequestType = 255;
         }
 
+        // Team constructions
+        for (i = 0; i < DHLevelInfo.TeamConstructions.Length; ++i)
+        {
+            GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
+            GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
+            GRI.TeamConstructions[i].Limit = DHLevelInfo.TeamConstructions[i].Limit;
+        }
+
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
         {
             bDidSendEnemyTeamWeakMessage[i] = 0;

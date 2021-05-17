@@ -325,13 +325,6 @@ simulated function PostBeginPlay()
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
-
-        for (i = 0; i < LI.TeamConstructions.Length; ++i)
-        {
-            TeamConstructions[i].TeamIndex = LI.TeamConstructions[i].TeamIndex;
-            TeamConstructions[i].ConstructionClass = LI.TeamConstructions[i].ConstructionClass;
-            TeamConstructions[i].Limit = LI.TeamConstructions[i].Limit;
-        }
     }
 }
 
