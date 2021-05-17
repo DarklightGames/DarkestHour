@@ -16,7 +16,7 @@ defaultproperties
         RespawnDeadParticles=False
         AutoDestroy=True
         AutomaticInitialSpawning=False
-        //UseRandomSubdivision=True
+        UseRandomSubdivision=True
         ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
         Opacity=1.0
@@ -29,8 +29,8 @@ defaultproperties
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.MudImpact01'
-        //TextureUSubdivisions=4
-        //TextureVSubdivisions=1
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
         LifetimeRange=(Min=0.200000,Max=0.400000)
         StartVelocityRange=(X=(Min=75.000000,Max=150.000000),Y=(Min=-20.000000,Max=25.000000),Z=(Min=-20.000000,Max=25.000000))
     End Object

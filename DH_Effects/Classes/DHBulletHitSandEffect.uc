@@ -21,7 +21,7 @@ defaultproperties
         Opacity=0.75
         FadeOutStartTime=0.150000
         MaxParticles=3
-
+        name="mainimpact"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=15.000000,Max=35.000000))
         InitialParticlesPerSecond=200.000000
@@ -163,7 +163,7 @@ defaultproperties
         FadeOutStartTime=0.200000
         FadeInEndTime=0.100000
         MaxParticles=1
-
+        name="litedust"
         StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=1.000000)
@@ -196,7 +196,7 @@ defaultproperties
         FadeOutStartTime=0.200000
         FadeInEndTime=0.100000
         MaxParticles=1
-
+        name="darkdust"
         StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=1.000000)
@@ -226,9 +226,11 @@ defaultproperties
         Acceleration=(Y=50.0,Z=-1200.000000)
         ColorScale(0)=(Color=(B=40,G=56,R=64,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=129,R=145,A=255))
+        Opacity=0.6
         FadeOutStartTime=0.25
         FadeInEndTime=0.150000
-        MaxParticles=2
+        MaxParticles=4
+        name="grounddust"
         StartLocationOffset=(X=15.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -242,7 +244,7 @@ defaultproperties
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.8,Max=1.0)
-        StartVelocityRange=(X=(Min=125.000000,Max=200.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=50.000000))
+        StartVelocityRange=(X=(Min=75.000000,Max=200.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=50.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)

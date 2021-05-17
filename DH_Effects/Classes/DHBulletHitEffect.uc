@@ -62,7 +62,7 @@ defaultproperties
     HitEffects(2)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitDirtEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt')        // Dirt
     HitEffects(3)=(HitDecal=class'BulletHoleMetal',HitEffect=class'DHBulletHitMetalEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Metal')      // Metal
     HitEffects(4)=(HitDecal=class'BulletHoleWood',HitEffect=class'ROBulletHitWoodEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Wood')        // Wood
-    HitEffects(5)=(HitDecal=class'BulletHoleDirt',HitEffect=class'ROBulletHitGrassEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Grass')      // Plant
+    HitEffects(5)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitGrassEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Grass')      // Plant
     HitEffects(6)=(HitDecal=class'BulletHoleFlesh',HitEffect=class'DHBulletHitFleshEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Mud')        // Flesh (dead animals)
     HitEffects(7)=(HitDecal=class'BulletHoleIce',HitEffect=class'DHBulletHitIceEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Snow')        // Ice
     HitEffects(8)=(HitDecal=class'BulletHoleSnow',HitEffect=class'DHBulletHitSnowEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Snow')        // Snow
