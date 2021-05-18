@@ -155,6 +155,7 @@ defaultproperties
     DeveloperIDs(4)="76561198050059841" // dolas
     DeveloperIDs(5)="76561198066643021" // Patison
     DeveloperIDs(6)="76561198046844470" // Matty
+    DeveloperIDs(7)="76561197991612787" // Razorneck
 
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
