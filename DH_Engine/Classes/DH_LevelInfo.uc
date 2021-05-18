@@ -104,6 +104,7 @@ struct STeamConstruction
     var() class<DHConstruction> ConstructionClass;
     var() int TeamIndex;
     var() int Limit;
+    var() int ReplenishPeriodSeconds;   // How long it takes, in seconds, for the limit to be increased by one
 };
 var(DH_Constructions) array<STeamConstruction> TeamConstructions;
 

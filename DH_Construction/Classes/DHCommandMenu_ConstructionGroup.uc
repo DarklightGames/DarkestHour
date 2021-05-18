@@ -187,6 +187,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_Exhausted:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.ExhaustedText;
+                if (E.OptionalInteger >= 0)
+                {
+                    ORI.InfoText @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
+                }
                 break;
             case ERROR_SquadTooSmall:
                 if (PC != none && PC.SquadReplicationInfo != none)

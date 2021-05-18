@@ -302,11 +302,13 @@ simulated function PostBeginPlay()
 function OnSpawnedByPlayer()
 {
     local DHGameReplicationInfo GRI;
+    local DH_LevelInfo LI;
     local int i;
 
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && LI != none)
     {
         for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
         {
@@ -318,7 +320,9 @@ function OnSpawnedByPlayer()
             if (GRI.TeamConstructions[i].ConstructionClass == Class &&
                 GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
             {
-                GRI.TeamConstructions[i].Limit -= 1;
+                GRI.TeamConstructions[i].Limit = Max(0, GRI.TeamConstructions[i].Limit - 1);
+                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + LI.TeamConstructions[i].ReplenishPeriodSeconds;
+
                 break;
             }
         }
@@ -441,8 +445,10 @@ auto simulated state Constructing
         local int OldStageIndex;
         local int SuppliesRefunded;
         local DHGameReplicationInfo GRI;
+        local DH_LevelInfo LI;
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+        LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
         if (bCanDieOfStagnation)
         {
@@ -458,7 +464,7 @@ auto simulated state Constructing
                 SuppliesRefunded = DHPawn(Instigator).RefundSupplies(GetSupplyCost(GetContext()));
             }
 
-            if (GRI != none && NEUTRAL_TEAM_INDEX != TeamIndex && Instigator.GetTeamNum() == TeamIndex)
+            if (GRI != none && LI != none && NEUTRAL_TEAM_INDEX != TeamIndex && Instigator.GetTeamNum() == TeamIndex)
             {
                 for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
                 {
@@ -470,7 +476,7 @@ auto simulated state Constructing
                     if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
                         GRI.TeamConstructions[i].ConstructionClass == Class)
                     {
-                        GRI.TeamConstructions[i].Limit += 1;
+                        GRI.TeamConstructions[i].Limit = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Limit + 1);
                         break;
                     }
                 }
@@ -938,15 +944,16 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
-    {
-        E.Type = ERROR_InsufficientSupply;
-        return E;
-    }
-
     if (GRI.GetTeamConstructionLimit(Context.TeamIndex, default.Class) == 0)
     {
         E.Type = ERROR_Exhausted;
+        E.OptionalInteger = GRI.GetTeamConstructionNextIncrementTimeSeconds(Context.TeamIndex, default.Class);
+        return E;
+    }
+
+    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
+    {
+        E.Type = ERROR_InsufficientSupply;
         return E;
     }
 

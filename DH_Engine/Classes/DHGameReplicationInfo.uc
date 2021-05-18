@@ -148,6 +148,7 @@ struct STeamConstruction
     var class<DHConstruction> ConstructionClass;
     var byte TeamIndex;
     var byte Limit;
+    var int NextIncrementTimeSeconds;
 };
 
 var array<STeamConstruction> TeamConstructions[16];
@@ -328,7 +329,7 @@ simulated function PostBeginPlay()
     }
 }
 
-simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int i;
 
@@ -342,11 +343,47 @@ simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruct
         if (TeamConstructions[i].TeamIndex == TeamIndex &&
             TeamConstructions[i].ConstructionClass == ConstructionClass)
         {
-            return TeamConstructions[i].Limit;
+            return i;
         }
     }
 
     return -1;
+}
+
+simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+    local DH_LevelInfo LI;
+
+    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (i == -1)
+    {
+       return -1;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none && LI.TeamConstructions[i].ReplenishPeriodSeconds > 0)
+    {
+        return TeamConstructions[i].NextIncrementTimeSeconds;
+    }
+
+    return -1;
+}
+
+simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (i == -1)
+    {
+       return -1;
+    }
+
+    return TeamConstructions[i].Limit;
 }
 
 simulated function PostNetBeginPlay()

@@ -2920,6 +2920,8 @@ state RoundInPlay
             }
         }
 
+        UpdateTeamConstructions();
+
         // If round time is up, decide the winner
         if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
@@ -2930,6 +2932,23 @@ state RoundInPlay
         if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+        }
+    }
+}
+
+function UpdateTeamConstructions()
+{
+    local int i;
+
+    // Check for if we can replenish any team constructions
+    for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
+    {
+        if (GRI.TeamConstructions[i].Limit < DHLevelInfo.TeamConstructions[i].Limit &&
+            DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
+            GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+        {
+            GRI.TeamConstructions[i].Limit += 1;
+            GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
         }
     }
 }
