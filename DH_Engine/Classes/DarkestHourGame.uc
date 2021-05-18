@@ -102,6 +102,9 @@ var()   config float                SurrenderVotesThresholdPercent;         // "
 
 var()   config bool                 bBigBalloony;
 
+// DEBUG
+var     bool                        bDebugConstructions;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -3282,6 +3285,30 @@ exec function DebugDestroyConstructions()
     {
         C.GotoState('Broken');
     }
+}
+
+exec function DebugConstruct()
+{
+    local string StatusText;
+
+    if (Level.NetMode != NM_Standalone &&
+        !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+
+    bDebugConstructions = !bDebugConstructions;
+
+    if (bDebugConstructions)
+    {
+        StatusText = "ENABLED";
+    }
+    else
+    {
+        StatusText = "DISABLED";
+    }
+
+    Level.Game.Broadcast(self, "DEBUG: Instant constructions are" @ StatusText);
 }
 
 // Quick test function to change a role's limit (doesn't support bots)
