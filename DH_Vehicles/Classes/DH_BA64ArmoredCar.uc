@@ -64,7 +64,6 @@ defaultproperties
     RearLeftAngle=202.0
 
     // Movement
-    MaxCriticalSpeed=1400.0 //~80 kph
     WheelSoftness=0.025000
     WheelPenScale=1.200000
     WheelPenOffset=0.010000
@@ -87,6 +86,7 @@ defaultproperties
     TurnDamping=35.000000
     StopThreshold=100.000000
     HandbrakeThresh=200.000000
+    bHasHandbrake=True
     LSDFactor=1.000000
     CenterSpringForce="SpringONSSRV"
 
@@ -94,14 +94,14 @@ defaultproperties
     SteerBoneAxis=AXIS_X
     SteeringScaleFactor=4.0
 
-    bHasHandbrake=True
+    MaxCriticalSpeed=662.0 // 40 kph
     TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=1500,OutVal=2.0),(InVal=3000,OutVal=0.0)))
-    GearRatios(0)=-0.20
-    GearRatios(1)=0.14
-    GearRatios(2)=0.32
-    GearRatios(3)=0.5
-    GearRatios(4)=0.65
-    TransRatio=0.16
+    GearRatios(0)=-0.12
+    GearRatios(1)=0.12
+    GearRatios(2)=0.24
+    GearRatios(3)=0.4
+    GearRatios(4)=0.54
+    TransRatio=0.12
     ChangeUpPoint=2200.000000
     ChangeDownPoint=1000.000000
     EngineBrakeFactor=0.000100
