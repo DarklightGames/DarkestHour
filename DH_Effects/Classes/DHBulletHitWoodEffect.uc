@@ -38,10 +38,8 @@ defaultproperties
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         Acceleration=(X=30.000000,Y=40.000000,Z=-650.000000)
-        ColorScale(0)=(Color=(B=30,G=79,R=71,A=255))
-        ColorScale(1)=(RelativeTime=0.485714,Color=(B=107,G=148,R=123,A=255))
-        ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=79,R=71,A=255))
-        ColorScaleRepeats=2.000000
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=12
         name="bigsplintersup"
         StartLocationShape=PTLS_Sphere
@@ -49,7 +47,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.750000,Max=5.000000))
         StartSpinRange=(X=(Min=0.500000,Max=1.000000))
-        StartSizeRange=(X=(Min=1.000000,Max=3.000000))
+        StartSizeRange=(X=(Min=2.000000,Max=5.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
@@ -141,7 +139,7 @@ defaultproperties
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=1.000000,Max=3.000000)
-        StartVelocityRange=(X=(Min=-100.000000,Max=350.000000),Y=(Min=-50.000000,Max=45.000000),Z=(Min=-45.000000,Max=50.000000))
+        StartVelocityRange=(X=(Min=25.000000,Max=85.000000),Y=(Min=-75.000000,Max=65.000000),Z=(Min=-65.000000,Max=75.000000))
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter12'
 
@@ -155,10 +153,8 @@ defaultproperties
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         Acceleration=(X=30.000000,Y=40.000000,Z=-800.000000)
-        ColorScale(0)=(Color=(B=30,G=79,R=71,A=255))
-        ColorScale(1)=(RelativeTime=0.485714,Color=(B=107,G=148,R=123,A=255))
-        ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=79,R=71,A=255))
-        ColorScaleRepeats=2.000000
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.25
         MaxParticles=12
         name="bigsplintersout"
@@ -167,7 +163,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.750000,Max=3.000000))
         StartSpinRange=(X=(Min=0.500000,Max=1.000000))
-        StartSizeRange=(X=(Min=1.000000,Max=3.000000))
+        StartSizeRange=(X=(Min=1.5,Max=4.0))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
