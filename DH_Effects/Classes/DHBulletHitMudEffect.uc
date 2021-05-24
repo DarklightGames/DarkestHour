@@ -7,12 +7,10 @@ class DHBulletHitMudEffect extends emitter;
 
 defaultproperties
 {
-    Begin Object Class=BeamEmitter Name=BeamEmitter1
-        BeamDistanceRange=(Min=35.000000,Max=45.000000)
-        DetermineEndPointBy=PTEP_Distance
-        RotatingSheets=1
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter11
+        //UseDirectionAs=PTDU_UP
+        FadeOut=true
         UseColorScale=True
-        FadeOut=True
         RespawnDeadParticles=False
         AutoDestroy=True
         AutomaticInitialSpawning=False
@@ -20,21 +18,20 @@ defaultproperties
         ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
         Opacity=1.0
-        FadeOutStartTime=0.150000
-        MaxParticles=3
+        FadeOutStartTime=0.2
+        MaxParticles=2
         name="mainimpact"
-        //StartLocationOffset=(X=-10.000000)
+        StartLocationOffset=(X=12.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=15.000000,Max=35.000000))
-        InitialParticlesPerSecond=200.000000
+        InitialParticlesPerSecond=2000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.MudImpact01'
+        Texture=Texture'DH_FX_Tex.Effects.MudImpacts'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.200000,Max=0.400000)
-        StartVelocityRange=(X=(Min=75.000000,Max=150.000000),Y=(Min=-20.000000,Max=25.000000),Z=(Min=-20.000000,Max=25.000000))
     End Object
-    Emitters(0)=BeamEmitter'BeamEmitter1'
+    Emitters(0)=SpriteEmitter'SpriteEmitter11'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=True

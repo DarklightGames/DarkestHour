@@ -41,7 +41,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=12
-        name="bigsplintersup"
+        name="chipsup"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
@@ -113,33 +113,33 @@ defaultproperties
     Emitters(3)=SpriteEmitter'SpriteEmitter11'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter12
-        UseDirectionAs=PTDU_UpAndNormal
-        ProjectionNormal=(X=1.000000,Y=0.500000)
+        UseDirectionAs=PTDU_UP
+        //EffectAxis=PTEA_NegativeX
         RespawnDeadParticles=False
         SpinParticles=True
-        UniformSize=True
+        UniformSize=False
+        UseColorScale=True
         AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
         Acceleration=(X=30.000000,Y=10.000000,Z=-350.000000)
-        ColorScale(0)=(Color=(B=34,G=68,R=60,A=255))
-        ColorScale(1)=(RelativeTime=0.485714,Color=(B=98,G=157,R=131,A=255))
-        ColorScale(2)=(RelativeTime=1.000000,Color=(B=30,G=68,R=60,A=255))
-        ColorScaleRepeats=2.000000
-        MaxParticles=40
-        name"smallsplinters"
-        StartLocationShape=PTLS_Sphere
-        SphereRadiusRange=(Min=5.000000,Max=10.000000)
+        ColorScale(0)=(Color=(B=81,G=117,R=134,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=81,G=117,R=134,A=255))
+        MaxParticles=25
+        name"splinters"
+        StartLocationShape=PTLS_Box
+        CoordinateSystem=PTCS_Independent
         UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.750000,Max=5.000000))
+        SpinsPerSecondRange=(X=(Min=0.750000,Max=3.000000))
         StartSpinRange=(X=(Min=0.500000,Max=1.000000))
-        StartSizeRange=(X=(Min=0.750000,Max=1.750000))
+        StartSizeRange=(X=(Min=1.000000,Max=1.7500000),Y=(Min=6.000000,Max=10.00000),Z=(Min=6.000000,Max=10.00000))
+        SpinCCWorCW=(X=1.00000,Y=0.500000,Z=0.500000)
+        UseRevolution=true
+        RevolutionsPerSecondRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.500000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.paperchunks'
-        TextureUSubdivisions=4
-        TextureVSubdivisions=4
+        Texture=Texture'Effects_Tex.Vehicles.vehiclesparkhead'
         LifetimeRange=(Min=1.000000,Max=3.000000)
-        StartVelocityRange=(X=(Min=25.000000,Max=85.000000),Y=(Min=-75.000000,Max=65.000000),Z=(Min=-65.000000,Max=75.000000))
+        StartVelocityRange=(X=(Min=25.000000,Max=150.000000),Y=(Min=-75.000000,Max=65.000000),Z=(Min=-65.000000,Max=75.000000))
+        MaxAbsVelocity=(X=10000.000000,Y=10000.000000,Z=10000.000000)
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter12'
 
@@ -157,7 +157,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.25
         MaxParticles=12
-        name="bigsplintersout"
+        name="chipsout"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
