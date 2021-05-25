@@ -978,6 +978,4 @@ defaultproperties
     PatronVoteModifiers(2)=0.25  //Bronze
     PatronVoteModifiers(3)=0.35  //Silver
     PatronVoteModifiers(4)=0.5  //Gold
-
-    bMapVote=true
 }
