@@ -140,40 +140,55 @@ function PlayFireEnd()
 {
     local name Anim;
 
-    if (Weapon != none && Weapon.Mesh != none)
+    if (Weapon == none || Weapon.Mesh == none)
     {
-        if (!IsPlayerHipFiring())
-        {
-            if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
-            {
-                Anim = BipodDeployFireEndAnim;
-            }
-            else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
-            {
-                Anim = FireIronLastAnim;
-            }
-            else if (Weapon.HasAnim(FireIronEndAnim))
-            {
-                Anim = FireIronEndAnim;
-            }
-        }
-        else
-        {
-            if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
-            {
-                Anim = FireLastAnim;
-            }
-        }
+        return;
+    }
 
-        if (Anim == '' && Weapon.HasAnim(FireEndAnim))
+    if (Weapon.GetFireMode(ThisModeNum).bWaitForRelease)
+    {
+        // The weapon is firing in single-fire mode, so do not play this end-fire animation.
+        return;
+    }
+
+    if (!IsPlayerHipFiring())
+    {
+        if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
+        {
+            Anim = BipodDeployFireEndAnim;
+        }
+        else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+        {
+            Anim = FireIronLastAnim;
+        }
+        else if (Weapon.HasAnim(FireIronEndAnim))
+        {
+            Anim = FireIronEndAnim;
+        }
+    }
+    else
+    {
+        if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+        {
+            Anim = FireLastAnim;
+        }
+    }
+
+    if (Anim == '')
+    {
+        if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+        {
+            Anim = FireLastAnim;
+        }
+        else if (Weapon.HasAnim(FireEndAnim))
         {
             Anim = FireEndAnim;
         }
+    }
 
-        if (Anim != '')
-        {
-            Weapon.PlayAnim(Anim, FireEndAnimRate, FireTweenTime);
-        }
+    if (Anim != '')
+    {
+        Weapon.PlayAnim(Anim, FireEndAnimRate, FireTweenTime);
     }
 }
 

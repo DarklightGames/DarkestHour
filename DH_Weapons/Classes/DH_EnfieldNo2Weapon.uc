@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_EnfieldNo2Weapon extends DHRevolverWeapon;
+class DH_EnfieldNo2Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
@@ -45,9 +45,5 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    //trick to make partial reload work properly on this weapon
-    PreReloadAnim="reload_half"
-    SingleReloadAnim="blank2"
-    PostReloadAnim="blank"
-    FullReloadAnim="reload_empty"
+    UnloadedMunitionsPolicy=UMP_Consolidate
 }

@@ -30,7 +30,7 @@ defaultproperties
 
     SelectFireAnim="switch_fire"
     SelectFireIronAnim="Iron_switch_fire"
-    SightUpSelectFireIronAnim="deploy_switch_fire"
+    SelectFireBipodIronAnim="deploy_switch_fire"
     SightUpIronBringUp="Deploy"
     SightUpIronPutDown="undeploy"
     SightUpIronIdleAnim="deploy_idle"

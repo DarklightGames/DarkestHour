@@ -3,14 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SVT40ScopedFire extends DH_SVT40Fire;
+class DH_G41Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    Spread=45.0
-    FireIronAnim="Scope_shoot"
-    ProjectileClass=class'DH_Weapons.DH_SVT40ScopedBullet'
-    FireLastAnim="shoot_last"
-    FireIronLastAnim="Scope_Shoot_Last"
+    MaxAmmo=10
+    InitialAmount=10
+    IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
 }
-

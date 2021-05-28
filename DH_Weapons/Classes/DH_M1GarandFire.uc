@@ -111,6 +111,8 @@ defaultproperties
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
+    ShellHipOffset=(X=0,Y=-3,Z=0)
     FireLastAnim="shoot_last"
     FireIronLastAnim="Iron_Shoot_Last"
+    MuzzleOffset=(X=10)
 }
