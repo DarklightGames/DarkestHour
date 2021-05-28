@@ -20,13 +20,13 @@ struct PassengerPawn
 
 struct VehicleAttachment
 {
-    var class<Actor> AttachClass;
-    var Actor        Actor;
-    var StaticMesh   StaticMesh;
-    var name         AttachBone;
-    var vector       Offset;
-    var material     Skin;
-    var bool         bHasCollision;
+    var class<Actor>    AttachClass;
+    var Actor           Actor;
+    var StaticMesh      StaticMesh;
+    var name            AttachBone;
+    var vector          Offset;
+    var array<Material> Skins;
+    var bool            bHasCollision;
 };
 
 struct RandomAttachOption
@@ -2610,7 +2610,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
 // Also removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
 static function StaticPrecache(LevelInfo L)
 {
-    local int i;
+    local int i, j;
 
     for (i = 0; i < default.PassengerWeapons.Length; ++i)
     {
@@ -2674,9 +2674,12 @@ static function StaticPrecache(LevelInfo L)
 
     for (i = 0; i < default.VehicleAttachments.Length; ++i)
     {
-        if (default.VehicleAttachments[i].Skin != none)
+        for (j = 0; j < default.VehicleAttachments[i].Skins.Length; ++j)
         {
-            L.AddPrecacheMaterial(default.VehicleAttachments[i].Skin);
+            if (default.VehicleAttachments[i].Skins[j] != none)
+            {
+                L.AddPrecacheMaterial(default.VehicleAttachments[i].Skins[j]);
+        }
         }
 
         if (default.VehicleAttachments[i].StaticMesh != none)
@@ -2706,7 +2709,7 @@ static function StaticPrecache(LevelInfo L)
 // Also to add extra material properties & remove obsolete stuff
 simulated function UpdatePrecacheMaterials()
 {
-    local int i;
+    local int i, j;
 
     super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
 
@@ -2752,9 +2755,12 @@ simulated function UpdatePrecacheMaterials()
 
     for (i = 0; i < VehicleAttachments.Length; ++i)
     {
-        if (VehicleAttachments[i].Skin != none)
+        for (j = 0; j < VehicleAttachments[i].Skins.Length; ++j)
         {
-            Level.AddPrecacheMaterial(VehicleAttachments[i].Skin);
+            if (VehicleAttachments[i].Skins[j] != none)
+            {
+                Level.AddPrecacheMaterial(VehicleAttachments[i].Skins[j]);
+            }
         }
     }
 }
@@ -2796,7 +2802,7 @@ simulated function SpawnVehicleAttachments()
     local VehicleAttachment VA;
     local class<Actor>      AttachClass;
     local Actor             A;
-    local int               RandomNumber, CumulativeChance, i;
+    local int               RandomNumber, CumulativeChance, i, j;
 
     // Treads & movement sound attachments
     if (Level.NetMode != NM_DedicatedServer)
@@ -2906,9 +2912,12 @@ simulated function SpawnVehicleAttachments()
             // Apply any specified options for static mesh, attachment bone, offset, or collision
             if (A != none)
             {
-                if (VA.Skin != none)
+                for (j = 0; j < VA.Skins.Length; ++j)
                 {
-                    A.Skins[0] = VA.Skin;
+                    if (VA.Skins[j] != none)
+                    {
+                        A.Skins[j] = VA.Skins[j];
+                    }
                 }
 
                 if (VA.bHasCollision)

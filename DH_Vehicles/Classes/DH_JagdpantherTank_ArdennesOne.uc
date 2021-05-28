@@ -9,6 +9,6 @@ defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.jagdpanther_body_ardennes'
     CannonSkins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.jagdpanther_body_ardennes'
-    RandomAttachment=(Skin=Texture'DH_VehiclesGE_tex3.ext_vehicles.Jagdpanther_armor_ardennes')
+    RandomAttachment=(Skins=(Texture'DH_VehiclesGE_tex3.ext_vehicles.Jagdpanther_armor_ardennes'))
     DestroyedMeshSkins(0)=none // remove inherited skin, as the inherited DestroyedVehicleMesh is correct for this camo variant & don't want it changed
 }

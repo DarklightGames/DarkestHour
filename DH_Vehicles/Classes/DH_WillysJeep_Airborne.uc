@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_WillysJeepFactory extends DH_USVehicles;
+class DH_WillysJeep_Airborne extends DH_WillysJeep;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_WillysJeep'
-    Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body'
+    // Skins
+    Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_Airborne'
+    DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.body.Willys_Body_Airborne_Destroyed'
 }
+
