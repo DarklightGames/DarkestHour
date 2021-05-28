@@ -65,7 +65,6 @@ defaultproperties
     MagPartialReloadAnims(0)="reload_half_A"
 
     bHasBayonet=true
-
     BayonetBoneName="Muzzle_Slave"
 
     BayoAttachAnim="Bayonet_on"
@@ -91,4 +90,3 @@ defaultproperties
 
     UnloadedMunitionsPolicy=UMP_Consolidate
 }
-

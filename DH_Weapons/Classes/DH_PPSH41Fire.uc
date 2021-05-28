@@ -31,6 +31,6 @@ defaultproperties
 
     FireIronLastAnim="iron_shoot_end_empty"
     FireIronEndAnim="Iron_Shoot_End"
-	FireLastAnim="shoot_end_empty"
+    FireLastAnim="shoot_end_empty"
     FireEndAnim="shoot_end"
 }
