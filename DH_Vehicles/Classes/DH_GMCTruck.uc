@@ -128,7 +128,7 @@ defaultproperties
 
     ShadowZOffset=30.0
     SteerBoneName="steering_wheel"
-    SteerBoneAxis=AXIS_Y
+    SteerBoneAxis=AXIS_Z
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
