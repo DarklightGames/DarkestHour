@@ -61,12 +61,12 @@ var     int                 WidgetsPanelX;
 var     int                 WidgetsPanelY;
 var     int                 WidgetsPanelEntryHeight;
 
-
 var     float               SmallSizeTickLength;
 var     float               MiddleSizeTickLength;
 var     float               LargeSizeTickLength;
 var     float               LabelOffset;
 var     float               IndicatorMiddleTickOffset;
+var     int                 TargetTickLength;
 
 var     bool                bIsTableInitialized;
 var     DHDataTable         RenderTable;
@@ -221,6 +221,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
+    local array<int>   TickBuckets;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     IndicatorTopLeftCornerY = C.SizeY * 0.93;
@@ -237,6 +238,9 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     C.CurX = IndicatorTopLeftCornerX;
     C.CurY = IndicatorTopLeftCornerY;
     C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
+    
+    // Prepare buckets for ticks so ticks don't get drawn on top of each other
+    TickBuckets.Insert(0, VisibleYawSegmentsNumber);
 
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)
@@ -258,11 +262,13 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
-            C.CurY = IndicatorTopLeftCornerY + 5.0;
+            C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
             C.CurX = IndicatorTopLeftCornerX;
+            TickBuckets[Index] = TickBuckets[Index] + 1;
 
             // Draw a target tick on the yaw indicator
-            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, 8.0);
+
+            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, default.TargetTickLength);
         }
         else
         {
@@ -271,7 +277,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
             {
                 // Left side
                 C.SetPos(IndicatorTopLeftCornerX - 10, IndicatorTopLeftCornerY);
-                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, 8);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, default.TargetTickLength);
 
                 ++TargetTickCountLeft;
             }
@@ -279,7 +285,7 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
             {
                 // Right side
                 C.SetPos(IndicatorTopLeftCornerX + default.YawIndicatorLength + 2, IndicatorTopLeftCornerY);
-                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, 8);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, default.TargetTickLength);
 
                 ++TargetTickCountRight;
             }
@@ -499,9 +505,10 @@ defaultproperties
 
     LargeSizeTickLength = 50.0
     MiddleSizeTickLength = 30.0
-    SmallSizeTickLength = 20.0
+    SmallSizeTickLength = 10.0
     LabelOffset = 10.0
-    IndicatorMiddleTickOffset = 15.0
+    IndicatorMiddleTickOffset = 30.0
     NumberOfYawSegments = 6;
     NumberOfPitchSegments = 6;
+    TargetTickLength=3
 }

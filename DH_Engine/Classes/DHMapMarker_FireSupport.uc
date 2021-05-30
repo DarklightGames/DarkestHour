@@ -35,5 +35,6 @@ defaultproperties
     OverwritingRule=UNIQUE
     Scope=TEAM
     LifetimeSeconds=-1            // artillery requests never expire
-    RequiredSquadMembers=3
+    // RequiredSquadMembers=3
+    RequiredSquadMembers=1 // to do: set back to 3
 }
