@@ -9,5 +9,5 @@ if %ERRORLEVEL% GEQ 1 (
 )
 
 start ucc server DH-WIP_Makhnovo_Advance.rom?game=DH_Engine.DarkestHourGame?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator -log=DHServerLog_%RANDOM%.log -mod=DarkestHourDev -ini=DarkestHourDev.ini
-start RedOrchestraLargeAddressAware.exe 0.0.0.0:7757 -mod=DarkestHourDev -log=DHLog_%RANDOM%.log
+start RedOrchestraLargeAddressAware.exe 172.21.96:7757 -mod=DarkestHourDev -log=DHLog_%RANDOM%.log
 start RedOrchestraLargeAddressAware1.exe 172.21.96.1:7757 -mod=DarkestHourDev -log=DHLog_%RANDOM%.log
