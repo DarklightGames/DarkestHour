@@ -98,7 +98,6 @@ function Destroyed()
 
     // new marking system - remove the hit marker after artillery is finished
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    Log("trying to invalidate the barrage marker");
     if (GRI == none || !GRI.InvalidateBarrageMarker(TeamIndex, self.OngoingBarrageMarkerClass))
     {
         Warn("Could not invalidate a target marker");
