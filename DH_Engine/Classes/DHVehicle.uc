@@ -174,6 +174,14 @@ var     int                     VehiclePoolIndex;     // the vehicle pool index 
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
 
+// Absolute exit positions
+struct SExitPosition
+{
+    var vector Location;
+    var rotator Rotation;
+};
+var     array<SExitPosition> AbsoluteExitPositions;
+
 // Debugging
 var     bool        bDebuggingText;
 
@@ -1722,6 +1730,16 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.DrivingHeight;
     ZOffset.Z = Driver.default.CollisionHeight * 0.5;
 
+    for (i = 0; i < AbsoluteExitPositions.Length; ++i)
+    {
+        ExitPosition = Location;
+
+        if (Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
+    }
+
     // Check through exit positions to see if player can be moved there, using the 1st valid one we find
     for (i = 0; i < ExitPositions.Length; ++i)
     {
@@ -1736,6 +1754,11 @@ function bool PlaceExitingDriver()
     }
 
     return false;
+}
+
+function array<vector> GetExitPositions()
+{
+    return self.ExitPositions;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
