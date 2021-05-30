@@ -20,7 +20,16 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
 // Only allow artillery roles and the SL who made the mark to see artillery requests.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return true; // off-map artillery markers are personal anyway, so always enable seeing them
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PC != none && PC.IsSL(); // off-map artillery markers are personal
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
