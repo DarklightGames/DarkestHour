@@ -833,8 +833,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         // "The squad leader has left the squad."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
-        GRI.InvalidateArtilleryRequestsForSquad(TeamIndex, SquadIndex);
-
         ClearSquadMergeRequests(TeamIndex, SquadIndex);
 
         Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
