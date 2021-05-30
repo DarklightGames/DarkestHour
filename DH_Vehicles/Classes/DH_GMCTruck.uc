@@ -98,9 +98,9 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0
-    DamagedEffectScale=0.8
-    DamagedEffectOffset=(X=135.0,Y=0.0,Z=65.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
+    DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
+    DamagedEffectScale=1.0
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'    // TODO: replace the asset
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -119,14 +119,13 @@ defaultproperties
     IdleSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
     RumbleSoundBone="body"
 
     // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-39.98,Y=-69.71,Z=46.37),ExhaustRotation=(Pitch=-4096,Yaw=-16384))
 
-    ShadowZOffset=30.0
+    ShadowZOffset=40.0
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
 
@@ -144,7 +143,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel.F.R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.F.R"
         SupportBoneAxis=AXIS_X
     End Object
@@ -154,7 +153,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel.F.L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.F.L"
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
@@ -165,7 +164,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="wheel.M.R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.M.R"
         SupportBoneAxis=AXIS_X
     End Object
@@ -175,7 +174,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="wheel.M.L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.M.L"
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
@@ -187,7 +186,7 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="wheel.B.R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.B.R"
         SupportBoneAxis=AXIS_X
     End Object
@@ -198,7 +197,7 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="wheel.B.L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=28.75
+        WheelRadius=28
         SupportBoneName="susp.B.L"
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
