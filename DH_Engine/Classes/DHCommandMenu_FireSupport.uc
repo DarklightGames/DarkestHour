@@ -135,12 +135,75 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
     }
 }
 
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
+{
+    local class<DHMapMarker_FireSupport>  FireSupportRequestClass;
+    local DHSquadReplicationInfo          SRI;
+    local DHPlayer                        PC;
+    local int                             SquadMembersCount;
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
+    {
+        return;
+    }
+
+    FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
+
+    PC = GetPlayerController();
+
+    if (FireSupportRequestClass != none)
+    {
+        PC = GetPlayerController();
+        SRI = PC.SquadReplicationInfo;
+        SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+    }
+
+    ORI.OptionName = Options[OptionIndex].ActionText;
+    ORI.DescriptionText = Options[OptionIndex].DescriptionText;
+    if(IsOptionDisabled(OptionIndex))
+    {
+        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoText = SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+    }
+    else
+    {
+        ORI.InfoColor = class'UColor'.default.White;
+        ORI.InfoText = Options[OptionIndex].SubjectText;
+    }
+}
+
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local class<DHMapMarker_FireSupport>  FireSupportRequestClass;
+    local DHSquadReplicationInfo          SRI;
+    local DHPlayer                        PC;
+    local int                             SquadMembersCount;
+
+    if (Options[OptionIndex].OptionalObject == none)
+    {
+        return true;
+    }
+
+    FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
+
+    PC = GetPlayerController();
+
+    if (FireSupportRequestClass != none)
+    {
+        PC = GetPlayerController();
+        SRI = PC.SquadReplicationInfo;
+        SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+        return SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     // TODO: Icons
-    Options(0)=(ActionText="Artillery Barrage",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(1)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(2)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(0)=(ActionText="Artillery Barrage",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_BarrageRequest')
+    Options(1)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
+    Options(2)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
 
     bShouldTick=true
 }
