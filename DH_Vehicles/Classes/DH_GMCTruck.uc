@@ -100,7 +100,7 @@ defaultproperties
     DirectHEImpactDamageMult=9.0
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'    // TODO: replace the asset
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -209,7 +209,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.0)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.3)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

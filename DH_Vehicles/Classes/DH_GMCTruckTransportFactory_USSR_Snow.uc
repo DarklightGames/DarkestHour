@@ -3,13 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GMCTruckSupport_USSR_Snow extends DH_GMCTruckSupport;
+class DH_GMCTruckTransportFactory_USSR_Snow extends DH_GMCTruckTransportFactory;
 
 defaultproperties
 {
+    VehicleClass=class'DH_Vehicles.DH_GMCTruckTransport_USSR_Snow'
     Skins(0)=Texture'DH_GMC_tex.GMC.GMC_Generic_Snow'
     Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas_Snow'
-    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_Generic_Snow_Destroyed'
-    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC.GMC_Canvas_Destroyed'
 }
 
