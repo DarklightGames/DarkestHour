@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GMCTruckTransport_USSR extends DH_GMCTruckTransport;
+class DH_GMCTruckSupport_LL extends DH_GMCTruckSupport;
 
 defaultproperties
 {
@@ -12,3 +12,4 @@ defaultproperties
     DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_Generic_Destroyed'
     DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC.GMC_Canvas_Destroyed'
 }
+
