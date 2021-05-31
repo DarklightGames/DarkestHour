@@ -30,15 +30,23 @@ defaultproperties
     ExitPositions(10)=(X=-271.0,Y=23.0,Z=25.0)  // back right rider
     ExitPositions(11)=(X=-271.0,Y=23.0,Z=25.0)  // back right rider
     VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.55
+    VehicleHudOccupantsY(2)=0.5125
     VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsY(3)=0.65
+    VehicleHudOccupantsY(3)=0.584375
     VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsY(4)=0.75
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsY(5)=0.55
-    VehicleHudOccupantsX(6)=0.55
-    VehicleHudOccupantsY(6)=0.65
+    VehicleHudOccupantsY(4)=0.65625
+    VehicleHudOccupantsX(5)=0.45
+    VehicleHudOccupantsY(5)=0.728125
+    VehicleHudOccupantsX(6)=0.45
+    VehicleHudOccupantsY(6)=0.8
     VehicleHudOccupantsX(7)=0.55
-    VehicleHudOccupantsY(7)=0.75
+    VehicleHudOccupantsY(7)=0.5125
+    VehicleHudOccupantsX(8)=0.55
+    VehicleHudOccupantsY(8)=0.584375
+    VehicleHudOccupantsX(9)=0.55
+    VehicleHudOccupantsY(9)=0.65625
+    VehicleHudOccupantsX(10)=0.55
+    VehicleHudOccupantsY(10)=0.728125
+    VehicleHudOccupantsX(11)=0.55
+    VehicleHudOccupantsY(11)=0.8
 }
