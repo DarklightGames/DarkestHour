@@ -5,25 +5,6 @@
 
 class DH_Flak38Cannon extends DHVehicleAutoCannon;
 
-var     name        SightBone;
-var     name        TraverseWheelBone;
-var     name        ElevationWheelBone;
-
-// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
-simulated function UpdateSightAndWheelRotation()
-{
-    local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
-
-    SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation);
-
-    ElevationWheelRotation.Pitch = -CurrentAim.Pitch * 32;
-    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation);
-
-    TraverseWheelRotation.Yaw = -CurrentAim.Yaw * 32;
-    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
-}
-
 defaultproperties
 {
     // Cannon mesh
@@ -66,14 +47,15 @@ defaultproperties
     ShellCaseEmitterClass=class'DH_Effects.DH_20mmShellCaseEmitter'
     ShellCaseEjectorBone="Gun"
 
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="Elevation_wheel",Scale=-32.0)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="Sight_arm",Scale=-1.0)
+
     // Animations
     BeginningIdleAnim="optic_idle"
     ShootLoweredAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"
     ShootRaisedAnim="shoot_lookover"
-    SightBone="Sight_arm"
-    TraverseWheelBone="Traverse_wheel"
-    ElevationWheelBone="Elevation_wheel"
 
     // Penetration (no defense against any AT weaponry)
     FrontArmorFactor=0.0

@@ -22,6 +22,8 @@ var     bool        bIsMasterFactory;         // flags that this factory is acti
 var     array<int>  SelectedFactoryIndexes;   // array of index numbers of the randomly selected active factories
 var     array<DHATGunFactory> GunFactories;   // saved actor references to all gun factories in our group
 
+var()   name        ExitPositionHintTag;      // allow the leveler to define a specific exit position (for guns with tight positioning)
+
 // Modified to handle the randomizer option
 // If enabled, we don't activate any factories directly, but just make one factory act as master controller for the group & that handles randomized activation
 function Reset()
@@ -184,6 +186,20 @@ function ActivatedBySpawn(int Team)
     else
     {
         super.ActivatedBySpawn(Team);
+    }
+}
+
+function VehicleSpawned(Vehicle V)
+{
+    local DHATGun Gun;
+
+    super.VehicleSpawned(V);
+
+    Gun = DHATGun(V);
+
+    if (Gun != none)
+    {
+        Gun.PrependFactoryExitPositions();
     }
 }
 

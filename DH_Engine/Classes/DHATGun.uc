@@ -602,6 +602,26 @@ simulated event NotifySelected(Pawn User)
     }
 }
 
+// Function that gathers locations to use for the exit positions based on
+// factory hints (especially useful if the gun is in a tight position!)
+function PrependFactoryExitPositions()
+{
+    local DHLocationHint LocationHint;
+    local DHATGunFactory Factory;
+
+    Factory = DHATGunFactory(ParentFactory);
+
+    if (Factory != none && Factory.ExitPositionHintTag != '')
+    {
+        foreach AllActors(class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
+        {
+            AbsoluteExitPositions.Insert(0, 1);
+            AbsoluteExitPositions[0].Location = LocationHint.Location;
+            AbsoluteExitPositions[0].Rotation = LocationHint.Rotation;
+        }
+    }
+}
+
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
 function Fire(optional float F);
 function ServerStartEngine();
