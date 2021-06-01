@@ -151,6 +151,7 @@ defaultproperties
         HeaderColumnPerc(4)=0.25 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
+
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
         HeaderColumnPerc(1)=0.3 // Votes
@@ -168,6 +169,7 @@ defaultproperties
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
+
     Begin Object Class=moComboBox Name=GameTypeCombo
         CaptionWidth=0.35
         Caption="Filter Game Type:"
@@ -176,6 +178,7 @@ defaultproperties
         bVisible=false
     End Object
     co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
+
     i_MapListBackground=none
     Begin Object Class=GUIImage Name=MapCountListBackground
         Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
@@ -183,18 +186,19 @@ defaultproperties
         OnDraw=DHMapVotingPage.AlignBK
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
-	Begin Object class=moEditBox Name=FilterEditbox
-		WinWidth=0.96
-		WinHeight=0.106609
-		WinLeft=0.02
-		WinTop=0.90
-		Caption="Filter:"
-		CaptionWidth=0.08
-		OnKeyEvent=InternalOnKeyEvent
-		// TabOrder=0
+
+    Begin Object class=moEditBox Name=FilterEditbox
+        WinWidth=0.96
+        WinHeight=0.106609
+        WinLeft=0.02
+        WinTop=0.90
+        Caption="Filter:"
+        CaptionWidth=0.08
+        OnKeyEvent=InternalOnKeyEvent
+        // TabOrder=0
         bScaleToParent=true
         bBoundToParent=true
-	End Object
-	ed_Filter=FilterEditbox
+    End Object
+    ed_Filter=FilterEditbox
     f_Chat=none
 }
