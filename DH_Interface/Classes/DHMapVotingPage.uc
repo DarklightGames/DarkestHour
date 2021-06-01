@@ -129,7 +129,7 @@ defaultproperties
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
-        WinHeight=0.293104
+        WinHeight=0.59
         WinLeft=0.02
         WinTop=0.371020
         bVisibleWhenEmpty=true
@@ -176,4 +176,5 @@ defaultproperties
         OnDraw=DHMapVotingPage.AlignBK
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
+    f_Chat=none
 }
