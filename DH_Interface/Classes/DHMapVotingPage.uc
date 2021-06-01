@@ -9,6 +9,8 @@ var localized string                            lmsgMapOutOfBounds;
 
 var(DHMapVotingInfo) config array<string>       MapVoteInfo;
 
+var automated moEditBox ed_Filter;
+
 function InternalOnOpen()
 {
     local int i, m;
@@ -121,6 +123,11 @@ function SendVote(GUIComponent Sender)
     }
 }
 
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    return true;
+}
+
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
@@ -129,7 +136,7 @@ defaultproperties
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
-        WinHeight=0.59
+        WinHeight=0.50
         WinLeft=0.02
         WinTop=0.371020
         bVisibleWhenEmpty=true
@@ -176,5 +183,18 @@ defaultproperties
         OnDraw=DHMapVotingPage.AlignBK
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
+	Begin Object class=moEditBox Name=FilterEditbox
+		WinWidth=0.96
+		WinHeight=0.106609
+		WinLeft=0.02
+		WinTop=0.90
+		Caption="Filter:"
+		CaptionWidth=0.08
+		OnKeyEvent=InternalOnKeyEvent
+		// TabOrder=0
+        bScaleToParent=true
+        bBoundToParent=true
+	End Object
+	ed_Filter=FilterEditbox
     f_Chat=none
 }
