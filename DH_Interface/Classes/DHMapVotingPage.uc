@@ -125,7 +125,12 @@ function SendVote(GUIComponent Sender)
 
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
-    return true;
+    // Update map list on "key down" event
+    if (State == 3)
+    {
+        DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern(ed_Filter.GetText());
+        return true;
+    }
 }
 
 defaultproperties
