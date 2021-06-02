@@ -10,6 +10,7 @@ var localized string                            lmsgMapOutOfBounds;
 var(DHMapVotingInfo) config array<string>       MapVoteInfo;
 
 var automated moEditBox ed_Filter;
+var automated GUIButton b_FilterClear;
 
 function InternalOnOpen()
 {
@@ -133,6 +134,21 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
     }
 }
 
+function bool InternalOnClick(GUIComponent Sender)
+{
+    if (Sender == b_FilterClear)
+    {
+        OnFilterClear();
+        return true;
+    }
+}
+
+delegate OnFilterClear()
+{
+    ed_Filter.SetText("");
+    DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern("");
+}
+
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
@@ -193,17 +209,33 @@ defaultproperties
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
 
     Begin Object class=moEditBox Name=FilterEditbox
-        WinWidth=0.96
-        WinHeight=0.106609
+        WinWidth=0.86
+        WinHeight=0.12
         WinLeft=0.02
         WinTop=0.90
-        Caption="Filter:"
-        CaptionWidth=0.08
+        Caption="Filter"
+        CaptionWidth=0.074
         OnKeyEvent=InternalOnKeyEvent
         // TabOrder=0
         bScaleToParent=true
         bBoundToParent=true
     End Object
     ed_Filter=FilterEditbox
+
+    Begin Object Class=GUIButton Name=FilterClearButton
+        WinWidth=0.08
+        WinHeight=0.04
+        WinLeft=0.90
+        WinTop=0.894
+        Caption="Clear"
+        FontScale=FNS_Small
+        OnClick=InternalOnClick
+        // TabOrder=1
+        bStandardized=true
+        bBoundToParent=true
+        bScaleToParent=true
+    End Object
+    b_FilterClear=FilterClearButton
+
     f_Chat=none
 }
