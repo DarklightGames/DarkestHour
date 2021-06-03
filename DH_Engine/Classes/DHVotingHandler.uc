@@ -7,7 +7,8 @@ class DHVotingHandler extends xVotingHandler;
 
 var class<VotingReplicationInfo> VotingReplicationInfoClass;
 
-var private float       PatronVoteModifiers[5];
+var private config float PatronVoteModifiers[5];
+var         config float MaxVotePower;
 
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;
@@ -766,7 +767,6 @@ function TallyVotes(bool bForceMapSwitch)
 // DH function which will calculate a specifici player's power
 function float GetPlayerVotePower(PlayerController Player)
 {
-    const PLAYER_VOTE_POWER_MAX = 15;
 
     local int VotePower, NumPlayers;
     local DHPlayerReplicationInfo PRI;
@@ -782,7 +782,7 @@ function float GetPlayerVotePower(PlayerController Player)
 
     NumPlayers = G.GetNumPlayers();
     VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
-    VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX); // Add the clamped vote power from Score
+    VotePower += Clamp(PRI.Score / 1000, 0, MaxVotePower); // Add the clamped vote power from Score
 
     // Everyone gets at least one vote
     if (VotePower < 1)
@@ -973,9 +973,11 @@ defaultproperties
     lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting another map!"
     SwapAndRestartText="DH-[Swap Teams and Restart]"
 
+    MaxVotePower=10
+
     PatronVoteModifiers(0)=0.0  //Not Patron
     PatronVoteModifiers(1)=0.15 //Lead
-    PatronVoteModifiers(2)=0.25  //Bronze
-    PatronVoteModifiers(3)=0.35  //Silver
+    PatronVoteModifiers(2)=0.25 //Bronze
+    PatronVoteModifiers(3)=0.35 //Silver
     PatronVoteModifiers(4)=0.5  //Gold
 }
