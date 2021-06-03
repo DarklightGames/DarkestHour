@@ -387,7 +387,12 @@ simulated event RenderOverlays(Canvas Canvas)
             }
 
             bDrawingFirstPerson = true;
-            Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+
+            if (Playa != none)
+            {
+                Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+            }
+
             bDrawingFirstPerson = false;
         }
         else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed)
@@ -436,7 +441,12 @@ simulated event RenderOverlays(Canvas Canvas)
         // TODO: This messes up the lighting & texture environment map shader when using ironsights
         // Maybe use a texrotator to simulate the texture environment map, or just find a way to fix the problems
         bDrawingFirstPerson = true;
-        Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+
+        if (Playa != none)
+        {
+            Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+        }
+
         bDrawingFirstPerson = false;
     }
     else
