@@ -1014,7 +1014,7 @@ function ServerSaveArtilleryTarget(vector Location)
 }
 
 // This function checks if the player can call artillery on the selected target.
-function bool IsArtilleryTargetValid(vector ArtilleryLocation)
+simulated function bool IsArtilleryTargetValid(vector ArtilleryLocation)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
@@ -1034,11 +1034,7 @@ function bool IsArtilleryTargetValid(vector ArtilleryLocation)
         VT.Destroy();
     }
 
-    if (bValidTarget)
-    {
-        return true;
-    }
-    return false;
+    return bValidTarget;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.

@@ -84,6 +84,7 @@ function Tick()
     local DHPlayer PC;
     local vector HitLocation, HitNormal;
     local Color C;
+    local bool isValid;
 
     C.R = 0;
     C.G = 0;
@@ -98,7 +99,9 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-    if (PC.IsArtilleryTargetValid(HitLocation))
+    isValid = PC.IsArtilleryTargetValid(HitLocation);
+    Log("target isValid: " @ isValid);
+    if (isValid)
     {
         C.G = 255;
         PC.SpottingMarker.SetColor(C);
