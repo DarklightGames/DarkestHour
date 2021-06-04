@@ -141,6 +141,20 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
+    // Handle single-player voting
+    if (Level.NetMode == NM_Standalone &&
+        class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
+        VotingHandlerClass != None &&
+        VotingHandlerClass.Static.IsEnabled())
+    {
+        VotingHandler = Spawn(VotingHandlerClass);
+
+        if (VotingHandler == none)
+        {
+            log("WARNING: Failed to spawn VotingHandler");
+        }
+    }
+
     // Force the server to update the MaxClientRate, setting it in config file
     // doesn't work as intended (something bugged in native)
     // This command will unlock a server so it can allow clients to have more

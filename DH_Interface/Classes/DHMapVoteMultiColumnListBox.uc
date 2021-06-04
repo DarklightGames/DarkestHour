@@ -16,6 +16,8 @@ function LoadList(VotingReplicationInfo LoadVRI)
         ListArray[i] = new class'DHMapVoteMultiColumnList';
         ListArray[i].LoadList(LoadVRI, i);
 
+        DHMapVoteMultiColumnList(ListArray[i]).GameTypeIndex = i;
+
         if (LoadVRI.GameConfig[i].GameClass ~= PlayerOwner().GameReplicationInfo.GameClass)
         {
             g = i;
