@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHBoltSniperWeapon extends DHSniperWeapon
@@ -422,6 +422,6 @@ defaultproperties
     PreReloadAnim="Single_Open"
     SingleReloadAnim="Single_insert"
     PostReloadAnim="Single_Close"
-    MagEmptyReloadAnim=none
-    MagPartialReloadAnim=none
+    MagEmptyReloadAnims(0)=none
+    MagPartialReloadAnims(0)=none
 }

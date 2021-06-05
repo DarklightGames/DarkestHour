@@ -1,34 +1,32 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M1GarandAttachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=InterfaceArt2_tex.utx
-
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Garand_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    MuzzleBoneName="Muzzle"
-    ShellEjectionBoneName="ejector"
     bRapidFire=false
 
-    WA_Idle="idle_garand"
-    WA_Fire="idle_garand"
-    WA_Reload="idle_garand"
-    WA_ProneReload="idle_garand"
-    WA_BayonetIdle="idle_garand_bayo"
-    WA_BayonetFire="idle_garand_bayo"
-    WA_BayonetReload="idle_garand_bayo"
-    WA_BayonetProneReload="idle_garand_bayo"
-    WA_BayonetAttach="idle_garand"
-    WA_BayonetDetach="idle_garand_bayo"
-    WA_BayonetAttachProne="idle_garand"
-    WA_BayonetDetachProne="idle_garand_bayo"
+    WA_Idle="idle_kar98"
+    WA_Fire="fire"
+    WA_Reload="reload_STRbolt"
+    WA_ProneReload="prone_reload_STRbolt"
+    WA_BayonetIdle="idle_kar98_bayo"
+    WA_BayonetFire="fire_bayo"
+    WA_BayonetReload="reload_STRbolt_bayo"
+    WA_BayonetProneReload="prone_reload_STRbolt_bayo"
+    WA_BayonetAttach="stand_bayattach_kar98"
+    WA_BayonetDetach="stand_bayremove_kar98"
+    WA_BayonetAttachProne="prone_bayattach_kar98"
+    WA_BayonetDetachProne="prone_bayremove_kar98"
+    WA_ReloadEmpty="reload_garand"
+    WA_ProneReloadEmpty="prone_reload_garand"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -96,8 +94,9 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
     PA_ReloadAnim="stand_reload_kar"
-    PA_ReloadEmptyAnim="stand_reload_kar"
-    PA_ProneReloadEmptyAnim="prone_reload_kar"
+    PA_ReloadEmptyAnim="stand_reload_garand"
+    PA_ProneReloadAnim="prone_reload_kar"
+    PA_ProneReloadEmptyAnim="prone_reload_garand"
     PA_ProneIdleRestAnim="prone_idle_kar"
     PA_BayonetAttachAnim="stand_bayattach_kar"
     PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
@@ -150,3 +149,4 @@ defaultproperties
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
 }
+

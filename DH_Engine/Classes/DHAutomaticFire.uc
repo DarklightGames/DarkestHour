@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHAutomaticFire extends DHProjectileFire
@@ -11,6 +11,9 @@ class DHAutomaticFire extends DHProjectileFire
 var     name    BipodDeployFireAnim;
 var     name    BipodDeployFireLoopAnim;
 var     name    BipodDeployFireEndAnim;
+
+var     bool    bHasSemiAutoFireRate;
+var     float   SemiAutoFireRate;
 
 // Modified to make the player stop firing if they are sprinting or switching to or from ironsights
 simulated function bool AllowFire()
@@ -40,6 +43,7 @@ function ModeTick(float DeltaTime)
 // Modified to handle different bipod firing animations
 function PlayFiring()
 {
+    // TODO: there is a HUGE amount of redundancy here, we should be able to roll all of this into DHProjectileFire at some point
     local name Anim;
 
     if (Weapon != none)
@@ -55,9 +59,20 @@ function PlayFiring()
                     {
                         Anim = BipodDeployFireLoopAnim;
                     }
+                    else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                    {
+                        Anim = FireIronLastAnim;
+                    }
                     else if (Weapon.HasAnim(FireIronLoopAnim))
                     {
                         Anim = FireIronLoopAnim;
+                    }
+                }
+                else
+                {
+                    if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                    {
+                        Anim = FireLastAnim;
                     }
                 }
 
@@ -81,9 +96,20 @@ function PlayFiring()
                     {
                         Anim = BipodDeployFireAnim;
                     }
+                    else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                    {
+                        Anim = FireIronLastAnim;
+                    }
                     else if (Weapon.HasAnim(FireIronAnim))
                     {
                         Anim = FireIronAnim;
+                    }
+                }
+                else
+                {
+                    if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                    {
+                        Anim = FireLastAnim;
                     }
                 }
 
@@ -114,29 +140,55 @@ function PlayFireEnd()
 {
     local name Anim;
 
-    if (Weapon != none && Weapon.Mesh != none)
+    if (Weapon == none || Weapon.Mesh == none)
     {
-        if (!IsPlayerHipFiring())
-        {
-            if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
-            {
-                Anim = BipodDeployFireEndAnim;
-            }
-            else if (Weapon.HasAnim(FireIronEndAnim))
-            {
-                Anim = FireIronEndAnim;
-            }
-        }
+        return;
+    }
 
-        if (Anim == '' && Weapon.HasAnim(FireEndAnim))
+    if (Weapon.GetFireMode(ThisModeNum).bWaitForRelease)
+    {
+        // The weapon is firing in single-fire mode, so do not play this end-fire animation.
+        return;
+    }
+
+    if (!IsPlayerHipFiring())
+    {
+        if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
+        {
+            Anim = BipodDeployFireEndAnim;
+        }
+        else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+        {
+            Anim = FireIronLastAnim;
+        }
+        else if (Weapon.HasAnim(FireIronEndAnim))
+        {
+            Anim = FireIronEndAnim;
+        }
+    }
+    else
+    {
+        if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+        {
+            Anim = FireLastAnim;
+        }
+    }
+
+    if (Anim == '')
+    {
+        if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+        {
+            Anim = FireLastAnim;
+        }
+        else if (Weapon.HasAnim(FireEndAnim))
         {
             Anim = FireEndAnim;
         }
+    }
 
-        if (Anim != '')
-        {
-            Weapon.PlayAnim(Anim, FireEndAnimRate, FireTweenTime);
-        }
+    if (Anim != '')
+    {
+        Weapon.PlayAnim(Anim, FireEndAnimRate, FireTweenTime);
     }
 }
 
@@ -173,5 +225,7 @@ defaultproperties
 
     AimError=1200.0
     BotRefireRate=0.99
+
+    SemiAutoFireRate=0.18
 }
 

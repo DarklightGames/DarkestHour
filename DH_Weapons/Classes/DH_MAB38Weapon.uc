@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MAB38Weapon extends DHAutoWeapon;
@@ -22,7 +22,7 @@ defaultproperties
     handnum=1
     sleevenum=2
 
-    DisplayFOV=75
+    DisplayFOV=90
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=40.0
     ZoomOutTime=0.1

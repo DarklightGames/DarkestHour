@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
@@ -28,8 +28,8 @@ defaultproperties
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
-    IronSightDisplayFOV=45.0
-    IronSightDisplayFOVHigh=45.0
+    IronSightDisplayFOV=40.0
+    DisplayFOV=85.0
 
     bHasBayonet=true
     BayonetBoneName="bayonet"

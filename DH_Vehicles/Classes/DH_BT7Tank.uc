@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_BT7Tank extends DHArmoredVehicle;
@@ -76,8 +76,8 @@ defaultproperties
     // cons:
     //- 3 men crew, who are quite close to each other
     //- petrol fuel
-    Health=460
-    HealthMax=460.0
+    Health=380
+    HealthMax=380.0
     EngineHealth=300
     AmmoIgnitionProbability=0.33  // 0.75 default
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_45mmM1937GunCannonShell extends DHSovietCannonShell;
@@ -14,7 +14,7 @@ defaultproperties
     BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
 
     //Damage
-    ImpactDamage=265 //30 gramms TNT filler
+    ImpactDamage=295 //30 gramms TNT filler
     Damage=700.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
     DamageRadius=150.0
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_G41Attachment extends DHWeaponAttachment;
@@ -9,19 +9,34 @@ class DH_G41Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.g41'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g41_3rd'
     MenuImage=Texture'InterfaceArt2_tex.Menu_weapons.g41'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
 
-    WA_Idle="Idle_g43"
-    WA_IdleEmpty="Idle_g43"
-    WA_Fire="shoot_g43"
-    WA_Reload="reloadhalf_g43"
-    WA_ReloadEmpty="reloadempty_g43"
-    WA_ProneReload="prone_reloadhalf_g43"
-    WA_ProneReloadEmpty="prone_reloadempty_g43"
+    WA_Idle="idle_kar98"
+    WA_Fire="fire"
+    WA_Reload="idle_kar98"
+    WA_ProneReload="idle_kar98"
+    WA_ReloadEmpty="reload_STRbolt"
+    WA_ProneReloadEmpty="prone_reload_STRbolt"
+    WA_PreReload="open_kar98scope"
+    WA_PostReload="close_kar98scope"
+    WA_BayonetIdle="idle_kar98_bayo"
+    WA_BayonetFire="fire_bayo"
+    WA_BayonetReload="idle_kar98_bayo"
+    WA_BayonetReloadEmpty="reload_STRbolt_bayo"
+    WA_BayonetProneReload="idle_kar98_bayo"
+    WA_BayonetProneReloadEmpty="prone_reload_STRbolt_bayo"
+    WA_BayonetPreReload="open_kar98scope"
+    WA_BayonetPostReload="close_kar98scope"
+    WA_BayonetAttach="stand_bayattach_kar98"
+    WA_BayonetDetach="stand_bayremove_kar98"
+    WA_BayonetAttachProne="prone_bayattach_kar98"
+    WA_BayonetDetachProne="prone_bayremove_kar98"
+    WA_WorkBolt="idle_kar98"
+    WA_BayonetWorkBolt="idle_kar98_bayo"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -88,11 +103,22 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_kar"
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
-    PA_ReloadAnim="stand_reloadhalf_svt40"
-    PA_ProneReloadAnim="prone_reloadhalf_svt40"
-    PA_ReloadEmptyAnim="stand_reloadempty_svt40"
-    PA_ProneReloadEmptyAnim="prone_reloadempty_svt40"
+
+    PA_ReloadAnim="stand_insert_karscope"
+    PA_ReloadEmptyAnim="stand_insert_karscope"
+    PA_ProneReloadAnim="prone_insert_karscope"
+    PA_ProneReloadEmptyAnim="prone_insert_karscope"
+    PA_PreReloadAnim="stand_open_karscope"
+    PA_PronePreReloadAnim="prone_open_karscope"
+    PA_PostReloadAnim="stand_close_karscope"
+    PA_PronePostReloadAnim="prone_close_karscope"
+
     PA_ProneIdleRestAnim="prone_idle_kar"
+    PA_BayonetAttachAnim="stand_bayattach_kar"
+    PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
+    PA_BayonetDetachAnim="stand_bayremove_kar"
+    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
+    PA_CrouchIronBoltActionAnim="crouch_bolt_kar"
     PA_Fire="stand_shoothip_kar"
     PA_IronFire="stand_shootiron_kar"
     PA_CrouchFire="crouch_shoot_kar"
@@ -132,6 +158,9 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
+    PA_BayonetAltFire="stand_stab_kar"
+    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
+    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     PA_FireLastShot="stand_shoothip_kar"
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHBipodAutoWeapon extends DHAutoWeapon
@@ -14,6 +14,8 @@ var     name    SightUpMagPartialReloadAnim;
 
 var     name    IdleToBipodDeployEmpty; // anim for bipod rest state to deployed empty state
 var     name    BipodDeployToIdleEmpty; // anim for bipod deployed state to rest empty state
+
+var     name    IronBipodDeployAnim;    // anim for deploying bipod from ironsights
 
 replication
 {
@@ -203,7 +205,7 @@ simulated function PlayReload()
         }
         else
         {
-            Anim = MagPartialReloadAnim;
+            Anim = MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)];
         }
     }
     else
@@ -214,7 +216,7 @@ simulated function PlayReload()
         }
         else
         {
-            Anim = MagEmptyReloadAnim;
+            Anim = MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)];
         }
     }
 
@@ -308,9 +310,9 @@ simulated state DeployingBipod extends WeaponBusy
     {
         local name Anim;
 
-        if (bUsingSights)
+        if (bUsingSights && HasAnim(IronBipodDeployAnim))
         {
-            Anim = SightUpIronBringUp;
+            Anim = IronBipodDeployAnim;
         }
         else if (AmmoAmount(0) < 1 && HasAnim(IdleToBipodDeployEmpty))
         {

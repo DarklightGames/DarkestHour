@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_12thSSGunner extends DHGEMachineGunnerRoles;
@@ -11,4 +11,6 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
+
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 }

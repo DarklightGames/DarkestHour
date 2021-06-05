@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PPSh41_StickWeapon extends DHFastAutoWeapon;
@@ -51,13 +51,23 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'
     handnum=2
 
-    IronSightDisplayFOV=67
+    IronSightDisplayFOV=65
+    DisplayFOV=82
 
     bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+
+    //alternative reload
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_empty" //standart should be more common
+    MagEmptyReloadAnims(3)="reload_empty" 
+    
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

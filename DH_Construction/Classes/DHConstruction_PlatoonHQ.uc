@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
@@ -245,6 +245,8 @@ simulated function Material GetFlagMaterial()
             return Texture'DH_Construction_tex.Base.BRIT_flag_01';
         case NATION_USSR:
             return Texture'DH_Construction_tex.Base.SOVIET_flag_01';
+        case NATION_Poland:
+            return Texture'DH_Construction_tex.Base.POL_flag_01';
         }
         break;
     }
@@ -271,7 +273,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     {
         C = DHConstruction(A);
 
-        if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        if (C != none && !C.IsInState('Dummy') && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
         {
             bFoundFriendlyDuplicate = true;
             break;

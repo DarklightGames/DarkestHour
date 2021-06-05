@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHAxisEngineerRoles extends DHAxisRoles
@@ -9,7 +9,7 @@ class DHAxisEngineerRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Combat Engineer"
-    AltName="Stürmpioniere"
+    AltName="Sturmpionier"
     Article="a "
     PluralName="Combat Engineers"
     Limit=2

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHProjectileFire extends DHWeaponFire;
@@ -56,6 +56,10 @@ var     float           BlurTime;                    // how long to blur when fi
 var     float           BlurTimeIronsight;           // how long to blur when firing ironsighted
 var     float           BlurScale;                   // blur effect scale when firing non-ironsighted
 var     float           BlurScaleIronsight;          // blur effect scale when firing ironsighted
+
+// Different firing animations if the weapon is firing its last round
+var     name    FireLastAnim;
+var     name    FireIronLastAnim;
 
 // Modified to set pre-launch trace distance, based on bullet's maximum speed, so slower bullets that drop sooner use a shorter trace
 simulated function PostBeginPlay()
@@ -555,11 +559,25 @@ function PlayFiring()
             }
             else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
-                Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                {
+                    Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+                }
             }
             else if (Weapon.HasAnim(FireAnim))
             {
-                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                {
+                    Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                }
             }
         }
 
@@ -734,7 +752,7 @@ simulated function EjectShell()
         // Have to calculate the the shell ejection bone offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
         EjectBoneCoords = Weapon.GetBoneCoords(ShellEmitBone);
         SpawnLocation = Weapon.Location + (0.2 * (EjectBoneCoords.Origin - Weapon.Location));
-        SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) +  (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
+        SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) + (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
         ShellRotation = rotator(-EjectBoneCoords.YAxis);
         Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
         ShellRotation = rotator(EjectBoneCoords.XAxis) + ShellRotOffsetHip;

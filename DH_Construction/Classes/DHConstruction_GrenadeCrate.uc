@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHConstruction_GrenadeCrate extends DHConstruction_InventorySpawner;
@@ -17,6 +17,7 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context C
                 case NATION_USA:
                     return class'DH_Weapons.DH_M1GrenadeSpawner';
                 case NATION_USSR:
+                case NATION_Poland:
                     return class'DH_Weapons.DH_F1GrenadeSpawner';
                 case NATION_Britain:
                 case NATION_Canada:

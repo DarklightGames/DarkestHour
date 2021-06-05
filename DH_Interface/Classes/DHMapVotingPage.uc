@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
@@ -8,6 +8,9 @@ class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
 var localized string                            lmsgMapOutOfBounds;
 
 var(DHMapVotingInfo) config array<string>       MapVoteInfo;
+
+var automated moEditBox ed_Filter;
+var automated GUIButton b_FilterClear;
 
 function InternalOnOpen()
 {
@@ -121,6 +124,31 @@ function SendVote(GUIComponent Sender)
     }
 }
 
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    // Update map list on "key down" event
+    if (State == 3)
+    {
+        DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern(ed_Filter.GetText());
+        return true;
+    }
+}
+
+function bool InternalOnClick(GUIComponent Sender)
+{
+    if (Sender == b_FilterClear)
+    {
+        OnFilterClear();
+        return true;
+    }
+}
+
+delegate OnFilterClear()
+{
+    ed_Filter.SetText("");
+    DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern("");
+}
+
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
@@ -129,7 +157,7 @@ defaultproperties
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
-        WinHeight=0.293104
+        WinHeight=0.50
         WinLeft=0.02
         WinTop=0.371020
         bVisibleWhenEmpty=true
@@ -144,6 +172,7 @@ defaultproperties
         HeaderColumnPerc(4)=0.25 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
+
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
         HeaderColumnPerc(1)=0.3 // Votes
@@ -161,6 +190,7 @@ defaultproperties
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
+
     Begin Object Class=moComboBox Name=GameTypeCombo
         CaptionWidth=0.35
         Caption="Filter Game Type:"
@@ -169,6 +199,7 @@ defaultproperties
         bVisible=false
     End Object
     co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
+
     i_MapListBackground=none
     Begin Object Class=GUIImage Name=MapCountListBackground
         Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
@@ -176,4 +207,35 @@ defaultproperties
         OnDraw=DHMapVotingPage.AlignBK
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
+
+    Begin Object class=moEditBox Name=FilterEditbox
+        WinWidth=0.86
+        WinHeight=0.12
+        WinLeft=0.02
+        WinTop=0.90
+        Caption="Filter"
+        CaptionWidth=0.074
+        OnKeyEvent=InternalOnKeyEvent
+        // TabOrder=0
+        bScaleToParent=true
+        bBoundToParent=true
+    End Object
+    ed_Filter=FilterEditbox
+
+    Begin Object Class=GUIButton Name=FilterClearButton
+        WinWidth=0.08
+        WinHeight=0.04
+        WinLeft=0.90
+        WinTop=0.894
+        Caption="Clear"
+        FontScale=FNS_Small
+        OnClick=InternalOnClick
+        // TabOrder=1
+        bStandardized=true
+        bBoundToParent=true
+        bScaleToParent=true
+    End Object
+    b_FilterClear=FilterClearButton
+
+    f_Chat=none
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -287,6 +287,9 @@ function Timer()
                     break;
                 case 3: // USSR
                     i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
+                    break;
+                case 4: // Poland
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
                     break;
             }
 

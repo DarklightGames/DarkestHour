@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M38Weapon extends DHBoltActionWeapon;
@@ -19,7 +19,8 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=47.0
+    DisplayFOV=85.0
     ZoomOutTime=0.35
     FreeAimRotationSpeed=7.0
 

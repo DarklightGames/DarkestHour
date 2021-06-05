@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SU76Cannon extends DHVehicleCannon;
@@ -8,12 +8,12 @@ class DH_SU76Cannon extends DHVehicleCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=Mesh'allies_su76_anm.SU76_turret_ext'
+    Mesh=Mesh'DH_SU76_anm.SU76_turret_ext'
     skins(0)=Texture'allies_vehicles_tex.ext_vehicles.SU76_ext'
     skins(1)=Texture'allies_vehicles_tex.int_vehicles.SU76_int'
-	HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.SU76_int_s'
-	bUseHighDetailOverlayIndex=true
-	HighDetailOverlayIndex=1
+    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.SU76_int_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=1
 
     // Cannon armour (mantlet)
     GunMantletArmorFactor=6.0 //gun breech should stop the shells, i think. In case of su-76 its rather a strong point rather than a weak point, as the rest of superstructure armor is very thin and not sloped
@@ -55,8 +55,8 @@ defaultproperties
     // Weapon fire
 
     WeaponFireOffset=200.0
-    
-	
+
+
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'

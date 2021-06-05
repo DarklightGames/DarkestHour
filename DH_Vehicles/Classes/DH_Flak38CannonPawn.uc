@@ -1,20 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Flak38CannonPawn extends DHATGunCannonPawn;
-
-// Modified to update sight & aiming wheel rotation, if gun yaw or pitch has changed
-function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
-{
-    super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-
-    if (Level.NetMode != NM_DedicatedServer && ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)) && DH_Flak38Cannon(Gun) != none)
-    {
-        DH_Flak38Cannon(Gun).UpdateSightAndWheelRotation();
-    }
-}
 
 defaultproperties
 {

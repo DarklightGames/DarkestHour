@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
@@ -8,6 +8,12 @@ class DH_PanzerFaustWeapon extends DHRocketWeapon;
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
 function DropFrom(vector StartLocation)
 {
+    if (!HasAmmo())
+    {
+        // If the panzerfaust has no ammo, it is useless, so don't drop it
+        return;
+    }
+
     super(DHWeapon).DropFrom(StartLocation);
 }
 

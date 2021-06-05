@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -16,7 +16,8 @@ enum EAlliedNation
     NATION_USA,
     NATION_Britain,
     NATION_Canada,
-    NATION_USSR
+    NATION_USSR,
+    NATION_Poland
 };
 
 enum ESpawnMode
@@ -42,7 +43,7 @@ enum EWeather
 
 struct SNationString
 {
-    var string Germany, USA, Britain, Canada, USSR;
+    var string Germany, USA, Britain, Canada, USSR, Poland;
 };
 
 struct ArtilleryType

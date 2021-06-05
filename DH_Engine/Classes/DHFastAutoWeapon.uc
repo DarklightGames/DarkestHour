@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHFastAutoWeapon extends DHAutoWeapon
@@ -33,7 +33,7 @@ simulated function AnimEnd(int Channel)
 {
     if (!FireMode[0].IsInState('FireLoop'))
     {
-        super(DHProjectileWeapon).AnimEnd(channel);
+        super.AnimEnd(channel);
     }
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MP38Weapon extends DHAutoWeapon;
@@ -19,13 +19,17 @@ defaultproperties
 
     SwayModifyFactor=0.77 // -0.03 for some micro difference from mp40
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=45.0
+    IronSightDisplayFOV=55.0
+    DisplayFOV=85.0
     ZoomOutTime=0.15
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
+    
+    //alternative reload
+    MagEmptyReloadAnims(1)="reload_emptyB"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 class DHSpawnPoint_Objective extends DHSpawnPoint;
 
@@ -24,5 +24,4 @@ defaultproperties
     bStatic=false
     bCollideWhenPlacing=false
     bHidden=true
-    BaseSpawnTimePenalty=15
 }

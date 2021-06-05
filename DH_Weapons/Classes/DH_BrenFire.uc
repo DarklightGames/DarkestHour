@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_BrenFire extends DHAutomaticFire;
@@ -15,7 +15,7 @@ defaultproperties
     FireRate=0.12
     FAProjSpawnOffset=(X=-28.0)
 
-    Spread=75.0
+    Spread=70.0
 
     // Recoil
     RecoilRate=0.075

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SVT40MeleeFire extends DHMeleeFire;
@@ -14,4 +14,13 @@ defaultproperties
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"
     BayoFinishAnim="stab_return"
+    
+    BashBackEmptyAnim="bash_pullback_empty"
+    BashHoldEmptyAnim="bash_hold_empty"
+    BashEmptyAnim="bash_attack_empty"
+    BashFinishEmptyAnim="bash_return_empty"
+    
+    BayoBackEmptyAnim="stab_pullback_empty"
+    BayoStabEmptyAnim="stab_attack_empty"
+    BayoFinishEmptyAnim="stab_return_empty"
 }

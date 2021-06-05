@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T3476_42TankFactory extends DH_USVehicles; // later version with HVAP instead of AP shot & with muzzle brake
