@@ -1569,19 +1569,44 @@ function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
     }
 }
 
-
-// Beware that this function will work correctly only for marker classes that have OverwritingRule=UNIQUE.
-function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> BarrageMarkerClass)
+function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
 {
     local int i;
-    Log("invalidating marker for team " $ TeamIndex $ ", class " $ BarrageMarkerClass);
 
     switch(TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].ExpiryTime == -1 && AlliesMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
+                if (AlliesMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+                {
+                    AlliesMapMarkers[i].ExpiryTime = 0;
+                }
+            }
+            break;
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); i++)
+            {
+                if (AxisMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+                {
+                    AxisMapMarkers[i].ExpiryTime = 0;
+                }
+            }
+            break;
+    }
+}
+
+// Beware that this function will work correctly only for marker classes that have OverwritingRule=UNIQUE.
+function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> ArtilleryRequest)
+{
+    local int i;
+
+    switch(TeamIndex)
+    {
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
+            {
+                if (AlliesMapMarkers[i].ExpiryTime == -1 && AlliesMapMarkers[i].MapMarkerClass == ArtilleryRequest)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                     return true;
@@ -1591,7 +1616,7 @@ function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_Artillery
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if (AxisMapMarkers[i].ExpiryTime == -1 && AxisMapMarkers[i].MapMarkerClass == BarrageMarkerClass)
+                if (AxisMapMarkers[i].ExpiryTime == -1 && AxisMapMarkers[i].MapMarkerClass == ArtilleryRequest)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                     return true;

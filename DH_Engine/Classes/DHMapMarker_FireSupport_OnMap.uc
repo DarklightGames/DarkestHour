@@ -35,10 +35,6 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    Log("PC != none" @ PC != none);
-    Log("PC.IsArtilleryOperator()" @ PC.IsArtilleryOperator());
-    Log("PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex" @ PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex);
-
     return PC != none && (PC.IsArtilleryOperator() || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex);
 }
 
@@ -73,6 +69,6 @@ defaultproperties
     bShouldShowOnCompass=false
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
-    LifetimeSeconds=-1            // artillery requests never expire
+    LifetimeSeconds=120
     HitVisibilityRadius=12070.4   // 200 meters
 }

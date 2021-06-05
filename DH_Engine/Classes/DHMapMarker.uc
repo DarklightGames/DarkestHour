@@ -84,6 +84,6 @@ defaultproperties
     LifetimeSeconds=-1
     GroupIndex=-1
     Scope=TEAM
-    OverwritingRule=NONE
+    OverwritingRule=OFF
     bShouldShowOnCompass=false
 }

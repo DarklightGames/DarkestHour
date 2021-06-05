@@ -6,7 +6,8 @@
 class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
-var string TypeName;
+var string  TypeName;
+var int     RequiredSquadMembers;
 
 // Any squad leader can call artillery support.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
@@ -34,4 +35,6 @@ defaultproperties
     OverwritingRule=UNIQUE
     Scope=TEAM
     LifetimeSeconds=-1            // artillery requests never expire
+    // RequiredSquadMembers=3
+    RequiredSquadMembers=1 // to do: set back to 3
 }

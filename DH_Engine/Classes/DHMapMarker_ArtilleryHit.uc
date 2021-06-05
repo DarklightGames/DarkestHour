@@ -66,9 +66,10 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
 
         bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime;
 
-        if ((Marker.MapMarkerClass == default.RequestMarkerClass) 
+        if ((Marker.MapMarkerClass == default.RequestMarkerClass)
           && bIsMarkerAlive
-          && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker))
+          && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+          && !(PRI.IsSL() && PRI.SquadIndex == Marker.SquadIndex))
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);
@@ -112,7 +113,8 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius;
+    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius
+    && !(PC.IsSL() && PC.GetSquadIndex() != Marker.SquadIndex);
 }
 
 defaultproperties
