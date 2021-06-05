@@ -29,13 +29,13 @@ function OnSelect(int Index, vector Location)
         switch (Index)
         {
             case 0: // Artillery barrage
-                self.AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
+                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
                 break;
             case 1: // Fire request (Smoke)
-                self.AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
+                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
                 break;
             case 2: // Fire request (HE)
-                self.AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_HE');
+                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_HE');
                 break;
         }
     }
@@ -43,6 +43,7 @@ function OnSelect(int Index, vector Location)
     {
         PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
     }
+
     Interaction.Hide();
 }
 
@@ -125,6 +126,7 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
     {
         PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
         PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+
         if (class<DHMapMarker_FireSupport_BarrageRequest>(MapMarkerClass) != none)
         {
             PC.ServerNotifyRadioman();
@@ -133,6 +135,7 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
         {
             PC.ServerNotifyArtilleryOperators(MapMarkerClass);
         }
+
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
         PC.ConsoleCommand("SPEECH SUPPORT 8");
     }

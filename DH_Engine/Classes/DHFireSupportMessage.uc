@@ -43,7 +43,7 @@ static function string GetString(
             // You cannot do another fire support request for another {seconds} seconds.
             PC = DHPlayer(OptionalObject);
             if (PC != none && PC.GameReplicationInfo != none)
-            { 
+            {
                 GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
                 Seconds = PC.ArtilleryRequestsUnlockTime - GRI.ElapsedTime;
                 return Repl(default.ArtilleryRequestingLocked, "{seconds}", Seconds);
@@ -54,7 +54,7 @@ static function string GetString(
             // off-map fire support (called by radio)
             PC = DHPlayer(OptionalObject);                // radioman
             PRI = DHPlayerReplicationInfo(RelatedPRI_2);  // artillery spotter
-            
+
             if (PRI != none && PC != none)
             {
                 SRI = PC.SquadReplicationInfo;
@@ -66,7 +66,7 @@ static function string GetString(
             // A new {type} target has been marked.
             // on-map fire support (mortars/Priests/LeIGs etc.)
             MapMarkerClass = class<DHMapMarker_FireSupport>(OptionalObject);
-            
+
             if (MapMarkerClass != none)
             {
                 return Repl(default.ArtilleryOperatorNotification, "{type}", MapMarkerClass.default.TypeName);
@@ -78,8 +78,8 @@ static function string GetString(
 
 defaultproperties
 {
-    RequestConfirmedText="Fire support request ({type}) has been sent."
-    ArtilleryRequestingLocked="You cannot do another fire support request for another {seconds} seconds."
+    RequestConfirmedText="Fire support request ({type}) has been marked."
+    ArtilleryRequestingLocked="You cannot mark another fire support request for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
 }

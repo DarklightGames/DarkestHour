@@ -13,7 +13,7 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     PC = DHPlayer(PRI.Owner);
 
     // off-map artillery request can only be removed if there are no ongoing artillery strikes
-    // (keep in mind that off-map artillery requests are personal anyway) 
+    // (keep in mind that off-map artillery requests are personal anyway)
     return DHGameReplicationInfo(PC.GameReplicationInfo).ArtyStrikeLocation[PRI.Team.TeamIndex] == vect(0,0,0);
 }
 
@@ -49,7 +49,7 @@ static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker 
 
 defaultproperties
 {
-    TypeName="HE"
+    TypeName="Howitzer Battery"
     IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
     IconColor=(R=255,G=255,B=255,A=128)
