@@ -5,7 +5,7 @@
 
 class DHFireSupportMessage extends ROCriticalMessage;
 
-var localized string RequestConfirmedText;
+var string RequestConfirmedText;
 var localized string ArtilleryRequestingLocked;
 var localized string RadiomanNotification;
 var localized string ArtilleryOperatorNotification;
@@ -28,7 +28,7 @@ static function string GetString(
     switch (Switch)
     {
         case 0:
-            // Fire support request ({type}) has been sent
+            // Location has been marked.
             MapMarkerClass = class<DHMapMarker_FireSupport>(OptionalObject);
             if (MapMarkerClass == none)
             {
@@ -36,7 +36,7 @@ static function string GetString(
             }
             else
             {
-                return Repl(default.RequestConfirmedText, "{type}", MapMarkerClass.default.TypeName);
+                return default.RequestConfirmedText;
             }
             return "";
         case 1:
@@ -78,7 +78,7 @@ static function string GetString(
 
 defaultproperties
 {
-    RequestConfirmedText="Fire support request ({type}) has been marked."
+    RequestConfirmedText="Location has been marked."
     ArtilleryRequestingLocked="You cannot mark another fire support request for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
