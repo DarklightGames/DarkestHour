@@ -49,6 +49,7 @@ struct SArtilleryHitInfo
 var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
 var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
 var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
+var     bool                    bIsArtilleryTargetValid;
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
@@ -187,7 +188,7 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged;
+        bSurrendered, bIQManaged, bIsArtilleryTargetValid;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -210,7 +211,8 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget,
+        ServerIsArtilleryTargetValid;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1025,27 +1027,30 @@ function ServerSaveArtilleryTarget(vector Location)
 }
 
 // This function checks if the player can call artillery on the selected target.
-simulated function bool IsArtilleryTargetValid(vector ArtilleryLocation)
+function ServerIsArtilleryTargetValid(vector ArtilleryLocation)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
 
     if (Pawn == none || Pawn.Health <= 0)
     {
-        return false;
+        bValidTarget = false;
     }
-
-    // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
-
-    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
-
-    if (VT != none)
+    else
     {
-        bValidTarget = !VT.IsInNoArtyVolume();
-        VT.Destroy();
+
+        // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
+
+        VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+
+        if (VT != none)
+        {
+            bValidTarget = !VT.IsInNoArtyVolume();
+            VT.Destroy();
+        }
     }
 
-    return bValidTarget;
+    bIsArtilleryTargetValid = bValidTarget;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
@@ -7378,4 +7383,5 @@ defaultproperties
     ArtilleryLockingPeriod = 10
 
     MinIQToGrowHead=100
+    bIsArtilleryTargetValid=false
 }

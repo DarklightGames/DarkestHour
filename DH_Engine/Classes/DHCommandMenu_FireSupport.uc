@@ -24,7 +24,8 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    if (PC.IsArtillerySpotter() && PC.IsArtilleryTargetValid(Location))
+    PC.ServerIsArtilleryTargetValid(Location);
+    if (PC.IsArtillerySpotter() && PC.bIsArtilleryTargetValid)
     {
         switch (Index)
         {
@@ -85,7 +86,6 @@ function Tick()
     local DHPlayer PC;
     local vector HitLocation, HitNormal;
     local Color C;
-    local bool isValid;
 
     C.R = 0;
     C.G = 0;
@@ -100,9 +100,8 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-    isValid = PC.IsArtilleryTargetValid(HitLocation);
-    Log("target isValid: " @ isValid);
-    if (isValid)
+    PC.ServerIsArtilleryTargetValid(HitLocation);
+    if (PC.bIsArtilleryTargetValid)
     {
         C.G = 255;
         PC.SpottingMarker.SetColor(C);
