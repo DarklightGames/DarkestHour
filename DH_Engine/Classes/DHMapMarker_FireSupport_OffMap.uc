@@ -29,7 +29,12 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsSL(); // off-map artillery markers are personal
+    // to do: refactor this
+    return PC != none && PC.IsSL()
+        || PRI != none &&
+            (PRI.bAdmin ||PRI.bSilentAdmin ||
+              (PRI.Level != none &&
+                PRI.Level.NetMode == NM_Standalone));
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
@@ -53,7 +58,7 @@ defaultproperties
     IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
     IconColor=(R=255,G=255,B=255,A=128)
-    OverwritingRule=UNIQUE
+    OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
-    GroupIndex=-1
+    GroupIndex=6
 }

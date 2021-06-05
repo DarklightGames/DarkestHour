@@ -15,7 +15,7 @@ var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
 
-var class<DHMapMarker_FireSupport>  BarrageRequestMarkerClass;
+var class<DHMapMarker_FireSupport>  RequestMarkerClass;
 var class<DHMapMarker_ArtilleryHit> OngoingBarrageMarkerClass;
 
 replication

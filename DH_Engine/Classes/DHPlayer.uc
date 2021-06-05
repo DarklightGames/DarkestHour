@@ -7350,7 +7350,6 @@ defaultproperties
     ConfigViewFOV=85.0
 
     // Paradrops
-    ParadropMarkerClass=class'DHMapMarker_Paradrop'
     ParadropHeight=10000
     ParadropSpreadModifier=600
 
@@ -7377,7 +7376,7 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
-    PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+    PersonalMapMarkerClasses(1)=class'DHMapMarker_FireSupport_OffMap'
 
     ArtilleryRequestsUnlockTime = 0
     ArtilleryLockingPeriod = 10

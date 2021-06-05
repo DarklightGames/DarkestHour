@@ -30,7 +30,7 @@ function OnSelect(int Index, vector Location)
         switch (Index)
         {
             case 0: // Artillery barrage
-                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_BarrageRequest');
+                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_OffMap');
                 break;
             case 1: // Fire request (Smoke)
                 AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
@@ -126,7 +126,7 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
         PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
         PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
 
-        if (class<DHMapMarker_FireSupport_BarrageRequest>(MapMarkerClass) != none)
+        if (class<DHMapMarker_FireSupport_OffMap>(MapMarkerClass) != none)
         {
             PC.ServerNotifyRadioman();
         }
@@ -206,9 +206,9 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     // TODO: Icons
-    Options(0)=(ActionText="Artillery Barrage",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_BarrageRequest')
+    Options(0)=(ActionText="Off-map support",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_OffMap')
     Options(1)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
     Options(2)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
-
+ 
     bShouldTick=true
 }

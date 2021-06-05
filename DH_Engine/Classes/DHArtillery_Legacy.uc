@@ -238,6 +238,6 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 defaultproperties
 {
-    BarrageRequestMarkerClass=class'DHMapMarker_FireSupport_BarrageRequest'
+    RequestMarkerClass=class'DHMapMarker_FireSupport_OffMap'
     OngoingBarrageMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
 }
