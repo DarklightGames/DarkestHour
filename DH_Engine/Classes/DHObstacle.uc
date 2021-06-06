@@ -104,7 +104,7 @@ simulated function bool CanBeDestroyedByExplosives() {return Info.CanBeDestroyed
 simulated function bool CanBeDestroyedByWeapons() {return Info.CanBeDestroyedByWeapons(TypeIndex, bIsDefault);}
 simulated function int GetExplosionDamageThreshold() {return Info.GetExplosionDamageThreshold(TypeIndex, bIsDefault);}
 simulated function int GetDamageThreshold() {return Info.GetDamageThreshold(TypeIndex, bIsDefault);}
-simulated function sound GetClearSound() {return Info.GetClearSound(TypeIndex, bIsDefault);}
+simulated function sound GetClearSound(out float SoundRadius) {return Info.GetClearSound(TypeIndex, bIsDefault, SoundRadius);}
 simulated function float GetCutDuration() {return Info.GetCutDuration(TypeIndex, bIsDefault);}
 simulated function class<Emitter> GetClearEmitterClass() {return Info.GetClearEmitterClass(TypeIndex, Index, bIsDefault);}
 
