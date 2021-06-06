@@ -1409,14 +1409,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
     M.WorldLocation = WorldLocation;
 
-    if (MapMarkerClass.default.Scope == SQUAD)
-    {
-        M.SquadIndex = PRI.SquadIndex;
-    }
-    else
-    {
-        M.SquadIndex = -1;
-    }
+    M.SquadIndex = PRI.SquadIndex;
 
     if (MapMarkerClass.default.LifetimeSeconds != -1)
     {
@@ -1435,9 +1428,10 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case UNIQUE_PER_GROUP:
                     for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
-                        if (AxisMapMarkers[i].MapMarkerClass != none &&
-                            AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                            (AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                        if (AxisMapMarkers[i].MapMarkerClass != none 
+                          && AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex
+                          && (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                            || MapMarkerClass.default.Scope == TEAM)
                         {
                             AxisMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1449,9 +1443,9 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case UNIQUE:
                     for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
-                        if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                            (MapMarkerClass.default.Scope == TEAM ||
-                             (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass
+                          && (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                            || MapMarkerClass.default.Scope == TEAM)
                         {
                             AxisMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1481,8 +1475,9 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
                         if (AlliesMapMarkers[i].MapMarkerClass != none &&
-                            AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
-                            (AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex))
+                            AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex
+                            && (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                            || MapMarkerClass.default.Scope == TEAM)
                         {
                             AlliesMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1493,9 +1488,9 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case UNIQUE:
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
-                        if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
-                            (MapMarkerClass.default.Scope == TEAM ||
-                             (MapMarkerClass.default.Scope == SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                        if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass 
+                          && (MapMarkerClass.default.Scope == TEAM 
+                          || (MapMarkerClass.default.Scope == SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AlliesMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1594,37 +1589,6 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
             }
             break;
     }
-}
-
-// Beware that this function will work correctly only for marker classes that have OverwritingRule=UNIQUE.
-function bool InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> ArtilleryRequest)
-{
-    local int i;
-
-    switch(TeamIndex)
-    {
-        case ALLIES_TEAM_INDEX:
-            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
-            {
-                if (AlliesMapMarkers[i].ExpiryTime == -1 && AlliesMapMarkers[i].MapMarkerClass == ArtilleryRequest)
-                {
-                    AlliesMapMarkers[i].ExpiryTime = 0;
-                    return true;
-                }
-            }
-            break;
-        case AXIS_TEAM_INDEX:
-            for (i = 0; i < arraycount(AxisMapMarkers); i++)
-            {
-                if (AxisMapMarkers[i].ExpiryTime == -1 && AxisMapMarkers[i].MapMarkerClass == ArtilleryRequest)
-                {
-                    AxisMapMarkers[i].ExpiryTime = 0;
-                    return true;
-                }
-            }
-            break;
-    }
-    return false;
 }
 
 function ClearMapMarkers()
