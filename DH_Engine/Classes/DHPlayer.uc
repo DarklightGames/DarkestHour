@@ -2270,6 +2270,25 @@ function bool IsPositionOfParadrop(vector Position)
     return false;
 }
 
+function int GetActiveOffMapSupportNumber()
+{
+    local int i, Counter;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    Counter = 0;
+    for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
+    {
+        if (GRI.DHArtillery[i] != none 
+          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
+        {
+            Counter++;
+        }
+    }
+    return Counter;
+}
+
 function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
 {
     local int                   TeamIndex;
@@ -7424,7 +7443,6 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
-    PersonalMapMarkerClasses(1)=class'DHMapMarker_FireSupport_OffMap'
 
     ArtilleryRequestsUnlockTime = 0
     ArtilleryLockingPeriod = 10
