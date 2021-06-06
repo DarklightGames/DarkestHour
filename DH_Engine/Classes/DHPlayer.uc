@@ -2270,45 +2270,6 @@ function bool IsPositionOfParadrop(vector Position)
     return false;
 }
 
-function int GetActiveParadropsNumber()
-{
-    local int i, Counter;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    Counter = 0;
-    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
-    {
-        if (GRI.DHArtillery[i] != none 
-          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
-          && GRI.DHArtillery[i].IsParadrop())
-        {
-            Counter++;
-        }
-    }
-    return Counter;
-}
-
-function int GetActiveOffMapSupportNumber()
-{
-    local int i, Counter;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    Counter = 0;
-    for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
-    {
-        if (GRI.DHArtillery[i] != none 
-          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
-        {
-            Counter++;
-        }
-    }
-    return Counter;
-}
-
 function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
 {
     local int                   TeamIndex;
