@@ -6,6 +6,8 @@
 class DHMapMarker_FireSupport_OffMap extends DHMapMarker_FireSupport
     abstract;
 
+var color               ActiveIconColor;
+
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
@@ -13,8 +15,11 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     PC = DHPlayer(PRI.Owner);
 
     // off-map artillery request can only be removed if there are no ongoing artillery strikes
-    // (keep in mind that off-map artillery requests are personal anyway)
-    return DHGameReplicationInfo(PC.GameReplicationInfo).ArtyStrikeLocation[PRI.Team.TeamIndex] == vect(0,0,0);
+    if(PC != none 
+      && PC.IsPositionOfArtillery(Marker.WorldLocation)
+        || PC.IsPositionOfParadrop(Marker.WorldLocation))
+        return false;
+    return Marker.SquadIndex == PRI.SquadIndex && PC.IsArtillerySpotter();
 }
 
 // Only allow artillery roles and the SL who made the mark to see artillery requests.
@@ -29,12 +34,11 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    // to do: refactor this
-    return PC != none && PC.IsSL()
-        || PRI != none &&
-            (PRI.bAdmin ||PRI.bSilentAdmin ||
-              (PRI.Level != none &&
-                PRI.Level.NetMode == NM_Standalone));
+    if(PC.IsPositionOfParadrop(Marker.WorldLocation))
+    {
+        return false;
+    }
+    return true;
 }
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
@@ -54,11 +58,11 @@ static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker 
 
 defaultproperties
 {
-    TypeName="Howitzer Battery"
+    TypeName="Off-map support"
     IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
     IconColor=(R=255,G=255,B=255,A=128)
-    OverwritingRule=UNIQUE_PER_GROUP
+    ActiveIconColor=(R=255,G=255,B=255,A=255)
     Scope=PERSONAL
-    GroupIndex=6
+    OverwritingRule=UNIQUE
 }

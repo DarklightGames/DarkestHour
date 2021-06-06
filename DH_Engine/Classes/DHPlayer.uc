@@ -2222,6 +2222,93 @@ function ServerNotifyRadioman()
     }
 }
 
+function bool IsPositionOfArtillery(vector Position)
+{
+    local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
+    {
+        if (GRI.DHArtillery[i] != none 
+          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
+          && !GRI.DHArtillery[i].IsParadrop())
+        {
+            // to do: refactor checking if GRI.DHArtillery[i].Location == Position
+            // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
+            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function bool IsPositionOfParadrop(vector Position)
+{
+    local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
+    {
+        if (GRI.DHArtillery[i] != none 
+          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
+          && GRI.DHArtillery[i].IsParadrop())
+        {
+            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            {
+                // to do: refactor checking if GRI.DHArtillery[i].Location == Position
+                // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function int GetActiveParadropsNumber()
+{
+    local int i, Counter;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    Counter = 0;
+    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
+    {
+        if (GRI.DHArtillery[i] != none 
+          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
+          && GRI.DHArtillery[i].IsParadrop())
+        {
+            Counter++;
+        }
+    }
+    return Counter;
+}
+
+function int GetActiveOffMapSupportNumber()
+{
+    local int i, Counter;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    Counter = 0;
+    for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
+    {
+        if (GRI.DHArtillery[i] != none 
+          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
+        {
+            Counter++;
+        }
+    }
+    return Counter;
+}
+
 function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
 {
     local int                   TeamIndex;

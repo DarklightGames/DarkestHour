@@ -5505,6 +5505,8 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 {
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
+    local DHPlayerReplicationInfo PRI;
+    local vector MapLocation;
     local int Interval;
     
     if (Request == none ||
@@ -5585,7 +5587,12 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime = GRI.ElapsedTime + Interval;
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].ArtilleryActor = Response.ArtilleryActor;
-
+            if(Response.ArtilleryActor.default.ActiveArtilleryMarkerClass != none)
+            {
+                PRI = DHPlayerReplicationInfo(Request.Sender.PlayerReplicationInfo);
+                GRI.GetMapCoords(Response.ArtilleryActor.Location, MapLocation.X, MapLocation.Y);
+                GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location);
+            }
             NotifyPlayersOfMapInfoChange(Request.TeamIndex);
         }
     }

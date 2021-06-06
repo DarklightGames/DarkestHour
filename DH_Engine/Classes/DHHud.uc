@@ -3784,11 +3784,18 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     }
 }
 
-function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMapMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)
+function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHGameReplicationInfo.MapMarker MapMarker, vector Target, Pawn P, DHPlayerReplicationInfo PRI)
 {
+    local class<DHMapMarker> MapMarkerClass;
+    local string Caption;
+    local DHPlayer PC;
+
+    MapMarkerClass = MapMarker.MapMarkerClass;
+    PC = DHPlayer(PRI.Owner);
+    Caption = MapMarkerClass.static.GetCaptionString(PC, MapMarker);
     MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
-    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.default.IconColor;
+    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.static.GetIconColor(PRI, MapMarker);
 
     DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
 
@@ -3835,10 +3842,10 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                                MyMapScale,
                                MapCenter,
                                Viewport,
-                               MapMarkers[i].MapMarkerClass,
+                               MapMarkers[i],
                                L,
                                PC.Pawn,
-                               MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, MapMarkers[i]));
+                               PRI);
         }
     }
 
@@ -3860,10 +3867,10 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                                MyMapScale,
                                MapCenter,
                                Viewport,
-                               PersonalMapMarkers[i].MapMarkerClass,
+                               PersonalMapMarkers[i],
                                L,
                                PC.Pawn,
-                               PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i]));
+                               PRI);
         }
     }
 }

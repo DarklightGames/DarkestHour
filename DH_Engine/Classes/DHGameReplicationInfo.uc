@@ -1057,22 +1057,6 @@ function AddArtillery(DHArtillery Artillery)
     }
 }
 
-function int GetActiveArtilleryStrikesNumber()
-{
-    local int i, Counter;
-
-    Counter = 0;
-    for (i = 0; i < arraycount(DHArtillery); ++i)
-    {
-        if (DHArtillery[i] == none)
-        {
-            Counter++;
-        }
-    }
-
-    return Counter;
-}
-
 function AddRadio(DHRadio Radio)
 {
     local int i;
@@ -1583,6 +1567,33 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
                 if (AxisMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+                {
+                    AxisMapMarkers[i].ExpiryTime = 0;
+                }
+            }
+            break;
+    }
+}
+
+function InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> MarkerClass)
+{
+    local int i;
+
+    switch(TeamIndex)
+    {
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
+            {
+                if (ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, MarkerClass))
+                {
+                    AlliesMapMarkers[i].ExpiryTime = 0;
+                }
+            }
+            break;
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); i++)
+            {
+                if (ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, MarkerClass))
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                 }

@@ -126,7 +126,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
     // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
     if (PC.SavedArtilleryCoords == vect(0, 0, 0)
-      && GRI.GetActiveArtilleryStrikesNumber() == 0)
+      && PC.GetActiveOffMapSupportNumber() == 0)
     {
         return ERROR_NoTarget;
     }

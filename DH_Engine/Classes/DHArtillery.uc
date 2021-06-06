@@ -15,8 +15,7 @@ var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
 
-var class<DHMapMarker_FireSupport>  RequestMarkerClass;
-var class<DHMapMarker_ArtilleryHit> OngoingBarrageMarkerClass;
+var class<DHMapMarker_ArtilleryHit> ActiveArtilleryMarkerClass;
 
 replication
 {
@@ -107,11 +106,16 @@ function SetTeamIndex(int TeamIndex)
     }
 }
 
+simulated function bool IsParadrop()
+{
+    return false;
+}
+
 defaultproperties
 {
     DrawType=DT_None
     RemoteRole=ROLE_SimulatedProxy
-    MenuName="Artillery Barrage"
+    MenuName="Off-map support"
     bAlwaysRelevant=true
 
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'

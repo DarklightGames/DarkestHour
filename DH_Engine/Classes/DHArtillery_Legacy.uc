@@ -24,10 +24,8 @@ var DHGameReplicationInfo GRI;
 // And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
 {
-    local DH_LevelInfo LI;
-    local float                           StrikeDelay, MaxSalvoDuration;
-    local DHPlayer                        PC;
-    local vector                          MapLocation;
+    local DH_LevelInfo            LI;
+    local float                   StrikeDelay, MaxSalvoDuration;
 
     super.PostBeginPlay();
 
@@ -61,31 +59,11 @@ function PostBeginPlay()
     // This actor's LifeSpan is set to the maximum possible length of the strike, assuming the max random time between shells & salvoes
     MaxSalvoDuration = 1.5 * (BatterySize - 1);
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
-
-    PC = DHPlayer(Owner);
-    if (PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        if (GRI != none)
-        {
-            // Record the team that called this arty strike
-            // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
-            // DH_Legacy.TeamIndex does not work (it's always 0) that's why we have to use PC.PlayerReplicationInfo.Team
-            GRI.ArtyStrikeLocation[PC.PlayerReplicationInfo.Team.TeamIndex] = Location;
-            GRI.GetMapCoords(PC.SavedArtilleryCoords, MapLocation.X, MapLocation.Y);
-            PC.AddMarker(self.OngoingBarrageMarkerClass, MapLocation.X, MapLocation.Y, PC.SavedArtilleryCoords);
-        }
-        else
-        {
-            Error("could not add a barrage marker :(");
-        }
-    }
 }
 
 // From deprecated ROArtillerySpawner
 function Destroyed()
 {
-    local DHPlayer              PC;
     // TODO: this is retarded
     if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
     {
@@ -95,16 +73,8 @@ function Destroyed()
     {
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
-
-    // new marking system - remove the hit marker after artillery is finished
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    if (GRI == none || !GRI.InvalidateBarrageMarker(TeamIndex, self.OngoingBarrageMarkerClass))
-    {
-        Warn("Could not invalidate a target marker");
-    }
-    PC = DHPlayer(Owner);
-
     LastSpawnedShell = none;
+    GRI.InvalidateBarrageMarker(TeamIndex, self.ActiveArtilleryMarkerClass);
 }
 
 // Modified from deprecated ROArtillerySpawner to fix log errors causing 1 extra salvo & 1 extra shell per salvo (& re-factored a little to optimise)
@@ -238,6 +208,5 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 defaultproperties
 {
-    RequestMarkerClass=class'DHMapMarker_FireSupport_OffMap'
-    OngoingBarrageMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
+    ActiveArtilleryMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
 }

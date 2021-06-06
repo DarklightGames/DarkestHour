@@ -66,6 +66,11 @@ static function color GetBeeLineColor()
     return default.IconColor;
 }
 
+static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return default.IconColor;
+}
+
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
 

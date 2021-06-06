@@ -45,6 +45,11 @@ event Destroyed()
     }
 }
 
+simulated function bool IsParadrop()
+{
+    return true;
+}
+
 defaultproperties
 {
     MenuName="Paratroopers"
