@@ -7417,6 +7417,7 @@ defaultproperties
     ConfigViewFOV=85.0
 
     // Paradrops
+    ParadropMarkerClass=class'DH_Engine.DHMapMarker_AdminParadrop'
     ParadropHeight=10000
     ParadropSpreadModifier=600
 
@@ -7443,6 +7444,7 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
+    PersonalMapMarkerClasses(1)=class'DHMapMarker_AdminParadrop'
 
     ArtilleryRequestsUnlockTime = 0
     ArtilleryLockingPeriod = 10
