@@ -16,6 +16,8 @@ class DHATGunFactory extends DHVehicleFactory
 var()   bool        bUseRandomizer;           // makes this factory part of a randomized AT gun group
 var()   string      GroupTag;                 // each factory in a group must have a matching GroupTag
 var()   int         MaxRandomFactoriesActive; // the number of gun factories to be activated based on random selection from their group
+var()   bool        bOverrideTeamLock;        // use factory value for `bTeamLocked`
+var()   bool        bTeamLocked;              // gun can only be used by owning team
 var     int         NumToActivate;            // the no. of factories out of the group that are to be randomly selected to be activated
 var     bool        bHaveSetupATGunGroup;     // flags that we've already set up our allocated AT gun group
 var     bool        bIsMasterFactory;         // flags that this factory is acting as the master gun factory & will control randomization
@@ -200,6 +202,11 @@ function VehicleSpawned(Vehicle V)
     if (Gun != none)
     {
         Gun.PrependFactoryExitPositions();
+
+        if (bOverrideTeamLock)
+        {
+            Gun.bTeamLocked = bTeamLocked;
+        }
     }
 }
 
