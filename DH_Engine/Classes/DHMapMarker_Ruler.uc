@@ -2,30 +2,26 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// A marker for measuring distances on the map. Any role can use it.
 
 class DHMapMarker_Ruler extends DHMapMarker
     abstract;
 
-// allow only artillery roles to place a Ruler marker
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryOperator();
+    return true;
 }
 
-// allow only artillery roles to remove a Ruler marker
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryOperator();
-}
+    return true;
 
-// keep in mind that this class is only inserted to personal map makers!
-// thus a Ruler marker can only be seen by the person who created it anyway
+// Personal marker: only visible to owner.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return PRI != none && DHPlayer(PRI.Owner).IsArtilleryOperator();
+    return true;
 }
 
-// Override this to have a caption accompany the marker.
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local vector PlayerLocation;
