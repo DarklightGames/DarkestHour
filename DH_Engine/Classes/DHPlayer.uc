@@ -167,7 +167,7 @@ var     rotator                 LazyCamRotationTarget;
 // Surrender
 var     bool                    bSurrendered;
 
-// Paradrops
+// Admin-initialed paradrops
 var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
@@ -5882,7 +5882,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none || MapMarkerClass == none || !(MapMarkerClass.default.Scope == PERSONAL))
+    if (GRI == none || MapMarkerClass == none || MapMarkerClass.default.Scope != PERSONAL)
     {
         return;
     }
@@ -7291,6 +7291,7 @@ simulated function bool CanUseFireSupportMenu()
 
     return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
 }
+
 function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)
 {
     local DHGameReplicationInfo GRI;
@@ -7298,7 +7299,8 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(GRI != none && L == vect(0,0,0))
+    // NOTE: Using vect(0,0,0) as a "null" value might be unreliable.
+    if (GRI != none && L == vect(0,0,0))
     {
         WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
     }
@@ -7416,7 +7418,7 @@ defaultproperties
     ViewFOVMax=100.0
     ConfigViewFOV=85.0
 
-    // Paradrops
+    // Admin-initialed paradrops
     ParadropMarkerClass=class'DH_Engine.DHMapMarker_AdminParadrop'
     ParadropHeight=10000
     ParadropSpreadModifier=600
