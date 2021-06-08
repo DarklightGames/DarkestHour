@@ -15,6 +15,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     return true;
+}
 
 // Personal marker: only visible to owner.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
