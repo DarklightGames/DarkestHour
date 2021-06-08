@@ -42,24 +42,15 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 // Override this function to determine if this map marker can be placed by
 // the provided player.
-static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
-{
-    return false;
-}
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI);
 
 // Override this function to determine if this map marker can be removed by
 // the provided player.
-static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return false;
-}
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker);
 
 // Override this function to determine if this map marker can be displayed on the map by
 // the provided player.
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return false;
-}
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker);
 
 static function color GetBeeLineColor()
 {
