@@ -36,6 +36,8 @@ var Object                  MenuObject;
 var int                     SlotCount;
 var int                     SlotCountOverride;  // If non-zero, the amount of slots will always be at least this many.
 
+var bool                    bShouldTick;
+
 // Called before pushed onto the stack
 function Setup()
 {
@@ -110,4 +112,7 @@ function OnPassive();                   // Called when a menu is no longer the t
 function OnHoverIn(int OptionIndex);    // Called when a menu option is hovered over
 function OnHoverOut(int OptionIndex);   // Called when a menu option is no longer being hovered over
 function OnSelect(int OptionIndex, vector Location);
+
+function Tick();                        // Called every frame if bShouldTick is true and the menu is at the top of the stack
+
 

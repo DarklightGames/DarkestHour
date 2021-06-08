@@ -91,7 +91,6 @@ function ServerSetFiringSettings(byte PackedSettings)
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local rotator    R;
 
     P = super.SpawnProjectile(ProjClass, bAltFire);
 
@@ -104,12 +103,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
 
         // Debug option
-        if (bDebug && P.IsA('DHMortarProjectile'))
+        if (P.IsA('DHMortarProjectile'))
         {
-            R = Rotation - CurrentAim;
-            R.Pitch = 0;
-            DHMortarProjectile(P).DebugForward = vector(R);
-            DHMortarProjectile(P).DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+            DHMortarProjectile(P).VehicleWeapon = self;
         }
     }
 
@@ -260,7 +256,7 @@ function bool GiveInitialAmmo()
 // Implemented to handle mortar resupply based on specified resupply quantities, but only for an occupied mortar (ammo is transferred to player when he exits & mortar will be empty)
 function bool ResupplyAmmo()
 {
-    if (MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval && MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo)
     {
         MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
         MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
@@ -269,7 +265,7 @@ function bool ResupplyAmmo()
         {
             DHMortarVehicle(Base).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
         }
-
+        LastResupplyTimestamp = Level.TimeSeconds;
         return true;
     }
 
@@ -315,4 +311,5 @@ defaultproperties
     BlurTime=0.5
     BlurEffectScalar=1.35
     AIInfo(0)=(AimError=0.0,WarnTargetPct=0.0)
+    ResupplyInterval=20.0
 }

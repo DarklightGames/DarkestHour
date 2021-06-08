@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_USMortarObserver29thBeach extends DH_USMortarObserver29th;
+class DH_USMortarObserver29thBeach extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawn',Weight=1.0)
 }

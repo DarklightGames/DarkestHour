@@ -132,6 +132,8 @@ var     TexRotator          VehicleHudTurretLook;
 var     float               VehicleHudTreadsPosX[2]; // 0.0 to 1.0 X positioning of tread damage indicators (index 0 = left, 1 = right)
 var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
+var     bool                bShouldDrawPositionDots;
+var     bool                bShouldDrawOccupantList;
 
 // Map icon
 var     class<DHMapIconAttachment>  MapIconAttachmentClass;
@@ -159,6 +161,8 @@ var     int                                     SupplyDropCountMax;         // H
 var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
+var     float                                   ResupplyInterval;
+var     int                                     LastResupplyTimestamp;
 
 var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
@@ -3578,11 +3582,19 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    bDidResupply = super.ResupplyAmmo();
-
-    if (SupplyAttachment != none && SupplyAttachment.Resupply())
+    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        bDidResupply = true;
+        bDidResupply = super.ResupplyAmmo();
+
+        if (SupplyAttachment != none && SupplyAttachment.Resupply())
+        {
+            bDidResupply = true;
+        }
+    }
+
+    if (bDidResupply)
+    {
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidResupply;
@@ -4267,6 +4279,8 @@ defaultproperties
     VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.65
+    bShouldDrawPositionDots=true
+    bShouldDrawOccupantList=true
 
     // Engine
     bEngineOff=true
@@ -4321,4 +4335,5 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //bDebuggingText=true
+    ResupplyInterval=2.5
 }

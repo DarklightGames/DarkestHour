@@ -35,6 +35,8 @@ var     vector  DebugRight;
 var     vector  DebugLocation;
 var     bool    bDebug;
 
+var     Texture HudTexture;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -303,7 +305,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local DHVehicle     V;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
-    local Controller    C;
     local bool          bAlreadyChecked, bAlreadyDead;
     local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
@@ -439,17 +440,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         if (ROVehicle(Victim) != none && ROVehicle(Victim).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
-        }
-
-        // Added to give additional points to the observer & the mortarman for working together for a kill!
-        if (!bAlreadyDead && Victim.IsA('Pawn') && Pawn(Victim).Health <= 0 && InstigatorController.GetTeamNum() != Pawn(Victim).GetTeamNum())
-        {
-            C = GetClosestArtilleryTargetController();
-
-            if (C != none)
-            {
-                DarkestHourGame(Level.Game).ScoreMortarSpotAssist(C, InstigatorController);
-            }
         }
     }
 

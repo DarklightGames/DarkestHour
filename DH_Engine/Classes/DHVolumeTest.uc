@@ -45,7 +45,7 @@ function bool IsInNoArtyVolume()
         // Prevent arty if we're in an active mine volume that is set to also function as a no arty volume
         else if (V.IsA('DHMineVolume'))
         {
-            if (DHMineVolume(V).bIsAlsoNoArtyVolume && DHMineVolume(V).bActive)
+            if (DHMineVolume(V).bIsAlsoNoArtyVolume && DHMineVolume(V).bClientActive)
             {
                 return true;
             }
@@ -56,7 +56,6 @@ function bool IsInNoArtyVolume()
             return true;
         }
     }
-
     return false;
 }
 

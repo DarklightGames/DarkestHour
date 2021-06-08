@@ -3,16 +3,26 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMapMarker_Paradrop extends DHMapMarker
+class DHMapMarker_AdminParadrop extends DHMapMarker
     abstract;
 
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     return PRI != none &&
            (PRI.bAdmin ||
             PRI.bSilentAdmin ||
             (PRI.Level != none &&
              PRI.Level.NetMode == NM_Standalone));
+}
+
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return true;
+}
+
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return true;
 }
 
 defaultproperties
@@ -23,6 +33,6 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    bIsUnique=true
-    bIsPersonal=true
+    OverwritingRule=UNIQUE
+    Scope=PERSONAL
 }

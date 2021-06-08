@@ -750,4 +750,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
+
+    bShouldDrawPositionDots=false
+    bShouldDrawOccupantList=false
 }

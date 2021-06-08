@@ -11,7 +11,8 @@ var automated   DHGUIMapContainer           c_Map;
 var string                                  HideExecs[2];
 var array<int>                              HideKeys;
 
-var int                                     SavedZoomLevel;
+var int     SavedZoomLevel;
+var vector  SavedOrigin;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -46,7 +47,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
             GRI.GetMapCoords(PC.Pawn.Location, Origin.X, Origin.Y);
             Origin.X = 1 - Origin.X;
             Origin.Y = 1 - Origin.Y;
-            c_Map.p_Map.SetViewport(Origin, default.SavedZoomLevel);
+            c_Map.p_Map.SetViewport(default.SavedOrigin, default.SavedZoomLevel);
         }
     }
 }
@@ -62,6 +63,9 @@ function InternalOnOpen()
 
 function InternalOnClose(optional bool bCancelled)
 {
+    default.SavedOrigin = c_Map.p_Map.GetViewportOrigin();
+    default.SavedZoomLevel = c_Map.p_Map.ZoomLevel;
+
     Controller.bActive = true;
 }
 
@@ -190,11 +194,6 @@ function PopulateHideKeys()
     }
 }
 
-function OnZoomLevelChanged(int ZoomLevel)
-{
-    default.SavedZoomLevel = ZoomLevel;
-}
-
 defaultproperties
 {
     bRenderWorld=true
@@ -222,7 +221,7 @@ defaultproperties
         WinTop=0.0
         bNeverFocus=true
         OnSpawnPointChanged=OnSpawnPointChanged
-        OnZoomLevelChanged=OnZoomLevelChanged
+        //OnZoomLevelChanged=OnZoomLevelChanged
     End Object
     c_Map=MapContainerObject
 

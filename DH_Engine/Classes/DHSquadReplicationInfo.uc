@@ -227,9 +227,8 @@ function Timer()
             continue;
         }
 
-        // Squad leaders and their assistants should know where their teams'
-        // other squad leaders are.
-        if (PRI.IsSLorASL())
+        // SLs, ASLs and radio operators should know where all squad leaders are.
+        if (PRI.IsSLorASL() || PRI.IsRadioman())
         {
             for (i = 0; i < GetTeamSquadLimit(PC.GetTeamNum()); ++i)
             {

@@ -23,7 +23,7 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
         menu = "";
         CurPageTitle = "";
 
-        for (i=0; i<QueryHandlers.Length; ++i)
+        for (i = 0; i < QueryHandlers.Length; ++i)
         {
             if (QueryHandlers[i].DefaultPage == GroupPage)
             {
@@ -31,6 +31,7 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
             }
 
             Dis = "";
+
             if (QueryHandlers[i].NeededPrivs != "" && !CanPerform(QueryHandlers[i].NeededPrivs))
             {
                 Dis = "d";
@@ -59,5 +60,4 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
 
 defaultproperties
 {
-
 }

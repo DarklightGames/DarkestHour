@@ -47,3 +47,21 @@ static final function Mod(float Dividend, float Divisor, optional out int Quotie
     Remainder = Dividend % Divisor;
 }
 
+static final function string Format(float Value, int Decimals)
+{
+    local int Quotient;
+    local float Remainder;
+    local string S;
+
+    Mod(Value, 1.0f, Quotient, Remainder);
+
+    if (Decimals == 0)
+    {
+        return string(int(Value));
+    }
+
+    S = string(Quotient) $ "." $ string(int(Remainder * (10 ** Decimals)));
+
+    return S;
+}
+

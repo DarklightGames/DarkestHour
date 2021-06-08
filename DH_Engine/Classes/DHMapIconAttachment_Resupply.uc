@@ -10,7 +10,7 @@ class DHMapIconAttachment_Resupply extends DHMapIconAttachment
 var Material IconMaterialVehicle;
 var float    IconScaleVehicle;
 
-var private DHResupplyAttachment.EResupplyType ResupplyType;
+var private DHResupplyStrategy.EResupplyType ResupplyType;
 
 replication
 {
@@ -18,12 +18,12 @@ replication
         ResupplyType;
 }
 
-final function DHResupplyAttachment.EResupplyType GetResupplyType()
+final function DHResupplyStrategy.EResupplyType GetResupplyType()
 {
     return ResupplyType;
 }
 
-final function SetResupplyType(DHResupplyAttachment.EResupplyType ResupplyType)
+final function SetResupplyType(DHResupplyStrategy.EResupplyType ResupplyType)
 {
     self.ResupplyType = ResupplyType;
 }

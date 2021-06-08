@@ -79,6 +79,11 @@ function SetViewport(vector Origin, int ZoomLevel)
     Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
+function vector GetViewportOrigin()
+{
+    return (Viewport.Min + Viewport.Max) / 2.0;
+}
+
 function UpdateSpawnPointPositions()
 {
     local int i;
@@ -391,10 +396,9 @@ function bool IsMarkerUnderCursor(float LocationX, float LocationY, float Cursor
 
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
-    local int i;
-    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
+    local int i, ElapsedTime;
+    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
-    local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
 
@@ -410,16 +414,20 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     Sender.ContextItems.Length = 0;
 
     // Iterate through existing map markers and check if any were clicked on.
-    GRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+    GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;
     MapMarkerIndexToRemove = -1;
     bRemoveMapMarker = false;
+    ElapsedTime = GRI.ElapsedTime;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (IsMarkerUnderCursor(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+        if (PersonalMapMarkers[i].MapMarkerClass != none &&
+           (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
+           PersonalMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PersonalMapMarkers[i]) &&
+           IsMarkerUnderCursor(float(PersonalMapMarkers[i].LocationX) / 255.0, float(PersonalMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
         {
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
@@ -433,24 +441,24 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     {
         for (i = 0; i < MapMarkers.Length; ++i)
         {
-            if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) ||
-                !IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            if (MapMarkers[i].MapMarkerClass != none &&
+                (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime) &&
+                MapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, MapMarkers[i]) &&
+                IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
-                continue;
+                bRemoveMapMarker = true;
+                MapMarkerIndexToRemove = i;
+                Sender.AddItem(RemoveText);
+                MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
+                break;
             }
-
-            bRemoveMapMarker = true;
-            MapMarkerIndexToRemove = Indices[i];
-            Sender.AddItem(RemoveText);
-            MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
-            break;
         }
     }
 
     // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlayerUse(PRI))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
@@ -458,7 +466,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
     {
-        if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlayerUse(PRI))
+        if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
         }
@@ -507,11 +515,11 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 
     if (bRemoveMapMarker && ClickIndex == 0)
     {
-        MenuItemObjects[ClickIndex].static.RemoveMarker(PC, MapMarkerIndexToRemove);
+        PC.RemoveMarker(MenuItemObjects[ClickIndex], MapMarkerIndexToRemove);
     }
     else
     {
-        MenuItemObjects[ClickIndex].static.AddMarker(PC, MapClickLocation.X, MapClickLocation.Y);
+        PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
     }
 }
 
@@ -821,4 +829,3 @@ defaultproperties
     ViewportInterpDuration=0.33
     Viewport=(Min=(X=0,Y=0),Max=(X=1,Y=1))
 }
-

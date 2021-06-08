@@ -3,9 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BritishMortarObserver extends DHCWMortarObserverRoles;
+class DH_BritishMortarObserver extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishPawn',Weight=1.0)
 }

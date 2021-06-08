@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BritishMortarObserverRMCommando extends DHCWMortarObserverRoles;
+class DH_BritishMortarObserverRMCommando extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRMCommandoPawn')
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
 }

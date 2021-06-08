@@ -9,6 +9,12 @@
 
 class DH_M7PriestCannonShellSmoke extends DH_ShermanM4A3105CannonShellSmoke;
 
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke');
+    super.Explode(HitLocation, HitNormal);
+}
+
 defaultproperties
 {
     SpeedFudgeScale=1.0
