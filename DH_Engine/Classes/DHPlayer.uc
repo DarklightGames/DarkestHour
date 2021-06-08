@@ -2231,7 +2231,7 @@ function bool IsPositionOfArtillery(vector Position)
 
     for (i = 0; i < arraycount(GRI.DHArtillery); i++)
     {
-        if (GRI.DHArtillery[i] != none 
+        if (GRI.DHArtillery[i] != none
           && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
           && !GRI.DHArtillery[i].IsParadrop())
         {
@@ -2255,7 +2255,7 @@ function bool IsPositionOfParadrop(vector Position)
 
     for (i = 0; i < arraycount(GRI.DHArtillery); i++)
     {
-        if (GRI.DHArtillery[i] != none 
+        if (GRI.DHArtillery[i] != none
           && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
           && GRI.DHArtillery[i].IsParadrop())
         {
@@ -2280,7 +2280,7 @@ function int GetActiveOffMapSupportNumber()
     Counter = 0;
     for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
     {
-        if (GRI.DHArtillery[i] != none 
+        if (GRI.DHArtillery[i] != none
           && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
         {
             Counter++;
@@ -7358,7 +7358,7 @@ exec function DebugStartRound()
 {
     local DHGameReplicationInfo GRI;
     local DHSetupPhaseManager SPM;
-    
+
     if (IsDebugModeAllowed())
     {
         GRI = DHGameReplicationInfo(GameReplicationInfo);
