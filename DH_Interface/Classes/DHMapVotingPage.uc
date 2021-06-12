@@ -39,6 +39,8 @@ function InternalOnOpen()
         }
     }
 
+    // Fill the filter box in case a pattern is set
+    ed_Filter.SetText(DHMapVoteMultiColumnList(lb_MapListBox.List).GetFilterPattern());
 }
 
 function bool AlignBK(Canvas C)
