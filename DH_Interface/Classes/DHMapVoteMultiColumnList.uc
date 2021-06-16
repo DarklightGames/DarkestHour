@@ -167,9 +167,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             }
 
             // Do a check if the current player count is in bounds of recommended range
-            if ((GRI.PRIArray.Length < Min ||
-                 (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers)) &&
-                MState != MSAT_Disabled)
+            if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
             {
                 DrawStyle = RedListStyle;
             }

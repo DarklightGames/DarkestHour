@@ -89,7 +89,7 @@ function SendVote(GUIComponent Sender)
                 Min = int(Parts[3]);
                 Max = int(Parts[4]);
 
-                if (GRI.PRIArray.Length < Min || (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers))
+                if (!GRI.IsPlayerCountInRange(Min, Max))
                 {
                     PlayerOwner().ClientMessage(lmsgMapOutOfBounds);
                     return;

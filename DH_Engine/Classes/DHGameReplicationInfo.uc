@@ -1380,6 +1380,14 @@ simulated function GetTeamSizes(out int TeamSizes[2])
     }
 }
 
+simulated function bool IsPlayerCountInRange(int Floor, int Ceiling)
+{
+    local int PlayerCount;
+
+    PlayerCount = Min(PRIArray.Length, MaxPlayers);
+    return PlayerCount >= Floor && PlayerCount <= Ceiling;
+}
+
 //==============================================================================
 // MAP MARKERS
 //==============================================================================
