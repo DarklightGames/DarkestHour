@@ -167,6 +167,10 @@ var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
+var     DHIQManager             IQManager;
+var     int                     MinIQToGrowHead;
+var     bool                    bIQManaged;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -177,7 +181,10 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered;
+        bSurrendered, bIQManaged;
+
+    reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
+        MinIQToGrowHead;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -259,6 +266,11 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ScoreManager = Spawn(class'DHScoreManager', self);
+
+        if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
+        {
+            IQManager = Spawn(class'DHIQManager', self);
+        }
     }
 }
 
@@ -3176,6 +3188,11 @@ state Dead
                 LastKilledTime = GRI.ElapsedTime;
             }
 
+            if (IQManager != none)
+            {
+                IQManager.OnDeath();
+            }
+
             // Apply personal message from server strings
             //ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
         }
@@ -4378,6 +4395,24 @@ exec function VehCamDist(int NewDistance)
             V.TPCamDistRange.Min = NewDistance;
             V.TPCamDistRange.Max = NewDistance;
             V.DesiredTPCamDistance = NewDistance;
+        }
+    }
+}
+
+// New debug exec to set a vehicle's 3rd person camera distance
+exec function VehCamLookAt(int X, int Y, int Z)
+{
+    local Vehicle V;
+
+    if (IsDebugModeAllowed())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none)
+        {
+            V.TPCamLookat.X = X;
+            V.TPCamLookat.Y = Y;
+            V.TPCamLookat.Z = Z;
         }
     }
 }
@@ -6657,9 +6692,17 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
-    if (Role == ROLE_Authority && ScoreManager != none)
+    if (Role == ROLE_Authority)
     {
-        ScoreManager.Destroy();
+        if (ScoreManager != none)
+        {
+            ScoreManager.Destroy();
+        }
+
+        if (IQManager != none)
+        {
+            IQManager.Destroy();
+        }
     }
 }
 
@@ -7142,4 +7185,6 @@ defaultproperties
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
     PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+
+    MinIQToGrowHead=100
 }

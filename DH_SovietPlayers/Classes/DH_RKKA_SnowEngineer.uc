@@ -11,5 +11,5 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
     DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
 }

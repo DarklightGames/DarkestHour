@@ -55,14 +55,18 @@ defaultproperties
     HandNum=1
     SleeveNum=0
 
-    IronSightDisplayFOV=62
+    IronSightDisplayFOV=65
     DisplayFOV=82
 
     bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+    
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
@@ -80,6 +84,6 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
-    MagEmptyReloadAnim="reload_empty_mp41r"
-    MagPartialReloadAnim="reload_half_mp41r"
+    MagEmptyReloadAnims(0)="reload_empty_mp41r"
+    MagPartialReloadAnims(0)="reload_half_mp41r"
 }

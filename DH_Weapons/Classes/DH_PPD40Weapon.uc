@@ -19,4 +19,14 @@ defaultproperties
 
     IronSightDisplayFOV=60.0
     DisplayFOV=85.0
+    
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
+    
+    //alternative reload (this one is "normal", so more common)
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_emptyB"
+    MagEmptyReloadAnims(3)="reload_emptyB"
 }

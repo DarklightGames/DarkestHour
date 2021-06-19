@@ -175,13 +175,13 @@ defaultproperties
     bSlowFireRate=true
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
-    SightUpSelectFireIronAnim="fireswitch_bipod"
+    SelectFireBipodIronAnim="fireswitch_bipod"
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
 
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     SightUpIronBringUp="bipod_in"
     SightUpIronPutDown="bipod_out"

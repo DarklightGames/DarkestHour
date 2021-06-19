@@ -306,6 +306,26 @@ simulated function PostNetReceive()
     }
 }
 
+simulated event SetHeadScale(float NewScale)
+{
+    HeadScale = NewScale;
+    SetBoneScale(4,HeadScale,'head');
+
+    if (Headgear != none)
+    {
+        Headgear.SetDrawScale(HeadScale);
+    }
+
+    // Increase scale of main collision hitbox (whole body hitbox used first to make sure you hit a target)
+    // We shouldn't increase this on the same scale as the head as the main collision hitbox will be way too large
+    HitPoints[0].PointRadius = 60.0 * HeadScale;
+    HitPoints[0].PointHeight = 75.0 * HeadScale;
+
+    // Adjust scale of head hitbox
+    HitPoints[1].PointRadius = 6.5 * HeadScale;
+    HitPoints[1].PointHeight = 8.0 * HeadScale;
+}
+
 // Modified so if player is on fire we cause fire damage every second, & force him to drop any weapon he in carrying in his hands
 // We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)
@@ -3381,6 +3401,11 @@ function CheckGiveSmoke()
                     case NATION_USSR:
                         SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
                         ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
+                        break;
+
+                    case NATION_Poland:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
                         break;
 
                     default:
@@ -7349,7 +7374,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(float X, float Y, float Z)
+simulated exec function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7418,6 +7443,11 @@ simulated exec function Give(string WeaponName)
     GiveWeapon(ClassName);
 }
 
+exec function BigHead(float V)
+{
+    SetHeadScale(V);
+}
+
 defaultproperties
 {
     // General class & interaction stuff
@@ -7471,7 +7501,7 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
+    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
     ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6

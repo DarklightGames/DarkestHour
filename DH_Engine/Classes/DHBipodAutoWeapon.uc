@@ -205,7 +205,7 @@ simulated function PlayReload()
         }
         else
         {
-            Anim = MagPartialReloadAnim;
+            Anim = MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)];
         }
     }
     else
@@ -216,7 +216,7 @@ simulated function PlayReload()
         }
         else
         {
-            Anim = MagEmptyReloadAnim;
+            Anim = MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)];
         }
     }
 

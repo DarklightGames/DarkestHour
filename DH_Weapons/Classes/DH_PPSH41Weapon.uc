@@ -53,10 +53,19 @@ defaultproperties
     DisplayFOV=85
 
     bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+
+    //alternative reloads
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_emptyC"
+    MagEmptyReloadAnims(3)="reload_empty" //standart should be more common
+    
+    SelectFireAnim="selectfire"
+    SelectFireIronAnim="Iron_selectfire"
+    SelectFireEmptyAnim="selectfire_empty"
+    SelectFireIronEmptyAnim="Iron_selectfire_empty"
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'

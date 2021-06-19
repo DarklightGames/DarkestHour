@@ -11,4 +11,7 @@ defaultproperties
 
     ProjectileClass=class'DH_Weapons.DH_G43ScopedBullet'
     FireIronAnim="Scope_Shoot"
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Scope_Shoot_Last"
+    FireAnim="Shoot_g43"
 }

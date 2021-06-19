@@ -59,10 +59,12 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="fire_select"
     SelectFireIronAnim="Iron_fire_select"
+    SelectFireEmptyAnim="fire_select_empty"
+    SelectFireIronEmptyAnim="Iron_fire_select_empty"
     PutDownAnim="put_away"
 
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     HandNum=1
     SleeveNum=0

@@ -37,4 +37,27 @@ defaultproperties
 
     InitialNumPrimaryMags=7
     MaxNumPrimaryMags=7
+    
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_emptyC"
+    MagPartialReloadAnims(0)="reload_half"
+    MagPartialReloadAnims(1)="reload_halfB"
+    MagPartialReloadAnims(2)="reload_halfC"
+
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="scope_idle_empty"
+    IronBringUpEmpty="scope_in_empty"
+    IronPutDownEmpty="scope_out_empty"
+    SprintStartEmptyAnim="sprint_start_empty"
+    SprintLoopEmptyAnim="sprint_middle_empty"
+    SprintEndEmptyAnim="sprint_end_empty"
+
+    CrawlForwardEmptyAnim="crawlF_empty"
+    CrawlBackwardEmptyAnim="crawlB_empty"
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+
+    SelectEmptyAnim="draw_empty"
+    PutDownEmptyAnim="put_away_empty"
 }
