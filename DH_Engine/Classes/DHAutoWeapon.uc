@@ -6,9 +6,12 @@
 class DHAutoWeapon extends DHProjectileWeapon
     abstract;
 
-var     name    SelectFireAnim;            // animation for selecting the firing mode
-var     name    SelectFireIronAnim;        // animation for selecting the firing mode in ironsights
-var     name    SightUpSelectFireIronAnim; // animation for selecting the firing mode in ironsights
+var     name    SelectFireAnim;
+var     name    SelectFireEmptyAnim;
+var     name    SelectFireIronAnim;
+var     name    SelectFireIronEmptyAnim;
+var     name    SelectFireBipodIronAnim;
+var     name    SelectFireBipodIronEmptyAnim;
 
 // Sound effect for the fire selector switch (in case it's not handled by the animation).
 var     sound   SelectFireSound;
@@ -92,18 +95,32 @@ simulated state SwitchingFireMode extends WeaponBusy
 
         if (bUsingSights || Instigator.bBipodDeployed)
         {
-            if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
+            if (Instigator.bBipodDeployed && HasAnim(SelectFireBipodIronAnim))
             {
-                Anim = SightUpSelectFireIronAnim;
+                Anim = SelectFireBipodIronAnim;
             }
             else
             {
-                Anim = SelectFireIronAnim;
+                if (AmmoAmount(0) == 0 && HasAnim(SelectFireIronEmptyAnim))
+                {
+                    Anim = SelectFireIronEmptyAnim;
+                }
+                else
+                {
+                    Anim = SelectFireIronAnim;
+                }
             }
         }
         else
         {
-            Anim = SelectFireAnim;
+            if (AmmoAmount(0) == 0 && HasAnim(SelectFireEmptyAnim))
+            {
+                Anim = SelectFireEmptyAnim;
+            }
+            else
+            {
+                Anim = SelectFireAnim;
+            }
         }
 
         PlayAnimAndSetTimer(Anim, 1.0);
@@ -153,9 +170,16 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease) // adds check that isn't animating
     {
-        PlayIdle();
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
+        else
+        {
+            FireMode[Mode].PlayFireEnd();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;

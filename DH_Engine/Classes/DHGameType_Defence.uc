@@ -18,10 +18,10 @@ defaultproperties
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true
     bOmitTimeAttritionForDefender=true
-    bTimeCanChangeAtZeroReinf=false
+    bTimeCanChangeAtZeroReinf=true
     bKeepSpawningWithoutReinf=false
-    OutOfReinfRoundTime=0
-    OutOfReinfLimitForTimeChange=10
+    OutOfReinfRoundTime=200
+    OutOfReinfLimitForTimeChange=500
 
     ObjSpawnMinimumDepth=1
 }

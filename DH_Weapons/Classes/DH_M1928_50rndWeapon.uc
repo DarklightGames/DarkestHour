@@ -59,6 +59,8 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="fire_select"
     SelectFireIronAnim="Iron_fire_select"
+    SelectFireEmptyAnim="fire_select_empty"
+    SelectFireIronEmptyAnim="Iron_fire_select_empty"
     PutDownAnim="put_away"
 
     MagEmptyReloadAnims(0)="reload_empty"

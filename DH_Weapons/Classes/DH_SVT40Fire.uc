@@ -27,4 +27,7 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
+    
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Iron_Shoot_Last"
 }

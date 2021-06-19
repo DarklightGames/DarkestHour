@@ -17,6 +17,7 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context C
                 case NATION_USA:
                     return class'DH_Weapons.DH_M1GrenadeSpawner';
                 case NATION_USSR:
+                case NATION_Poland:
                     return class'DH_Weapons.DH_F1GrenadeSpawner';
                 case NATION_Britain:
                 case NATION_Canada:

@@ -22,8 +22,8 @@ defaultproperties
     
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="Iron_fireswitch"
-    //="fireswitch_empty"
-    //="Iron_fireswitch_empty"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
     
     //alternative reload (this one is "normal", so more common)
     MagEmptyReloadAnims(1)="reload_emptyB"

@@ -8,7 +8,7 @@ class DH_JagdpantherTank extends DHArmoredVehicle;
 // Hack to stop jagdpanther camo variants without a matching schurzen texture from spawning schurzen
 simulated function SpawnVehicleAttachments()
 {
-    if (RandomAttachment.Skin == none)
+    if (RandomAttachment.Skins[0] == none)
     {
         RandomAttachOptions.Length = 0;
     }
@@ -66,12 +66,12 @@ defaultproperties
     MaxCriticalSpeed=1002.0 // 60 kph
 
     // Damage
-	// pros: 5 men crew
-	// cons: petrol fuel
+    // pros: 5 men crew
+    // cons: petrol fuel
     Health=565
     HealthMax=565.0
-	EngineHealth=300
-	AmmoIgnitionProbability=0.8  // 0.75 default
+    EngineHealth=300
+    AmmoIgnitionProbability=0.8  // 0.75 default
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-122.0,Z=-6.0)) // engine
@@ -120,7 +120,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:
-    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skin=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')
+    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2'))
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
     RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides

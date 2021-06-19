@@ -5,8 +5,12 @@
 
 class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 
-var(Style) string                RedListStyleName; // name of the style to use for when current player is out of recommended player range
-var(Style) noexport GUIStyles    RedListStyle;
+var           noexport int       GameTypeIndex;
+var protected noexport string    FilterPattern;
+
+// Style for maps that are out of player range
+var(Style)             string    RedListStyleName;
+var(Style)    noexport GUIStyles RedListStyle;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -16,6 +20,48 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         RedListStyle = MyController.GetStyle(RedListStyleName, FontScale);
     }
+}
+
+function string GetFilterPattern() { return FilterPattern; }
+
+function SetFilterPattern(string FilterPattern)
+{
+    self.FilterPattern = Locs(FilterPattern);
+    Clear();
+    LoadList(VRI, GameTypeIndex);
+}
+
+function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
+{
+    local int m, p, l;
+    local array<string> PrefixList;
+
+    VRI = LoadVRI;
+
+    if (VRI == none)
+    {
+        return;
+    }
+
+    Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
+
+    for (m = 0; m < VRI.MapList.Length; m++)
+    {
+        for (p = 0; p < PreFixList.Length; p++)
+        {
+            if (Left(VRI.MapList[m].MapName, Len(PrefixList[p])) ~= PrefixList[p] &&
+                (FilterPattern == "" || InStr(Locs(VRI.MapList[m].MapName), FilterPattern) != -1))
+            {
+                l = MapVoteData.Length;
+                MapVoteData.Insert(l, 1);
+                MapVoteData[l] = m;
+                AddedItem();
+                break;
+            }
+        }
+    }
+
+    OnDrawItem = DrawItem;
 }
 
 // Override to remove any prefix from lists and handle new features
@@ -121,7 +167,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             }
 
             // Do a check if the current player count is in bounds of recommended range
-            if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MState != MSAT_Disabled)
+            if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
             {
                 DrawStyle = RedListStyle;
             }
