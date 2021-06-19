@@ -23,7 +23,7 @@ defaultproperties
         name="mainimpact"
         StartLocationOffset=(Z=15.000000)
         //UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=10.000000,Max=15.000000),Y=(Min=10.000000,Max=15.000000),Z=(Min=10.000000,Max=15.000000))
+        StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=15.000000,Max=25.000000))
         InitialParticlesPerSecond=2000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.MudImpacts'
@@ -50,7 +50,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=104,G=165,R=183,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=50
-
+        name="main_chunks"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
@@ -90,7 +90,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=174,R=190,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=300
-
+        name="side_chunks"
         SphereRadiusRange=(Min=2.000000,Max=5.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
@@ -124,7 +124,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=178,R=194,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=200
-
+        name="added_chunks"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
@@ -194,8 +194,8 @@ defaultproperties
         ColorScale(0)=(Color=(B=40,G=56,R=64,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=129,R=145,A=255))
         Opacity=0.850000
-        FadeOutStartTime=0.200000
-        FadeInEndTime=0.100000
+        FadeOutStartTime=0.350000
+        FadeInEndTime=0.15
         MaxParticles=1
         name="darkdust"
         StartLocationOffset=(X=-20.000000)

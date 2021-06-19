@@ -23,7 +23,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="waterring"
+        name="water_ring"
         UseRotationFrom=PTRS_Actor
         SpinCCWorCW=(X=0.000000,Y=0.000000,Z=0.000000)
         SpinsPerSecondRange=(X=(Min=-0.100000,Max=0.100000))
@@ -80,12 +80,13 @@ defaultproperties
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        Acceleration=(Z=-500.000000)
+        Acceleration=(Z=-1000.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.500000
-        FadeOutStartTime=0.400000
-        MaxParticles=35
+        FadeOutStartTime=0.25
+        MaxParticles=100
+        name="drops"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=0.500000,Max=0.750000))
         InitialParticlesPerSecond=300.000000
@@ -93,8 +94,8 @@ defaultproperties
         Texture=Texture'Effects_Tex.Smoke.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=1.000000,Max=1.000000)
-        StartVelocityRange=(X=(Min=100.000000,Max=200.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
+        LifetimeRange=(Min=0.8,Max=1.000000)
+        StartVelocityRange=(X=(Min=100.000000,Max=500.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter28'
 
@@ -226,7 +227,7 @@ defaultproperties
     Emitters(6)=SpriteEmitter'SpriteEmitter32'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter5
-        BeamDistanceRange=(Min=40.000000,Max=85.000000)
+        BeamDistanceRange=(Min=85.000000,Max=150.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=1
         FadeOut=True
@@ -236,17 +237,18 @@ defaultproperties
         UseRandomSubdivision=True
         ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=200,G=200,R=200,A=255))
-        Opacity=0.6
+        Opacity=0.5
         FadeOutStartTime=0.150000
         MaxParticles=1
+        name="main_impact"
         StartLocationOffset=(X=-5.000000)
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=45.000000))
+        StartSizeRange=(X=(Min=20.000000,Max=25.000000),Y=(Min=20.000000,Max=25.000000),Z=(Min=85.000000))
         InitialParticlesPerSecond=50.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.WaterImpact01'
         LifetimeRange=(Min=0.500000,Max=0.750000)
-        StartVelocityRange=(X=(Min=100.000000,Max=150.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=-10.000000,Max=10.000000))
+        StartVelocityRange=(X=(Min=300.000000,Max=500.000000),Y=(Min=-5.000000,Max=8.000000),Z=(Min=-8.000000,Max=5.000000))
     End Object
     Emitters(7)=BeamEmitter'BeamEmitter5'
 

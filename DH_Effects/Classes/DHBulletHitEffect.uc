@@ -80,7 +80,7 @@ defaultproperties
 
     //DH Custom impacts
     HitEffects(21)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitSandEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Gravel') // Sand EST_Custom01
-    HitEffects(22)=(HitDecal=class'BulletHoleCloth',HitEffect=class'DHBulletHitSandBagEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt') //Sand Bags EST_Custom02
+    HitEffects(22)=(HitDecal=class'BulletHoleCloth',HitEffect=class'DHBulletHitSandBagEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Gravel') //Sand Bags EST_Custom02
     HitEffects(23)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'DHBulletHitBrickEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Asphalt') //Brick EST_Custom03
     HitEffects(24)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitHedgeEffect',HitSound=sound'ProjectileSounds.Bullets.Impact_Dirt') //Hedgerow-Bush EST_Custom04
 }
