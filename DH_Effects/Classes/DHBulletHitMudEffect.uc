@@ -7,31 +7,119 @@ class DHBulletHitMudEffect extends emitter;
 
 defaultproperties
 {
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter11
-        //UseDirectionAs=PTDU_UP
-        FadeOut=true
+    Begin Object Class=BeamEmitter Name=BeamEmitter1
+        BeamDistanceRange=(Min=15.000000,Max=25.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=1
         UseColorScale=True
+        FadeOut=True
         RespawnDeadParticles=False
         AutoDestroy=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
-        Opacity=1.0
-        FadeOutStartTime=0.1
-        MaxParticles=2
-        name="mainimpact"
-        StartLocationOffset=(Z=15.000000)
-        //UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=15.000000,Max=25.000000))
-        InitialParticlesPerSecond=2000.000000
+        FadeOutStartTime=0.120000
+        MaxParticles=1
+        name="impact1"
+        StartLocationOffset=(X=6.000000)
+        UseRotationFrom=PTRS_Actor
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=8.000000,Max=12.000000),Y=(Min=8.000000,Max=12.000000),Z=(Min=15.000000,Max=25.000000))
+        InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.MudImpacts'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=2
-        LifetimeRange=(Min=0.200000,Max=0.400000)
+        Texture=Texture'DH_FX_Tex.Effects.MudImpact01'
+        LifetimeRange=(Min=0.200000,Max=0.250000)
+        StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
     End Object
-    Emitters(0)=SpriteEmitter'SpriteEmitter11'
+    Emitters(0)=BeamEmitter'BeamEmitter1'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter2
+        BeamDistanceRange=(Min=15.000000,Max=25.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=1
+        UseColorScale=True
+        FadeOut=True
+        FadeIn=true
+        RespawnDeadParticles=False
+        AutoDestroy=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
+        FadeInEndTime=0.02
+        FadeOutStartTime=0.120000
+        MaxParticles=1
+        name="impact2"
+        StartLocationOffset=(X=6.000000)
+        UseRotationFrom=PTRS_Actor
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=8.000000,Max=12.000000),Y=(Min=8.000000,Max=12.000000),Z=(Min=15.000000,Max=25.000000))
+        InitialParticlesPerSecond=200.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'DH_FX_Tex.Effects.MudImpact02'
+        LifetimeRange=(Min=0.200000,Max=0.250000)
+        StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
+    End Object
+    Emitters(1)=BeamEmitter'BeamEmitter2'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter3
+        BeamDistanceRange=(Min=15.000000,Max=25.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=1
+        UseColorScale=True
+        FadeOut=True
+        FadeIn=true
+        RespawnDeadParticles=False
+        AutoDestroy=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
+        FadeInEndTime=0.05
+        FadeOutStartTime=0.150000
+        MaxParticles=1
+        name="impact3"
+        StartLocationOffset=(X=6.000000)
+        UseRotationFrom=PTRS_Actor
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=8.000000,Max=12.000000),Y=(Min=8.000000,Max=12.000000),Z=(Min=15.000000,Max=25.000000))
+        InitialParticlesPerSecond=200.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'DH_FX_Tex.Effects.MudImpact03'
+        LifetimeRange=(Min=0.200000,Max=0.30000)
+        StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
+    End Object
+    Emitters(2)=BeamEmitter'BeamEmitter3'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter4
+        BeamDistanceRange=(Min=15.000000,Max=25.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=1
+        UseColorScale=True
+        FadeOut=True
+        FadeIn=true
+        RespawnDeadParticles=False
+        AutoDestroy=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=34,G=46,R=51,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
+        FadeInEndTime=0.05
+        FadeOutStartTime=0.120000
+        MaxParticles=1
+        name="impact4"
+        StartLocationOffset=(X=6.000000)
+        UseRotationFrom=PTRS_Actor
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=8.000000,Max=12.000000),Y=(Min=8.000000,Max=12.000000),Z=(Min=15.000000,Max=25.000000))
+        InitialParticlesPerSecond=200.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'DH_FX_Tex.Effects.MudImpact04'
+        LifetimeRange=(Min=0.200000,Max=0.250000)
+        StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
+    End Object
+    Emitters(3)=BeamEmitter'BeamEmitter4'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=True
@@ -69,7 +157,7 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+    Emitters(4)=SpriteEmitter'SpriteEmitter1'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         UseMaxCollisions=True
@@ -104,7 +192,7 @@ defaultproperties
         LifetimeRange=(Min=0.500000,Max=1.000000)
         StartVelocityRange=(X=(Min=25.000000,Max=35.000000),Y=(Min=-45.000000,Max=55.000000),Z=(Min=-45.000000,Max=55.000000))
     End Object
-    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+    Emitters(5)=SpriteEmitter'SpriteEmitter2'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter19
         FadeOut=True
@@ -141,7 +229,7 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(3)=SpriteEmitter'SpriteEmitter19'
+    Emitters(6)=SpriteEmitter'SpriteEmitter19'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter78
         FadeOut=True
@@ -163,7 +251,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
         SizeScale(0)=(RelativeSize=0.500000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=15.000000,Max=25.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
@@ -176,8 +264,9 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
-    Emitters(4)=SpriteEmitter'SpriteEmitter78'
+    Emitters(7)=SpriteEmitter'SpriteEmitter78'
 
+    //bDirectional=true
     Autodestroy=true
     bnodelete=false
 }
