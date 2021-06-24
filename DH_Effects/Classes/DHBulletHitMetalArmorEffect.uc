@@ -120,21 +120,29 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         UseCollision=True
         UseMaxCollisions=True
+        UseDirectionAs=PTDU_UpAndNormal
+        ProjectionNormal=(X=1.000000,Y=0.500000)
         UseColorScale=True
         FadeOut=True
         RespawnDeadParticles=False
+        SpinParticles=True
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        Acceleration=(Z=-350.000000)
+        Acceleration=(X=100.000000,Y=10.000000,Z=-250.000000)
+        DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
+        ColorScaleRepeats=4.0
         FadeOutStartTime=0.300000
-        MaxParticles=24
+        MaxParticles=25
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Max=20.000000)
+        SpinsPerSecondRange=(X=(Min=0.500000,Max=4.000000))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
+        //StartSizeRange=(X=(Min=1.500000,Max=3.000000))
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=1.000000)
         SizeScale(1)=(RelativeTime=0.500000,RelativeSize=2.000000)
@@ -146,7 +154,7 @@ defaultproperties
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.350000,Max=0.650000)
-        StartVelocityRange=(X=(Min=75.000000,Max=100.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=75.000000))
+        StartVelocityRange=(X=(Min=75.000000,Max=150.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=50.000000))
         StartVelocityRadialRange=(Min=2.000000,Max=20.000000)
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter4'
