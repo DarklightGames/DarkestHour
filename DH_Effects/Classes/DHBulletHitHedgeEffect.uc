@@ -136,21 +136,21 @@ defaultproperties
         RespawnDeadParticles=False
         SpinParticles=True
         AutomaticInitialSpawning=False
-        Acceleration=(Z=-650.000000)
+        Acceleration=(Z=-850.000000)
         DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.5000000))
         MaxParticles=1
         name="LargeTwig"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=25.000000)
         UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=-0.250000,Max=0.750000),Y=(Min=-0.250000,Max=1.000000),Z=(Min=-0.500000,Max=0.500000))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000),Y=(Min=-0.25,Max=0.5.))
+        SpinsPerSecondRange=(X=(Min=0.5,Max=2.0),Y=(Min=-0.250000,Max=0.250000)) //yaw,pitch,roll (n/a)
         StartSizeRange=(X=(Min=0.080000,Max=0.120000),Y=(Min=0.080000,Max=0.120000),Z=(Min=0.080000,Max=0.120000))
         InitialParticlesPerSecond=1000.000000
         LifetimeRange=(Min=1.000000,Max=1.400000)
-        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-200.000000,Max=125.000000),Z=(Min=-175.000000,Max=250.000000))
+        StartVelocityRange=(X=(Min=250.000000,Max=350.000000),Y=(Min=-100.000000,Max=350.000000),Z=(Min=-100.000000,Max=450.000000))
     End Object
     Emitters(4)=MeshEmitter'MeshEmitter0'
 
