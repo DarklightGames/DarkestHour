@@ -190,7 +190,6 @@ defaultproperties
     Begin Object Class=SparkEmitter Name=SparkEmitter2
         LineSegmentsRange=(Min=0.000000,Max=0.000000)
         TimeBetweenSegmentsRange=(Min=0.030000,Max=0.075000)
-        UseColorScale=True
         FadeOut=True
         RespawnDeadParticles=False
         UseSizeScale=True
@@ -199,16 +198,16 @@ defaultproperties
         AutomaticInitialSpawning=False
         Acceleration=(Z=-250.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=196,G=0,R=0,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.150000
-        MaxParticles=35
+        MaxParticles=15
         SizeScale(0)=(RelativeSize=1.000000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.25)
         InitialParticlesPerSecond=1000.000000
         UseRotationFrom=PTRS_Actor
         Texture=Texture'Effects_Tex.explosions.fire_quad'
-        LifetimeRange=(Min=0.20,Max=0.45)
-        StartVelocityRange=(X=(Min=20.000000,Max=100.000000),Y=(Min=-25.000000,Max=20.000000),Z=(Min=-20.000000,Max=15.000000))
+        LifetimeRange=(Min=0.20,Max=0.35)
+        StartVelocityRange=(X=(Min=20.000000,Max=100.000000),Y=(Min=-12.000000,Max=20.000000),Z=(Min=-20.000000,Max=15.000000))
     End Object
     Emitters(6)=SparkEmitter'SparkEmitter2'
 
