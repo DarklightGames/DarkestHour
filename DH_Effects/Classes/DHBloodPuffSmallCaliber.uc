@@ -81,7 +81,7 @@ defaultproperties
     Emitters(2)=BeamEmitter'BeamEmitter1'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
-        Disabled=true
+        //Disabled=true
         FadeOut=True
         FadeIn=True
         RespawnDeadParticles=False
@@ -98,7 +98,7 @@ defaultproperties
         ColorScale(0)=(Color=(R=79,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=79,A=255))
         Opacity=0.8
-        FadeOutStartTime=0.35
+        FadeOutStartTime=0.15
         FadeInEndTime=0.150000
         MaxParticles=1
         name="red_puffbig"
@@ -114,7 +114,7 @@ defaultproperties
         Texture=Texture'Effects_Tex.BulletHits.snowfinal2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=0.75,Max=1.5)
+        LifetimeRange=(Min=0.75,Max=1.0)
         StartVelocityRange=(X=(Min=85.000000,Max=175.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-85.000000,Max=95.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
@@ -208,7 +208,7 @@ defaultproperties
         ColorScale(0)=(Color=(R=59,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=59,A=255))
         FadeOutStartTime=0.150000
-        MaxParticles=75
+        MaxParticles=50
         name="blood_spray"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
