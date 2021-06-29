@@ -56,29 +56,37 @@ defaultproperties
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter34'
 
-    Begin Object Class=BeamEmitter Name=BeamEmitter1
-        BeamDistanceRange=(Min=40.000000,Max=80.000000)
+    Begin Object Class=BeamEmitter Name=BeamEmitter7
+        BeamDistanceRange=(Min=35.000000,Max=55.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=1
+        UseColorScale=True
         FadeOut=True
+        FadeIn=true
         RespawnDeadParticles=False
         AutoDestroy=True
+        UseSizeScale=True
+        UseRegularSizeScale=False
         AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
         ColorScale(0)=(Color=(R=79,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(R=79,A=255))
-        FadeOutStartTime=0.150000
+        ColorScale(1)=(RelativeTime=1.000000,Color=(R=79,A=255)))
+        Opacity=1.0
+        FadeOutStartTime=0.20
+        FadeInEndTime=0.1
         MaxParticles=1
-        StartLocationRange=(X=(Min=-5.000000,Max=-10.000000))
+        name="impact"
+        StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=35.000000,Max=75.000000))
+        SizeScale(0)=(RelativeSize=0.1)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=30.000000,Max=35.000000),Y=(Min=30.000000,Max=35.000000),Z=(Min=35.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Effects.Impact03'
-        LifetimeRange=(Min=0.200000,Max=0.250000)
-        StartVelocityRange=(X=(Min=300.000000,Max=500.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=-10.000000,Max=10.000000))
+        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        LifetimeRange=(Min=0.900000,Max=1.500000)
+        StartVelocityRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=-200.000000,Max=225.000000),Z=(Min=-225.000000,Max=200.000000))
     End Object
-    Emitters(2)=BeamEmitter'BeamEmitter1'
+    Emitters(2)=BeamEmitter'BeamEmitter7'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=True
