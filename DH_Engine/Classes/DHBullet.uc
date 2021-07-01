@@ -41,6 +41,7 @@ var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to 
 const       MinPenetrateVelocity = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
 
 var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
+var         class<ROHitEffect>      ImpactEffectLow; // bullet impacts for low detail settings
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
 var         class<Actor>            SplashEffect;    // water splash effect class
 var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
@@ -143,17 +144,18 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(Other) != none)
-    {
-        CheckForSplash(Location);
-    }
 
     // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
     // This is so a collision static mesh gets handled properly in ProcessTouch, as it will have bBlockHitPointTraces=false
     if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) || !Other.bBlockHitPointTraces)
     {
         return;
+    }
+
+    // Added splash if projectile hits a fluid surface
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
@@ -483,9 +485,13 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
     // Spawn the bullet hit effect on anything other than a vehicle
-    else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
+    else if (Level.NetMode != NM_DedicatedServer && (ImpactEffect != none || ImpactEffectLow !=none))
     {
-        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
+        if( Level.bDropDetail || Level.DetailMode == DM_Low )
+            Spawn(ImpactEffectLow, self,, Location, rotator(-HitNormal)); // low detail impact
+        else
+            Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
+            //Spawn(ImpactFlashEffect, self,, Location, rotator(-HitNormal)); //Spawn a brief flash of light on impact
     }
 
     if (!bHasDeflected)
@@ -712,7 +718,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        Velocity *= 0.5;
+        Velocity *= 0.1;
         CheckForSplash(Location);
     }
 }
@@ -782,11 +788,12 @@ defaultproperties
     WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    ImpactEffectLow=class'ROBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffect'
     VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
-    VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehicleDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffect'
     VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
@@ -807,5 +814,5 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    SplashEffect=class'DH_Effects.DHBulletHitWaterEffect'
 }
