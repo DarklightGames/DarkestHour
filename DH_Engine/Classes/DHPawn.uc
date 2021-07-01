@@ -119,6 +119,9 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// Gore
+var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
+
 // Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
 var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
@@ -1359,6 +1362,14 @@ simulated function ProcessHitFX()
                             bRightArmGibbed = true;
                         }
                         break;
+
+                    case 'head':
+                        if (!bHeadSevered)
+                        {
+                            bHeadSevered = true;
+                            HideBone('head'); //just literally blow it off
+                        }
+                        break;
                 }
 
                 if (SeveredLimbClass != none)
@@ -1484,7 +1495,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     {
         if (DamageType.default.HumanObliterationThreshhold != 1000001)
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 3.0, false, 100.0);
         }
 
         HitDamageType = DamageType;

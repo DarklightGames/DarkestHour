@@ -41,7 +41,7 @@ defaultproperties
         AutomaticInitialSpawning=False
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.75
+        Opacity=0.5
         MaxParticles=1
         name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
@@ -59,7 +59,7 @@ defaultproperties
     Begin Object Class=BeamEmitter Name=BeamEmitter7
         BeamDistanceRange=(Min=35.000000,Max=55.000000)
         DetermineEndPointBy=PTEP_Distance
-        RotatingSheets=1
+        RotatingSheets=2
         UseColorScale=True
         FadeOut=True
         FadeIn=true
@@ -237,11 +237,13 @@ defaultproperties
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter2'
 
-    AutoDestroy=true
+    AutoDestroy=True
     Style=STY_Alpha
+    bDirectional=True
     bNoDelete=false
-    bHardAttach=true // test
-    RemoteRole=ROLE_DumbProxy  //required because this is spawned on server during netplay.
+    //required because this is spawned on server during netplay.
+    RemoteRole=ROLE_DumbProxy
+    //make sure initial rotation is replicated
     bNetInitialRotation=true
     LifeSpan=6.0
 }

@@ -230,11 +230,13 @@ defaultproperties
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter2'
 
-    AutoDestroy=true
+    AutoDestroy=True
     Style=STY_Alpha
-    bDirectional=true
+    bDirectional=True
     bNoDelete=false
+    //required because this is spawned on server during netplay.
     RemoteRole=ROLE_DumbProxy
+    //make sure initial rotation is replicated
     bNetInitialRotation=true
     LifeSpan=6.0
 }
