@@ -99,8 +99,10 @@ defaultproperties
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        ColorScale(0)=(Color=(B=30,G=79,R=71,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=120,G=167,R=175,A=255))
+        //ColorScale(0)=(Color=(B=30,G=79,R=71,A=255))
+        //ColorScale(1)=(RelativeTime=1.000000,Color=(B=120,G=167,R=175,A=255))
+        ColorScale(0)=(Color=(B=115,G=136,R=145,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=12
         name="greenpuff"
