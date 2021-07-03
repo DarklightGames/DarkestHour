@@ -40,8 +40,7 @@ var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to 
 // From deprecated ROBullet class:
 const       MinPenetrateVelocity = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
 
-var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
-var         class<ROHitEffect>      ImpactEffectLow; // bullet impacts for low detail settings
+var         class<DHHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
 var         class<Actor>            SplashEffect;    // water splash effect class
 var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
@@ -485,13 +484,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
     // Spawn the bullet hit effect on anything other than a vehicle
-    else if (Level.NetMode != NM_DedicatedServer && (ImpactEffect != none || ImpactEffectLow !=none))
+    else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
-        if( Level.bDropDetail || Level.DetailMode == DM_Low )
-            Spawn(ImpactEffectLow, self,, Location, rotator(-HitNormal)); // low detail impact
-        else
-            Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
-            //Spawn(ImpactFlashEffect, self,, Location, rotator(-HitNormal)); //Spawn a brief flash of light on impact
+        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
     }
 
     if (!bHasDeflected)
@@ -788,7 +783,6 @@ defaultproperties
     WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
-    ImpactEffectLow=class'ROBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     VehiclePenetrateEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffect'
     VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
