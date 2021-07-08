@@ -5334,12 +5334,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
-    // If spawn failed, try again using default player class
-    if (C.Pawn == none)
-    {
-        C.Pawn = Spawn(GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
-    }
-
     // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
     // Try again with black room spawn & teleport them to spawn location
     if (C.Pawn == none)
