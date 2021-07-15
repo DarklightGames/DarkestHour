@@ -8,7 +8,7 @@ class DHFlashEffectSmall extends Emitter;
 
 defaultproperties
 {
-    LifeSpan=0.25
+    LifeSpan=0.10
 
     Autodestroy=true
     bnodelete=false
