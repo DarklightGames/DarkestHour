@@ -12,9 +12,7 @@ defaultproperties
     RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLLatePawnC',Weight=1.0)
     RolePawns(3)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLLatePawnM35',Weight=2.0)
     RolePawns(4)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=1.0)
-    RolePawns(5)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLGreyPawn',Weight=1.0)
-    RolePawns(6)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLGreyPawnB',Weight=1.0)
-    RolePawns(7)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLGreyPawnC',Weight=1.0)
+
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
     Headgear(1)=class'DH_SovietPlayers.DH_LWPHelmet'
     HeadgearProbabilities(0)=0.5

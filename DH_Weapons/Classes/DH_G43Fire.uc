@@ -19,4 +19,9 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_old_inf_Weapons.g43.g43shot3'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
+    
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Iron_Shoot_Last"
+    FireIronAnim="Iron_Shoot_g43"
+    FireAnim="Shoot_g43"
 }

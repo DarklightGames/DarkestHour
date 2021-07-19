@@ -8,7 +8,7 @@ class DH_PantherDTank extends DHArmoredVehicle;
 // Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
 simulated function SpawnVehicleAttachments()
 {
-    if (RandomAttachment.Skin == none)
+    if (RandomAttachment.Skins[0] == none)
     {
         RandomAttachOptions.Length = 0;
     }
@@ -71,16 +71,16 @@ defaultproperties
     ChangeDownPoint=1000.0
 
     // Damage
-	// pros: 5 men crew;
-	// cons: petrol fuel; general unreliability of the panthers; this variant in particular is an early one which was even more unreliable
+    // pros: 5 men crew;
+    // cons: petrol fuel; general unreliability of the panthers; this variant in particular is an early one which was even more unreliable
     Health=560
     HealthMax=560.0
-	EngineHealth=200 //engine health is lowered for above reason
+    EngineHealth=200 //engine health is lowered for above reason
     EngineRestartFailChance=0.4 //unreliability
-	
+
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
-	
+
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -115,7 +115,7 @@ defaultproperties
     WheelRotationScale=81250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
+    RandomAttachment=(AttachBone="body",Skins=(none)) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
     RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides

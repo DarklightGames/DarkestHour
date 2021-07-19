@@ -119,6 +119,9 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// Gore
+var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
+
 // Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
 var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
@@ -304,6 +307,26 @@ simulated function PostNetReceive()
     {
         bNetNotify = false;
     }
+}
+
+simulated event SetHeadScale(float NewScale)
+{
+    HeadScale = NewScale;
+    SetBoneScale(4,HeadScale,'head');
+
+    if (Headgear != none)
+    {
+        Headgear.SetDrawScale(HeadScale);
+    }
+
+    // Increase scale of main collision hitbox (whole body hitbox used first to make sure you hit a target)
+    // We shouldn't increase this on the same scale as the head as the main collision hitbox will be way too large
+    HitPoints[0].PointRadius = 60.0 * HeadScale;
+    HitPoints[0].PointHeight = 75.0 * HeadScale;
+
+    // Adjust scale of head hitbox
+    HitPoints[1].PointRadius = 6.5 * HeadScale;
+    HitPoints[1].PointHeight = 8.0 * HeadScale;
 }
 
 // Modified so if player is on fire we cause fire damage every second, & force him to drop any weapon he in carrying in his hands
@@ -1339,6 +1362,14 @@ simulated function ProcessHitFX()
                             bRightArmGibbed = true;
                         }
                         break;
+
+                    case 'head':
+                        if (!bHeadSevered)
+                        {
+                            bHeadSevered = true;
+                            HideBone('head'); //just literally blow it off
+                        }
+                        break;
                 }
 
                 if (SeveredLimbClass != none)
@@ -1464,7 +1495,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     {
         if (DamageType.default.HumanObliterationThreshhold != 1000001)
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 3.0, false, 100.0);
         }
 
         HitDamageType = DamageType;
@@ -7354,7 +7385,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(float X, float Y, float Z)
+simulated exec function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7421,6 +7452,11 @@ simulated exec function Give(string WeaponName)
     }
 
     GiveWeapon(ClassName);
+}
+
+exec function BigHead(float V)
+{
+    SetHeadScale(V);
 }
 
 defaultproperties

@@ -100,6 +100,11 @@ var()   config float                SurrenderReinforcementsRequiredPercent; // H
 var()   config float                SurrenderNominationsThresholdPercent;   // Nominations needed to start the vote
 var()   config float                SurrenderVotesThresholdPercent;         // "Yes" votes needed for the vote to pass
 
+var()   config bool                 bBigBalloony;
+
+// DEBUG
+var     bool                        bDebugConstructions;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -134,6 +139,20 @@ event InitGame(string Options, out string Error)
     {
         AccessControl.Destroy();
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
+    }
+
+    // Handle single-player voting
+    if (Level.NetMode == NM_Standalone &&
+        class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
+        VotingHandlerClass != None &&
+        VotingHandlerClass.Static.IsEnabled())
+    {
+        VotingHandler = Spawn(VotingHandlerClass);
+
+        if (VotingHandler == none)
+        {
+            log("WARNING: Failed to spawn VotingHandler");
+        }
     }
 
     // Force the server to update the MaxClientRate, setting it in config file
@@ -2972,6 +2991,7 @@ state ResetGameCountdown
             if (GRI != none)
             {
                 GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
+                GRI.DangerZoneUpdated();
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
@@ -3281,6 +3301,30 @@ exec function DebugDestroyConstructions()
     }
 }
 
+exec function DebugConstruct()
+{
+    local string StatusText;
+
+    if (Level.NetMode != NM_Standalone &&
+        !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+
+    bDebugConstructions = !bDebugConstructions;
+
+    if (bDebugConstructions)
+    {
+        StatusText = "ENABLED";
+    }
+    else
+    {
+        StatusText = "DISABLED";
+    }
+
+    Level.Game.Broadcast(self, "DEBUG: Instant constructions are" @ StatusText);
+}
+
 // Quick test function to change a role's limit (doesn't support bots)
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 {
@@ -3548,6 +3592,122 @@ exec function MidGameVote()
     if (VH != none)
     {
         VH.MidGameVote();
+    }
+}
+
+// Debug function that changes Danger Zone influence for objectives AND
+// main spawns.
+//
+// Influence types (short types): all (a), allies (al), axis (ax), base (b), neutral (n),
+// spawn (s).
+//
+// NOTE: Run ShowDebugMap beforehand to display objective/spawn indices and current values
+// on the map.
+exec function SetInfluence(string InfluenceType, int Index, float Value)
+{
+    local float ClampedValue;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    ClampedValue = FMax(0.0, Value);
+
+    if (InfluenceType == "spawn" || InfluenceType == "s")
+    {
+        if (Index < 0 ||
+            Index >= arraycount(GRI.SpawnPoints))
+        {
+            Log("Spawn index [" $ Index $ "] out of range!");
+            return;
+        }
+
+        if (GRI.SpawnPoints[Index].bMainSpawn)
+        {
+            Log("Spawn [" $ Index $ "] is not a main spawn!");
+            return;
+        }
+
+        GRI.SpawnPoints[Index].BaseInfluenceModifier = ClampedValue;
+    }
+    else
+    {
+        if (Index < 0 ||
+            Index >= arraycount(GRI.DHObjectives)||
+            GRI.DHObjectives[Index] == none)
+        {
+            Log("Objective index out of range or does not exist [" $ Index $ "]!");
+            return;
+        }
+
+        switch (InfluenceType)
+        {
+            case "a":
+            case "all":
+                GRI.DHObjectives[Index].BaseInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].NeutralInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].AxisInfluenceModifier = ClampedValue;
+                GRI.DHObjectives[Index].AlliesInfluenceModifier = ClampedValue;
+                break;
+            case "b":
+            case "base":
+                GRI.DHObjectives[Index].BaseInfluenceModifier = ClampedValue;
+                break;
+            case "n":
+            case "neutral":
+                GRI.DHObjectives[Index].NeutralInfluenceModifier = ClampedValue;
+                break;
+            case "ax":
+            case "axis":
+                GRI.DHObjectives[Index].AxisInfluenceModifier = ClampedValue;
+                break;
+            case "al":
+            case "allies":
+                GRI.DHObjectives[Index].AlliesInfluenceModifier = ClampedValue;
+                break;
+            default:
+                Log("Incorrect influence type for objective. Use 'allies', 'axis', 'base', or 'neutral'.");
+                return;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
+exec function LogInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] == none)
+        {
+            continue;
+        }
+
+        Log("[" $ i $ ":" $ GRI.DHObjectives[i].ObjName $ "]");
+
+        if (GRI.DHObjectives[i].AlliesInfluenceModifier !=
+            GRI.DHObjectives[i].default.AlliesInfluenceModifier)
+            Log("AlliesInfluenceMoifier=" $ GRI.DHObjectives[i].AlliesInfluenceModifier);
+
+        if (GRI.DHObjectives[i].AxisInfluenceModifier !=
+            GRI.DHObjectives[i].default.AxisInfluenceModifier)
+            Log("AxisInfluenceMoifier=" $ GRI.DHObjectives[i].AxisInfluenceModifier);
+
+        if (GRI.DHObjectives[i].BaseInfluenceModifier !=
+            GRI.DHObjectives[i].default.BaseInfluenceModifier)
+            Log("BaseInfluenceMoifier=" $ GRI.DHObjectives[i].BaseInfluenceModifier);
+
+        if (GRI.DHObjectives[i].NeutralInfluenceModifier !=
+            GRI.DHObjectives[i].default.NeutralInfluenceModifier)
+            Log("NeutralInfluenceMoifier=" $ GRI.DHObjectives[i].NeutralInfluenceModifier);
     }
 }
 
@@ -5156,6 +5316,9 @@ function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Ty
     }
 }
 
+// TODO: This function uses different systems for spawning players depending
+// on whether the spawn is blocked or not. This can lead to players spawning in
+// different states. Fix it!
 function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)
@@ -5174,12 +5337,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
-    // If spawn failed, try again using default player class
-    if (C.Pawn == none)
-    {
-        C.Pawn = Spawn(GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
-    }
-
     // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
     // Try again with black room spawn & teleport them to spawn location
     if (C.Pawn == none)
@@ -5190,6 +5347,13 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
+                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
+
+                if (C.IQManager != none)
+                {
+                    C.IQManager.OnSpawn();
+                }
+
                 return C.Pawn; // exit as we used old spawn system & don't need to do anything else in this function
             }
             else
@@ -5218,17 +5382,30 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.Pawn.PlayTeleportEffect(true, true);
     C.ClientSetRotation(C.Pawn.Rotation);
 
-    // Set proper spawn kill protection times
-    if (DHPawn(C.Pawn) != none && SP != none)
+    AddDefaultInventory(C.Pawn);
+    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
+
+    if (C.IQManager != none)
     {
-        DHPawn(C.Pawn).SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        DHPawn(C.Pawn).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        DHPawn(C.Pawn).SpawnPoint = SP;
+        C.IQManager.OnSpawn();
     }
 
-    AddDefaultInventory(C.Pawn);
-
     return C.Pawn;
+}
+
+function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
+{
+    local DHPawn P;
+
+    P = DHPawn(C.Pawn);
+
+    // Set proper spawn kill protection times
+    if (P != none && SP != none)
+    {
+        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        P.SpawnPoint = SP;
+    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5507,9 +5684,9 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=11
-        Patch=1
-        Prerelease=""
+        Minor=13
+        Patch=0
+        Prerelease="beta.1"
     End Object
     Version=VersionObject
 

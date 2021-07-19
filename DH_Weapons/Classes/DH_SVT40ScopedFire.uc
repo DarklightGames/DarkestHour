@@ -10,5 +10,7 @@ defaultproperties
     Spread=45.0
     FireIronAnim="Scope_shoot"
     ProjectileClass=class'DH_Weapons.DH_SVT40ScopedBullet'
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Scope_Shoot_Last"
 }
 

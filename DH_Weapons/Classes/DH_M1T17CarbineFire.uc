@@ -19,11 +19,10 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 
     MuzzleBone="MuzzleNew2"
-    //FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
-    FireEndAnim="idle"  //that just doesnt work correctly at all
+    FireEndAnim=""
+    FireIronEndAnim=""
     FireIronLoopAnim="Iron_Shoot"
-    //FireIronEndAnim="Iron_Shoot_End"
 
     FireAnim="Shoot"
     FireIronAnim="Iron_Shoot"

@@ -64,8 +64,8 @@ defaultproperties
     
     SelectFireAnim="selectfire"
     SelectFireIronAnim="Iron_selectfire"
-    //="selectfire_empty"
-    //="Iron_selectfire_empty"
+    SelectFireEmptyAnim="selectfire_empty"
+    SelectFireIronEmptyAnim="Iron_selectfire_empty"
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'

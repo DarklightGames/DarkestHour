@@ -36,6 +36,13 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
 
+    FireLoopAnim="Shoot_auto"
+    FireEndAnim=""
+    FireIronLoopAnim="Iron_Shoot"
+    FireIronEndAnim=""
     FireAnim="Shoot"
     FireIronAnim="Iron_Shoot"
+
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Iron_Shoot_Last"
 }

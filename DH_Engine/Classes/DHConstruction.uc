@@ -468,7 +468,11 @@ Begin:
     if (Role == ROLE_Authority) // this is likely unneeded
     {
         // When placed in the SDK, the Owner will be none.
-        if (Owner == none && bShouldAutoConstruct)
+        // DEBUG: Construct instantly.
+        if ((Owner == none &&
+             bShouldAutoConstruct) ||
+            (DarkestHourGame(Level.Game) != none &&
+             DarkestHourGame(Level.Game).bDebugConstructions))
         {
             bShouldAutoConstruct = false;
             Progress = ProgressMax;
