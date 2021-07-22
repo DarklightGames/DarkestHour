@@ -22,6 +22,7 @@ defaultproperties
         MaxParticles=2
         name="initial_spurt"
         StartLocationOffset=(X=15.000000)
+        UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
@@ -45,9 +46,10 @@ defaultproperties
         MaxParticles=1
         name="impact_flash"
         StartLocationOffset=(X=5.000000)
+        UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=5.000000,Max=8.000000))
+        StartSizeRange=(X=(Min=4.000000,Max=6.000000))
         InitialParticlesPerSecond=500.000000
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
