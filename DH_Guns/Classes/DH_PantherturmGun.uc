@@ -102,7 +102,7 @@ defaultproperties
     HealthMax=1600.0
     Health=1600
     EngineHealth=0
-	VehHitpoints(0)=(PointRadius=70.0,PointBone="Turret",DamageMultiplier=500.0,HitPointType=HP_AmmoStore)
+	VehHitpoints(0)=(PointRadius=30.0,PointBone="Turret",DamageMultiplier=50.0,HitPointType=HP_AmmoStore)
     DamagedEffectClass=none
     DestructionEffectClass=class'DH_Effects.DHVehicleDestroyedEmitter'
     DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'
