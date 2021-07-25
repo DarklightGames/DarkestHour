@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHFlashEffectSmall extends Emitter;
+class DHFlashEffectMedium extends Emitter;
 
 
 defaultproperties
 {
-    LifeSpan=0.10
+    LifeSpan=0.15
 
     Autodestroy=true
     bnodelete=false
@@ -17,8 +17,8 @@ defaultproperties
     bMovable=true
 
     LightType=LT_Steady
-    LightBrightness = 24.0
-    LightRadius = 5.0
+    LightBrightness = 64.0
+    LightRadius = 16.0
     LightHue = 20
     LightSaturation = 128
     AmbientGlow = 254
