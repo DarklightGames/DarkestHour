@@ -3942,6 +3942,7 @@ function UpdateObjectiveSpawns()
                 SpawnPoint.SetTeamIndex(Team);
                 SpawnPoint.Objective = Obj;
                 SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
+                SpawnPoint.VehicleLocationHintTag = Obj.VehicleSpawnPointHintTags[Team];
                 SpawnPoint.BuildLocationHintsArrays();
                 SpawnPoint.SetIsActive(true);
 
