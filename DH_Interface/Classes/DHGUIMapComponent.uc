@@ -44,7 +44,8 @@ var             bool                        bIsViewportInterpolating;
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
-var localized string        ActiveTargetSetText;
+var localized string        ActiveTargetSelectText;
+var localized string        ActiveTargetDeselectText;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 delegate OnZoomLevelChanged(int ZoomLevel);
@@ -460,9 +461,18 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 PC.GetSquadIndex() != PublicMapMarkers[i].SquadIndex &&
                 IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
-                PC.ArtillerySupportSquadIndex = PublicMapMarkers[i].SquadIndex;
-                Sender.AddItem(ActiveTargetSetText);
-                MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                if(PC.ArtillerySupportSquadIndex == PublicMapMarkers[i].SquadIndex)
+                { 
+                    PC.ArtillerySupportSquadIndex = -1;
+                    Sender.AddItem(ActiveTargetDeselectText);
+                    MenuItemObjects[MenuItemObjects.Length] = none;
+                }
+                else
+                {
+                    PC.ArtillerySupportSquadIndex = PublicMapMarkers[i].SquadIndex;
+                    Sender.AddItem(ActiveTargetSelectText);
+                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                }
                 break;
             }
         }
@@ -726,7 +736,8 @@ defaultproperties
     SquadRallyPointDestroyText="Destroy Rally"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
     RemoveText="Remove Marker"
-    ActiveTargetSetText="Set as Active Target"
+    ActiveTargetSelectText="Select as Active Target"
+    ActiveTargetSelectText="Deselect Active Target"
 
     OnKeyEvent=InternalOnKeyEvent
     OnMousePressed=InternalOnMousePressed
