@@ -51,6 +51,8 @@ var     int                     ArtilleryRequestsUnlockTime;  // block on-map ar
 var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
 var     bool                    bIsArtilleryTargetValid;
 
+var     int                     ArtillerySupportSquadIndex;
+
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
 var     float                   ViewFOVMin;
@@ -7194,8 +7196,11 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
     local int                                    i;
     local DHGameReplicationInfo                  GRI;
     local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers, TargetMapMarkers;
+    local DHPlayerReplicationInfo                PRI;
 
-    if (Pawn == none)
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (Pawn == none || PRI == none)
     {
         return TargetMapMarkers;
     }
@@ -7206,7 +7211,9 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
 
     for (i = 0; i < PublicMapMarkers.Length; ++i)
     {
-        if (ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+        if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex 
+          && ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport')
+          && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]))
         {
             TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
         }
@@ -7453,4 +7460,5 @@ defaultproperties
 
     MinIQToGrowHead=100
     bIsArtilleryTargetValid=false
+    ArtillerySupportSquadIndex=-1
 }

@@ -69,7 +69,8 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
         if ((Marker.MapMarkerClass == default.RequestMarkerClass)
           && bIsMarkerAlive
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-          && !(PRI.IsSL() && PRI.SquadIndex == Marker.SquadIndex))
+          && !(PRI.IsSL() && PRI.SquadIndex == Marker.SquadIndex)
+          && PC.ArtillerySupportSquadIndex == Marker.SquadIndex)
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - WorldLocation);

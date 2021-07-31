@@ -3813,7 +3813,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     local int i, ElapsedTime;
     local vector L;
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
-    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers;
 
     PC = DHPlayer(PlayerOwner);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -3824,17 +3824,17 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     }
 
     // Team & squad map markers
-    DHGRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+    DHGRI.GetMapMarkers(PC, PublicMapMarkers, PC.GetTeamNum());
     ElapsedTime = DHGRI.ElapsedTime;
 
-    for (i = 0; i < MapMarkers.Length; ++i)
+    for (i = 0; i < PublicMapMarkers.Length; ++i)
     {
-        if (MapMarkers[i].MapMarkerClass != none &&
-            (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime) &&
-            MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+        if (PublicMapMarkers[i].MapMarkerClass != none &&
+            (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
+            PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]))
         {
-            L.X = float(MapMarkers[i].LocationX) / 255.0;
-            L.Y = float(MapMarkers[i].LocationY) / 255.0;
+            L.X = float(PublicMapMarkers[i].LocationX) / 255.0;
+            L.Y = float(PublicMapMarkers[i].LocationY) / 255.0;
             L = DHGRI.GetWorldCoords(L.X, L.Y);
 
             DrawMapMarkerOnMap(C,
@@ -3842,7 +3842,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                                MyMapScale,
                                MapCenter,
                                Viewport,
-                               MapMarkers[i],
+                               PublicMapMarkers[i],
                                L,
                                PC.Pawn,
                                PRI);

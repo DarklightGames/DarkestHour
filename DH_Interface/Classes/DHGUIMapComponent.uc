@@ -44,6 +44,7 @@ var             bool                        bIsViewportInterpolating;
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
+var localized string        ActiveTargetSetText;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 delegate OnZoomLevelChanged(int ZoomLevel);
@@ -398,7 +399,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i, ElapsedTime;
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
-    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
 
@@ -414,7 +415,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     Sender.ContextItems.Length = 0;
 
     // Iterate through existing map markers and check if any were clicked on.
-    GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+    GRI.GetMapMarkers(PC, PublicMapMarkers, PC.GetTeamNum());
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;
@@ -439,17 +440,29 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     if (!bRemoveMapMarker)
     {
-        for (i = 0; i < MapMarkers.Length; ++i)
+        for (i = 0; i < PublicMapMarkers.Length; ++i)
         {
-            if (MapMarkers[i].MapMarkerClass != none &&
-                (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > ElapsedTime) &&
-                MapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, MapMarkers[i]) &&
-                IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            if (PublicMapMarkers[i].MapMarkerClass != none &&
+                (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                PublicMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PublicMapMarkers[i]) &&
+                IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
                 bRemoveMapMarker = true;
                 MapMarkerIndexToRemove = i;
                 Sender.AddItem(RemoveText);
-                MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
+                MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                break;
+            }
+            if (PublicMapMarkers[i].MapMarkerClass != none &&
+                (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport_OnMap') &&
+                PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]) &&
+                PC.GetSquadIndex() != PublicMapMarkers[i].SquadIndex &&
+                IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            {
+                PC.ArtillerySupportSquadIndex = PublicMapMarkers[i].SquadIndex;
+                Sender.AddItem(ActiveTargetSetText);
+                MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
                 break;
             }
         }
@@ -713,6 +726,7 @@ defaultproperties
     SquadRallyPointDestroyText="Destroy Rally"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
     RemoveText="Remove Marker"
+    ActiveTargetSetText="Set as Active Target"
 
     OnKeyEvent=InternalOnKeyEvent
     OnMousePressed=InternalOnMousePressed
