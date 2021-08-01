@@ -7,6 +7,7 @@ class DHMapMarker_FireSupport_OnMap extends DHMapMarker_FireSupport
     abstract;
 
 var float HitVisibilityRadius;      // the maximum distance a shell can land from the artillery request for the hit to be visible on the map
+var color               ActivatedIconColor;
 
 // An artillery support request can be removed only by the SL of the squad that called artillery request.
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -57,6 +58,22 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
 
     return "" $ (Distance / 5) * 5 $ "m" ;
+}
+
+static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+    PC = DHPlayer(PRI.Owner);
+    if(PC == none)
+    {
+        return default.IconColor;
+    }
+    if(PC.IsArtilleryOperator() && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
+      || PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
+    {
+        return default.ActivatedIconColor;
+    }
+    return default.IconColor;
 }
 
 defaultproperties

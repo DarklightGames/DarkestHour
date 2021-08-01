@@ -47,6 +47,10 @@ var localized string        RemoveText;
 var localized string        ActiveTargetSelectText;
 var localized string        ActiveTargetDeselectText;
 
+var             bool                        bSelectArtilleryTarget;
+var             bool                        bDeselectArtilleryTarget;
+var             int                         TargetSquadIndex;
+
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 delegate OnZoomLevelChanged(int ZoomLevel);
 
@@ -462,16 +466,18 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
                 if(PC.ArtillerySupportSquadIndex == PublicMapMarkers[i].SquadIndex)
-                { 
-                    PC.ArtillerySupportSquadIndex = -1;
+                {
+                    bDeselectArtilleryTarget = True;
+                    TargetSquadIndex = -1;
+                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
                     Sender.AddItem(ActiveTargetDeselectText);
-                    MenuItemObjects[MenuItemObjects.Length] = none;
                 }
                 else
                 {
-                    PC.ArtillerySupportSquadIndex = PublicMapMarkers[i].SquadIndex;
-                    Sender.AddItem(ActiveTargetSelectText);
+                    bSelectArtilleryTarget = True;
+                    TargetSquadIndex = PublicMapMarkers[i].SquadIndex;
                     MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                    Sender.AddItem(ActiveTargetSelectText);
                 }
                 break;
             }
@@ -531,18 +537,32 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
+    Log("ClickIndex"@ClickIndex);
     if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
     {
         return;
     }
 
-    if (bRemoveMapMarker && ClickIndex == 0)
+    if (bRemoveMapMarker && ClickIndex == 0 && MenuItemObjects[ClickIndex] != none)
     {
         PC.RemoveMarker(MenuItemObjects[ClickIndex], MapMarkerIndexToRemove);
     }
-    else
+    else 
     {
-        PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+        if (bSelectArtilleryTarget && ClickIndex == 0)
+        {
+            PC.ArtillerySupportSquadIndex = TargetSquadIndex;
+            bSelectArtilleryTarget = False;
+        }
+        else if (bDeselectArtilleryTarget && ClickIndex == 0)
+        {
+            PC.ArtillerySupportSquadIndex = -1;
+            bDeselectArtilleryTarget = False;
+        }
+        else
+        {
+            PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+        }
     }
 }
 
@@ -737,7 +757,8 @@ defaultproperties
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
     RemoveText="Remove Marker"
     ActiveTargetSelectText="Select as Active Target"
-    ActiveTargetSelectText="Deselect Active Target"
+    ActiveTargetDeselectText="Deselect Active Target"
+    TargetSquadIndex=-1;
 
     OnKeyEvent=InternalOnKeyEvent
     OnMousePressed=InternalOnMousePressed

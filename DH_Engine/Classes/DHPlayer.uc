@@ -7193,10 +7193,11 @@ exec function IpFuzz(int Iterations)
 
 function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
 {
-    local int                                    i;
+    local int                                    i, ElapsedTime;
     local DHGameReplicationInfo                  GRI;
     local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers, TargetMapMarkers;
     local DHPlayerReplicationInfo                PRI;
+    local bool                                   bMarkerExpired;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
@@ -7208,12 +7209,16 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
     // Select only fire requests & ruler markers
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
+    ElapsedTime = GRI.ElapsedTime;
 
     for (i = 0; i < PublicMapMarkers.Length; ++i)
     {
+        bMarkerExpired = PublicMapMarkers[i].ExpiryTime <= ElapsedTime || PublicMapMarkers[i].ExpiryTime == -1;
+        // Log("i=" $ i @ "SquadIndex=" $ PublicMapMarkers[i].SquadIndex @ ": bMarkerExpired=" $ bMarkerExpired @ ", " @ "PublicMapMarkers[i].ExpiryTime=" $ PublicMapMarkers[i].ExpiryTime @ ", ElapsedTime=" $ ElapsedTime);
         if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex 
           && ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport')
-          && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]))
+          && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i])
+          && !bMarkerExpired)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
         }

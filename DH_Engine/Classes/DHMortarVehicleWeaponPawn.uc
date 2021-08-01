@@ -203,6 +203,7 @@ simulated function DrawHUD(Canvas C)
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
+    local DHPlayerReplicationInfo                       PRI;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
@@ -221,6 +222,8 @@ simulated function DrawHUD(Canvas C)
             TargetMapMarkers = Player.GetArtilleryMapMarkers();
             Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
 
+            PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+
             // to do: refactor to separate variables (calculate once)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C,
@@ -230,7 +233,9 @@ simulated function DrawHUD(Canvas C)
                 DHMortarVehicleWeapon(VehWep).Elevation,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
                 DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
-            ArtillerySpottingScope.static.DrawYaw(C,
+            ArtillerySpottingScope.static.DrawYaw(
+                PRI,
+                C,
                 // without multiplying yaw by (-1) below the yaw readout is reversed
                 class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),

@@ -2335,7 +2335,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
         TargetInfo.Distance       = Distance;
         TargetInfo.SquadName      = SquadName;
         TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
-        TargetInfo.Type           = MapMarker.MapMarkerClass;
+        TargetInfo.Marker         = MapMarker;
         Targets[Targets.Length]   = TargetInfo;
     }
 

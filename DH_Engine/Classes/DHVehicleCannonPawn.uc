@@ -195,11 +195,13 @@ simulated function DrawHUD(Canvas C)
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local DHPlayer                                      Player;
+    local DHPlayerReplicationInfo                       PRI;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
+    PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
 
-    if (PC != none && !PC.bBehindView)
+    if (PC != none && !PC.bBehindView && PRI != none)
     {
         // Player is in a position where an overlay should be drawn
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
@@ -233,7 +235,9 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
                         class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
-                    ArtillerySpottingScope.static.DrawYaw(C,
+                    ArtillerySpottingScope.static.DrawYaw(
+                        PRI,
+                        C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),

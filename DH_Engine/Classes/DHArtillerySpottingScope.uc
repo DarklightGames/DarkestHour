@@ -19,10 +19,10 @@ var int PitchDecimalsDial;
 
 struct STargetInfo
 {
-    var int                               Distance;       // distance between the player and the target
-    var int                               YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
-    var string                            SquadName;      // name of the squad that requests fire support
-    var class<DHMapMarker>                Type;           // Fire_Support or Ruler
+    var int                              Distance;       // distance between the player and the target
+    var int                              YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
+    var string                           SquadName;      // name of the squad that requests fire support
+    var DHGameReplicationInfo.MapMarker  Marker;           // Fire_Support or Ruler
 };
 
 enum EShapePrimitive
@@ -153,22 +153,23 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
 }
 
 // A helper function to draw a single widget on the left panel in spotting scope view
-simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
+simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
     local string CorrectionString;
     local int Deflection;
+    local color IconColor;
 
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
 
     C.SetDrawColor(0, 255, 128, 255);
 
-    if (class<DHMapMarker_FireSupport>(TargetInfo.Type) != none)
+    if (class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass) != none)
     {
         C.CurX = X;
         C.CurY = Y;
-        C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Type).default.TypeName $ ")");
+        C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass).default.TypeName $ ")");
     }
-    else if (class<DHMapMarker_Ruler>(TargetInfo.Type) != none)
+    else if (class<DHMapMarker_Ruler>(TargetInfo.Marker.MapMarkerClass) != none)
     {
         C.CurX = X;
         C.CurY = Y;
@@ -204,18 +205,19 @@ simulated static function DrawTargetWidget(Canvas C, float X, float Y, STargetIn
     C.DrawText("Correction:" @ CorrectionString);
     C.CurX = X - 40;
     C.CurY = Y;
-    C.SetDrawColor(TargetInfo.Type.default.IconColor.R, TargetInfo.Type.default.IconColor.G, TargetInfo.Type.default.IconColor.B, TargetInfo.Type.default.IconColor.A);
+    IconColor = TargetInfo.Marker.MapMarkerClass.static.GetIconColor(PRI, TargetInfo.Marker);
+    C.SetDrawColor(IconColor.R, IconColor.G, IconColor.B, IconColor.A);
     C.DrawTile(
-      TargetInfo.Type.default.IconMaterial,
+      TargetInfo.Marker.MapMarkerClass.default.IconMaterial,
       32.0,
       32.0,
-      TargetInfo.Type.default.IconCoords.X1,
-      TargetInfo.Type.default.IconCoords.Y1,
-      TargetInfo.Type.default.IconCoords.X2,
-      TargetInfo.Type.default.IconCoords.Y2);
+      TargetInfo.Marker.MapMarkerClass.default.IconCoords.X1,
+      TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
+      TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
+      TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
 }
 
-simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
+simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index, SegmentSchemaIndex, VisibleYawSegmentsNumber;
@@ -223,6 +225,11 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     local string Label;
     local color Color;
     local array<int>   TickBuckets;
+
+    if(PRI == none)
+    {
+        return;
+    }
 
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     IndicatorTopLeftCornerY = C.SizeY * 0.93;
@@ -247,14 +254,14 @@ simulated static function DrawYaw(Canvas C, float CurrentYaw, float GunYawMin, f
     for (i = 0; i < Targets.Length; ++i)
     {
         // Always draw a target widget on the left panel
-        DrawTargetWidget(C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
+        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
 
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
         Shade = class'UInterp'.static.Mimi(FClamp(Index / VisibleYawSegmentsNumber, 0.25, 0.75));
 
-        Color = Targets[i].Type.default.IconColor;
+        Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
         Color.R = Max(1, int(Color.R) * Shade);
         Color.G = Max(1, int(Color.G) * Shade);
         Color.B = Max(1, int(Color.B) * Shade);
@@ -494,7 +501,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="°"
+    AngleUnit="ï¿½"
     DistanceUnit="m"
 
     WidgetsPanelX=50
