@@ -43,6 +43,9 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 {
     local int Distance;
     local vector PlayerLocation, WorldLocation;
+    local string SquadName, ArtilleryType;
+    local DHSquadReplicationInfo SRI;
+    local class<DHMapMarker_FireSupport_OnMap> MapMarkerClass;
 
     if (PC == none || PC.Pawn == none)
     {
@@ -56,8 +59,14 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     PlayerLocation.Z = 0.0;
 
     Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
+    
+    SRI = PC.SquadReplicationInfo;
+    SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
+    
+    MapMarkerClass = class<DHMapMarker_FireSupport_OnMap>(Marker.MapMarkerClass);
+    ArtilleryType = MapMarkerClass.default.TypeName;
 
-    return "" $ (Distance / 5) * 5 $ "m" ;
+    return SquadName @ "-" @ ArtilleryType @ "-" @ (Distance / 5) * 5 $ "m" ;
 }
 
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -80,7 +89,8 @@ defaultproperties
 {
     MarkerName="Fire Support"
     IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
-    IconColor=(R=204,G=,B=255,A=255)
+    IconColor=(R=220,G=0,B=100,A=100)
+    ActivatedIconColor=(R=255,G=0,B=0,A=255)
     IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
     bShouldShowOnCompass=false

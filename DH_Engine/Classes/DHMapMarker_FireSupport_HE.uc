@@ -10,5 +10,6 @@ defaultproperties
 {
     MarkerName="Fire Support (HE)"
     TypeName="HE"
+    IconColor=(R=255,G=0,B=0,A=100)
     ActivatedIconColor=(R=255,G=0,B=0,A=255)
-    IconColor=(R=220,G=,B=100,A=100)}
+}

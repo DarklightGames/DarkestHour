@@ -10,6 +10,6 @@ defaultproperties
 {
     MarkerName="Fire Support (smoke)"
     TypeName="Smoke"
+    IconColor=(R=160,G=160,B=160,A=100)
     ActivatedIconColor=(R=160,G=160,B=160,A=255)
-    IconColor=(R=220,G=220,B=220,A=255) // gray
 }
