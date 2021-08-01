@@ -9,4 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloEarlyPawn',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
+
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
 }

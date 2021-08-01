@@ -3,14 +3,13 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SovietGreenTeloSLLatePawn extends DH_SovietPawn;
+class DH_LWPTunicSLLightPawn extends DH_LWPPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharactersSOV_anm.sov_tunic_sergeant_Late'
-    Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
-    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_green01'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_SL_late'
+    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic_light'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
 
     bReversedSkinsSlots=true
-
 }

@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_LWPTunicSLLatePawnM35 extends DH_LWPPawn; //soviet m35 tunic with polish insignia - should be rare
+class DH_LWPTunicSLLightPawnC extends DH_LWPPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_SL_late' 
-    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_SL_C'
+    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic_light'
     Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
 
     bReversedSkinsSlots=true
