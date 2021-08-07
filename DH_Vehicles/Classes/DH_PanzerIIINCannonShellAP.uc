@@ -3,43 +3,39 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_PanzerIIINCannonShellHE extends DHCannonShellHE;
+class DH_PanzerIIINCannonShellAP extends DHGermanCannonShell;
 
 defaultproperties
 {
-    Speed=25348.0
-    MaxSpeed=25348.0
+    Speed=38548.0
+    MaxSpeed=38548.0
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
-    //Damage
-    ImpactDamage=710
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    PenetrationMag=750.0
-    Damage=350.0   //725 gramms TNT, but is known for being inferior to soviet 76mm, so i assume worse/lighter  fragmentation
-    DamageRadius=950.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
-    HullFireChance=0.8
-    EngineFireChance=0.8
+   //Damage
+    ImpactDamage=360
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    HullFireChance=0.5
+    EngineFireChance=0.6
 
-    //Effects
-    bHasTracer=false
-    bHasShellTrail=false
+        //Effects
+    bHasTracer=true
+    bHasShellTrail=true
 
-    bDebugInImperial=false
+
 
     //Penetration
-    DHPenetrationTable(0)=3.3
-    DHPenetrationTable(1)=3.1
-    DHPenetrationTable(2)=3.1
-    DHPenetrationTable(3)=3.1
-    DHPenetrationTable(4)=3.1
-    DHPenetrationTable(5)=3.1
-    DHPenetrationTable(6)=3.0
-    DHPenetrationTable(7)=2.9
-    DHPenetrationTable(8)=2.85
-    DHPenetrationTable(9)=2.8
-    DHPenetrationTable(10)=2.9
+    DHPenetrationTable(0)=5.7
+    DHPenetrationTable(1)=5.6
+    DHPenetrationTable(2)=5.5
+    DHPenetrationTable(3)=5.3
+    DHPenetrationTable(4)=5.2
+    DHPenetrationTable(5)=5.1
+    DHPenetrationTable(6)=5.0
+    DHPenetrationTable(7)=4.9
+    DHPenetrationTable(8)=4.8
+    DHPenetrationTable(9)=4.6
+    DHPenetrationTable(10)=4.5
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

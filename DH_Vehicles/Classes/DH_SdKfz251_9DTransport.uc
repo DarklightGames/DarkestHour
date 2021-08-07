@@ -22,18 +22,20 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    //standard health (same as marder)
-    Health=525
-    HealthMax=525.0
+    //standard health (525 same as marder)
+    Health=500
+    HealthMax=500.0
     EngineHealth=300
     ReinforcementCost=8
+
+    VehicleMass=10.0
 
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
-    VehicleNameString="Sd.Kfz.251/9D Halftrack"
+    VehicleNameString="Sd.Kfz.251/9D Stummel"
     PassengerWeapons(0)=(WeaponBone="mg_base") // cannon pawn class has to be set in PostBeginPlay() due to build order
-    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
+    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
 
