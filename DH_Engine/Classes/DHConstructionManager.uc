@@ -54,6 +54,11 @@ function Register(DHConstruction C)
 {
     local int i;
 
+    if (C == none)
+    {
+        return;
+    }
+
     for (i = 0; i < Constructions.Length; ++i)
     {
         if (Constructions[i] == C)
@@ -68,6 +73,11 @@ function Register(DHConstruction C)
 function Unregister(DHConstruction C)
 {
     local int i;
+
+    if (C == none)
+    {
+        return;
+    }
 
     for (i = Constructions.Length - 1; i >= 0; --i)
     {

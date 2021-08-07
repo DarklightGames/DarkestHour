@@ -10,6 +10,9 @@ class DHMortarProjectileHE extends DHMortarProjectile
 var     class<Emitter>  GroundExplosionEmitterClass;
 var     class<Emitter>  SnowExplosionEmitterClass;
 var     class<Emitter>  WaterExplosionEmitterClass;
+
+var     class<Emitter>      FlashEffectClass; //new for DH
+
 var     array<sound>    GroundExplosionSounds;
 var     array<sound>    SnowExplosionSounds;
 var     array<sound>    WaterExplosionSounds;
@@ -84,6 +87,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 
         PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
         Spawn(ExplosionEmitterClass, self,, HitLocation);
+        Spawn(FlashEffectClass, self,, HitLocation);
         Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
 
         DoShakeEffect();
@@ -182,6 +186,9 @@ defaultproperties
     GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
     SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
     WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
+
+    FlashEffectClass=class'DH_Effects.DHFlashEffectMedium'
+
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
 
