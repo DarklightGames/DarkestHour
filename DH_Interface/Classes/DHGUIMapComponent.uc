@@ -492,12 +492,14 @@ function bool InternalOnOpen(GUIContextMenu Sender)
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
     }
-
-    for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
+    if(!bDeselectArtilleryTarget && !bSelectArtilleryTarget)
     {
-        if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
+        for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
         {
-            MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+            if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
+            {
+                MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+            }
         }
     }
 

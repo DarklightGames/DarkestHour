@@ -937,7 +937,6 @@ function DrawHudPassC(Canvas C)
     // Resupply icon
     if (PawnOwner.bTouchingResupply)
     {
-      Log("PawnOwner.bTouchingResupply=true");
         if (Vehicle(PawnOwner) != none)
         {
             if (Level.TimeSeconds - PawnOwner.LastResupplyTime <= 1.5)
