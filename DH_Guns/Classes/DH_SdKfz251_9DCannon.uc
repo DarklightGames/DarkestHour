@@ -24,7 +24,7 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Cromwell95mmCannonShellSmoke'
+    TertiaryProjectileClass=class'DH_SdKfz251_9DCannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
