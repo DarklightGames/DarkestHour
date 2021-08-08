@@ -12,4 +12,7 @@ defaultproperties
 
     Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
+
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
 }
