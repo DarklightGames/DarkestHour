@@ -24,23 +24,23 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellAP'
+    TertiaryProjectileClass=class'DH_Cromwell95mmCannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
-    ProjectileDescriptions(2)="AP"
+    ProjectileDescriptions(2)="SMOKE"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
     nProjectileDescriptions(1)="Gr.38 Hl/C"
-    nProjectileDescriptions(2)="PzGr.39/43"
+    nProjectileDescriptions(2)="Nbgr. Kw. K."
 
     InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=4
-    InitialTertiaryAmmo=10
+    InitialSecondaryAmmo=6
+    InitialTertiaryAmmo=5
 
     MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=20
+    MaxSecondaryAmmo=15
+    MaxTertiaryAmmo=10
 
     Spread=0.001
     SecondarySpread=0.001
