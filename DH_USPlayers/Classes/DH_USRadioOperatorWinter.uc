@@ -11,4 +11,9 @@ defaultproperties
     RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    BareHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    CustomHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
 }
