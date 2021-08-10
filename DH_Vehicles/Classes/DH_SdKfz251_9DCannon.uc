@@ -13,10 +13,10 @@ defaultproperties
     // WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
 
-    MaxPositiveYaw=2300
-    MaxNegativeYaw=-2300
-    YawStartConstraint=-2300
-    YawEndConstraint=2300
+    MaxPositiveYaw=2200
+    MaxNegativeYaw=-2200
+    YawStartConstraint=-2200
+    YawEndConstraint=2200
     CustomPitchUpLimit=3400
     CustomPitchDownLimit=65275
 

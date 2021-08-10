@@ -7,7 +7,7 @@ class DH_SdKfz251_9DCannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_SdKfz251_9DCannon'
+    GunClass=class'DH_Vehicles.DH_SdKfz251_9DCannon'
 
     DriverPositions(0)=(ViewLocation=(X=28.0,Y=-19.0,Z=3.0),ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_Stummel.stummel_ext',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=4005,ViewPitchDownLimit=64623,ViewPositiveYawLimit=5825,ViewNegativeYawLimit=-5825,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stummel.stummel_ext',TransitionDownAnim=com_close,DriverTransitionAnim="stand_idlehold_bayo",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=2400,ViewNegativeYawLimit=-5100,bExposed=true)

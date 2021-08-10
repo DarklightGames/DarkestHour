@@ -5,20 +5,13 @@
 
 class DH_SdKfz251_9DTransport extends DH_Sdkfz251Transport;
 
-// Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
-// Also to remove the MG position & void the PassengerPawns array, as we inherit unwanted positions that can't be used due to the mounted Pak 40
-simulated function PostBeginPlay()
-{
-    // Remove the inherited MG position & riders (note array length adjustment needs to go before the Super)
-    PassengerWeapons.Length = 1;
-    PassengerPawns.Length = 0;
-    VehicleHudOccupantsX.Length = 2;
-    VehicleHudOccupantsY.Length = 2;
 
-    super.PostBeginPlay();
 
-    PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_9DCannonPawn", class'Class'));
-}
+    //PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_SdKfz251_9DCannonPawn',WeaponBone="mg_base")
+
+
+
+    //PassengerPawns(1)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
 defaultproperties
 {
@@ -26,15 +19,29 @@ defaultproperties
     Health=500
     HealthMax=500.0
     EngineHealth=300
-    ReinforcementCost=8
+    ReinforcementCost=4
 
     VehicleMass=10.0
+
+    bIsApc=true
+
+    //PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Vehicles.DH_SdKfz251_9DCannonPawn", class'Class'));
+    //PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Vehicles.DH_Marder3MMountedMGPawn", class'Class'));
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz251_9DCannonPawn',WeaponBone="mg_base")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_StummelMMountedMGPawn',WeaponBone="mg_base")
+
+    PassengerPawns(0)=None
+    PassengerPawns(1)=None
+    PassengerPawns(2)=None
+    PassengerPawns(3)=None
+    PassengerPawns(4)=None
+    PassengerPawns(5)=None
 
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
     VehicleNameString="Sd.Kfz.251/9D Stummel"
-    PassengerWeapons(0)=(WeaponBone="mg_base") // cannon pawn class has to be set in PostBeginPlay() due to build order
+    //PassengerWeapons(0)=(WeaponBone="mg_base") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
@@ -53,6 +60,4 @@ defaultproperties
     //AmmoIgnitionProbability=0.75  // 0.75 default
     //^ "unknown property"
 
-    // STUMMEL TODO:
-    //CollisionAttachments
 }
