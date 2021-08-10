@@ -38,10 +38,14 @@ defaultproperties
     UnbuttonedPositionIndex=0
     BinocPositionIndex=2
     bDrawDriverInTP=true
-    DrivePos=(X=16,Y=22,Z=2)
-    //RelativeLocation=(X=16,Y=22,Z=2)
+    bMustBeTankCrew=false
+
+    DrivePos=(X=14,Y=1,Z=-17)
+
     DriveRot=(Yaw=16384)
-    BinocsDrivePos=(X=16,Y=22,Z=6)
+
+    BinocsDrivePos=(X=14,Y=1,Z=-38)
+
     DriveAnim="VHalftrack_com_idle"
     CameraBone="loader_cam"
     HUDOverlayClass=class'DH_Vehicles.DH_MG34_VehHUDOverlay'

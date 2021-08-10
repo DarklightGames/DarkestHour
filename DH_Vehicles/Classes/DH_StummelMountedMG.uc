@@ -15,11 +15,13 @@ defaultproperties
     GunnerAttachmentBone="loader_player"
     FireEffectClass=none // there's no MG hatch & the 'turret' fire effect fills the open superstructure
 
+    RelativeLocation=(X=16,Y=22,Z=21)
+
     // Movement
     RotationsPerSecond=0.5
     YawBone="mg_pitch"
-    MaxPositiveYaw=5500
-    MaxNegativeYaw=-5500
+    MaxPositiveYaw=8500
+    MaxNegativeYaw=-8500
     CustomPitchUpLimit=4500
     CustomPitchDownLimit=63500
 
