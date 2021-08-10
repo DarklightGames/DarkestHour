@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_PanzerIIINCannonShellHEAT extends DHCannonShellHEAT;
+class DH_SdKfz251_9DCannonShellHEATC extends DHCannonShellHEAT;
 
 defaultproperties
 {
@@ -23,18 +23,18 @@ defaultproperties
 
     bDebugInImperial=false
 
-    //Penetration Gr.38 Hl/B (HEAT) December 1942
-    DHPenetrationTable(0)=8.7
-    DHPenetrationTable(1)=8.7
-    DHPenetrationTable(2)=8.7
-    DHPenetrationTable(3)=8.7
-    DHPenetrationTable(4)=8.7
-    DHPenetrationTable(5)=8.7
-    DHPenetrationTable(6)=8.7
-    DHPenetrationTable(7)=8.7
-    DHPenetrationTable(8)=8.7
-    DHPenetrationTable(9)=8.7
-    DHPenetrationTable(10)=8.7
+    //Penetration Gr.38 Hl/C (HEAT) April 1943
+    DHPenetrationTable(0)=11.6
+    DHPenetrationTable(1)=11.6
+    DHPenetrationTable(2)=11.6
+    DHPenetrationTable(3)=11.6
+    DHPenetrationTable(4)=11.6
+    DHPenetrationTable(5)=11.6
+    DHPenetrationTable(6)=11.6
+    DHPenetrationTable(7)=11.6
+    DHPenetrationTable(8)=11.6
+    DHPenetrationTable(9)=11.6
+    DHPenetrationTable(10)=11.6
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)
