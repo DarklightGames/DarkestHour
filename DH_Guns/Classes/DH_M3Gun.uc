@@ -20,10 +20,10 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ShadowZOffset=20.0
     ExitPositions(1)=(X=-100.00,Y=-30.00,Z=35.00)
-    VehicleMass=11.0
-    SupplyCost=1650
+    VehicleMass=04.5
+    SupplyCost=250
     ConstructionPlacementOffset=(Z=-2)
     bCanBeRotated=true
-    PlayersNeededToRotate=2
+    PlayersNeededToRotate=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 }

@@ -14,6 +14,8 @@ defaultproperties
     bAttachColMeshToPitchBone=true // because the gun shield also tilts back & forth when the gun is elevated // TODO: but query whether shield should move (pretty sure not)
     GunnerAttachmentBone="com_player"
 
+    WeaponAttachOffset=(X=0,Y=0,Z=-15)
+
     // Turret movement
     MaxPositiveYaw=4096 // 22.5 degrees traverse
     MaxNegativeYaw=-4096
@@ -23,17 +25,23 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_M3CannonShell'
-    PrimaryProjectileClass=class'DH_Guns.DH_M3CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_M3CannonShellHE'
+    ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
+    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
 
-    nProjectileDescriptions(0)="M62 APC" // TODO: replace
-    nProjectileDescriptions(1)="M42A1 HE-T" // TODO: replace
+    nProjectileDescriptions(0)="M51B1 APC"
+    nProjectileDescriptions(1)="M63 HE-T"
+    nProjectileDescriptions(2)="M2 Canister"
 
-    InitialPrimaryAmmo=20
+    InitialPrimaryAmmo=15
     InitialSecondaryAmmo=10
+    InitialTertiaryAmmo=15
+
     MaxPrimaryAmmo=60
     MaxSecondaryAmmo=30
+    MaxTertiaryAmmo=20
+
     SecondarySpread=0.00135
 
     // Weapon fire
