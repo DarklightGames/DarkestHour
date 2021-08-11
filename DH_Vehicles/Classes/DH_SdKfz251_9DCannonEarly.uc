@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCannon extends DHATGunCannon;
+class DH_SdKfz251_9DCannonEarly extends DHATGunCannon;
 
 defaultproperties
 {
@@ -11,7 +11,7 @@ defaultproperties
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
     Mesh=SkeletalMesh'DH_Stummel.stummel_ext'
     // WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
-    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_early_camo_ext'
 
     MaxPositiveYaw=2200
     MaxNegativeYaw=-2200
@@ -23,15 +23,15 @@ defaultproperties
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz251_9DCannonShellHEATB'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz251_9DCannonShellHEATA'
     TertiaryProjectileClass=class'DH_SdKfz251_9DCannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="HEAT"
+    ProjectileDescriptions(1)="HEAT A"
     ProjectileDescriptions(2)="SMOKE"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
-    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(1)="Gr.38 Hl"
     nProjectileDescriptions(2)="Nbgr. Kw. K."
 
     InitialPrimaryAmmo=20

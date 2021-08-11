@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCamoWinter extends DH_SdKfz251_9DTransport;
+class DH_SdKfz251_9DLateCamoWinter extends DH_SdKfz251_9DTransportLate;
 
 defaultproperties
 {

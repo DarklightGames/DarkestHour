@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DTransport extends DH_Sdkfz251Transport;
+class DH_SdKfz251_9DTransportMid extends DH_Sdkfz251Transport;
 
 
 
@@ -25,10 +25,9 @@ defaultproperties
 
     bIsApc=true
 
-    //PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Vehicles.DH_SdKfz251_9DCannonPawn", class'Class'));
-    //PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Vehicles.DH_Marder3MMountedMGPawn", class'Class'));
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz251_9DCannonPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz251_9DCannonPawnMid',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_StummelMMountedMGPawn',WeaponBone="mg_base")
+
 
     PassengerPawns(0)=None
     PassengerPawns(1)=None
@@ -40,10 +39,10 @@ defaultproperties
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
-    VehicleNameString="Sd.Kfz.251/9D Stummel"
+    VehicleNameString="Sd.Kfz.251/9C Stummel"
     //PassengerWeapons(0)=(WeaponBone="mg_base") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo1'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
 
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
