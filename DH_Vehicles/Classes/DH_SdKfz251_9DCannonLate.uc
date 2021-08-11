@@ -55,6 +55,9 @@ defaultproperties
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
+    ShootLoweredAnim="fire_close"
+    ShootRaisedAnim="fire_open"
+
        // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
