@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCannonShellHEATA extends DH_SdKfz251_9DCannonShellHEAT;
+class DH_SdKfz2519CannonShellHEATA extends DH_SdKfz2519CannonShellHEAT;
 
 defaultproperties
 {

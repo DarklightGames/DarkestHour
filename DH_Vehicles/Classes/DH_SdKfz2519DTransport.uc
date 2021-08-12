@@ -4,7 +4,7 @@
 //==============================================================================
 // Late variant
 
-class DH_SdKfz251_9DTransportLate extends DH_Sdkfz251Transport;
+class DH_SdKfz2519DTransport extends DH_Sdkfz251Transport;
 
 defaultproperties
 {
@@ -23,7 +23,7 @@ defaultproperties
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
 
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz251_9DCannonPawnLate',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz2519DCannonPawn',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_StummelMMountedMGPawn',WeaponBone="mg_base")
 
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)

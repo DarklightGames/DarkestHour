@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCannonPawnMid extends DH_SdKfz251_9DCannonPawnLate;
+class DH_SdKfz2519BCannonPawn extends DH_SdKfz2519DCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_SdKfz251_9DCannonMid'
+    GunClass=class'DH_Vehicles.DH_SdKfz2519BCannon'
 }

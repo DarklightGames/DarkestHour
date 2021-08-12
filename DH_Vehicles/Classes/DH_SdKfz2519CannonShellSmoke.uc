@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCannonShellSmoke extends DHCannonShellSmoke;
+class DH_SdKfz2519CannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 

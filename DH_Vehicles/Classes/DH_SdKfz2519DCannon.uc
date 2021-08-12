@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_SdKfz251_9DCannonLate extends DHATGunCannon;
+class DH_SdKfz2519DCannon extends DHATGunCannon;
 
 defaultproperties
 {
@@ -23,8 +23,8 @@ defaultproperties
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz251_9DCannonShellHEATC'
-    TertiaryProjectileClass=class'DH_SdKfz251_9DCannonShellSmoke'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEATC'
+    TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT C"
@@ -46,7 +46,7 @@ defaultproperties
     SecondarySpread=0.001
     TertiarySpread=0.001
 
-        // Sounds
+    // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire03'
@@ -58,7 +58,7 @@ defaultproperties
     ShootLoweredAnim="fire_close"
     ShootRaisedAnim="fire_open"
 
-       // Cannon range settings
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
