@@ -24,25 +24,29 @@ defaultproperties
     CustomPitchUpLimit=5460 // 30/-5 degrees elevation/depression
     CustomPitchDownLimit=64625
 
-    // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
 
+    ProjectileDescriptions(2)="Canister"
+
     nProjectileDescriptions(0)="M51B1 APC"
     nProjectileDescriptions(1)="M63 HE-T"
     nProjectileDescriptions(2)="M2 Canister"
 
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=10
+    InitialPrimaryAmmo=60
+    InitialSecondaryAmmo=30
     InitialTertiaryAmmo=15
 
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=30
+    MaxPrimaryAmmo=64
+    MaxSecondaryAmmo=44
     MaxTertiaryAmmo=20
 
-    SecondarySpread=0.00135
+    PrimarySpread=0.0016
+    SecondarySpread=0.0016
+    TertiarySpread=0.04
+
 
     // Weapon fire
     WeaponFireOffset=10.0

@@ -8,7 +8,7 @@ class DH_M3GunCannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_M3GunCannon'
-    DriverPositions(0)=(ViewLocation=(X=0.0,Y=0,Z=-16.0),ViewFOV=28.33,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
+    DriverPositions(0)=(ViewLocation=(X=15,Y=0,Z=-16.0),ViewFOV=28.33,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
     DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
