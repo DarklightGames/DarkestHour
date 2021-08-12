@@ -1,10 +1,17 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
     abstract;
+
+enum EUnloadedMunitionsPolicy
+{
+    UMP_Preserve,       // preserve unloaded "magazines" as-is (default)
+    UMP_Discard,        // any unloaded munitions are immediately discarded
+    UMP_Consolidate,    // unloaded munitions will be consolidated into full magazines
+};
 
 var         float       PlayerDeployFOV;
 var         bool        bCanFireFromHip;            // if true this weapon has a hip firing mode
@@ -18,15 +25,16 @@ var         int         CurrentMagIndex;            // the index of the magazine
 var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
 var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
 var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
-var         bool        bDiscardMagOnReload;        // when weapon is reloaded, the previously loaded magazine is discarded
+var         EUnloadedMunitionsPolicy UnloadedMunitionsPolicy;
+var         int         SavedRoundCount;            // number of rounds that have been saved from discarded magazines
 var         bool        bDoesNotRetainLoadedMag;    // this weapon does not retain its loaded 'mag' when put away or dropped & it doesn't start loaded (e.g. bazooka or panzerschreck)
 var         int         FillAmmoMagCount;           // the number of mags that a resupply point will try to add each time
 var         bool        bCanBeResupplied;           // the weapon can be resupplied by another player
 var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
 
 // Animations
-var         name        MagEmptyReloadAnim;         // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
-var         name        MagPartialReloadAnim;       // anim for reloads when a weapon still has ammo in magazine/box
+var         array<name> MagEmptyReloadAnims;        // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
+var         array<name> MagPartialReloadAnims;      // anim for reloads when a weapon still has ammo in magazine/box
 
 var         name        IronIdleAnim;               // anim for weapon idling while in iron sight view
 var         name        IronBringUp;                // anim for weapon being brought up to iron sight view
@@ -35,6 +43,8 @@ var         name        IronPutDown;                // anim for weapon being low
 
 var         name        BayoAttachAnim;             // anim for attaching the bayonet
 var         name        BayoDetachAnim;             // anim for detaching the bayonet
+var         name        BayoAttachEmptyAnim;        // anim for attaching the bayonet when empty
+var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
 
@@ -377,7 +387,12 @@ simulated event RenderOverlays(Canvas Canvas)
             }
 
             bDrawingFirstPerson = true;
-            Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+
+            if (Playa != none)
+            {
+                Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+            }
+
             bDrawingFirstPerson = false;
         }
         else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed)
@@ -426,7 +441,12 @@ simulated event RenderOverlays(Canvas Canvas)
         // TODO: This messes up the lighting & texture environment map shader when using ironsights
         // Maybe use a texrotator to simulate the texture environment map, or just find a way to fix the problems
         bDrawingFirstPerson = true;
-        Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+
+        if (Playa != none)
+        {
+            Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+        }
+
         bDrawingFirstPerson = false;
     }
     else
@@ -1085,7 +1105,14 @@ simulated state AttachingBayonet extends WeaponBusy
             ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
         }
 
-        PlayAnimAndSetTimer(BayoAttachAnim, 1.0, 0.1);
+        if (AmmoAmount(0) == 0 && HasAnim(BayoAttachEmptyAnim))
+        {
+            PlayAnimAndSetTimer(BayoAttachEmptyAnim, 1.0, 0.1);
+        }
+        else
+        {
+            PlayAnimAndSetTimer(BayoAttachAnim, 1.0, 0.1);
+        }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
@@ -1127,7 +1154,14 @@ simulated state DetachingBayonet extends WeaponBusy
             ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
         }
 
-        PlayAnimAndSetTimer(BayoDetachAnim, 1.0, 0.1);
+        if (AmmoAmount(0) == 0 && HasAnim(BayoDetachEmptyAnim))
+        {
+            PlayAnimAndSetTimer(BayoDetachEmptyAnim, 1.0, 0.1);
+        }
+        else
+        {
+            PlayAnimAndSetTimer(BayoDetachAnim, 1.0, 0.1);
+        }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
@@ -1718,6 +1752,32 @@ simulated state Reloading extends WeaponBusy
         bWaitingToBolt = false;
     }
 
+    // This is overridden because the normal PlayIdle function will play the
+    // "empty" animations after a reload because the client hasn't gotten
+    // the message about the updated ammo count yet.
+    simulated function PlayIdle()
+    {
+        local name Anim;
+
+        if (Instigator.bBipodDeployed)
+        {
+            if (AmmoAmount(0) == 0 && HasAnim(IronIdleEmptyAnim))
+            {
+                Anim = IronIdleEmptyAnim;
+            }
+            else if (HasAnim(IronIdleAnim))
+            {
+                Anim = IronIdleAnim;
+            }
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            Anim = IdleAnim;
+        }
+
+        LoopAnim(Anim, IdleAnimRate, 0.2);
+    }
+
 // Take the player out of ironsights
 Begin:
     if (bUsingSights)
@@ -1787,11 +1847,11 @@ simulated function PlayReload()
 {
     if (AmmoAmount(0) > 0 || (bTwoMagsCapacity && CurrentMagCount < 2))
     {
-        PlayAnimAndSetTimer(MagPartialReloadAnim, 1.0, 0.1);
+        PlayAnimAndSetTimer(MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)], 1.0, 0.1);
     }
     else
     {
-        PlayAnimAndSetTimer(MagEmptyReloadAnim, 1.0, 0.1);
+        PlayAnimAndSetTimer(MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)], 1.0, 0.1);
     }
 }
 
@@ -1815,22 +1875,49 @@ function PerformReload(optional int Count)
         bDidPlusOneReload = true;
     }
 
-    // Discard current mag (remove it from ammo array) if it's empty, or if weapon is set to discard current mag on reloading (e.g. Garand rifle, which ejects the clip),
-    // or if we're going to load a 2nd clip into a weapon that can load 2 clips/mags (new clip becomes the current 'mag')
-    if (CurrentMagLoad <= 0 || bDiscardMagOnReload || bTwoMagsCapacity)
+    // Discard current mag (remove it from ammo array) if it's empty, or if
+    // weapon is set to discard current mag on reloading or if we're going to
+    // load a 2nd clip into a weapon that can load 2 clips/mags (new clip
+    // becomes the current 'mag')
+    if (CurrentMagLoad <= 0 || UnloadedMunitionsPolicy == UMP_Discard || bTwoMagsCapacity)
     {
-        PrimaryAmmoArray.Remove(CurrentMagIndex, 1); // remove current mag, meaning the next one in the array now becomes the new current mag
+        // Remove current mag, meaning the next one in the array now becomes the new current mag
+        PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
+
+        // Loop back to index 0 if we just removed last mag in the array
+        if (CurrentMagIndex >= PrimaryAmmoArray.Length)
+        {
+            CurrentMagIndex = 0;
+        }
+    }
+    // Check if we are unloading a partial clip and we are consolidating clips
+    else if (CurrentMagLoad < FireMode[0].AmmoClass.default.InitialAmount && UnloadedMunitionsPolicy == UMP_Consolidate)
+    {
+        // Remove the current magazine.
+        PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 
         if (CurrentMagIndex >= PrimaryAmmoArray.Length) // loop back to index 0 if we just removed last mag in the array
         {
             CurrentMagIndex = 0;
         }
+
+        SavedRoundCount += CurrentMagLoad;
     }
     // Otherwise put the current mag back into player's spare mags
     else
     {
         PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad; // update CurrentMagIndex with current no. of loaded rounds, as it won't have been updated when shots fired
         CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length); // now cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
+    }
+
+    if (UnloadedMunitionsPolicy == UMP_Consolidate)
+    {
+        // Consolidate saved rounds into a new magazine.
+        while (SavedRoundCount >= FireMode[0].AmmoClass.default.InitialAmount)
+        {
+            PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
+            SavedRoundCount -= FireMode[0].AmmoClass.default.InitialAmount;
+        }
     }
 
     // Now build up the new ammo 'charge' from the newly loaded mag

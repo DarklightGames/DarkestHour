@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVoiceSayMessage extends DHLocalMessage
@@ -27,14 +27,13 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, DHPlayerReplicationInfo(RelatedPRI_1)))
     {
         NameColor = class'DHColor'.default.SquadColor;
+        SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
+        if (SquadMemberID != "") SquadMemberID $= " ";
     }
     else
     {
         NameColor = ConsoleColor;
     }
-
-    SquadMemberID = GetSquadMemberID(DHPlayerReplicationInfo(RelatedPRI_1));
-    if (SquadMemberID != "") SquadMemberID $= " ";
 
     return default.MessagePrefix @
            class'GameInfo'.static.MakeColorCode(NameColor) $

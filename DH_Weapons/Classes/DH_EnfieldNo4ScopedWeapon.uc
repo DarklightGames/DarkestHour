@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
@@ -26,16 +26,19 @@ defaultproperties
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
     ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
 
-    ScopeOverlaySize=0.7 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+    ScopeOverlaySize=0.54 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5
-    OverlayCorrectionY=6    //pixel value scope overaly correction
-    DisplayFOV=70.0         // idk
-    IronSightDisplayFOV=40.0
-    IronSightDisplayFOVHigh=40.0
-    PlayerFOVZoom=25.714285 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
-    ScopePortalFOV=7.0
-    ScopePortalFOVHigh=7.0
+    //OverlayCorrectionY=6    //pixel value scope overaly correction // removed, because it moved the 0 meters mark above the center (which isnt only wrong, but also inconsistent with the 3d scope)
+    DisplayFOV=85.0
+    IronSightDisplayFOV=33.5
+    IronSightDisplayFOVHigh=33.5
+    PlayerFOVZoom=17.143 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
+    ScopePortalFOV=9.4   //~8.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=9.4  //also it is reduced so that 3d scope takes slightly less space on the screen
     LensMaterialID=3
+
+    PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 
     HandNum=1
     SleeveNum=0
@@ -43,7 +46,6 @@ defaultproperties
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
-    bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85
 
@@ -53,8 +55,8 @@ defaultproperties
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
     PostFireIronIdleAnim=none
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end_scope"

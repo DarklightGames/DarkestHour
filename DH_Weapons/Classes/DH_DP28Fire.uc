@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_DP28Fire extends DHMGAutomaticFire;
@@ -13,8 +13,7 @@ defaultproperties
     FireRate=0.1
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)
-    Spread=80.0
-
+    Spread=70.0
 
     // Recoil
     RecoilRate=0.05

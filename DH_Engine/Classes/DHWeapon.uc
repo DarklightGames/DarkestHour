@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -173,6 +173,86 @@ simulated function SetPlayerFOV(float PlayerFOV)
     if (InstigatorIsLocalHuman())
     {
         PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
+    }
+}
+
+// Re-implemented to fix a long-standing bug where picking up a weapon while
+// reloading an empty weapon would trigger a latent weapon change upon firing
+// the currently held weapon.
+function GiveTo(Pawn Other, optional Pickup Pickup)
+{
+    local ROWeaponPickup Pick;
+    local int m;
+    local weapon w;
+    local bool bPossiblySwitch, bJustSpawned;
+    local ROWeapon ROW;
+
+    if (Pickup != none)
+    {
+        Pick = ROWeaponPickup(Pickup);
+
+        if (Pick != none)
+        {
+            bBayonetMounted = Pick.bHasBayonetMounted;
+        }
+    }
+
+    Instigator = Other;
+    W = Weapon(Instigator.FindInventoryType(Class));
+
+    if (W == none || W.Class != Class)
+    {
+        bJustSpawned = true;
+
+        super(Inventory).GiveTo(Other);
+
+        bPossiblySwitch = true;
+
+        W = self;
+    }
+    else if (!W.HasAmmo())
+    {
+        bPossiblySwitch = true;
+    }
+
+    if (Pickup == none)
+    {
+        bPossiblySwitch = true;
+    }
+
+    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    {
+        if (FireMode[m] != none)
+        {
+            FireMode[m].Instigator = Instigator;
+
+            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+        }
+    }
+
+    // MODIFICATION:
+    // Do not switch to this weapon if the user cannot switch from their current
+    // weapon!
+    ROW = ROWeapon(Instigator.Inventory);
+
+    if (ROW != none && !ROW.WeaponCanSwitch())
+    {
+        bPossiblySwitch = false;
+    }
+
+    if (Instigator.Weapon != W)
+    {
+        W.ClientWeaponSet(bPossiblySwitch);
+    }
+
+    if (!bJustSpawned)
+    {
+        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        {
+            Ammo[m] = none;
+        }
+
+        Destroy();
     }
 }
 
@@ -717,6 +797,38 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 }
 
+exec function SetMuzzleOffset(int X, int Y, int Z)
+{
+    local int i;
+    local DHWeaponFire WF;
+    local vector V;
+
+    V.X = X;
+    V.Y = Y;
+    V.Z = Z;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        for (i = 0; i < arraycount(FireMode); ++i)
+        {
+            WF = DHWeaponFire(FireMode[i]);
+
+            if (WF != none)
+            {
+                if (WF.FlashEmitter != none)
+                {
+                    WF.FlashEmitter.SetRelativeLocation(V);
+                }
+
+                if (WF.SmokeEmitter != none)
+                {
+                    WF.SmokeEmitter.SetRelativeLocation(V);
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {
@@ -901,10 +1013,12 @@ simulated function HandleSleeveSwapping()
 
         RoleSleeveTexture = RI.static.GetSleeveTexture();
 
+        /*
         if (RI.static.GetHandTexture() == none)
         {
             Warn("Hand texture for role info" @ RI @ "is not set!");
         }
+        */
 
         RoleHandTexture = RI.static.GetHandTexture();
     }

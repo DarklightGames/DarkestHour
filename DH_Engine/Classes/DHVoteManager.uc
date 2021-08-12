@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVoteManager extends Actor
@@ -51,6 +51,15 @@ function AddNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
         if (TeamIndex > 1)
         {
             Warn("Failed to nominate the vote. Invalid team index.");
+            return;
+        }
+    }
+
+    // Disallow multiple nominations from the same player
+    for (i = 0; i < Nominations.Length; ++i)
+    {
+        if (Nominations[i].Player == Player && Nominations[i].VoteClass == VoteClass)
+        {
             return;
         }
     }

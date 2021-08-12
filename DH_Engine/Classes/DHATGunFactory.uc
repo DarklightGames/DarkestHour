@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHATGunFactory extends DHVehicleFactory
@@ -16,11 +16,15 @@ class DHATGunFactory extends DHVehicleFactory
 var()   bool        bUseRandomizer;           // makes this factory part of a randomized AT gun group
 var()   string      GroupTag;                 // each factory in a group must have a matching GroupTag
 var()   int         MaxRandomFactoriesActive; // the number of gun factories to be activated based on random selection from their group
+var()   bool        bOverrideTeamLock;        // use factory value for `bTeamLocked`
+var()   bool        bTeamLocked;              // gun can only be used by owning team
 var     int         NumToActivate;            // the no. of factories out of the group that are to be randomly selected to be activated
 var     bool        bHaveSetupATGunGroup;     // flags that we've already set up our allocated AT gun group
 var     bool        bIsMasterFactory;         // flags that this factory is acting as the master gun factory & will control randomization
 var     array<int>  SelectedFactoryIndexes;   // array of index numbers of the randomly selected active factories
 var     array<DHATGunFactory> GunFactories;   // saved actor references to all gun factories in our group
+
+var()   name        ExitPositionHintTag;      // allow the leveler to define a specific exit position (for guns with tight positioning)
 
 // Modified to handle the randomizer option
 // If enabled, we don't activate any factories directly, but just make one factory act as master controller for the group & that handles randomized activation
@@ -184,6 +188,25 @@ function ActivatedBySpawn(int Team)
     else
     {
         super.ActivatedBySpawn(Team);
+    }
+}
+
+function VehicleSpawned(Vehicle V)
+{
+    local DHATGun Gun;
+
+    super.VehicleSpawned(V);
+
+    Gun = DHATGun(V);
+
+    if (Gun != none)
+    {
+        Gun.PrependFactoryExitPositions();
+
+        if (bOverrideTeamLock)
+        {
+            Gun.bTeamLocked = bTeamLocked;
+        }
     }
 }
 

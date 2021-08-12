@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ZiS3Cannon extends DHATGunCannon;
@@ -25,7 +25,7 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
+    //TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
 
 
     ProjectileDescriptions(0)="APBC"

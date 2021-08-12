@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHWeaponAttachment extends ROWeaponAttachment
@@ -185,7 +185,7 @@ simulated event ThirdPersonEffects()
 simulated function SpawnHitEffect()
 {
     local PlayerController   PC;
-    local ROVehicleHitEffect VehEffect;
+    local DHVehicleHitEffect VehEffect;
 
     OldSpawnHitCount = SpawnHitCount;
 
@@ -199,7 +199,7 @@ simulated function SpawnHitEffect()
     {
         if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
         {
-            VehEffect = Spawn(class'ROVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            VehEffect = Spawn(class'DHVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
             VehEffect.InitHitEffects(mHitLocation, mHitNormal);
         }
         else
@@ -408,6 +408,7 @@ defaultproperties
     bNetNotify=true
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
+    SplashEffect=class'DHBulletHitWaterEffect'
 
     // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
     // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")

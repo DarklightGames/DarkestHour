@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -64,8 +64,9 @@ var(ROObjective) bool               bIsInitiallyActive;         // Purpose is ma
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Objective Spawn variables
-var(DHObjectiveSpawn) name          SpawnPointHintTags[2];      // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
-var DHSpawnPoint_Objective          SpawnPoint;                 // Reference to the attached DHSpawnPoint_Objective if one exists
+var(DHObjectiveSpawn) name          SpawnPointHintTags[2];          // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
+var(DHObjectiveSpawn) name          VehicleSpawnPointHintTags[2];   // Tags of hints for vehicle obj spawns (0 = Axis, 1 = Allies)
+var DHSpawnPoint_Objective          SpawnPoint;                     // Reference to the attached DHSpawnPoint_Objective if one exists
 
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
@@ -77,6 +78,7 @@ var(DHObjectiveCapture) int         LockDownOnCaptureTime;      // time to preve
 var(DHObjectiveCapture) int         AlliesAddedLockDown;        // added time to lock down if Allies take the objective
 var(DHObjectiveCapture) int         AxisAddedLockDown;          // added time to lock down if Axis takle the objective
 var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
+var(DHObjectiveCapture) bool        bLockDownNeverControlled;   // Lock objectives on capture regardless of whether they were recently controlled or not
 var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 
 // Requirements
@@ -149,6 +151,10 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
+// New group system
+var()       name             ObjectiveGroupTag;
+var         DHObjectiveGroup ObjectiveGroup;
+
 // Replication
 var                         EObjectiveState             OldObjState;
 
@@ -169,6 +175,7 @@ simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
+    local DHObjectiveGroup      ObjectiveGroupFound;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -205,6 +212,18 @@ simulated function PostBeginPlay()
         if (DarkestHourGame(Level.Game) != none)
         {
             DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+
+            foreach AllActors(class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
+            {
+                if (ObjectiveGroup != none)
+                {
+                    Warn("Objective group already assigned (possible duplicate tag)");
+                    break;
+                }
+
+                ObjectiveGroup = ObjectiveGroupFound;
+                ObjectiveGroup.AddObjective(self);
+            }
         }
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -590,7 +609,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
-            if (bLockDownOnCapture && bRecentlyControlledByAllies)
+            if (bLockDownOnCapture && (bLockDownNeverControlled || bRecentlyControlledByAllies))
             {
                 UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime + AxisAddedLockDown;
             }
@@ -651,7 +670,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
-            if (bLockDownOnCapture && bRecentlyControlledByAxis)
+            if (bLockDownOnCapture && (bLockDownNeverControlled || bRecentlyControlledByAxis))
             {
                 UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime + AlliesAddedLockDown;
             }
@@ -1374,6 +1393,11 @@ simulated function byte GetTeamIndex()
         default:
             return -1;
     }
+}
+
+simulated function bool IsInGroup()
+{
+    return ObjectiveGroupTag != '' && ObjectiveGroup != none;
 }
 
 // Clients/Server can run this function very fast because of the hashtable

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz105Transport extends DHVehicle;
@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
 simulated function SpawnVehicleAttachments()
 {
-    VehicleAttachments[0].Skin = Skins[1];
+    VehicleAttachments[0].Skins[0] = Skins[1];
 
     super.SpawnVehicleAttachments();
 }

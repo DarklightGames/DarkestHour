@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_AchillesCannonShell extends DHCannonShell;
@@ -12,8 +12,9 @@ defaultproperties
     ShellDiameter=7.62
     BallisticCoefficient=2.45
 
-    //Damage
+    // Damage
     ImpactDamage=580  //solid shell
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.35
     EngineFireChance=0.75
 

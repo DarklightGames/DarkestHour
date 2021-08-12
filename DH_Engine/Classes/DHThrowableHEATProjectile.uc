@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHThrowableHEATProjectile extends DHCannonShellHEAT;
@@ -451,6 +451,30 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Glass:
             DampenFactor = 0.3;
+            DampenFactorParallel = 0.55;
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
+            break;
+
+        case EST_Custom01: //Sand
+            DampenFactor = 0.1;
+            DampenFactorParallel = 0.45;
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
+            break;
+
+        case EST_Custom02: //SandBag
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.55;
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
+            break;
+
+        case EST_Custom03: //Brick
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.5;
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
+            break;
+
+        case EST_Custom04: //Hedgerow
+            DampenFactor = 0.15;
             DampenFactorParallel = 0.55;
             ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;

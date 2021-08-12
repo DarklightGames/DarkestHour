@@ -1,6 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
+//==============================================================================
+// WARNING: THIS WHOLE CLASS IS A HACK, REMOVE IT WHEN WE MOVE SINGLEs RELOADS
+// TO THE MAIN PROJECTILE WEAPON CLASS!
 //==============================================================================
 
 class DHRevolverWeapon extends DHBoltActionWeapon

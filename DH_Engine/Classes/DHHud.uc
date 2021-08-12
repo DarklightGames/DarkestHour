@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHHud extends ROHud
@@ -38,7 +38,7 @@ var     TextWidget          MapScaleText;
 var     TextWidget          PlayerNumberText;
 var     SpriteWidget        MapIconCarriedRadio;
 var     SpriteWidget        MapAxisFlagIcon;
-var     SpriteWidget        MapAlliesFlagIcons[4];
+var     SpriteWidget        MapAlliesFlagIcons[5];
 var     SpriteWidget        MapIconMortarHETarget;
 var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
@@ -79,6 +79,7 @@ var     NumericWidget       VehicleSmokeLauncherAmmoAmount;     // ammo quantity
 var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
 var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
+var     SpriteWidget        VehicleVisionConeIcon;
 
 // Supply Points
 var     SpriteWidget        SupplyPointIcon;
@@ -138,7 +139,8 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
-var     globalconfig int    MinPromptPacketLoss;    // client option used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
+var     globalconfig bool   bShowVehicleVisionCone; // whether or not to draw the vehicle vision cone
+var     globalconfig int    MinPromptPacketLoss;    // used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 var     globalconfig bool   bUseTechnicalAmmoNames; // client side Display technical designation for ammo type
 
 // Indicators
@@ -180,6 +182,9 @@ var     Material            RallyPointIconFlag;
 var     Material            RallyPointIconBadLocation;
 var     Material            RallyPointIconMissingSquadmate;
 var     Material            RallyPointIconKey;
+
+var     SpriteWidget        IQIconWidget;
+var     TextWidget          IQTextWidget;
 
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
@@ -858,6 +863,7 @@ function DrawHudPassC(Canvas C)
     local rotator               CameraRotation;
     local Actor                 ViewActor;
     local DHPawn                P;
+    local DHPlayer              PC;
     local DHVehicle             V;
 
     if (PawnOwner == none)
@@ -1039,6 +1045,12 @@ function DrawHudPassC(Canvas C)
     {
         DrawRallyPointStatus(C);
     }
+
+    // Rally
+
+    // IQ Widget
+    PC = DHPlayer(PlayerOwner);
+    DrawIQWidget(C);
 
     // Player names
     DrawPlayerNames(C);
@@ -1456,6 +1468,15 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
+            if (bShowVehicleVisionCone && Passenger == none)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
+
             PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
             PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
             PlayerNumberText.text = string(i + 1);
@@ -1499,6 +1520,15 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            if (bShowVehicleVisionCone && WP != none && WP == Passenger && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+            {
+                VehicleVisionConeIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
+                VehicleVisionConeIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
+
+                TexRotator(VehicleVisionConeIcon.WidgetTexture).Rotation.Yaw = -(PlayerOwner.CalcViewRotation.Yaw - Vehicle.Rotation.Yaw);
+                DrawSpriteWidgetClipped(Canvas, VehicleVisionConeIcon, Coords, true);
+            }
 
             PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
             PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
@@ -3743,7 +3773,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             Widget = MapIconNeutral;
         }
 
-        if (!DHGRI.DHObjectives[i].bActive)
+        if (!DHGRI.DHObjectives[i].bActive && !bShowDebugInfoOnMap)
         {
             Widget.Tints[0] = GrayColor;
             Widget.Tints[1] = GrayColor;
@@ -3763,6 +3793,15 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         else
         {
             ObjLabel = DHGRI.DHObjectives[i].ObjName;
+        }
+
+        if (bShowDebugInfoOnMap)
+        {
+            ObjLabel @= "[" $ i $ "]" @
+                        "Al" @  DHGRI.DHObjectives[i].AlliesInfluenceModifier @
+                        "Ax" @  DHGRI.DHObjectives[i].AxisInfluenceModifier @
+                        "B" @  DHGRI.DHObjectives[i].BaseInfluenceModifier @
+                        "N" @  DHGRI.DHObjectives[i].NeutralInfluenceModifier;
         }
 
         // Draw flashing icon if objective is disputed
@@ -4288,6 +4327,7 @@ function DrawLocationHits(Canvas C, ROPawn P)
                 switch(DHGRI.AlliedNationID)
                 {
                     case 3: // USSR
+                    case 4: // Poland
                         Widget.WidgetTexture = class'ROHud'.default.LocationHitAlliesImages[i];
                         break;
                     default:
@@ -4321,7 +4361,7 @@ function UpdateHud()
 
     if (PawnOwnerPRI != none)
     {
-        bIsRussian = PawnOwnerPRI.Team != none && PawnOwnerPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && DHGRI != none && DHGRI.AlliedNationID == 3;
+        bIsRussian = PawnOwnerPRI.Team != none && PawnOwnerPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && DHGRI != none && (DHGRI.AlliedNationID == 3 || DHGRI.AlliedNationID == 4);
 
         P = ROPawn(PawnOwner);
 
@@ -5572,6 +5612,57 @@ function bool ShouldShowRallyPointIndicator()
     return PC.SquadReplicationInfo.bAreRallyPointsEnabled;
 }
 
+function DrawIQWidget(Canvas C)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+    local AbsoluteCoordsInfo GlobalCoords;
+    local color IQWidgetColor;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || !PC.bIQManaged)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    GlobalCoords.Width = C.ClipX;
+    GlobalCoords.Height = C.ClipY;
+
+    DrawSpriteWidgetClipped(C, IQIconWidget, GlobalCoords, false);
+
+    if (PRI.PlayerIQ >= PC.MinIQToGrowHead * 2)
+    {
+        IQWidgetColor = class'UColor'.default.Red;
+    }
+    else if (PRI.PlayerIQ > PC.MinIQToGrowHead)
+    {
+        IQWidgetColor = class'UColor'.default.Yellow;
+    }
+    else
+    {
+        IQWidgetColor = class'UColor'.default.White;
+    }
+
+    IQIconWidget.Tints[0] = IQWidgetColor;
+    IQIconWidget.Tints[1] = IQWidgetColor;
+
+    IQTextWidget.Tints[0] = IQWidgetColor;
+    IQTextWidget.Tints[1] = IQWidgetColor;
+
+    IQTextWidget.Text = string(PRI.PlayerIQ);
+
+    C.Font = GetSmallerMenuFont(C);
+    DrawTextWidgetClipped(C, IQTextWidget, GlobalCoords);
+}
+
 function DrawRallyPointStatus(Canvas C)
 {
     local DHPlayer PC;
@@ -5684,6 +5775,7 @@ function DrawRallyPointStatus(Canvas C)
             ErrorIcon = default.RallyPointIconCooldown;
             ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
             break;
+        case ERROR_BehindEnemyLines:
         case ERROR_InUncontrolledObjective:
             ErrorIcon = default.RallyPointIconFlag;
             IconColor = class'UColor'.default.Red;
@@ -5760,7 +5852,7 @@ function DrawRallyPointStatus(Canvas C)
         }
     }
 
-    if (Result.bIsInDangerZone)
+    if (SRI.bAllowRallyPointsBehindEnemyLines && Result.bIsInDangerZone)
     {
         GlobalCoors.PosX = BaseX;
         GlobalCoors.PosY = BaseY;
@@ -5975,7 +6067,9 @@ defaultproperties
     ConsoleFontSize=6
     MessageFontOffset=0
     bShowIndicators=true
-    MinPromptPacketLoss=9
+    MinPromptPacketLoss=10
+
+    bShowVehicleVisionCone=true
 
     // Death messages
     bShowDeathMessages=true
@@ -6107,6 +6201,7 @@ defaultproperties
     MapAlliesFlagIcons(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapAlliesFlagIcons(2)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapAlliesFlagIcons(3)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=32,X2=63,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(4)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=32,X2=95,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
     MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
@@ -6134,6 +6229,8 @@ defaultproperties
     VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.OverheadMap.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
     VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.42,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    VehicleVisionConeIcon=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Soliton_rot',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,OffsetX=0,OffsetY=0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255)))
 
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
@@ -6190,4 +6287,8 @@ defaultproperties
     DangerZoneOverlaySubResolution=57
     bDangerZoneOverlayUpdatePending=true
     DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
+
+    // IQ
+    IQIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
+    IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=-55,OffsetY=-118)
 }

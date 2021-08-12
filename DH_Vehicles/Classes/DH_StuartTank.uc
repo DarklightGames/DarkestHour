@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_StuartTank extends DHArmoredVehicle;
@@ -53,12 +53,12 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-	// pros: 37mm ammo is less likely to explode; 
-	// cons: tightly placed 4 men crew; petrol fuel; 
-    Health=500
-    HealthMax=500.0
-	EngineHealth=300
-	AmmoIgnitionProbability=0.27  // 0.75 default
+    // pros: 37mm ammo is less likely to explode;
+    // cons: tightly placed 4 men crew; petrol fuel;
+    Health=420
+    HealthMax=420.0
+    EngineHealth=300
+    AmmoIgnitionProbability=0.27  // 0.75 default
     TurretDetonationThreshold=4000.0 // increased from 1750
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol

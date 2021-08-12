@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 // This is now a deprecated pass-through class that spawns a DHRadio in it's
 // place to maintain backwards compatibility with old maps.

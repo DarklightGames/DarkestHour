@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_USRifleman82nd extends DHUSRiflemanRoles;
@@ -11,6 +11,7 @@ defaultproperties
     SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet82ndEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet82ndEMb'
+
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
 }

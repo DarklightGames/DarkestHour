@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SVT40ScopedWeapon extends DHSniperWeapon;
@@ -18,21 +18,46 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    ScopeOverlaySize=0.29
+
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
-    bUsesIronsightFOV=false
-
-    IronSightDisplayFOV=60.0
-    IronSightDisplayFOVHigh=60.0
-
-    PlayerFOVZoom=24.0 // 3.5x
-
-    ScopePortalFOV=7.0 // 3.5x
-    ScopePortalFOVHigh=7.0
+    IronSightDisplayFOV=44.4
+    IronSightDisplayFOVHigh=44.4
+    DisplayFOV=85.0
+    PlayerIronsightFOV=60.0
+    PlayerFOVZoom=17.143 // 3.5x
+    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.4
+    bUsesIronsightFOV=true
 
     LensMaterialID=4
 
     InitialNumPrimaryMags=7
     MaxNumPrimaryMags=7
+    
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagEmptyReloadAnims(1)="reload_emptyB"
+    MagEmptyReloadAnims(2)="reload_emptyC"
+    MagPartialReloadAnims(0)="reload_half"
+    MagPartialReloadAnims(1)="reload_halfB"
+    MagPartialReloadAnims(2)="reload_halfC"
+
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="scope_idle_empty"
+    IronBringUpEmpty="scope_in_empty"
+    IronPutDownEmpty="scope_out_empty"
+    SprintStartEmptyAnim="sprint_start_empty"
+    SprintLoopEmptyAnim="sprint_middle_empty"
+    SprintEndEmptyAnim="sprint_end_empty"
+
+    CrawlForwardEmptyAnim="crawlF_empty"
+    CrawlBackwardEmptyAnim="crawlB_empty"
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+
+    SelectEmptyAnim="draw_empty"
+    PutDownEmptyAnim="put_away_empty"
 }

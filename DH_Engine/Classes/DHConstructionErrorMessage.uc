@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHConstructionErrorMessage extends LocalMessage
@@ -91,5 +91,6 @@ defaultproperties
     ErrorMessages(23)="Too close to an uncontrolled objective ({string}), it must be {integer}m further away."
     ErrorMessages(24)="You must {verb} a {name} within {integer}m of a friendly {string}";
     ErrorMessages(25)="You cannot {verb} a {name} in enemy territory";
+    ErrorMessages(26)="There are no more {name} available";
 }
 

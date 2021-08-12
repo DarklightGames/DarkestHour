@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MP41RFire extends DHFastAutoFire;
@@ -28,4 +28,9 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=11000)
+
+    FireIronEndAnim="iron_shoot_end"
+    FireIronLastAnim="iron_shoot_end_empty"
+    FireLastAnim="shoot_end_empty"
+    FireEndAnim="shoot_end"
 }

@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
     notplaceable;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
+#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
@@ -145,7 +146,7 @@ auto state Constructing
             EstablishmentCounter -= 1;
         }
 
-        if (EstablishmentCounter >= default.EstablishmentCounterThreshold)
+        if (EstablishmentCounter >= EstablishmentCounterThreshold)
         {
             // Rally point exceeded the Establishment counter threshold. This
             // rally point is now established!
@@ -400,6 +401,9 @@ function UpdateAppearance()
             case NATION_USSR:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established';
                 break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established';
+                break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
                 break;
@@ -427,6 +431,9 @@ function UpdateAppearance()
             case NATION_USSR:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
                 break;
+            case NATION_Poland:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack';
+                break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
                 break;
@@ -441,7 +448,19 @@ function UpdateAppearance()
 
 function OnTeamIndexChanged()
 {
+    local bool bIsInFriendlyTerritory;
+
     UpdateAppearance();
+
+    if (IsInState('Constructing'))
+    {
+        bIsInFriendlyTerritory = GRI.IsInDangerZone(Location.X, Location.Y, int(!bool(GetTeamIndex())));
+
+        if (bIsInFriendlyTerritory)
+        {
+            EstablishmentCounterThreshold = default.EstablishmentCounterThreshold * 0.5;
+        }
+    }
 }
 
 simulated function string GetMapText()

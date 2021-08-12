@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
@@ -82,7 +82,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             }
 
             // Do a check if the current player count is in bounds of recommended range
-            if (GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max)
+            if (!GRI.IsPlayerCountInRange(Min, Max))
             {
                 DrawStyle = RedListStyle;
             }

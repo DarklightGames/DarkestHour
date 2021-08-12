@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 // This gun still need a bunch of work, and it's utility is extremely limited
 // because the gun has such a limited yaw range. This gun can be implemented

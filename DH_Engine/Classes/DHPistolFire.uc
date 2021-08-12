@@ -1,49 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHPistolFire extends DHProjectileFire
     abstract;
-
-// Different firing animations if pistol is firing its last round
-var     name    FireLastAnim;
-var     name    FireIronLastAnim;
-
-// Modified to use different firing animations if pistol is firing its last round
-function PlayFiring()
-{
-    if (Weapon != none)
-    {
-        if (Weapon.Mesh != none)
-        {
-            if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
-            {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
-                {
-                    Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
-                }
-                else
-                {
-                    Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-                }
-            }
-            else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
-            {
-                Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
-            }
-            else if (Weapon.HasAnim(FireAnim))
-            {
-                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-            }
-        }
-
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-    }
-
-    ClientPlayForceFeedback(FireForce);
-    FireCount++;
-}
 
 // Modified so if remaining ammo is low, we immediately consume ammo on a net client, without waiting for a reduced ammo count to replicate
 // This could be dangerous (old RO comment) but should ensure the proper anims play for pistol firing in laggy situations

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -170,6 +170,7 @@ defaultproperties
     TerrainSurfaceTypes(2)=EST_Snow
     TerrainSurfaceTypes(3)=EST_Mud
     TerrainSurfaceTypes(4)=EST_Plant
+    TerrainSurfaceTypes(5)=EST_Custom01 // Sand
     bShouldBlockSquadRallyPoints=true
     bIsNeutral=true
     LargeTerrainScaleThreshold=128.0

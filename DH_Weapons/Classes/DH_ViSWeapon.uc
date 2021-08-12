@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ViSWeapon extends DHPistolWeapon;
@@ -24,8 +24,8 @@ defaultproperties
 
     FirstSelectAnim="draw2"
 
-    DisplayFOV=70.0
-    IronSightDisplayFOV=64.0
+    DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
     ZoomOutTime=0.4
 
     MaxNumPrimaryMags=5
@@ -37,9 +37,9 @@ defaultproperties
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="Iron_In_empty"
     IronPutDownEmpty="Iron_Out_empty"
-    SprintStartEmptyAnim="Sprint_Empty_Start"
-    SprintLoopEmptyAnim="Sprint_Empty_Middle"
-    SprintEndEmptyAnim="Sprint_Empty_End"
+    SprintStartEmptyAnim="Sprint_Start_empty"
+    SprintLoopEmptyAnim="Sprint_middle_Empty"
+    SprintEndEmptyAnim="Sprint_end_Empty"
     CrawlForwardEmptyAnim="crawlF_empty"
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"

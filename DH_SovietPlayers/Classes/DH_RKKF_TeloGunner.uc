@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_RKKF_TeloGunner extends DHSOVMachineGunnerRoles; //wears helmet and no naval cap, so doesnt need to be separated on fleets for an appropriate cap

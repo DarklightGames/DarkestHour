@@ -1,11 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVotingHandler extends xVotingHandler;
 
-var private float       PatronVoteModifiers[5];
+var class<VotingReplicationInfo> VotingReplicationInfoClass;
+
+var private config float PatronVoteModifiers[5];
+var         config float MaxVotePower;
 
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;
@@ -21,6 +24,78 @@ function SubmitKickVote(int PlayerID, Actor Voter){}
 function UpdateKickVoteCount(int PlayerID, int VoteCountDelta){}
 function TallyKickVotes(){}
 function KickPlayer(int PlayerIndex){}
+
+// Overriden to allow map voting in single-player (for debug purposes)
+function PostBeginPlay()
+{
+    local int i;
+
+    super(VotingHandler).PostBeginPlay();
+
+    if (Level.NetMode == NM_Standalone &&
+        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
+    {
+        return;
+    }
+
+    bMatchSetup = bMatchSetup && MATCHSETUPALLOWED;
+
+    if (bKickVote)
+    {
+        Log("Kick Voting Enabled", 'MapVote');
+    }
+    else
+    {
+        Log("Kick Voting Disabled", 'MapVote');
+    }
+
+    if (bMapVote)
+    {
+        Log("Map Voting Enabled", 'MapVote');
+
+        // Check current game settings
+        if (GameConfig.Length > 0)
+        {
+            if (!(string(Level.Game.Class) ~= GameConfig[CurrentGameConfig].GameClass))
+            {
+                CurrentGameConfig = 0;
+
+                // Find matching game type in game config
+                for(i=0; i < GameConfig.Length; i++)
+                {
+                    if (GameConfig[i].GameClass ~= string(Level.Game.Class))
+                    {
+                        CurrentGameConfig = i;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            CurrentGameConfig = 0;
+        }
+
+        LoadMapList();
+    }
+    else
+    {
+        Log("Map Voting Disabled", 'MapVote');
+    }
+
+    if(bMatchSetup)
+    {
+        Log("MatchSetup Enabled", 'MapVote');
+
+        MatchProfile = CreateMatchProfile();
+        MatchProfile.Init(Level);
+        MatchProfile.LoadCurrentSettings();
+    }
+    else
+    {
+        Log("MatchSetup Disabled", 'MapVote');
+    }
+}
 
 // Modified to avoid calling PlayCountDown() on the VotingReplicationInfo as that just spams log errors as this game doesn't have a StatusAnnouncer actor
 function Timer()
@@ -67,6 +142,25 @@ function Timer()
     {
         TallyVotes(true);
     }
+}
+
+// Overriden to use DHVotingReplicationInfo
+function AddMapVoteReplicationInfo(PlayerController Player)
+{
+    local VotingReplicationInfo M;
+
+    Log("___Spawning VotingReplicationInfo", 'MapVoteDebug');
+
+    M = Spawn(VotingReplicationInfoClass, Player,, Player.Location);
+
+    if (M == None)
+    {
+        Log("___Failed to spawn VotingReplicationInfo", 'MapVote');
+        return;
+    }
+
+    M.PlayerID = Player.PlayerReplicationInfo.PlayerID;
+    MVRI[MVRI.Length] = M;
 }
 
 // Modified to allow for specific repeat limit
@@ -192,13 +286,37 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     return ReturnString;
 }
 
+// Overriden to add single-player debugging
+function PlayerJoin(PlayerController Player)
+{
+    if (Level.NetMode == NM_Standalone &&
+        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
+    {
+        return;
+    }
+
+    if (!Player.IsA('XPlayer')) // no bots
+    {
+        return;
+    }
+
+    if (bMapVote || bKickVote || bMatchSetup)
+    {
+        Log("___New Player Joined - " $
+            Player.PlayerReplicationInfo.PlayerName $
+            ", " $
+            Player.GetPlayerNetworkAddress(),'MapVote');
+        AddMapVoteReplicationInfo(Player);
+    }
+}
+
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
     local int ExitingPlayerIndex, i, x;
 
-    // Disable voting in single player mode
-    if (Level.NetMode == NM_StandAlone)
+    if (Level.NetMode == NM_Standalone &&
+        !class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting)
     {
         return;
     }
@@ -649,7 +767,6 @@ function TallyVotes(bool bForceMapSwitch)
 // DH function which will calculate a specifici player's power
 function float GetPlayerVotePower(PlayerController Player)
 {
-    const PLAYER_VOTE_POWER_MAX = 15;
 
     local int VotePower, NumPlayers;
     local DHPlayerReplicationInfo PRI;
@@ -665,7 +782,7 @@ function float GetPlayerVotePower(PlayerController Player)
 
     NumPlayers = G.GetNumPlayers();
     VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
-    VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX); // Add the clamped vote power from Score
+    VotePower += Clamp(PRI.Score / 1000, 0, MaxVotePower); // Add the clamped vote power from Score
 
     // Everyone gets at least one vote
     if (VotePower < 1)
@@ -849,14 +966,18 @@ static function FillPlayInfo(PlayInfo PlayInfo)
 
 defaultproperties
 {
+    VotingReplicationInfoClass=class'DHVotingReplicationInfo'
+
     bUseSwapVote=true
     MapVoteIntervalDuration=3.0
     lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting another map!"
     SwapAndRestartText="DH-[Swap Teams and Restart]"
 
+    MaxVotePower=10
+
     PatronVoteModifiers(0)=0.0  //Not Patron
     PatronVoteModifiers(1)=0.15 //Lead
-    PatronVoteModifiers(2)=0.25  //Bronze
-    PatronVoteModifiers(3)=0.35  //Silver
+    PatronVoteModifiers(2)=0.25 //Bronze
+    PatronVoteModifiers(3)=0.35 //Silver
     PatronVoteModifiers(4)=0.5  //Gold
 }

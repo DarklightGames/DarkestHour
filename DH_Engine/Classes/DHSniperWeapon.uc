@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSniperWeapon extends DHProjectileWeapon
@@ -19,8 +19,8 @@ defaultproperties
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"
     IronIdleAnim="Scope_Idle"
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     AIRating=0.4
     CurrentRating=0.4

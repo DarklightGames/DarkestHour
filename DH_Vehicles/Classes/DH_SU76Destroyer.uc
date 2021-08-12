@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 
@@ -15,7 +15,7 @@ defaultproperties
     ReinforcementCost=4
 
     // Hull mesh
-    Mesh=Mesh'allies_su76_anm.SU76_body_ext'
+    Mesh=Mesh'DH_SU76_anm.SU76_body_ext'
     Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.SU76_ext'
     Skins(1)=Texture'allies_vehicles_tex.Treads.SU76_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.SU76_treads'
@@ -33,8 +33,8 @@ defaultproperties
 
     // Driver
     DriverAttachmentBone=driver_attachment
-    DriverPositions(0)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=Mesh'allies_su76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=Mesh'DH_SU76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=Mesh'DH_SU76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1 // position in array where driver can exit
     FPCamPos=(X=0,Y=0,Z=0)

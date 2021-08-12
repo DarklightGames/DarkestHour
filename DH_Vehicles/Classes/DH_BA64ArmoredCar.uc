@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_BA64ArmoredCar extends DHArmoredVehicle;
@@ -64,7 +64,6 @@ defaultproperties
     RearLeftAngle=202.0
 
     // Movement
-    MaxCriticalSpeed=1400.0 //~80 kph
     WheelSoftness=0.025000
     WheelPenScale=1.200000
     WheelPenOffset=0.010000
@@ -82,11 +81,12 @@ defaultproperties
     FTScale=0.030000
     ChassisTorqueScale=0.095
     MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-    SteerSpeed=160.000000
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    SteerSpeed=85.000000
     TurnDamping=35.000000
     StopThreshold=100.000000
     HandbrakeThresh=200.000000
+    bHasHandbrake=True
     LSDFactor=1.000000
     CenterSpringForce="SpringONSSRV"
 
@@ -94,15 +94,15 @@ defaultproperties
     SteerBoneAxis=AXIS_X
     SteeringScaleFactor=4.0
 
-    bHasHandbrake=True
-    TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=200,OutVal=0.75),(InVal=1500,OutVal=2.0),(InVal=2200,OutVal=0.0)))
-    GearRatios(0)=-0.20
-    GearRatios(1)=0.20
-    GearRatios(2)=0.42
-    GearRatios(3)=0.80
-    GearRatios(4)=1.05
-    TransRatio=0.16
-    ChangeUpPoint=1990.000000
+    MaxCriticalSpeed=662.0 // 40 kph
+    TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=1500,OutVal=2.0),(InVal=3000,OutVal=0.0)))
+    GearRatios(0)=-0.12
+    GearRatios(1)=0.12
+    GearRatios(2)=0.24
+    GearRatios(3)=0.4
+    GearRatios(4)=0.6
+    TransRatio=0.14
+    ChangeUpPoint=2200.000000
     ChangeDownPoint=1000.000000
     EngineBrakeFactor=0.000100
     EngineBrakeRPMScale=0.100000
@@ -111,12 +111,10 @@ defaultproperties
     IdleRPM=500.000000
     EngineRPMSoundRange=5000.000000
     RevMeterScale=4000.000000
-    //GroundSpeed=325.000000
-    //^ for some reason this line makes it slow as hell, and it doesnt exist on gaz67 so i removed it
 
     // Damage
-    Health=1500.0
-    HealthMax=1500.0
+    Health=300.0
+    HealthMax=300.0
     DirectHEImpactDamageMult=8.0
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=22.0,PointHeight=0.0,PointScale=1.0,PointBone=engine,PointOffset=(X=60.0,Y=0.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)

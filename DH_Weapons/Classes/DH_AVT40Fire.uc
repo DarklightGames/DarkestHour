@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_AVT40Fire extends DHAutomaticFire;
@@ -9,8 +9,10 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    FireRate=0.085 // ~700rpm; TO DO: make a separate fire rate for semi auto mode
-    Spread=90.0
+    FireRate=0.085 // ~700rpm
+    bHasSemiAutoFireRate=true
+    SemiAutoFireRate=0.215
+    Spread=60.0
     bWaitForRelease=true // set to semi-auto by default
 
     RecoilRate=0.06
@@ -20,9 +22,9 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 
-    FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'
-    FireSounds(1)=Sound'Inf_Weapons.svt40.svt40_fire02'
-    FireSounds(2)=Sound'Inf_Weapons.svt40.svt40_fire03'
+    FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
+    FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
+    FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)
@@ -34,6 +36,13 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
 
+    FireLoopAnim="Shoot_auto"
+    FireEndAnim=""
+    FireIronLoopAnim="Iron_Shoot"
+    FireIronEndAnim=""
     FireAnim="Shoot"
     FireIronAnim="Iron_Shoot"
+
+    FireLastAnim="shoot_last"
+    FireIronLastAnim="Iron_Shoot_Last"
 }

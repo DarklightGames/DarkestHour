@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
@@ -843,6 +843,12 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
         {
             PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
             PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
+
+        if (Level.NetMode != NM_DedicatedServer &&
+            ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
+        {
+            Cannon.UpdateGunWheels();
         }
     }
 }

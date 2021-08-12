@@ -324,6 +324,14 @@ def main():
     compiled_packages = set()
     did_build_succeed = True
 
+    ucc_log_path = os.path.join(sys_dir, 'UCC.log')
+
+    # write out an empty log file, so that even if there are no
+    # packages to compile, WOTgreal still has a log file to parse
+    ucc_log_file = open(ucc_log_path, 'w')
+    ucc_log_file.write('Warning: No packages were marked for compilation')
+    ucc_log_file.close()
+
     if len(packages_to_compile) > 0:
         print_header('Build started for mod: {}'.format(args.mod))
 
@@ -360,7 +368,7 @@ def main():
         proc.communicate()
 
         # store contents of ucc.log before it's overwritten
-        ucc_log_file = open('ucc.log', 'rb')
+        ucc_log_file = open(ucc_log_path, 'rb')
         ucc_log_contents = ucc_log_file.read()
         ucc_log_file.close()
 
@@ -389,7 +397,7 @@ def main():
                         os.remove(os.path.join(root, filename))
 
         # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
-        ucc_log_file = open('ucc.log', 'wb')
+        ucc_log_file = open(ucc_log_path, 'wb')
         ucc_log_file.truncate()
         ucc_log_file.write(ucc_log_contents)
         ucc_log_file.close()

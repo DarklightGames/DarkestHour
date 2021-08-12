@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_HellcatTank extends DHArmoredVehicle;
@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M18 Hellcat"
     VehicleTeam=1
     VehicleMass=11.0
-    ReinforcementCost=15
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
@@ -60,12 +60,12 @@ defaultproperties
     TransRatio=0.17
 
     // Damage
-	// pros:  5 men crew, relatively sparsed between each other; 
-	// cons: petrol fuel
+    // pros:  5 men crew, relatively sparsed between each other;
+    // cons: petrol fuel
     Health=570
     HealthMax=570.0
-	EngineHealth=300
-	
+    EngineHealth=300
+
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0)) // engine
@@ -84,7 +84,7 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' 
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
     StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'

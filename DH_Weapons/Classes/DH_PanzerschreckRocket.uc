@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerschreckRocket extends DHRocketProjectile;
@@ -36,14 +36,14 @@ defaultproperties
     DHPenetrationTable(5)=17.6
     DHPenetrationTable(6)=17.6
 
-    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    DirtHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    RockHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    WoodHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
+    VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
+    DirtHitSound=Sound'DH_WeaponSounds.faust.faust_explode031'
+    RockHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
+    WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
     WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
-
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
+	
+    ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
+    ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
+    ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
 }
