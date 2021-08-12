@@ -15,7 +15,6 @@ defaultproperties
     DrivePos=(X=-11.0,Y=-1.2,Z=-10.0)
     DriveAnim="crouch_idlehold_bayo"
 
-
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
@@ -24,4 +23,3 @@ defaultproperties
 
     PlayerCameraBone="com_camera"
 }
-

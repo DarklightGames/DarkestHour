@@ -14,13 +14,13 @@ defaultproperties
     ShellDiameter=7.5
     BallisticCoefficient=2.1
 
-    //Effects
+    // Effects
     CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 
-    //Gunsight adjustments
+    // Gunsight adjustments
     bMechanicalAiming=true
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)

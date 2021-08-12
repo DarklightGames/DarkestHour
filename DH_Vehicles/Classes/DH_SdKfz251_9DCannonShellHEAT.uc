@@ -12,18 +12,18 @@ defaultproperties
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
-    //Damage
-    ImpactDamage=350   //~~600 gramms TNT
+    // Damage
+    ImpactDamage=350 // ~600 grams of TNT
     Damage=300.0
     DamageRadius=700.0
 
-    //Effects
+    // Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 
-    //Penetration Gr.38 Hl (HEAT) June 1940
+    // Penetration Gr.38 Hl (HEAT) June 1940
     DHPenetrationTable(0)=5.2
     DHPenetrationTable(1)=5.2
     DHPenetrationTable(2)=5.2
