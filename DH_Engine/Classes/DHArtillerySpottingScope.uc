@@ -74,6 +74,15 @@ var     DHDataTable         RenderTable;
 var     localized string    RangeHeaderString;
 var     localized string    PitchHeaderString;
 
+var     color               Green;
+var     color               White;
+var     color               Orange;
+
+var     int                 TargetWidgetFirstLineOffset;
+var     int                 TargetWidgetSecondLineOffset;
+var     int                 TargetWidgetThirdLineOffset;
+var     int                 TargetWidgetFourthLineOffset;
+
 simulated static function CreateRenderTable(Canvas C)
 {
     local int i;
@@ -158,53 +167,91 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     local string CorrectionString;
     local int Deflection;
     local color IconColor;
+    local float XL, YL;
 
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
 
-    C.SetDrawColor(0, 255, 128, 255);
+    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
+    C.Font = C.MedFont;
 
     if (class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass) != none)
     {
+        // Draw first line (artillery support)
+        C.CurX = X - 40;
+        C.CurY = Y + default.TargetWidgetFirstLineOffset;
+        C.DrawText("SELECTED TARGET");
+
+        // Draw second line
         C.CurX = X;
-        C.CurY = Y;
-        C.DrawText("Squad:" @ TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass).default.TypeName $ ")");
+        C.CurY = Y + default.TargetWidgetSecondLineOffset;
+        C.DrawText("Squad: ");
+        C.TextSize("Squad: ", XL, YL);
+        C.CurX = X + XL;
+        C.CurY = Y + default.TargetWidgetSecondLineOffset;
+        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+        C.DrawText(TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass).default.TypeName $ ")");
+        C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     }
     else if (class<DHMapMarker_Ruler>(TargetInfo.Marker.MapMarkerClass) != none)
     {
+        // Draw first line (ruler)
+        C.Font = C.MedFont;
+        C.CurX = X - 40;
+        C.CurY = Y + default.TargetWidgetFirstLineOffset;
+        C.DrawText("MEASUREMENT TOOL:");
+        
+        // Draw second line
         C.CurX = X;
-        C.CurY = Y;
-        C.DrawText("Your marker");
+        C.CurY = Y + default.TargetWidgetSecondLineOffset;
+        C.DrawText("Ruler marker");
     }
     else
+
     {
         Warn("This code shouldn't be reached :(");
     }
 
-    C.SetDrawColor(255, 255, 255, 255);
-    C.CurY = Y + 10;
+    // Draw third line
     C.CurX = X;
-    C.DrawText("Distance:" @ (TargetInfo.Distance / 5) * 5 $ "m");
-    C.CurY = Y + 20;
+    C.CurY = Y + default.TargetWidgetThirdLineOffset;
+    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
+    C.DrawText("Distance: ");
+    C.TextSize("Distance: ", XL, YL);
+    C.CurX = X + XL;
+    C.CurY = Y + default.TargetWidgetThirdLineOffset;
+    C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+    C.DrawText("" $ (TargetInfo.Distance / 5) * 5 $ "m");
+
+    // Draw fourth line
+    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.CurX = X;
+    C.CurY = Y + default.TargetWidgetFourthLineOffset;
+    C.DrawText("Correction: ");
+    C.TextSize("Correction: ", XL, YL);
 
     Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
-
     if (Deflection > 0)
     {
         CorrectionString = Deflection $ "mils left";
+        C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
     }
     else if (Deflection == 0)
     {
         CorrectionString = "0mils";
+        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
     }
     else
     {
         CorrectionString = -Deflection $ "mils right";
+        C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
     }
+    C.CurX = X + XL;
+    C.CurY = Y + default.TargetWidgetFourthLineOffset;
+    C.DrawText(CorrectionString);
 
-    C.DrawText("Correction:" @ CorrectionString);
+    // Draw icon on the left of the text but below the first line
     C.CurX = X - 40;
-    C.CurY = Y;
+    C.CurY = Y + default.TargetWidgetFourthLineOffset/2;
     IconColor = TargetInfo.Marker.MapMarkerClass.static.GetIconColor(PRI, TargetInfo.Marker);
     C.SetDrawColor(IconColor.R, IconColor.G, IconColor.B, IconColor.A);
     C.DrawTile(
@@ -215,6 +262,8 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
+    
+    C.Font = C.TinyFont;
 }
 
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
@@ -232,7 +281,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     }
 
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
-    IndicatorTopLeftCornerY = C.SizeY * 0.93;
+    IndicatorTopLeftCornerY = C.SizeY * 0.95;
 
     VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.SegmentSchema.Length;
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
@@ -353,7 +402,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
                     break;
             }
-            C.CurX = C.CurX - TextWidth * 0.5;
+            C.CurX = C.CurX - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
 
@@ -501,22 +550,31 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="�"
+    AngleUnit="°"
     DistanceUnit="m"
 
     WidgetsPanelX=50
     WidgetsPanelY=100
-    WidgetsPanelEntryHeight=60
+    WidgetsPanelEntryHeight=80
 
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
 
-    LargeSizeTickLength = 50.0
-    MiddleSizeTickLength = 30.0
+    LargeSizeTickLength = 30.0
+    MiddleSizeTickLength = 15.0
     SmallSizeTickLength = 10.0
     LabelOffset = 10.0
-    IndicatorMiddleTickOffset = 30.0
+    IndicatorMiddleTickOffset = 20.0
     NumberOfYawSegments = 6;
     NumberOfPitchSegments = 6;
     TargetTickLength=3
+
+    Green=(R=0,G=128,B=0,A=255)
+    White=(R=255,G=255,B=255,A=255)
+    Orange=(R=255,G=165,B=0,A=255)
+
+    TargetWidgetFirstLineOffset=0
+    TargetWidgetSecondLineOffset=20
+    TargetWidgetThirdLineOffset=35
+    TargetWidgetFourthLineOffset=50
 }

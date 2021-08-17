@@ -15,6 +15,7 @@ var localized string BadLocationText;
 var localized string NoTargetText;
 var localized string NotQualifiedText;
 var localized string CancelledText;
+var localized string ActiveTargetChosen;
 
 static function string GetString(
     optional int Switch,
@@ -65,6 +66,9 @@ static function string GetString(
         case 9:
             S = default.NoTargetText;
             break;
+        case 10:
+            S = default.ActiveTargetChosen;
+            break;
     }
 
     S = Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
@@ -84,5 +88,6 @@ defaultproperties
     NoTargetText="No target location."
     NotQualifiedText="You are not qualified to request a {name}."
     CancelledText="{name} has been cancelled."
+    ActiveTargetChosen="You have chosen an artillery target. Use your spotting scope to zero in on the target."
 }
 

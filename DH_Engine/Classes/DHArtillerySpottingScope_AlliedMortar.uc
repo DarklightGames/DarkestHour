@@ -41,7 +41,7 @@ defaultproperties
     SegmentSchema(2)=(Shape=ShortTick,DrawLabel=false)
     SegmentSchema(3)=(Shape=ShortTick,DrawLabel=false)
     SegmentSchema(4)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(5)=(Shape=MediumLengthTick,DrawLabel=true)
+    SegmentSchema(5)=(Shape=MediumLengthTick,DrawLabel=false)
     SegmentSchema(6)=(Shape=ShortTick,DrawLabel=false)
     SegmentSchema(7)=(Shape=ShortTick,DrawLabel=false)
     SegmentSchema(8)=(Shape=ShortTick,DrawLabel=false)

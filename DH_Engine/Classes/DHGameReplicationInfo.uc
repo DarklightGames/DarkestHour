@@ -1495,7 +1495,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                         {
                             AxisMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
-                            Log("Overwritten a UNIQUE_PER_GROUP marker");
                             return i;
                         }
                     }
@@ -1510,7 +1509,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                         {
                             AxisMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
-                            Log("Overwritten a UNIQUE marker");
                             return i;
                         }
                     }
@@ -1543,7 +1541,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                         {
                             AlliesMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
-                            Log("Overwritten a UNIQUE_PER_GROUP marker");
                             return i;
                         }
                     }
@@ -1557,7 +1554,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                         {
                             AlliesMapMarkers[i] = M;
                             MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
-                            Log("Overwritten a UNIQUE marker");
                             return i;
                         }
                     }
@@ -1573,7 +1569,6 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 {
                     AlliesMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
-                    Log("Adding a new marker");
                     return i;
                 }
             }
