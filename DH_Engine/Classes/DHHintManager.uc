@@ -203,4 +203,5 @@ defaultproperties
     Hints(47)=(Title="Remote controlled MG",Text="This machine gun can only be fired from inside the vehicle, but it is externally mounted and you must unbutton the hatch to reload")
     Hints(48)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
     Hints(49)=(Title="Artillery spotting scopes",Text="Use the %NEXTWEAPON% button to enter the spotting scope view")
+    Hints(50)=(Title="Artillery operators",Text="Open map to coordinate fire. Use RMB on a fire request created by Artillery Spotters to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
 }

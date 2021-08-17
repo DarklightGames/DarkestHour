@@ -5,6 +5,19 @@
 
 class DH_M7Priest extends DHArmoredVehicle;
 
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    local DHPlayer DHP;
+
+    super.ClientKDriverEnter(PC);
+
+    DHP = DHPlayer(PC);
+    if(DHP != none && DHP.IsArtilleryOperator())
+    {
+        DHP.QueueHint(50, false);
+    }
+}
+
 defaultproperties
 {
     // Vehicle properties

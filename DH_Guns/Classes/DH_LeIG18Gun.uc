@@ -9,6 +9,18 @@
 
 class DH_LeIG18Gun extends DHATGun;
 
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    local DHPlayer DHP;
+
+    super.ClientKDriverEnter(PC);
+
+    DHP = DHPlayer(PC);
+    if(DHP != none && DHP.IsArtilleryOperator())
+    {
+        DHP.QueueHint(50, false);
+    }
+}
 defaultproperties
 {
     VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"

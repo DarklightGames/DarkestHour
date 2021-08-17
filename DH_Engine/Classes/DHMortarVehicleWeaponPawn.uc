@@ -293,6 +293,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     if (DHP != none)
     {
         // Queues up a number of mortar-related hints.
+        DHP.QueueHint(50, false);
         DHP.QueueHint(49, false);
         DHP.QueueHint(7, false);
         DHP.QueueHint(8, false);

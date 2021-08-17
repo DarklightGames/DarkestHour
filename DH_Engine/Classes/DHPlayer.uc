@@ -2293,18 +2293,19 @@ function int GetActiveOffMapSupportNumber()
 
 function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
 {
-    local int                   TeamIndex;
+    local int                   TeamIndex, SquadIndex;
     local Controller            C;
     local DHPlayer              OtherPlayer;
 
     TeamIndex = GetTeamNum();
+    SquadIndex = GetSquadIndex();
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         OtherPlayer = DHPlayer(C);
-        if (OtherPlayer != none)
+        if (OtherPlayer != none && OtherPlayer != self)
         {
-            if (OtherPlayer.IsArtilleryOperator() && OtherPlayer.GetTeamNum() == TeamIndex)
+            if (OtherPlayer.IsArtilleryOperator() && OtherPlayer.GetTeamNum() == TeamIndex && !(OtherPlayer.IsSL() && OtherPlayer.GetSquadindex() == SquadIndex))
             {
                 OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 3,,, MapMarkerClass);
             }
