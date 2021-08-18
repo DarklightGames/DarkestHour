@@ -540,7 +540,6 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    Log("ClickIndex"@ClickIndex);
     if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
     {
         return;
