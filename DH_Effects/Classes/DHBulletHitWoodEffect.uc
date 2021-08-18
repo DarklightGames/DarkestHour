@@ -74,11 +74,11 @@ defaultproperties
         name="main_impact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=35.000000,Max=45.000000))
+        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=35.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.Impact03'
-        LifetimeRange=(Min=0.200000,Max=0.400000)
+        LifetimeRange=(Min=0.100000,Max=0.400000)
         StartVelocityRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=-75.000000,Max=85.000000),Z=(Min=-85.000000,Max=75.000000))
     End Object
     Emitters(2)=BeamEmitter'BeamEmitter2'
