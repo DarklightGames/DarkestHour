@@ -182,6 +182,7 @@ function bool IsOptionDisabled(int OptionIndex)
     local DHSquadReplicationInfo          SRI;
     local DHPlayer                        PC;
     local int                             SquadMembersCount;
+    local DHGameReplicationInfo           GRI;
 
     if (Options[OptionIndex].OptionalObject == none)
     {
@@ -189,15 +190,38 @@ function bool IsOptionDisabled(int OptionIndex)
     }
 
     FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
-
     PC = GetPlayerController();
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    SRI = PC.SquadReplicationInfo;
 
-    if (FireSupportRequestClass != none)
+    if(PC != none && FireSupportRequestClass != none && GRI != none && SRI != none)
     {
-        PC = GetPlayerController();
-        SRI = PC.SquadReplicationInfo;
         SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
-        return SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers;
+        if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+        {
+            return false;
+        }
+        switch(PC.GetTeamNum())
+        {
+            case AXIS_TEAM_INDEX:
+                if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
+                {
+                    return GRI.bOffMapArtilleryEnabledAxis;
+                }
+                else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap'))
+                {
+                    return GRI.bOnMapArtilleryEnabledAxis;
+                }
+            case ALLIES_TEAM_INDEX:
+                if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
+                {
+                    return GRI.bOffMapArtilleryEnabledAllies;
+                }
+                else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap'))
+                {
+                    return GRI.bOnMapArtilleryEnabledAllies;
+                }
+        }
     }
 
     return false;

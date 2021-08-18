@@ -174,6 +174,10 @@ var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
+var bool                                bOffMapArtilleryEnabledAllies;
+var bool                                bOffMapArtilleryEnabledAxis;
+var bool                                bOnMapArtilleryEnabledAllies;
+var bool                                bOnMapArtilleryEnabledAxis;
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -237,7 +241,11 @@ replication
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
-        TeamConstructions;
+        TeamConstructions,
+        bOffMapArtilleryEnabledAllies,
+        bOffMapArtilleryEnabledAxis,
+        bOnMapArtilleryEnabledAllies,
+        bOnMapArtilleryEnabledAxis;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -255,11 +263,13 @@ simulated event PreBeginPlay()
 // Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local WaterVolume       WV;
-    local FluidSurfaceInfo  FSI;
-    local int               i, j;
-    local DH_LevelInfo      LI;
-    local class<DHMapMarker> MapMarkerClass;
+    local WaterVolume                   WV;
+    local FluidSurfaceInfo              FSI;
+    local int                           i, j;
+    local DH_LevelInfo                  LI;
+    local class<DHMapMarker>            MapMarkerClass;
+    local class<DHVehicle>              VehicleClass;
+    local class<DHConstruction_Vehicle> ConstructionClass;
 
     super.PostBeginPlay();
 
@@ -307,6 +317,114 @@ simulated function PostBeginPlay()
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
+
+        // Artillery-related initilization
+
+        // Check if mortars are enabled (on-map artillery part 1.)
+        for (i = 0; i < arraycount(DHAxisRoles); i++)
+        {
+            if (DHAxisMortarmanRoles(DHAxisRoles[i]) != none)
+            {
+                bOnMapArtilleryEnabledAxis = True;
+                Log("1");
+                break;
+            }
+        }
+        
+        for (i = 0; i < arraycount(DHAlliesRoles); i++)
+        {
+            if (DHAlliedMortarmanRoles(DHAxisRoles[i]) != none)
+            {
+                bOnMapArtilleryEnabledAxis = True;
+                Log("2");
+                break;
+            }
+        }
+
+        // Check if artillery vehicles are enabled (on-map artillery part 2.)
+        for (i = 0; i < arraycount(VehiclePoolVehicleClasses); i++)
+        {
+            VehicleClass = class<DHVehicle>(VehiclePoolVehicleClasses[i]);
+            if(VehicleClass != none)
+            {
+                switch(VehiclePoolVehicleClasses[i].default.VehicleTeam)
+                {
+                        case AXIS_TEAM_INDEX:
+                        if(VehicleClass.default.bIsArtilleryVehicle)
+                        {
+                            bOnMapArtilleryEnabledAxis = True;
+                            Log("3");
+                        }
+                        break;
+                        case ALLIES_TEAM_INDEX:
+                        if(VehicleClass.default.bIsArtilleryVehicle)
+                        {
+                            bOnMapArtilleryEnabledAllies = True;
+                            Log("4");
+                        }
+                        break;
+                }
+            }
+        }
+
+        // Check if artillery constructions are enabled (on-map artillery part 3.)
+        for (i = 0; i < arraycount(ConstructionClasses); i++)
+        {
+            ConstructionClass = class<DHConstruction_Vehicle>(ConstructionClasses[i]);
+            if(ConstructionClass != none)
+            {
+                VehicleClass = ConstructionClass.default.VehicleClass;
+                if(VehicleClass != none)
+                {
+                    switch(ConstructionClasses[i].default.TeamOwner)
+                    {
+                        case TEAM_Axis:
+                            if(VehicleClass.default.bIsArtilleryVehicle)
+                            {
+                                bOnMapArtilleryEnabledAxis = True;
+                                Log("5");
+                            }
+                            break;
+                        case TEAM_Allies:
+                            if(VehicleClass.default.bIsArtilleryVehicle)
+                            {
+                                bOnMapArtilleryEnabledAllies = True;
+                                Log("6");
+                            }
+                            break;
+                        default:
+                            Warn("Should not reach this code...");
+                            break;
+                    }
+                }
+            }
+        }
+
+        // Check if off-map artillery (legacy artillery) is enabled...
+        for (i = 0; i < LI.ArtilleryTypes.Length; i++)
+        {
+            switch(LI.ArtilleryTypes[i].TeamIndex)
+            {
+                case AXIS_TEAM_INDEX:
+                    if(LI.ArtilleryTypes[i].Limit > 0)
+                    {
+                        bOffMapArtilleryEnabledAxis = True;
+                        Log("7");
+                    }
+                    break;
+                case ALLIES_TEAM_INDEX:
+                    if(LI.ArtilleryTypes[i].Limit > 0)
+                    {
+                        bOffMapArtilleryEnabledAllies = True;
+                        Log("8");
+                    }
+                    break;
+                default:
+                    Warn("Should not reach this code...");
+                    break;
+            }
+        }
+        
     }
 }
 
@@ -2046,4 +2164,9 @@ defaultproperties
     // case we fail to retrieve those values.
     DangerZoneNeutral=128
     DangerZoneBalance=128
+
+    bOnMapArtilleryEnabledAxis=false
+    bOnMapArtilleryEnabledAllies=false
+    bOffMapArtilleryEnabledAxis=false
+    bOffMapArtilleryEnabledAllies=false
 }
