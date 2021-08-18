@@ -5,6 +5,13 @@
 
 class DHCommandMenu_FireSupport extends DHCommandMenu;
 
+enum EArtilleryStatus
+{
+    DisabledGlobally,
+    DisabledNotEnoughMembers,
+    Enabled
+};
+
 function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
@@ -83,9 +90,13 @@ function OnPop()
 
 function Tick()
 {
-    local DHPlayer PC;
-    local vector HitLocation, HitNormal;
-    local Color C;
+    local DHPlayer                PC;
+    local vector                  HitLocation, HitNormal;
+    local Color                   C;
+    local bool                    bArtillerySupportEnabled;
+    local DHGameReplicationInfo   GRI;
+
+    bArtillerySupportEnabled = false;
 
     C.R = 0;
     C.G = 0;
@@ -93,15 +104,25 @@ function Tick()
     C.A = 0;
 
     PC = GetPlayerController();
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (PC == none || PC.SpottingMarker == none)
+    if (PC == none || PC.SpottingMarker == none || GRI == none)
     {
         return;
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
     PC.ServerIsArtilleryTargetValid(HitLocation);
-    if (PC.bIsArtilleryTargetValid)
+    switch(PC.GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAxis || GRI.bOffMapArtilleryEnabledAxis;
+            break;
+        case ALLIES_TEAM_INDEX:
+            bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAllies || GRI.bOffMapArtilleryEnabledAllies;
+            break;
+    }
+    if (PC.bIsArtilleryTargetValid && bArtillerySupportEnabled)
     {
         C.G = 255;
         PC.SpottingMarker.SetColor(C);
@@ -146,33 +167,110 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHSquadReplicationInfo          SRI;
     local DHPlayer                        PC;
     local int                             SquadMembersCount;
-    if (OptionIndex < 0 || OptionIndex >= Options.Length)
+    local DHGameReplicationInfo           GRI;
+    local EArtilleryStatus                Status;
+
+    FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
+    PC = GetPlayerController();
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    SRI = PC.SquadReplicationInfo;
+
+    if (OptionIndex < 0 || OptionIndex >= Options.Length || SRI == none || PC == none || GRI == none || FireSupportRequestClass == none)
     {
         return;
     }
+    
+    SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
-    FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
+    ORI.OptionName = FireSupportRequestClass.default.MarkerName;
+    ORI.DescriptionText = "";
 
-    PC = GetPlayerController();
+    Status = GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI);
 
-    if (FireSupportRequestClass != none)
+    switch(Status)
     {
-        PC = GetPlayerController();
-        SRI = PC.SquadReplicationInfo;
-        SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+        case EArtilleryStatus.DisabledGlobally:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText = "Option disabled";
+            break;
+        case EArtilleryStatus.DisabledNotEnoughMembers:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+            break;
+        case EArtilleryStatus.Enabled:
+            ORI.InfoColor = class'UColor'.default.White;
+            ORI.InfoText = Options[OptionIndex].SubjectText;
+            break;
+        default:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText = "Something went really wrong";
+            break;
     }
+}
 
-    ORI.OptionName = Options[OptionIndex].ActionText;
-    ORI.DescriptionText = Options[OptionIndex].DescriptionText;
-    if(IsOptionDisabled(OptionIndex))
+// This function should be merged with IsOptionDisabled
+// IsOptionDisabled should be refactored to return an enum of values instead of bool... 
+function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> FireSupportRequestClass, DHPlayer PC, DHGameReplicationinfo GRI, DHSquadReplicationInfo SRI)
+{
+    local int                             SquadMembersCount;
+
+    SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+    switch(PC.GetTeamNum())
     {
-        ORI.InfoColor = class'UColor'.default.Red;
-        ORI.InfoText = SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+        case AXIS_TEAM_INDEX:
+            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+              && GRI.bOffMapArtilleryEnabledAxis
+              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
+            {
+                return EArtilleryStatus.Enabled;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+              && !GRI.bOffMapArtilleryEnabledAxis)
+            {
+                return EArtilleryStatus.DisabledGlobally;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+              && GRI.bOnMapArtilleryEnabledAxis
+              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
+            {
+                return EArtilleryStatus.Enabled;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+              && !GRI.bOnMapArtilleryEnabledAxis)
+            {
+                return EArtilleryStatus.DisabledGlobally;
+            }
+        case ALLIES_TEAM_INDEX:
+            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+              && GRI.bOffMapArtilleryEnabledAllies
+              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
+            {
+                return EArtilleryStatus.Enabled;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+              && !GRI.bOffMapArtilleryEnabledAllies)
+            {
+                return EArtilleryStatus.DisabledGlobally;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+              && GRI.bOnMapArtilleryEnabledAllies
+              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
+            {
+                return EArtilleryStatus.Enabled;
+            }
+            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+              && !GRI.bOnMapArtilleryEnabledAllies)
+            {
+                return EArtilleryStatus.DisabledGlobally;
+            }
+    }
+    if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    {
+        return EArtilleryStatus.DisabledNotEnoughMembers;
     }
     else
     {
-        ORI.InfoColor = class'UColor'.default.White;
-        ORI.InfoText = Options[OptionIndex].SubjectText;
+        Warn("ArtilleryStatus(): Something went really bad." @ self @ "will not work.");
     }
 }
 
@@ -181,8 +279,8 @@ function bool IsOptionDisabled(int OptionIndex)
     local class<DHMapMarker_FireSupport>  FireSupportRequestClass;
     local DHSquadReplicationInfo          SRI;
     local DHPlayer                        PC;
-    local int                             SquadMembersCount;
     local DHGameReplicationInfo           GRI;
+    local EArtilleryStatus                Status;
 
     if (Options[OptionIndex].OptionalObject == none)
     {
@@ -196,43 +294,27 @@ function bool IsOptionDisabled(int OptionIndex)
 
     if(PC != none && FireSupportRequestClass != none && GRI != none && SRI != none)
     {
-        SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
-        if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+        Status = GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI);
+        switch(Status)
         {
-            return false;
-        }
-        switch(PC.GetTeamNum())
-        {
-            case AXIS_TEAM_INDEX:
-                if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
-                {
-                    return GRI.bOffMapArtilleryEnabledAxis;
-                }
-                else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap'))
-                {
-                    return GRI.bOnMapArtilleryEnabledAxis;
-                }
-            case ALLIES_TEAM_INDEX:
-                if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
-                {
-                    return GRI.bOffMapArtilleryEnabledAllies;
-                }
-                else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap'))
-                {
-                    return GRI.bOnMapArtilleryEnabledAllies;
-                }
+            case EArtilleryStatus.Enabled:
+                return false;
+            case EArtilleryStatus.DisabledGlobally:
+                return true;
+            case EArtilleryStatus.DisabledNotEnoughMembers:
+                return true;
         }
     }
 
-    return false;
+    return true;
 }
 
 defaultproperties
 {
     // TODO: Icons
-    Options(0)=(ActionText="Off-map support",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_OffMap')
-    Options(1)=(ActionText="Fire Request (Smoke)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
-    Options(2)=(ActionText="Fire Request (HE)",Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
+    Options(0)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_OffMap')
+    Options(1)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
+    Options(2)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
  
     bShouldTick=true
 }

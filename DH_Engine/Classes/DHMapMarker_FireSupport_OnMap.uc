@@ -87,7 +87,6 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
 
 defaultproperties
 {
-    MarkerName="Fire Support"
     IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconColor=(R=220,G=0,B=100,A=100)
     ActivatedIconColor=(R=255,G=0,B=0,A=255)

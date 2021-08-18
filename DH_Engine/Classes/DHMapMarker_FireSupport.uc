@@ -26,7 +26,6 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 
 defaultproperties
 {
-    MarkerName="Fire Support"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.developer'
     IconColor=(R=204,G=,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
@@ -36,5 +35,5 @@ defaultproperties
     Scope=TEAM
     LifetimeSeconds=-1            // artillery requests never expire
     // RequiredSquadMembers=3
-    RequiredSquadMembers=1 // to do: set back to 3
+    RequiredSquadMembers=3
 }

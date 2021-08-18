@@ -8,7 +8,7 @@ class DHMapMarker_FireSupport_Smoke extends DHMapMarker_FireSupport_OnMap
 
 defaultproperties
 {
-    MarkerName="Fire Support (smoke)"
+    MarkerName="On-map mortar barrage (smoke)"
     TypeName="Smoke"
     IconColor=(R=160,G=160,B=160,A=100)
     ActivatedIconColor=(R=160,G=160,B=160,A=255)
