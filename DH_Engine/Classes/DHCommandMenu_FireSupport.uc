@@ -111,6 +111,14 @@ function Tick()
         return;
     }
 
+    // Hide the interaction if the player somehow stops using the binoculars
+    // (eg. proning, getting their weapon shot out of their hands etc.)
+    if (PC.Pawn != none && PC.Pawn.Weapon != none && !PC.Pawn.Weapon.bUsingSights)
+    {
+        Interaction.Hide();
+        return;
+    }
+
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
     PC.ServerIsArtilleryTargetValid(HitLocation);
     switch(PC.GetTeamNum())
