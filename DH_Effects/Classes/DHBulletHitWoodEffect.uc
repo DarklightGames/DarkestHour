@@ -47,14 +47,14 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.750000,Max=5.000000))
         StartSpinRange=(X=(Min=0.500000,Max=1.000000))
-        StartSizeRange=(X=(Min=2.000000,Max=5.000000))
+        StartSizeRange=(X=(Min=1.000000,Max=3.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.75,Max=1.5)
-        StartVelocityRange=(X=(Min=-100.000000,Max=350.000000),Y=(Min=-60.000000,Max=85.000000),Z=(Min=-75.000000,Max=60.000000))
+        StartVelocityRange=(X=(Min=-100.000000,Max=350.000000),Y=(Min=-10.000000,Max=25.000000),Z=(Min=-25.000000,Max=20.000000))
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter10'
 
@@ -70,7 +70,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=136,G=168,R=183,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=81,G=117,R=134,A=255))
         FadeOutStartTime=0.150000
-        MaxParticles=6
+        MaxParticles=3
         name="main_impact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
@@ -94,7 +94,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=30,G=79,R=71,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=120,G=167,R=175,A=255))
         FadeOutStartTime=0.100000
-        MaxParticles=12
+        MaxParticles=8
         name="wood_dust"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
@@ -111,49 +111,6 @@ defaultproperties
         StartVelocityRange=(X=(Min=5.000000,Max=75.000000),Y=(Min=-35.000000,Max=40.000000),Z=(Min=-35.000000,Max=40.000000))
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter11'
-
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-        UseCollision=True
-        UseMaxCollisions=True
-        UseDirectionAs=PTDU_UpAndNormal
-        ProjectionNormal=(X=1.000000,Y=0.500000)
-        FadeOut=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
-        Acceleration=(X=100.000000,Y=10.000000,Z=-250.000000)
-        DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
-        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        ColorScaleRepeats=4.0
-        Opacity=0.4
-        FadeOutStartTime=0.300000
-        MaxParticles=15
-        name="splinters"
-        StartLocationShape=PTLS_Sphere
-        SphereRadiusRange=(Max=20.000000)
-        SpinsPerSecondRange=(X=(Min=0.500000,Max=4.000000))
-        StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
-        //StartSizeRange=(X=(Min=1.500000,Max=3.000000))
-        UseRotationFrom=PTRS_Actor
-        SizeScale(0)=(RelativeSize=1.000000)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=2.000000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.500000)
-        StartSizeRange=(X=(Min=0.750000,Max=1.2500000),Y=(Min=0.750000,Max=1.250000),Z=(Min=0.750000,Max=1.250000))
-        InitialParticlesPerSecond=100.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.snowchunksfinal'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=2
-        LifetimeRange=(Min=0.350000,Max=0.650000)
-        StartVelocityRange=(X=(Min=75.000000,Max=150.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=-50.000000,Max=50.000000))
-        StartVelocityRadialRange=(Min=2.000000,Max=20.000000)
-    End Object
-    Emitters(4)=SpriteEmitter'SpriteEmitter4'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter89
         UseDirectionAs=PTDU_UpAndNormal
@@ -175,7 +132,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.750000,Max=3.000000))
         StartSpinRange=(X=(Min=0.500000,Max=1.000000))
-        StartSizeRange=(X=(Min=1.5,Max=4.0))
+        StartSizeRange=(X=(Min=1.5,Max=2.5))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
@@ -184,7 +141,29 @@ defaultproperties
         LifetimeRange=(Min=0.75,Max=1.25)
         StartVelocityRange=(X=(Min=25.000000,Max=100.000000),Y=(Min=-120.000000,Max=135.000000),Z=(Min=-135.000000,Max=120.000000))
     End Object
-    Emitters(5)=SpriteEmitter'SpriteEmitter89'
+    Emitters(4)=SpriteEmitter'SpriteEmitter89'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter14
+        UseCollision=True
+        RespawnDeadParticles=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        MaxParticles=4
+        name="bullet_hole"
+        UseRotationFrom=PTRS_Actor
+        StartSizeRange=(X=(Min=3.000000,Max=4.000000))
+        InitialParticlesPerSecond=10000.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=1.000000,Max=3.000000)
+    End Object
+    Emitters(5)=SpriteEmitter'SpriteEmitter14'
 
     Autodestroy=true
     bnodelete=false
