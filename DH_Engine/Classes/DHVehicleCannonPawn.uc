@@ -844,6 +844,12 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
             PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
             PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
         }
+
+        if (Level.NetMode != NM_DedicatedServer &&
+            ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)))
+        {
+            Cannon.UpdateGunWheels();
+        }
     }
 }
 

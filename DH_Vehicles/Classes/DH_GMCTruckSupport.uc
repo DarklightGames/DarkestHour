@@ -8,19 +8,18 @@ class DH_GMCTruckSupport extends DH_GMCTruck;
 defaultproperties
 {
     VehicleNameString="GMC CCKW (Logistics)"
-    PassengerPawns(1)=(AttachBone="passenger_l_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(2)=(AttachBone="passenger_r_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DriveRot=(Yaw=-40000),DrivePos=(X=-180.0,Y=-40.0,Z=135.0),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(2)=(AttachBone="body",DriveRot=(Yaw=40000),DrivePos=(X=-180.0,Y=40.0,Z=135.0),DriveAnim="crouch_idle_binoc")
     ExitPositions(2)=(X=-273.0,Y=-34.0,Z=25.0) // back left rider
-    ExitPositions(3)=(X=-271.0,Y=23.0,Z=25.0)  // back right rider
+    ExitPositions(11)=(X=-271.0,Y=23.0,Z=25.0)  // back right rider
     VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsY(2)=0.8
     VehicleHudOccupantsX(3)=0.55
-    VehicleHudOccupantsY(3)=0.75
+    VehicleHudOccupantsY(3)=0.8
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
-    SupplyAttachmentBone="Deco"
-    SupplyAttachmentOffset=(X=-2.0,Y=0.0,Z=2.0)
-    ResupplyAttachmentBone="supply"
-    VehHitpoints(7)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-80.0,Y=0.0,Z=90.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    SupplyAttachmentBone="cache_attachment"
+    ResupplyAttachmentBone="resupply"
+    VehHitpoints(7)=(PointRadius=60.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=0.0,Z=100.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'

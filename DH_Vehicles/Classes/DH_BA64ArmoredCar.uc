@@ -64,7 +64,6 @@ defaultproperties
     RearLeftAngle=202.0
 
     // Movement
-    MaxCriticalSpeed=1400.0 //~80 kph
     WheelSoftness=0.025000
     WheelPenScale=1.200000
     WheelPenOffset=0.010000
@@ -82,11 +81,12 @@ defaultproperties
     FTScale=0.030000
     ChassisTorqueScale=0.095
     MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-    SteerSpeed=160.000000
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    SteerSpeed=85.000000
     TurnDamping=35.000000
     StopThreshold=100.000000
     HandbrakeThresh=200.000000
+    bHasHandbrake=True
     LSDFactor=1.000000
     CenterSpringForce="SpringONSSRV"
 
@@ -94,14 +94,14 @@ defaultproperties
     SteerBoneAxis=AXIS_X
     SteeringScaleFactor=4.0
 
-    bHasHandbrake=True
+    MaxCriticalSpeed=662.0 // 40 kph
     TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=1500,OutVal=2.0),(InVal=3000,OutVal=0.0)))
-    GearRatios(0)=-0.20
-    GearRatios(1)=0.14
-    GearRatios(2)=0.32
-    GearRatios(3)=0.5
-    GearRatios(4)=0.65
-    TransRatio=0.16
+    GearRatios(0)=-0.12
+    GearRatios(1)=0.12
+    GearRatios(2)=0.24
+    GearRatios(3)=0.4
+    GearRatios(4)=0.6
+    TransRatio=0.14
     ChangeUpPoint=2200.000000
     ChangeDownPoint=1000.000000
     EngineBrakeFactor=0.000100

@@ -176,6 +176,86 @@ simulated function SetPlayerFOV(float PlayerFOV)
     }
 }
 
+// Re-implemented to fix a long-standing bug where picking up a weapon while
+// reloading an empty weapon would trigger a latent weapon change upon firing
+// the currently held weapon.
+function GiveTo(Pawn Other, optional Pickup Pickup)
+{
+    local ROWeaponPickup Pick;
+    local int m;
+    local weapon w;
+    local bool bPossiblySwitch, bJustSpawned;
+    local ROWeapon ROW;
+
+    if (Pickup != none)
+    {
+        Pick = ROWeaponPickup(Pickup);
+
+        if (Pick != none)
+        {
+            bBayonetMounted = Pick.bHasBayonetMounted;
+        }
+    }
+
+    Instigator = Other;
+    W = Weapon(Instigator.FindInventoryType(Class));
+
+    if (W == none || W.Class != Class)
+    {
+        bJustSpawned = true;
+
+        super(Inventory).GiveTo(Other);
+
+        bPossiblySwitch = true;
+
+        W = self;
+    }
+    else if (!W.HasAmmo())
+    {
+        bPossiblySwitch = true;
+    }
+
+    if (Pickup == none)
+    {
+        bPossiblySwitch = true;
+    }
+
+    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    {
+        if (FireMode[m] != none)
+        {
+            FireMode[m].Instigator = Instigator;
+
+            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+        }
+    }
+
+    // MODIFICATION:
+    // Do not switch to this weapon if the user cannot switch from their current
+    // weapon!
+    ROW = ROWeapon(Instigator.Inventory);
+
+    if (ROW != none && !ROW.WeaponCanSwitch())
+    {
+        bPossiblySwitch = false;
+    }
+
+    if (Instigator.Weapon != W)
+    {
+        W.ClientWeaponSet(bPossiblySwitch);
+    }
+
+    if (!bJustSpawned)
+    {
+        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        {
+            Ammo[m] = none;
+        }
+
+        Destroy();
+    }
+}
+
 // Modified to remove resetting DefaultFOV to hard coded RO value of 85
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
@@ -377,8 +457,17 @@ simulated state PostFiring
 
 simulated state RaisingWeapon
 {
-Begin:
-    bHasBeenDrawn = true;
+    simulated function bool IsBusy()
+    {
+        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
@@ -715,6 +804,38 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.DrawText("DisplayFOV =" @ DisplayFOV @ " Default =" @ default.DisplayFOV @ "Zoomed default =" @ IronSightDisplayFOV);
     YPos += YL;
     Canvas.SetPos(4.0, YPos);
+}
+
+exec function SetMuzzleOffset(int X, int Y, int Z)
+{
+    local int i;
+    local DHWeaponFire WF;
+    local vector V;
+
+    V.X = X;
+    V.Y = Y;
+    V.Z = Z;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        for (i = 0; i < arraycount(FireMode); ++i)
+        {
+            WF = DHWeaponFire(FireMode[i]);
+
+            if (WF != none)
+            {
+                if (WF.FlashEmitter != none)
+                {
+                    WF.FlashEmitter.SetRelativeLocation(V);
+                }
+
+                if (WF.SmokeEmitter != none)
+                {
+                    WF.SmokeEmitter.SetRelativeLocation(V);
+                }
+            }
+        }
+    }
 }
 
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off

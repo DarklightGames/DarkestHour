@@ -4399,6 +4399,24 @@ exec function VehCamDist(int NewDistance)
     }
 }
 
+// New debug exec to set a vehicle's 3rd person camera distance
+exec function VehCamLookAt(int X, int Y, int Z)
+{
+    local Vehicle V;
+
+    if (IsDebugModeAllowed())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none)
+        {
+            V.TPCamLookat.X = X;
+            V.TPCamLookat.Y = Y;
+            V.TPCamLookat.Z = Z;
+        }
+    }
+}
+
 // New debug exec to enable/disable penetration debugging functionality for all armored vehicles
 exec function DebugPenetration(bool bEnable)
 {

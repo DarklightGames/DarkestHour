@@ -94,18 +94,19 @@ simulated function SetCleared(bool bIsCleared)
 {
     local sound ClearSound;
     local class<Emitter> ClearEmitterClass;
+    local float ClearSoundRadius;
 
     if (bIsCleared && !IsInState('Cleared'))
     {
         if (Level.NetMode != NM_DedicatedServer &&
             !IsInState('DHObstacleInstance'))
         {
-            ClearSound = Info.GetClearSound();
+            ClearSound = Info.GetClearSound(ClearSoundRadius);
             ClearEmitterClass = Info.GetClearEmitterClass();
 
             if (ClearSound != none)
             {
-                PlaySound(ClearSound, SLOT_None, 255.0, true, 60.0);
+                PlaySound(ClearSound, SLOT_None, 255.0, true, ClearSoundRadius);
             }
 
             if (ClearEmitterClass != none)

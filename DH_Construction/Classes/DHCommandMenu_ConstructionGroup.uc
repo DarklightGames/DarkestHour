@@ -13,6 +13,8 @@ var Material SuppliesIcon;
 var localized string NotAvailableText;
 var localized string TeamLimitText;
 var localized string BusyText;
+var localized string ExhaustedText;
+var localized string RemainingText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHActorProxy.Context Context;
@@ -143,7 +145,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHConstruction> ConstructionClass;
     local DHConstruction.ConstructionError E;
     local DHPlayer PC;
-    local int SquadMemberCount;
+    local int SquadMemberCount, TeamLimit;
+    local DHGameReplicationInfo GRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
@@ -153,6 +156,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     if (ConstructionClass != none && PC != none)
     {
         E = ConstructionClass.static.GetPlayerError(Context);
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
         ORI.OptionName = ConstructionClass.static.GetMenuName(Context);
 
@@ -180,6 +184,14 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.TeamLimitText;
                 break;
+            case ERROR_Exhausted:
+                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoText = default.ExhaustedText;
+                if (E.OptionalInteger >= 0)
+                {
+                    ORI.InfoText @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
+                }
+                break;
             case ERROR_SquadTooSmall:
                 if (PC != none && PC.SquadReplicationInfo != none)
                 {
@@ -196,6 +208,16 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         }
 
         ORI.DescriptionText = ConstructionClass.default.MenuDescription;
+
+        if (GRI != none && ORI.DescriptionText == "")
+        {
+            TeamLimit = GRI.GetTeamConstructionLimit(PC.GetTeamNum(), ConstructionClass);
+
+            if (TeamLimit != -1)
+            {
+                ORI.DescriptionText = string(TeamLimit) @ default.RemainingText;
+            }
+        }
     }
 }
 
@@ -212,6 +234,8 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
+    ExhaustedText="Exhausted"
+    RemainingText="Remaining"
     BusyText="Busy"
     SlotCountOverride=8
 }

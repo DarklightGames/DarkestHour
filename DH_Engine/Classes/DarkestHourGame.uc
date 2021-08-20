@@ -102,6 +102,9 @@ var()   config float                SurrenderVotesThresholdPercent;         // "
 
 var()   config bool                 bBigBalloony;
 
+// DEBUG
+var     bool                        bDebugConstructions;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -136,6 +139,20 @@ event InitGame(string Options, out string Error)
     {
         AccessControl.Destroy();
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
+    }
+
+    // Handle single-player voting
+    if (Level.NetMode == NM_Standalone &&
+        class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting &&
+        VotingHandlerClass != None &&
+        VotingHandlerClass.Static.IsEnabled())
+    {
+        VotingHandler = Spawn(VotingHandlerClass);
+
+        if (VotingHandler == none)
+        {
+            log("WARNING: Failed to spawn VotingHandler");
+        }
     }
 
     // Force the server to update the MaxClientRate, setting it in config file
@@ -2471,6 +2488,14 @@ state RoundInPlay
             GRI.AxisHelpRequests[i].RequestType = 255;
         }
 
+        // Team constructions
+        for (i = 0; i < DHLevelInfo.TeamConstructions.Length; ++i)
+        {
+            GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
+            GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
+            GRI.TeamConstructions[i].Limit = DHLevelInfo.TeamConstructions[i].Limit;
+        }
+
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
         {
             bDidSendEnemyTeamWeakMessage[i] = 0;
@@ -2912,6 +2937,8 @@ state RoundInPlay
             }
         }
 
+        UpdateTeamConstructions();
+
         // If round time is up, decide the winner
         if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
@@ -2922,6 +2949,23 @@ state RoundInPlay
         if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+        }
+    }
+}
+
+function UpdateTeamConstructions()
+{
+    local int i;
+
+    // Check for if we can replenish any team constructions
+    for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
+    {
+        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
+            DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
+            GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+        {
+            GRI.TeamConstructions[i].Limit += 1;
+            GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
         }
     }
 }
@@ -3282,6 +3326,30 @@ exec function DebugDestroyConstructions()
     {
         C.GotoState('Broken');
     }
+}
+
+exec function DebugConstruct()
+{
+    local string StatusText;
+
+    if (Level.NetMode != NM_Standalone &&
+        !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+
+    bDebugConstructions = !bDebugConstructions;
+
+    if (bDebugConstructions)
+    {
+        StatusText = "ENABLED";
+    }
+    else
+    {
+        StatusText = "DISABLED";
+    }
+
+    Level.Game.Broadcast(self, "DEBUG: Instant constructions are" @ StatusText);
 }
 
 // Quick test function to change a role's limit (doesn't support bots)
@@ -3901,6 +3969,7 @@ function UpdateObjectiveSpawns()
                 SpawnPoint.SetTeamIndex(Team);
                 SpawnPoint.Objective = Obj;
                 SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
+                SpawnPoint.VehicleLocationHintTag = Obj.VehicleSpawnPointHintTags[Team];
                 SpawnPoint.BuildLocationHintsArrays();
                 SpawnPoint.SetIsActive(true);
 
@@ -5275,6 +5344,9 @@ function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Ty
     }
 }
 
+// TODO: This function uses different systems for spawning players depending
+// on whether the spawn is blocked or not. This can lead to players spawning in
+// different states. Fix it!
 function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)
@@ -5293,12 +5365,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
-    // If spawn failed, try again using default player class
-    if (C.Pawn == none)
-    {
-        C.Pawn = Spawn(GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
-    }
-
     // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
     // Try again with black room spawn & teleport them to spawn location
     if (C.Pawn == none)
@@ -5309,6 +5375,8 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
+                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
+
                 if (C.IQManager != none)
                 {
                     C.IQManager.OnSpawn();
@@ -5342,15 +5410,8 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.Pawn.PlayTeleportEffect(true, true);
     C.ClientSetRotation(C.Pawn.Rotation);
 
-    // Set proper spawn kill protection times
-    if (DHPawn(C.Pawn) != none && SP != none)
-    {
-        DHPawn(C.Pawn).SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        DHPawn(C.Pawn).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        DHPawn(C.Pawn).SpawnPoint = SP;
-    }
-
     AddDefaultInventory(C.Pawn);
+    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
 
     if (C.IQManager != none)
     {
@@ -5358,6 +5419,21 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     return C.Pawn;
+}
+
+function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
+{
+    local DHPawn P;
+
+    P = DHPawn(C.Pawn);
+
+    // Set proper spawn kill protection times
+    if (P != none && SP != none)
+    {
+        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        P.SpawnPoint = SP;
+    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5636,9 +5712,9 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=11
-        Patch=7
-        Prerelease=""
+        Minor=13
+        Patch=0
+        Prerelease="beta.2"
     End Object
     Version=VersionObject
 

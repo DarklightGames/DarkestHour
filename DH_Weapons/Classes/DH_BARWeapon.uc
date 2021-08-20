@@ -175,7 +175,7 @@ defaultproperties
     bSlowFireRate=true
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="fireswitch_aim"
-    SightUpSelectFireIronAnim="fireswitch_bipod"
+    SelectFireBipodIronAnim="fireswitch_bipod"
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
