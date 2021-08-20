@@ -2960,7 +2960,7 @@ function UpdateTeamConstructions()
     // Check for if we can replenish any team constructions
     for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
     {
-        if (GRI.TeamConstructions[i].Limit < DHLevelInfo.TeamConstructions[i].Limit &&
+        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
             DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
             GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
         {
