@@ -7,9 +7,9 @@ class DHCommandMenu_FireSupport extends DHCommandMenu;
 
 enum EArtilleryStatus
 {
-    DisabledGlobally,
-    DisabledNotEnoughMembers,
-    Enabled
+    AS_DisabledGlobally,
+    AS_DisabledNotEnoughMembers,
+    AS_Enabled
 };
 
 function OnSelect(int Index, vector Location)
@@ -20,7 +20,6 @@ function OnSelect(int Index, vector Location)
     local vector MapLocation;
 
     PC = GetPlayerController();
-
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
@@ -32,6 +31,7 @@ function OnSelect(int Index, vector Location)
     }
 
     PC.ServerIsArtilleryTargetValid(Location);
+
     if (PC.IsArtillerySpotter() && PC.bIsArtilleryTargetValid)
     {
         switch (Index)
@@ -49,7 +49,8 @@ function OnSelect(int Index, vector Location)
     }
     else
     {
-        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
+        // "Not a Valid Artillery Target!"
+        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
     }
 
     Interaction.Hide();
@@ -96,17 +97,16 @@ function Tick()
     local bool                    bArtillerySupportEnabled;
     local DHGameReplicationInfo   GRI;
 
-    bArtillerySupportEnabled = false;
-
-    C.R = 0;
-    C.G = 0;
-    C.B = 0;
-    C.A = 0;
-
     PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (PC == none || PC.SpottingMarker == none || GRI == none)
+    if (GRI == none)
     {
         return;
     }
@@ -121,7 +121,8 @@ function Tick()
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
     PC.ServerIsArtilleryTargetValid(HitLocation);
-    switch(PC.GetTeamNum())
+
+    switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAxis || GRI.bOffMapArtilleryEnabledAxis;
@@ -130,16 +131,17 @@ function Tick()
             bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAllies || GRI.bOffMapArtilleryEnabledAllies;
             break;
     }
+
     if (PC.bIsArtilleryTargetValid && bArtillerySupportEnabled)
     {
         C.G = 255;
-        PC.SpottingMarker.SetColor(C);
     }
     else
     {
         C.R = 255;
-        PC.SpottingMarker.SetColor(C);
     }
+
+    PC.SpottingMarker.SetColor(C);
     PC.SpottingMarker.SetLocation(HitLocation);
     PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
 }
@@ -187,7 +189,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     {
         return;
     }
-    
+
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
     ORI.OptionName = FireSupportRequestClass.default.MarkerName;
@@ -197,84 +199,87 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     switch(Status)
     {
-        case EArtilleryStatus.DisabledGlobally:
+        case EArtilleryStatus.AS_DisabledGlobally:
             ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "Option disabled";
+            ORI.InfoText = "Unavailable";
             break;
-        case EArtilleryStatus.DisabledNotEnoughMembers:
+        case EArtilleryStatus.AS_DisabledNotEnoughMembers:
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
-        case EArtilleryStatus.Enabled:
+        case EArtilleryStatus.AS_Enabled:
             ORI.InfoColor = class'UColor'.default.White;
             ORI.InfoText = Options[OptionIndex].SubjectText;
             break;
         default:
+            Warn("Unhandled artillery status:" @ Status);
             ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "Something went really wrong";
+            ORI.InfoText = "Unavailable";
             break;
     }
 }
 
 // This function should be merged with IsOptionDisabled
-// IsOptionDisabled should be refactored to return an enum of values instead of bool... 
+// IsOptionDisabled should be refactored to return an enum of values instead of bool...
 function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> FireSupportRequestClass, DHPlayer PC, DHGameReplicationinfo GRI, DHSquadReplicationInfo SRI)
 {
-    local int                             SquadMembersCount;
+    local int SquadMembersCount;
 
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+
     switch(PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+            if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
               && GRI.bOffMapArtilleryEnabledAxis
               && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
             {
-                return EArtilleryStatus.Enabled;
+                return EArtilleryStatus.AS_Enabled;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
               && !GRI.bOffMapArtilleryEnabledAxis)
             {
-                return EArtilleryStatus.DisabledGlobally;
+                return EArtilleryStatus.AS_DisabledGlobally;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
               && GRI.bOnMapArtilleryEnabledAxis
               && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
             {
-                return EArtilleryStatus.Enabled;
+                return EArtilleryStatus.AS_Enabled;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
               && !GRI.bOnMapArtilleryEnabledAxis)
             {
-                return EArtilleryStatus.DisabledGlobally;
+                return EArtilleryStatus.AS_DisabledGlobally;
             }
         case ALLIES_TEAM_INDEX:
-            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+            if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
               && GRI.bOffMapArtilleryEnabledAllies
               && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
             {
-                return EArtilleryStatus.Enabled;
+                return EArtilleryStatus.AS_Enabled;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
               && !GRI.bOffMapArtilleryEnabledAllies)
             {
-                return EArtilleryStatus.DisabledGlobally;
+                return EArtilleryStatus.AS_DisabledGlobally;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
               && GRI.bOnMapArtilleryEnabledAllies
               && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
             {
-                return EArtilleryStatus.Enabled;
+                return EArtilleryStatus.AS_Enabled;
             }
-            else if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
+            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
               && !GRI.bOnMapArtilleryEnabledAllies)
             {
-                return EArtilleryStatus.DisabledGlobally;
+                return EArtilleryStatus.AS_DisabledGlobally;
             }
     }
-    if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+
+    if (SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
     {
-        return EArtilleryStatus.DisabledNotEnoughMembers;
+        return EArtilleryStatus.AS_DisabledNotEnoughMembers;
     }
     else
     {
@@ -288,9 +293,8 @@ function bool IsOptionDisabled(int OptionIndex)
     local DHSquadReplicationInfo          SRI;
     local DHPlayer                        PC;
     local DHGameReplicationInfo           GRI;
-    local EArtilleryStatus                Status;
 
-    if (Options[OptionIndex].OptionalObject == none)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none)
     {
         return true;
     }
@@ -300,18 +304,9 @@ function bool IsOptionDisabled(int OptionIndex)
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     SRI = PC.SquadReplicationInfo;
 
-    if(PC != none && FireSupportRequestClass != none && GRI != none && SRI != none)
+    if (PC != none && FireSupportRequestClass != none && GRI != none && SRI != none)
     {
-        Status = GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI);
-        switch(Status)
-        {
-            case EArtilleryStatus.Enabled:
-                return false;
-            case EArtilleryStatus.DisabledGlobally:
-                return true;
-            case EArtilleryStatus.DisabledNotEnoughMembers:
-                return true;
-        }
+        return GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI) != EArtilleryStatus.AS_Enabled;
     }
 
     return true;
@@ -323,6 +318,6 @@ defaultproperties
     Options(0)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_OffMap')
     Options(1)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
     Options(2)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
- 
+
     bShouldTick=true
 }

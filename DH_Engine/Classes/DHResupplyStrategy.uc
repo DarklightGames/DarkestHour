@@ -40,9 +40,9 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     local Vehicle V;
     local DHRoleInfo RI;
     local ROWeapon recvr_weapon;
-    local float ResupplyInterval;
 
     bResupplied = false;
+
     P = DHPawn(recvr);
 
     if (P != none)
@@ -65,7 +65,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             bResupplied = bResupplied || recvr_weapon.FillAmmo();
         }
 
-        if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime) 
+        if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
           && RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
         {
             P.bUsedCarriedMGAmmo = false;
@@ -94,7 +94,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
         {
             if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime))
             {
-                bResupplied = bResupplied 
+                bResupplied = bResupplied
                     || (CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
                     || RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition();
                 P.bUsedCarriedMGAmmo = false;

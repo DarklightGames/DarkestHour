@@ -2295,6 +2295,114 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
     }
 }
 
+function UpdateArtilleryAvailability()
+{
+    local int i;
+    local class<DHVehicle> VehicleClass;
+
+    GRI.bOnMapArtilleryEnabledAxis = false;
+    GRI.bOnMapArtilleryEnabledAllies = false;
+
+    if (GRI == none || DHLevelInfo == none)
+    {
+        return;
+    }
+
+    // Check if mortars are enabled (on-map artillery part 1.)
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    {
+        if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
+        {
+            GRI.bOnMapArtilleryEnabledAxis = true;
+            break;
+        }
+    }
+
+    for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+    {
+        if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
+        {
+            GRI.bOnMapArtilleryEnabledAllies = true;
+            break;
+        }
+    }
+
+    // Check if artillery vehicles are enabled (on-map artillery part 2.)
+    for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); ++i)
+    {
+        VehicleClass = class<DHVehicle>(GRI.VehiclePoolVehicleClasses[i]);
+
+        if (VehicleClass != none)
+        {
+            switch (GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam)
+            {
+                case AXIS_TEAM_INDEX:
+                    if (VehicleClass.default.bIsArtilleryVehicle)
+                    {
+                        GRI.bOnMapArtilleryEnabledAxis = true;
+                    }
+                    break;
+                case ALLIES_TEAM_INDEX:
+                    if (VehicleClass.default.bIsArtilleryVehicle)
+                    {
+                        GRI.bOnMapArtilleryEnabledAllies = true;
+                    }
+                    break;
+                default:
+                   break;
+            }
+        }
+    }
+
+    // Check if artillery constructions are enabled (on-map artillery)
+    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    {
+        if (GRI.ConstructionClasses[i] != none
+          && GRI.ConstructionClasses[i].static.IsArtillery()
+          && !DHLevelInfo.IsConstructionRestricted(GRI.ConstructionClasses[i])
+          && GRI.bAreConstructionsEnabled)
+        {
+            switch (GRI.ConstructionClasses[i].default.TeamOwner)
+            {
+                case TEAM_Axis:
+                    GRI.bOnMapArtilleryEnabledAxis = true;
+                    break;
+                case TEAM_Allies:
+                    GRI.bOnMapArtilleryEnabledAllies = true;
+                    break;
+                case TEAM_Neutral:
+                    GRI.bOnMapArtilleryEnabledAxis = true;
+                    GRI.bOnMapArtilleryEnabledAllies = true;
+                    break;
+            }
+        }
+    }
+
+    // Check if off-map artillery (legacy artillery) is enabled
+    for (i = 0; i < DHLevelInfo.ArtilleryTypes.Length; ++i)
+    {
+        switch (DHLevelInfo.ArtilleryTypes[i].TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                if (DHLevelInfo.ArtilleryTypes[i].Limit > 0)
+                {
+                    GRI.bOffMapArtilleryEnabledAxis = true;
+                }
+                break;
+            case ALLIES_TEAM_INDEX:
+                if (DHLevelInfo.ArtilleryTypes[i].Limit > 0)
+                {
+                    GRI.bOffMapArtilleryEnabledAllies = true;
+                }
+                break;
+            case NEUTRAL_TEAM_INDEX:
+                GRI.bOffMapArtilleryEnabledAllies = true;
+                GRI.bOffMapArtilleryEnabledAxis = true;
+                break;
+        }
+    }
+}
+
 function UpdateAllPlayerScores()
 {
     local Controller C;
@@ -2611,109 +2719,8 @@ state RoundInPlay
         {
             Metrics.OnRoundBegin();
         }
-                // Artillery-related initilization
 
-        // Check if mortars are enabled (on-map artillery part 1.)
-        for (i = 0; i < arraycount(GRI.DHAxisRoles); i++)
-        {
-            if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
-            {
-                GRI.bOnMapArtilleryEnabledAxis = True;
-                // Log("Axis mortars enabled:"@GRI.DHAxisRoles[i]);
-                break;
-            }
-        }
-        
-        for (i = 0; i < arraycount(GRI.DHAlliesRoles); i++)
-        {
-            if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
-            {
-                GRI.bOnMapArtilleryEnabledAllies = True;
-                // Log("Allied mortars enabled:"@GRI.DHAlliesRoles[i]);
-                break;
-            }
-        }
-
-        // Check if artillery vehicles are enabled (on-map artillery part 2.)
-        for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); i++)
-        {
-            VehicleClass = class<DHVehicle>(GRI.VehiclePoolVehicleClasses[i]);
-            if(VehicleClass != none)
-            {
-                switch(GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam)
-                {
-                        case AXIS_TEAM_INDEX:
-                            if(VehicleClass.default.bIsArtilleryVehicle)
-                            {
-                                GRI.bOnMapArtilleryEnabledAxis = True;
-                                // Log("Axis artillery vehicles enabled:"@VehicleClass);
-                            }
-                            break;
-                        case ALLIES_TEAM_INDEX:
-                            if(VehicleClass.default.bIsArtilleryVehicle)
-                            {
-                                GRI.bOnMapArtilleryEnabledAllies = True;
-                                // Log("Allied artillery vehicles enabled:"@VehicleClass);
-                            }
-                            break;
-                }
-            }
-        }
-
-        // Check if artillery constructions are enabled (on-map artillery part 3.)
-
-        for (i = 0; i < arraycount(GRI.ConstructionClasses); i++)
-        {
-            if(GRI.ConstructionClasses[i] != none 
-              && GRI.ConstructionClasses[i].static.IsArtillery() 
-              && !DHLevelInfo.IsConstructionRestricted(GRI.ConstructionClasses[i])
-              && GRI.bAreConstructionsEnabled)
-            { 
-                switch(GRI.ConstructionClasses[i].default.TeamOwner)
-                {
-                    case TEAM_Axis:
-                        GRI.bOnMapArtilleryEnabledAxis = True;
-                        // Log("Axis artillery constructions enabled");
-                        break;
-                    case TEAM_Allies:
-                        GRI.bOnMapArtilleryEnabledAllies = True;
-                        // Log("Allied artillery constructions enabled");
-                        break;
-                    case TEAM_Neutral:
-                        GRI.bOnMapArtilleryEnabledAxis = True;
-                        GRI.bOnMapArtilleryEnabledAllies = True;
-                        // Log("Allied artillery constructions enabled");
-                        // Log("Axis artillery constructions enabled");
-                        break;
-                }
-            }
-        }
-
-        // Check if off-map artillery (legacy artillery) is enabled...
-        for (i = 0; i < LI.ArtilleryTypes.Length; i++)
-        {
-            switch(LI.ArtilleryTypes[i].TeamIndex)
-            {
-                case AXIS_TEAM_INDEX:
-                    if(LI.ArtilleryTypes[i].Limit > 0)
-                    {
-                        GRI.bOffMapArtilleryEnabledAxis = True;
-                        // Log("Axis LI.ArtilleryTypes["$i$"].Limit:"@LI.ArtilleryTypes[i].Limit);
-                    }
-                    break;
-                case ALLIES_TEAM_INDEX:
-                    if(LI.ArtilleryTypes[i].Limit > 0)
-                    {
-                        GRI.bOffMapArtilleryEnabledAllies = True;
-                        // Log("Allies LI.ArtilleryTypes["$i$"].Limit:"@LI.ArtilleryTypes[i].Limit);
-                    }
-                    break;
-                case NEUTRAL_TEAM_INDEX:
-                        GRI.bOffMapArtilleryEnabledAllies = True;
-                        GRI.bOffMapArtilleryEnabledAxis = True;
-                    break;
-            }
-        }
+        UpdateArtilleryAvailability();
         UpdateAllPlayerScores();
     }
 
