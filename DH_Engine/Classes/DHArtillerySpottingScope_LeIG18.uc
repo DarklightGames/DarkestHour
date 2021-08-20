@@ -40,16 +40,16 @@ defaultproperties
 
     AngleUnit="mils"
     
-    SegmentSchema(0)=(Shape=MediumLengthTick,DrawLabel=true)
-    SegmentSchema(1)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(2)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(3)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(4)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(5)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(6)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(7)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(8)=(Shape=ShortTick,DrawLabel=false)
-    SegmentSchema(9)=(Shape=ShortTick,DrawLabel=false)
+    SegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
+    SegmentSchema(1)=(Shape=ShortTick)
+    SegmentSchema(2)=(Shape=ShortTick)
+    SegmentSchema(3)=(Shape=ShortTick)
+    SegmentSchema(4)=(Shape=ShortTick)
+    SegmentSchema(5)=(Shape=ShortTick)
+    SegmentSchema(6)=(Shape=ShortTick)
+    SegmentSchema(7)=(Shape=ShortTick)
+    SegmentSchema(8)=(Shape=ShortTick)
+    SegmentSchema(9)=(Shape=ShortTick)
     
     NumberOfYawSegments = 4;
     NumberOfPitchSegments = 6;

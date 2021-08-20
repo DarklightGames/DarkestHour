@@ -115,7 +115,7 @@ defaultproperties
 {
     DrawType=DT_None
     RemoteRole=ROLE_SimulatedProxy
-    MenuName="Off-map support"
+    MenuName="Long-Range Artillery"
     bAlwaysRelevant=true
 
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
