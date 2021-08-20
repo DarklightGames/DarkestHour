@@ -176,7 +176,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHMapMarker_FireSupport>  FireSupportRequestClass;
     local DHSquadReplicationInfo          SRI;
     local DHPlayer                        PC;
-    local int                             SquadMembersCount;
+    local int                             SquadMembersCount, AvailableCount;
     local DHGameReplicationInfo           GRI;
     local EArtilleryStatus                Status;
 
@@ -208,8 +208,23 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case EArtilleryStatus.AS_Enabled:
-            ORI.InfoColor = class'UColor'.default.White;
-            ORI.InfoText = Options[OptionIndex].SubjectText;
+            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
+            {
+                ORI.InfoColor = class'UColor'.default.White;
+                switch(PC.GetTeamNum())
+                {
+                    case AXIS_TEAM_INDEX:
+                        AvailableCount = GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].Limit - GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].UsedCount;
+                    case ALLIES_TEAM_INDEX:
+                        AvailableCount = GRI.ArtilleryTypeInfos[ALLIES_TEAM_INDEX].Limit - GRI.ArtilleryTypeInfos[ALLIES_TEAM_INDEX].UsedCount;
+                }
+                ORI.InfoText = "Available count: " $ AvailableCount;
+            }
+            else
+            {
+                ORI.InfoColor = class'UColor'.default.White;
+                ORI.InfoText = Options[OptionIndex].SubjectText;
+            }
             break;
         default:
             Warn("Unhandled artillery status:" @ Status);
@@ -314,10 +329,9 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    // TODO: Icons
-    Options(0)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_OffMap')
-    Options(1)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_Smoke')
-    Options(2)=(Material=Texture'DH_InterfaceArt2_tex.Icons.fire',OptionalObject=class'DHMapMarker_FireSupport_HE')
-
+    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap')
+    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke')
+    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE')
+ 
     bShouldTick=true
 }

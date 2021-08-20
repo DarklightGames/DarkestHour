@@ -195,6 +195,18 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
     }
 }
 
+simulated function int GetIndex(class<Projectile> ProjectileClass)
+{
+    if(ProjectileClass == VehWep.PrimaryProjectileClass)
+    {
+        return 0;
+    }
+    if(ProjectileClass == VehWep.PrimaryProjectileClass)
+    {
+        return 1;
+    }
+}
+
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
@@ -258,21 +270,15 @@ simulated function DrawHUD(Canvas C)
 
         if(MortarVehWep.NewProjectileClass == MortarVehWep.PrimaryProjectileClass)
         {
-            AmmoIndex = 0;
             AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
         }
         else if(MortarVehWep.NewProjectileClass == MortarVehWep.SecondaryProjectileClass)
         {
-            AmmoIndex = 1;
             AmmoIcon.WidgetTexture = HUDSmokeTexture;
         }
+        AmmoIndex = GetIndex(MortarVehWep.NewProjectileClass);
         AmmoAmount.Value = VehWep.MainAmmoCharge[AmmoIndex];
         ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
-
-        if(AmmoAmount.Value == 0)
-        {
-            C.SetDrawColor(255, 0, 0, 255);
-        }
         ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
     }
 }
