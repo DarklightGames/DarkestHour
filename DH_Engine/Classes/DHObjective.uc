@@ -64,8 +64,9 @@ var(ROObjective) bool               bIsInitiallyActive;         // Purpose is ma
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Objective Spawn variables
-var(DHObjectiveSpawn) name          SpawnPointHintTags[2];      // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
-var DHSpawnPoint_Objective          SpawnPoint;                 // Reference to the attached DHSpawnPoint_Objective if one exists
+var(DHObjectiveSpawn) name          SpawnPointHintTags[2];          // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
+var(DHObjectiveSpawn) name          VehicleSpawnPointHintTags[2];   // Tags of hints for vehicle obj spawns (0 = Axis, 1 = Allies)
+var DHSpawnPoint_Objective          SpawnPoint;                     // Reference to the attached DHSpawnPoint_Objective if one exists
 
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
