@@ -42,11 +42,11 @@ defaultproperties
         ColorScale(0)=(Color=(B=45,G=66,R=77,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=65,G=86,R=95,A=255))
         FadeOutStartTime=0.150000
-        MaxParticles=10
+        MaxParticles=6//10
         name="main_impact"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000,Max=60.000000))
+        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=50.000000))
         InitialParticlesPerSecond=200.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.Impact03'
@@ -68,13 +68,14 @@ defaultproperties
         Acceleration=(Y=-50.000000,Z=-200.000000)
         ColorScale(0)=(Color=(B=115,G=136,R=145,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
-        Opacity=0.7
-        FadeOutStartTime=0.140000
-        MaxParticles=6
+        Opacity=0.85
+        FadeOutStartTime=0.20000
+        MaxParticles=4//6
         name="light_dust"
         StartLocationRange=(X=(Min=-10.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.600000,Max=0.800000))
+        SpinsPerSecondRange=(X=(Min=-0.200000,Max=0.20000))
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=3.250000)
@@ -82,8 +83,8 @@ defaultproperties
         InitialParticlesPerSecond=20.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.Impact01'
-        LifetimeRange=(Min=0.510000,Max=1.000000)
-        StartVelocityRange=(X=(Min=150.000000,Max=350.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
+        LifetimeRange=(Min=0.750000,Max=1.500000)
+        StartVelocityRange=(X=(Min=75.000000,Max=250.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
         VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))
         VelocityScale(2)=(RelativeTime=1.000000)
@@ -181,7 +182,7 @@ defaultproperties
         DampingFactorRange=(X=(Min=0.150000,Max=0.250000),Y=(Min=0.150000,Max=0.250000),Z=(Min=0.150000,Max=0.250000))
         ColorScale(0)=(Color=(B=52,G=64,R=69,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=69,G=86,R=95,A=255))
-        MaxParticles=5
+        MaxParticles=4//5
         name="random_dark"
         FadeOutStartTime=0.15
         UseRotationFrom=PTRS_Actor
@@ -219,7 +220,7 @@ defaultproperties
         DampingFactorRange=(X=(Min=0.150000,Max=0.250000),Y=(Min=0.150000,Max=0.250000),Z=(Min=0.150000,Max=0.250000))
         ColorScale(0)=(Color=(B=115,G=138,R=149,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=138,R=149,A=255))
-        MaxParticles=6
+        MaxParticles=4//6
         FadeOutStartTime=0.15
         name="random_lite"
         UseRotationFrom=PTRS_Actor
