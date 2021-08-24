@@ -29,7 +29,7 @@ defaultproperties
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter34'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter39
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter44
         UseColorScale=True
         FadeOut=True
         FadeIn=True
@@ -63,7 +63,7 @@ defaultproperties
         LifetimeRange=(Min=1.000000,Max=1.500000)
         StartVelocityRange=(X=(Min=25.000000,Max=50.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-20.0,Max=20.000000))
     End Object
-    Emitters(1)=SpriteEmitter'SpriteEmitter39'
+    Emitters(1)=SpriteEmitter'SpriteEmitter44'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter8
         UseCollision=True

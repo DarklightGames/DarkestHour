@@ -2488,6 +2488,14 @@ state RoundInPlay
             GRI.AxisHelpRequests[i].RequestType = 255;
         }
 
+        // Team constructions
+        for (i = 0; i < DHLevelInfo.TeamConstructions.Length; ++i)
+        {
+            GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
+            GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
+            GRI.TeamConstructions[i].Limit = DHLevelInfo.TeamConstructions[i].Limit;
+        }
+
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
         {
             bDidSendEnemyTeamWeakMessage[i] = 0;
@@ -2929,6 +2937,8 @@ state RoundInPlay
             }
         }
 
+        UpdateTeamConstructions();
+
         // If round time is up, decide the winner
         if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
@@ -2939,6 +2949,23 @@ state RoundInPlay
         if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+        }
+    }
+}
+
+function UpdateTeamConstructions()
+{
+    local int i;
+
+    // Check for if we can replenish any team constructions
+    for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
+    {
+        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
+            DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
+            GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+        {
+            GRI.TeamConstructions[i].Limit += 1;
+            GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
         }
     }
 }
@@ -3942,6 +3969,7 @@ function UpdateObjectiveSpawns()
                 SpawnPoint.SetTeamIndex(Team);
                 SpawnPoint.Objective = Obj;
                 SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
+                SpawnPoint.VehicleLocationHintTag = Obj.VehicleSpawnPointHintTags[Team];
                 SpawnPoint.BuildLocationHintsArrays();
                 SpawnPoint.SetIsActive(true);
 
@@ -5685,8 +5713,8 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=9
         Minor=13
-        Patch=0
-        Prerelease="beta.1"
+        Patch=1
+        Prerelease=""
     End Object
     Version=VersionObject
 

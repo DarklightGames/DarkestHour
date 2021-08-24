@@ -21,6 +21,10 @@ var     bool    bNeedToAttachDriver;      // flags that net client was unable to
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
 
+// Common Sounds
+// ** We are overwriting ROPawn here to expand for our custom surface types **
+var(Sounds) sound   DHSoundFootsteps[50]; // Indexed by ESurfaceTypes (sorry about the literal).
+
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
 var     array<material> BodySkins;
@@ -6137,7 +6141,7 @@ simulated function FootStepping(int Side)
     }
 
     // Play footstep sound, based on surface type & volume/radius modifiers
-    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
+    PlaySound(DHSoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
 }
 
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
@@ -7501,6 +7505,34 @@ defaultproperties
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
+
+    //Footstepping - add additional slots in the array for our new material surface types
+    DHSoundFootsteps(0)=Sound'Inf_Player.FootStepDirt'
+    DHSoundFootsteps(1)=Sound'Inf_Player.FootstepGravel' // Rock
+    DHSoundFootsteps(2)=Sound'Inf_Player.FootStepDirt'
+    DHSoundFootsteps(3)=Sound'Inf_Player.FootstepMetal' // Metal
+    DHSoundFootsteps(4)=Sound'Inf_Player.FootstepWoodenfloor' // Wood
+    DHSoundFootsteps(5)=Sound'Inf_Player.FootstepGrass' // Plant
+    DHSoundFootsteps(6)=Sound'Inf_Player.FootStepDirt' // Flesh
+    DHSoundFootsteps(7)=Sound'Inf_Player.FootstepSnowRough' // Ice
+    DHSoundFootsteps(8)=Sound'Inf_Player.FootstepSnowHard'
+    DHSoundFootsteps(9)=Sound'Inf_Player.FootstepWaterShallow'
+    DHSoundFootsteps(10)=Sound'Inf_Player.FootstepGravel' // Glass- Replaceme
+    DHSoundFootsteps(11)=Sound'Inf_Player.FootstepGravel' // Gravel
+    DHSoundFootsteps(12)=Sound'Inf_Player.FootstepAsphalt' // Concrete
+    DHSoundFootsteps(13)=Sound'Inf_Player.FootstepWoodenfloor' // HollowWood
+    DHSoundFootsteps(14)=Sound'Inf_Player.FootstepMud' // Mud
+    DHSoundFootsteps(15)=Sound'Inf_Player.FootstepMetal' // MetalArmor
+    DHSoundFootsteps(16)=Sound'Inf_Player.FootstepAsphalt_P' // Paper
+    DHSoundFootsteps(17)=Sound'Inf_Player.FootStepDirt' // Cloth
+    DHSoundFootsteps(18)=Sound'Inf_Player.FootStepDirt' // Rubber
+    DHSoundFootsteps(19)=Sound'Inf_Player.FootStepDirt' // Crap
+
+    DHSoundFootsteps(20)=none // this is a test material
+    DHSoundFootsteps(21)=Sound'Inf_Player.FootstepSnowRough' // Sand
+    DHSoundFootsteps(22)=Sound'Inf_Player.FootStepDirt' //Sand Bags
+    DHSoundFootsteps(23)=Sound'Inf_Player.FootstepAsphalt' // Brick
+    DHSoundFootsteps(24)=Sound'Inf_Player.FootstepGrass' // Hedgerow
 
     // Burning player
     FireDamage=10

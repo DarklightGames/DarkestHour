@@ -457,8 +457,17 @@ simulated state PostFiring
 
 simulated state RaisingWeapon
 {
-Begin:
-    bHasBeenDrawn = true;
+    simulated function bool IsBusy()
+    {
+        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
