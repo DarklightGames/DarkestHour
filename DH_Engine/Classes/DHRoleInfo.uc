@@ -255,4 +255,5 @@ defaultproperties
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandType=Hand_Bare
 }
