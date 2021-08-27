@@ -9,7 +9,7 @@ class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
 // From DHBullet:
 const   MinPenetrateVelocity = 163;
 
-var     class<ROHitEffect>  ImpactEffect;
+var     class<DHHitEffect>  ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var     class<ROBulletWhiz> WhizSoundEffect;
 var     int                 WhizType;
 var     float               VehiclePenetrateSoundVolume;
