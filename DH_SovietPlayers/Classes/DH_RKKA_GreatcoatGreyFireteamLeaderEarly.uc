@@ -3,9 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_RKKA_GreatcoatGreyFireteamLeaderEarly extends DH_RKKA_GreatcoatFireteamLeaderEarly; //delete later
+class DH_RKKA_GreatcoatGreyFireteamLeaderEarly extends DHDeprecated;
 
 defaultproperties
 {
-
 }

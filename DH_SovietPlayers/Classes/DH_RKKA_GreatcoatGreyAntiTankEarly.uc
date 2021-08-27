@@ -3,9 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_RKKA_GreatcoatGreyAntiTankEarly extends DH_RKKA_GreatcoatAntiTankEarly; //delete later
+class DH_RKKA_GreatcoatGreyAntiTankEarly extends DHDeprecated;
 
 defaultproperties
 {
-
 }

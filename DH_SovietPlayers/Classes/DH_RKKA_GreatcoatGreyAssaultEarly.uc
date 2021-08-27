@@ -3,9 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_RKKA_GreatcoatGreyAssaultEarly extends DH_RKKA_GreatcoatAssaultEarly; //delete later
+class DH_RKKA_GreatcoatGreyAssaultEarly extends DHDeprecated;
 
 defaultproperties
 {
-
 }
