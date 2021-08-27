@@ -130,7 +130,7 @@ function Reset()
     bIsLocked = bIsInitiallyLocked;
 }
 
-simulated function BuildLocationHintsArrays()
+function BuildLocationHintsArrays()
 {
     local DHLocationHint LH;
 

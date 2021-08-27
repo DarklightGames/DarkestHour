@@ -22,6 +22,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
+function string GetFilterPattern() { return FilterPattern; }
+
 function SetFilterPattern(string FilterPattern)
 {
     self.FilterPattern = Locs(FilterPattern);
@@ -48,7 +50,7 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
         for (p = 0; p < PreFixList.Length; p++)
         {
             if (Left(VRI.MapList[m].MapName, Len(PrefixList[p])) ~= PrefixList[p] &&
-                InStr(Locs(VRI.MapList[m].MapName), FilterPattern) != -1)
+                (FilterPattern == "" || InStr(Locs(VRI.MapList[m].MapName), FilterPattern) != -1))
             {
                 l = MapVoteData.Length;
                 MapVoteData.Insert(l, 1);
@@ -165,7 +167,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             }
 
             // Do a check if the current player count is in bounds of recommended range
-            if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MState != MSAT_Disabled)
+            if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
             {
                 DrawStyle = RedListStyle;
             }

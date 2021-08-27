@@ -27,11 +27,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         PC = PlayerController(O);
     }
 
-    S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.TouchMessage, PC);
-
     if (ATGunClass != none)
     {
-        S = Repl(S, "{0}", ATGunClass.default.VehicleNameString);
+        S = Repl(default.TouchMessage, "{0}", ATGunClass.default.VehicleNameString);
 
         if (ATGunClass.default.bCanBeRotated)
         {
@@ -39,11 +37,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
         }
     }
 
-    return S;
+    return class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PC);
 }
 
 defaultproperties
 {
     RotateHintString="hold [%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%] to rotate"
 }
-
