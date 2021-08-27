@@ -1,9 +1,9 @@
-UMODEL (UE Viewer)
-(c) Konstantin Nosov (Gildor), 2007-2017
+UE Viewer
+(c) Konstantin Nosov (Gildor), 2007-2021
 
 
 Please support the development by making a donation here:
-http://www.gildor.org/en/donate
+https://www.gildor.org/en/donate
 
 
 System requirements
@@ -16,27 +16,40 @@ SDL 2.0 (for Linux only, windows distribution has SDL2.dll included)
 
 List of supported games
 ~~~~~~~~~~~~~~~~~~~~~~~
-Supported all Unreal engine versions (1-3). The list of supported games consists of
-more than 100 game titles, it is not reasonable to include it here. Some game titles
+Supported all Unreal engine versions (1-4). The list of supported games consists of
+more than 300 game titles, it is not reasonable to include it here. Some game titles
 has limited support or not supported at all. Detailed information can be found here:
-http://www.gildor.org/projects/umodel/compat
+https://www.gildor.org/projects/umodel/compat
 
 
 Web resources
 ~~~~~~~~~~~~~
-Umodel home page and forum:
-http://www.gildor.org/en/projects/umodel
+UE Viewer home page and forum:
+https://www.gildor.org/en/projects/umodel
 or Russian page:
-http://www.gildor.org/projects/umodel
+https://www.gildor.org/projects/umodel
 
-Umodel FAQ:
-http://www.gildor.org/projects/umodel/faq
+UE Viewer FAQ:
+https://www.gildor.org/projects/umodel/faq
 
 Some tutorials available here:
-http://www.gildor.org/projects/umodel/tutorials
+https://www.gildor.org/projects/umodel/tutorials
+
+Youtube page with tutorials and news:
+https://www.youtube.com/playlist?list=PLJROJrENPVvK-V8PCTR9qBmY0Q7v4wCym
 
 Other documentation:
-http://www.gildor.org/smf/index.php/board,9.0.html
+https://www.gildor.org/smf/index.php/board,9.0.html
+
+
+Name of the project
+~~~~~~~~~~~~~~~~~~~
+I've started the project in 2007 as some quick test for own skeletal animation system.
+It didn't get a name first. Later I made it more "mature", it becate "UT2004 model viewer".
+Later more games were added, and it became "Unreal model viewer" - short form is "umodel".
+Later Epic Games requested me to remove their trademark "Unreal" from the name, so it became
+"UE Viewer", with the same "shortcut" name which is now used only for executable file name
+and when it's preferred to use shorter (unofficial) name.
 
 
 Quick start
@@ -51,6 +64,9 @@ list of available command line options run 'umodel -help'.
 You could also drag a package file (.upk, .xxx, .ukx etc) to umodel's icon to launch
 the application. However default settings will be used in this case, so if game requires
 some compatibility options, this will not work.
+
+You may also use response file to provide command line arguments. More info is in Wiki page:
+https://github.com/gildor2/UModel/wiki/Response-file
 
 
 GUI
@@ -82,7 +98,7 @@ keyboard shortcuts by pressing 'H' (Help) key. Here's the list of some shortcuts
   Shift+Up/Down    change scene FOV
   Ctrl+L           switch lighting modes
   Ctrl+Q           toggle visualization of debug information (text, 3D axis etc)
-  Ctrl+G           toggle OpenGL 2.0 / OpenGL 1.1 renderer
+  Ctrl+G           toggle between OpenGL 2.0 (using shaders) and OpenGL 1.1 (no shaders)
   Esc              exit from the umodel
 
 You may attach the AnimSet to the SkeletalMesh object using Ctrl+A key. Animation
@@ -92,9 +108,9 @@ sequences are listed by '[' and ']' keys, playback is started with a Space key.
 Psk/psa export
 ~~~~~~~~~~~~~~
 To load psk or psa into the 3ds Max you'll need ActorX Importer script created by me:
-http://www.gildor.org/projects/unactorx
+https://www.gildor.org/projects/unactorx
 It has own announcements thread here:
-http://www.gildor.org/smf/index.php/topic,228.0.html
+https://www.gildor.org/smf/index.php/topic,228.0.html
 
 Some meshes contains information which cannot fit into psk standard. For this reason I've
 extended the format to hold advanced information. Files in this format has extension pskx
@@ -112,9 +128,9 @@ skeleton hierarchy because Unreal engine uses hierarchy from the mesh, not from 
 animation. Some md5 viewers/importers does require md5anim hierarchy, some - does not.
 
 There is a 3ds Max md5mesh/md5anim importer script available on umodel forum:
-http://www.gildor.org/smf/index.php?topic=87.0
+https://www.gildor.org/smf/index.php?topic=87.0
 or here
-http://www.gildor.org/downloads
+https://www.gildor.org/downloads
 This script was originally created by der_ton, but was updated by me.
 
 Please note that psk/psa format is more powerful, and ActorX Importer script has much more
@@ -140,6 +156,17 @@ sometimes with bad. Umodel will never export full materials (GLSL script etc). D
 too much from this feature.
 
 
+Audio export
+~~~~~~~~~~~~
+Audio assets can't be previewed in UModel, it doesn't have any sound library built-in. However
+you can export sounds. By default, sound loading is disabled in options, so if you'll try to
+export any audio object you'll get nothing. To enable audio loading, you should either pass
+option "-sounds", or check "sounds" option in UModel startup options window. Please note that
+despite you may think that package contains audio, there are many objects in UE3 and UE4 which
+are related to sound rendering, but they do not contain sounds themselves. For UE3, sound
+objects are SoundNodeWave, and SoundWave in UE4. In older versions of UE they have name Sound.
+
+
 Used third-party libraries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 SDL - Simple DirectMedia Layer
@@ -150,6 +177,10 @@ zlib data compression library
   (c) Jean-loup Gailly and Mark Adler
   http://zlib.net/
 
+libpng
+  (c) Glenn Randers-Pehrson
+  http://www.libpng.org/
+
 LZO data compression library
   (c) Markus F.X.J. Oberhumer
   http://www.oberhumer.com/opensource/lzo/
@@ -157,6 +188,10 @@ LZO data compression library
 libmspack - a library for Microsoft compression formats
   (c) Stuart Caie
   http://www.cabextract.org.uk/libmspack/
+
+LZ4
+  (c) Yann Collet
+  http://www.lz4.org
 
 NVIDIA Texture Tools
   (c) NVIDIA
@@ -174,9 +209,427 @@ detex
   (c) Harm Hanemaaijer
   https://github.com/hglm/detex
 
+Oodle
+  (c) Epic Games
+  http://www.radgametools.com/oodle.htm
+
 
 Changes
 ~~~~~~~
+05.07.2021
+- providing Win32 and Win64 builds of UE Viewer
+
+30.05.2021
+- Mass Effect Legendary Edition support
+
+29.05.2021
+- replaced ooz library with oodle SDK shipped with UE4.27 source code
+
+06.04.2021
+- added UE4 SkeletalMesh socket support
+
+18.02.2021
+- added support for playing back animations with negative rates (playing in opposite direction)
+
+30.12.2020
+- hyperlinks for SkeletalMesh sub-objects: Skeleton, AnimSet, AnimSequence, tagged meshes
+- highlighting tagges skeletal mesh when mouse points at its name
+- showing properties of non-visual objects
+
+28.12.2020
+- support for multiple AES keys provided with UI or command line; commane line systax has been extended to
+  support multiple -aes=... options, or with providing a text file with multiple keys: -aes=@filename.txt
+
+12.12.2020
+- saving .props.txt when exporting skeletal and static meshes, and for animation
+
+22.11.2020
+- added option for disabling vertex mesh loading (-novert command line option)
+
+07.11.2020
+- UE4.26 support
+
+01.11.2020
+- using oo2core_5_win32.dll when internal oodle decompressor failed to process compressed block
+
+19.10.2020
+- removed restriction to maximal number of pak files in the game
+
+16.10.2020
+- updated Lineage 2 support
+
+01.09.2020
+- bugfix: exporting of all referenced textures from materials didn't work
+
+14.08.2020
+- Gears of War Ultimate Edition support
+
+31.07.2020
+- full Fable Legends (canceled game) support
+
+28.07.2020
+- use Ctrl+MouseWheel to scroll long window texts (in addition to Ctrl+PgUp/PgDn)
+
+27.07.2020
+- highlighting mesh material in "show materials" (M key) mode when mouse hovered over material name
+- navigation between referenced objects: material names, texture names, etc works as hyperlinks in "M" mode
+  for mesh and material; navigation back/forward over history could be done with Alt+Left/Right keys
+
+23.07.2020
+- Sea of Thieves support, requires game override (-game=sot)
+
+21.07.2020
+- UE2 Cubemap support
+- UE4 TextureCube support
+
+13.07.2020
+- multiple optimizations (mostly for multi-core CPU), could be disabled with "-nomt" command line option
+
+25.06.2020
+- recognition of duplicated files when exporting UE3 content
+
+24.06.2020
+- faster export when part of assets were already exported and "don't overwrite already exported files" is enabled
+
+22.06.2020
+- reading UE3/UE4 material expressions for collecting Material's parameters and their values; this extends
+  material outline, dump and export information
+
+30.05.2020
+- completed UE4.25 support
+
+15.03.2020
+- added UE3 iOS and WiiU sound export
+
+21.02.2020
+- support for UE4.25 pak file format
+
+10.01.2020
+- updated SMITE support
+
+05.01.2020
+- added Days Gone (PS4) support, required game override -game=daysgone
+
+29.12.2019
+- added option to disable MorphTarget loading: available in UI and with -nomorph command line option
+
+21.11.2019
+- added Star Wars Jedi: Fallen Order support, requires game override (-game=jedi)
+
+16.11.2019
+- added oodle decompression support
+
+22.10.2019
+- finalized UE4.23 support, initial UE4.24 support
+
+15.10.2019
+- loading and visualizing of UE3 and UE4 MorphTargets; switching between morphs is done with Ctrl+[ and Ctrl+]
+  keys
+
+13.10.2019
+- added full vertex color support (loading, viewing, exporting)
+
+09.10.2019
+- supported Borderlands 3 static meshes
+
+06.10.2019
+- added Kingdom Hearts III support, requires -game=kh3 -ps4
+
+17.09.2019
+- implemented glTF LOD export
+
+14.09.2019
+- added support for Borderlands 3 skeletal meshes and textures (nothing else works), requires -game=border3
+
+28.08.2019
+- added option for exporting textures using PNG format; could be switched on with -png command line option
+  or in Export Options dialog window
+
+25.08.2019
+- fixed UE4 masked material display
+
+22.08.2019
+- implemented Ascendant One support, requires -game=asc1 or override in UI
+
+17.08.2019
+- improved UE4 batch export of animations: now each AnimSequence stored in own psa file with the name of
+  AnimSequence object
+- logging export process with saying exact name of exported animation
+- optimized export of textures: avoiding multi-export when the same texture regerenced by materials etc;
+  in my tests export for UE4 folder performed 3+ times faster
+
+02.08.2019
+- more UE4.23 stuff: changes in skeletal and static mesh data formats
+
+23.07.2019
+- support for UE4.23 animation changes
+
+18.07.2019
+- UI: using tabbed dialog for options
+- UI: showing export and save packages options when user doing these operations, the options window could be
+  suppressed for next export/save
+
+11.07.2019
+- updated Lineage 2 SkeletalMesh support
+
+05.07.2019
+- added support for final version of Unreal Tournament 4 (requires game override: -game=ut4)
+
+22.06.2019
+- support for newer UE3 StaticMesh format
+
+12.06.2019
+- initial support for UE4.23
+
+13.05.2019
+- added Life is Strange 2 support (requires -game=lis2 override)
+
+11.05.2019
+- added support for New Gundam Breaker (requires game override, -game=ngb)
+
+16.04.2019
+- added response file support, more info: https://github.com/gildor2/UModel/wiki/Response-file
+  - usage: umodel @response.txt
+
+14.04.2019
+- improved package dialog:
+  - added "open" actions for folder
+  - added "copy path" action for package list
+  - added "scan content" for folder (so you don't need to scan everything if interested only in single folder)
+
+12.04.2019
+- final UE4.22 support
+
+23.03.2019
+- changed default texture ("UV checker")
+
+21.03.2019
+- fixed crash with some pre-UE4.13 animation tracks
+
+20.03.2019
+- optimized startup and content scan times when working with huge games
+
+18.03.2019
+- when exporting, avoiding adding numeric suffixes to files which are saved more than once whenever possible
+  (adding only for UE3 with special options)
+
+12.03.2019
+- UModel is no longer crashed when trying to open a file with wrong tag - a warning message is displayed instead
+
+10.03.2019
+- UE4.22 StaticMesh support
+
+06.03.2019
+- made error window larger and resizeable
+
+28.02.2019
+- memory use optimizations, package information now uses 25% less memory
+
+22.02.2019
+- 32-bit Windows build now can use up to 4Gb of RAM when running on 64-bit Windows
+
+06.02.2019
+- "save packages" now preserves oridinal directory directory structure; Windows version has options for selecting save
+  path and option for building or not directory hierarchy (for linux, same things could be changed in cfg file)
+
+08.01.2019
+- added Nintendo Switch texture support; activated with option "-nsw" or with selecting Nintendo Switch from platform
+  list
+- platform list now displayed in UI as a combobox, not as a radio button group
+
+04.01.2019
+- added UE4.21 support
+
+29.10.2018
+- UI: added content menu for file list in package dialog
+
+27.10.2018
+- UI: added context menu for folder list in package dialog, contains "export" and "save packages" commands
+- "-export" command line option now uses the same exporting code as GUI, so "-export *" will work correctly without
+  running out of memory
+- added "-save" command line option which saves all specified packages
+
+21.10.2018
+- properly work with UE4 skeletons which has scale on bones
+
+06.10.2018
+- sound export for UE4 attempts to save "ue4opus" file for streamed sounds
+
+22.08.2018
+- implemented glTF skeletal animation export; note that the animation should be opened in mesh viewer for that
+
+16.08.2018
+- an attempt to not crash when UE4 pak files has encrypted index, and AES key doesn't match
+
+01.08.2018
+- addeed skeletal mesh export in glTF format
+
+27.07.2018
+- added option for exporting static meshes to glTF 2.0 format; activated in options window or with "-gltf"
+  command line option
+
+20.07.2018
+- final UE4.20 support
+
+19.07.2018
+- some fixes for UE4 PNG texture loading
+
+15.07.2018
+- package selection and package version report windows are now resizable
+
+11.07.2018
+- exporting a .props.txt file next to .mat, it contains all material's properties
+
+28.06.2018
+- heavily optimized memory used by animations
+
+24.06.2018
+- fixed loading of UE4 .umap files
+- initial support for UE4.20
+
+23.06.2018
+- optimized amount of memory used for UE4 animations
+
+21.06.2018
+- added configuration file (umodel.cfg) and options window
+
+19.06.2018
+- added Playstation 4 platform support, activated with -ps4 command line or in GUI; credit for texture
+  decoding is m0xf (http://www.gildor.org/smf/index.php/topic,6221.0.html)
+
+14.06.2018
+- added Rocket League support, contributed by AltimorTASDK (https://github.com/gildor2/UModel/pull/73)
+
+06.06.2018
+- added PF_BC4 texture format support
+- fixed a bug: materials and referenced textures weren't exported when UModel failed to recognize at least one
+  texture parameter
+
+04.06.2018
+- added State of Decay 2 SkeletalMesh support, requires game override (-game=sod2)
+- linux: saving all files to the user's home (~/) directory by default
+
+29.05.2018
+- fixed incompatibilities with Ark: Survival Evolved and Dauntless, both games requires explicit game override
+
+19.05.2018
+- implemented support for loading of UE3 and UE4 png-compressed textures
+
+16.05.2018
+- added functionality which finds all animations for currently opened UE4 SkeletalMesh, accessible with Ctrl+A
+  key or via "SkeletalMesh | Find animations" menu
+
+13.05.2018
+- added viewer menu with object-specific actions
+
+01.05.2018
+- added UE4.20 pak file support
+
+20.04.2018
+- added support for loading UE4 editor SkeletalMesh assets
+
+11.04.2018
+- fixed long standing issue with many UE4 animation tracks caused either crash or dropping animation
+
+02.04.2018
+- added possibility to change shape of material preview with 'S' key
+- fixes some issues with material/texture preview mode (wrong lighting, wrong reflections)
+
+01.04.2018
+- implemented HDR texture support; textures are exported into radiance .hdr file format (RGB, no alpha channel);
+  initial implepemtation has been contributed by m0xf (https://github.com/gildor2/UModel/pull/60)
+
+31.03.2018
+- improved handling of AES keys: stripping spaces from key string, improved encryption errors reporting
+
+23.03.2018
+- updated for final UE4.19 version (changed SkeletalMesh format)
+
+22.03.2018
+- implemented full Gears of War 4 support
+- displaying information in viewer window about objects in loaded packages when there's nothing visual inside
+- improved umodel's main window title - it now contains information about umodel build version and about path
+  to game files
+- preserving all UI elements when closing Package Selection dialog, so next time you'll open it, dialog will
+  be in exactly the same state as when it was closed
+
+18.03.2018
+- implemented Gears of War 4 pak file and package support; requires game override -game=gears4 (or use UI)
+
+24.02.2018
+- AES encryption key could be now in hex format: 0x123456789ABCDEF (C-like format)
+
+18.02.2018
+- implemented Heroes of Incredible Tales (HIT) static mesh support; requires -game=hit override
+
+08.02.2018
+- added Paragon support (requires game override: -game=paragon)
+
+07.02.2018
+- implemented UE4.19 support
+
+31.01.2018
+- implemented loader for encrypted compressed UE4 pak files
+
+23.01.2018
+- added support for loading AES-encrypted UE4 pak files; AES key may be specified with command line option
+  -aes=key, or it will be requested by UI when needed
+
+20.01.2018
+- improved laptop keyboard support
+
+04.01.2018
+- updated UE4.18 support
+- displaying a warning message in UE4 SkeletalMesh viewer when Skeleton object is not loaded, and therefore
+  animation will not work
+
+06.12.2017
+- an attempt to make smoothing groups working: always exporting 1st smoothing group for all mesh faces
+
+19.11.2017
+- exporting "source art" (png) textures whenever possible - for UE3 and UE4 editor packages
+
+02.10.2017
+- added Fortnite support (currently requires game override)
+
+29.09.2017
+- added Unreal engine 4.17 support and initial UE4.18 support
+
+29.07.2017
+- implemented Lawbreakers support
+
+28.07.2017
+- added Gigantic auto detection
+
+27.07.2017
+- showing object's group name in viewer for UE1-UE3 games
+
+12.06.2017
+- added Tekken 7 support, game requires override -game=tekken7
+
+09.06.2017
+- added Friday the 13th: The Game support, game requires override -game=friday13
+
+16.05.2017
+- fixed loading of UE4 source animation assets
+
+09.05.2017
+- fixed bug in Win32 SDL2 caused incorrect handling of -path="some path" command line option
+
+26.04.2017
+- added Android ETC2 texture format support
+
+25.04.2017
+- fixes with mesh rotation (only affects mesh display in viewer)
+- exporting skeletal mesh with "-uc" parameter will not also dump mesh socket information
+
+09.04.2017
+- updated UE4.16 support
+
+08.04.2017
+- Heavily optimized package scanner. Results: PARAGON scanned 30 times faster (reduced scan time from 2.5 min
+  to 4 sec) and requires 35% less memory after package scan.
+
 03.04.2017
 - implemented loading of Blade & Soul specific animations
 
@@ -358,7 +811,7 @@ Changes
 - implemented support for destructible meshes: UE3 FracturedStaticMesh and UE4 DestructibleMesh
 
 07.03.2015
-- added Gigantic (alpha) support
+- added Gigantic (alpha) support (-game=gigantic is required)
 
 02.02.2015
 - implemented Life is Strange support
@@ -468,7 +921,7 @@ Changes
 
 01.09.2014
 - first public release of umodel with UI; to show the UI, launch umodel without arguments;
-  to show package selection dialog at any time, press "O" key
+  to show package selection dialog at any time, press 'O' key
 
 31.08.2014
 - improved -pkginfo output: displaying class statistics for loaded package(s)
@@ -644,11 +1097,11 @@ Changes
 - fixed crash in StaticMesh with recent Lineage 2 update
 
 20.03.2012
-- Shift+Up/Down key could be used to change scene FOV
+- 'Shift'+'Up'/'Down' key could be used to change scene FOV
 
 19.03.2012
-- Ctrl+Q key will toggle visualization of debug information (text, 3D axis etc)
-- Alt+S key will produce screenshot with transparent background
+- 'Ctrl+Q' key will toggle visualization of debug information (text, 3D axis etc)
+- 'Alt+S' key will produce screenshot with transparent background
 
 07.03.2012
 - implemented Mass Effect 3 support
@@ -732,7 +1185,7 @@ Changes
 - implemented support for SkeletalMesh with more than 64k vertices
 
 21.11.2011
-- major rewritting of SkeletalMesh subsystem; implemented support for multiple UV sets,
+- major rewriting of SkeletalMesh subsystem; implemented support for multiple UV sets,
   which can be switched in viewer by 'U' key and exported to psk when "-pskx" option is
   supplied
 
@@ -758,7 +1211,7 @@ Changes
 - improved positioning of the mesh in a viewer
 
 06.11.2011
-- major rewritting of the StaticMesh subsystem
+- major rewriting of the StaticMesh subsystem
   - implemented UE3 LOD support:
     - LODs are exported when "-lods" switch is passed to the command line
     - LODs can be switched in the viewer with 'L' key
@@ -1433,7 +1886,7 @@ Changes
 - additional fix for Lineage LOD models
 
 23.11.2008
-- fixed skeletal LOD model visualisation
+- fixed skeletal LOD model visualization
 - implemented skinning for LOD models
 - Lineage2: implemented support for Lineage-specific LOD models
 - Lineage2: restoring base skeletal mesh from 1st LOD when needed
