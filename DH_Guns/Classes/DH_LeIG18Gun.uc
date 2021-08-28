@@ -29,6 +29,7 @@ defaultproperties
     VehicleMass=11.0 // TODO: replace
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    RotateCooldown=2
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
