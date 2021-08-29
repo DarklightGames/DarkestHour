@@ -198,26 +198,26 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
     MapCount++;
 
     /* Commented out to instead support per map vote repeat limit (this might be moved later)
-    if(Mutators != "" && Mutators != MapInfo.U)
+    if (Mutators != "" && Mutators != MapInfo.U)
     {
         MapInfo.U = Mutators;
         bUpdate = True;
     }
     */
 
-    if(GameOptions != "" && GameOptions != MapInfo.G)
+    if (GameOptions != "" && GameOptions != MapInfo.G)
     {
         MapInfo.G = GameOptions;
         bUpdate = True;
     }
 
-    if(MapInfo.M == "") // if map not found in MapVoteHistory then add it
+    if (MapInfo.M == "") // if map not found in MapVoteHistory then add it
     {
         MapInfo.M = MapName;
         bUpdate = True;
     }
 
-    if(bUpdate)
+    if (bUpdate)
     {
         History.AddMap(MapInfo);
     }
@@ -245,7 +245,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     */
 
     // Add Per-GameType Game Options
-    if(GameConfig[GameIndex].Options != "")
+    if (GameConfig[GameIndex].Options != "")
     {
         OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options,",","?")," ","");
     }

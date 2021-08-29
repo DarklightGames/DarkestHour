@@ -6,7 +6,7 @@
 class DHMapMarker_Squad_Attack extends DHMapMarker_Squad
     abstract;
 
-static function OnMapMarkerPlaced(DHPlayer PC)
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     if (PC != none && PC.SquadReplicationInfo != none)
     {
@@ -19,6 +19,5 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.attack'
     IconColor=(R=255,G=211,B=0,A=255)
     MarkerName="Squad Attack"
-    bIsUnique=true
     bShouldDrawBeeLine=true
 }

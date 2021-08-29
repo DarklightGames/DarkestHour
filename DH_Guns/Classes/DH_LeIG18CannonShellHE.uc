@@ -5,13 +5,20 @@
 
 class DH_LeIG18CannonShellHE extends DHCannonShellHE;
 
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
+    super.Explode(HitLocation, HitNormal);
+}
+
 defaultproperties
 {
-    Speed=12674.0      // 210 m/s
-    MaxSpeed=12674.0
+    Speed=6962.0        // arbitrary value
+    MaxSpeed=6962.0     // arbitrary value
     SpeedFudgeScale=1.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.1 //TODO: pls find correct BC
+    BallisticCoefficient=2.96 //TODO: pls find correct BC
+    LifeSpan=30.0
 
     //Damage
     ImpactDamage=700

@@ -7,9 +7,21 @@ class DHMapMarker_Friendly extends DHMapMarker
     abstract;
 
 // Allow squad leaders and their assistants to mark friendly markers.
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     return PRI != none && PRI.IsSLorASL();
+}
+
+// Allow squad leaders and their assistants to remove friendly markers.
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return PRI != none && PRI.IsSLorASL();
+}
+
+// Allow everyone on the team to see friendly markers.
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return PRI != none;
 }
 
 defaultproperties

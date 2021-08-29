@@ -56,11 +56,62 @@ function OnSelect(int OptionIndex, vector Location)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    PC.ServerAddMapMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
+    PC.ServerAddMapMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
 
     Interaction.Hide();
 }
 
+function OnPush()
+{
+    local DHPlayer PC;
+
+    PC = GetPlayerController();
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    if (PC.SpottingMarker != none)
+    {
+        PC.SpottingMarker.Destroy();
+    }
+
+    PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
+}
+
+function OnPop()
+{
+    local DHPlayer PC;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.SpottingMarker.Destroy();
+}
+
+function Tick()
+{
+    local DHPlayer PC;
+    local vector HitLocation, HitNormal;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.GetEyeTraceLocation(HitLocation, HitNormal);
+    PC.SpottingMarker.SetLocation(HitLocation);
+    PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
+}
+
 defaultproperties
 {
+    bShouldTick=true
 }

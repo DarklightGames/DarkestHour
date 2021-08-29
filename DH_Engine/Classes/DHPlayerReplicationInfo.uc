@@ -73,14 +73,24 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+simulated function bool IsSL()
+{
+    return IsSquadLeader();
+}
+
 simulated function bool IsAssistantLeader()
 {
     return IsInSquad() && bIsSquadAssistant;
 }
 
+simulated function bool IsASL()
+{
+    return IsAssistantLeader();
+}
+
 simulated function bool IsSLorASL()
 {
-    return IsInSquad() && (SquadMemberIndex == 0 || bIsSquadAssistant);
+    return IsSL() || IsASL();
 }
 
 simulated function bool IsInSquad()
@@ -91,6 +101,17 @@ simulated function bool IsInSquad()
 simulated function bool IsPatron()
 {
     return PatronTier != PATRON_None;
+}
+
+simulated function bool IsRadioman()
+{
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    if(PC != none)
+    {
+        return PC.IsRadioman();
+    }
+    return false;
 }
 
 // Will return true if passed two players that are in the same squad.

@@ -25,6 +25,9 @@ var     bool                bUsesMags;          // main weapon uses magazines or
 var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
 var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
 
+var     float       ResupplyInterval;
+var     int         LastResupplyTimestamp;
+
 // MG weapon (hull mounted or coaxial)
 const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
 var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
@@ -62,11 +65,29 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
+// Artillery Hit Location
+struct SArtilleryHitLocation
+{
+    var vector HitLocation;
+    var int ElapsedTime;
+};
+
+var SArtilleryHitLocation    ArtilleryHitLocation;
+
+struct SRangeTableRecord
+{
+    var float Mils;     // Pitch, in mils.
+    var float Range;    // Range, in meters.
+    var float TTI;      // Time-to-impact in seconds
+};
+
+var array<SRangeTableRecord> RangeTable;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NumMGMags;
+        NumMGMags, ArtilleryHitLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -83,6 +104,8 @@ simulated function PostBeginPlay()
     local name AttachBone;
 
     super.PostBeginPlay();
+
+    // TODO: we gotta add MULTIPLE of these! why always just 1 of everything ;_;
 
     if (CollisionStaticMesh != none)
     {
@@ -352,7 +375,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         if (bIsArtillery && P.IsA('DHBallisticProjectile'))
         {
-            DHBallisticProjectile(P).bIsArtilleryProjectile = true;
+            DHBallisticProjectile(P).VehicleWeapon = self;
         }
 
         // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
@@ -417,6 +440,11 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
     }
 
     return WeaponFireLocation;
+}
+
+simulated function rotator GetWeaponFireRotation()
+{
+    return rotator(vector(CurrentAim) >> Rotation);
 }
 
 // New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
@@ -1225,4 +1253,6 @@ defaultproperties
     FireIntervalAimLock=0.0 // also means AimLockReleaseTime is deprecated
     bShowAimCrosshair=false
     bInheritVelocity=false
+
+    ResupplyInterval=2.5
 }

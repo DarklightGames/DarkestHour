@@ -268,7 +268,15 @@ simulated function bool HasAmmo()
 // Implemented to check the DHPawn's ResupplyMortarAmmunition() function when another player tries to give ammo to the mortar carrier
 function bool ResupplyAmmo()
 {
-    return DHPawn(Instigator) != none && DHPawn(Instigator).ResupplyMortarAmmunition();
+    local bool bResupplied;
+    bResupplied = (Level.TimeSeconds > (LastResupplyTimestamp + ResupplyInterval)) 
+        && DHPawn(Instigator) != none
+        && DHPawn(Instigator).ResupplyMortarAmmunition();
+    if (bResupplied)
+    {
+        LastResupplyTimestamp = Level.TimeSeconds;
+    }
+    return bResupplied;
 }
 
 // Emptied out as mortar uses a different system in ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with check whether the resupply area can resupply mortars

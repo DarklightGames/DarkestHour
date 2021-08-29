@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMortarVehicle extends ROVehicle
+class DHMortarVehicle extends DHVehicle
     abstract;
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
@@ -231,4 +231,7 @@ defaultproperties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
     End Object
     KParams=KarmaParamsRBFull'KParams0'
+
+    bShouldDrawPositionDots=false
+    bShouldDrawOccupantList=false
 }

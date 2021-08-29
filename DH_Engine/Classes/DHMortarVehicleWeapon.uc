@@ -13,7 +13,7 @@ var     float       SpreadYawMax;
 var     float       BlurTime;                 // how long screen blur effect should last when firing
 var     float       BlurEffectScalar;         // scale for the screen blur when firing
 var     int         PlayerResupplyAmounts[2]; // the amount of each round type supplied by another player
-var     bool        bLastUpdatedPrimaryAmmo;  // net client records last ammo type passed to server, so can decide if needs to update server
+var   class<Projectile>   NewProjectileClass;
 
 // Mortar elevation
 var     float       Elevation;                // current elevation setting, in degrees
@@ -40,18 +40,16 @@ replication
 simulated function CheckUpdateFiringSettings()
 {
     local byte NumElevationIncrements;
-
-    if (Elevation != LastUpdatedElevation || (bLastUpdatedPrimaryAmmo && ProjectileClass != PrimaryProjectileClass))
+    if (Elevation != LastUpdatedElevation || ProjectileClass != NewProjectileClass)
     {
         LastUpdatedElevation = Elevation;
-        bLastUpdatedPrimaryAmmo = ProjectileClass == PrimaryProjectileClass;
         NumElevationIncrements = byte((Elevation - ElevationMinimum) / ElevationStride);
 
-        if (bLastUpdatedPrimaryAmmo)
+        if (NewProjectileClass == PrimaryProjectileClass)
         {
             ServerSetFiringSettings(NumElevationIncrements);
         }
-        else
+        else if (NewProjectileClass == SecondaryProjectileClass)
         {
             ServerSetFiringSettings(NumElevationIncrements + 100);
         }
@@ -91,7 +89,6 @@ function ServerSetFiringSettings(byte PackedSettings)
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local rotator    R;
 
     P = super.SpawnProjectile(ProjClass, bAltFire);
 
@@ -104,12 +101,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
 
         // Debug option
-        if (bDebug && P.IsA('DHMortarProjectile'))
+        if (P.IsA('DHMortarProjectile'))
         {
-            R = Rotation - CurrentAim;
-            R.Pitch = 0;
-            DHMortarProjectile(P).DebugForward = vector(R);
-            DHMortarProjectile(P).DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+            DHMortarProjectile(P).VehicleWeapon = self;
         }
     }
 
@@ -190,6 +184,7 @@ function Fire(Controller C)
 {
     if (ProjectileClass != none)
     {
+        Log("ProjectileClass:" @ ProjectileClass);
         // Normal mortar fire
         if (!bDebugCalibrate)
         {
@@ -238,13 +233,13 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // This only happens locally on a net client & any changed ammo type is only passed to the server on firing or the player exiting the mortar
 simulated function ToggleRoundType()
 {
-    if (ProjectileClass == PrimaryProjectileClass)
+    if (NewProjectileClass == PrimaryProjectileClass)
     {
-        ProjectileClass = SecondaryProjectileClass;
+        NewProjectileClass = SecondaryProjectileClass;
     }
     else
     {
-        ProjectileClass = PrimaryProjectileClass;
+        NewProjectileClass = PrimaryProjectileClass;
     }
 
     PlayClickSound();
@@ -260,7 +255,7 @@ function bool GiveInitialAmmo()
 // Implemented to handle mortar resupply based on specified resupply quantities, but only for an occupied mortar (ammo is transferred to player when he exits & mortar will be empty)
 function bool ResupplyAmmo()
 {
-    if (MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval && MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo)
     {
         MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
         MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
@@ -269,7 +264,7 @@ function bool ResupplyAmmo()
         {
             DHMortarVehicle(Base).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
         }
-
+        LastResupplyTimestamp = Level.TimeSeconds;
         return true;
     }
 
@@ -315,4 +310,5 @@ defaultproperties
     BlurTime=0.5
     BlurEffectScalar=1.35
     AIInfo(0)=(AimError=0.0,WarnTargetPct=0.0)
+    ResupplyInterval=20.0
 }

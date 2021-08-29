@@ -24,8 +24,8 @@ var DHGameReplicationInfo GRI;
 // And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
 {
-    local DH_LevelInfo LI;
-    local float StrikeDelay, MaxSalvoDuration;
+    local DH_LevelInfo            LI;
+    local float                   StrikeDelay, MaxSalvoDuration;
 
     super.PostBeginPlay();
 
@@ -42,10 +42,6 @@ function PostBeginPlay()
         Destroy();
         return;
     }
-
-    // Record the team that called this arty strike
-    // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
-    GRI.ArtyStrikeLocation[TeamIndex] = Location;
 
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -77,8 +73,8 @@ function Destroyed()
     {
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
-
     LastSpawnedShell = none;
+    GRI.InvalidateBarrageMarker(TeamIndex, self.ActiveArtilleryMarkerClass);
 }
 
 // Modified from deprecated ROArtillerySpawner to fix log errors causing 1 extra salvo & 1 extra shell per salvo (& re-factored a little to optimise)
@@ -210,3 +206,7 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
     return LI.GetStrikeInterval(TeamIndex) * 2.0;
 }
 
+defaultproperties
+{
+    ActiveArtilleryMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
+}

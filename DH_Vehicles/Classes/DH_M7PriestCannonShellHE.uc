@@ -9,6 +9,12 @@
 
 class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
 
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
+    super.Explode(HitLocation, HitNormal);
+}
+
 defaultproperties
 {
     Speed=8962.5         // 198m/s x 75%
@@ -16,4 +22,3 @@ defaultproperties
     LifeSpan=20.0
     SpeedFudgeScale=1.0
 }
-

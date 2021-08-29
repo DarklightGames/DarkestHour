@@ -31,6 +31,10 @@ var     float       GunsightSize;                // size of the gunsight overlay
 var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
 
+// Spotting scope overlay
+var     int         SpottingScopePositionIndex;
+var     class<DHArtillerySpottingScope>     ArtillerySpottingScope;
+
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
@@ -198,8 +202,8 @@ simulated function DrawBinocsOverlay(Canvas C)
         TextureSize = float(BinocsOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / BinocsOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
@@ -208,6 +212,55 @@ simulated function DrawBinocsOverlay(Canvas C)
     }
 }
 
+// These values are for easily grabbing the range and current value of pitch and yaw values.
+// Primarily for use in drawing the spotting scope knobs.
+simulated function int GetGunYaw()
+{
+    local int Yaw;
+
+    Yaw = VehWep.CurrentAim.Yaw;
+
+    if (Yaw >= 32768)
+    {
+        Yaw -= 65536;
+    }
+
+    return Yaw;
+}
+
+simulated function int GetGunYawMin()
+{
+    return VehWep.MaxNegativeYaw;
+}
+
+simulated function int GetGunYawMax()
+{
+    return VehWep.MaxPositiveYaw;
+}
+
+simulated function int GetGunPitch()
+{
+    local int Pitch;
+
+    Pitch = VehWep.CurrentAim.Pitch;
+
+    if (Pitch >= 32768)
+    {
+        Pitch -= 65536;
+    }
+
+    return Pitch;
+}
+
+simulated function int GetGunPitchMin()
+{
+    return VehWep.CustomPitchDownLimit - 65535;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return VehWep.CustomPitchUpLimit;
+}
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation
 // Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
 // This is because when we enter a vehicle we now call SetInitialViewRotation(), which is already relative to vehicle
@@ -1691,6 +1744,11 @@ static function StaticPrecache(LevelInfo L)
     {
         default.GunClass.static.StaticPrecache(L);
     }
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        L.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to add extra material properties (no need to call the Super, as it's only in Actor & only caches the Skins array, which a weapon pawn doesn't have)
@@ -1700,6 +1758,11 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to call Initialize functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
@@ -2231,6 +2294,54 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
     }
 }
 
+// A helper function to calculate artillery target information used by spotting scopes
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers, int YawScaleStep)
+{
+    local vector                                        VehicleLocation, Delta;
+    local rotator                                       VehicleRotation;
+    local int                                           Distance, Deflection, i;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHPlayer                                      Player;
+
+    Player = DHPlayer(Controller);
+
+    if (Player == none)
+    {
+        return Targets;
+    }
+
+    VehicleLocation = VehWep.Location;
+    VehicleLocation.Z = 0.0;
+
+    VehicleRotation.Yaw = VehWep.Rotation.Yaw;
+    VehicleRotation.Roll = 0;
+    VehicleRotation.Pitch = 0;
+
+    // Prepare target information for each marker
+    for (i = 0; i < MapMarkers.Length; ++i)
+    {
+        MapMarker = MapMarkers[i];
+        Delta = MapMarker.WorldLocation - VehicleLocation;
+        Delta.Z = 0;
+
+        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
+        SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+
+        TargetInfo.Distance       = Distance;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
+        TargetInfo.Marker         = MapMarker;
+        Targets[Targets.Length]   = TargetInfo;
+    }
+
+    return Targets;
+}
+
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
@@ -2397,6 +2508,7 @@ defaultproperties
     bCustomAiming=true
     bHasAltFire=false
     BinocPositionIndex=-1 // none by default, so set an invalid position
+    SpottingScopePositionIndex=-1
     WeaponFOV=0.0 // neutralise inherited RO value, so unless overridden in subclass we will use the player's default view FOV (i.e. player's normal FOV when on foot)
     DriveAnim=""
     TPCamDistance=300.0
@@ -2416,4 +2528,7 @@ defaultproperties
     bAllowViewChange=false
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+    // RangeString="Range"
+    // ElevationString="Elevation"
 }

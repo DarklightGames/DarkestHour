@@ -23,11 +23,11 @@ var     float       PeriscopeSize;               // so we can adjust the "exteri
 var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
-var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
-var     float       RangePositionX;              // X & Y positioning of range text (0.0 to 1.0)
-var     float       RangePositionY;
-var localized string    RangeText;               // metres or yards (can be localised for other languages)
-var     bool        bIsPeriscopicGunsight;       // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
+var     texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
+var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
+var     float               RangePositionY;
+var     localized string    RangeText;                  // metres or yards
+var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -113,6 +113,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         bOnGunsight = true;
         CameraRotation = VehWep.GetBoneRotation(CameraBone);
     }
+    else if (DriverPositionIndex == SpottingScopePositionIndex && !IsInState('ViewTransition'))
+    {
+        // TODO: set the camera location and LOCK the camera pitch to zero, somehow
+        bOnGunsight = true;
+        CameraRotation = VehWep.GetBoneRotation(VehWep.YawBone);
+        CameraRotation.Pitch = 0;
+    }
     // Or if camera is locked during a current transition, use PlayerCameraBone for camera rotation
     else if (bLockCameraDuringTransition && IsInState('ViewTransition'))
     {
@@ -183,13 +190,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 // Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController PC;
-    local float            SavedOpacity, PosX, PosY, XL, YL, MapX, MapY;
-    local color            SavedColor, WhiteColor;
+    local PlayerController                              PC;
+    local float                                         SavedOpacity;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
+    local DHPlayer                                      Player;
+    local DHPlayerReplicationInfo                       PRI;
 
     PC = PlayerController(Controller);
+    Player = DHPlayer(PC);
+    PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
 
-    if (PC != none && !PC.bBehindView)
+    if (PC != none && !PC.bBehindView && PRI != none)
     {
         // Player is in a position where an overlay should be drawn
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
@@ -202,55 +214,43 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                // Player on the gunsight
-                if (DriverPositionIndex < GunsightPositions)
+                if (DriverPositionIndex < GunsightPositions)   // TODO: this variable (GunsightPositions) is TERRIBLE
                 {
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
-
-                    // Draw range setting in text, if cannon has range settings
-                    if (Cannon != none && Cannon.RangeSettings.Length > 0)
-                    {
-                        C.Style = ERenderStyle.STY_Normal;
-                        SavedColor = C.DrawColor;
-                        WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
-                        C.DrawColor = WhiteColor;
-                        MapX = RangePositionX * C.ClipX;
-                        MapY = RangePositionY * C.ClipY;
-                        C.SetPos(MapX, MapY);
-                        C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-                        C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-                        C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
-                        C.DrawColor = SavedColor;
-                    }
-
-                    // Debug - draw cross on center of screen to check sight overlay is properly centred
-                    if (bDebugSights)
-                    {
-                        PosX = C.SizeX / 2.0;
-                        PosY = C.SizeY / 2.0;
-                        C.SetPos(0.0, 0.0);
-                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        C.DrawVertical(PosX, PosY - 3.0);
-                        C.SetPos(0.0, PosY + 3.0);
-                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        C.DrawVertical(PosX, PosY - 3.0);
-                        C.SetPos(0.0, 0.0);
-                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        C.DrawHorizontal(PosY, PosX - 3.0);
-                        C.SetPos(PosX + 3.0, 0.0);
-                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        C.DrawHorizontal(PosY, PosX - 3.0);
-                    }
                 }
-                // Draw periscope overlay
+                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
+                {
+                    TargetMapMarkers = Player.GetArtilleryMapMarkers();
+                    Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
+
+                    // Draw the spotting scope overlay
+                    // to do: refactor to separate variables (calculate once)
+                    ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+                    ArtillerySpottingScope.static.DrawRangeTable(C,
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
+                    ArtillerySpottingScope.static.DrawPitch(C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
+                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
+                    ArtillerySpottingScope.static.DrawYaw(
+                        PRI,
+                        C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                        Targets);
+                }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {
+                    // Draw periscope overlay
                     DrawPeriscopeOverlay(C);
                 }
-                // Draw binoculars overlay
                 else if (DriverPositionIndex == BinocPositionIndex)
                 {
+                    // Draw binoculars overlay
                     DrawBinocsOverlay(C);
                 }
 
@@ -280,6 +280,8 @@ simulated function DrawHUD(Canvas C)
 simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+    local float XL, YL, MapX, MapY, PosX, PosY;
+    local color SavedColor, WhiteColor;
 
     if (GunsightOverlay != none)
     {
@@ -303,6 +305,41 @@ simulated function DrawGunsightOverlay(Canvas C)
         {
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        }
+
+        // Draw range setting in text, if cannon has range settings
+        if (Cannon != none && Cannon.RangeSettings.Length > 0)
+        {
+            C.Style = ERenderStyle.STY_Normal;
+            SavedColor = C.DrawColor;
+            WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+            C.DrawColor = WhiteColor;
+            MapX = RangePositionX * C.ClipX;
+            MapY = RangePositionY * C.ClipY;
+            C.SetPos(MapX, MapY);
+            C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+            C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
+            C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+            C.DrawColor = SavedColor;
+        }
+
+        // Debug - draw cross on center of screen to check sight overlay is properly centred
+        if (bDebugSights)
+        {
+            PosX = C.SizeX / 2.0;
+            PosY = C.SizeY / 2.0;
+            C.SetPos(0.0, 0.0);
+            C.DrawVertical(PosX - 1.0, PosY - 3.0);
+            C.DrawVertical(PosX, PosY - 3.0);
+            C.SetPos(0.0, PosY + 3.0);
+            C.DrawVertical(PosX - 1.0, PosY - 3.0);
+            C.DrawVertical(PosX, PosY - 3.0);
+            C.SetPos(0.0, 0.0);
+            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            C.DrawHorizontal(PosY, PosX - 3.0);
+            C.SetPos(PosX + 3.0, 0.0);
+            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            C.DrawHorizontal(PosY, PosX - 3.0);
         }
     }
 }
@@ -350,6 +387,22 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
+    local DHPlayer PC;
+
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
+    {
+        if (DriverPositionIndex == BinocPositionIndex)
+        {
+            PC = DHPlayer(Controller);
+
+            if (PC != none && PC.CanUseFireSupportMenu())
+            {
+                PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
+                return;
+            }
+        }
+    }
+
     if (!CanFire() || ArePlayersWeaponsLocked() || Cannon == none || Cannon.bDebugRangeAutomatically)
     {
         return;
@@ -578,11 +631,25 @@ function KDriverEnter(Pawn P)
     }
 }
 
+simulated function bool HasSpottingScope()
+{
+    return SpottingScopePositionIndex != -1;
+}
+
 // Modified so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
 // and so net client autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
+
+    if (HasSpottingScope())
+    {
+        if (DHPlayer(PC) != none)
+        {
+            // Queue the hint for spotting scopes
+            DHPlayer(PC).QueueHint(49, false);
+        }
+    }
 
     if (Cannon != none)
     {
@@ -668,7 +735,7 @@ simulated state ViewTransition
 // Modified to include a periscope overlay position & to allow for a cannon having more than 1 gunsight position
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
-    return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex < GunsightPositions || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex);
+    return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex < GunsightPositions || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex || PositionIndex == SpottingScopePositionIndex);
 }
 
 // Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards
@@ -1054,6 +1121,59 @@ exec function LogCannon() // DEBUG (Matt: please use & report the logged result 
     {
         Log("SmokeLauncherReloadState =" @ GetEnum(enum'EReloadState', Cannon.SmokeLauncherReloadState) @ " bSmokeLauncherReloadPaused =" @ Cannon.bSmokeLauncherReloadPaused
             @ " NumSmokeLauncherRounds =" @ Cannon.NumSmokeLauncherRounds);
+    }
+}
+
+exec function CalibrateFire(int MilsMin, int MilsMax)
+{
+    local int Mils;
+    local DHBallisticProjectile BP;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
+        {
+            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Yaw = 0;
+
+            VehWep.CalcWeaponFire(false);
+            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
+
+            if (BP != none)
+            {
+                BP.bIsCalibrating = true;
+                BP.LifeStart = Level.TimeSeconds;
+                BP.DebugMils = Mils;
+                BP.StartLocation = BP.Location;
+            }
+        }
+    }
+}
+
+exec function CorrectX(float NewValue)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Name @ "OverlayCorrectionX =" @ NewValue @ "(was" @ OverlayCorrectionX $ ")");
+        OverlayCorrectionX = NewValue;
+    }
+}
+
+exec function CorrectY(float NewValue)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
+        OverlayCorrectionY = NewValue;
+    }
+}
+
+exec function SetPrimaryAmmo(int Value)
+{
+    if (IsDebugModeAllowed() && Cannon != none)
+    {
+        Cannon.MainAmmoChargeExtra[0] = Value;
+        Log(Cannon.Tag @ ".MainAmmoChargeExtra[0] =" @ Cannon.MainAmmoChargeExtra[0]);
     }
 }
 

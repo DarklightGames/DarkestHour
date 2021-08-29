@@ -6,7 +6,7 @@
 class DHMapMarker_Squad_Move extends DHMapMarker_Squad
     abstract;
 
-static function OnMapMarkerPlaced(DHPlayer PC)
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     if (PC != none && PC.SquadReplicationInfo != none)
     {
