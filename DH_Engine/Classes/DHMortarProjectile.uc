@@ -37,6 +37,8 @@ var     bool    bDebug;
 
 var     Texture HudTexture;
 
+var     class<DHMapMarker_ArtilleryHit> HitMapMarkerClass;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -229,6 +231,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (!bDud)
     {
+        if (HitMapMarkerClass != none)
+        {
+            SaveHitPostion(HitLocation, HitNormal, HitMapMarkerClass);
+        }
+
         SpawnExplosionEffects(HitLocation, HitNormal);
         BlowUp(HitLocation);
     }
