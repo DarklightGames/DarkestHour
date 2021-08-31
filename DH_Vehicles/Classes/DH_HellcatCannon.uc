@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
     Skins(1)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll')
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=15.0,Y=30.0,Z=0.0)

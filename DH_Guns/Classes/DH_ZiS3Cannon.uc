@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
     Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
     Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision')
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
@@ -37,11 +37,11 @@ defaultproperties
 
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=20
-    //InitialTertiaryAmmo=0 
+    //InitialTertiaryAmmo=0
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=60
-    //MaxTertiaryAmmo=0  //no APCR for zis3 because the gun is available since 1942, but APCR was only adopted in 1943. 
-	//Ideally it should be available on `43-`45 maps but i dont know a proper way to do this, so zis2 kinda "replaces" 76mm APCR shells in terms of gameplay for now
+    //MaxTertiaryAmmo=0  //no APCR for zis3 because the gun is available since 1942, but APCR was only adopted in 1943.
+    //Ideally it should be available on `43-`45 maps but i dont know a proper way to do this, so zis2 kinda "replaces" 76mm APCR shells in terms of gameplay for now
     SecondarySpread=0.002
 
     // Sounds
