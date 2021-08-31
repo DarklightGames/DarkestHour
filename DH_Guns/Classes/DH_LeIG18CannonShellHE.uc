@@ -5,12 +5,6 @@
 
 class DH_LeIG18CannonShellHE extends DHCannonShellHE;
 
-simulated function Explode(vector HitLocation, vector HitNormal)
-{
-    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
-    super.Explode(HitLocation, HitNormal);
-}
-
 defaultproperties
 {
     Speed=6962.0        // arbitrary value
@@ -29,6 +23,8 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     HullFireChance=0.8
     EngineFireChance=0.8
+
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
 
     bDebugInImperial=false
 

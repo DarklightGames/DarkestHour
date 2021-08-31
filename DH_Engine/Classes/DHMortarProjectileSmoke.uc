@@ -11,12 +11,6 @@ var     sound           SmokeIgniteSound;   // initial sound when smoke begins e
 var     sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
 var     float           SmokeSoundDuration; // duration until smoke sound stops playing as smoke clears, used to make projectile persist to keep playing SmokeLoopSound
 
-simulated function Explode(vector HitLocation, vector HitNormal)
-{
-    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke');
-    super.Explode(HitLocation, HitNormal);
-}
-
 // Modified to delay destroying projectile until the end of the SmokeSoundDuration (unless shell was a dud)
 // Means actor persists as long as the smoke sound, so players keep hearing it until the smoke fades away
 // Not relevant on server & client actors will already have been torn off & are independent from server as mortar shells are bNetTemporary projectiles
@@ -54,4 +48,5 @@ defaultproperties
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'
 }
