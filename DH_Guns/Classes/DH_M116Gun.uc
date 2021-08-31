@@ -14,11 +14,11 @@ defaultproperties
     Skins(0)=Texture'DH_M116_tex.M116.M116_body'
 //    DestroyedVehicleMesh=StaticMesh'DH_M116_stc.destroyed.m116_destro'
 //    DestroyedMeshSkins(0)=Material'DH_M116_tex.M116.M116_destroyed'
-//    VehicleHudImage=Texture'DH_M116_tex.HUD.M116_body'
-//    VehicleHudTurret=TexRotator'DH_M116_tex.HUD.M116_turret_rot'
-//    VehicleHudTurretLook=TexRotator'DH_M116_tex.HUD.M116_turret_look'
-    VehicleHudOccupantsX(1)=0.4 // TODO:
-    ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00) // TODO:
+    VehicleHudImage=Texture'DH_M116_tex.Interface.M116_body_hud'
+    VehicleHudTurret=TexRotator'DH_M116_tex.Interface.M116_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M116_tex.Interface.M116_turret_look'
+    ExitPositions(1)=(X=-78.00,Y=-50.00,Z=48.00)
+    ExitPositions(2)=(X=-78.00,Y=50.00,Z=48.00)
     VehicleMass=11.0  // TODO:
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating' // TODO: howitzer icon would be good

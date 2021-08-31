@@ -2,6 +2,20 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// [ ] increase pitching speed (yaw & pitch are tied together in this way?")
+// [X] make clock image
+// [ ] make specific round types
+// [ ] calibrate range table
+// [x] fix breeching animation (seems fine in blender)
+// [x] increase camera height when raised
+// [x] hook up traverse wheel
+// [x] move player a bit further up
+// [x] exit positions
+// [ ] final mesh export
+// [ ] add spring to mesh
+
+// branch in general:
+// [ ] make RMB the thing that activates the map for use
 
 class DH_M116Cannon extends DHATGunCannon;
 
@@ -12,8 +26,15 @@ defaultproperties
     Skins(0)=Texture'DH_M116_tex.M116.m116_body'
     GunnerAttachmentBone="com_player"
 
+    // Collision meshes
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_gun_coll',AttachBone="Gun")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_turret_coll',AttachBone="Turret")
+
     // Animation
     ShootIntermediateAnim="shoot_close"
+
+    // Gun Wheels
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
 
     // Turret movement
     ManualRotationsPerSecond=0.011111
