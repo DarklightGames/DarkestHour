@@ -287,10 +287,9 @@ final function UpdateQuantized2DPose()
 
 static function OnError(EMapIconAttachmentError Error)
 {
-    switch(Error)
+    if (Error == ERROR_SpawnFailed)
     {
-        case ERROR_SpawnFailed:
-            Warn("Failed to spawn map icon attachment!");
+        Warn("Failed to spawn map icon attachment!");
     }
 }
 

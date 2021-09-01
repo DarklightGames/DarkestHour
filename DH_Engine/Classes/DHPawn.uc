@@ -1124,7 +1124,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
             }
             else
             {
-                switch(BoneName)
+                switch (BoneName)
                 {
                     case 'lfoot':
                     case 'lthigh':

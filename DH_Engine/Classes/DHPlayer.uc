@@ -7216,7 +7216,7 @@ function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
     {
         bMarkerExpired = PublicMapMarkers[i].ExpiryTime <= ElapsedTime || PublicMapMarkers[i].ExpiryTime == -1;
         // Log("i=" $ i @ "SquadIndex=" $ PublicMapMarkers[i].SquadIndex @ ": bMarkerExpired=" $ bMarkerExpired @ ", " @ "PublicMapMarkers[i].ExpiryTime=" $ PublicMapMarkers[i].ExpiryTime @ ", ElapsedTime=" $ ElapsedTime);
-        if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex 
+        if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex
           && ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport')
           && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i])
           && !bMarkerExpired)

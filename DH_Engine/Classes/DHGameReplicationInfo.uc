@@ -1496,7 +1496,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case UNIQUE_PER_GROUP:
                     for (i = 0; i < arraycount(AxisMapMarkers); ++i)
                     {
-                        if (AxisMapMarkers[i].MapMarkerClass != none 
+                        if (AxisMapMarkers[i].MapMarkerClass != none
                           && AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex
                           && (MapMarkerClass.default.Scope == SQUAD && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
                             || MapMarkerClass.default.Scope == TEAM)
@@ -1556,8 +1556,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
                 case UNIQUE:
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                     {
-                        if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass 
-                          && (MapMarkerClass.default.Scope == TEAM 
+                        if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass
+                          && (MapMarkerClass.default.Scope == TEAM
                           || (MapMarkerClass.default.Scope == SQUAD && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
                         {
                             AlliesMapMarkers[i] = M;
@@ -1636,7 +1636,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
 {
     local int i;
 
-    switch(TeamIndex)
+    switch (TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
@@ -1663,7 +1663,7 @@ function InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> 
 {
     local int i;
 
-    switch(TeamIndex)
+    switch (TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
