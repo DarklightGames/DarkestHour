@@ -4228,7 +4228,7 @@ function DrawLocationHits(Canvas C, ROPawn P)
             }
             else if (Team == ALLIES_TEAM_INDEX)
             {
-                switch(DHGRI.AlliedNationID)
+                switch (DHGRI.AlliedNationID)
                 {
                     case 3: // USSR
                     case 4: // Poland

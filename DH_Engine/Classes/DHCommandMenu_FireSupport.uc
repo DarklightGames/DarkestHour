@@ -197,7 +197,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     Status = GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI);
 
-    switch(Status)
+    switch (Status)
     {
         case EArtilleryStatus.AS_DisabledGlobally:
             ORI.InfoColor = class'UColor'.default.Red;
@@ -211,7 +211,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                switch(PC.GetTeamNum())
+                switch (PC.GetTeamNum())
                 {
                     case AXIS_TEAM_INDEX:
                         AvailableCount = GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].Limit - GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].UsedCount;
@@ -242,7 +242,7 @@ function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> Fire
 
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
-    switch(PC.GetTeamNum())
+    switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
@@ -332,6 +332,6 @@ defaultproperties
     Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap')
     Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke')
     Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE')
- 
+
     bShouldTick=true
 }
