@@ -1200,16 +1200,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
         {
             // The request was denied by the server
-
-            switch (Result)
-            {
-                case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
-                    break;
-                default:
-                    MessageText = SurrenderResponseMessages[Result];
-            }
-
+            MessageText = SurrenderResponseMessages[Result];
             Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
@@ -1926,7 +1917,7 @@ defaultproperties
     SurrenderResponseMessages[5]="You've already surrendered.";
     SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
     SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender.";
     SurrenderResponseMessages[9]="You cannot surrender this early.";
     SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
 

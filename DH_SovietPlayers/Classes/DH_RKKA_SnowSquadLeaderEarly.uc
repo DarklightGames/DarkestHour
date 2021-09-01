@@ -10,4 +10,10 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
 
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmetSnow'
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
+    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
+    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
 }

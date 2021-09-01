@@ -8,6 +8,7 @@ class DH_LWP_StandardSniperGrey extends DHPOLSniperRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLGreyPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicMixBGreyPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
 
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.LWP_grey_sleeves'

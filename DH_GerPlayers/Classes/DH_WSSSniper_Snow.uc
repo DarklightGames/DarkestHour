@@ -16,4 +16,9 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BHPWeapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ColtM1914Weapon')
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }
