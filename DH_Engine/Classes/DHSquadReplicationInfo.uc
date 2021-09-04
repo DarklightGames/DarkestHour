@@ -107,8 +107,6 @@ var int                             NextSquadMergeRequestID;
 
 var localized array<string>         SquadMergeRequestResultStrings;
 
-const Z = 0.3;
-
 enum ERallyPointPlacementErrorType
 {
     ERROR_None,
@@ -155,11 +153,6 @@ replication
 function PostBeginPlay()
 {
     local DH_LevelInfo LI;
-    local name A;
-    local rotator B;
-
-    B = rot(0, 0, 0);
-    B = rot(1.e3, 2.e3, 3.e3);
 
     super.PostBeginPlay();
 
