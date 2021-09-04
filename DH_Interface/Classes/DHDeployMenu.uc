@@ -1906,7 +1906,7 @@ defaultproperties
     SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
-    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[0]="Retreat"
     SurrenderButtonText[1]="Keep fighting"
 
     SurrenderResponseMessages[0]="Fatal error!";
@@ -2315,15 +2315,15 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Surrender"
+    Begin Object Class=DHGUIButton Name=RetreatButtonObject
+        Caption="Retreat"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(2)=KickVoteButtonObject
+    b_MenuOptions(2)=RetreatButtonObject
 
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"

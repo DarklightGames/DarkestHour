@@ -72,9 +72,9 @@ static function string GetString(
 
 defaultproperties
 {
-    VoteSucceededText="The vote to surrender has succeeded ({0})."
-    VoteFailedText="The vote to surrender has failed ({0})."
+    VoteSucceededText="The vote to retreat has succeeded ({0})."
+    VoteFailedText="The vote to retreat has failed ({0})."
     VoteSummaryText="Yes: {0}, Needed: {1}"
-    VoteNominatedText="{0} has nominated to surrender."
+    VoteNominatedText="{0} has nominated to retreat."
     VoteNominationsRemainingText="Need {0} more nomination{1} to start the vote."
 }

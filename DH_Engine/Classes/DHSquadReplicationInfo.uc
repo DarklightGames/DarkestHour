@@ -57,8 +57,6 @@ var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
-var TreeMap_string_int              InvitationExpirations;
-
 var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
@@ -109,6 +107,8 @@ var int                             NextSquadMergeRequestID;
 
 var localized array<string>         SquadMergeRequestResultStrings;
 
+const Z = 0.3;
+
 enum ERallyPointPlacementErrorType
 {
     ERROR_None,
@@ -155,14 +155,16 @@ replication
 function PostBeginPlay()
 {
     local DH_LevelInfo LI;
+    local name A;
+    local rotator B;
+
+    B = rot(0, 0, 0);
+    B = rot(1.e3, 2.e3, 3.e3);
 
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
-        // TODO: make sure invitations can't be sent so damned frequently!
-        InvitationExpirations = new class'TreeMap_string_int';
-
         SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
         SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
 
