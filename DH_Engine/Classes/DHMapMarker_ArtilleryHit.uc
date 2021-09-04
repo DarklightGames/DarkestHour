@@ -6,7 +6,7 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-var class<DHMapMarker_FireSupport_OnMap> RequestMarkerClass;
+var class<DHMapMarker_FireSupport> RequestMarkerClass;
 
 // Only allow artillery roles to place artillery hits.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)

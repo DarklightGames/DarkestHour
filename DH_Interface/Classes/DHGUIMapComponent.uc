@@ -460,7 +460,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
             }
             if (PublicMapMarkers[i].MapMarkerClass != none &&
                 (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
-                ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport_OnMap') &&
+                PublicMapMarkers[i].MapMarkerClass.static.IsOnMapArtillery() &&
                 PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]) &&
                 (PC.IsArtilleryOperator() && !(PC.IsSL() && PC.GetSquadIndex() == PublicMapMarkers[i].SquadIndex)) &&
                 IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))

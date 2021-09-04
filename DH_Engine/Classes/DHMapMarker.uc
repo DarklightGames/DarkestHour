@@ -62,6 +62,11 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
     return default.IconColor;
 }
 
+static function bool IsOnMapArtillery()
+{
+    return false;
+}
+
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
 

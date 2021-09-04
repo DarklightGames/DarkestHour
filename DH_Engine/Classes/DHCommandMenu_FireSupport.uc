@@ -37,7 +37,7 @@ function OnSelect(int Index, vector Location)
         switch (Index)
         {
             case 0: // Artillery barrage
-                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_OffMap');
+                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_ArtilleryBarrage');
                 break;
             case 1: // Fire request (Smoke)
                 AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
@@ -157,7 +157,7 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
         PC.LockArtilleryRequests(PC.ArtilleryLockingPeriod);
         PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
 
-        if (class<DHMapMarker_FireSupport_OffMap>(MapMarkerClass) != none)
+        if (MapMarkerClass.default.ArtilleryRange == AR_OffMap)
         {
             PC.ServerNotifyRadioman();
         }
@@ -208,7 +208,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case EArtilleryStatus.AS_Enabled:
-            if(ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap'))
+            if(FireSupportRequestClass.default.ArtilleryRange == AR_OffMap)
             {
                 ORI.InfoColor = class'UColor'.default.White;
                 switch (PC.GetTeamNum())
@@ -242,64 +242,60 @@ function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> Fire
 
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
-    switch (PC.GetTeamNum())
-    {
-        case AXIS_TEAM_INDEX:
-            if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
-              && GRI.bOffMapArtilleryEnabledAxis
-              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
-            {
-                return EArtilleryStatus.AS_Enabled;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
-              && !GRI.bOffMapArtilleryEnabledAxis)
-            {
-                return EArtilleryStatus.AS_DisabledGlobally;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
-              && GRI.bOnMapArtilleryEnabledAxis
-              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
-            {
-                return EArtilleryStatus.AS_Enabled;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
-              && !GRI.bOnMapArtilleryEnabledAxis)
-            {
-                return EArtilleryStatus.AS_DisabledGlobally;
-            }
-        case ALLIES_TEAM_INDEX:
-            if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
-              && GRI.bOffMapArtilleryEnabledAllies
-              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
-            {
-                return EArtilleryStatus.AS_Enabled;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OffMap')
-              && !GRI.bOffMapArtilleryEnabledAllies)
-            {
-                return EArtilleryStatus.AS_DisabledGlobally;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
-              && GRI.bOnMapArtilleryEnabledAllies
-              && SquadMembersCount >= FireSupportRequestClass.default.RequiredSquadMembers)
-            {
-                return EArtilleryStatus.AS_Enabled;
-            }
-            else if (ClassIsChildOf(FireSupportRequestClass, class'DHMapMarker_FireSupport_OnMap')
-              && !GRI.bOnMapArtilleryEnabledAllies)
-            {
-                return EArtilleryStatus.AS_DisabledGlobally;
-            }
-    }
-
-    if (SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
     {
         return EArtilleryStatus.AS_DisabledNotEnoughMembers;
     }
-    else
+
+    switch (PC.GetTeamNum())
     {
-        Warn("ArtilleryStatus(): Something went really bad." @ self @ "will not work.");
+        case AXIS_TEAM_INDEX:
+            switch(FireSupportRequestClass.default.ArtilleryRange)
+            {
+                case AR_OffMap:
+                    if(GRI.bOffMapArtilleryEnabledAxis)
+                    {
+                        return EArtilleryStatus.AS_Enabled;
+                    }
+                    else
+                    {
+                        return EArtilleryStatus.AS_DisabledGlobally;
+                    }
+                case AR_OnMap:
+                    if(GRI.bOnMapArtilleryEnabledAxis)
+                    {
+                        return EArtilleryStatus.AS_Enabled;
+                    }
+                    else
+                    {
+                        return EArtilleryStatus.AS_DisabledGlobally;
+                    }
+            }
+        case ALLIES_TEAM_INDEX:
+            switch(FireSupportRequestClass.default.ArtilleryRange)
+            {
+                case AR_OffMap:
+                    if(GRI.bOffMapArtilleryEnabledAllies)
+                    {
+                        return EArtilleryStatus.AS_Enabled;
+                    }
+                    else
+                    {
+                        return EArtilleryStatus.AS_DisabledGlobally;
+                    }
+                case AR_OnMap:
+                    if(GRI.bOnMapArtilleryEnabledAllies)
+                    {
+                        return EArtilleryStatus.AS_Enabled;
+                    }
+                    else
+                    {
+                        return EArtilleryStatus.AS_DisabledGlobally;
+                    }
+            }
     }
+
+    Warn("ArtilleryStatus(): Something went really bad. This code should not be reached." @ self @ "will not work.");
 }
 
 function bool IsOptionDisabled(int OptionIndex)
@@ -329,7 +325,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap')
+    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage')
     Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke')
     Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE')
 
