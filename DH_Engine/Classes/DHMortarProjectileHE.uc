@@ -43,7 +43,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
     }
 
-    SaveHitPostion(HitLocation, HitNormal, class'DH_Engine.DHMapMarker_ArtilleryHit_HE');
     super.Explode(HitLocation, HitNormal);
 }
 
@@ -191,6 +190,8 @@ defaultproperties
 
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
 
     ShakeRotMag=(Z=100.0)
     ShakeRotRate=(Z=2500.0)

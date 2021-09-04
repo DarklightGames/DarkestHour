@@ -71,9 +71,7 @@ static function string GetString(
             break;
     }
 
-    S = Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
-
-    return S;
+    return Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
 }
 
 defaultproperties
@@ -88,6 +86,6 @@ defaultproperties
     NoTargetText="No target location."
     NotQualifiedText="You are not qualified to request a {name}."
     CancelledText="{name} has been cancelled."
-    ActiveTargetChosen="You have chosen an artillery target. Use your spotting scope to zero in on the target."
+    ActiveTargetChosen="Fire support target selected."
 }
 

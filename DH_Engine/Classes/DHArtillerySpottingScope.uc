@@ -37,7 +37,7 @@ var EShapePrimitive                      CurrentValueIndicator;
 struct SSegmentTick
 {
     var EShapePrimitive                   Shape;
-    var bool                              DrawLabel;
+    var bool                              bShouldDrawLabel;
 };
 
 var array<SSegmentTick>                   SegmentSchema;
@@ -199,7 +199,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         C.CurX = X - 40;
         C.CurY = Y + default.TargetWidgetFirstLineOffset;
         C.DrawText("MEASUREMENT TOOL:");
-        
+
         // Draw second line
         C.CurX = X;
         C.CurY = Y + default.TargetWidgetSecondLineOffset;
@@ -262,7 +262,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
-    
+
     C.Font = C.TinyFont;
 }
 
@@ -295,7 +295,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     C.CurX = IndicatorTopLeftCornerX;
     C.CurY = IndicatorTopLeftCornerY;
     C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
-    
+
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
 
@@ -388,7 +388,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].DrawLabel)
+        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
         {
             switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
             {
@@ -494,7 +494,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].DrawLabel)
+        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
         {
             switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
             {
