@@ -3,16 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 // [ ] increase pitching speed (yaw & pitch are tied together in this way?")
-// [X] make clock image
 // [ ] make specific round types
 // [ ] calibrate range table
-// [x] fix breeching animation (seems fine in blender)
-// [x] increase camera height when raised
-// [x] hook up traverse wheel
-// [x] move player a bit further up
-// [x] exit positions
 // [ ] final mesh export
-// [ ] add spring to mesh
+// [ ] add tail spring to mesh
+// [ ] add spring thing on the axle
+// [ ] fix camera while transitioning positions
 
 // branch in general:
 // [ ] make RMB the thing that activates the map for use
