@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GermanSnowGreatCoatPawn extends DH_GermanGreatCoatPawn;
+class DH_GermanSnowGreatCoatPawn extends DH_GermanGreatCoatPawn_Winter;
 
 defaultproperties
 {
