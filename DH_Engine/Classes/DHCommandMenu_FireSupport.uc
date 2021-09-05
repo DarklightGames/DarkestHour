@@ -102,6 +102,7 @@ function Tick()
     local bool                    bIsArtillerySpotter;
     local bool                    bIsArtilleryTargetValid;
     local bool                    bIsArtilleryEnabled;
+    local DHVolumeTest            VT;
 
     PC = GetPlayerController();
 
@@ -128,7 +129,23 @@ function Tick()
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
 
     bIsArtillerySpotter = PC.IsArtillerySpotter();
-    bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
+    bIsArtilleryTargetValid = false;
+    if (PC.Pawn == none || PC.Pawn.Health <= 0)
+    {
+        bIsArtilleryTargetValid = false;
+    }
+    else
+    {
+        // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
+
+        VT = PC.Spawn(class'DHVolumeTest', PC,, HitLocation);
+
+        if (VT != none)
+        {
+            bIsArtilleryTargetValid = !VT.IsInNoArtyVolume();
+            VT.Destroy();
+        }
+    }
     bIsArtilleryEnabled = false;
     switch (PC.GetTeamNum())
     {
