@@ -5,10 +5,14 @@
 
 class DHCommandMenu_FireSupport extends DHCommandMenu;
 
+var color DisabledColor;
+var color EnabledColor;
+
 enum EArtilleryStatus
 {
     AS_DisabledGlobally,
     AS_DisabledNotEnoughMembers,
+    AS_DisabledNoArtilleryVolume,
     AS_Enabled
 };
 
@@ -30,9 +34,9 @@ function OnSelect(int Index, vector Location)
         return;
     }
 
-    PC.ServerIsArtilleryTargetValid(Location);
-
-    if (PC.IsArtillerySpotter() && PC.bIsArtilleryTargetValid)
+    if (PC.IsArtillerySpotter()
+        && PC.IsArtilleryTargetValid(Location)
+        && GRI.IsArtilleryEnabled(PC.GetTeamNum()))
     {
         switch (Index)
         {
@@ -94,8 +98,10 @@ function Tick()
     local DHPlayer                PC;
     local vector                  HitLocation, HitNormal;
     local Color                   C;
-    local bool                    bArtillerySupportEnabled;
     local DHGameReplicationInfo   GRI;
+    local bool                    bIsArtillerySpotter;
+    local bool                    bIsArtilleryTargetValid;
+    local bool                    bIsArtilleryEnabled;
 
     PC = GetPlayerController();
 
@@ -120,25 +126,34 @@ function Tick()
     }
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-    PC.ServerIsArtilleryTargetValid(HitLocation);
 
+    bIsArtillerySpotter = PC.IsArtillerySpotter();
+    bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
+    bIsArtilleryEnabled = false;
     switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAxis || GRI.bOffMapArtilleryEnabledAxis;
+            bIsArtilleryEnabled =  GRI.bOnMapArtilleryEnabledAxis || GRI.bOffMapArtilleryEnabledAxis;
             break;
         case ALLIES_TEAM_INDEX:
-            bArtillerySupportEnabled = GRI.bOnMapArtilleryEnabledAllies || GRI.bOffMapArtilleryEnabledAllies;
+            bIsArtilleryEnabled =  GRI.bOnMapArtilleryEnabledAllies || GRI.bOffMapArtilleryEnabledAllies;
             break;
     }
 
-    if (PC.bIsArtilleryTargetValid && bArtillerySupportEnabled)
+    Log("bIsArtillerySpotter" @ bIsArtillerySpotter);
+    Log("bIsArtilleryTargetValid" @ bIsArtilleryTargetValid);
+    Log("bIsArtilleryEnabled" @ bIsArtilleryEnabled);
+    Log("");
+
+    if (bIsArtillerySpotter && bIsArtilleryTargetValid && bIsArtilleryEnabled)
     {
-        C.G = 255;
+        PC.SpottingMarker.bIsDisabled = false;
+        C = default.EnabledColor;
     }
     else
     {
-        C.R = 255;
+        PC.SpottingMarker.bIsDisabled = true;
+        C = default.DisabledColor;
     }
 
     PC.SpottingMarker.SetColor(C);
@@ -207,6 +222,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
+        case EArtilleryStatus.AS_DisabledNoArtilleryVolume:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText = "No-artillery volume";
+            break;
         case EArtilleryStatus.AS_Enabled:
             if(FireSupportRequestClass.default.ArtilleryRange == AR_OffMap)
             {
@@ -245,6 +264,10 @@ function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> Fire
     if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
     {
         return EArtilleryStatus.AS_DisabledNotEnoughMembers;
+    }
+    if (PC.SpottingMarker != none && PC.SpottingMarker.bIsDisabled)
+    {
+        return EArtilleryStatus.AS_DisabledNoArtilleryVolume;
     }
 
     switch (PC.GetTeamNum())
@@ -325,9 +348,12 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage')
-    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke')
-    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE')
+    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
+    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
 
     bShouldTick=true
+
+    DisabledColor=(B=0,G=0,R=255,A=255)
+    EnabledColor=(B=0,G=255,R=0,A=255)
 }

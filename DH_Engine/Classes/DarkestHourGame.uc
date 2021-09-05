@@ -2530,7 +2530,6 @@ state RoundInPlay
         local int i;
         local ROVehicleFactory ROV;
         local DH_LevelInfo                    LI;
-        local class<DHVehicle>                VehicleClass;
 
         LI = DHLevelInfo;
 

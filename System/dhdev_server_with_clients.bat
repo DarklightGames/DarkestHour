@@ -8,4 +8,4 @@ if %ERRORLEVEL% GEQ 1 (
     exit /b %ERRORLEVEL%
 )
 
-python ..\tools\test_multiplayer.py DarkestHourDev DH-Brecourt_Push.rom?game=DH_Engine.DarkestHourGame?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator
+python ..\tools\test_multiplayer.py DarkestHourDev DH-Makhnovo_Advance.rom?game=DH_Engine.DarkestHourGame?MaxPlayers=64?Mutator=DH_AdminMenuMutator.DHAdminMenuMutator

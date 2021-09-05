@@ -49,8 +49,6 @@ struct SArtilleryHitInfo
 var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
 var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
 var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
-var     bool                    bIsArtilleryTargetValid;
-
 var     int                     ArtillerySupportSquadIndex;
 
 // View FOV
@@ -190,7 +188,7 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged, bIsArtilleryTargetValid;
+        bSurrendered, bIQManaged;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -213,8 +211,7 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget,
-        ServerIsArtilleryTargetValid;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1029,7 +1026,7 @@ function ServerSaveArtilleryTarget(vector Location)
 }
 
 // This function checks if the player can call artillery on the selected target.
-function ServerIsArtilleryTargetValid(vector ArtilleryLocation)
+function bool IsArtilleryTargetValid(vector ArtilleryLocation)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
@@ -1040,7 +1037,6 @@ function ServerIsArtilleryTargetValid(vector ArtilleryLocation)
     }
     else
     {
-
         // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
 
         VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
@@ -1052,7 +1048,7 @@ function ServerIsArtilleryTargetValid(vector ArtilleryLocation)
         }
     }
 
-    bIsArtilleryTargetValid = bValidTarget;
+    return bValidTarget;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
@@ -7465,6 +7461,5 @@ defaultproperties
     ArtilleryLockingPeriod = 10
 
     MinIQToGrowHead=100
-    bIsArtilleryTargetValid=false
     ArtillerySupportSquadIndex=-1
 }

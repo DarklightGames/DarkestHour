@@ -1119,6 +1119,19 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
 // Artillery Functions
 //------------------------------------------------------------------------------
 
+function bool IsArtilleryEnabled(int TeamIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return bOnMapArtilleryEnabledAxis || bOffMapArtilleryEnabledAxis;
+        case ALLIES_TEAM_INDEX:
+            return bOnMapArtilleryEnabledAllies || bOffMapArtilleryEnabledAllies;
+    }
+
+    return false;
+}
+
 function AddArtillery(DHArtillery Artillery)
 {
     local int i;
