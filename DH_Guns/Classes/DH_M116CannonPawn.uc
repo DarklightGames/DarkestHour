@@ -27,6 +27,8 @@ defaultproperties
     RaisedPositionIndex=2
     BinocPositionIndex=3
 
+    bLockCameraDuringTransition=true
+
     DrivePos=(X=0,Y=0.0,Z=60.0)
     DriveAnim="crouch_idle_binoc"
 

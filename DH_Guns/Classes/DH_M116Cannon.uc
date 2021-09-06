@@ -2,13 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] increase pitching speed (yaw & pitch are tied together in this way?")
+
 // [ ] make specific round types
-// [ ] calibrate range table
-// [ ] final mesh export
-// [ ] add tail spring to mesh
-// [ ] add spring thing on the axle
-// [ ] fix camera while transitioning positions
+// [ ] calibrate range table & dials
+// [ ] destroyed meshes
 
 // branch in general:
 // [ ] make RMB the thing that activates the map for use
@@ -20,6 +17,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M116_anm.m116_turret'
     Skins(0)=Texture'DH_M116_tex.M116.m116_body'
+    Skins(1)=Texture'DH_M116_tex.M116.m116_spring'
     GunnerAttachmentBone="com_player"
 
     // Collision meshes
@@ -33,7 +31,7 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
 
     // Turret movement
-    ManualRotationsPerSecond=0.011111
+    ManualRotationsPerSecond=0.05
     MaxPositiveYaw=546.0
     MaxNegativeYaw=-546.0
     YawStartConstraint=-546.0
