@@ -2067,12 +2067,25 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 {
-    return DHKiller != none &&
-           DHKiller.IsArtilleryOperator() &&
-           (class<DHMortarDamageType>(DamageType) != none ||
-            class<DHShellHE105mmDamageType>(DamageType) != none ||          // M7 Priest explosion
-            class<DHShellHE75mmATDamageType>(DamageType) != none ||         // LeIG18 explosion
-            ClassIsChildOf(DamageType, class'DHShellHEImpactDamageType'));  // M7 Priest and LeIG18 impact damage types)
+    local class<DHShellExplosionDamageType> ExplosionDamageType;
+    local class<DHShellImpactDamageType>  ImpactDamageType ;
+
+    if (DHKiller == none || !DHKiller.IsArtilleryOperator())
+    {
+        return false;
+    }
+
+    ExplosionDamageType = class<DHShellExplosionDamageType>(DamageType);
+    if(ExplosionDamageType != none && ExplosionDamageType.default.bIsArtilleryExplosion)
+    {
+        return true;
+    }
+    ImpactDamageType = class<DHShellImpactDamageType>(DamageType);
+    if(ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact)
+    {
+        return true;
+    }
+    return false;
 }
 
 // Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
