@@ -6,17 +6,16 @@
 class DHMapMarker_FireSupport extends DHMapMarker
     abstract;
 
-// to do: add planes
 enum EArtilleryType
 {
-  AT_HighExplosives,
-  AT_Smoke
+    AT_HighExplosives,
+    AT_Smoke
 };
 
 enum EArtilleryRange
 {
-  AR_OnMap,
-  AR_OffMap
+    AR_OnMap,
+    AR_OffMap
 };
 
 var string            TypeName;
@@ -24,9 +23,6 @@ var int               RequiredSquadMembers;
 var EArtilleryType    ArtilleryType;
 var EArtilleryRange   ArtilleryRange;
 var color             ActivatedIconColor; // for off-map artillery requests
-
-// the maximum distance a shell can land from the artillery request for the hit to be visible on the map
-var float             HitVisibilityRadius;
 
 // Any squad leader can call artillery support.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
@@ -58,7 +54,7 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     {
         case EArtilleryRange.AR_OffMap:
             // check if there are no ongoing artillery strikes
-            if(PC != none 
+            if(PC != none
               && PC.IsPositionOfArtillery(Marker.WorldLocation)
                 || PC.IsPositionOfParadrop(Marker.WorldLocation))
                 return false;
@@ -138,10 +134,10 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
             PlayerLocation.Z = 0.0;
 
             Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
-            
+
             SRI = PC.SquadReplicationInfo;
             SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
-            
+
             ArtilleryType = default.TypeName;
 
             return SquadName @ "-" @ ArtilleryType @ "-" @ (Distance / 5) * 5 $ "m";
@@ -153,7 +149,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
-    
+
     switch(default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:

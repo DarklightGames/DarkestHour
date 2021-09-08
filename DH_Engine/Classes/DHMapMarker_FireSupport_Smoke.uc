@@ -21,5 +21,4 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     LifetimeSeconds=120
-    HitVisibilityRadius=12070.4   // 200 meters
 }

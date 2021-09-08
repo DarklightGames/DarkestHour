@@ -8,7 +8,6 @@ class DHMapMarker_ArtilleryHit_Smoke extends DHMapMarker_ArtilleryHit
 
 defaultproperties
 {
-    RequestMarkerClass=class'DHMapMarker_FireSupport_Smoke'
     IconColor=(R=250,G=250,B=250,A=255)
 }
 

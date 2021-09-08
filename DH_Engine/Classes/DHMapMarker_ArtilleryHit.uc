@@ -6,8 +6,6 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-var class<DHMapMarker_FireSupport> RequestMarkerClass;
-
 // Only allow artillery roles to place artillery hits.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
@@ -29,8 +27,7 @@ static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicat
     return false;
 }
 
-static function CalculateHitMarkerVisibility(out DHPlayer PC,
-                                             vector WorldLocation)
+static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocation)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHGameReplicationInfo GRI;
@@ -55,8 +52,8 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
 
     ClosestArtilleryRequest = -1;
     MinimumDistance = class'UFloat'.static.Infinity();
-
     ElapsedTime = GRI.ElapsedTime;
+
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
     // Look for the closest marker that corresponds to the given RequestMarkerClass
@@ -66,8 +63,7 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
 
         bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime;
 
-        if ((Marker.MapMarkerClass == default.RequestMarkerClass)
-          && bIsMarkerAlive
+        if (bIsMarkerAlive
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
           && !(PRI.IsSL() && PRI.SquadIndex == Marker.SquadIndex)
           && PC.ArtillerySupportSquadIndex == Marker.SquadIndex)
@@ -84,7 +80,7 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC,
     }
 
     PC.ArtilleryHitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < default.RequestMarkerClass.default.HitVisibilityRadius);
+    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHUnits'.static.MetersToUnreal(200));    // TODO: put the right
 
     if (ClosestArtilleryRequest != -1 && PC.ArtilleryHitInfo.bIsWithinRadius)
     {
