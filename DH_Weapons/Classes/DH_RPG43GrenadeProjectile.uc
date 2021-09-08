@@ -42,7 +42,7 @@ defaultproperties
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
     // Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' 
     ShellHitDirtEffectClass=class'GrenadeExplosion'
     ShellHitWoodEffectClass=class'GrenadeExplosion'
     ShellHitRockEffectClass=class'GrenadeExplosion'
