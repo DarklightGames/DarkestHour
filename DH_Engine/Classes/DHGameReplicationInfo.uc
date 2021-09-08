@@ -174,10 +174,8 @@ var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
-var bool                                bOffMapArtilleryEnabledAllies;
-var bool                                bOffMapArtilleryEnabledAxis;
-var bool                                bOnMapArtilleryEnabledAllies;
-var bool                                bOnMapArtilleryEnabledAxis;
+var byte                                bOffMapArtilleryEnabled[2];
+var byte                                bOnMapArtilleryEnabled[2];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -242,10 +240,8 @@ replication
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
         TeamConstructions,
-        bOffMapArtilleryEnabledAllies,
-        bOffMapArtilleryEnabledAxis,
-        bOnMapArtilleryEnabledAllies,
-        bOnMapArtilleryEnabledAxis;
+        bOffMapArtilleryEnabled,
+        bOnMapArtilleryEnabled;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -1119,17 +1115,9 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
 // Artillery Functions
 //------------------------------------------------------------------------------
 
-function bool IsArtilleryEnabled(int TeamIndex)
+simulated function bool IsArtilleryEnabled(int TeamIndex)
 {
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return bOnMapArtilleryEnabledAxis || bOffMapArtilleryEnabledAxis;
-        case ALLIES_TEAM_INDEX:
-            return bOnMapArtilleryEnabledAllies || bOffMapArtilleryEnabledAllies;
-    }
-
-    return false;
+    return bOffMapArtilleryEnabled[TeamIndex] == 1 || bOffMapArtilleryEnabled[TeamIndex] == 1;
 }
 
 function AddArtillery(DHArtillery Artillery)
@@ -2067,9 +2055,4 @@ defaultproperties
     // case we fail to retrieve those values.
     DangerZoneNeutral=128
     DangerZoneBalance=128
-
-    bOnMapArtilleryEnabledAxis=false
-    bOnMapArtilleryEnabledAllies=false
-    bOffMapArtilleryEnabledAxis=false
-    bOffMapArtilleryEnabledAllies=false
 }

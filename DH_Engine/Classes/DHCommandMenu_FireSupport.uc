@@ -8,12 +8,17 @@ class DHCommandMenu_FireSupport extends DHCommandMenu;
 var color DisabledColor;
 var color EnabledColor;
 
+var localized string UnavailableText;
+var localized string InvalidTargetText;
+var localized string AvailableText;
+
 enum EArtilleryStatus
 {
     AS_DisabledGlobally,
     AS_DisabledNotEnoughMembers,
     AS_DisabledNoArtilleryVolume,
-    AS_Enabled
+    AS_Enabled,
+    AS_Fatal
 };
 
 function OnSelect(int Index, vector Location)
@@ -35,21 +40,10 @@ function OnSelect(int Index, vector Location)
     }
 
     if (PC.IsArtillerySpotter()
-        && PC.IsArtilleryTargetValid(Location)
-        && GRI.IsArtilleryEnabled(PC.GetTeamNum()))
+        && GRI.IsArtilleryEnabled(PC.GetTeamNum())
+        && PC.IsArtilleryTargetValid(Location))
     {
-        switch (Index)
-        {
-            case 0: // Artillery barrage
-                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_ArtilleryBarrage');
-                break;
-            case 1: // Fire request (Smoke)
-                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_Smoke');
-                break;
-            case 2: // Fire request (HE)
-                AddNewArtilleryRequest(PC, MapLocation, Location, class'DH_Engine.DHMapMarker_FireSupport_HE');
-                break;
-        }
+        AddNewArtilleryRequest(PC, MapLocation, Location, class<DHMapMarker_FireSupport>(Options[Index].OptionalObject));
     }
     else
     {
@@ -85,12 +79,10 @@ function OnPop()
 
     PC = GetPlayerController();
 
-    if (PC == none || PC.SpottingMarker == none)
+    if (PC != none && PC.SpottingMarker != none)
     {
-        return;
+        PC.SpottingMarker.Destroy();
     }
-
-    PC.SpottingMarker.Destroy();
 }
 
 function Tick()
@@ -99,10 +91,6 @@ function Tick()
     local vector                  HitLocation, HitNormal;
     local Color                   C;
     local DHGameReplicationInfo   GRI;
-    local bool                    bIsArtillerySpotter;
-    local bool                    bIsArtilleryTargetValid;
-    local bool                    bIsArtilleryEnabled;
-    local DHVolumeTest            VT;
 
     PC = GetPlayerController();
 
@@ -128,41 +116,9 @@ function Tick()
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
 
-    bIsArtillerySpotter = PC.IsArtillerySpotter();
-    bIsArtilleryTargetValid = false;
-    if (PC.Pawn == none || PC.Pawn.Health <= 0)
-    {
-        bIsArtilleryTargetValid = false;
-    }
-    else
-    {
-        // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
-
-        VT = PC.Spawn(class'DHVolumeTest', PC,, HitLocation);
-
-        if (VT != none)
-        {
-            bIsArtilleryTargetValid = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
-    }
-    bIsArtilleryEnabled = false;
-    switch (PC.GetTeamNum())
-    {
-        case AXIS_TEAM_INDEX:
-            bIsArtilleryEnabled =  GRI.bOnMapArtilleryEnabledAxis || GRI.bOffMapArtilleryEnabledAxis;
-            break;
-        case ALLIES_TEAM_INDEX:
-            bIsArtilleryEnabled =  GRI.bOnMapArtilleryEnabledAllies || GRI.bOffMapArtilleryEnabledAllies;
-            break;
-    }
-
-    Log("bIsArtillerySpotter" @ bIsArtillerySpotter);
-    Log("bIsArtilleryTargetValid" @ bIsArtilleryTargetValid);
-    Log("bIsArtilleryEnabled" @ bIsArtilleryEnabled);
-    Log("");
-
-    if (bIsArtillerySpotter && bIsArtilleryTargetValid && bIsArtilleryEnabled)
+    if (PC.IsArtillerySpotter()
+        && GRI.IsArtilleryEnabled(PC.GetTeamNum())
+        && PC.IsArtilleryTargetValid(HitLocation))
     {
         PC.SpottingMarker.bIsDisabled = false;
         C = default.EnabledColor;
@@ -180,6 +136,11 @@ function Tick()
 
 function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLocation, class<DHMapMarker_FireSupport> MapMarkerClass)
 {
+    if (PC == none || MapMarkerClass == none)
+    {
+        return;
+    }
+
     if (PC.IsArtilleryRequestingLocked())
     {
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, PC);
@@ -199,7 +160,6 @@ function AddNewArtilleryRequest(DHPlayer PC, vector MapLocation, vector WorldLoc
         }
 
         PC.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
-        PC.ConsoleCommand("SPEECH SUPPORT 8");
     }
 }
 
@@ -210,7 +170,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHPlayer                        PC;
     local int                             SquadMembersCount, AvailableCount;
     local DHGameReplicationInfo           GRI;
-    local EArtilleryStatus                Status;
 
     FireSupportRequestClass = class<DHMapMarker_FireSupport>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
@@ -225,30 +184,25 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
     ORI.OptionName = FireSupportRequestClass.default.MarkerName;
-    ORI.DescriptionText = "";
 
-    Status = GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI);
-
-    switch (Status)
+    switch (GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI))
     {
-        case EArtilleryStatus.AS_DisabledGlobally:
+        case AS_DisabledNotEnoughMembers:
             ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "Unavailable";
+            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoText = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
-        case EArtilleryStatus.AS_DisabledNotEnoughMembers:
+        case AS_DisabledNoArtilleryVolume:
             ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "Squad members:" @ SquadMembersCount @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText = default.InvalidTargetText;
             break;
-        case EArtilleryStatus.AS_DisabledNoArtilleryVolume:
-            ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "No-artillery volume";
-            break;
-        case EArtilleryStatus.AS_Enabled:
-            if(FireSupportRequestClass.default.ArtilleryRange == AR_OffMap)
+        case AS_Enabled:
+            if (FireSupportRequestClass.default.ArtilleryRange == AR_OffMap)
             {
                 ORI.InfoColor = class'UColor'.default.White;
                 AvailableCount = GRI.ArtilleryTypeInfos[PC.GetTeamNum()].Limit - GRI.ArtilleryTypeInfos[PC.GetTeamNum()].UsedCount;
-                ORI.InfoText = "Available count: " $ AvailableCount;
+                ORI.InfoText = Repl(default.AvailableText, "{0}", AvailableCount);
             }
             else
             {
@@ -256,80 +210,59 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText = Options[OptionIndex].SubjectText;
             }
             break;
+        case AS_DisabledGlobally:
+        case AS_Fatal:
         default:
-            Warn("Unhandled artillery status:" @ Status);
             ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoText = "Unavailable";
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText = default.UnavailableText;
             break;
     }
 }
 
-// This function should be merged with IsOptionDisabled
-// IsOptionDisabled should be refactored to return an enum of values instead of bool...
+// TODO: this function should live in DHPlayer and should take the candidate
+// location instead of messing around with the spotting marker to indicate state.
 function EArtilleryStatus GetArtilleryStatus(class<DHMapMarker_FireSupport> FireSupportRequestClass, DHPlayer PC, DHGameReplicationinfo GRI, DHSquadReplicationInfo SRI)
 {
     local int SquadMembersCount;
 
     SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
 
-    if(SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    if (SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
     {
-        return EArtilleryStatus.AS_DisabledNotEnoughMembers;
+        return AS_DisabledNotEnoughMembers;
     }
+
+    // TODO: Why on earth are we doing this here?! the spotting marker should
+    // not be used as a data passthru for this.
     if (PC.SpottingMarker != none && PC.SpottingMarker.bIsDisabled)
     {
-        return EArtilleryStatus.AS_DisabledNoArtilleryVolume;
+        return AS_DisabledNoArtilleryVolume;
     }
 
-    switch (PC.GetTeamNum())
+    switch (FireSupportRequestClass.default.ArtilleryRange)
     {
-        case AXIS_TEAM_INDEX:
-            switch(FireSupportRequestClass.default.ArtilleryRange)
+        case AR_OffMap:
+            if (GRI.bOffMapArtilleryEnabled[PC.GetTeamNum()] == 1)
             {
-                case AR_OffMap:
-                    if(GRI.bOffMapArtilleryEnabledAxis)
-                    {
-                        return EArtilleryStatus.AS_Enabled;
-                    }
-                    else
-                    {
-                        return EArtilleryStatus.AS_DisabledGlobally;
-                    }
-                case AR_OnMap:
-                    if(GRI.bOnMapArtilleryEnabledAxis)
-                    {
-                        return EArtilleryStatus.AS_Enabled;
-                    }
-                    else
-                    {
-                        return EArtilleryStatus.AS_DisabledGlobally;
-                    }
+                return AS_Enabled;
             }
-        case ALLIES_TEAM_INDEX:
-            switch(FireSupportRequestClass.default.ArtilleryRange)
+            else
             {
-                case AR_OffMap:
-                    if(GRI.bOffMapArtilleryEnabledAllies)
-                    {
-                        return EArtilleryStatus.AS_Enabled;
-                    }
-                    else
-                    {
-                        return EArtilleryStatus.AS_DisabledGlobally;
-                    }
-                case AR_OnMap:
-                    if(GRI.bOnMapArtilleryEnabledAllies)
-                    {
-                        return EArtilleryStatus.AS_Enabled;
-                    }
-                    else
-                    {
-                        return EArtilleryStatus.AS_DisabledGlobally;
-                    }
+                return AS_DisabledGlobally;
+            }
+        case AR_OnMap:
+            if (GRI.bOnMapArtilleryEnabled[PC.GetTeamNum()] == 1)
+            {
+                return AS_Enabled;
+            }
+            else
+            {
+                return AS_DisabledGlobally;
             }
     }
 
-    Warn("ArtilleryStatus(): Something went really bad. This code should not be reached." @ self @ "will not work.");
+    return AS_Fatal;
 }
 
 function bool IsOptionDisabled(int OptionIndex)
@@ -351,7 +284,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     if (PC != none && FireSupportRequestClass != none && GRI != none && SRI != none)
     {
-        return GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI) != EArtilleryStatus.AS_Enabled;
+        return GetArtilleryStatus(FireSupportRequestClass, PC, GRI, SRI) != AS_Enabled;
     }
 
     return true;
@@ -362,6 +295,10 @@ defaultproperties
     Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
     Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+
+    UnavailableText="Unavailable"
+    InvalidTargetText="Invalid target"
+    AvailableText="{0} available"
 
     bShouldTick=true
 
