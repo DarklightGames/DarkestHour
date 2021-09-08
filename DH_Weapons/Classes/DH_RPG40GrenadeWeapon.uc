@@ -12,9 +12,9 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_RPG40GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_RPG40GrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_RPG40GrenadePickup'
-    Mesh=SkeletalMesh'DH_RPG40Grenade_1st.RPG40Grenade_1st'
-    Skins(2)=Texture'DH_RPG40Grenade_tex.Weapon.RPG40Grenade' // TODO: there is no specularity mask for this weapon
-    DisplayFOV=75.0
+    Mesh=SkeletalMesh'DH_RPG43Grenade_1st.RPG40Grenade'
+    Skins(2)=Texture'DH_RPG43Grenade_1st.RPG40' // TODO: there is no specularity mask for this weapon
+    DisplayFOV=80.0
 
     GroupOffset=4
 }

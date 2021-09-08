@@ -11,7 +11,7 @@ class DH_RPG40GrenadeProjectile extends DHThrowableExplosiveProjectile;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_RPG40Grenade_stc.Weapon.RPG40Grenade'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG40'
 
     // Impact
     bExplodeOnImpact=true
@@ -20,7 +20,7 @@ defaultproperties
 
     // Damage
     Damage=760.0 // 760 grams of TNT
-    DamageRadius=700.0
+    DamageRadius=780.0
 
     MyDamageType=class'DH_Weapons.DH_RPG40GrenadeDamType'
 
@@ -32,8 +32,21 @@ defaultproperties
     ExplodeMidAirEffectClass=class'GrenadeExplosion'
 
     // Sounds
-    ExplosionSound(0)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode01'
-    ExplosionSound(1)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode02'
-    ExplosionSound(2)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode03'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
+    //ExplosionSoundVolume=10.0
+
+    //EngineDamageMassThreshold=15.1
+    //EngineDamageRadius=220.0
+    //EngineDamageMax=800.0
+
+    //TreadDamageMassThreshold=10.0
+    //TreadDamageRadius=60.0
+    //TreadDamageMax=100.0
+
+    BlurTime=3.0
+    ShakeRotTime=1.0
+    ShakeScale=1.0
 }

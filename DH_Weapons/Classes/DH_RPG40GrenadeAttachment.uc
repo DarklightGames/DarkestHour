@@ -7,7 +7,7 @@ class DH_RPG40GrenadeAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_RPG40Grenade_3rd.RPG40Grenade_3rd'
-    Skins(0)=Texture'DH_RPG40Grenade_tex.Weapon.RPG40Grenade_world'
+    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.RPG40'
+    Skins(0)=Texture'DH_RPG43Grenade_1st.RPG40'
     MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.rpg40'
 }
