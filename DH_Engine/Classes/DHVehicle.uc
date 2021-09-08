@@ -1224,12 +1224,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     if (DHP != none)
     {
         DHP.QueueHint(40, true);
-
-        if (IsSpawnVehicle())
-        {
-            DHP.QueueHint(14, true);
-            DHP.QueueHint(16, true);
-        }
     }
 
     super(Vehicle).ClientKDriverEnter(PC);
