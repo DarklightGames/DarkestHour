@@ -247,13 +247,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if(FireSupportRequestClass.default.ArtilleryRange == AR_OffMap)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                switch (PC.GetTeamNum())
-                {
-                    case AXIS_TEAM_INDEX:
-                        AvailableCount = GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].Limit - GRI.ArtilleryTypeInfos[AXIS_TEAM_INDEX].UsedCount;
-                    case ALLIES_TEAM_INDEX:
-                        AvailableCount = GRI.ArtilleryTypeInfos[ALLIES_TEAM_INDEX].Limit - GRI.ArtilleryTypeInfos[ALLIES_TEAM_INDEX].UsedCount;
-                }
+                AvailableCount = GRI.ArtilleryTypeInfos[PC.GetTeamNum()].Limit - GRI.ArtilleryTypeInfos[PC.GetTeamNum()].UsedCount;
                 ORI.InfoText = "Available count: " $ AvailableCount;
             }
             else
