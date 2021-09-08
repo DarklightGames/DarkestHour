@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T3485CannonShellHE extends DHCannonShellHE;
@@ -13,12 +13,12 @@ defaultproperties
     BallisticCoefficient=1.55 //find correct BC
 
     //Damage
-    ImpactDamage=510
-    Damage=430.0
+    ImpactDamage=741
+    Damage=430.0   //741 gramms TNT
     DamageRadius=1300.0
     PenetrationMag=1000.0
-    HullFireChance=0.35
-    EngineFireChance=0.70
+    HullFireChance=1.0
+    EngineFireChance=1.0
 
     bDebugInImperial=false
 

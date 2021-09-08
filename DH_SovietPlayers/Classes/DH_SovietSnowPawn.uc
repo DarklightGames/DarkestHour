@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SovietSnowPawn extends DH_SovietPawn;
+class DH_SovietSnowPawn extends DH_SovietPawn_Balaklava;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_snowcamo'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_snowcamo'
     Skins(0)=Texture'Characters_tex.rus_uniforms.rus_snowcamo'
 }

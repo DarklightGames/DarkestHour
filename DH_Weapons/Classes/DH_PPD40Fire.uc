@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PPD40Fire extends DHFastAutoFire;
@@ -16,7 +16,7 @@ defaultproperties
     RecoilRate=0.05
     MaxVerticalRecoilAngle=270
     MaxHorizontalRecoilAngle=80
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=4.0,OutVal=0.8),(InVal=10.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=2.0,OutVal=0.6),(InVal=4.0,OutVal=0.85),(InVal=10.0,OutVal=1.1),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=14.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_loop'
@@ -26,4 +26,7 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)
+
+    FireIronLastAnim="iron_idle_empty"
+    FireLastAnim="shoot_last"
 }

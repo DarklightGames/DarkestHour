@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T60Tank extends DHArmoredVehicle;
@@ -63,9 +63,15 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-    Health=375
-    HealthMax=375.0
-    EngineHealth=200
+    // pros: 20mm ammo is very unlikely to explode
+    // cons: 2 men crew; petrol fuel
+    Health=300
+    HealthMax=300.0
+    AmmoIgnitionProbability=0.2  // 0.75 default
+    TurretDetonationThreshold=5000.0 // increased from 1750
+    EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=-90.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(1)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=13.0,Y=-25.0,Z=-5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=13.0,Y=25.0,Z=-5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -114,8 +120,8 @@ defaultproperties
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.T60_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.T60_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.T60_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.T60_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.35
     VehicleHudTreadsPosX(1)=0.66
@@ -131,7 +137,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.8
     VehicleHudOccupantsX(4)=0.65
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.t60'
 
     // Visible wheels
     // Wheel bones for animation

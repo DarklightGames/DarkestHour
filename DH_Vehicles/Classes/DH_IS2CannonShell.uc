@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_IS2CannonShell extends DHSovietCannonShell;
@@ -13,8 +13,9 @@ defaultproperties
     BallisticCoefficient=2.3
 
     //Damage
-    ImpactDamage=1800
-    HullFireChance=0.55
+    ImpactDamage=1800  //156 gramms TNT filler, extreme kinetic energy
+    Damage=600 //going to treat this like a medium HE shell when it impacts the ground
+    HullFireChance=1.0 //extremely powerful shell, anything that gets penetrated dies or gets severely crippled
     EngineFireChance=1.0
 
     //Effects

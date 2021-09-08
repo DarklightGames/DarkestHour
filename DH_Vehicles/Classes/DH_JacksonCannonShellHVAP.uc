@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_JacksonCannonShellHVAP extends DHCannonShellHVAP;
@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.55 // Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=525
+    ImpactDamage=555
     HullFireChance=0.38
-    EngineFireChance=0.73
+    EngineFireChance=0.7
 
     //Penetration
     DHPenetrationTable(0)=30.6

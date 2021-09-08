@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_StuH42Destroyer extends DH_Stug3GDestroyer;
@@ -18,4 +18,12 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.stuh42_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.stuh42_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stuh42'
+	
+    // Damage
+	// cons: petrol fuel; 105mm ammo is more likely to explode
+	// 4 men crew
+	AmmoIgnitionProbability=0.88  // 0.75 default
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_45mmM1937GunCannonShellHE extends DHCannonShellHE;
@@ -13,13 +13,13 @@ defaultproperties
     BallisticCoefficient=0.6 // TODO: try to find an accurate BC (this is from AHZ)
 
     //Damage
-    ImpactDamage=225
+    ImpactDamage=425
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    Damage=190.0
-    DamageRadius=600.0
+    Damage=190.0  //118 gramms TNT
+    DamageRadius=590.0
     MyDamageType=Class'DH_Engine.DHShellHE50mmATDamageType'
-    HullFireChance=0.20
-    EngineFireChance=0.43
+    HullFireChance=0.50
+    EngineFireChance=0.5
 
     bDebugInImperial=false
 
@@ -33,10 +33,6 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-
-    //Sound
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration same as Bofors 40mm HE, slightly better than US 37mm HE

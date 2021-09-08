@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_RPG43GrenadeProjectile extends DHThrowableHEATProjectile;
@@ -21,11 +21,11 @@ defaultproperties
     MaxVerticalAOIForTopArmor=33.0
 
     // Armour penetration
-    DHPenetrationTable(0)=7.5
-    DHPenetrationTable(1)=7.5
-    DHPenetrationTable(2)=7.5
-    DHPenetrationTable(3)=7.5
-    DHPenetrationTable(4)=7.5
+    DHPenetrationTable(0)=7.6  //7.5, but set to 7.6 so it will penetrate 75 mm with slight angle imperfection
+    DHPenetrationTable(1)=7.6
+    DHPenetrationTable(2)=7.6
+    DHPenetrationTable(3)=7.6
+    DHPenetrationTable(4)=7.6
     DHPenetrationTable(5)=7.5
     DHPenetrationTable(6)=7.5
     DHPenetrationTable(7)=7.5
@@ -34,9 +34,10 @@ defaultproperties
     DHPenetrationTable(10)=7.5
 
     // Damage
-    ImpactDamage=200
-    Damage=400.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
-    DamageRadius=600.0
+    ImpactDamage=300
+    Damage=300.0  
+    DamageRadius=700.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
+    EngineFireChance=0.7  //weaker HEAT round
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
@@ -55,14 +56,14 @@ defaultproperties
 
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode01'
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     VehicleDeflectSound=Sound'Inf_Weapons_Foley.grenadeland'
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     DirtHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     RockHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WoodHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode01'
-    ExplosionSound(1)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode02'
-    ExplosionSound(2)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode03'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_50CalDamType extends DHLargeCaliberDamageType
@@ -9,9 +9,9 @@ class DH_50CalDamType extends DHLargeCaliberDamageType
 defaultproperties
 {
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
-    TankDamageModifier=0.1    // 0.15 in 234/1, 1.0 in PTRD
-    APCDamageModifier=0.1     // 0.35 in 234/1, 0.5 in PTRD
-    VehicleDamageModifier=0.15 // 0.75 in 234/1, 0.35 in PTRD, small arms veh damage are default 0.05
+    TankDamageModifier=0.2    
+    APCDamageModifier=0.3     
+    VehicleDamageModifier=0.4
     TreadDamageModifier=0.25  // 0.5 in 234/1, 1.0 in PTRD
     WeaponClass=class'DH_Weapons.DH_30calWeapon' // 50 cal is vehicle only & doesn't have a WeaponClass in DH_Weapons - never mind, just use dummy class & 50 cal specific death strings
     DeathString="%o was killed by %k's .50 cal machine gun."

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MP41RWeapon extends DHFastAutoWeapon;
@@ -37,7 +37,7 @@ simulated function bool StartFire(int Mode)
 defaultproperties
 {
     SwayModifyFactor=0.75 // -0.5
-    ItemName="MP-41(r)"
+    ItemName="Maschinenpistole 41(r)"
 
     FireModeClass(0)=class'DH_Weapons.DH_MP41RFire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41RMeleeFire'
@@ -52,16 +52,21 @@ defaultproperties
     Skins(1)=Texture'Weapons1st_tex.Arms.hands'
     Skins(2)=Shader'Weapons1st_tex.SMG.MP40_s'
     //Skins(3)=shader'Weapons1st_tex.SMG.PPSH41_S'
-    handnum=1
-    sleevenum=0
+    HandNum=1
+    SleeveNum=0
 
-    IronSightDisplayFOV=60
+    IronSightDisplayFOV=65
+    DisplayFOV=82
 
     bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+    
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
@@ -79,6 +84,6 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
-    MagEmptyReloadAnim="reload_empty_mp41r"
-    MagPartialReloadAnim="reload_half_mp41r"
+    MagEmptyReloadAnims(0)="reload_empty_mp41r"
+    MagPartialReloadAnims(0)="reload_half_mp41r"
 }

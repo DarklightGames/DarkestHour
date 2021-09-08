@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -27,7 +27,9 @@ var     private int     TeamIndex;       // which team this spawn point belongs 
 var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
 var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
 var()   bool            bMainSpawn;      // is a main spawn for gametype: Advance
-var     string          SpawnPointStyle; // style name to use for spawnpoints (main spawns require an override in GetMapStyleName())
+var()   bool            bAirborneSpawn;  // the spawn is located on a plane or in the air
+
+var     string          SpawnPointStyle; // style name to use for spawnpoints (can be overriden in GetMapStyleName())
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
@@ -360,10 +362,13 @@ simulated function string GetMapStyleName()
     {
         return "DHMainSpawnButtonStyle";
     }
-    else
+
+    if (bAirborneSpawn)
     {
-        return SpawnPointStyle;
+        return "DHParatroopersButtonStyle";
     }
+
+    return SpawnPointStyle;
 }
 
 // Override to change the text displayed overtop of the spawn point icon on the map.

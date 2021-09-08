@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_JagdpantherCannon extends DHVehicleCannon;
@@ -15,7 +15,7 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Cannon armour (mantlet)
-    GunMantletArmorFactor=20.0
+    GunMantletArmorFactor=15.0
     GunMantletSlope=35.0
 
     // Cannon movement

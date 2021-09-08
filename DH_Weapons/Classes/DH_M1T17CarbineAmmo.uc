@@ -1,0 +1,13 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2021
+//==============================================================================
+
+class DH_M1T17CarbineAmmo extends DHAmmunition;
+
+defaultproperties
+{
+    MaxAmmo=16
+    InitialAmount=15
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Carbine_ammo'
+}

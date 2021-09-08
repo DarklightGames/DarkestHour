@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_GAZ67Vehicle extends DHVehicle;
@@ -94,9 +94,9 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
+    IdleSound=sound'Vehicle_Engines.BA64.ba64_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.BA64.ba64_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.BA64.ba64_engine_stop'
     RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects

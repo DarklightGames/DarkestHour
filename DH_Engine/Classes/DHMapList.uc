@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHMapList extends MapList
@@ -127,7 +127,7 @@ defaultproperties
     OfficialMaps(54)="DH-Ogledow_Clash.rom"
     OfficialMaps(55)="DH-Rabenheck_Advance.rom"
     OfficialMaps(56)="DH-San_Valentino_Advance.rom"
-    OfficialMaps(57)="DH-Ten_Aaard_Clash.rom"
+    OfficialMaps(57)="DH-Ten_Aard_Clash.rom"
     OfficialMaps(58)="DH-Valko_Advance.rom"
     OfficialMaps(59)="DH-Danzig_Push.rom"
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T60CannonShell extends DHSovietCannonShell;
@@ -20,7 +20,7 @@ defaultproperties
     HullFireChance=0.15
     EngineFireChance=0.35
 
-    Damage=50 //no explosive filler in 20mm BZT -- this damage is just to simulate some splinters flying
+    Damage=50 //no explosive filler in 20mm BZT -- this damage is just to simulate some splinters flying (it did have some incendiary filler)
     DamageRadius=120
 
     //Effects
@@ -48,7 +48,7 @@ defaultproperties
     WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
 
     //Penetration
-    DHPenetrationTable(0)=2.5 //100m
+    DHPenetrationTable(0)=2.99 //100m; increased so that it can penetrate 35mm point blank (which it should be able to according to info that i found)
     DHPenetrationTable(1)=2.1 //250
     DHPenetrationTable(2)=1.7 //500
     DHPenetrationTable(3)=1.3 //750

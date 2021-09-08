@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ZiS2CannonShell extends DHSovietCannonShell;
@@ -14,24 +14,23 @@ defaultproperties
     BallisticCoefficient=1.14 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=370
+    ImpactDamage=460  //14 gramms TNT filler
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.31
-    EngineFireChance=0.58
-    //^slightly better than AT57, assumed because higher speed and small TNT filler (14 gramms)
+    HullFireChance=0.35
+    EngineFireChance=0.62
 
     //Penetration
-    DHPenetrationTable(0)=11.7  // 100m (all same as T34/76)
-    DHPenetrationTable(1)=11.0  // 250m
-    DHPenetrationTable(2)=10.3  // 500m
-    DHPenetrationTable(3)=9.8
-    DHPenetrationTable(4)=9.1  // 1000m
-    DHPenetrationTable(5)=8.5
-    DHPenetrationTable(6)=7.9  // 1500m
-    DHPenetrationTable(7)=7.4
-    DHPenetrationTable(8)=6.9  // 2000m
-    DHPenetrationTable(9)=5.5
-    DHPenetrationTable(10)=4.2 // 3000m
+    DHPenetrationTable(0)=12.1  // 100m  (from Bird & Livingstone, estimate between rolled homogenous and face hardened armor)
+    DHPenetrationTable(1)=11.6  // 250m
+    DHPenetrationTable(2)=10.9  // 500m
+    DHPenetrationTable(3)=10.3
+    DHPenetrationTable(4)=9.5  // 1000m
+    DHPenetrationTable(5)=8.8
+    DHPenetrationTable(6)=8.1  // 1500m
+    DHPenetrationTable(7)=7.7
+    DHPenetrationTable(8)=7.1  // 2000m
+    DHPenetrationTable(9)=5.7
+    DHPenetrationTable(10)=4.9 // 3000m
 
     //Gunsight adjustments
     //these are commented out because i dont know how to do these, should be done in the future

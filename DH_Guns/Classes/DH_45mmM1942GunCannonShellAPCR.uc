@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_45mmM1942GunCannonShellAPCR extends DH_45mmM1937GunCannonShellAPCR;
@@ -11,7 +11,9 @@ defaultproperties
     MaxSpeed=52506.0
 
     //Damage
-    ImpactDamage=280 // just a tungsten slug; no explosive filler
+    ImpactDamage=240 // just a tungsten slug; no explosive filler
+    Damage=790.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=100.0
 
     //Penetration
     DHPenetrationTable(0)=10.8  // 100m // TODO: confirm penetration

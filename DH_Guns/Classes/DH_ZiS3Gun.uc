@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ZiS3Gun extends DHATGun;
@@ -23,7 +23,7 @@ defaultproperties
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=16)
     bCanBeRotated=true
-    PlayersNeededToRotate=2
+    PlayersNeededToRotate=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

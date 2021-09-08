@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_USAB101stPawn extends DH_AmericanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_Airborne'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_Airborne'
     Skins(1)=Texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
 
     BodySkins(0)=Texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'

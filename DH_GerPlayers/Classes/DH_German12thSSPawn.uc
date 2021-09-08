@@ -1,16 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_German12thSSPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=Texture'DHGermanCharactersTex.WSS.12SS_1'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 
-    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.12SS_1'
-    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.12SS_2'
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.12SS_3'
-    BodySkins(3)=Texture'DHGermanCharactersTex.WSS.12SS_4'
+    Skins(2)=Texture'DHGermanCharactersTex.WSS.12SS_1'  //shirt
+
+    BodySkins(0)=Texture'DHGermanCharactersTex.WSS.12SS_1' //pants
+    BodySkins(1)=Texture'DHGermanCharactersTex.WSS.SS_2'
+    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' //heer pants
+
 }

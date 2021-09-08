@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_45mmM1942GunCannonShell extends DH_45mmM1937GunCannonShell;
@@ -11,7 +11,9 @@ defaultproperties
     MaxSpeed=52506.0
 
     //Damage
-    ImpactDamage=320
+    ImpactDamage=315  //30 gramms TNT filler
+    Damage=700.0 //"regular" damage is only changed so that AT guns are one-shot killed reliably, so the radius is small
+    DamageRadius=150.0
 
     //Penetration
     DHPenetrationTable(0)=7.1  // 100m

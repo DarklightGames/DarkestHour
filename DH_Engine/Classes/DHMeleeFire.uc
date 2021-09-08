@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHMeleeFire extends DHWeaponFire
@@ -28,6 +28,10 @@ var     sound           GroundStabSound;    // sound of stabbing the ground with
 var     sound           GroundBashSound;    // sound of bashing the ground with the rifle butt
 var     sound           PlayerStabSound;    // sound of stabbing the player with the bayonet
 var     sound           PlayerBashSound;    // sound of bashing the player with the rifle butt
+
+var         name        BayoBackEmptyAnim;
+var         name        BayoStabEmptyAnim;
+var         name        BayoFinishEmptyAnim;
 
 // Modified to stop trying to make the weapon attachment play visual hit effects - they don't play & we don't want them anyway; it just creates pointless replication to all clients
 // Also to increase damage if striking a player from behind, & to generally optimised
@@ -320,7 +324,14 @@ function PlayPreFire()
     {
         if (Weapon.bBayonetMounted && Weapon.HasAnim(BayoBackAnim))
         {
-            Weapon.PlayAnim(BayoBackAnim, 1.0, TweenTime);
+            if (Weapon.AmmoAmount(0) == 0 && Weapon.HasAnim(BayoBackEmptyAnim))
+            {
+                Weapon.PlayAnim(BayoBackEmptyAnim, 1.0, TweenTime);
+            }
+            else
+            {
+                Weapon.PlayAnim(BayoBackAnim, 1.0, TweenTime);
+            }
         }
         else if (Weapon.AmmoAmount(0) < 1 && Weapon.HasAnim(BashBackEmptyAnim))
         {
@@ -341,7 +352,14 @@ function PlayFiring()
     {
         if (Weapon.bBayonetMounted)
         {
-            Anim = BayoStabAnim;
+            if (Weapon.AmmoAmount(0) == 0 && Weapon.HasAnim(BayoStabEmptyAnim))
+            {
+                Anim = BayoStabEmptyAnim;
+            }
+            else
+            {
+                Anim = BayoStabAnim;
+            }
         }
         else if (Weapon.AmmoAmount(0) < 1 && Weapon.HasAnim(BashEmptyAnim))
         {
@@ -389,19 +407,36 @@ function DoFireEffect()
 
 function PlayFireEnd()
 {
+    local name Anim;
+
     if (Weapon != none && Weapon.Mesh != none)
     {
-        if (Weapon.bBayonetMounted && Weapon.HasAnim(BayoFinishAnim))
+        if (Weapon.bBayonetMounted)
         {
-            Weapon.PlayAnim(BayoFinishAnim, FireEndAnimRate, TweenTime);
+            if (Weapon.AmmoAmount(0) == 0 && Weapon.HasAnim(BayoFinishEmptyAnim))
+            {
+                Anim = BayoFinishEmptyAnim;
+            }
+            else if (Weapon.HasAnim(BayoFinishAnim))
+            {
+                Anim = BayoFinishAnim;
+            }
         }
-        else if (Weapon.AmmoAmount(0) < 1 && Weapon.HasAnim(BashFinishEmptyAnim))
+        else
         {
-            Weapon.PlayAnim(BashFinishEmptyAnim, FireEndAnimRate, TweenTime);
+            if (Weapon.AmmoAmount(0) == 0 && Weapon.HasAnim(BashFinishEmptyAnim))
+            {
+                Anim = BashFinishEmptyAnim;
+            }
+            else if (Weapon.HasAnim(BashFinishAnim))
+            {
+                Anim = BashFinishAnim;
+            }
         }
-        else if (Weapon.HasAnim(BashFinishAnim))
+
+        if (Anim != '')
         {
-            Weapon.PlayAnim(BashFinishAnim, FireEndAnimRate, TweenTime);
+            Weapon.PlayAnim(Anim, FireEndAnimRate, TweenTime);
         }
     }
 }

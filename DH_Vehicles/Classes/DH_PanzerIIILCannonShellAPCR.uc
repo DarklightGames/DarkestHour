@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerIIILCannonShellAPCR extends DHGermanCannonShell;
@@ -16,10 +16,10 @@ defaultproperties
 
     //Damage
     bShatterProne=true
-    ImpactDamage=250
+    ImpactDamage=310
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
-    HullFireChance=0.22
-    EngineFireChance=0.45
+    HullFireChance=0.4
+    EngineFireChance=0.6
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

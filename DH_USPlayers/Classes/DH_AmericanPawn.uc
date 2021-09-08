@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_AmericanPawn extends DHPawn;
@@ -9,7 +9,7 @@ defaultproperties
 {
     Species=class'DH_USPlayers.DH_American'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI'
     Skins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=Texture'DHUSCharactersTex.GI.GI_1'
 

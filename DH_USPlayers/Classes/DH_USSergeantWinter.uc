@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_USSergeantWinter extends DHUSSergeantRoles;
@@ -17,4 +17,9 @@ defaultproperties
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    BareHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    CustomHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
 }

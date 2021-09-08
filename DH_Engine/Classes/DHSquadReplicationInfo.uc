@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSquadReplicationInfo extends ReplicationInfo;
@@ -41,6 +41,7 @@ var float                           RallyPointSquadmatePlacementRadiusInMeters;
 var int                             RallyPointInitialSpawnsMinimum;
 var float                           RallyPointInitialSpawnsMemberFactor;
 var float                           RallyPointInitialSpawnsDangerZoneFactor;
+var config  bool                    bAllowRallyPointsBehindEnemyLines;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private byte                    AlliesAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
@@ -118,6 +119,7 @@ enum ERallyPointPlacementErrorType
     ERROR_TooSoon/*=53*/,                               // PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(53, E.OptionalInt));
     ERROR_MissingSquadmate/*=47*/,                      // PC.ReceiveLocalizedMessage(SquadMessageClass, 47);
     ERROR_BadLocation/*=56*/,
+    ERROR_BehindEnemyLines/*=80*/,
 };
 
 struct RallyPointPlacementError
@@ -1898,6 +1900,13 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     else
     {
         Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+
+        if (!bAllowRallyPointsBehindEnemyLines &&
+            Result.bIsInDangerZone)
+        {
+            Result.Error.Type = ERROR_BehindEnemyLines;
+            return Result;
+        }
     }
 
     // Must be on foot.
@@ -2111,6 +2120,9 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
                 break;
             case ERROR_BadLocation:
                 PC.ReceiveLocalizedMessage(SquadMessageClass, 56);
+                break;
+            case ERROR_BehindEnemyLines:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, 80);
                 break;
         }
 
@@ -2905,6 +2917,7 @@ defaultproperties
 {
     AlliesSquadSize=10
     AxisSquadSize=8
+    bAllowRallyPointsBehindEnemyLines=false
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
     RallyPointRadiusInMeters=100.0

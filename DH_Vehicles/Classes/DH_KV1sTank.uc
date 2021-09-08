@@ -1,16 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_KV1sTank extends DHArmoredVehicle;
+class DH_KV1sTank extends DHArmoredVehicle;  //to do: is the standart texture really accurate? It's a light blue/grey color, i never found any images of such KV-1S
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="KV-1S"
     VehicleTeam=1
-    VehicleMass=13.5
+    VehicleMass=15.2  //should be above 15.1 (or whatever is set in gebalte ladung) so its resistant to gebalte ladung, due to relatively thick top armor (30-40mm)
     ReinforcementCost=5
 
     // Hull mesh
@@ -38,8 +38,11 @@ defaultproperties
     DrivePos=(X=10.0,Y=0.0,Z=1.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
     UnbuttonedPositionIndex=1 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
+
+    // Driver overlay
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
-    HUDOverlayFOV=85.0
+    HUDOverlayOffset=(X=0,Y=0,Z=0)
+    HUDOverlayFOV=85
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.0,Slope=-25.0,MaxRelativeHeight=6.5,LocationName="lower")
@@ -63,9 +66,19 @@ defaultproperties
     GearRatios(4)=0.7
     TransRatio=0.08
 
+    EngineRestartFailChance=0.1  //later improved and lightened design
+
     // Damage
-    Health=600
-    HealthMax=600.0
+    // Compared to KV-1:
+    // pros: later, more polished design from 1942 that eliminated some of the early reliability problems.
+    Health=565
+    HealthMax=565.0
+    EngineHealth=300 // better than on KV-1/KV-1E because its a "lightweight" modification with less stress on engine and transmission
+
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
+      // more reliable engine and transmission due to lower weight and later, more polished design
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -121,7 +134,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.84
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1s'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

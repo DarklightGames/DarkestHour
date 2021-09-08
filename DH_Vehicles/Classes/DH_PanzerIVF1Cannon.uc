@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerIVF1Cannon extends DHVehicleCannon;
@@ -57,9 +57,9 @@ defaultproperties
     MaxPrimaryAmmo=40
     MaxSecondaryAmmo=15
     MaxTertiaryAmmo=25
-    Spread=0.00135
+    Spread=0.00125
     SecondarySpread=0.0039
-    TertiarySpread=0.04
+    TertiarySpread=0.00135
 
    // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'

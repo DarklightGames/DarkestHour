@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -20,6 +20,10 @@ var     bool    bHasBeenPossessed;        // fixes players getting new ammunitio
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
+
+// Common Sounds
+// ** We are overwriting ROPawn here to expand for our custom surface types **
+var(Sounds) sound   DHSoundFootsteps[50]; // Indexed by ESurfaceTypes (sorry about the literal).
 
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
@@ -118,6 +122,9 @@ var     class<DamageType>   FireDamageClass;               // the damage type th
 var     int                 BurnTimeLeft;                  // number of seconds remaining for a corpse to burn
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
+
+// Gore
+var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
 
 // Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
@@ -304,6 +311,26 @@ simulated function PostNetReceive()
     {
         bNetNotify = false;
     }
+}
+
+simulated event SetHeadScale(float NewScale)
+{
+    HeadScale = NewScale;
+    SetBoneScale(4,HeadScale,'head');
+
+    if (Headgear != none)
+    {
+        Headgear.SetDrawScale(HeadScale);
+    }
+
+    // Increase scale of main collision hitbox (whole body hitbox used first to make sure you hit a target)
+    // We shouldn't increase this on the same scale as the head as the main collision hitbox will be way too large
+    HitPoints[0].PointRadius = 60.0 * HeadScale;
+    HitPoints[0].PointHeight = 75.0 * HeadScale;
+
+    // Adjust scale of head hitbox
+    HitPoints[1].PointRadius = 6.5 * HeadScale;
+    HitPoints[1].PointHeight = 8.0 * HeadScale;
 }
 
 // Modified so if player is on fire we cause fire damage every second, & force him to drop any weapon he in carrying in his hands
@@ -1339,6 +1366,14 @@ simulated function ProcessHitFX()
                             bRightArmGibbed = true;
                         }
                         break;
+
+                    case 'head':
+                        if (!bHeadSevered)
+                        {
+                            bHeadSevered = true;
+                            HideBone('head'); //just literally blow it off
+                        }
+                        break;
                 }
 
                 if (SeveredLimbClass != none)
@@ -1464,7 +1499,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     {
         if (DamageType.default.HumanObliterationThreshhold != 1000001)
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 3.0, false, 100.0);
         }
 
         HitDamageType = DamageType;
@@ -3381,6 +3416,11 @@ function CheckGiveSmoke()
                     case NATION_USSR:
                         SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
                         ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
+                        break;
+
+                    case NATION_Poland:
+                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
+                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
                         break;
 
                     default:
@@ -6101,7 +6141,7 @@ simulated function FootStepping(int Side)
     }
 
     // Play footstep sound, based on surface type & volume/radius modifiers
-    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
+    PlaySound(DHSoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
 }
 
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
@@ -7349,7 +7389,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(float X, float Y, float Z)
+simulated exec function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7383,12 +7423,44 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
-simulated exec function DebugGiveWeapon(string ClassName)
+simulated exec function Give(string WeaponName)
 {
-    if (IsDebugModeAllowed())
+    local string ClassName;
+    local int i;
+
+    if (!IsDebugModeAllowed())
     {
-        GiveWeapon(ClassName);
+        return;
     }
+
+    if (WeaponName ~= "ALL")
+    {
+        for (i = 0; i < class'DHWeaponRegistry'.default.Records.Length; ++i)
+        {
+            if (class'DHWeaponRegistry'.default.Records[i].bShouldExcludeFromGiveAll)
+            {
+                continue;
+            }
+
+            GiveWeapon(class'DHWeaponRegistry'.default.Records[i].ClassName);
+        }
+
+        return;
+    }
+
+    ClassName = class'DHWeaponRegistry'.static.GetClassNameFromWeaponName(WeaponName);
+
+    if (ClassName == "")
+    {
+        ClassName = WeaponName;
+    }
+
+    GiveWeapon(ClassName);
+}
+
+exec function BigHead(float V)
+{
+    SetHeadScale(V);
 }
 
 defaultproperties
@@ -7434,6 +7506,34 @@ defaultproperties
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
 
+    //Footstepping - add additional slots in the array for our new material surface types
+    DHSoundFootsteps(0)=Sound'Inf_Player.FootStepDirt'
+    DHSoundFootsteps(1)=Sound'Inf_Player.FootstepGravel' // Rock
+    DHSoundFootsteps(2)=Sound'Inf_Player.FootStepDirt'
+    DHSoundFootsteps(3)=Sound'Inf_Player.FootstepMetal' // Metal
+    DHSoundFootsteps(4)=Sound'Inf_Player.FootstepWoodenfloor' // Wood
+    DHSoundFootsteps(5)=Sound'Inf_Player.FootstepGrass' // Plant
+    DHSoundFootsteps(6)=Sound'Inf_Player.FootStepDirt' // Flesh
+    DHSoundFootsteps(7)=Sound'Inf_Player.FootstepSnowRough' // Ice
+    DHSoundFootsteps(8)=Sound'Inf_Player.FootstepSnowHard'
+    DHSoundFootsteps(9)=Sound'Inf_Player.FootstepWaterShallow'
+    DHSoundFootsteps(10)=Sound'Inf_Player.FootstepGravel' // Glass- Replaceme
+    DHSoundFootsteps(11)=Sound'Inf_Player.FootstepGravel' // Gravel
+    DHSoundFootsteps(12)=Sound'Inf_Player.FootstepAsphalt' // Concrete
+    DHSoundFootsteps(13)=Sound'Inf_Player.FootstepWoodenfloor' // HollowWood
+    DHSoundFootsteps(14)=Sound'Inf_Player.FootstepMud' // Mud
+    DHSoundFootsteps(15)=Sound'Inf_Player.FootstepMetal' // MetalArmor
+    DHSoundFootsteps(16)=Sound'Inf_Player.FootstepAsphalt_P' // Paper
+    DHSoundFootsteps(17)=Sound'Inf_Player.FootStepDirt' // Cloth
+    DHSoundFootsteps(18)=Sound'Inf_Player.FootStepDirt' // Rubber
+    DHSoundFootsteps(19)=Sound'Inf_Player.FootStepDirt' // Crap
+
+    DHSoundFootsteps(20)=none // this is a test material
+    DHSoundFootsteps(21)=Sound'Inf_Player.FootstepSnowRough' // Sand
+    DHSoundFootsteps(22)=Sound'Inf_Player.FootStepDirt' //Sand Bags
+    DHSoundFootsteps(23)=Sound'Inf_Player.FootstepAsphalt' // Brick
+    DHSoundFootsteps(24)=Sound'Inf_Player.FootstepGrass' // Hedgerow
+
     // Burning player
     FireDamage=10
     FireDamageClass=class'DH_Engine.DHBurningDamageType'
@@ -7444,7 +7544,7 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
+    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
     ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6

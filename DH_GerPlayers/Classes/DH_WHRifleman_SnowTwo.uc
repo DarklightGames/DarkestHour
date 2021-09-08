@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WHRifleman_SnowTwo extends DHGERiflemanRoles;
@@ -18,4 +18,9 @@ defaultproperties
     HeadgearProbabilities(1)=0.25
     HeadgearProbabilities(2)=0.3
     HeadgearProbabilities(3)=0.05
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

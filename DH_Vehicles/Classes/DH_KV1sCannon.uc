@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_KV1sCannon extends DH_T3476Cannon; // different turret but shares much in common with T34/76 cannon class
@@ -19,6 +19,7 @@ defaultproperties
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=7.5
+    FrontArmorSlope=5.0  // to do: spherical shape that has different slope depending on elevation
     LeftArmorSlope=15.0
     RightArmorSlope=15.0
     RearArmorSlope=15.0
@@ -44,6 +45,9 @@ defaultproperties
     InitialSecondaryAmmo=30
     MaxPrimaryAmmo=54
     MaxSecondaryAmmo=60
+
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellSolid'
+    nProjectileDescriptions(0)="BR-350BSP" // 1942 solid shell, after A and before the "proper" B
 
     // Weapon fire
     WeaponFireOffset=69.6

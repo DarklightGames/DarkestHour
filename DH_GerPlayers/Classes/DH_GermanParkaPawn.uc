@@ -1,14 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GermanParkaPawn extends DH_GermanPawn;
+class DH_GermanParkaPawn extends DH_GermanPawn_Gloves;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Parka'
-    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Parka_mix'
+
+    Skins(2)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1' //shirt
+    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1' //pants
+
+    //BodySkins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam4'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam1'
+    //BodySkins(2)=Texture'DHGermanCharactersTex.Heer.HeerSmock1' //green
+
     Skins(1)=Texture'Characters_tex.ger_heads.ger_face01'
 
     bReversedSkinsSlots=false

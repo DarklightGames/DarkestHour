@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
@@ -15,13 +15,13 @@ defaultproperties
     BallisticCoefficient=0.68 //G1 figure based on JBM calculation for US M95 20mm AP
 
     //Damage
-    ImpactDamage=125
+    ImpactDamage=200
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=125.0 //10.2 gr of TNT -- 2m kill radius
-    DamageRadius=600
+    Damage=75.0 //10.2 gr of TNT 
+    DamageRadius=250
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
-    HullFireChance=0.10
-    EngineFireChance=0.30
+    HullFireChance=0.25
+    EngineFireChance=0.35
 
     //Effects
     DrawScale=0.75

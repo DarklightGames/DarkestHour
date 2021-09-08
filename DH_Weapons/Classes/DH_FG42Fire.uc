@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_FG42Fire extends DHAutomaticFire; // TODO: could maybe use DHFastAutoFire/DHHighROFWeaponAttachment as fires at 750 rpm (higher than PPs-43 SMG's 700 rpm, which does use fast auto)
@@ -10,11 +10,13 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_FG42Bullet'
     AmmoClass=class'DH_Weapons.DH_FG42Ammo'
     FireRate=0.08
+    bHasSemiAutoFireRate=true
+    SemiAutoFireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
     // Spread
     HipSpreadModifier=5.0
-    Spread=85.0
+    Spread=65.0
 
     // Recoil
     RecoilRate=0.06

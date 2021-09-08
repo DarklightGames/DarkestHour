@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_45mmM1937GunCannon extends DHATGunCannon;
@@ -18,29 +18,26 @@ defaultproperties
     MaxNegativeYaw=-5461
     YawStartConstraint=-6000.0
     YawEndConstraint=6000.0
-    CustomPitchUpLimit=2366 // +13/-5 (should be +25 degrees, but any higher & barrel clips through gun shield)
+    CustomPitchUpLimit=2766 // +16/-5 (should be +25 degrees, but any higher & barrel clips through gun shield)
     CustomPitchDownLimit=64200
 
     // Cannon ammo
     ProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellHE'
-    TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'
+    //TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'
 
     ProjectileDescriptions(0)="APBC"
-    ProjectileDescriptions(2)="APCR"
 
     nProjectileDescriptions(0)="BR-240"
     nProjectileDescriptions(1)="O-240"
-    nProjectileDescriptions(2)="BR-240P"
-
 
     InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=4
+    InitialSecondaryAmmo=20
+
     MaxPrimaryAmmo=60
     MaxSecondaryAmmo=30
-    MaxTertiaryAmmo=6
+    //MaxTertiaryAmmo=6
     SecondarySpread=0.002
 
     // Weapon fire
@@ -48,13 +45,13 @@ defaultproperties
     EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AT_Guns.47mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Panzer_III_reload_04')
+    CannonFireSound(0)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire01'
+    CannonFireSound(1)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire02'
+    CannonFireSound(2)=SoundGroup'DH_CC_Vehicle_Weapons.45mm.45mmAT_fire03'
+    ReloadStages(0)=(Sound=none) //~2.8 seconds reload for a lower caliber AT gun
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
     // Cannon range settings
     RangeSettings(0)=0

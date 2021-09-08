@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz105Transport extends DHVehicle;
@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
 simulated function SpawnVehicleAttachments()
 {
-    VehicleAttachments[0].Skin = Skins[1];
+    VehicleAttachments[0].Skins[0] = Skins[1];
 
     super.SpawnVehicleAttachments();
 }
@@ -73,8 +73,11 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=8.0
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
+    //AmmoIgnitionProbability=0.2  // 0.75 default; 20mm ammo is unlikely to explode
+    //TurretDetonationThreshold=5000.0 // increased from 1750
+    //above properties dont compile
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine

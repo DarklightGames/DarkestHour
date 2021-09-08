@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerIVF1CannonShellHEAT extends DHCannonShellHEAT;
@@ -13,26 +13,26 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=650
-    Damage=450.0
-    DamageRadius=200.0
+    ImpactDamage=330   //~~600 gramms TNT, assuming (couldnt find anything)
+    Damage=300.0
+    DamageRadius=700.0
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     //Penetration
-    DHPenetrationTable(0)=8.0
-    DHPenetrationTable(1)=8.0
-    DHPenetrationTable(2)=8.0
-    DHPenetrationTable(3)=8.0
-    DHPenetrationTable(4)=8.0
-    DHPenetrationTable(5)=8.0
-    DHPenetrationTable(6)=8.0
-    DHPenetrationTable(7)=8.0
-    DHPenetrationTable(8)=8.0
-    DHPenetrationTable(9)=8.0
-    DHPenetrationTable(10)=8.0
+    DHPenetrationTable(0)=8.7
+    DHPenetrationTable(1)=8.7
+    DHPenetrationTable(2)=8.7
+    DHPenetrationTable(3)=8.7
+    DHPenetrationTable(4)=8.7
+    DHPenetrationTable(5)=8.7
+    DHPenetrationTable(6)=8.7
+    DHPenetrationTable(7)=8.7
+    DHPenetrationTable(8)=8.7
+    DHPenetrationTable(9)=8.7
+    DHPenetrationTable(10)=8.7
 
     bDebugInImperial=false
 

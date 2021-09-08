@@ -1,7 +1,8 @@
-//-----------------------------------------------------------
+//==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
-//-----------------------------------------------------------
+// Darklight Games (c) 2008-2021
+//==============================================================================
+
 class DHDangerZone extends Object
     abstract;
 
@@ -27,6 +28,11 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
     local int AxisCount, AlliedCount, NeutralCount, TeamModifier, i;
     local vector V1, V2;
 
+    if (GRI == none)
+    {
+        return 0.0;
+    }
+
     V2.X = PointerX;
     V2.Y = PointerY;
 
@@ -39,7 +45,8 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 
     for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
-        if (GRI.DHObjectives[i] == none)
+        if (GRI.DHObjectives[i] == none ||
+            GRI.DHObjectives[i].BaseInfluenceModifier <= 0.0)
         {
             continue;
         }
@@ -51,24 +58,36 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(NEUTRAL_TEAM_INDEX))
         {
-            ++NeutralCount;
-            NeutralIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].NeutralInfluenceModifier);
+            if (GRI.DHObjectives[i].NeutralInfluenceModifier > 0.0)
+            {
+                ++NeutralCount;
+                NeutralIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].NeutralInfluenceModifier);
+            }
         }
         else if (GRI.DHObjectives[i].IsOwnedByTeam(AXIS_TEAM_INDEX))
         {
-            ++AxisCount;
-            AxisIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AxisInfluenceModifier);
+            if (GRI.DHObjectives[i].AxisInfluenceModifier > 0.0)
+            {
+                ++AxisCount;
+                AxisIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AxisInfluenceModifier);
+            }
         }
         else
         {
-            ++AlliedCount;
-            AlliedIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AlliesInfluenceModifier);
+            if (GRI.DHObjectives[i].AlliesInfluenceModifier > 0.0)
+            {
+                ++AlliedCount;
+                AlliedIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AlliesInfluenceModifier);
+            }
         }
     }
 
     for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
     {
-        if (GRI.SpawnPoints[i] == none || !GRI.SpawnPoints[i].bMainSpawn || !GRI.SpawnPoints[i].IsActive())
+        if (GRI.SpawnPoints[i] == none ||
+            !GRI.SpawnPoints[i].bMainSpawn ||
+            !GRI.SpawnPoints[i].IsActive() ||
+            GRI.SpawnPoints[i].BaseInfluenceModifier <= 0.0)
         {
             continue;
         }
@@ -100,7 +119,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 
 static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float PointerY, byte TeamIndex)
 {
-    if (!GRI.IsDangerZoneEnabled())
+    if (GRI == none || !GRI.IsDangerZoneEnabled())
     {
         return false;
     }
@@ -205,6 +224,11 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
     local array<vector> Segments, Contour;
     local array<InterpCurve> LineStringsX;
     local array<InterpCurve> LineStringsY;
+
+    if (GRI == none)
+    {
+        return Contour;
+    }
 
     Resolution = Clamp(Resolution, 2, 128);
     SubResolution = Max(2, SubResolution);

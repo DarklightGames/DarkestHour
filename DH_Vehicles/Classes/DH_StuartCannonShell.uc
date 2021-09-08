@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_StuartCannonShell extends DHCannonShell;
@@ -13,10 +13,12 @@ defaultproperties
     BallisticCoefficient=1.52 //Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=250
+    ImpactDamage=245  //solid shell
+    Damage=980.0 //"regular" damage is only changed so that AT guns can be killed more reliably, so the radius is very small
+    DamageRadius=70.0
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
-    HullFireChance=0.2
-    EngineFireChance=0.45
+    HullFireChance=0.17
+    EngineFireChance=0.3
 
     //Effects
     bShatterProne=true

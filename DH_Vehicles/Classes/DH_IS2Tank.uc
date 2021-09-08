@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_IS2Tank extends DHArmoredVehicle;
@@ -57,11 +57,21 @@ defaultproperties
 
     // Movement
     GearRatios(4)=0.72
+    GearRatios(0)=-0.35
     TransRatio=0.09
 
     // Damage
-    Health=650 // was 800 but adjusted to more in line with similar DH vehicles
-    HealthMax=650.0
+	// pros: Diesel fuel
+	// cons: high caliber ammorack is more likely to detonate; fuel tanks in the crew compartment
+	// 4 men crew
+    Health=485
+    HealthMax=485.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.9  // 0.75 default
+    TurretDetonationThreshold=1400.0 // reduced from 1750
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

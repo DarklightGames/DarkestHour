@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Bofors40mmCannonShellHE extends DHCannonShellHE;
@@ -13,13 +13,13 @@ defaultproperties
     BallisticCoefficient=0.984 //TODO: pls, check
 
     //Damage
-    ImpactDamage=200
+    ImpactDamage=300
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    Damage=165.0
-    DamageRadius=500.0
+    Damage=165.0   //~90 gramms TNT
+    DamageRadius=540.0
     MyDamageType=class'DH_Engine.DHShellHE37mmATDamageType'
-    HullFireChance=0.20
-    EngineFireChance=0.40
+    HullFireChance=0.50
+    EngineFireChance=0.50
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
@@ -34,8 +34,8 @@ defaultproperties
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
 
     //Sound
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
+    //VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    //VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'   <why would an explosive shell produce sound of bullet deflection?
 
     //Penetration
     DHPenetrationTable(0)=1.3 // penetration slightly better than US 37mm HE

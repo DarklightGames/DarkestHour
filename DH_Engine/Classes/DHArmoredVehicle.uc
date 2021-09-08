@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -1126,9 +1126,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
     local rotator ArmourSlopeRotator;
     local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
-    local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
+    local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio, ShatterChance;
     local int     i;
-    local string  HitSide, OppositeSide, DebugString1, DebugString2;
+    local string  HitSide, OppositeSide, DebugString1, DebugString2, DebugString3;
     local bool    bRearHit, bSideHit;
     local array<ArmorSection> HitSideArmorArray;
 
@@ -1305,7 +1305,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
 
     // Check & record whether or not we penetrated the vehicle (including check if shattered on the armor)
-    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
+    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && CheckIfShatters(P, PenetrationRatio, OverMatchFactor, ShatterChance);
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set variables used in TakeDamage()
@@ -1319,16 +1319,19 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Debugging options
     if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
     {
-        DebugString1 = Caps("Hit hull" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated) $ ", hit location angle ="
+        DebugString1 = Caps("Hit hull" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated && !P.bRoundShattered) $ ", hit location angle ="
             @ int(Round(HitLocationAngle)) @ "deg, armor =" @ int(Round(ArmorThickness * 10.0)) $ "mm @" @ int(Round(ArmorSlope)) @ "deg";
 
         DebugString2 = "Shot penetration =" @ int(Round(MaxArmorPenetration * 10.0)) $ "mm, effective armor =" @ int(Round(EffectiveArmorThickness * 10.0))
             $ "mm, shot AOI =" @ int(Round(AngleOfIncidence)) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
 
+        DebugString3 = "Penetration radio =" @ PenetrationRatio $ ", shatter chance =" @ (ShatterChance * 100) $ "%, shattered =" @ Locs(P.bRoundShattered);
+
         if (bLogDebugPenetration)
         {
             Log(DebugString1);
             Log(DebugString2);
+            Log(DebugString3);
             Log("------------------------------------------------------------------------------------------------------");
         }
 
@@ -1338,6 +1341,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             {
                 Log(DebugString1);
                 Log(DebugString2);
+                Log(DebugString3);
             }
 
             if (Level.NetMode != NM_DedicatedServer)
@@ -1500,46 +1504,53 @@ simulated static function float ArmorSlopeTable(DHAntiVehicleProjectile P, float
     return 1.0; // fail-safe neutral return value
 }
 
+// Shatter chance is plotted on a curve where the middle of the two shatter ratios is a 75% chance, and the outer-edges are 0% chance.
+simulated static function float GetShatterChance(float PenetrationRatio, float PenetrationRatioMin, float PenetrationRatioMax)
+{
+    local float T;
+
+    T = (PenetrationRatio - PenetrationRatioMin) / (PenetrationRatioMax - PenetrationRatioMin);
+
+    if (T < 0 || T > 1.0)
+    {
+        return 0.0;
+    }
+
+    return 0.75 * class'UInterp'.static.Mimi(T);
+}
+
 // New function to check whether a projectile should shatter on vehicle's armor, based on the 'shatter gap' for different round types
 // A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
-simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, optional float OverMatchFactor)
+// This data is based on the book WW2 Ballistics - Armor and Gunnery (p.29)
+simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, float OverMatchFactor, out float ShatterChance)
 {
     if (P.RoundType == RT_HVAP)
     {
         if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
-            if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
-            {
-                return true;
-            }
+            ShatterChance = GetShatterChance(PenetrationRatio, 1.1, 1.27);
         }
         else // smaller HVAP rounds
         {
-            if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.34)
-            {
-                return true;
-            }
+            ShatterChance = GetShatterChance(PenetrationRatio, 1.1, 1.34);
         }
     }
     else if (P.RoundType == RT_APDS)
     {
-        if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.2)
-        {
-            return true;
-        }
+        ShatterChance = GetShatterChance(PenetrationRatio, 1.06, 1.2);
     }
     else if (P.RoundType == RT_HEAT) // no chance of shatter for HEAT round
     {
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
     {
-        if (OverMatchFactor > 0.8 && PenetrationRatio >= 1.06 && PenetrationRatio <= 1.19)
+        if (OverMatchFactor > 0.8)
         {
-            return true;
+            ShatterChance = GetShatterChance(PenetrationRatio, 1.06, 1.19);
         }
     }
 
-    return false;
+    return FRand() <= ShatterChance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2386,12 +2397,13 @@ defaultproperties
     GunDamageChance=1250.0
     TraverseDamageChance=2000.0
     TurretDetonationThreshold=1750.0
+    // above values are misleading: the greater the number, the lower the chance is
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
-    EngineToHullFireChance=0.05
-    PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death
-    FireDetonationChance=0.07
+    EngineToHullFireChance=0.05  //increased to 0.1 on all petrol engines
+    PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death; reduced to 12 on all diesels
+    FireDetonationChance=0.07  //reduced to 0.045 on all diesels
     bFirstPenetratingHit=true
     VehicleBurningDamType=class'DHVehicleBurningDamageType'
 

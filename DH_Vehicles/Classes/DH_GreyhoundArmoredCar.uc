@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_GreyhoundArmoredCar extends DHArmoredVehicle;
@@ -67,9 +67,15 @@ defaultproperties
     TurnDamping=100.0
 
     // Damage
-    Health=300
-    HealthMax=300.0
-    EngineHealth=100
+	// pros: 37mm ammorack is less likely to detonate
+	// cons: tight 4 men crew; petrol fuel
+    Health=510
+    HealthMax=510.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.27  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+    TurretDetonationThreshold=4000.0 // increased from 1750
     VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=100.0)

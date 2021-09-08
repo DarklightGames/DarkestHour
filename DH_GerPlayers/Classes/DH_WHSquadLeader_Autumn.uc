@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WHSquadLeader_Autumn extends DHGESergeantRoles;
@@ -11,7 +11,7 @@ defaultproperties
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
 }

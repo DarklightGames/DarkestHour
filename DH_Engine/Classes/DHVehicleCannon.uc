@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -74,6 +74,22 @@ var     int                 ClosestHighDebugPitch;     // pitch adjustments that
 var     int                 ClosestLowDebugPitch;
 var     float               ClosestHighDebugHeight;    // height (in UU) above & below target from current closest recorded high & low shots during auto range calibration
 var     float               ClosestLowDebugHeight;
+
+// Gun wheels
+enum ERotationType
+{
+    ROTATION_Yaw,
+    ROTATION_Pitch
+};
+
+struct SGunWheel
+{
+    var ERotationType RotationType;
+    var name          BoneName;
+    var float         Scale;
+};
+
+var array<SGunWheel> GunWheels;
 
 replication
 {
@@ -1351,9 +1367,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local DHArmoredVehicle AV;
     local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
     local rotator TurretRelativeRotation, TurretNonRelativeRotation, ArmourSlopeRotator;
-    local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
+    local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope, ShatterChance;
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
-    local string  HitSide, OppositeSide, DebugString1, DebugString2;
+    local string  HitSide, OppositeSide, DebugString1, DebugString2, DebugString3;
     local bool    bProjectilePenetrated;
 
     AV = DHArmoredVehicle(Base);
@@ -1531,7 +1547,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
 
     // Check & record whether or not we penetrated the vehicle (including check if shattered on the armor)
-    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && class'DHArmoredVehicle'.static.CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
+    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && class'DHArmoredVehicle'.static.CheckIfShatters(P, PenetrationRatio, OverMatchFactor, ShatterChance);
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set variables on the vehicle itself that are used in its TakeDamage()
@@ -1546,16 +1562,19 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Debugging options
     if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
     {
-        DebugString1 = Caps("Hit turret" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated) $ ", hit location angle ="
+        DebugString1 = Caps("Hit turret" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated && !P.bRoundShattered) $ ", hit location angle ="
             @ int(Round(HitLocationAngle)) @ "deg, armor =" @ int(Round(ArmorThickness * 10.0)) $ "mm @" @ int(Round(ArmorSlope)) @ "deg";
 
         DebugString2 = "Shot penetration =" @ int(Round(MaxArmorPenetration * 10.0)) $ "mm, effective armor =" @ int(Round(EffectiveArmorThickness * 10.0))
             $ "mm, shot AOI =" @ int(Round(AngleOfIncidence)) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
 
+        DebugString3 = "Penetration radio =" @ PenetrationRatio $ ", shatter chance =" @ (ShatterChance * 100) $ "%, shattered =" @ Locs(P.bRoundShattered);
+
         if (bLogDebugPenetration)
         {
             Log(DebugString1);
             Log(DebugString2);
+            Log(DebugString3);
             Log("------------------------------------------------------------------------------------------------------");
         }
 
@@ -1565,6 +1584,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             {
                 Level.Game.Broadcast(self, DebugString1);
                 Level.Game.Broadcast(self, DebugString2);
+                Level.Game.Broadcast(self, DebugString3);
             }
 
             if (Level.NetMode != NM_DedicatedServer)
@@ -1965,6 +1985,32 @@ simulated function DebugModifyOverlayCorrection(float Adjustment)
             CP.ClientMessage("New OverlayCorrectionY =" @ CP.OverlayCorrectionY @ " Original value =" @ CP.default.OverlayCorrectionY
                 @ " Adjustment =" @ CP.OverlayCorrectionY - CP.default.OverlayCorrectionY);
         }
+    }
+}
+
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateGunWheels()
+{
+    local int i;
+    local rotator BoneRotation;
+
+    for (i = 0; i < GunWheels.Length; ++i)
+    {
+        BoneRotation = rot(0, 0, 0);
+
+        switch (GunWheels[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                BoneRotation.Yaw = CurrentAim.Yaw * GunWheels[i].Scale;
+                break;
+            case ROTATION_Pitch:
+                BoneRotation.Pitch = CurrentAim.Pitch * GunWheels[i].Scale;
+                break;
+            default:
+                break;
+        }
+
+        SetBoneRotation(GunWheels[i].BoneName, BoneRotation);
     }
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_HellcatCannonShellHVAP extends DHCannonShellHVAP;
@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=1.87 // Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=450
+    ImpactDamage=460
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
-    HullFireChance=0.33
-    EngineFireChance=0.65
+    HullFireChance=0.31
+    EngineFireChance=0.61
 
     //Penetration
     DHPenetrationTable(0)=19.2

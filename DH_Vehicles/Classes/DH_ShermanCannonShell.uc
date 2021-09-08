@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ShermanCannonShell extends DHCannonShell;
@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=2.98 // Correct - verified on range at 1000 yards
 
     //Damage
-    ImpactDamage=540
+    ImpactDamage=600 //64 gramms TNT filler - i assume M61 shot
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    HullFireChance=0.37
-    EngineFireChance=0.75
+    HullFireChance=0.47
+    EngineFireChance=0.85
 
     //Penetration
     DHPenetrationTable(0)=8.8

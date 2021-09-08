@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerIIILCannon extends DHVehicleCannon;
@@ -22,7 +22,7 @@ defaultproperties
     RightArmorFactor=3.0
     LeftArmorFactor=3.0
     RearArmorFactor=3.0
-    FrontArmorSlope=25.0
+    FrontArmorSlope=12.0 // to do: spherical shape that has different slope depending on elevation
     RightArmorSlope=25.0
     LeftArmorSlope=25.0
     RearArmorSlope=12.0
@@ -32,7 +32,7 @@ defaultproperties
     RearLeftAngle=215.0
 
     // Turret movement
-    ManualRotationsPerSecond=0.04
+    ManualRotationsPerSecond=0.0333 //30 seconds for full rotation (12 degrees per second)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63715
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Bofors40mmCannonShell extends DHCannonShell;
@@ -15,10 +15,10 @@ defaultproperties
     BallisticCoefficient=0.984 // TODO: try to find an accurate BC (this is same as US 37mm)
 
     //Damage
-    ImpactDamage=265
+    ImpactDamage=180 //solid shell, i assume because didnt find any info
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.23
-    EngineFireChance=0.47
+    HullFireChance=0.14
+    EngineFireChance=0.23
 
     bShatterProne=true
 

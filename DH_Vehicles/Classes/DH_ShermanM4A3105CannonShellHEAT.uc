@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ShermanM4A3105CannonShellHEAT extends DHCannonShellHEAT;
@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.96 //TODO: check BC
 
     //Damage
-    ImpactDamage=650
-    Damage=415.0
-    DamageRadius=700.0
+    ImpactDamage=650  //1.6 KG TNT
+    Damage=700.0
+    DamageRadius=1000.0
 
     //Effects
     DrawScale=1.5

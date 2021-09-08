@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShellAPDS extends DHCannonShellAPDS;
@@ -13,10 +13,11 @@ defaultproperties
     BallisticCoefficient=1.15 //TODO: pls, check
 
     //Damage
-    ImpactDamage=300
+    bShatterProne=true
+    ImpactDamage=310
     ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
-    HullFireChance=0.25
-    EngineFireChance=0.50
+    HullFireChance=0.4
+    EngineFireChance=0.6
 
     //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'

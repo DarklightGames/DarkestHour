@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_HellcatTank extends DHArmoredVehicle;
@@ -60,8 +60,14 @@ defaultproperties
     TransRatio=0.17
 
     // Damage
-    Health=500
-    HealthMax=500.0
+    // pros:  5 men crew, relatively sparsed between each other;
+    // cons: petrol fuel
+    Health=570
+    HealthMax=570.0
+    EngineHealth=300
+
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -78,9 +84,9 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop' // TODO: Hellcat used same gasoline engine as Sherman M4/M4A1, so switch to Sherman sounds
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="driver_attachment"

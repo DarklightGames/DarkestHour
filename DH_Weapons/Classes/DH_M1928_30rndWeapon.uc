@@ -1,9 +1,38 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_M1928_30rndWeapon extends DHAutoWeapon;
+class DH_M1928_30rndWeapon extends DHFastAutoWeapon;
+
+simulated function bool StartFire(int Mode)
+{
+    if (super(DHProjectileWeapon).StartFire(Mode))
+    {
+        if (FireMode[Mode].bMeleeMode)
+        {
+            return true;
+        }
+
+        AnimStopLooping();
+
+        // single
+        if (FireMode[0].bWaitForRelease)
+        {
+            return true;
+        }
+        else // auto
+        {
+            if (!FireMode[Mode].IsInState('FireLoop'))
+            {
+                FireMode[Mode].StartFiring();
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 defaultproperties
 {
@@ -16,9 +45,10 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1928_30rnd' // TODO: there is no specularity mask for this weapon
 
-    PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=60.0
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=65.0
 
+    DisplayFOV=86.0
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
@@ -31,8 +61,8 @@ defaultproperties
     SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
 
-    MagEmptyReloadAnim="reload_m1a1"
-    MagPartialReloadAnim="reload_m1a1"
+    MagEmptyReloadAnims(0)="reload_m1a1"
+    MagPartialReloadAnims(0)="reload_m1a1"
 
     HandNum=1
     SleeveNum=0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_AchillesCannonShellAPDS extends DHCannonShellAPDS;
@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=1.47 //TODO: pls check
 
     //Damage
-    ImpactDamage=400
+    ImpactDamage=600
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
-    HullFireChance=0.3
-    EngineFireChance=0.60
+    HullFireChance=0.45
+    EngineFireChance=0.75
 
     //Penetration
     DHPenetrationTable(0)=27.5

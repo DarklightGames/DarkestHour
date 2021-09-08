@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WSSHatPanzerTwo extends DHHeadgear;
@@ -13,6 +13,6 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     bIsHelmet=false
-    Mesh=SkeletalMesh'gear_anm.ger_NCOlate_cap'
+    Mesh=SkeletalMesh'dhgear_anm.ger_NCOlate_alt'
     Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.SS_HG_1'
 }

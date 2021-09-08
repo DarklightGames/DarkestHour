@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WSSAssault_Snow extends DHGEAssaultRoles;
@@ -15,4 +15,9 @@ defaultproperties
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

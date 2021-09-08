@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerIVJTank extends DH_PanzerIVHTank;
@@ -27,11 +27,23 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int')
 
     // Damage
-    VehHitpoints(0)=(PointOffset=(X=-100.0,Y=0.0,Z=12.0)) // engine
+	// pros: 5 men crew
+	// cons: petrol fuel; 
+	// (mostly unchanged as it extends ausf H)
+	// this modification was produced late in the war (1944-45), most (if not all) tanks of this modification had very low quality armor due to absence of proper alloys, which was less effective and caused a lot of spalling
+    Health=535
+    HealthMax=535.0
+	VehHitpoints(0)=(PointOffset=(X=-100.0,Y=0.0,Z=12.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointOffset=(X=30.0,Y=-27.0,Z=0.0)) // ammo stores x 3
     VehHitpoints(2)=(PointRadius=20.0,PointOffset=(X=-20.0,Y=-27.0,Z=0.0))
     VehHitpoints(3)=(PointRadius=20.0,PointOffset=(X=-30.0,Y=27.0,Z=0.0))
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.PanzerIVJ.PanzerIVJ_dest'
+	
+    // Hull armor
+    FrontArmor(0)=(Thickness=2.4,Slope=-64.0,MaxRelativeHeight=-20.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=7.2,Slope=-12.0,MaxRelativeHeight=6.8,LocationName="nose")
+    FrontArmor(2)=(Thickness=2.0,Slope=73.0,MaxRelativeHeight=22.5,LocationName="glacis")
+    FrontArmor(3)=(Thickness=7.2,Slope=10.0,LocationName="upper")
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-176.0,Y=-10.0,Z=42.0),ExhaustRotation=(Pitch=22000,Yaw=0)) // this model has twin exhausts

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHSquadMessage extends LocalMessage
@@ -40,6 +40,7 @@ var localized string RallyPointTooCloseToConstruction;
 var localized string RallyPointDestroyed;
 var localized string RallyPointInUncontrolledObjective;
 var localized string RallyPointExposed;
+var localized string RallyPointBehindEnemyLines;
 var localized string BannedPlayer;
 var localized string BannedCannotJoin;
 var localized string AutoJoinFailed;
@@ -193,6 +194,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.RallyPointInUncontrolledObjective;
         case 79:
             return default.RallyPointExposed;
+        case 80:
+            return default.RallyPointBehindEnemyLines;
         default:
             break;
     }
@@ -237,6 +240,7 @@ defaultproperties
     RallyPointDestroyed="A squad rally point has been destroyed."
     RallyPointInUncontrolledObjective="You cannot create a squad rally point inside an uncontrolled objective."
     RallyPointExposed="A squad rally point has been spotted by the enemy!"
+    RallyPointBehindEnemyLines="A squad rally point cannot be created in enemy-controlled territory."
     BannedPlayer="{0} has been banned from the squad."
     BannedCannotJoin="You are unable to join this squad as you have been banned."
     AutoJoinFailed="There are no squads that you are eligible to join."
@@ -260,4 +264,3 @@ defaultproperties
     bIsConsoleMessage=true
     LifeTime=8.0
 }
-

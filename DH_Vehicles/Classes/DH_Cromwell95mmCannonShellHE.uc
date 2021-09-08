@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Cromwell95mmCannonShellHE extends DHCannonShellHE;
@@ -13,12 +13,12 @@ defaultproperties
     BallisticCoefficient=2.6 // between 75mm (P3N) & 105mm howitzers
 
     //Damage
-    ImpactDamage=585     // between 75mm (P3N) & 105mm howitzers
-    Damage=470.0 // between 75mm (P3N) & 105mm howitzers
-    DamageRadius=1300.0 // similar to other howitzers
+    ImpactDamage=1700
+    Damage=750
+    DamageRadius=1200
     PenetrationMag=965.0 // between 75mm (P3N) & 105mm howitzers
-    HullFireChance=0.38
-    EngineFireChance=0.80
+    HullFireChance=1.0
+    EngineFireChance=1.0
 
     //Effects
     DrawScale=1.2

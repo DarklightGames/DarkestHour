@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SpringfieldA1Weapon extends DHBoltActionWeapon;
@@ -22,7 +22,8 @@ defaultproperties
     sleevenum=1
     handnum=2
 
-    IronSightDisplayFOV=28.0
+    IronSightDisplayFOV=45.0
+    DisplayFOV=85.0
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

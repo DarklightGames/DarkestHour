@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_LeIG18CannonShellHEAT extends DHCannonShellHEAT;
@@ -14,26 +14,28 @@ defaultproperties
     BallisticCoefficient=2.1 //TODO: pls, check
 
     //Damage
-    ImpactDamage=650 //same as Panzer III M HEAT
-    Damage=450.0
-    DamageRadius=200.0
-    HullFireChance=50.0
-    EngineFireChance=85.0
+    ImpactDamage=350   //~~600 gramms TNT
+    Damage=300.0
+    DamageRadius=700.0
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 
     //Penetration
-    DHPenetrationTable(0)=7.5
-    DHPenetrationTable(1)=7.5
-    DHPenetrationTable(2)=7.5
-    DHPenetrationTable(3)=7.5
-    DHPenetrationTable(4)=7.5
-    DHPenetrationTable(5)=7.5
-    DHPenetrationTable(6)=7.5
-    DHPenetrationTable(7)=7.5
-    DHPenetrationTable(8)=7.5
-    DHPenetrationTable(9)=7.5
-    DHPenetrationTable(10)=7.5
+    DHPenetrationTable(0)=10.0
+    DHPenetrationTable(1)=10.0
+    DHPenetrationTable(2)=10.0
+    DHPenetrationTable(3)=10.0
+    DHPenetrationTable(4)=10.0
+    DHPenetrationTable(5)=10.0
+    DHPenetrationTable(6)=10.0
+    DHPenetrationTable(7)=10.0
+    DHPenetrationTable(8)=10.0
+    DHPenetrationTable(9)=10.0
+    DHPenetrationTable(10)=10.0
 
     //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)

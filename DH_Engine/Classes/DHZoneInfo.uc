@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 // The purpose of this class is to optimize both server and client performance using FogDistance and FogRatio
@@ -43,6 +43,8 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         TargetDistanceFog;
 }
+
+simulated function float GetDistanceFogEndMin() { return FMax(DistanceFogEndMin, DistanceFogStart + 100.0); }
 
 simulated event PostBeginPlay()
 {
@@ -173,10 +175,17 @@ simulated function Tick( float DeltaTime )
     // Non net client
     if (Level.NetMode != NM_Client)
     {
-        if (DistanceFogEnd != TargetDistanceFog)
+        if (DistanceFogEnd != TargetDistanceFog && TargetDistanceFog >= 0.0)
         {
-            T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
-            DistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
+            if (FogChangeEnd > FogChangeStart)
+            {
+                T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
+                DistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
+            }
+            else
+            {
+                DistanceFogEnd = TargetDistanceFog;
+            }
         }
     }
 }
@@ -186,19 +195,16 @@ function SetNewTargetFogDistance(float NewDistance)
     // Not client (dedicated, stanalone, listen)
     if (Level.NetMode != NM_Client)
     {
-        // If greater than 0 AND above the start fog distance, then we can set the TargetDistanceFog
-        // It is important to never let the DistanceFogEnd be less than DistanceFogStart, because of a very strange render effect
-        if (NewDistance > 0.0 && NewDistance > DistanceFogStart)
-        {
-            // Clamp the view distance to the level's FogEndMin and ~4km
-            TargetDistanceFog = FClamp(NewDistance, DistanceFogEndMin + 100.0, 256000.0);
+        // Clamp the view distance to the level's FogEndMin and ~4km.
+        // It is important to never let the DistanceFogEnd be less than
+        // DistanceFogStart, because of a very strange render effect.
+        TargetDistanceFog = FClamp(NewDistance, GetDistanceFogEndMin() + 100.0, 256000.0);
 
-            if (DistanceFogEnd != TargetDistanceFog)
-            {
-                FogChangeStart = Level.TimeSeconds;
-                FogChangeEnd = FogChangeStart + FOG_CHANGE_TIME;
-                SavedDistanceEndFog = DistanceFogEnd;
-            }
+        if (DistanceFogEnd != TargetDistanceFog && TargetDistanceFog > DistanceFogStart)
+        {
+            FogChangeStart = Level.TimeSeconds;
+            FogChangeEnd = FogChangeStart + FOG_CHANGE_TIME;
+            SavedDistanceEndFog = DistanceFogEnd;
         }
     }
 }
@@ -208,7 +214,7 @@ function SetFogDistanceWithRatio(float Ratio)
 {
     if (Ratio >= 0.0 && Ratio <= 1.0)
     {
-        SetNewTargetFogDistance(DistanceFogEndMin + ((OriginalFogDistanceEnd - DistanceFogEndMin) * Ratio));
+        SetNewTargetFogDistance(GetDistanceFogEndMin() + ((OriginalFogDistanceEnd - FMin(OriginalFogDistanceEnd, GetDistanceFogEndMin())) * Ratio));
     }
 }
 

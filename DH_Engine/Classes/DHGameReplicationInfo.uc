@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -143,6 +143,16 @@ var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
+struct STeamConstruction
+{
+    var class<DHConstruction> ConstructionClass;
+    var byte TeamIndex;
+    var byte Limit;
+    var int NextIncrementTimeSeconds;
+};
+
+var array<STeamConstruction> TeamConstructions[16];
+
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
@@ -245,7 +255,8 @@ replication
         DangerZoneBalance,
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
-        SurrenderVotesInProgress;
+        SurrenderVotesInProgress,
+        TeamConstructions;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -316,6 +327,63 @@ simulated function PostBeginPlay()
             }
         }
     }
+}
+
+simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(TeamConstructions); ++i)
+    {
+        if (TeamConstructions[i].ConstructionClass == none)
+        {
+            continue;
+        }
+
+        if (TeamConstructions[i].TeamIndex == TeamIndex &&
+            TeamConstructions[i].ConstructionClass == ConstructionClass)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+    local DH_LevelInfo LI;
+
+    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (i == -1)
+    {
+       return -1;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none && LI.TeamConstructions[i].ReplenishPeriodSeconds > 0)
+    {
+        return TeamConstructions[i].NextIncrementTimeSeconds;
+    }
+
+    return -1;
+}
+
+simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (i == -1)
+    {
+       return -1;
+    }
+
+    return TeamConstructions[i].Limit;
 }
 
 simulated function PostNetBeginPlay()
@@ -1380,6 +1448,14 @@ simulated function GetTeamSizes(out int TeamSizes[2])
     }
 }
 
+simulated function bool IsPlayerCountInRange(int Floor, int Ceiling)
+{
+    local int PlayerCount;
+
+    PlayerCount = Min(PRIArray.Length, MaxPlayers);
+    return PlayerCount >= Floor && PlayerCount <= Ceiling;
+}
+
 //==============================================================================
 // MAP MARKERS
 //==============================================================================
@@ -1977,20 +2053,19 @@ defaultproperties
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
     ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_ATGun_HeavyEarly"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_AAGun_Medium"
 
     // Defenses
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
-    //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
-    //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
+    ConstructionClassNames(14)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(21)="DH_Construction.DHConstruction_AntiTankCrate"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

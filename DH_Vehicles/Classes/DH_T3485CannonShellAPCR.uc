@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T3485CannonShellAPCR extends DHCannonShellAPDS;
@@ -14,10 +14,10 @@ defaultproperties
     BallisticCoefficient=2.0 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=450 // just a tungsten slug; no explosive filler
+    ImpactDamage=410 // just a tungsten slug; no explosive filler
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    HullFireChance=0.33
-    EngineFireChance=0.65
+    HullFireChance=0.28
+    EngineFireChance=0.58
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'

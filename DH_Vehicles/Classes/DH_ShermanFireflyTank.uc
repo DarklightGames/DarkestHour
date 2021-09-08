@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ShermanFireflyTank extends DHArmoredVehicle;
@@ -57,6 +57,11 @@ defaultproperties
     TransRatio=0.091
 
     // Damage
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointOffset=(X=-120.0,Y=0.0,Z=5.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

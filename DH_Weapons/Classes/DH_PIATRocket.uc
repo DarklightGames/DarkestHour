@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PIATRocket extends DHRocketProjectile;
@@ -12,8 +12,8 @@ defaultproperties
     StraightFlightTime=0.5
 
     //Damage
-    ImpactDamage=650
-    DamageRadius=300
+	Damage=800
+	DamageRadius=600  //1.1 KG 
     ShellImpactDamage=class'DH_Weapons.DH_PIATImpactDamType'
     MyDamageType=class'DH_Weapons.DH_PIATDamType'
 
@@ -31,4 +31,15 @@ defaultproperties
     DHPenetrationTable(4)=9.1
     DHPenetrationTable(5)=9.1
     DHPenetrationTable(6)=9.1
+	
+    VehicleHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
+    DirtHitSound=Sound'DH_WeaponSounds.faust.faust_explode031'
+    RockHitSound=Sound'DH_WeaponSounds.faust.faust_explode011'
+    WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
+    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
+	
+    ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
+    ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
+    ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
 }

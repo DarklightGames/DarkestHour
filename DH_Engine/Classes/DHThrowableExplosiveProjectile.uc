@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 // TODO:
 //  * Impact fuze: Add pickup functionality for impact explosives that failed
@@ -807,6 +807,26 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Glass:
             DampenFactor = 0.3;
+            DampenFactorParallel = 0.55;
+            break;
+
+        case EST_Custom01: //Sand
+            DampenFactor = 0.1;
+            DampenFactorParallel = 0.45;
+            break;
+
+        case EST_Custom02: //SandBag
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.55;
+            break;
+
+        case EST_Custom03: //Brick
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.5;
+            break;
+
+        case EST_Custom04: //Hedgerow
+            DampenFactor = 0.15;
             DampenFactorParallel = 0.55;
             break;
     }

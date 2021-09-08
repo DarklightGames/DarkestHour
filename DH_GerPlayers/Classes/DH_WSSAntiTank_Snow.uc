@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WSSAntiTank_Snow extends DHGEAntiTankRoles;
@@ -14,4 +14,9 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
 
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

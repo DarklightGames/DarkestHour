@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Kar98Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'

@@ -1,18 +1,26 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHAutoWeapon extends DHProjectileWeapon
     abstract;
 
-var     name    SelectFireAnim;            // animation for selecting the firing mode
-var     name    SelectFireIronAnim;        // animation for selecting the firing mode in ironsights
-var     name    SightUpSelectFireIronAnim; // animation for selecting the firing mode in ironsights
+var     name    SelectFireAnim;
+var     name    SelectFireEmptyAnim;
+var     name    SelectFireIronAnim;
+var     name    SelectFireIronEmptyAnim;
+var     name    SelectFireBipodIronAnim;
+var     name    SelectFireBipodIronEmptyAnim;
 
 // Sound effect for the fire selector switch (in case it's not handled by the animation).
 var     sound   SelectFireSound;
 var     float   SelectFireVolume;
+
+// Fire select switch
+var     name            FireSelectSwitchBoneName;
+var     rotator         FireSelectSemiRotation;
+var     rotator         FireSelectAutoRotation;
 
 replication
 {
@@ -30,6 +38,55 @@ simulated exec function SwitchFireMode()
     }
 }
 
+simulated function UpdateFireSelectSwitchRotation()
+{
+    if (FireSelectSwitchBoneName != '')
+    {
+        if (FireMode[0].bWaitForRelease)
+        {
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectSemiRotation);
+        }
+        else
+        {
+            SetBoneRotation(FireSelectSwitchBoneName, FireSelectAutoRotation);
+        }
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    UpdateFireSelectSwitchRotation();
+    UpdateFireRate();
+}
+
+simulated function UpdateFireRate()
+{
+    local DHAutomaticFire AF;
+
+    AF = DHAutomaticFire(FireMode[0]);
+
+    if (AF == none)
+    {
+        return;
+    }
+
+    if (UsingAutoFire() || !AF.bHasSemiAutoFireRate)
+    {
+        FireMode[0].FireRate = FireMode[0].default.FireRate;
+    }
+    else if (AF.bHasSemiAutoFireRate)
+    {
+        FireMode[0].FireRate = AF.default.SemiAutoFireRate;
+    }
+}
+
+simulated event ToggleFireSelectSwitch()
+{
+    UpdateFireSelectSwitchRotation();
+}
+
 simulated state SwitchingFireMode extends WeaponBusy
 {
     simulated function BeginState()
@@ -38,18 +95,32 @@ simulated state SwitchingFireMode extends WeaponBusy
 
         if (bUsingSights || Instigator.bBipodDeployed)
         {
-            if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
+            if (Instigator.bBipodDeployed && HasAnim(SelectFireBipodIronAnim))
             {
-                Anim = SightUpSelectFireIronAnim;
+                Anim = SelectFireBipodIronAnim;
             }
             else
             {
-                Anim = SelectFireIronAnim;
+                if (AmmoAmount(0) == 0 && HasAnim(SelectFireIronEmptyAnim))
+                {
+                    Anim = SelectFireIronEmptyAnim;
+                }
+                else
+                {
+                    Anim = SelectFireIronAnim;
+                }
             }
         }
         else
         {
-            Anim = SelectFireAnim;
+            if (AmmoAmount(0) == 0 && HasAnim(SelectFireEmptyAnim))
+            {
+                Anim = SelectFireEmptyAnim;
+            }
+            else
+            {
+                Anim = SelectFireAnim;
+            }
         }
 
         PlayAnimAndSetTimer(Anim, 1.0);
@@ -74,6 +145,8 @@ simulated function ToggleFireMode()
         }
 
         FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+
+        UpdateFireRate();
     }
 }
 
@@ -97,9 +170,16 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease) // adds check that isn't animating
     {
-        PlayIdle();
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
+        else
+        {
+            FireMode[Mode].PlayFireEnd();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;
@@ -238,8 +318,8 @@ defaultproperties
     SelectFireVolume=2.0
 
     IronIdleAnim="Iron_idle"
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 
     AIRating=0.7
     CurrentRating=0.7

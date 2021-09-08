@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz2341CannonShell extends DHGermanCannonShell;
@@ -15,10 +15,10 @@ defaultproperties
     BallisticCoefficient=0.68 //G1 figure based on JBM calculation for US M95 20mm AP
 
     //Damage
-    ImpactDamage=175
+    ImpactDamage=155
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     HullFireChance=0.15
-    EngineFireChance=0.35
+    EngineFireChance=0.3
 
     Damage=50 //no explosive filler in 20mm PzGr -- this damage is just to simulate some splinters flying
     DamageRadius=120

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_JacksonTank extends DHArmoredVehicle; // later version with HVAP instead of AP shot & with muzzle brake
@@ -61,8 +61,14 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-    Health=500
-    HealthMax=500.0
+	// pros: diesel fuel, 5 men crew
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.8  // 0.75 default
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointRadius=35.0,PointBone="Jackson_body_ext",PointOffset=(X=-90.0,Z=-35.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -80,12 +86,12 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop' // TODO: Jackson used same gasoline engine as Sherman M4A3, different to Wolverine, so switch to Sherman sounds
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' 
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSoundBone="driver_attachment"
+    RumbleSoundBone="Turret_placement"
     RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects

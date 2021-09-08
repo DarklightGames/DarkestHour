@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T3485CannonShell extends DH_T3485CannonShell_Early;
@@ -8,6 +8,12 @@ class DH_T3485CannonShell extends DH_T3485CannonShell_Early;
 defaultproperties
 {
     RoundType=RT_APBC
+	
+    //Damage
+    ImpactDamage=780  //82 gramms TNT filler
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    HullFireChance=0.45
+    EngineFireChance=0.94
 
     //Penetration
     DHPenetrationTable(0)=12.6 // 100m

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHRocketWeapon extends DHSemiAutoWeapon
@@ -492,8 +492,8 @@ defaultproperties
     bCanBeResupplied=true
     NumMagsToResupply=1
 
-    MagEmptyReloadAnim="Reloads"
-    MagPartialReloadAnim="Reloads"
+    MagEmptyReloadAnims(0)="Reloads"
+    MagPartialReloadAnims(0)="Reloads"
     AssistedMagEmptyReloadAnim="reloadA"
     AssistedMagPartialReloadAnim="reloadA"
     PutDownAnim="putaway"

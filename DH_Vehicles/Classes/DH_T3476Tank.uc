@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_T3476Tank extends DHArmoredVehicle;
@@ -59,10 +59,17 @@ defaultproperties
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.13
+    EngineRestartFailChance=0.2 //unreliability of early modification
 
     // Damage
-    Health=525 // was 800 but adjusted to match similar DH vehicles, i.e. Sherman
-    HealthMax=525.0
+    // Compared to m42: early design with some reliability problems that werent yet fixed
+    Health=460
+    HealthMax=460
+    EngineHealth=240 //reduced from 300
+
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-90.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

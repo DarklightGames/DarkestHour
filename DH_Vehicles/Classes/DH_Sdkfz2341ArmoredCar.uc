@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
@@ -77,9 +77,17 @@ defaultproperties
     TurnDamping=100.0
 
     // Damage
-    Health=300
-    HealthMax=300.0
-    EngineHealth=100
+	// pros: diesel fuel; 20mm ammo is very unlikely to detonate; 
+	// 4 men crew
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.2  // 0.75 default
+    TurretDetonationThreshold=5000.0 // increased from 1750
+	
+	PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     DamagedEffectScale=0.8

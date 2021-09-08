@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_BritishAirbornePawn extends DH_BritishPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Brit_Para'
+    Mesh=SkeletalMesh'DHCharactersBRIT_anm.Brit_Para'
     Skins(0)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritPara1'
 
     BodySkins(0)=Texture'DHBritishCharactersTex.ParachuteRegiment.BritPara1'

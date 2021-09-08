@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
@@ -216,24 +216,24 @@ defaultproperties
     CollisionHeight=4.0
 
     Speed=300.0
-    Damage=1000.0
-    DamageRadius=1000.0
+    Damage=1200.0
+    DamageRadius=1200.0
 
     UnderneathDamageMultiplier=8.0
 
     ConstructionDamageRadius=375
-    ConstructionDamageMax=550
+    ConstructionDamageMax=750
 
     ObstacleDamageRadius=500
     ObstacleDamageMax=1400
 
-    EngineDamageMassThreshold=20.0
-    EngineDamageRadius=200.0
-    EngineDamageMax=150.0
+    EngineDamageMassThreshold=200.0 //3kg TNT should penetrate any top armor or engine desk and severely damage anything under it (even if it is a Maus tank)
+    EngineDamageRadius=240.0 //slightly increased because often it seemed like its not close enough even if its on the engine desk
+    EngineDamageMax=5000.0 
 
-    TreadDamageMassThreshold=20.0
-    TreadDamageRadius=80.0
-    TreadDamageMax=100.0
+    TreadDamageMassThreshold=200.0
+    TreadDamageRadius=100.0
+    TreadDamageMax=200.0
 
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 

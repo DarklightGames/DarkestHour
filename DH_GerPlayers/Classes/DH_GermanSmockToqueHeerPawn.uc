@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GermanSmockToqueHeerPawn extends DH_GermanPawn;
+class DH_GermanSmockToqueHeerPawn extends DH_GermanPawn_Gloves;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_SmockToque'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_SmockToque'
     Skins(1)=Texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
 }

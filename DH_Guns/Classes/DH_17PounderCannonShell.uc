@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_17PounderCannonShell extends DHCannonShell;
@@ -13,10 +13,10 @@ defaultproperties
     BallisticCoefficient=2.45 //TODO: pls check
 
     // Damage
-    ImpactDamage=580
+    ImpactDamage=580  //solid shell
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    HullFireChance=0.40
-    EngineFireChance=0.70
+    HullFireChance=0.35
+    EngineFireChance=0.75
 
     //Penetration
     DHPenetrationTable(0)=18.5

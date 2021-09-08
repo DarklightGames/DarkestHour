@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHPOLAntiTankRoles extends DHAlliedAntiTankRoles
@@ -8,7 +8,7 @@ class DHPOLAntiTankRoles extends DHAlliedAntiTankRoles
 
 defaultproperties
 {
-    AltName="Strzelec Przeciwpancerny"
+    AltName="Strzelec przeciwpancerny"
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
     //removed m38 as an option because this is usually a strategically important role, if someone will take it and "waste" by taking non-PTRD weapon, this will damage the whole team

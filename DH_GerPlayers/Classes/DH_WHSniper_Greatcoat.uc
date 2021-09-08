@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WHSniper_Greatcoat extends DHGESniperRoles;
@@ -11,6 +11,6 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
     DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
+    Headgear(0)=class'ROInventory.ROGermanHat'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
 }

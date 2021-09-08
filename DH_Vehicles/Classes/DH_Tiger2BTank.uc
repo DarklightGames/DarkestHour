@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Tiger2BTank extends DHArmoredVehicle;
@@ -54,10 +54,17 @@ defaultproperties
     GearRatios(4)=0.7
     TransRatio=0.07
     SteerSpeed=50.0
+	
+    EngineRestartFailChance=0.5 //unreliability
 
     // Damage
-    Health=700
-    HealthMax=700.0
+	// Compared to Tiger1: even more reliability problems due to extreme weight
+    Health=570
+    HealthMax=570.0
+    EngineHealth=170  // reduced from 300
+    AmmoIgnitionProbability=0.8 // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)

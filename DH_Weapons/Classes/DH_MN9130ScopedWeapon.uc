@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
@@ -14,29 +14,31 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
 
-    Mesh=SkeletalMesh'Allies_Nagantscope_1st.Mosin-Nagant-9130-Scoped-Mesh'
+    Mesh=SkeletalMesh'DH_Nagantscope_1st.mosinscoped_mesh'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay' //to do: proper 3d scope texture
 
-    ScopeOverlaySize=0.7 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-    DisplayFOV=70.0         // idk
+    ScopeOverlaySize=0.29 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+    DisplayFOV=82.0
 
-    IronSightDisplayFOV=40.0
-    IronSightDisplayFOVHigh=40.0
+    IronSightDisplayFOV=42.5
+    IronSightDisplayFOVHigh=42.5
 
-    PlayerFOVZoom=24.0 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
-    ScopePortalFOV=7.0
-    ScopePortalFOVHigh=7.0
+    PlayerIronsightFOV=60.0
+
+    PlayerFOVZoom=17.143 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
+    ScopePortalFOV=5.4
+    ScopePortalFOVHigh=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=5
+    bUsesIronsightFOV=true
 
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
-
-    bUsesIronsightFOV=false
 
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"

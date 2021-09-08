@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
@@ -8,6 +8,12 @@ class DH_PanzerFaustWeapon extends DHRocketWeapon;
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
 function DropFrom(vector StartLocation)
 {
+    if (!HasAmmo())
+    {
+        // If the panzerfaust has no ammo, it is useless, so don't drop it
+        return;
+    }
+
     super(DHWeapon).DropFrom(StartLocation);
 }
 
@@ -26,12 +32,6 @@ simulated function int GetHudAmmoCount()
 // Emptied out as faust doesn't use CurrentMagCount & can't be resupplied or reloaded
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
-}
-
-// Modified as faust can be fired from the hip, unlike other rocket weapons
-simulated function bool CanFire(optional bool bShowFailureMessage)
-{
-    return true;
 }
 
 // Modified as faust is one-shot weapon, so auto-lowers after firing & then either switches to a new weapon or brings up another faust (if player has another - not normally in DH)
@@ -113,7 +113,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
 
-    Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
+    Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Grenades.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -127,5 +127,5 @@ defaultproperties
     RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",FireIronAnim="shoot30")
     RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",FireIronAnim="shoot")
     RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",FireIronAnim="shoot90")
-    IdleAnim="idle30"
+    IdleAnim="idle2"
 }

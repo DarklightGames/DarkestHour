@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -287,6 +287,9 @@ function Timer()
                     break;
                 case 3: // USSR
                     i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
+                    break;
+                case 4: // Poland
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
                     break;
             }
 
@@ -1197,16 +1200,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
         {
             // The request was denied by the server
-
-            switch (Result)
-            {
-                case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
-                    break;
-                default:
-                    MessageText = SurrenderResponseMessages[Result];
-            }
-
+            MessageText = SurrenderResponseMessages[Result];
             Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
@@ -1707,7 +1701,7 @@ function UpdateSquads()
         SetVisible(C.b_CreateSquad, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
-        SetVisible(C.b_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
+        SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
 
         if (bIsSquadLeader)
@@ -1720,15 +1714,16 @@ function UpdateSquads()
             else
             {
                 C.i_LockSquad.Image = UnlockIcon;
-                C.b_LockSquad.SetHint(default.LockText);
 
                 if (bCanSquadBeLocked)
                 {
                     C.i_LockSquad.ImageColor.A = 255;
+                    C.b_LockSquad.SetHint(default.LockText);
                 }
                 else
                 {
-                    C.i_LockSquad.ImageColor.A = 128;
+                    C.i_LockSquad.ImageColor.A = 64;
+                    C.b_LockSquad.SetHint("Squad can be locked only if it has " $ SRI.SquadLockMemberCountMin $ " or more members");
                 }
             }
         }
@@ -1922,7 +1917,7 @@ defaultproperties
     SurrenderResponseMessages[5]="You've already surrendered.";
     SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
     SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender.";
     SurrenderResponseMessages[9]="You cannot surrender this early.";
     SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
 

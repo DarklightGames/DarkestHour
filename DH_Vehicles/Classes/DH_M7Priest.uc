@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_M7Priest extends DHArmoredVehicle;
@@ -68,6 +68,13 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
+	// pros: 7 men crew; 
+	// cons: 105mm ammorack is more likely to explode; petrol fuel
+    Health=620
+    HealthMax=620.0
+	EngineHealth=300	
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

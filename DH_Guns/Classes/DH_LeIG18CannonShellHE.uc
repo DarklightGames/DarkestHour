@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_LeIG18CannonShellHE extends DHCannonShellHE;
@@ -14,14 +14,14 @@ defaultproperties
     BallisticCoefficient=2.1 //TODO: pls find correct BC
 
     //Damage
-    ImpactDamage=455
+    ImpactDamage=700
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    PenetrationMag=1000.0
-    Damage=415.0
-    DamageRadius=1350.0
+    PenetrationMag=800.0
+    Damage=380.0   //700 gramms TNT
+    DamageRadius=1050.0
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
-    HullFireChance=33.0
-    EngineFireChance=0.65
+    HullFireChance=0.8
+    EngineFireChance=0.8
 
     bDebugInImperial=false
 
@@ -34,13 +34,13 @@ defaultproperties
     DHPenetrationTable(1)=3.1
     DHPenetrationTable(2)=2.8
     DHPenetrationTable(3)=2.4
-    DHPenetrationTable(4)=2.0
-    DHPenetrationTable(5)=1.7
-    DHPenetrationTable(6)=1.3
-    DHPenetrationTable(7)=1.1
-    DHPenetrationTable(8)=0.9
-    DHPenetrationTable(9)=0.5
-    DHPenetrationTable(10)=0.3
+    DHPenetrationTable(4)=2.4
+    DHPenetrationTable(5)=2.4
+    DHPenetrationTable(6)=2.4
+    DHPenetrationTable(7)=2.4
+    DHPenetrationTable(8)=2.4
+    DHPenetrationTable(9)=2.4
+    DHPenetrationTable(10)=2.4
 
     //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)

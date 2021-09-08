@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_BritishPawn extends DHPawn;
@@ -9,7 +9,7 @@ defaultproperties
 {
     Species=class'DH_BritishPlayers.DH_British'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry'
+    Mesh=SkeletalMesh'DHCharactersBRIT_anm.Brit_Infantry'
     Skins(0)=Texture'DHBritishCharactersTex.PBI.British_Infantry'
     Skins(1)=Texture'DHBritishCharactersTex.Faces.BritParaFace1'
 

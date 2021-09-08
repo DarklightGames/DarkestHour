@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ShermanTank_M4A375W extends DHArmoredVehicle;
@@ -58,6 +58,13 @@ defaultproperties
     SteerSpeed=75.0
 
     // Damage
+	// pros: 5 men crew; wet stowage
+	// cons: petrol
+    Health=565
+    HealthMax=565.0
+	EngineHealth=300
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-1000.0 //petrol and wet stowage
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
@@ -68,7 +75,7 @@ defaultproperties
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
     FireAttachBone="Player_Driver"
-    AmmoIgnitionProbability=0.5 // wet stowage means reduced chance of a hit on an ammo storage location detonating the ammo
+    AmmoIgnitionProbability=0.35 // wet stowage means reduced chance of a hit on an ammo storage location detonating the ammo
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_75dest'
 
     // Exit

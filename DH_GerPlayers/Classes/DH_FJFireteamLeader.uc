@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_FJFireteamLeader extends DHGECorporalRoles;
@@ -20,4 +20,5 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_FG42Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_BHPWeapon')
 }

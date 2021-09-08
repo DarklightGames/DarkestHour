@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_SovietPawn extends DHPawn;
@@ -9,7 +9,7 @@ defaultproperties
 {
     Species=class'DH_SovietPlayers.DH_Soviet'
 
-    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
     Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
 

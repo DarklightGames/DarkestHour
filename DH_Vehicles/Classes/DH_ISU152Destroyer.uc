@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 //=====================================================================
@@ -61,10 +61,19 @@ defaultproperties
     // Movement
     GearRatios(4)=0.72
     TransRatio=0.09
+    GearRatios(0)=-0.35
 
     // Damage
-    Health=650 // was 800 but adjusted to more in line with similar DH vehicles
-    HealthMax=650.0
+	// pros: Diesel fuel, 5 men crew
+	// cons: high caliber ammorack is more likely to detonate; fuel tanks in the crew compartment
+    Health=525
+    HealthMax=525.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.9  // 0.75 default
+    PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
+    FireDetonationChance=0.045  //reduced from 0.07 for all diesels
+    DisintegrationHealth=-1200.0 //diesel
+    TurretDetonationThreshold=1300.0 // reduced from 1750 (this vehicle is turretless though? i am not sure how this works so put it here just in case)
     VehHitpoints(0)=(PointRadius=35.0,PointBone="Engine",PointOffset=(X=-25.0,Y=0.0,Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.0,Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

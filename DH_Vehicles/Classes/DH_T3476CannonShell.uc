@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_T3476CannonShell extends DHSovietCannonShell;
+class DH_T3476CannonShell extends DHSovietCannonShell;  //BR-350B
 
 defaultproperties
 {
@@ -14,16 +14,16 @@ defaultproperties
     BallisticCoefficient=1.55 //TODO: pls, check
 
     //Damage
-    ImpactDamage=560
+    ImpactDamage=670  //109 gramms TNT filler
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    HullFireChance=0.38
-    EngineFireChance=0.75
+    HullFireChance=0.55
+    EngineFireChance=0.91
 
     //Penetration
-    DHPenetrationTable(0)=8.4  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity vs face hardened armor)
-    DHPenetrationTable(1)=8.1  // 250m
-    DHPenetrationTable(2)=7.6  // 500m
-    DHPenetrationTable(3)=7.2
+    DHPenetrationTable(0)=8.2  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity, in between rolled homogenous and face hardened armor)
+    DHPenetrationTable(1)=7.9  // 250m
+    DHPenetrationTable(2)=7.4  // 500m
+    DHPenetrationTable(3)=7.1
     DHPenetrationTable(4)=6.7  // 1000m
     DHPenetrationTable(5)=6.4
     DHPenetrationTable(6)=6.0  // 1500m

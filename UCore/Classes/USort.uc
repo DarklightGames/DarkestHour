@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 // We will use insertion sort, since it doesn't require any recursive calls.
 // Recursive calls kill performance because UnrealScript dynamic arrays are not

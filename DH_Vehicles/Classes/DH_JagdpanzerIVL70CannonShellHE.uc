@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_JagdpanzerIVL70CannonShellHE extends DHCannonShellHE;
@@ -13,12 +13,14 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=455
-    Damage=415.0
-    DamageRadius=1350.0
-    PenetrationMag=920.0
-    HullFireChance=0.33
-    EngineFireChance=0.65
+    ImpactDamage=710
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    PenetrationMag=750.0
+    Damage=350.0   //725 gramms TNT, but is known for being inferior to soviet 76mm, so i assume worse/lighter  fragmentation
+    DamageRadius=950.0
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    HullFireChance=0.8
+    EngineFireChance=0.8
 
     bDebugInImperial=false
 
@@ -33,11 +35,11 @@ defaultproperties
     DHPenetrationTable(3)=3.2
     DHPenetrationTable(4)=2.8
     DHPenetrationTable(5)=2.4
-    DHPenetrationTable(6)=2.2
-    DHPenetrationTable(7)=1.9
-    DHPenetrationTable(8)=1.5
-    DHPenetrationTable(9)=1.2
-    DHPenetrationTable(10)=1.0
+    DHPenetrationTable(6)=2.4
+    DHPenetrationTable(7)=2.4
+    DHPenetrationTable(8)=2.4
+    DHPenetrationTable(9)=2.4
+    DHPenetrationTable(10)=2.4
 
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=20.0)

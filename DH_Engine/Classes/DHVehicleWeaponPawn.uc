@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHVehicleWeaponPawn extends ROVehicleWeaponPawn
@@ -1471,10 +1471,24 @@ function bool PlaceExitingDriver()
 {
     local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    StartIndex, i;
+    local DHVehicle DHV;
 
     if (Driver == none || VehicleBase == none)
     {
         return false;
+    }
+
+    // Try absolute exit positions first
+    DHV = DHVehicle(VehicleBase);
+
+    for (i = 0; i < DHV.AbsoluteExitPositions.Length; ++i)
+    {
+        ExitPosition = DHV.AbsoluteExitPositions[i].Location;
+
+        if (Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
     }
 
     // Set extent & ZOffset, using a smaller extent than original

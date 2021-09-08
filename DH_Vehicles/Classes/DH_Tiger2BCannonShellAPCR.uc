@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Tiger2BCannonShellAPCR extends DHCannonShellAPDS;
@@ -15,9 +15,9 @@ defaultproperties
     BallisticCoefficient=1.527 //TODO: find correct BC - this is grossly incorrect
 
     //Damage
-    ImpactDamage=545
+    ImpactDamage=555
     HullFireChance=0.38
-    EngineFireChance=0.75
+    EngineFireChance=0.7
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Cromwell6PdrTank extends DH_CromwellTank;
@@ -17,4 +17,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
+	
+	AmmoIgnitionProbability=0.65  // 0.75 default
+	
 }

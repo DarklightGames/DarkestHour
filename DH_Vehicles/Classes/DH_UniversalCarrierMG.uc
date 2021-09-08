@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_UniversalCarrierMG extends DHVehicleMG;
@@ -22,7 +22,7 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
-    InitialPrimaryAmmo=60
+    InitialPrimaryAmmo=63
     NumMGMags=15
     FireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'

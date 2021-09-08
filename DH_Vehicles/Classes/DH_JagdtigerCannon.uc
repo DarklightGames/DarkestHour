@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_JagdtigerCannon extends DHVehicleCannon;
@@ -12,7 +12,7 @@ defaultproperties
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
 
     // Cannon armour (mantlet)
-    GunMantletArmorFactor=10.0
+    GunMantletArmorFactor=20.0
     GunMantletSlope=40.0
 
     // Cannon movement

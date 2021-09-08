@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Sdkfz251Transport extends DHVehicle;
@@ -71,8 +71,8 @@ defaultproperties
     WheelLatFrictionScale=1.5
 
     // Damage
-    Health=2000
-    HealthMax=2000.0
+    Health=1500
+    HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=15.0,Y=0.0,Z=-15.0)) // engine

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ZiS3CannonShell extends DHSovietCannonShell;
@@ -14,10 +14,10 @@ defaultproperties
     BallisticCoefficient=1.55 //TODO: pls, check
 
     //Damage
-    ImpactDamage=560
+    ImpactDamage=660  //109 gramms TNT filler
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    HullFireChance=0.38
-    EngineFireChance=0.75
+    HullFireChance=0.55
+    EngineFireChance=0.91
 
     //Penetration
     DHPenetrationTable(0)=8.4  // 100m (all same as T34/76)

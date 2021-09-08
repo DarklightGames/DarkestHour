@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_TigerTank extends DHArmoredVehicle;
@@ -58,10 +58,18 @@ defaultproperties
     GearRatios(4)=0.7
     TransRatio=0.09
     SteerSpeed=50.0
+	
+    EngineRestartFailChance=0.25  //unreliability
 
     // Damage
-    Health=650
-    HealthMax=650.0
+	// pros: 5 men crew, relatively sparsed; 
+	// cons: petrol fuel; a lot of reliability problems with engine/transmission 
+    Health=570
+    HealthMax=570.0
+    EngineHealth=220  // reduced from 300
+    AmmoIgnitionProbability=0.8 // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointHeight=40.0,PointOffset=(X=-100.0,Z=10.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

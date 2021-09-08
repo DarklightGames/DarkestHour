@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_WHSquadLeader_Snow extends DHGESergeantRoles;
@@ -14,5 +14,10 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetCover'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ViSWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP38Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_C96Weapon extends DHPistolWeapon;
@@ -24,8 +24,8 @@ defaultproperties
 
     SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
 
-    DisplayFOV=75.0
-    IronSightDisplayFOV=70
+    DisplayFOV=85.0
+    IronSightDisplayFOV=75.0
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12

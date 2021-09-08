@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_Cromwell95mmCannonShellHEAT extends DHCannonShellHEAT;
@@ -13,9 +13,9 @@ defaultproperties
     BallisticCoefficient=2.6 // between 75mm (P3N) & 105mm howitzers
 
     //Damage
-    ImpactDamage=585         // between 75mm (P3N) & 105mm howitzers
-    Damage=415.0       // as 105mm howitzers
-    DamageRadius=615.0 // between 75mm (P3N) & 105mm howitzers
+    ImpactDamage=365    
+    Damage=400.0          ///couldnt find anything about the filler weight; assumed 600 gramms TNT
+    DamageRadius=700.0 
 
     //Effects
     DrawScale=1.2

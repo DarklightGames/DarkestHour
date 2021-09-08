@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -173,6 +173,86 @@ simulated function SetPlayerFOV(float PlayerFOV)
     if (InstigatorIsLocalHuman())
     {
         PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
+    }
+}
+
+// Re-implemented to fix a long-standing bug where picking up a weapon while
+// reloading an empty weapon would trigger a latent weapon change upon firing
+// the currently held weapon.
+function GiveTo(Pawn Other, optional Pickup Pickup)
+{
+    local ROWeaponPickup Pick;
+    local int m;
+    local weapon w;
+    local bool bPossiblySwitch, bJustSpawned;
+    local ROWeapon ROW;
+
+    if (Pickup != none)
+    {
+        Pick = ROWeaponPickup(Pickup);
+
+        if (Pick != none)
+        {
+            bBayonetMounted = Pick.bHasBayonetMounted;
+        }
+    }
+
+    Instigator = Other;
+    W = Weapon(Instigator.FindInventoryType(Class));
+
+    if (W == none || W.Class != Class)
+    {
+        bJustSpawned = true;
+
+        super(Inventory).GiveTo(Other);
+
+        bPossiblySwitch = true;
+
+        W = self;
+    }
+    else if (!W.HasAmmo())
+    {
+        bPossiblySwitch = true;
+    }
+
+    if (Pickup == none)
+    {
+        bPossiblySwitch = true;
+    }
+
+    for (m = 0; m < NUM_FIRE_MODES; ++m)
+    {
+        if (FireMode[m] != none)
+        {
+            FireMode[m].Instigator = Instigator;
+
+            W.GiveAmmo(m, WeaponPickup(Pickup), bJustSpawned);
+        }
+    }
+
+    // MODIFICATION:
+    // Do not switch to this weapon if the user cannot switch from their current
+    // weapon!
+    ROW = ROWeapon(Instigator.Inventory);
+
+    if (ROW != none && !ROW.WeaponCanSwitch())
+    {
+        bPossiblySwitch = false;
+    }
+
+    if (Instigator.Weapon != W)
+    {
+        W.ClientWeaponSet(bPossiblySwitch);
+    }
+
+    if (!bJustSpawned)
+    {
+        for (m = 0; m < NUM_FIRE_MODES; ++m)
+        {
+            Ammo[m] = none;
+        }
+
+        Destroy();
     }
 }
 
@@ -377,8 +457,17 @@ simulated state PostFiring
 
 simulated state RaisingWeapon
 {
-Begin:
-    bHasBeenDrawn = true;
+    simulated function bool IsBusy()
+    {
+        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
@@ -717,6 +806,38 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 }
 
+exec function SetMuzzleOffset(int X, int Y, int Z)
+{
+    local int i;
+    local DHWeaponFire WF;
+    local vector V;
+
+    V.X = X;
+    V.Y = Y;
+    V.Z = Z;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        for (i = 0; i < arraycount(FireMode); ++i)
+        {
+            WF = DHWeaponFire(FireMode[i]);
+
+            if (WF != none)
+            {
+                if (WF.FlashEmitter != none)
+                {
+                    WF.FlashEmitter.SetRelativeLocation(V);
+                }
+
+                if (WF.SmokeEmitter != none)
+                {
+                    WF.SmokeEmitter.SetRelativeLocation(V);
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {
@@ -871,6 +992,54 @@ simulated function name GetSelectAnim()
     return SelectAnim;
 }
 
+// This function handles sleeve and hand swapping depending on the player's role
+// (overriden to support hand textures).
+simulated function HandleSleeveSwapping()
+{
+    local Material RoleSleeveTexture, RoleHandTexture;
+    local DHRoleInfo RI;
+    local ROPlayer PC;
+
+    // Don't bother with AI players.
+    if (!Instigator.IsHumanControlled() || !Instigator.IsLocallyControlled())
+    {
+        return;
+    }
+
+    PC = ROPlayer(Instigator.Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (RI != none)
+    {
+        RoleSleeveTexture = RI.static.GetSleeveTexture();
+        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
+    }
+
+    if (RoleSleeveTexture != none && SleeveNum >= 0)
+    {
+        Skins[SleeveNum] = RoleSleeveTexture;
+    }
+
+    if (HandNum >= 0)
+    {
+        // We want our hands to look consistent when we change weapons.
+        // Handtex is still supported to preserve the old functionality,
+        // but hand textures defined by roles will take precedence.
+        if (RoleHandTexture != none)
+        {
+            Skins[HandNum] = RoleHandTexture;
+        }
+        else
+        {
+            Skins[HandNum] = Handtex;
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
@@ -881,7 +1050,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
-    SwayBayonetModifier=1.1
+    SwayBayonetModifier=1.2
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=0.9

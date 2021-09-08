@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHInventorySpawner extends Actor
@@ -66,14 +66,6 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
-        TouchMessageParameters.InventoryClass = WeaponClass;
-
-        UpdateProxies();
-    }
-
     if (Role == ROLE_Authority)
     {
         TeamIndex = int(TeamOwner);
@@ -91,9 +83,15 @@ simulated function PostBeginPlay()
 
         SetTimer(1.0, true);
     }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
+        TouchMessageParameters.InventoryClass = WeaponClass;
+
+        UpdateProxies();
+    }
 }
-
-
 
 simulated function Open()
 {
@@ -312,7 +310,9 @@ simulated function StaticMesh GetProxyStaticMesh()
 
 simulated function UpdateProxies()
 {
+    local int i;
     local Actor Proxy;
+    local bool bShouldHideProxies;
 
     while (Proxies.Length > PickupCount && Proxies.Length > 0)
     {
@@ -328,6 +328,13 @@ simulated function UpdateProxies()
         Proxy.SetRelativeLocation(vect(0, 0, 0));
         Proxy.SetRelativeRotation(rot(0, 0, 0));
         Proxies[Proxies.Length] = Proxy;
+    }
+
+    bShouldHideProxies = !CanBeUsedByTeam(Level.GetLocalPlayerController().GetTeamNum());
+
+    for (i = 0; i < Proxies.Length; ++i)
+    {
+        Proxies[i].bHidden = bShouldHideProxies;
     }
 }
 

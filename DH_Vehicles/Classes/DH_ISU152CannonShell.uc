@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ISU152CannonShell extends DHSovietCannonShell;
@@ -13,7 +13,9 @@ defaultproperties
     BallisticCoefficient=4.4 //TODO: find correct BC
 
     //Damage
-    ImpactDamage=2750
+    ImpactDamage=3000  //extremely powerful round with 400-600 gramms TNT - should leave nothing alive after penetration
+    Damage=900 //going to treat this like a heavy HE shell when it impacts the ground
+    DamageRadius=850
     HullFireChance=1.0
     EngineFireChance=1.0
 

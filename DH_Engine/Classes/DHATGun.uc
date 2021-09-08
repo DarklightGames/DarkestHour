@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -602,6 +602,26 @@ simulated event NotifySelected(Pawn User)
     }
 }
 
+// Function that gathers locations to use for the exit positions based on
+// factory hints (especially useful if the gun is in a tight position!)
+function PrependFactoryExitPositions()
+{
+    local DHLocationHint LocationHint;
+    local DHATGunFactory Factory;
+
+    Factory = DHATGunFactory(ParentFactory);
+
+    if (Factory != none && Factory.ExitPositionHintTag != '')
+    {
+        foreach AllActors(class'DHLocationHint', LocationHint, Factory.ExitPositionHintTag)
+        {
+            AbsoluteExitPositions.Insert(0, 1);
+            AbsoluteExitPositions[0].Location = LocationHint.Location;
+            AbsoluteExitPositions[0].Rotation = LocationHint.Rotation;
+        }
+    }
+}
+
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
 function Fire(optional float F);
 function ServerStartEngine();
@@ -651,8 +671,8 @@ defaultproperties
     bSpecialHUD=false
 
     // Damage
-    HealthMax=101.0
-    Health=101
+    HealthMax=185.0
+    Health=185
     EngineHealth=0
     VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
     DamagedEffectClass=none

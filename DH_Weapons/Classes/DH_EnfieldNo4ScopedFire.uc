@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_EnfieldNo4ScopedFire extends DHBoltFire;
@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_EnfieldNo4ScopedBullet'
     AmmoClass=class'DH_Weapons.DH_EnfieldNo4ScopedAmmo'
-    Spread=30.0
+    Spread=25.0
     PctRestDeployRecoil=0.25
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'

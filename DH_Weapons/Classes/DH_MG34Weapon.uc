@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_MG34Weapon extends DHMGWeapon;
@@ -73,6 +73,6 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
     BipodHipToDeploy="Hip_2_Bipod"
-    MagEmptyReloadAnim="Bipod_Reload"
-    MagPartialReloadAnim="Bipod_Reload"
+    MagEmptyReloadAnims(0)="Bipod_Reload"
+    MagPartialReloadAnims(0)="Bipod_Reload"
 }

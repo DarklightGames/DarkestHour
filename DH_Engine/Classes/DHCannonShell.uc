@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -206,6 +206,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             case EST_Rock:
             case EST_Gravel:
             case EST_Concrete:
+            case EST_Custom03:  //Brick
                 HitSound = RockHitSound;
                 HitEmitterClass = ShellHitRockEffectClass;
                 bShowDecal = true;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_IS2Cannon extends DHVehicleCannon;
@@ -56,7 +56,7 @@ defaultproperties
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
-    InitialAltAmmo=60
+    InitialAltAmmo=63
     NumMGMags=15
     AltFireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
@@ -81,8 +81,8 @@ defaultproperties
 
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=1.35)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=1.2,HUDProportion=0.35)
 
     // Cannon range settings
     RangeSettings(0)=0

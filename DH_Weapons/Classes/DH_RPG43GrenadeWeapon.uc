@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_RPG43GrenadeWeapon extends DHExplosiveWeapon;
@@ -16,4 +16,5 @@ defaultproperties
     Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade' // TODO: there is no specularity mask for this weapon
 
     GroupOffset=4
+    DisplayFOV=80.0
 }

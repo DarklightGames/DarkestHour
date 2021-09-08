@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_USWinterScarfPawn extends DH_USWinterPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GIS'
+    Mesh=SkeletalMesh'DHCharactersUS_anm.USWinter_GIS'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DHCWTankCrewmanRoles extends DHAlliedTankCrewmanRoles
@@ -13,4 +13,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
+    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
 }

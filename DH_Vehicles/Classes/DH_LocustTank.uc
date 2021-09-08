@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_LocustTank extends DHArmoredVehicle;
@@ -125,9 +125,15 @@ defaultproperties
     TransRatio=0.14
 
     // Damage
-    Health=200
-    HealthMax=200.0
-    EngineHealth=100
+	// pros: 37mm ammoracks are unlikely to explode
+	// cons: 3 men crew in a tight space; petrol fuel
+    Health=455
+    HealthMax=455.0
+	EngineHealth=300
+	AmmoIgnitionProbability=0.27  // 0.75 default
+    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
+    DisintegrationHealth=-800.0 //petrol
+    TurretDetonationThreshold=4000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
     VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=49.0

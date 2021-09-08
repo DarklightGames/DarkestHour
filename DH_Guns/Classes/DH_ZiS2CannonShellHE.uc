@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
 class DH_ZiS2CannonShellHE extends DHCannonShellHE;
@@ -15,11 +15,11 @@ defaultproperties
     //Damage
     ImpactDamage=350
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    Damage=300.0
-    DamageRadius=640.0
+    Damage=260.0  //220 gramms TNT
+    DamageRadius=650.0
     MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
     PenetrationMag=690.0
-    HullFireChance=0.25
+    HullFireChance=0.5
     EngineFireChance=0.50
 
     bDebugInImperial=false

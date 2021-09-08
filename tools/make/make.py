@@ -202,7 +202,7 @@ def main():
         sys.exit(1)
 
 
-    # read the default config 
+    # read the default config
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
     if os.path.isfile(default_config_path):
         config = ConfigParserMultiOpt()
@@ -324,6 +324,14 @@ def main():
     compiled_packages = set()
     did_build_succeed = True
 
+    ucc_log_path = os.path.join(sys_dir, 'UCC.log')
+
+    # write out an empty log file, so that even if there are no
+    # packages to compile, WOTgreal still has a log file to parse
+    ucc_log_file = open(ucc_log_path, 'w')
+    ucc_log_file.write('Warning: No packages were marked for compilation')
+    ucc_log_file.close()
+
     if len(packages_to_compile) > 0:
         print_header('Build started for mod: {}'.format(args.mod))
 
@@ -360,7 +368,7 @@ def main():
         proc.communicate()
 
         # store contents of ucc.log before it's overwritten
-        ucc_log_file = open('ucc.log', 'rb')
+        ucc_log_file = open(ucc_log_path, 'rb')
         ucc_log_contents = ucc_log_file.read()
         ucc_log_file.close()
 
@@ -389,7 +397,7 @@ def main():
                         os.remove(os.path.join(root, filename))
 
         # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
-        ucc_log_file = open('ucc.log', 'wb')
+        ucc_log_file = open(ucc_log_path, 'wb')
         ucc_log_file.truncate()
         ucc_log_file.write(ucc_log_contents)
         ucc_log_file.close()
@@ -419,8 +427,12 @@ def main():
         len(up_to_date_packages),
     ))
 
+    # exit with an error code if the build fails
+    if not did_build_succeed:
+        sys.exit(1)
+
     # create build snapshot
-    if args.snapshot and did_build_succeed:
+    if args.snapshot:
         # TODO: make sure that all of the necessary files are here
         zf = zipfile.ZipFile(os.path.join(mod_dir, '{}.zip'.format(args.mod)), mode='w')
         zf.write(manifest_path, os.path.relpath(manifest_path, mod_dir))
