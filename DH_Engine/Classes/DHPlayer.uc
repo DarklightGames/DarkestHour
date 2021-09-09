@@ -1031,21 +1031,12 @@ function bool IsArtilleryTargetValid(vector ArtilleryLocation)
     local DHVolumeTest VT;
     local bool         bValidTarget;
 
-    if (Pawn == none || Pawn.Health <= 0)
-    {
-        bValidTarget = false;
-    }
-    else
-    {
-        // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
+    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
 
-        VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
-
-        if (VT != none)
-        {
-            bValidTarget = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
+    if (VT != none)
+    {
+        bValidTarget = !VT.DHIsInNoArtyVolume(DHGameReplicationInfo(GameReplicationInfo));
+        VT.Destroy();
     }
 
     return bValidTarget;
@@ -7385,6 +7376,101 @@ exec function DebugStartRound()
             SPM.ModifySetupPhaseDuration(3, true);
         }
     }
+}
+
+function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker_FireSupport> MapMarkerClass)
+{
+    if (MapMarkerClass == none)
+    {
+        return;
+    }
+
+    if (IsArtilleryRequestingLocked())
+    {
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
+    }
+    else
+    {
+        LockArtilleryRequests(ArtilleryLockingPeriod);
+        AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+
+        if (MapMarkerClass.default.ArtilleryRange == AR_OffMap)
+        {
+            ServerNotifyRadioman();
+        }
+        else
+        {
+            ServerNotifyArtilleryOperators(MapMarkerClass);
+        }
+
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+    }
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker_FireSupport> FireSupportRequestClass)
+{
+    local int SquadMembersCount;
+    local DHGameReplicationInfo GRI;
+    local DHSquadReplicationInfo SRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    SRI = SquadReplicationInfo;
+
+    if (GRI == none || SRI == none || FireSupportRequestClass == none)
+    {
+        return FSE_Fatal;
+    }
+
+    if (!IsArtillerySpotter())
+    {
+        return FSE_InsufficientPrivileges;
+    }
+
+    switch (FireSupportRequestClass.default.ArtilleryRange)
+    {
+        case AR_OffMap:
+            if (GRI.bOffMapArtilleryEnabled[GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        case AR_OnMap:
+            if (GRI.bOnMapArtilleryEnabled[GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        default:
+            return FSE_Fatal;
+    }
+
+    SquadMembersCount = SRI.GetMemberCount(GetTeamNum(), GetSquadIndex());
+
+    if (Level.NetMode != NM_Standalone && SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    {
+        return FSE_NotEnoughSquadmates;
+    }
+
+    return FSE_None;
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<DHMapMarker_FireSupport> FireSupportRequestClass, vector WorldLocation)
+{
+    local DHFireSupport.EFireSupportError Error;
+
+    Error = GetFireSupportError(FireSupportRequestClass);
+
+    if (Error != FSE_None)
+    {
+        return Error;
+    }
+
+    if (!IsArtilleryTargetValid(WorldLocation))
+    {
+        return FSE_InvalidLocation;
+    }
+
+    return FSE_None;
 }
 
 defaultproperties

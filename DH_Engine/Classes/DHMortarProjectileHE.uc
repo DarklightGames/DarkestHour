@@ -38,7 +38,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (VT != none)
         {
-            bDud = VT.IsInNoArtyVolume();
+            bDud = VT.DHIsInNoArtyVolume(DHGameReplicationInfo(PlayerController(Instigator.Controller).GameReplicationInfo));
             VT.Destroy();
         }
     }

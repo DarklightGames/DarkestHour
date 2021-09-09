@@ -5679,7 +5679,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // become an active "no artillery" volume after they marked the location.
         VT = Spawn(class'DHVolumeTest', self,, Request.Location);
 
-        if (VT != none && VT.IsInNoArtyVolume())
+        if (VT != none && VT.DHIsInNoArtyVolume(GRI))
         {
             // The requested location is in a no-artillery volume.
             Response.Type = RESPONSE_BadLocation;

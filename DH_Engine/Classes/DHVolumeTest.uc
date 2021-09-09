@@ -7,7 +7,7 @@ class DHVolumeTest extends ROVolumeTest;
 
 // Modified to handle no arty volumes that are linked to a DHSpawnPoint (as well as an old spawn area) or to a DHObjective
 // Also to handle DHMineVolumes that use the option to also act as a NoArtyVolume
-function bool IsInNoArtyVolume()
+function bool DHIsInNoArtyVolume(DHGameReplicationInfo GRI)
 {
     local Volume V;
 
@@ -45,7 +45,7 @@ function bool IsInNoArtyVolume()
         // Prevent arty if we're in an active mine volume that is set to also function as a no arty volume
         else if (V.IsA('DHMineVolume'))
         {
-            if (DHMineVolume(V).bIsAlsoNoArtyVolume && DHMineVolume(V).bClientActive)
+            if (DHMineVolume(V).bIsAlsoNoArtyVolume && GRI.IsMineVolumeActive(DHMineVolume(V)))
             {
                 return true;
             }

@@ -18,6 +18,7 @@ const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
 const ARTILLERY_MAX = 8;
+const MINE_VOLUMES_MAX = 32;
 
 enum VehicleReservationError
 {
@@ -105,6 +106,9 @@ var byte                VehiclePoolSpawnCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
+
+// It is impossible to get DHMineVolume to actually replicate variables so this is needed as proxy.
+var byte                DHMineVolumeIsActives[MINE_VOLUMES_MAX];
 
 var int                 MaxTeamVehicles[2];
 
@@ -241,7 +245,8 @@ replication
         SurrenderVotesInProgress,
         TeamConstructions,
         bOffMapArtilleryEnabled,
-        bOnMapArtilleryEnabled;
+        bOnMapArtilleryEnabled,
+        DHMineVolumeIsActives;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -311,6 +316,8 @@ simulated function PostBeginPlay()
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
+
+        RegisterMineVolumes();
     }
 }
 
@@ -1434,6 +1441,7 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
     }
 
     MapMarker = MM;
+
     return true;
 }
 
@@ -1991,6 +1999,41 @@ function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
     }
 }
 
+//==============================================================================
+// MINE VOLUMES
+//==============================================================================
+
+function RegisterMineVolumes()
+{
+    local DHMineVolume MV;
+    local int Index;
+
+    if (ROLE != ROLE_Authority)
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHMineVolume', MV)
+    {
+        if (Index >= MINE_VOLUMES_MAX)
+        {
+            Warn("Too many mine volumes! Only" @ MINE_VOLUMES_MAX @ "minefield activation states can be tracked at once.");
+        }
+
+        MV.Index = Index++;
+    }
+}
+
+simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
+{
+    if (MineVolume == none || MineVolume.Index < 0 || MineVolume.Index >= MINE_VOLUMES_MAX)
+    {
+        return false;
+    }
+
+    return DHMineVolumeIsActives[MineVolume.Index] == 1;
+}
+
 defaultproperties
 {
     bNetNotify=true
@@ -2056,3 +2099,4 @@ defaultproperties
     DangerZoneNeutral=128
     DangerZoneBalance=128
 }
+
