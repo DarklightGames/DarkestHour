@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHRocketProjectileStrong extends DHRocketProjectile //for rockets with heavy filler, so they can destroy obstacles 
+class DHRocketProjectileStrong extends DHRocketProjectile; //for rockets with heavy filler, so they can destroy obstacles
 
 //a piece of code is copied from the satchel
 var float           ObstacleDamageRadius;       // A radius that will damage Obstacles
