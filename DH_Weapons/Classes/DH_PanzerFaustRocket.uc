@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_PanzerFaustRocket extends DHRocketProjectile;
+class DH_PanzerFaustRocket extends DHRocketProjectileStrong;
 
 defaultproperties
 {

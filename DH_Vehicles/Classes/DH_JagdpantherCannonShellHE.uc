@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_JagdpantherCannonShellHE extends DHCannonShellHE;
+class DH_JagdpantherCannonShellHE extends DHCannonShellHEStrong;
 
 defaultproperties
 {
@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=3.25
 
     //Damage
-    ImpactDamage=550
+    ImpactDamage=1000
     Damage=475.0
     DamageRadius=1550.0
     MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'

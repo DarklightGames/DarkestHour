@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_JacksonCannonShellHE extends DHCannonShellHE;
+class DH_JacksonCannonShellHE extends DHCannonShellHEStrong;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_Cromwell95mmCannonShellHE extends DHCannonShellHE;
+class DH_Cromwell95mmCannonShellHE extends DHCannonShellHEStrong;
 
 defaultproperties
 {
