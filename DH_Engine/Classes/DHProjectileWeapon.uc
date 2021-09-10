@@ -567,7 +567,7 @@ exec function CorrectY(float NewValue)
 }
 
 exec function EmptyMags()
-{    
+{
     if (IsDebugModeAllowed())
     {
         PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);
@@ -2046,7 +2046,7 @@ function bool FillAmmo()
     local int  InitialAmount, i;
     local bool bDidFillAmmo;
 
-    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
         InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 

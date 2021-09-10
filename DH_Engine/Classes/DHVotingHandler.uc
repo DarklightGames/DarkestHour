@@ -61,7 +61,7 @@ function PostBeginPlay()
                 CurrentGameConfig = 0;
 
                 // Find matching game type in game config
-                for(i=0; i < GameConfig.Length; i++)
+                for (i=0; i < GameConfig.Length; i++)
                 {
                     if (GameConfig[i].GameClass ~= string(Level.Game.Class))
                     {
@@ -83,7 +83,7 @@ function PostBeginPlay()
         Log("Map Voting Disabled", 'MapVote');
     }
 
-    if(bMatchSetup)
+    if (bMatchSetup)
     {
         Log("MatchSetup Enabled", 'MapVote');
 

@@ -278,7 +278,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local DHPlayer PC;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
 
-    if(PRI == none)
+    if (PRI == none || C == none)
     {
         return;
     }
@@ -304,14 +304,15 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
     // Display hints about selected artillery target
     PC = DHPlayer(PRI.Owner);
-    
-    if(PC != none)
+
+    if (PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         GRI.GetArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
-        if(GRI != none)
+
+        if (GRI != none)
         {
-            if(ArtilleryMarkers.Length > 0)
+            if (ArtilleryMarkers.Length > 0)
             {
                 C.CurX = default.WidgetsPanelX - 40;
                 C.CurY = default.WidgetsPanelY - 40;

@@ -18,7 +18,7 @@ var     float           UpdateTime;     // How often this thing needs to do it's
 var     class<DHMapIconAttachment> MapIconAttachmentClass;
 var     DHMapIconAttachment        MapIconAttachment;
 
-var     DHResupplyStrategy ResupplyStrategy; 
+var     DHResupplyStrategy ResupplyStrategy;
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -190,23 +190,23 @@ function Timer()
             P = ROPawn(recvr);
             V = Vehicle(recvr);
 
-            if (P != none && (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Players) 
-              || (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars) 
+            if (P != none && (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Players)
+              || (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars)
                 && RI != none && RI.bCanUseMortars)))
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
                 P.bTouchingResupply = true;
             }
-            else if (V != none && V != Base && (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Vehicles) 
-              || (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars) 
+            else if (V != none && V != Base && (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Vehicles)
+              || (ResupplyStrategy.static.CanResupplyType(ResupplyType, RT_Mortars)
                 && V.IsA('DHMortarVehicleWeaponPawn'))))
             {
                 ResupplyActors[ResupplyActors.Length] = V;
                 V.bTouchingResupply = true;
             }
 
-            if(ResupplyStrategy.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
+            if (ResupplyStrategy.HandleResupply(recvr, ResupplyType, Level.TimeSeconds))
             {
                 OnPawnResupplied(recvr);
             }

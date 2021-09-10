@@ -2068,7 +2068,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 {
     local class<DHShellExplosionDamageType> ExplosionDamageType;
-    local class<DHShellImpactDamageType>  ImpactDamageType ;
+    local class<DHShellImpactDamageType> ImpactDamageType;
 
     if (DHKiller == none || !DHKiller.IsArtilleryOperator())
     {
@@ -2076,15 +2076,19 @@ function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
     }
 
     ExplosionDamageType = class<DHShellExplosionDamageType>(DamageType);
-    if(ExplosionDamageType != none && ExplosionDamageType.default.bIsArtilleryExplosion)
+
+    if (ExplosionDamageType != none && ExplosionDamageType.default.bIsArtilleryExplosion)
     {
         return true;
     }
+
     ImpactDamageType = class<DHShellImpactDamageType>(DamageType);
-    if(ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact)
+
+    if (ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact)
     {
         return true;
     }
+
     return false;
 }
 
@@ -5639,7 +5643,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local DHPlayerReplicationInfo PRI;
     local vector MapLocation;
     local int Interval;
-    local bool test;
 
     if (Request == none ||
         Request.ArtilleryTypeIndex < 0 ||
@@ -5719,19 +5722,14 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime = GRI.ElapsedTime + Interval;
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].ArtilleryActor = Response.ArtilleryActor;
-            Log("replacing marker 1");
-            if(Response.ArtilleryActor.default.ActiveArtilleryMarkerClass != none)
+
+            if (Response.ArtilleryActor.default.ActiveArtilleryMarkerClass != none)
             {
-                Log("replacing marker 2");
                 PRI = DHPlayerReplicationInfo(Request.Sender.PlayerReplicationInfo);
                 GRI.GetMapCoords(Response.ArtilleryActor.Location, MapLocation.X, MapLocation.Y);
-                test = GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location) != -1;
-                Log("test" @ test);
+                GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location);
             }
-            else
-            {
-                Warn("Could not add an ongoing strike. The artillery marker won't be visible on the map.");
-            }
+
             NotifyPlayersOfMapInfoChange(Request.TeamIndex);
         }
     }

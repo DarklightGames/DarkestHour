@@ -72,11 +72,12 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicationInfo PRI)
 {
-    if(PRI == none)
+    if (PRI == none)
     {
         return false;
     }
-    switch(RoleSelector)
+
+    switch (RoleSelector)
     {
         case NO_ONE:
             return false;
@@ -94,8 +95,9 @@ static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicatio
             return PRI.IsAdmin();
         case PATRON:
             return PRI.IsPatron();
+        default:
+            return false;
     }
-    return false;
 }
 
 static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -107,17 +109,18 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
 
     bIsVisible = false;
 
-    if(PRI == none)
+    if (PRI == none)
     {
         return false;
     }
 
-    for(i = 0; i < Permissions.Length; i++)
+    for (i = 0; i < Permissions.Length; i++)
     {
-        if(Permissions[i].LevelSelector == SQUAD && Marker.SquadIndex != PRI.SquadIndex)
+        if (Permissions[i].LevelSelector == SQUAD && Marker.SquadIndex != PRI.SquadIndex)
         {
             continue;
         }
+
         bIsVisible = bIsVisible || CheckRole(Permissions[i].RoleSelector, PRI);
     }
 
@@ -135,16 +138,20 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
     bIsVisible = false;
 
     PC = DHPlayer(PRI.Owner);
+
     if(default.Scope == SQUAD
       && (default.RequiredSquadMembers == 0 && PC.SquadReplicationInfo == none
-        || PC.SquadReplicationInfo != none 
+        || PC.SquadReplicationInfo != none
           && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))
+    {
         return false;
+    }
 
-    for(i = 0; i < default.Permissions_CanPlace.Length; i++)
+    for (i = 0; i < default.Permissions_CanPlace.Length; i++)
     {
         bIsVisible = bIsVisible || CheckRole(default.Permissions_CanPlace[i], PRI);
     }
+
     return bIsVisible;
 }
 

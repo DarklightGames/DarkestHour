@@ -12,7 +12,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
     super.ClientKDriverEnter(PC);
 
     DHP = DHPlayer(PC);
-    if(DHP != none && DHP.IsArtilleryOperator())
+
+    if (DHP != none && DHP.IsArtilleryOperator())
     {
         DHP.QueueHint(50, false);
     }
@@ -81,11 +82,11 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-	// pros: 7 men crew; 
-	// cons: 105mm ammorack is more likely to explode; petrol fuel
+    // pros: 7 men crew;
+    // cons: 105mm ammorack is more likely to explode; petrol fuel
     Health=620
     HealthMax=620.0
-	EngineHealth=300	
+    EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")

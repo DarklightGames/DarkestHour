@@ -25,7 +25,7 @@ var color             ActivatedIconColor; // for off-map artillery requests
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    switch(default.ArtilleryRange)
+    switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
             PC.ServerSaveArtilleryTarget(Marker.WorldLocation);
@@ -36,10 +36,11 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 
 static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    switch(default.ArtilleryRange)
+    switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
             PC.ServerSaveArtilleryTarget(vect(0,0,0));
+            return;
         case EArtilleryRange.AR_OnMap:
             break;
     }
@@ -57,7 +58,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         return "";
     }
 
-    switch(default.ArtilleryRange)
+    switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
             return "";
@@ -85,21 +86,23 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
 {
     local DHPlayer PC;
 
-    switch(default.ArtilleryRange)
+    switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
             return default.IconColor;
         case EArtilleryRange.AR_OnMap:
             PC = DHPlayer(PRI.Owner);
-            if(PRI == none || PC == none)
+
+            if (PRI == none || PC == none)
             {
                 return default.IconColor;
             }
-            if(PC.IsArtilleryOperator() && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
-              || PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
+
+            if (PC.IsArtilleryOperator() && PC.ArtillerySupportSquadIndex == Marker.SquadIndex || PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
             {
                 return default.ActivatedIconColor;
             }
+
             return default.IconColor;
     }
 

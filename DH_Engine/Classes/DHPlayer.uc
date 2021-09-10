@@ -2179,13 +2179,10 @@ simulated function bool IsArtillerySpotter()
 simulated function bool IsRadioman()
 {
     local DHRoleInfo RI;
+
     RI = DHRoleInfo(GetRoleInfo());
 
-    if(RI != none)
-    {
-        return RI.bCarriesRadio;
-    }
-    return false;
+    return RI != none && RI.bCarriesRadio;
 }
 
 function ServerNotifyRadioman()
@@ -2226,7 +2223,7 @@ function bool IsPositionOfArtillery(vector Position)
         {
             // to do: refactor checking if GRI.DHArtillery[i].Location == Position
             // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
-            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
                 return true;
             }
@@ -7480,45 +7477,48 @@ exec function ToggleSelectedArtilleryTarget()
     local DHPlayerReplicationInfo PRI;
     local int i, NewSquadIndex, Attempts;
 
-    GRI = DHGameReplicationInfo(self.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (GRI == none || PRI == none || self.SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
     {
         return;
     }
 
-    GRI.GetArtilleryMapMarkers(self, ArtilleryMarkers, self.GetTeamNum());
-    NewSquadIndex = self.ArtillerySupportSquadIndex;
-    Attempts = 0;
-    while(Attempts < self.SquadReplicationInfo.TEAM_SQUADS_MAX)
-    {
-        NewSquadIndex = (NewSquadIndex + 1) % self.SquadReplicationInfo.TEAM_SQUADS_MAX;
+    GRI.GetArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
 
-        if(self.IsArtillerySpotter() && PRI.SquadIndex == NewSquadIndex)
+    NewSquadIndex = ArtillerySupportSquadIndex;
+
+    while (Attempts < SquadReplicationInfo.TEAM_SQUADS_MAX)
+    {
+        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+
+        if (IsArtillerySpotter() && PRI.SquadIndex == NewSquadIndex)
         {
-            if(ArtilleryMarkers.Length == 1)
+            if (ArtilleryMarkers.Length == 1)
             {
                 // "You are an artillery spotter. You cannot switch the active artillery target to your own marker."
-                self.ReceiveLocalizedMessage(class'DHSquadMessage', 81);
-                self.ArtillerySupportSquadIndex = -1;
+                ReceiveLocalizedMessage(class'DHSquadMessage', 81);
+                ArtillerySupportSquadIndex = -1;
                 return;
             }
+
             continue;
         }
-        
+
         for (i = 0; i < ArtilleryMarkers.Length; i++)
         {
             if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
-                self.ArtillerySupportSquadIndex = i;
+                ArtillerySupportSquadIndex = i;
                 return;
             }
         }
-        Attempts = Attempts + 1;
+
+        ++Attempts;
     }
 
-    self.ArtillerySupportSquadIndex = -1;
+    ArtillerySupportSquadIndex = -1;
 }
 
 defaultproperties

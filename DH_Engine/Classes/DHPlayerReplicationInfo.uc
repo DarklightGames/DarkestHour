@@ -106,12 +106,10 @@ simulated function bool IsPatron()
 simulated function bool IsRadioman()
 {
     local DHPlayer PC;
+
     PC = DHPlayer(Owner);
-    if(PC != none)
-    {
-        return PC.IsRadioman();
-    }
-    return false;
+
+    return PC != none && PC.IsRadioman();
 }
 
 simulated function bool IsArtilleryOperator()

@@ -1588,7 +1588,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             }
             break;
         case ALLIES_TEAM_INDEX:
-            switch(MapMarkerClass.default.OverwritingRule)
+            switch (MapMarkerClass.default.OverwritingRule)
             {
                 case UNIQUE_PER_GROUP:
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)

@@ -418,7 +418,7 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified so resupply point gradually replenishes ammo (no full resupply in one go)
 function bool FillAmmo()
 {
-    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
         if (AmmoAmount(0) < MaxAmmo(0))
         {

@@ -3576,7 +3576,7 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
         bDidResupply = super.ResupplyAmmo();
 

@@ -55,15 +55,12 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     if (P != none)
-    {        
-        PC = DHPlayer(Instigator.Controller);
-        if(PC != none)
+    {
+        PC = DHPlayer(P.Controller);
+
+        if (PC != none && PC.IsRadioman())
         {
-            RI = DHRoleInfo(PC.GetRoleInfo());
-            if(RI != none && RI.bCarriesRadio)
-            {
-                PC.QueueHint(13, false);
-            }
+            PC.QueueHint(13, false);
         }
     }
 }
