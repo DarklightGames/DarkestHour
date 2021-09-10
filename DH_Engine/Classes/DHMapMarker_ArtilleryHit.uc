@@ -15,7 +15,6 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     local int i, ClosestArtilleryRequest, ElapsedTime;
     local float MinimumDistance, Distance;
     local DHPlayerReplicationInfo PRI;
-    local bool bIsMarkerAlive;
 
     if (PC == none)
     {
@@ -42,9 +41,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     {
         Marker = MapMarkers[i];
 
-        bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > ElapsedTime;
-
-        if (bIsMarkerAlive
+        if (!GRI.IsMapMarkerExpired(Marker)
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
           && !(PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
           && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
@@ -62,7 +59,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     }
 
     PC.ArtilleryHitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHUnits'.static.MetersToUnreal(default.VisibilityRange));    // TODO: put the right
+    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHUnits'.static.MetersToUnreal(default.VisibilityRange));
 
     if (ClosestArtilleryRequest != -1 && PC.ArtilleryHitInfo.bIsWithinRadius)
     {
@@ -87,8 +84,7 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
     PC = DHPlayer(PRI.Owner);
 
-    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius
-    && !(PC.IsSL() && PC.GetSquadIndex() != Marker.SquadIndex);
+    return PC != none && PC.IsArtilleryOperator() && PC.ArtilleryHitInfo.bIsWithinRadius && !(PC.IsSL() && PC.GetSquadIndex() != Marker.SquadIndex);
 }
 
 defaultproperties
@@ -102,5 +98,5 @@ defaultproperties
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=NO_ONE)
     Permissions_CanPlace(0)=ARTILLERY_OPERATOR
-    VisibilityRange=50
+    VisibilityRange=100
 }

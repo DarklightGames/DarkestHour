@@ -29,6 +29,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     {
         case EArtilleryRange.AR_OffMap:
             PC.ServerSaveArtilleryTarget(Marker.WorldLocation);
+            break;
         case EArtilleryRange.AR_OnMap:
             break;
     }
@@ -39,8 +40,8 @@ static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker 
     switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
-            PC.ServerSaveArtilleryTarget(vect(0,0,0));
-            return;
+            PC.ServerSaveArtilleryTarget(vect(0, 0, 0));
+            break;
         case EArtilleryRange.AR_OnMap:
             break;
     }
@@ -86,6 +87,11 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
 {
     local DHPlayer PC;
 
+    if (PRI == none)
+    {
+        return default.IconColor;
+    }
+
     switch (default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
@@ -93,12 +99,11 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
         case EArtilleryRange.AR_OnMap:
             PC = DHPlayer(PRI.Owner);
 
-            if (PRI == none || PC == none)
-            {
-                return default.IconColor;
-            }
-
-            if (PC.IsArtilleryOperator() && PC.ArtillerySupportSquadIndex == Marker.SquadIndex || PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
+            if (PC != none
+                && PC.IsArtilleryOperator()
+                && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
+                || PC.IsArtillerySpotter()
+                && PRI.SquadIndex == Marker.SquadIndex)
             {
                 return default.ActivatedIconColor;
             }

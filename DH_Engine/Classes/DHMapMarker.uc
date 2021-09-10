@@ -102,12 +102,7 @@ static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicatio
 
 static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayer PC;
-    local bool bIsVisible;
     local int i;
-    local int SquadIndex;
-
-    bIsVisible = false;
 
     if (PRI == none)
     {
@@ -121,10 +116,13 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
             continue;
         }
 
-        bIsVisible = bIsVisible || CheckRole(Permissions[i].RoleSelector, PRI);
+        if (CheckRole(Permissions[i].RoleSelector, PRI))
+        {
+            return true;
+        }
     }
 
-    return bIsVisible;
+    return false;
 }
 
 // Override this function to determine if this map marker can be placed by

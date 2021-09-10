@@ -42,7 +42,6 @@ simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perha
 simulated function PostBeginPlay()
 {
     local DHPawn P;
-    local DHRoleInfo RI;
     local DHPlayer PC;
 
     P = DHPawn(Instigator);
