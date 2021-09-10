@@ -72,6 +72,10 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicationInfo PRI)
 {
+    if(PRI == none)
+    {
+        return false;
+    }
     switch(RoleSelector)
     {
         case NO_ONE:
@@ -102,6 +106,11 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
     local int SquadIndex;
 
     bIsVisible = false;
+
+    if(PRI == none)
+    {
+        return false;
+    }
 
     for(i = 0; i < Permissions.Length; i++)
     {

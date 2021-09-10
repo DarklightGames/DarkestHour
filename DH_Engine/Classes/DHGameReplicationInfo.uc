@@ -180,7 +180,6 @@ var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 var byte                                bOffMapArtilleryEnabled[2];
 var byte                                bOnMapArtilleryEnabled[2];
-var byte                                FireRequestNumber[2];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -1453,9 +1452,6 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
 {
     local int i;
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PC.Owner);
 
     switch (TeamIndex)
     {
@@ -1466,6 +1462,51 @@ simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, i
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                 MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+            break;
+    }
+}
+
+simulated function GetArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+{
+    local int i, NewSquadIndex;
+    local DHPlayerReplicationInfo PRI;
+    local MapMarker Marker;
+    local bool bIsMarkerAlive;
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); i++)
+            {
+                Marker = AxisMapMarkers[i];
+
+                bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > self.ElapsedTime;
+
+                if (bIsMarkerAlive
+                  && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+                  && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+                {
+                    MapMarkers[MapMarkers.Length] = Marker;
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
+            {
+                Marker = AlliesMapMarkers[i];
+
+                bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > self.ElapsedTime;
+
+                if (bIsMarkerAlive
+                  && Marker.MapMarkerClass != none
+                  && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+                  && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+                {
+                    MapMarkers[MapMarkers.Length] = Marker;
+                }
+            }
             break;
     }
 }

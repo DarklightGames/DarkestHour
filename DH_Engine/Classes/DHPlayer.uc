@@ -7475,12 +7475,9 @@ function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<D
 
 exec function ToggleSelectedArtilleryTarget()
 {
-    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
-    local DHGameReplicationInfo.MapMarker Marker;
+    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    local DHSquadReplicationInfo SRI;
-    local bool bIsMarkerAlive;
     local int i, NewSquadIndex, Attempts;
 
     GRI = DHGameReplicationInfo(self.GameReplicationInfo);
@@ -7491,7 +7488,7 @@ exec function ToggleSelectedArtilleryTarget()
         return;
     }
 
-    GRI.GetMapMarkers(self, MapMarkers, self.GetTeamNum());
+    GRI.GetArtilleryMapMarkers(self, ArtilleryMarkers, self.GetTeamNum());
     NewSquadIndex = self.ArtillerySupportSquadIndex;
     Attempts = 0;
     while(Attempts < self.SquadReplicationInfo.TEAM_SQUADS_MAX)
@@ -7500,19 +7497,19 @@ exec function ToggleSelectedArtilleryTarget()
 
         if(self.IsArtillerySpotter() && PRI.SquadIndex == NewSquadIndex)
         {
+            if(ArtilleryMarkers.Length == 1)
+            {
+                // "You are an artillery spotter. You cannot switch the active artillery target to your own marker."
+                self.ReceiveLocalizedMessage(class'DHSquadMessage', 81);
+                self.ArtillerySupportSquadIndex = -1;
+                return;
+            }
             continue;
         }
         
-        for (i = 0; i < MapMarkers.Length; ++i)
+        for (i = 0; i < ArtilleryMarkers.Length; i++)
         {
-            Marker = MapMarkers[i];
-
-            bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > GRI.ElapsedTime;
-
-            if (bIsMarkerAlive
-              && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-              && NewSquadIndex == Marker.SquadIndex
-              && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+            if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
                 self.ArtillerySupportSquadIndex = i;
                 return;
@@ -7522,11 +7519,6 @@ exec function ToggleSelectedArtilleryTarget()
     }
 
     self.ArtillerySupportSquadIndex = -1;
-}
-
-exec function AddFireRequest(int type, int squad)
-{
-
 }
 
 defaultproperties

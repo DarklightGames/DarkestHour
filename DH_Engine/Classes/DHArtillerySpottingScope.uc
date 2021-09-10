@@ -276,6 +276,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local array<int> TickBuckets;
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
+    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
 
     if(PRI == none)
     {
@@ -307,15 +308,20 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     if(PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        GRI.GetArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
         if(GRI != none)
         {
-            if(PC.ArtillerySupportSquadIndex == -1 && GRI.FireRequestNumber[PC.GetTeamNum()] == 1
-              || GRI.FireRequestNumber[PC.GetTeamNum()] > 1)
+            if(ArtilleryMarkers.Length > 0)
             {
                 C.CurX = default.WidgetsPanelX - 40;
-                C.CurY = default.WidgetsPanelY - 30;
+                C.CurY = default.WidgetsPanelY - 40;
                 C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor("Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests:" @ GRI.FireRequestNumber[PC.GetTeamNum()], PC);
+                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor("Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests:" @ ArtilleryMarkers.Length $ ".", PC);
+                C.DrawText(Label);
+                C.CurX = default.WidgetsPanelX - 40;
+                C.CurY = default.WidgetsPanelY - 20;
+                C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+                Label = "You cannot use your own markers.";
                 C.DrawText(Label);
             }
         }

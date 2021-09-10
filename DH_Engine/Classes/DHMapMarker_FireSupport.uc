@@ -25,9 +25,6 @@ var color             ActivatedIconColor; // for off-map artillery requests
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHGameReplicationInfo GRI;
-
-
     switch(default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
@@ -35,37 +32,16 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
         case EArtilleryRange.AR_OnMap:
             break;
     }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    if(GRI != none)
-    {
-        GRI.FireRequestNumber[PC.GetTeamNum()]++;
-    }
-    else
-    {
-        Warn("Could not increment FireRequestNumber[" $ PC.GetTeamNum() $ "], hints for artillery operators won't work.");
-    }
 }
 
 static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHGameReplicationInfo GRI;
     switch(default.ArtilleryRange)
     {
         case EArtilleryRange.AR_OffMap:
             PC.ServerSaveArtilleryTarget(vect(0,0,0));
         case EArtilleryRange.AR_OnMap:
             break;
-    }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    if(GRI != none)
-    {
-        GRI.FireRequestNumber[PC.GetTeamNum()]--;
-    }
-    else
-    {
-        Warn("Could not decrement FireRequestNumber[" $ PC.GetTeamNum() $ "], hints for artillery operators won't work.");
     }
 }
 
@@ -143,9 +119,9 @@ defaultproperties
     GroupIndex=-1
     bShouldShowOnCompass=false
     OverwritingRule=UNIQUE
-    Scope=TEAM
+    Scope=PERSONALL
     LifetimeSeconds=-1            // artillery requests never expire
-    RequiredSquadMembers=3
+    RequiredSquadMembers=1
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
