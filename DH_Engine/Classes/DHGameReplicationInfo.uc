@@ -180,6 +180,7 @@ var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 var byte                                bOffMapArtilleryEnabled[2];
 var byte                                bOnMapArtilleryEnabled[2];
+var byte                                FireRequestNumber[2];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;

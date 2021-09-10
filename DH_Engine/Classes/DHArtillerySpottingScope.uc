@@ -273,7 +273,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
-    local array<int>   TickBuckets;
+    local array<int> TickBuckets;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
     if(PRI == none)
     {
@@ -298,6 +300,34 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
+
+    // Display hints about selected artillery target
+    PC = DHPlayer(PRI.Owner);
+    
+    if(PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        if(GRI != none)
+        {
+            if(PC.ArtillerySupportSquadIndex == -1 && GRI.FireRequestNumber[PC.GetTeamNum()] == 1
+              || GRI.FireRequestNumber[PC.GetTeamNum()] > 1)
+            {
+                C.CurX = default.WidgetsPanelX - 40;
+                C.CurY = default.WidgetsPanelY - 30;
+                C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor("Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests:" @ GRI.FireRequestNumber[PC.GetTeamNum()], PC);
+                C.DrawText(Label);
+            }
+        }
+        else
+        {
+            Warn("DHGameReplicationInfo is null, hints for artillery operators won't work.");
+        }
+    }
+    else
+    {
+        Warn("DHPlayer is null, hints for artillery operators won't work.");
+    }
 
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)

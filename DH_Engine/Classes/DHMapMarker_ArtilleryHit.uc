@@ -6,6 +6,8 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
+var int VisibilityRange;
+
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
@@ -45,7 +47,8 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
         if (bIsMarkerAlive
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
           && !(PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
-          && PC.ArtillerySupportSquadIndex == Marker.SquadIndex)
+          && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
+          && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - Marker.WorldLocation);
@@ -59,7 +62,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     }
 
     PC.ArtilleryHitInfo.ClosestArtilleryRequestIndex = ClosestArtilleryRequest;
-    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHUnits'.static.MetersToUnreal(200));    // TODO: put the right
+    PC.ArtilleryHitInfo.bIsWithinRadius = (MinimumDistance < class'DHUnits'.static.MetersToUnreal(default.VisibilityRange));    // TODO: put the right
 
     if (ClosestArtilleryRequest != -1 && PC.ArtilleryHitInfo.bIsWithinRadius)
     {
@@ -99,4 +102,5 @@ defaultproperties
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=NO_ONE)
     Permissions_CanPlace(0)=ARTILLERY_OPERATOR
+    VisibilityRange=50
 }

@@ -7473,6 +7473,62 @@ function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<D
     return FSE_None;
 }
 
+exec function ToggleSelectedArtilleryTarget()
+{
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local DHGameReplicationInfo.MapMarker Marker;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHSquadReplicationInfo SRI;
+    local bool bIsMarkerAlive;
+    local int i, NewSquadIndex, Attempts;
+
+    GRI = DHGameReplicationInfo(self.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none || self.SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    {
+        return;
+    }
+
+    GRI.GetMapMarkers(self, MapMarkers, self.GetTeamNum());
+    NewSquadIndex = self.ArtillerySupportSquadIndex;
+    Attempts = 0;
+    while(Attempts < self.SquadReplicationInfo.TEAM_SQUADS_MAX)
+    {
+        NewSquadIndex = (NewSquadIndex + 1) % self.SquadReplicationInfo.TEAM_SQUADS_MAX;
+
+        if(self.IsArtillerySpotter() && PRI.SquadIndex == NewSquadIndex)
+        {
+            continue;
+        }
+        
+        for (i = 0; i < MapMarkers.Length; ++i)
+        {
+            Marker = MapMarkers[i];
+
+            bIsMarkerAlive = Marker.ExpiryTime == -1 || Marker.ExpiryTime > GRI.ElapsedTime;
+
+            if (bIsMarkerAlive
+              && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+              && NewSquadIndex == Marker.SquadIndex
+              && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+            {
+                self.ArtillerySupportSquadIndex = i;
+                return;
+            }
+        }
+        Attempts = Attempts + 1;
+    }
+
+    self.ArtillerySupportSquadIndex = -1;
+}
+
+exec function AddFireRequest(int type, int squad)
+{
+
+}
+
 defaultproperties
 {
     CorpseStayTime=15

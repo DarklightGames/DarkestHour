@@ -77,7 +77,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         Controller.SteamGetUserName() != "")
     {
         // This converts an underscore to a non-breaking space (0xA0)
-        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", " "));
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", "ï¿½"));
     }
 }
 
@@ -370,6 +370,8 @@ event Opened(GUIComponent Sender)
         if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v9.7.6")) < 0)
         {
             Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
+
+            SetKeyBindIfAvailable(",", "ToggleSelectedArtilleryTarget");
 
             if (PlayerOwner().ConsoleCommand("get IpDrv.TcpNetDriver KeepAliveTime") != "0.004")
             {
