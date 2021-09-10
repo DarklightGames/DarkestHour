@@ -18,6 +18,6 @@ defaultproperties
     Scope=TEAM
     LifetimeSeconds=-1
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)
-    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=SL)
-    Permissions_CanPlace(0)=SL)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=NO_ONE)
+    Permissions_CanPlace(0)=ARTILLERY_SPOTTER)
 }

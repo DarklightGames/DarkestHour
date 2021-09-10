@@ -1668,7 +1668,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
     }
 }
 
-function InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> MarkerClass)
+function InvalidateMarker(int TeamIndex, class<DHMapMarker> MarkerClass)
 {
     local int i;
 

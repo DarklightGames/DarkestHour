@@ -5639,6 +5639,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     local DHPlayerReplicationInfo PRI;
     local vector MapLocation;
     local int Interval;
+    local bool test;
 
     if (Request == none ||
         Request.ArtilleryTypeIndex < 0 ||
@@ -5718,11 +5719,18 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime = GRI.ElapsedTime + Interval;
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].ArtilleryActor = Response.ArtilleryActor;
+            Log("replacing marker 1");
             if(Response.ArtilleryActor.default.ActiveArtilleryMarkerClass != none)
             {
+                Log("replacing marker 2");
                 PRI = DHPlayerReplicationInfo(Request.Sender.PlayerReplicationInfo);
                 GRI.GetMapCoords(Response.ArtilleryActor.Location, MapLocation.X, MapLocation.Y);
-                GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location);
+                test = GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location) != -1;
+                Log("test" @ test);
+            }
+            else
+            {
+                Warn("Could not add an ongoing strike. The artillery marker won't be visible on the map.");
             }
             NotifyPlayersOfMapInfoChange(Request.TeamIndex);
         }
