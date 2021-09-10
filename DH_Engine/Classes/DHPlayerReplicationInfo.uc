@@ -114,6 +114,26 @@ simulated function bool IsRadioman()
     return false;
 }
 
+simulated function bool IsArtilleryOperator()
+{
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    return PC != none && PC.IsArtilleryOperator();
+}
+
+simulated function bool IsArtillerySpotter()
+{
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    return PC != none && PC.IsArtillerySpotter();
+}
+
+simulated function bool IsAdmin()
+{
+    return self.bAdmin || self.bSilentAdmin
+      || (self.Level != none && self.Level.NetMode == NM_Standalone);
+}
+
 // Will return true if passed two players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {

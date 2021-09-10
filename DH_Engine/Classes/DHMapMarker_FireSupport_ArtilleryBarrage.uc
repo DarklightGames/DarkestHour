@@ -6,6 +6,27 @@
 class DHMapMarker_FireSupport_ArtilleryBarrage extends DHMapMarker_FireSupport
     abstract;
 
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PRI != none && PC != none 
+      && !PC.IsPositionOfArtillery(Marker.WorldLocation)
+      && !PC.IsPositionOfParadrop(Marker.WorldLocation);
+}
+
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PRI.Owner);
+
+    return PRI != none && PC != none 
+      && !PC.IsPositionOfParadrop(Marker.WorldLocation);
+}
+
 defaultproperties
 {
     MarkerName="Off-map artillery barrage"

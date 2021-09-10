@@ -6,27 +6,6 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-// Only allow artillery roles to place artillery hits.
-static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
-{
-    local DHPlayer PC;
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    PC = DHPlayer(PRI.Owner);
-
-    return PC != none && PC.IsArtilleryOperator();
-}
-
-// Disable for everyone - artillery hits can't be removed from the map.
-static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return false;
-}
-
 static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocation)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
@@ -122,4 +101,7 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
     LifetimeSeconds=15 // 30 seconds
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=NO_ONE)
+    Permissions_CanPlace(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
 }

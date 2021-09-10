@@ -19,74 +19,9 @@ enum EArtilleryRange
 };
 
 var string            TypeName;
-var int               RequiredSquadMembers;
 var EArtilleryType    ArtilleryType;
 var EArtilleryRange   ArtilleryRange;
 var color             ActivatedIconColor; // for off-map artillery requests
-
-// Any squad leader can call artillery support.
-static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
-{
-    local DHPlayer PC;
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    PC = DHPlayer(PRI.Owner);
-
-    return PC != none && PC.IsArtillerySpotter();
-}
-
-static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    local DHPlayer PC;
-
-    PC = DHPlayer(PRI.Owner);
-
-    if(PRI == none || PC == none)
-    {
-        return false;
-    }
-
-    switch(default.ArtilleryRange)
-    {
-        case EArtilleryRange.AR_OffMap:
-            // check if there are no ongoing artillery strikes
-            if(PC != none
-              && PC.IsPositionOfArtillery(Marker.WorldLocation)
-                || PC.IsPositionOfParadrop(Marker.WorldLocation))
-                return false;
-            return Marker.SquadIndex == PRI.SquadIndex && PC.IsArtillerySpotter();
-        case EArtilleryRange.AR_OnMap:
-            return PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex;
-    }
-
-    return false;
-}
-
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    local DHPlayer PC;
-
-    PC = DHPlayer(PRI.Owner);
-
-    if (PRI == none || PC == none)
-    {
-        return false;
-    }
-
-    switch(default.ArtilleryRange)
-    {
-        case EArtilleryRange.AR_OffMap:
-            return !PC.IsPositionOfParadrop(Marker.WorldLocation);
-        case EArtilleryRange.AR_OnMap:
-            return (PC.IsArtilleryOperator() || PC.IsSL() && PRI.SquadIndex == Marker.SquadIndex);
-    }
-
-    return false;
-}
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
@@ -186,6 +121,9 @@ defaultproperties
     OverwritingRule=UNIQUE
     Scope=TEAM
     LifetimeSeconds=-1            // artillery requests never expire
-    // RequiredSquadMembers=3
     RequiredSquadMembers=3
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
+    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
+    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
 }
