@@ -25,5 +25,5 @@ defaultproperties
     Scope=SQUAD
     Permissions_CanSee(0)=(LevelSelector=SQUAD,RoleSelector=ALL)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=SL)
-    Permissions_CanPlace(0)=(LevelSelector=SQUAD,RoleSelector=SL)
+    Permissions_CanPlace(0)=SL
 }

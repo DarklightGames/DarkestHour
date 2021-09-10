@@ -16,7 +16,7 @@ defaultproperties
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=SL)
     Permissions_CanRemove(1)=(LevelSelector=TEAM,RoleSelector=ASL)
     Permissions_CanRemove(2)=(LevelSelector=TEAM,RoleSelector=PATRON)
-    Permissions_CanPlace(0)=(LevelSelector=TEAM,RoleSelector=SL)
-    Permissions_CanPlace(1)=(LevelSelector=TEAM,RoleSelector=ASL)
-    Permissions_CanPlace(2)=(LevelSelector=TEAM,RoleSelector=PATRON)
+    Permissions_CanPlace(0)=SL
+    Permissions_CanPlace(1)=ASL
+    Permissions_CanPlace(2)=PATRON
 }

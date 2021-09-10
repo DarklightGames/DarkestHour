@@ -17,5 +17,5 @@ defaultproperties
     Scope=PERSONAL
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
-    Permissions_CanPlace(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
+    Permissions_CanPlace(0)=ADMIN
 }

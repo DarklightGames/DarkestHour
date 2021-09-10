@@ -208,5 +208,5 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 defaultproperties
 {
-    ActiveArtilleryMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
+    ActiveArtilleryMarkerClass=class'DHMapMarker_OngoingBarrage'
 }

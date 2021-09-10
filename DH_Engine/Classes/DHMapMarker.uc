@@ -49,7 +49,7 @@ struct SVisibilityPermissions
     var ELevelSelector LevelSelector;
 };
 
-var array<SVisibilityPermissions> Permissions_CanPlace;
+var array<ERolePermissions> Permissions_CanPlace;
 var array<SVisibilityPermissions> Permissions_CanSee;
 var array<SVisibilityPermissions> Permissions_CanRemove;
 
@@ -91,19 +91,21 @@ static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicatio
         case PATRON:
             return PRI.IsPatron();
     }
+    return false;
 }
 
-static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, optional int SquadIndex)
+static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local DHPlayer PC;
     local bool bIsVisible;
     local int i;
+    local int SquadIndex;
 
     bIsVisible = false;
 
     for(i = 0; i < Permissions.Length; i++)
     {
-        if(Permissions[i].LevelSelector == SQUAD && SquadIndex != PRI.SquadIndex)
+        if(Permissions[i].LevelSelector == SQUAD && Marker.SquadIndex != PRI.SquadIndex)
         {
             continue;
         }
@@ -118,6 +120,10 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
+    local int i;
+    local bool bIsVisible;
+
+    bIsVisible = false;
 
     PC = DHPlayer(PRI.Owner);
     if(default.Scope == SQUAD
@@ -125,21 +131,26 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
         || PC.SquadReplicationInfo != none 
           && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))
         return false;
-    return CheckPermissions(default.Permissions_CanPlace, PRI);
+
+    for(i = 0; i < default.Permissions_CanPlace.Length; i++)
+    {
+        bIsVisible = bIsVisible || CheckRole(default.Permissions_CanPlace[i], PRI);
+    }
+    return bIsVisible;
 }
 
 // Override this function to determine if this map marker can be removed by
 // the provided player.
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return CheckPermissions(default.Permissions_CanRemove, PRI);
+    return CheckPermissions(default.Permissions_CanRemove, PRI, Marker);
 }
 
 // Override this function to determine if this map marker can be displayed on the map by
 // the provided player.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    return CheckPermissions(default.Permissions_CanSee, PRI);
+    return CheckPermissions(default.Permissions_CanSee, PRI, Marker);
 }
 
 static function color GetBeeLineColor()

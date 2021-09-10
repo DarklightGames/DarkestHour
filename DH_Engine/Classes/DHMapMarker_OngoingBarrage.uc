@@ -1,21 +1,23 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DHMapMarker_Friendly extends DHMapMarker
+class DHMapMarker_OngoingBarrage extends DHMapMarker
     abstract;
 
 defaultproperties
 {
-    IconColor=(R=0,G=255,B=0,A=255)
-    GroupIndex=2
+    MarkerName="Ongoing Barrage"
+
+    IconMaterial=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
+    IconCoords=(X1=0,Y1=64,X2=63,Y2=127)
+    IconColor=(R=255,G=255,B=255,A=255)
+
+    OverwritingRule=UNIQUE
     Scope=TEAM
-    OverwritingRule=OFF
+    LifetimeSeconds=-1
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=SL)
-    Permissions_CanRemove(1)=(LevelSelector=TEAM,RoleSelector=ASL)
-    Permissions_CanPlace(0)=SL
-    Permissions_CanPlace(1)=ASL
+    Permissions_CanPlace(0)=SL)
 }
-

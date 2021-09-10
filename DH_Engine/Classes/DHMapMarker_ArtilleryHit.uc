@@ -103,5 +103,5 @@ defaultproperties
     LifetimeSeconds=15 // 30 seconds
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=NO_ONE)
-    Permissions_CanPlace(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
+    Permissions_CanPlace(0)=ARTILLERY_OPERATOR
 }

@@ -125,5 +125,5 @@ defaultproperties
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanPlace(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=ARTILLERY_SPOTTER
 }
