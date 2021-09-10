@@ -59,6 +59,7 @@ simulated function PostBeginPlay()
 
         if (PC != none && PC.IsRadioman())
         {
+            // "You are a radio operator! Stay close to squad leaders so they can call in artillery strikes!"
             PC.QueueHint(13, false);
         }
     }
