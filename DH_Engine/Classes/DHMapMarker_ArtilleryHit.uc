@@ -6,11 +6,10 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocation)
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHGameReplicationInfo GRI;
-    local DHGameReplicationInfo.MapMarker Marker;
     local int i, ClosestArtilleryRequest, ElapsedTime;
     local float MinimumDistance, Distance;
     local DHPlayerReplicationInfo PRI;
@@ -35,7 +34,8 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocati
 
     GRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
 
-    // Look for the closest marker that corresponds to the given RequestMarkerClass
+    // Look for the selected artillery target
+    // Also in case the operator is also a spotter: do not let them shoot if the shells land on their squad's marker
     for (i = 0; i < MapMarkers.Length; ++i)
     {
         Marker = MapMarkers[i];
@@ -44,11 +44,11 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocati
 
         if (bIsMarkerAlive
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-          && !(PRI.IsSL() && PRI.SquadIndex == Marker.SquadIndex)
+          && !(PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
           && PC.ArtillerySupportSquadIndex == Marker.SquadIndex)
         {
             Marker.WorldLocation.Z = 0.0;
-            Distance = VSize(Marker.WorldLocation - WorldLocation);
+            Distance = VSize(Marker.WorldLocation - Marker.WorldLocation);
 
             if (MinimumDistance > Distance)
             {
@@ -71,11 +71,6 @@ static function CalculateHitMarkerVisibility(out DHPlayer PC, vector WorldLocati
         // to do: handle it in a better way?
         PC.ArtilleryHitInfo.ExpiryTime = 0;
     }
-}
-
-static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
-{
-    CalculateHitMarkerVisibility(PC, Marker.WorldLocation);
 }
 
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)

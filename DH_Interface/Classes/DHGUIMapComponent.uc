@@ -463,7 +463,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
                 (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
                 PublicMapMarkers[i].MapMarkerClass.static.IsOnMapArtillery() &&
                 PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]) &&
-                (PC.IsArtilleryOperator() && !(PC.IsSL() && PC.GetSquadIndex() == PublicMapMarkers[i].SquadIndex)) &&
+                (PC.IsArtilleryOperator() && !(PC.IsArtillerySpotter() && PC.GetSquadIndex() == PublicMapMarkers[i].SquadIndex)) &&
                 IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
                 if (PC.ArtillerySupportSquadIndex == PublicMapMarkers[i].SquadIndex)
