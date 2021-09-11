@@ -2083,13 +2083,7 @@ function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
     }
 
     ImpactDamageType = class<DHShellImpactDamageType>(DamageType);
-
-    if (ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact)
-    {
-        return true;
-    }
-
-    return false;
+    return ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact;
 }
 
 // Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
@@ -2099,7 +2093,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i;
+    local int        i, MarkerExpiryTime;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
 
     if (Killed == none)
@@ -2122,9 +2116,15 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        if (IsArtilleryKill(DHKiller, DamageType) &&
-            (DHKiller.ArtilleryHitInfo.ExpiryTime == -1 || DHKiller.ArtilleryHitInfo.ExpiryTime > GRI.ElapsedTime))
+        Log("IsArtilleryKill(DHKiller, DamageType):" @ IsArtilleryKill(DHKiller, DamageType));
+        Log("DHKiller.ArtilleryHitInfo.ExpiryTime:" @ DHKiller.ArtilleryHitInfo.ExpiryTime);
+        Log("ElapsedTime:" @ ElapsedTime);
+        Log("DHKiller.ArtilleryHitInfo.bIsWithinRadius:" @ DHKiller.ArtilleryHitInfo.bIsWithinRadius);
+        if (IsArtilleryKill(DHKiller, DamageType) 
+          && (MarkerExpiryTime == -1 || MarkerExpiryTime > ElapsedTime)
+          && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
         {
+            Log("Artillery kill");
             DamageType =  class'DHArtilleryKillDamageType';
         }
 
@@ -2443,13 +2443,6 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
     KilledPRI = Killed.PlayerReplicationInfo;
 
-    if (class<DHArtilleryKillDamageType>(DamageType) != none && Killer != none && Killed != none)
-    {
-        // broadcast artillery kill feed to the artillery operator
-        DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
-        return;
-    }
-
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
     // (If message mode is OnDeath or Personal) AND DamageType is not type DHInstantObituaryDamageTypes
     if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
@@ -2470,7 +2463,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         return;
     }
 
-    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a Spawn Kill
+    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a DHInstantObituaryDamageTypes
     // Loop through all controllers & DM each human player
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {

@@ -45,9 +45,6 @@ function SetHitLocation(vector HitLocation)
 
     if (VehicleWeapon != none)
     {
-        VehicleWeapon.ArtilleryHitLocation.HitLocation = HitLocation;
-        VehicleWeapon.ArtilleryHitLocation.ElapsedTime = Level.Game.GameReplicationInfo.ElapsedTime;
-
         if (bIsCalibrating)
         {
             Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));

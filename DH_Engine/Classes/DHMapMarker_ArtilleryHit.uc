@@ -12,7 +12,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker H
 {
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHGameReplicationInfo GRI;
-    local int i, ClosestArtilleryRequest;
+    local int i;
     local float Distance, Threshold;
     local DHPlayerReplicationInfo PRI;
     local vector RequestLocation, HitLocation;
@@ -43,14 +43,12 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker H
             Distance = VSize(RequestLocation - HitLocation);
             Threshold = class'DHUnits'.static.MetersToUnreal(default.VisibilityRange);
             PC.ArtilleryHitInfo.bIsWithinRadius = (Distance < Threshold);
-            PC.ArtilleryHitInfo.ClosestArtilleryRequestLocation = MapMarkers[ClosestArtilleryRequest].WorldLocation;
-            PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[ClosestArtilleryRequest].ExpiryTime;
+            PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[i].ExpiryTime;
             return;
         }
     }
-    
+
     PC.ArtilleryHitInfo.bIsWithinRadius = false;
-    PC.ArtilleryHitInfo.ClosestArtilleryRequestLocation = vect(0.0,0.0,0.0);
     PC.ArtilleryHitInfo.ExpiryTime = 0;
 }
 
