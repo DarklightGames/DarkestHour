@@ -83,6 +83,8 @@ var     int                 TargetWidgetSecondLineOffset;
 var     int                 TargetWidgetThirdLineOffset;
 var     int                 TargetWidgetFourthLineOffset;
 
+var     string              TargetToggleHint;
+
 simulated static function CreateRenderTable(Canvas C)
 {
     local int i;
@@ -308,21 +310,18 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     if (PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        GRI.GetArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
 
         if (GRI != none)
         {
+            GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
+
             if (ArtilleryMarkers.Length > 0)
             {
                 C.CurX = default.WidgetsPanelX - 40;
-                C.CurY = default.WidgetsPanelY - 40;
+                C.CurY = default.WidgetsPanelY - 30;
                 C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor("Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests:" @ ArtilleryMarkers.Length $ ".", PC);
-                C.DrawText(Label);
-                C.CurX = default.WidgetsPanelX - 40;
-                C.CurY = default.WidgetsPanelY - 20;
-                C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-                Label = "You cannot use your own markers.";
+                Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
                 C.DrawText(Label);
             }
         }
@@ -614,4 +613,6 @@ defaultproperties
     TargetWidgetSecondLineOffset=20
     TargetWidgetThirdLineOffset=35
     TargetWidgetFourthLineOffset=50
+
+    TargetToggleHint="Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests available for you: {ArtilleryMarkersLength}."
 }

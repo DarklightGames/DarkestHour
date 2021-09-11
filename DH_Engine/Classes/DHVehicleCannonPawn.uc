@@ -221,7 +221,7 @@ simulated function DrawHUD(Canvas C)
                 }
                 else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
                 {
-                    TargetMapMarkers = Player.GetArtilleryMapMarkers();
+                    TargetMapMarkers = Player.GetSpottingScopeTargets();
                     Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
 
                     // Draw the spotting scope overlay

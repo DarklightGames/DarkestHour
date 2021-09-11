@@ -236,7 +236,7 @@ simulated function DrawHUD(Canvas C)
         }
         else
         {
-            TargetMapMarkers = Player.GetArtilleryMapMarkers();
+            TargetMapMarkers = Player.GetSpottingScopeTargets();
             Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
 
             PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);

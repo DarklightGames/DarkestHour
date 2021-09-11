@@ -7176,39 +7176,38 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
+// This function returns all fire support requests visible in the spotting scope
+function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
 {
-    local int                                    i, ElapsedTime;
+    local int                                    i;
     local DHGameReplicationInfo                  GRI;
-    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers, TargetMapMarkers;
-    local DHPlayerReplicationInfo                PRI;
-    local bool                                   bMarkerExpired;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalTargetMarkers;
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (Pawn == none || PRI == none)
+    if (Pawn == none)
     {
         return TargetMapMarkers;
     }
 
-    // Select only fire requests & ruler markers
     GRI = DHGameReplicationInfo(GameReplicationInfo);
-    GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
-    ElapsedTime = GRI.ElapsedTime;
 
-    for (i = 0; i < PublicMapMarkers.Length; ++i)
+    if(GRI == none)
     {
-        bMarkerExpired = PublicMapMarkers[i].ExpiryTime <= ElapsedTime || PublicMapMarkers[i].ExpiryTime == -1;
-        // Log("i=" $ i @ "SquadIndex=" $ PublicMapMarkers[i].SquadIndex @ ": bMarkerExpired=" $ bMarkerExpired @ ", " @ "PublicMapMarkers[i].ExpiryTime=" $ PublicMapMarkers[i].ExpiryTime @ ", ElapsedTime=" $ ElapsedTime);
-        if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex
-          && ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport')
-          && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i])
-          && !bMarkerExpired)
+        return TargetMapMarkers;
+    }
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalTargetMarkers, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalTargetMarkers.Length; ++i)
+    {
+        if(GlobalTargetMarkers[i].SquadIndex == self.ArtillerySupportSquadIndex)
         {
-            TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalTargetMarkers[i];
         }
     }
 
+    // Add the ruler marker
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
         if (ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
@@ -7475,7 +7474,7 @@ exec function ToggleSelectedArtilleryTarget()
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    local int i, NewSquadIndex, Attempts;
+    local int i, NewSquadIndex, Attempts, AvailableTargets;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -7485,40 +7484,35 @@ exec function ToggleSelectedArtilleryTarget()
         return;
     }
 
-    GRI.GetArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
+    GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
 
-    NewSquadIndex = ArtillerySupportSquadIndex;
-
-    while (Attempts < SquadReplicationInfo.TEAM_SQUADS_MAX)
+    if(ArtilleryMarkers.Length == 0)
     {
-        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+        // not artillery markers found, fall back to a neutral index
+        ArtillerySupportSquadIndex = -1;
+        return;
+    }
 
-        if (IsArtillerySpotter() && PRI.SquadIndex == NewSquadIndex)
-        {
-            if (ArtilleryMarkers.Length == 1)
-            {
-                // "You are an artillery spotter. You cannot switch the active artillery target to your own marker."
-                ReceiveLocalizedMessage(class'DHSquadMessage', 81);
-                ArtillerySupportSquadIndex = -1;
-                return;
-            }
+    NewSquadIndex = ArtillerySupportSquadIndex + 1;
 
-            continue;
-        }
-
+    // cycle through all squads in an increasing Round-Robin order
+    // and check if there are available targets that can be selected
+    while (NewSquadIndex != ArtillerySupportSquadIndex)
+    {
+        // look for a map marker made by the squad with the new squad index
         for (i = 0; i < ArtilleryMarkers.Length; i++)
         {
             if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
-                ArtillerySupportSquadIndex = i;
+                ArtillerySupportSquadIndex = ArtilleryMarkers[i].SquadIndex;
                 return;
             }
         }
 
-        ++Attempts;
+        // no marker found for the new squad index
+        // try the next squad
+        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
     }
-
-    ArtillerySupportSquadIndex = -1;
 }
 
 defaultproperties

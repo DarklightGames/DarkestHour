@@ -1471,11 +1471,12 @@ simulated function bool IsMapMarkerExpired(MapMarker MM)
     return MM.ExpiryTime != -1 && MM.ExpiryTime <= ElapsedTime;
 }
 
-simulated function GetArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
 {
     local int i;
     local DHPlayerReplicationInfo PRI;
     local MapMarker Marker;
+    local bool bIsArtillerySpotter;
 
     if (PC == none)
     {
@@ -1489,6 +1490,8 @@ simulated function GetArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapM
         return;
     }
 
+    bIsArtillerySpotter = PRI.IsArtillerySpotter();
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -1497,8 +1500,10 @@ simulated function GetArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapM
                 Marker = AxisMapMarkers[i];
 
                 if (!IsMapMarkerExpired(Marker)
+                    && Marker.MapMarkerClass != none
                     && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none
+                    && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
                 {
                     MapMarkers[MapMarkers.Length] = Marker;
                 }
@@ -1510,8 +1515,10 @@ simulated function GetArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapM
                 Marker = AlliesMapMarkers[i];
 
                 if (!IsMapMarkerExpired(Marker)
+                    && Marker.MapMarkerClass != none
                     && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none
+                    && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
                 {
                     MapMarkers[MapMarkers.Length] = Marker;
                 }

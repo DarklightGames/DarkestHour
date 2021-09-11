@@ -64,20 +64,27 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         case EArtilleryRange.AR_OffMap:
             return "";
         case EArtilleryRange.AR_OnMap:
-            WorldLocation = Marker.WorldLocation;
-            WorldLocation.Z = 0.0;
+            if(PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
+            {
+                return "Your fire support request";
+            }
+            else
+            {
+                WorldLocation = Marker.WorldLocation;
+                WorldLocation.Z = 0.0;
 
-            PlayerLocation = PC.Pawn.Location;
-            PlayerLocation.Z = 0.0;
+                PlayerLocation = PC.Pawn.Location;
+                PlayerLocation.Z = 0.0;
 
-            Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
+                Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
 
-            SRI = PC.SquadReplicationInfo;
-            SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
+                SRI = PC.SquadReplicationInfo;
+                SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
 
-            ArtilleryType = default.TypeName;
+                ArtilleryType = default.TypeName;
 
-            return SquadName @ "-" @ ArtilleryType @ "-" @ (Distance / 5) * 5 $ "m";
+                return SquadName @ "-" @ ArtilleryType @ "-" @ (Distance / 5) * 5 $ "m";
+            }
     }
 
     return "";
@@ -127,9 +134,9 @@ defaultproperties
     GroupIndex=-1
     bShouldShowOnCompass=false
     OverwritingRule=UNIQUE
-    Scope=PERSONALL
+    Scope=TEAM
     LifetimeSeconds=-1            // artillery requests never expire
-    RequiredSquadMembers=1
+    RequiredSquadMembers=3
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
