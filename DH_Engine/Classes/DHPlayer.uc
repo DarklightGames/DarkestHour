@@ -41,7 +41,6 @@ var     globalconfig int        MinDesiredFPS;       // client option used to ca
 // Artillery hits - only for artillery roles
 struct SArtilleryHitInfo
 {
-    var int         ClosestArtilleryRequestIndex;       // position in the markers array
     var vector      ClosestArtilleryRequestLocation;    // world location of the closest artillery request
     var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
     var int         ExpiryTime;
