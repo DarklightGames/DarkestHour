@@ -16,7 +16,7 @@ function Setup()
 
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && ClassIsChildOf(GRI.MapMarkerClasses[i], class'DHMapMarker_Enemy'))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].default.Type == MT_Enemy)
         {
             Options.Insert(j, 1);
             Options[j].OptionalObject = GRI.MapMarkerClasses[i];

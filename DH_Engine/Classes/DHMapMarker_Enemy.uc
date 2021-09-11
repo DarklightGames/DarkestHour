@@ -10,6 +10,7 @@ defaultproperties
 {
     IconColor=(R=255,G=0,B=0,A=255)
     GroupIndex=1
+    Type=MT_Enemy
     Scope=TEAM
     OverwritingRule=OFF
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)

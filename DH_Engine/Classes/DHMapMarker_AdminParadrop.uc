@@ -13,6 +13,7 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
+    Type=MT_Admin
     OverwritingRule=UNIQUE
     Scope=PERSONAL
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)

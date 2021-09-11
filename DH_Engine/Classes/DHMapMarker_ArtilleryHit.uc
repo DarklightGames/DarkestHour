@@ -45,7 +45,7 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
           && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
           && !(PC.IsArtillerySpotter() && PRI.SquadIndex == Marker.SquadIndex)
           && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
-          && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none)
+          && Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
         {
             Marker.WorldLocation.Z = 0.0;
             Distance = VSize(Marker.WorldLocation - Marker.WorldLocation);
@@ -92,6 +92,7 @@ defaultproperties
     IconMaterial=MaterialSequence'DH_InterfaceArt2_tex.Artillery.HitMarker'
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=6
+    Type=MT_ArtilleryHit
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
     LifetimeSeconds=15 // 30 seconds

@@ -2275,7 +2275,7 @@ function int GetActiveOffMapSupportNumber()
     return Counter;
 }
 
-function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
+function ServerNotifyArtilleryOperators(class<DHMapMarker> MapMarkerClass)
 {
     local int                   TeamIndex, SquadIndex;
     local Controller            C;
@@ -7207,10 +7207,10 @@ function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
         }
     }
 
-    // Add the ruler marker
+    // Add measurement markers
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
         }
@@ -7374,9 +7374,11 @@ exec function DebugStartRound()
     }
 }
 
-function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker_FireSupport> MapMarkerClass)
+function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker> MapMarkerClass)
 {
-    if (MapMarkerClass == none)
+    if (MapMarkerClass == none 
+      || !(MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
+        || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
     {
         return;
     }
@@ -7390,20 +7392,24 @@ function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<D
         LockArtilleryRequests(ArtilleryLockingPeriod);
         AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
 
-        if (MapMarkerClass.default.ArtilleryRange == AR_OffMap)
+        if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
         {
             ServerNotifyRadioman();
         }
-        else
+        else if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
         {
             ServerNotifyArtilleryOperators(MapMarkerClass);
+        }
+        else
+        {
+            Warn("Something went wrong when adding the artillery request. Artillery operators and radiomen won't be notified.");
         }
 
         ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
     }
 }
 
-function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker_FireSupport> FireSupportRequestClass)
+function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker> FireSupportRequestClass)
 {
     local int SquadMembersCount;
     local DHGameReplicationInfo GRI;
@@ -7412,7 +7418,9 @@ function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker_F
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     SRI = SquadReplicationInfo;
 
-    if (GRI == none || SRI == none || FireSupportRequestClass == none)
+    if (GRI == none || SRI == none || FireSupportRequestClass == none
+      || !(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+        || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
     {
         return FSE_Fatal;
     }
@@ -7422,21 +7430,22 @@ function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker_F
         return FSE_InsufficientPrivileges;
     }
 
-    switch (FireSupportRequestClass.default.ArtilleryRange)
+    switch (FireSupportRequestClass.default.Type)
     {
-        case AR_OffMap:
+        case MT_OffMapArtilleryRequest:
             if (GRI.bOffMapArtilleryEnabled[GetTeamNum()] == 0)
             {
                 return FSE_Disabled;
             }
             break;
-        case AR_OnMap:
+        case MT_OnMapArtilleryRequest:
             if (GRI.bOnMapArtilleryEnabled[GetTeamNum()] == 0)
             {
                 return FSE_Disabled;
             }
             break;
         default:
+            Warn("Unknown artillery type class passed to GetFireSupportError");
             return FSE_Fatal;
     }
 
@@ -7450,7 +7459,7 @@ function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker_F
     return FSE_None;
 }
 
-function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<DHMapMarker_FireSupport> FireSupportRequestClass, vector WorldLocation)
+function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<DHMapMarker> FireSupportRequestClass, vector WorldLocation)
 {
     local DHFireSupport.EFireSupportError Error;
 
@@ -7474,7 +7483,7 @@ exec function ToggleSelectedArtilleryTarget()
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    local int i, NewSquadIndex, Attempts, AvailableTargets;
+    local int i, NewSquadIndex;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);

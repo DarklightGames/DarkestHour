@@ -63,6 +63,20 @@ var bool                bShouldShowOnCompass;   // Whether or not this marker is
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 var int                 RequiredSquadMembers;
 
+enum EMarkerType
+{
+    MT_Friendly,
+    MT_Enemy,
+    MT_OffMapArtilleryRequest,
+    MT_OnMapArtilleryRequest,
+    MT_ArtilleryHit,
+    MT_Measurement,
+    MT_Admin,
+    MT_Movement
+};
+
+var EMarkerType Type;
+
 // Override this function to determine if this map marker can be used. This
 // function is evaluated once at the beginning of the map.
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
@@ -125,8 +139,8 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
     return false;
 }
 
-// Override this function to determine if this map marker can be placed by
-// the provided player.
+// Determine if this map marker can be placed by the provided player.
+// Override it only if it is really necessary.
 static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
@@ -153,15 +167,15 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
     return bIsVisible;
 }
 
-// Override this function to determine if this map marker can be removed by
-// the provided player.
+// Determine if this map marker can be removed by the provided player.
+// Override it only if it is really necessary.
 static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     return CheckPermissions(default.Permissions_CanRemove, PRI, Marker);
 }
 
-// Override this function to determine if this map marker can be displayed on the map by
-// the provided player.
+// Determine if this map marker can be seen by the provided player.
+// Override it only if it is really necessary.
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     return CheckPermissions(default.Permissions_CanSee, PRI, Marker);
@@ -175,11 +189,6 @@ static function color GetBeeLineColor()
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     return default.IconColor;
-}
-
-static function bool IsOnMapArtillery()
-{
-    return false;
 }
 
 // Override to run specific logic when this marker is placed.

@@ -17,7 +17,7 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    local class<DHMapMarker_FireSupport>  MapMarkerClass;
+    local class<DHMapMarker>              MapMarkerClass;
     local int                             Seconds;
     local DHGameReplicationInfo           GRI;
     local DHPlayerReplicationInfo         PRI;
@@ -29,9 +29,11 @@ static function string GetString(
     {
         case 0:
             // Location has been marked.
-            MapMarkerClass = class<DHMapMarker_FireSupport>(OptionalObject);
+            MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none)
+            if (MapMarkerClass != none
+              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
+                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
             {
                 return default.RequestConfirmedText;
             }
@@ -66,11 +68,13 @@ static function string GetString(
         case 3:
             // A new {type} target has been marked.
             // on-map fire support (mortars/Priests/LeIGs etc.)
-            MapMarkerClass = class<DHMapMarker_FireSupport>(OptionalObject);
+            MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none)
+            if (MapMarkerClass != none
+              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
+                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
             {
-                return Repl(default.ArtilleryOperatorNotification, "{type}", MapMarkerClass.default.TypeName);
+                return Repl(default.ArtilleryOperatorNotification, "{type}", MapMarkerClass.default.MarkerName);
             }
 
             break;

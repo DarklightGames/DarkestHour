@@ -1502,7 +1502,7 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
                 if (!IsMapMarkerExpired(Marker)
                     && Marker.MapMarkerClass != none
                     && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none
+                    && Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest
                     && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
                 {
                     MapMarkers[MapMarkers.Length] = Marker;
@@ -1517,7 +1517,7 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
                 if (!IsMapMarkerExpired(Marker)
                     && Marker.MapMarkerClass != none
                     && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
-                    && class<DHMapMarker_FireSupport>(Marker.MapMarkerClass) != none
+                    && Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest
                     && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
                 {
                     MapMarkers[MapMarkers.Length] = Marker;
@@ -1695,7 +1695,9 @@ function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
     }
 }
 
-function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
+// This is stupid, but for now 
+// there can only be 1 active off-map artillery strike anyway
+function InvalidateOffMapArtilleryMarker(int TeamIndex)
 {
     local int i;
 
@@ -1704,7 +1706,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                 }
@@ -1713,34 +1715,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if (AxisMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
-                {
-                    AxisMapMarkers[i].ExpiryTime = 0;
-                }
-            }
-            break;
-    }
-}
-
-function InvalidateMarker(int TeamIndex, class<DHMapMarker> MarkerClass)
-{
-    local int i;
-
-    switch (TeamIndex)
-    {
-        case ALLIES_TEAM_INDEX:
-            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
-            {
-                if (ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, MarkerClass))
-                {
-                    AlliesMapMarkers[i].ExpiryTime = 0;
-                }
-            }
-            break;
-        case AXIS_TEAM_INDEX:
-            for (i = 0; i < arraycount(AxisMapMarkers); i++)
-            {
-                if (ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, MarkerClass))
+                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                 }

@@ -37,6 +37,7 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4
     bShouldShowOnCompass=true
+    Type=MT_Measurement
     OverwritingRule=UNIQUE
     Scope=PERSONAL
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)

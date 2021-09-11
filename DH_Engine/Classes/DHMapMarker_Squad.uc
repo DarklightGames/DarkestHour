@@ -21,6 +21,7 @@ defaultproperties
     BroadcastedMessageIndex=0
     GroupIndex=0
     bShouldShowOnCompass=true
+    Type=MT_Movement
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     Permissions_CanSee(0)=(LevelSelector=SQUAD,RoleSelector=ALL)

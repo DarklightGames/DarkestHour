@@ -176,7 +176,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.Font = C.MedFont;
 
-    if (class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass) != none)
+    if (TargetInfo.Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
     {
         // Draw first line (artillery support)
         C.CurX = X - 40;
@@ -191,12 +191,12 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         C.CurX = X + XL;
         C.CurY = Y + default.TargetWidgetSecondLineOffset;
         C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-        C.DrawText(TargetInfo.SquadName @ "(" $ class<DHMapMarker_FireSupport>(TargetInfo.Marker.MapMarkerClass).default.TypeName $ ")");
+        C.DrawText(TargetInfo.SquadName @ "(" $ TargetInfo.Marker.MapMarkerClass.default.MarkerName $ ")");
         C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     }
-    else if (class<DHMapMarker_Ruler>(TargetInfo.Marker.MapMarkerClass) != none)
+    else if (TargetInfo.Marker.MapMarkerClass.default.Type == MT_Measurement)
     {
-        // Draw first line (ruler)
+        // Draw first line
         C.Font = C.MedFont;
         C.CurX = X - 40;
         C.CurY = Y + default.TargetWidgetFirstLineOffset;
