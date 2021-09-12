@@ -229,17 +229,17 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         if (TargetInfo.Timeout > 10)
         {
             C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-            Timeout = TargetInfo.Timeout $ "s";
+            Timeout = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
         }
         else if (TargetInfo.Timeout > 0)
         {
             C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
-            Timeout = TargetInfo.Timeout $ "s";
+            Timeout = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
         }
         else
         {
             C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
-            Timeout = "0s";
+            Timeout = "0";
         }
         C.CurX = X + XL;
         C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
