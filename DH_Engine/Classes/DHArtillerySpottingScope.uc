@@ -19,6 +19,7 @@ var int PitchDecimalsDial;
 
 struct STargetInfo
 {
+    var int                              Timeout;        // time to expiry [s]
     var int                              Distance;       // distance between the player and the target
     var int                              YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
     var string                           SquadName;      // name of the squad that requests fire support
@@ -77,11 +78,13 @@ var     localized string    PitchHeaderString;
 var     color               Green;
 var     color               White;
 var     color               Orange;
+var     color               Red;
 
 var     int                 TargetWidgetFirstLineOffset;
 var     int                 TargetWidgetSecondLineOffset;
 var     int                 TargetWidgetThirdLineOffset;
 var     int                 TargetWidgetFourthLineOffset;
+var     int                 TargetWidgetFifthLineOffset;
 
 var     string              TargetToggleHint;
 
@@ -167,6 +170,7 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
 simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
 {
     local string CorrectionString;
+    local string Timeout;
     local int Deflection;
     local color IconColor;
     local float XL, YL;
@@ -214,20 +218,51 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     }
 
     // Draw third line
+    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.CurX = X;
     C.CurY = Y + default.TargetWidgetThirdLineOffset;
+    C.DrawText("Marker expires in: ");
+    C.TextSize("Marker expires in: ", XL, YL);
+
+    if(TargetInfo.Timeout == -1)
+    {
+        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+        Timeout = "never";
+    }
+    else if (TargetInfo.Timeout > 10)
+    {
+        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+        Timeout = TargetInfo.Timeout $ "s";
+    }
+    else if (TargetInfo.Timeout > 0)
+    {
+        C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
+        Timeout = TargetInfo.Timeout $ "s";
+    }
+    else
+    {
+        C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
+        Timeout = "0s";
+    }
+    C.CurX = X + XL;
+    C.CurY = Y + default.TargetWidgetThirdLineOffset;
+    C.DrawText(Timeout);
+
+    // Draw fourth line
+    C.CurX = X;
+    C.CurY = Y + default.TargetWidgetFourthLineOffset;
     C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.DrawText("Distance: ");
     C.TextSize("Distance: ", XL, YL);
     C.CurX = X + XL;
-    C.CurY = Y + default.TargetWidgetThirdLineOffset;
+    C.CurY = Y + default.TargetWidgetFourthLineOffset;
     C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
     C.DrawText("" $ (TargetInfo.Distance / 5) * 5 $ "m");
 
-    // Draw fourth line
+    // Draw fifth line
     C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.CurX = X;
-    C.CurY = Y + default.TargetWidgetFourthLineOffset;
+    C.CurY = Y + default.TargetWidgetFifthLineOffset;
     C.DrawText("Correction: ");
     C.TextSize("Correction: ", XL, YL);
 
@@ -248,7 +283,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
     }
     C.CurX = X + XL;
-    C.CurY = Y + default.TargetWidgetFourthLineOffset;
+    C.CurY = Y + default.TargetWidgetFifthLineOffset;
     C.DrawText(CorrectionString);
 
     // Draw icon on the left of the text but below the first line
@@ -591,7 +626,7 @@ defaultproperties
 
     WidgetsPanelX=50
     WidgetsPanelY=100
-    WidgetsPanelEntryHeight=80
+    WidgetsPanelEntryHeight=100
 
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
@@ -608,11 +643,13 @@ defaultproperties
     Green=(R=0,G=128,B=0,A=255)
     White=(R=255,G=255,B=255,A=255)
     Orange=(R=255,G=165,B=0,A=255)
+    Red=(R=255,G=0,B=0,A=255)
 
     TargetWidgetFirstLineOffset=0
     TargetWidgetSecondLineOffset=20
     TargetWidgetThirdLineOffset=35
     TargetWidgetFourthLineOffset=50
+    TargetWidgetFifthLineOffset=65
 
     TargetToggleHint="Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests available for you: {ArtilleryMarkersLength}."
 }

@@ -2299,16 +2299,24 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 {
     local vector                                        VehicleLocation, Delta;
     local rotator                                       VehicleRotation;
-    local int                                           Distance, Deflection, i;
+    local int                                           Distance, Deflection, MarkerTimeouot, i;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          TargetInfo;
     local string                                        SquadName;
     local DHGameReplicationInfo.MapMarker               MapMarker;
     local DHPlayer                                      Player;
+    local DHGameReplicationInfo                         GRI;
 
     Player = DHPlayer(Controller);
 
     if (Player == none)
+    {
+        return Targets;
+    }
+
+    GRI = DHGameReplicationInfo(Player.GameReplicationInfo);
+
+    if(GRI == none)
     {
         return Targets;
     }
@@ -2331,11 +2339,20 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
         Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
         SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
         Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+        if(MapMarker.ExpiryTime != -1)
+        {
+            MarkerTimeouot = MapMarker.ExpiryTime - GRI.ElapsedTime;
+        }
+        else
+        {
+            MarkerTimeouot = -1;
+        }
 
         TargetInfo.Distance       = Distance;
         TargetInfo.SquadName      = SquadName;
         TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
         TargetInfo.Marker         = MapMarker;
+        TargetInfo.Timeout        = MarkerTimeouot;
         Targets[Targets.Length]   = TargetInfo;
     }
 
