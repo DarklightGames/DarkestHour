@@ -218,14 +218,11 @@ simulated function DrawHUD(Canvas C)
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
     local DHPlayerReplicationInfo                       PRI;
-    local DHMortarVehicleWeapon                         MortarVehWep;
-    local int                                           AmmoIndex;
 
     PC = PlayerController(Controller);
     Player = DHPlayer(PC);
-    MortarVehWep = DHMortarVehicleWeapon(VehWep);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && MortarVehWep != none || PC.myHud == none || PC.myHud.bHideHud)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none || PC.myHud == none || PC.myHud.bHideHud)
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -244,12 +241,12 @@ simulated function DrawHUD(Canvas C)
             // to do: refactor to separate variables (calculate once)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
             ArtillerySpottingScope.static.DrawRangeTable(C,
-                MortarVehWep.Elevation + MortarVehWep.default.ElevationMinimum,
-                MortarVehWep.Elevation + MortarVehWep.default.ElevationMaximum);
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawPitch(C,
-                MortarVehWep.Elevation,
-                MortarVehWep.default.ElevationMinimum,
-                MortarVehWep.default.ElevationMaximum);
+                DHMortarVehicleWeapon(VehWep).Elevation,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawYaw(
                 PRI,
                 C,
@@ -261,27 +258,24 @@ simulated function DrawHUD(Canvas C)
         }
 
         ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
+        AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
+
+        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
 
         // TODO: holy crap this is bad
 
-        if (MortarVehWep.NewProjectileClass == none)
+        switch (VehWep.GetAmmoIndex())
         {
-            MortarVehWep.NewProjectileClass = MortarVehWep.PrimaryProjectileClass;
+            case 0:
+                AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
+                break;
+            case 1:
+                AmmoIcon.WidgetTexture = HUDSmokeTexture;
+                break;
+            default:
+            break;
         }
 
-        if (MortarVehWep.NewProjectileClass == MortarVehWep.PrimaryProjectileClass)
-        {
-            AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
-        }
-        else if(MortarVehWep.NewProjectileClass == MortarVehWep.SecondaryProjectileClass)
-        {
-            AmmoIcon.WidgetTexture = HUDSmokeTexture;
-        }
-
-        AmmoIndex = GetIndex(MortarVehWep.NewProjectileClass);
-        AmmoAmount.Value = VehWep.MainAmmoCharge[AmmoIndex];
-
-        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
         ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
     }
 }
