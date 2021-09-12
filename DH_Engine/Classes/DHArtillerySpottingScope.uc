@@ -163,7 +163,7 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
 }
 
 // A helper function to draw a single widget on the left panel in spotting scope view
-simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw)
+simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw, int MinimumGunYaw, int MaximumGunYaw)
 {
     local string CorrectionString;
     local string Timeout;
@@ -269,8 +269,17 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
     if (Deflection > 0)
     {
+        if(CurrentYaw - Deflection < MinimumGunYaw)
+        {
+            // the target is outside of the upper traverse range
+            C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
+        }
+        else
+        {
+            // the target is within the traverse range
+            C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
+        }
         CorrectionString = Deflection $ "mils left";
-        C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
     }
     else if (Deflection == 0)
     {
@@ -279,8 +288,17 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     }
     else
     {
+        if(CurrentYaw - Deflection > MaximumGunYaw)
+        {
+            // the target is outside of the lower traverse range
+            C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
+        }
+        else
+        {
+            // the target is within the traverse range
+            C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
+        }
         CorrectionString = -Deflection $ "mils right";
-        C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
     }
     C.CurX = X + XL;
     C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
@@ -375,8 +393,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)
     {
-        // Always draw a target widget on the left panel
-        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw);
+        // Draw the target widget on the left panel
+        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)), int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)));
 
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
