@@ -19,6 +19,14 @@ defaultproperties
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
 
+    bHasScope=true
+    bForceModelScope=true
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    ScriptedScopeTexture=Texture'DH_Springfield_tex.Scopes.Scope3D'
+    ScopePortalFOV=15
+    ScopePortalFOVHigh=15
+    LensMaterialID=4
+
     FirstSelectAnim="draw_first"
     SelectAnim="Draw"
     PutDownAnim="putaway"
