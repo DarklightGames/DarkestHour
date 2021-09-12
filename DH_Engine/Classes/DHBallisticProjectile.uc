@@ -19,37 +19,85 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local int i;
+    local float Distance, Threshold;
+    local DHPlayerReplicationInfo PRI;
+    local vector RequestLocation;
+    local bool bIsWithinRadius;
 
     PC = DHPlayer(InstigatorController);
 
-    if (PC != none)
+    if (PC == none)
+    {
+        return;
+    }
+    if(PC != none)
     {
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-        PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     }
+    if (GRI == none || PRI == none)
+    {
+        return;
+    }
+
+    if(PC.ArtillerySupportSquadIndex != -1)
+    {
+        GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+        for (i = 0; i < MapMarkers.Length; ++i)
+        {
+            if (PC.ArtillerySupportSquadIndex == MapMarkers[i].SquadIndex)
+            {
+                RequestLocation = MapMarkers[i].WorldLocation;
+                RequestLocation.Y = 0.0;
+                HitLocation.Y = 0.0;
+                Distance = VSize(RequestLocation - HitLocation);
+                Threshold = class'DHUnits'.static.MetersToUnreal(50);
+                bIsWithinRadius = Distance < Threshold;
+
+                if(bIsWithinRadius)
+                {
+                    PC.ArtilleryHitInfo.bIsWithinRadius = true;
+                    PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[i].ExpiryTime;
+                    
+                    if (Role == ROLE_Authority)
+                    {
+                        // add artillery marker only (only artillery operator)
+                        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+                        PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
+                    }
+                }
+                else
+                {
+                    PC.ArtilleryHitInfo.bIsWithinRadius = false;
+                    PC.ArtilleryHitInfo.ExpiryTime = 0;
+                }
+                return;
+            }
+        }
+    }
+
+    PC.ArtilleryHitInfo.bIsWithinRadius = false;
+    PC.ArtilleryHitInfo.ExpiryTime = 0;
+    return;
 }
 
 simulated function BlowUp(vector HitLocation)
 {
-    if (Role == ROLE_Authority)
-    {
-        SetHitLocation(HitLocation);
-    }
-}
-
-// New function to set hit location in team's artillery targets so it's marked on the map for mortar crew
-function SetHitLocation(vector HitLocation)
-{
     local float Distance;
 
-    if (VehicleWeapon != none)
+    if (Role == ROLE_Authority)
     {
-        if (bIsCalibrating)
+        if (VehicleWeapon != none)
         {
-            Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
 
-            Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
+            if (bIsCalibrating)
+            {
+                Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
+
+                Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
+            }
         }
     }
 }

@@ -186,7 +186,7 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged;
+        bSurrendered, bIQManaged, ArtillerySupportSquadIndex;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -209,7 +209,8 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators,
+        ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1021,6 +1022,11 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 function ServerSaveArtilleryTarget(vector Location)
 {
     SavedArtilleryCoords = Location;
+}
+
+function ServerSaveArtillerySupportSquadIndex(int Index)
+{
+    ArtillerySupportSquadIndex = Index;
 }
 
 // This function checks if the player can call artillery on the selected target.
@@ -7483,42 +7489,45 @@ exec function ToggleSelectedArtilleryTarget()
     local DHPlayerReplicationInfo PRI;
     local int i, NewSquadIndex;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    if (Role < ROLE_Authority)
     {
-        return;
-    }
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
-
-    if(ArtilleryMarkers.Length == 0)
-    {
-        // not artillery markers found, fall back to a neutral index
-        ArtillerySupportSquadIndex = -1;
-        return;
-    }
-
-    NewSquadIndex = ArtillerySupportSquadIndex + 1;
-
-    // cycle through all squads in an increasing Round-Robin order
-    // and check if there are available targets that can be selected
-    while (NewSquadIndex != ArtillerySupportSquadIndex)
-    {
-        // look for a map marker made by the squad with the new squad index
-        for (i = 0; i < ArtilleryMarkers.Length; i++)
+        if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
         {
-            if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
-            {
-                ArtillerySupportSquadIndex = ArtilleryMarkers[i].SquadIndex;
-                return;
-            }
+            return;
         }
 
-        // no marker found for the new squad index
-        // try the next squad
-        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+        GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
+
+        if(ArtilleryMarkers.Length == 0)
+        {
+            // no artillery markers found, fall back to a neutral index
+            ServerSaveArtillerySupportSquadIndex(-1);
+            return;
+        }
+
+        NewSquadIndex = ArtillerySupportSquadIndex + 1;
+
+        // cycle through all squads in an increasing Round-Robin order
+        // and check if there are available targets that can be selected
+        while (NewSquadIndex != ArtillerySupportSquadIndex)
+        {
+            // look for a map marker made by the squad with the new squad index
+            for (i = 0; i < ArtilleryMarkers.Length; i++)
+            {
+                if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
+                {
+                    ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
+                    return;
+                }
+            }
+
+            // no marker found for the new squad index
+            // try the next squad
+            NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+        }
     }
 }
 

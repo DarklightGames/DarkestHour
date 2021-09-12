@@ -2093,7 +2093,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i, MarkerExpiryTime;
+    local int        i, ArtilleryRequestExpiryTime;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
 
     if (Killed == none)
@@ -2116,15 +2116,12 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        Log("IsArtilleryKill(DHKiller, DamageType):" @ IsArtilleryKill(DHKiller, DamageType));
-        Log("DHKiller.ArtilleryHitInfo.ExpiryTime:" @ DHKiller.ArtilleryHitInfo.ExpiryTime);
-        Log("ElapsedTime:" @ ElapsedTime);
-        Log("DHKiller.ArtilleryHitInfo.bIsWithinRadius:" @ DHKiller.ArtilleryHitInfo.bIsWithinRadius);
+        ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
+
         if (IsArtilleryKill(DHKiller, DamageType) 
-          && (MarkerExpiryTime == -1 || MarkerExpiryTime > ElapsedTime)
+          && (ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
           && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
         {
-            Log("Artillery kill");
             DamageType =  class'DHArtilleryKillDamageType';
         }
 
