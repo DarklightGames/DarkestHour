@@ -7489,45 +7489,42 @@ exec function ToggleSelectedArtilleryTarget()
     local DHPlayerReplicationInfo PRI;
     local int i, NewSquadIndex;
 
-    if (Role < ROLE_Authority)
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
     {
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+        return;
+    }
 
-        if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
+
+    if(ArtilleryMarkers.Length == 0)
+    {
+        // no artillery markers found, fall back to a neutral index
+        ServerSaveArtillerySupportSquadIndex(-1);
+        return;
+    }
+
+    NewSquadIndex = ArtillerySupportSquadIndex + 1;
+
+    // cycle through all squads in an increasing Round-Robin order
+    // and check if there are available targets that can be selected
+    while (NewSquadIndex != ArtillerySupportSquadIndex)
+    {
+        // look for a map marker made by the squad with the new squad index
+        for (i = 0; i < ArtilleryMarkers.Length; i++)
         {
-            return;
-        }
-
-        GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
-
-        if(ArtilleryMarkers.Length == 0)
-        {
-            // no artillery markers found, fall back to a neutral index
-            ServerSaveArtillerySupportSquadIndex(-1);
-            return;
-        }
-
-        NewSquadIndex = ArtillerySupportSquadIndex + 1;
-
-        // cycle through all squads in an increasing Round-Robin order
-        // and check if there are available targets that can be selected
-        while (NewSquadIndex != ArtillerySupportSquadIndex)
-        {
-            // look for a map marker made by the squad with the new squad index
-            for (i = 0; i < ArtilleryMarkers.Length; i++)
+            if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
-                if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
-                {
-                    ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
-                    return;
-                }
+                ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
+                return;
             }
-
-            // no marker found for the new squad index
-            // try the next squad
-            NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
         }
+
+        // no marker found for the new squad index
+        // try the next squad
+        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
     }
 }
 

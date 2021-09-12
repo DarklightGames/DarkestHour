@@ -6,7 +6,7 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
-var int VisibilityRange;
+var int VisibilityRange; // [m]
 
 static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {

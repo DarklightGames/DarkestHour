@@ -32,15 +32,17 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
     {
         return;
     }
-    if(PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    }
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    
     if (GRI == none || PRI == none)
     {
         return;
     }
+
+    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+    PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
 
     if(PC.ArtillerySupportSquadIndex != -1)
     {
@@ -53,20 +55,13 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
                 RequestLocation.Y = 0.0;
                 HitLocation.Y = 0.0;
                 Distance = VSize(RequestLocation - HitLocation);
-                Threshold = class'DHUnits'.static.MetersToUnreal(50);
+                Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
                 bIsWithinRadius = Distance < Threshold;
 
                 if(bIsWithinRadius)
                 {
                     PC.ArtilleryHitInfo.bIsWithinRadius = true;
                     PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[i].ExpiryTime;
-                    
-                    if (Role == ROLE_Authority)
-                    {
-                        // add artillery marker only (only artillery operator)
-                        GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-                        PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
-                    }
                 }
                 else
                 {
