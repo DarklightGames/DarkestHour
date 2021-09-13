@@ -371,13 +371,18 @@ event Opened(GUIComponent Sender)
         {
             Log("Configuration file is older than v9.7.6, attempting to assign a new keep alive value");
 
-            SetKeyBindIfAvailable(",", "ToggleSelectedArtilleryTarget");
-
             if (PlayerOwner().ConsoleCommand("get IpDrv.TcpNetDriver KeepAliveTime") != "0.004")
             {
                 PlayerOwner().ConsoleCommand("set IpDrv.TcpNetDriver KeepAliveTime 0.004");
                 PlayerOwner().SaveConfig();
             }
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v10.0.0")) < 0)
+        {
+            Log("Configuration file is older than v10.0.0, assigning the artillery target toggle keybind");
+
+            SetKeyBindIfAvailable(",", "ToggleSelectedArtilleryTarget");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
