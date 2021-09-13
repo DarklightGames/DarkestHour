@@ -45,6 +45,7 @@ defaultproperties
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
     ShadowZOffset=10
+    bIsArtilleryVehicle=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

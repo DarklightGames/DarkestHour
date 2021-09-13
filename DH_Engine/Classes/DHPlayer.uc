@@ -1049,7 +1049,8 @@ function bool IsArtilleryTargetValid(vector ArtilleryLocation)
 // Emptied out, as this funcionality has been moved to DHRadio.
 function HitThis(ROArtilleryTrigger RAT) { return; }
 
-// New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
+// New function to determine if the player is operating a vehicle that is marked as artillery
+// TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
 {
     local DHVehicle V;
@@ -1065,7 +1066,7 @@ simulated function bool IsInArtilleryVehicle()
 
     if (V != none)
     {
-        return (V.IsA('DH_LeIG18Gun') || V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(Pawn));
+        return V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(Pawn);
     }
 
     return false;
