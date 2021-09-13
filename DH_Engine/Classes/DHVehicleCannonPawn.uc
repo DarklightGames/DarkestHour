@@ -193,7 +193,6 @@ simulated function DrawHUD(Canvas C)
     local PlayerController                              PC;
     local float                                         SavedOpacity;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local DHPlayer                                      Player;
     local DHPlayerReplicationInfo                       PRI;
 
@@ -221,8 +220,7 @@ simulated function DrawHUD(Canvas C)
                 }
                 else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
                 {
-                    TargetMapMarkers = Player.GetSpottingScopeTargets();
-                    Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
+                    Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
                     // Draw the spotting scope overlay
                     // to do: refactor to separate variables (calculate once)

@@ -20,6 +20,8 @@ var int PitchDecimalsDial;
 struct STargetInfo
 {
     var int                              Timeout;        // time to expiry [s]
+    var int                              MarkerIndex;        // time to expiry [s]
+    var int                              MarkersTotal;        // time to expiry [s]
     var int                              Distance;       // distance between the player and the target
     var int                              YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
     var string                           SquadName;      // name of the squad that requests fire support
@@ -80,9 +82,28 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
-var     int                 TargetWidgetTextLineHeight;
+enum ETargetWidgetLineType
+{
+    TWLT_Header,
+    TWLT_MarkerType,
+    TWLT_ExpiryTime,
+    TWLT_Distance,
+    TWLT_Correction
+};
+
+struct STargetWidgetLayout
+{
+    var                       int LineHeight;     // [px]
+    var                       int HeaderOffsetX;  // [px]
+    var                       int IconOffsetX;    // [px]
+    var                       int IconOffsetY;    // [px]
+    var ETargetWidgetLineType LineConfig[5];      // add more lines?
+};
+
+var     STargetWidgetLayout TargetWidgetLayout;
 
 var     string              TargetToggleHint;
+var     string              SelectTargetHint;
 
 simulated static function CreateRenderTable(Canvas C)
 {
@@ -165,149 +186,154 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
 // A helper function to draw a single widget on the left panel in spotting scope view
 simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw, int MinimumGunYaw, int MaximumGunYaw)
 {
-    local string CorrectionString;
-    local string Timeout;
+    local string Labels[2];
     local int Deflection;
-    local color IconColor;
+    local color IconColor, LabelColors[2];
     local float XL, YL;
-    local int LineNumber;
+    local int LabelIndex, LineIndex, MaxLines, LineOffsetX, i;
 
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
 
     C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
     C.Font = C.MedFont;
 
-    LineNumber = 0;
-    if (TargetInfo.Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
-    {
-        // Draw header (artillery support)
-        C.CurX = X - 40;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText("SELECTED TARGET");
-        ++LineNumber;
+    MaxLines = arraycount(default.TargetWidgetLayout.LineConfig);
 
-        // Draw squad name
-        C.CurX = X;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText("Squad: ");
-        C.TextSize("Squad: ", XL, YL);
-        C.CurX = X + XL;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-        C.DrawText(TargetInfo.SquadName @ "-" @ TargetInfo.Marker.MapMarkerClass.default.MarkerName);
-        C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
-        ++LineNumber;
-    }
-    else if (TargetInfo.Marker.MapMarkerClass.default.Type == MT_Measurement)
+    i = 0;
+    while(i < MaxLines)
     {
-        // Draw header (measurement tool)
-        C.Font = C.MedFont;
-        C.CurX = X - 40;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText("MEASUREMENT TOOL:");
-        ++LineNumber;
+        LabelColors[0] = default.White;
+        Labels[0] = "";
+        Labels[1] = "";
+        LabelColors[0] = default.White;
+        LabelColors[1] = default.White;
+        LineOffsetX = 0;
 
-        // Draw marker name
-        C.CurX = X;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText("Ruler marker");
-        ++LineNumber;
-    }
-    else
-    {
-        Warn("This code shouldn't be reached :(");
+        // Calculate what to draw
+        switch(default.TargetWidgetLayout.LineConfig[i])
+        {
+            case TWLT_Header:
+                switch(TargetInfo.Marker.MapMarkerClass.default.Type)
+                {
+                    case MT_OnMapArtilleryRequest:
+                        Labels[0] = "SELECTED TARGET ";
+                        if(TargetInfo.MarkersTotal > 1)
+                        {
+                            Labels[1] = "[" $ TargetInfo.MarkerIndex $ " / " $ TargetInfo.MarkersTotal $ "]";
+                            LabelColors[1] = default.Green;
+                        }
+                        break;
+                    case MT_Measurement:
+                        Labels[0] = "MEASUREMENT TOOL";
+                        break;
+                    case MT_Measurement:
+                        break;
+                }
+                LineOffsetX = default.TargetWidgetLayout.HeaderOffsetX;
+                break;
+            case TWLT_MarkerType:
+                switch(TargetInfo.Marker.MapMarkerClass.default.Type)
+                {
+                    case MT_OnMapArtilleryRequest:
+                        Labels[0] = "Squad: ";
+                        Labels[1] = TargetInfo.SquadName @ "-" @ TargetInfo.Marker.MapMarkerClass.default.MarkerName;
+                        LabelColors[1] = default.Green;
+                        break;
+                    case MT_Measurement:
+                        Labels[0] = "Ruler marker";
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case TWLT_ExpiryTime:
+                if(TargetInfo.Timeout != -1)
+                {
+                    Labels[0] = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
+                    if (TargetInfo.Timeout > 10)
+                    {
+                        LabelColors[0] = default.Green;
+                    }
+                    else if (TargetInfo.Timeout > 0)
+                    {
+                        LabelColors[0] = default.Orange;
+                    }
+                    else
+                    {
+                        LabelColors[0] = default.Red;
+                    }
+                }
+                LineOffsetX = default.TargetWidgetLayout.IconOffsetX;
+                break;
+            case TWLT_Correction:
+                Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
+                Labels[0] = "Correction: ";
+                if (Deflection > 0)
+                {
+                    Labels[1] = Deflection $ "mils left";
+                    if(CurrentYaw - Deflection < MinimumGunYaw)
+                    {
+                        // the target is outside of the upper traverse limit
+                        LabelColors[1] = default.Red;
+                    }
+                    else
+                    {
+                        // the target is within the traverse range
+                        LabelColors[1] = default.Orange;
+                    }
+                }
+                else if (Deflection == 0)
+                {
+                    Labels[1] = "0mils";
+                    LabelColors[1] = default.Green;
+                }
+                else
+                {
+                    Labels[1] = -Deflection $ "mils right";
+                    if(CurrentYaw - Deflection > MaximumGunYaw)
+                    {
+                        // the target is outside of the lower traverse limit
+                        LabelColors[1] = default.Red;
+                    }
+                    else
+                    {
+                        // the target is within the traverse range
+                        LabelColors[1] = default.Orange;
+                    }
+                }
+                break;
+            case TWLT_Distance:
+                C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
+                Labels[0] = "Distance: ";
+                Labels[1] = (TargetInfo.Distance / 5) * 5 $ "m";
+                LabelColors[1] = default.Green;
+                break;
+        }
+
+        if(Labels[0] != "")
+        {
+            // Draw whatever there is to be drawn or skip the line
+            XL = 0.0;
+            for(LabelIndex = 0; LabelIndex < arraycount(Labels); ++LabelIndex)
+            {
+                if(Labels[LabelIndex] != "")
+                {
+                    C.CurX = X - LineOffsetX;
+                    C.CurY = Y + LineIndex * default.TargetWidgetLayout.LineHeight;
+                    C.SetDrawColor(LabelColors[LabelIndex].R, LabelColors[LabelIndex].G, LabelColors[LabelIndex].B, LabelColors[LabelIndex].A);
+                    C.DrawText(Labels[LabelIndex]);
+                    C.TextSize(Labels[LabelIndex], XL, YL);
+                    LineOffsetX = LineOffsetX - XL;
+                }
+            }
+            ++LineIndex;
+        }
+        ++i;
     }
 
-    // Draw expiry time
-    if(TargetInfo.Timeout != -1)
-    {
-        C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
-        C.CurX = X;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText("Marker expires in: ");
-        C.TextSize("Marker expires in: ", XL, YL);
-        if (TargetInfo.Timeout > 10)
-        {
-            C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-            Timeout = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
-        }
-        else if (TargetInfo.Timeout > 0)
-        {
-            C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
-            Timeout = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
-        }
-        else
-        {
-            C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
-            Timeout = "0";
-        }
-        C.CurX = X + XL;
-        C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-        C.DrawText(Timeout);
-        ++LineNumber;
-    }
-
-    // Draw distance
-    C.CurX = X;
-    C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
-    C.DrawText("Distance: ");
-    C.TextSize("Distance: ", XL, YL);
-    C.CurX = X + XL;
-    C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-    C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-    C.DrawText("" $ (TargetInfo.Distance / 5) * 5 $ "m");
-    ++LineNumber;
-
-    // Draw correction
-    C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
-    C.CurX = X;
-    C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-    C.DrawText("Correction: ");
-    C.TextSize("Correction: ", XL, YL);
-
-    Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
-    if (Deflection > 0)
-    {
-        if(CurrentYaw - Deflection < MinimumGunYaw)
-        {
-            // the target is outside of the upper traverse range
-            C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
-        }
-        else
-        {
-            // the target is within the traverse range
-            C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
-        }
-        CorrectionString = Deflection $ "mils left";
-    }
-    else if (Deflection == 0)
-    {
-        CorrectionString = "0mils";
-        C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-    }
-    else
-    {
-        if(CurrentYaw - Deflection > MaximumGunYaw)
-        {
-            // the target is outside of the lower traverse range
-            C.SetDrawColor(default.Red.R, default.Red.G, default.Red.B, default.Red.A);
-        }
-        else
-        {
-            // the target is within the traverse range
-            C.SetDrawColor(default.Orange.R, default.Orange.G, default.Orange.B, default.Orange.A);
-        }
-        CorrectionString = -Deflection $ "mils right";
-    }
-    C.CurX = X + XL;
-    C.CurY = Y + LineNumber * default.TargetWidgetTextLineHeight;
-    C.DrawText(CorrectionString);
-    ++LineNumber;
-
-    // Draw icon on the left of the text but below the first line
-    C.CurX = X - 40;
-    C.CurY = Y + 2 * default.TargetWidgetTextLineHeight;
+    // Draw the widget icon on the left of the text but below the header
+    C.CurX = X - default.TargetWidgetLayout.IconOffsetX;
+    C.CurY = Y + default.TargetWidgetLayout.IconOffsetY;
     IconColor = TargetInfo.Marker.MapMarkerClass.static.GetIconColor(PRI, TargetInfo.Marker);
     C.SetDrawColor(IconColor.R, IconColor.G, IconColor.B, IconColor.A);
     C.DrawTile(
@@ -318,9 +344,6 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
       TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
-
-    C.Font = C.TinyFont;
-    ++LineNumber;
 }
 
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
@@ -334,6 +357,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
+    local bool bSelectedMarkerNotAvailable;
 
     if (PRI == none || C == none)
     {
@@ -359,7 +383,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
 
-    // Display hints about selected artillery target
+    // Display hints about selecting artillery targets
     PC = DHPlayer(PRI.Owner);
 
     if (PC != none)
@@ -370,15 +394,40 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         {
             GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
 
-            if (ArtilleryMarkers.Length > 0)
+            // check if the player has selected any marker
+            bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != -1 && ArtilleryMarkers.Length > 0;
+
+            if(bSelectedMarkerNotAvailable)
             {
-                C.CurX = default.WidgetsPanelX - 40;
-                C.CurY = default.WidgetsPanelY - 30;
-                C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+                // The player selected some marker
+                // Let's check if that marker is still available
+                for(i = 0; i < ArtilleryMarkers.Length; ++i)
+                {
+                    if(ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
+                    {
+                        bSelectedMarkerNotAvailable = false;
+                    }
+                }
+            }
+ 
+            if (ArtilleryMarkers.Length > 0 
+              && (bSelectedMarkerNotAvailable ||  PC.ArtillerySupportSquadIndex == -1))
+            {
+                // The player hasn't chosen anything from the available requests
+                Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
+            }
+            else if(!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != -1)
+            {
+                // The player has selected an avilable marker
+                // but there are more to toggle between
                 Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
                 Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
-                C.DrawText(Label);
             }
+            C.CurX = default.WidgetsPanelX - 40;
+            C.CurY = default.WidgetsPanelY - 30;
+            C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+            C.DrawText(Label);
         }
         else
         {
@@ -644,7 +693,7 @@ defaultproperties
     AngleUnit="°"
     DistanceUnit="m"
 
-    WidgetsPanelX=50
+    WidgetsPanelX=60
     WidgetsPanelY=100
     WidgetsPanelEntryHeight=100
 
@@ -665,7 +714,7 @@ defaultproperties
     Orange=(R=255,G=165,B=0,A=255)
     Red=(R=255,G=0,B=0,A=255)
 
-    TargetWidgetTextLineHeight=15
-
-    TargetToggleHint="Toggle artillery target using [%TOGGLESELECTEDARTILLERYTARGET%]. Number of fire support requests available for you: {ArtilleryMarkersLength}."
+    TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
+    TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
+    SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
 }

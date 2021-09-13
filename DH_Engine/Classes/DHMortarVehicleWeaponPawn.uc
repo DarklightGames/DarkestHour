@@ -214,7 +214,6 @@ simulated function int GetIndex(class<Projectile> ProjectileClass)
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController                              PC;
-    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      Player;
     local DHPlayerReplicationInfo                       PRI;
@@ -233,8 +232,7 @@ simulated function DrawHUD(Canvas C)
         }
         else
         {
-            TargetMapMarkers = Player.GetSpottingScopeTargets();
-            Targets = PrepareTargetInfo(TargetMapMarkers, ArtillerySpottingScope.default.YawScaleStep);
+            Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
             PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
 

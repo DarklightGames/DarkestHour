@@ -7180,6 +7180,107 @@ exec function IpFuzz(int Iterations)
     }
 }
 
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(int YawScaleStep, rotator VehicleRotation, vector VehicleLocation)
+{
+    local vector                                        Delta;
+    local int                                           Distance, Deflection, MarkerTimeouot, MarkerIndex, MarkersTotal, i, j;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHGameReplicationInfo                         GRI;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalArtilleryRequests;
+
+    GRI = DHGameReplicationInfo(self.GameReplicationInfo);
+
+    if(GRI == none)
+    {
+        return Targets;
+    }
+
+    VehicleLocation.Z = 0.0;
+
+    VehicleRotation.Roll = 0;
+    VehicleRotation.Pitch = 0;
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalArtilleryRequests, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalArtilleryRequests.Length; ++i)
+    {
+        if(GlobalArtilleryRequests[i].SquadIndex == self.ArtillerySupportSquadIndex)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalArtilleryRequests[i];
+        }
+    }
+
+    // Add measurement markers
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+        }
+    }
+
+    // Prepare target information for each marker
+    for (i = 0; i < TargetMapMarkers.Length; ++i)
+    {
+        MapMarker = TargetMapMarkers[i];
+        Delta = MapMarker.WorldLocation - VehicleLocation;
+        Delta.Z = 0;
+
+        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
+        SquadName = self.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+        if(MapMarker.ExpiryTime != -1)
+        {
+            MarkerTimeouot = MapMarker.ExpiryTime - GRI.ElapsedTime;
+        }
+        else
+        {
+            MarkerTimeouot = -1;
+        }
+        
+        switch(TargetMapMarkers[i].MapMarkerClass.default.Type)
+        {
+            case MT_OnMapArtilleryRequest:
+                // calculate which index does this marker's squad have throughout global on-map artillery requests
+                MarkerIndex = 0;
+                for (j = 0; j < GlobalArtilleryRequests.Length; ++j)
+                {
+                    if(GlobalArtilleryRequests[j].SquadIndex < TargetMapMarkers[i].SquadIndex)
+                    {
+                        ++MarkerIndex;
+                    }
+                }
+                ++MarkerIndex;
+                MarkersTotal = GlobalArtilleryRequests.Length;
+                break;
+            case MT_Measurement:
+                // leave neutral values for measurement markers
+                MarkerIndex = -1;
+                MarkersTotal = -1;
+                break;
+            default:
+                Warn("Unknown artillery marker type in DHPlayer.PrepareTargetInfo()");
+        }
+
+        TargetInfo.Distance       = Distance;
+        TargetInfo.MarkerIndex    = MarkerIndex;
+        TargetInfo.MarkersTotal   = MarkersTotal;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
+        TargetInfo.Marker         = MapMarker;
+        TargetInfo.Timeout        = MarkerTimeouot;
+        Targets[Targets.Length]   = TargetInfo;
+    }
+
+    return Targets;
+}
+
 // This function returns all fire support requests visible in the spotting scope
 function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
 {
@@ -7517,7 +7618,10 @@ exec function ToggleSelectedArtilleryTarget()
         {
             if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
+                // we found the marker we were looking for
+                
                 ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
+                ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
                 return;
             }
         }
