@@ -38,7 +38,7 @@ simulated exec function Deploy()
 {
     if (bUsingSights && !IsBusy())
     {
-        RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeds last range setting
+        RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeding last range setting
 
         if (InstigatorIsLocallyControlled())
         {

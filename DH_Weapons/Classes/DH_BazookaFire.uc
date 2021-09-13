@@ -9,7 +9,8 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_BazookaRocket'
     AmmoClass=class'DH_Weapons.DH_BazookaAmmo'
-    Spread=480.0
+    //Spread=480.0
+    Spread=0.0
     ExhaustDamageType=class'DH_Weapons.DH_BazookaExhaustDamType'
     ExhaustDamage=180.0
     ExhaustLength=320.0
