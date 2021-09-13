@@ -2250,7 +2250,7 @@ function bool IsPositionOfParadrop(vector Position)
           && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
           && GRI.DHArtillery[i].IsParadrop())
         {
-            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
                 // to do: refactor checking if GRI.DHArtillery[i].Location == Position
                 // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
@@ -7297,7 +7297,7 @@ function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(GRI == none)
+    if (GRI == none)
     {
         return TargetMapMarkers;
     }
@@ -7308,7 +7308,7 @@ function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
     // From all global markers leave only the one selected by the player
     for (i = 0; i < GlobalTargetMarkers.Length; ++i)
     {
-        if(GlobalTargetMarkers[i].SquadIndex == ArtillerySupportSquadIndex)
+        if (GlobalTargetMarkers[i].SquadIndex == ArtillerySupportSquadIndex)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = GlobalTargetMarkers[i];
         }
@@ -7602,7 +7602,7 @@ exec function ToggleSelectedArtilleryTarget()
 
     GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
 
-    if(ArtilleryMarkers.Length == 0)
+    if (ArtilleryMarkers.Length == 0)
     {
         // no artillery markers found, fall back to a neutral index
         ServerSaveArtillerySupportSquadIndex(-1);
