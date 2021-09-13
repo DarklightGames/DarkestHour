@@ -1065,7 +1065,7 @@ simulated function bool IsInArtilleryVehicle()
 
     if (V != none)
     {
-        return (V.IsA('DH_LeIG18Gun') || V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self.Pawn));
+        return (V.IsA('DH_LeIG18Gun') || V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(Pawn));
     }
 
     return false;
@@ -1079,13 +1079,13 @@ simulated function LockArtilleryRequests(int Seconds)
 
     if (GameReplicationInfo != none)
     {
-        self.ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+        ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
     }
 }
 
 simulated function bool IsArtilleryRequestingLocked()
 {
-    return self.ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
+    return ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
 }
 
 simulated function bool IsInSquad()
@@ -2177,7 +2177,7 @@ simulated function bool IsArtillerySpotter()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return (RI.bIsArtilleryOfficer || self.IsSL());
+    return (RI.bIsArtilleryOfficer || IsSL());
 }
 
 simulated function bool IsRadioman()
@@ -7191,9 +7191,9 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
     local DHGameReplicationInfo                         GRI;
     local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalArtilleryRequests;
 
-    GRI = DHGameReplicationInfo(self.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(GRI == none)
+    if (GRI == none)
     {
         return Targets;
     }
@@ -7209,7 +7209,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
     // From all global markers leave only the one selected by the player
     for (i = 0; i < GlobalArtilleryRequests.Length; ++i)
     {
-        if(GlobalArtilleryRequests[i].SquadIndex == self.ArtillerySupportSquadIndex)
+        if (GlobalArtilleryRequests[i].SquadIndex == ArtillerySupportSquadIndex)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = GlobalArtilleryRequests[i];
         }
@@ -7233,9 +7233,10 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
 
         // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
         Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
-        SquadName = self.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        SquadName = SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
         Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
-        if(MapMarker.ExpiryTime != -1)
+
+        if (MapMarker.ExpiryTime != -1)
         {
             MarkerTimeout = MapMarker.ExpiryTime - GRI.ElapsedTime;
         }
@@ -7244,14 +7245,14 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
             MarkerTimeout = -1;
         }
 
-        switch(TargetMapMarkers[i].MapMarkerClass.default.Type)
+        switch (TargetMapMarkers[i].MapMarkerClass.default.Type)
         {
             case MT_OnMapArtilleryRequest:
                 // calculate which index does this marker's squad have throughout global on-map artillery requests
                 MarkerIndex = 0;
                 for (j = 0; j < GlobalArtilleryRequests.Length; ++j)
                 {
-                    if(GlobalArtilleryRequests[j].SquadIndex < TargetMapMarkers[i].SquadIndex)
+                    if (GlobalArtilleryRequests[j].SquadIndex < TargetMapMarkers[i].SquadIndex)
                     {
                         ++MarkerIndex;
                     }
@@ -7306,7 +7307,7 @@ function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
     // From all global markers leave only the one selected by the player
     for (i = 0; i < GlobalTargetMarkers.Length; ++i)
     {
-        if(GlobalTargetMarkers[i].SquadIndex == self.ArtillerySupportSquadIndex)
+        if(GlobalTargetMarkers[i].SquadIndex == ArtillerySupportSquadIndex)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = GlobalTargetMarkers[i];
         }
