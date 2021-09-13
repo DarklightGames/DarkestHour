@@ -7183,7 +7183,7 @@ exec function IpFuzz(int Iterations)
 simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(int YawScaleStep, rotator VehicleRotation, vector VehicleLocation)
 {
     local vector                                        Delta;
-    local int                                           Distance, Deflection, MarkerTimeouot, MarkerIndex, MarkersTotal, i, j;
+    local int                                           Distance, Deflection, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHArtillerySpottingScope.STargetInfo          TargetInfo;
     local string                                        SquadName;
@@ -7237,13 +7237,13 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
         Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
         if(MapMarker.ExpiryTime != -1)
         {
-            MarkerTimeouot = MapMarker.ExpiryTime - GRI.ElapsedTime;
+            MarkerTimeout = MapMarker.ExpiryTime - GRI.ElapsedTime;
         }
         else
         {
-            MarkerTimeouot = -1;
+            MarkerTimeout = -1;
         }
-        
+
         switch(TargetMapMarkers[i].MapMarkerClass.default.Type)
         {
             case MT_OnMapArtilleryRequest:
@@ -7274,7 +7274,7 @@ simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo
         TargetInfo.SquadName      = SquadName;
         TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
         TargetInfo.Marker         = MapMarker;
-        TargetInfo.Timeout        = MarkerTimeouot;
+        TargetInfo.Timeout        = MarkerTimeout;
         Targets[Targets.Length]   = TargetInfo;
     }
 
@@ -7481,7 +7481,7 @@ exec function DebugStartRound()
 
 function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker> MapMarkerClass)
 {
-    if (MapMarkerClass == none 
+    if (MapMarkerClass == none
       || !(MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
         || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
     {
@@ -7619,7 +7619,7 @@ exec function ToggleSelectedArtilleryTarget()
             if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
             {
                 // we found the marker we were looking for
-                
+
                 ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
                 ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
                 return;
