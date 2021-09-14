@@ -43,7 +43,8 @@ struct SSegmentTick
     var bool                              bShouldDrawLabel;
 };
 
-var array<SSegmentTick>                   SegmentSchema;
+var array<SSegmentTick>                   PitchSegmentSchema;
+var array<SSegmentTick>                   YawSegmentSchema;
 var int                                   NumberOfYawSegments;
 var int                                   NumberOfPitchSegments;
 
@@ -349,7 +350,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
-    local int i, Yaw, Quotient, Index, SegmentSchemaIndex, VisibleYawSegmentsNumber;
+    local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
@@ -367,7 +368,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     IndicatorTopLeftCornerY = C.SizeY * 0.95;
 
-    VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.SegmentSchema.Length;
+    VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.YawSegmentSchema.Length;
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
     YawLowerBound = CurrentYaw - default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
     YawUpperBound = CurrentYaw + default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
@@ -515,8 +516,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         C.CurY = IndicatorTopLeftCornerY - 5.0;
         C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
 
-        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
-        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+        YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
+        switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
         {
             case ShortTick:
                 C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
@@ -528,9 +529,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
+        if (default.YawSegmentSchema[YawSegmentSchemaIndex].bShouldDrawLabel)
         {
-            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
                     C.CurY = C.CurY - default.SmallSizeTickLength - TextHeight - default.LabelOffset;
@@ -569,25 +570,25 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
 simulated static function float GetPitchLowerBound(float CurrentPitch)
 {
-    return CurrentPitch - default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
+    return CurrentPitch - default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
 simulated static function float  GetPitchUpperBound(float CurrentPitch)
 {
-    return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
+    return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, SegmentSchemaIndex;
+    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex;
     local string Label;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
     IndicatorTopLeftCornerY = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
     CurrentPitch += GunPitchOffset;
-    VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.SegmentSchema.Length;
+    VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.PitchSegmentSchema.Length;
 
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
@@ -621,8 +622,8 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         C.CurX = IndicatorTopLeftCornerX - 5.0;
         C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
 
-        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
-        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+        PitchSegmentSchemaIndex = abs(Quotient) % default.PitchSegmentSchema.Length;
+        switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
         {
             case ShortTick:
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.SmallSizeTickLength);
@@ -634,9 +635,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
+        if (default.PitchSegmentSchema[PitchSegmentSchemaIndex].bShouldDrawLabel)
         {
-            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
                     C.CurX = C.CurX - default.SmallSizeTickLength - TextWidth - default.LabelOffset;
