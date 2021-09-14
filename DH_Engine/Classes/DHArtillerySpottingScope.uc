@@ -552,14 +552,28 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
         if (Yaw < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
         {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
+            for(i = 0; i <= IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber + float(i)/default.YawIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                C.CurX = i + IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', 1, default.StrikeThroughThickness);
+            }
         }
 
         if (Yaw > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
         {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
+            for(i = 0; i < IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber - float(i)/default.YawIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                C.CurX = (-i) + IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', -1, default.StrikeThroughThickness);
+            }
         }
     }
     // Draw current value indicator (middle tick)
@@ -581,7 +595,7 @@ simulated static function float  GetPitchUpperBound(float CurrentPitch)
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex;
+    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, i;
     local string Label;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
@@ -658,15 +672,33 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
+            for(i = 0; i < IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber - float(i)/default.PitchIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                
+                C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
+                C.CurY = (-i) + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, 1);
+            }
         }
 
         // Draw a strike-through if this segment is above the upper limit.
         if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
+            for(i = 0; i < IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber + float(i)/default.PitchIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                
+                C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
+                C.CurY = i + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -1);
+            }
         }
     }
 
