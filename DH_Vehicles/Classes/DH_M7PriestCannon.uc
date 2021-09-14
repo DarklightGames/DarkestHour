@@ -17,7 +17,8 @@ defaultproperties
 
     // Turret movement
     bHasTurret=false
-    ManualRotationsPerSecond=0.02
+    ManualRotationsPerSecond=0.005
+    RotationsPerSecond=0.005
     bLimitYaw=true
     MaxPositiveYaw=5461        // 30 degrees
     MaxNegativeYaw=-2730       // -15 degrees

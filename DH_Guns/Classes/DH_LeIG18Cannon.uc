@@ -14,7 +14,7 @@ defaultproperties
     GunnerAttachmentBone="com_player"
 
     // Turret movement
-    ManualRotationsPerSecond=0.011111
+    RotationsPerSecond=0.005
     MaxPositiveYaw=1092.0
     MaxNegativeYaw=-1092.0
     YawStartConstraint=-1092.0

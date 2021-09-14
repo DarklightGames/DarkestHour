@@ -32,7 +32,7 @@ defaultproperties
     RangeTable(17)=(Range=550,Pitch=56.0)
     RangeTable(18)=(Range=575,Pitch=52.0)
 
-    YawScaleStep=5.0
+    YawScaleStep=1.0
     PitchScaleStep=0.5
     PitchDecimalsTable=1
 
