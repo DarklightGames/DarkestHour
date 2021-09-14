@@ -6,8 +6,11 @@
 class DHShellExplosionDamageType extends ROTankShellExplosionDamage
     abstract;
 
+var bool bIsArtilleryExplosion;
+
 defaultproperties
 {
+    bIsArtilleryExplosion=false
     DeathString="%o was blown up by %k's cannon shell."
     MaleSuicide="%o was blown up his own cannon shell."
     FemaleSuicide="%o was blown up by her own cannon shell."

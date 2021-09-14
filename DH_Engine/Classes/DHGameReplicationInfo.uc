@@ -18,6 +18,7 @@ const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
 const ARTILLERY_MAX = 8;
+const MINE_VOLUMES_MAX = 32;
 
 enum VehicleReservationError
 {
@@ -106,6 +107,9 @@ var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
+// It is impossible to get DHMineVolume to actually replicate variables so this is needed as proxy.
+var byte                DHMineVolumeIsActives[MINE_VOLUMES_MAX];
+
 var int                 MaxTeamVehicles[2];
 
 var float               TeamMunitionPercentages[2];
@@ -174,10 +178,8 @@ var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
-var bool                                bOffMapArtilleryEnabledAllies;
-var bool                                bOffMapArtilleryEnabledAxis;
-var bool                                bOnMapArtilleryEnabledAllies;
-var bool                                bOnMapArtilleryEnabledAxis;
+var byte                                bOffMapArtilleryEnabled[2];
+var byte                                bOnMapArtilleryEnabled[2];
 
 // Delayed round ending
 var byte   RoundWinnerTeamIndex;
@@ -242,10 +244,9 @@ replication
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
         TeamConstructions,
-        bOffMapArtilleryEnabledAllies,
-        bOffMapArtilleryEnabledAxis,
-        bOnMapArtilleryEnabledAllies,
-        bOnMapArtilleryEnabledAxis;
+        bOffMapArtilleryEnabled,
+        bOnMapArtilleryEnabled,
+        DHMineVolumeIsActives;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -315,6 +316,8 @@ simulated function PostBeginPlay()
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
+
+        RegisterMineVolumes();
     }
 }
 
@@ -1119,6 +1122,11 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
 // Artillery Functions
 //------------------------------------------------------------------------------
 
+simulated function bool IsArtilleryEnabled(int TeamIndex)
+{
+    return bOffMapArtilleryEnabled[TeamIndex] == 1 || bOffMapArtilleryEnabled[TeamIndex] == 1;
+}
+
 function AddArtillery(DHArtillery Artillery)
 {
     local int i;
@@ -1427,12 +1435,13 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
             return false;
     }
 
-    if (MM.MapMarkerClass == none || (MM.ExpiryTime != -1 && MM.ExpiryTime <= ElapsedTime))
+    if (MM.MapMarkerClass == none || IsMapMarkerExpired(MM))
     {
        return false;
     }
 
     MapMarker = MM;
+
     return true;
 }
 
@@ -1443,9 +1452,6 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
 {
     local int i;
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PC.Owner);
 
     switch (TeamIndex)
     {
@@ -1456,6 +1462,67 @@ simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, i
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
                 MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+            break;
+    }
+}
+
+simulated function bool IsMapMarkerExpired(MapMarker MM)
+{
+    return MM.ExpiryTime != -1 && MM.ExpiryTime <= ElapsedTime;
+}
+
+simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI;
+    local MapMarker Marker;
+    local bool bIsArtillerySpotter;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    bIsArtillerySpotter = PRI.IsArtillerySpotter();
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                Marker = AxisMapMarkers[i];
+
+                if (!IsMapMarkerExpired(Marker)
+                    && Marker.MapMarkerClass != none
+                    && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+                    && Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest
+                    && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
+                {
+                    MapMarkers[MapMarkers.Length] = Marker;
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                Marker = AlliesMapMarkers[i];
+
+                if (!IsMapMarkerExpired(Marker)
+                    && Marker.MapMarkerClass != none
+                    && Marker.MapMarkerClass.static.CanSeeMarker(PRI, Marker)
+                    && Marker.MapMarkerClass.default.Type == MT_OnMapArtilleryRequest
+                    && !(bIsArtillerySpotter && Marker.SquadIndex == PRI.SquadIndex))
+                {
+                    MapMarkers[MapMarkers.Length] = Marker;
+                }
+            }
             break;
     }
 }
@@ -1526,9 +1593,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             }
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
             {
-                if (AxisMapMarkers[i].MapMarkerClass == none ||
-                    (AxisMapMarkers[i].ExpiryTime != -1 &&
-                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
+                if (AxisMapMarkers[i].MapMarkerClass == none || IsMapMarkerExpired(AxisMapMarkers[i]))
                 {
                     AxisMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1537,7 +1602,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             }
             break;
         case ALLIES_TEAM_INDEX:
-            switch(MapMarkerClass.default.OverwritingRule)
+            switch (MapMarkerClass.default.OverwritingRule)
             {
                 case UNIQUE_PER_GROUP:
                     for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
@@ -1571,9 +1636,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
             }
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
             {
-                if (AlliesMapMarkers[i].MapMarkerClass == none ||
-                    (AlliesMapMarkers[i].ExpiryTime != -1 &&
-                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
+                if (AlliesMapMarkers[i].MapMarkerClass == none || IsMapMarkerExpired(AlliesMapMarkers[i]))
                 {
                     AlliesMapMarkers[i] = M;
                     MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner), M);
@@ -1632,7 +1695,9 @@ function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
     }
 }
 
-function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
+// This is stupid, but for now 
+// there can only be 1 active off-map artillery strike anyway
+function InvalidateOffMapArtilleryMarker(int TeamIndex)
 {
     local int i;
 
@@ -1641,7 +1706,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
+                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                 }
@@ -1650,34 +1715,7 @@ function InvalidateArtilleryRequestsForSquad(int TeamIndex, int SquadIndex)
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if (AxisMapMarkers[i].SquadIndex == SquadIndex && ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport'))
-                {
-                    AxisMapMarkers[i].ExpiryTime = 0;
-                }
-            }
-            break;
-    }
-}
-
-function InvalidateBarrageMarker(int TeamIndex, class<DHMapMarker_ArtilleryHit> MarkerClass)
-{
-    local int i;
-
-    switch (TeamIndex)
-    {
-        case ALLIES_TEAM_INDEX:
-            for (i = 0; i < arraycount(AlliesMapMarkers); i++)
-            {
-                if (ClassIsChildOf(AlliesMapMarkers[i].MapMarkerClass, MarkerClass))
-                {
-                    AlliesMapMarkers[i].ExpiryTime = 0;
-                }
-            }
-            break;
-        case AXIS_TEAM_INDEX:
-            for (i = 0; i < arraycount(AxisMapMarkers); i++)
-            {
-                if (ClassIsChildOf(AxisMapMarkers[i].MapMarkerClass, MarkerClass))
+                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                 }
@@ -1990,6 +2028,41 @@ function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
     }
 }
 
+//==============================================================================
+// MINE VOLUMES
+//==============================================================================
+
+function RegisterMineVolumes()
+{
+    local DHMineVolume MV;
+    local int Index;
+
+    if (ROLE != ROLE_Authority)
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHMineVolume', MV)
+    {
+        if (Index >= MINE_VOLUMES_MAX)
+        {
+            Warn("Too many mine volumes! Only" @ MINE_VOLUMES_MAX @ "minefield activation states can be tracked at once.");
+        }
+
+        MV.Index = Index++;
+    }
+}
+
+simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
+{
+    if (MineVolume == none || MineVolume.Index < 0 || MineVolume.Index >= MINE_VOLUMES_MAX)
+    {
+        return false;
+    }
+
+    return DHMineVolumeIsActives[MineVolume.Index] == 1;
+}
+
 defaultproperties
 {
     bNetNotify=true
@@ -2054,9 +2127,5 @@ defaultproperties
     // case we fail to retrieve those values.
     DangerZoneNeutral=128
     DangerZoneBalance=128
-
-    bOnMapArtilleryEnabledAxis=false
-    bOnMapArtilleryEnabledAllies=false
-    bOffMapArtilleryEnabledAxis=false
-    bOffMapArtilleryEnabledAllies=false
 }
+

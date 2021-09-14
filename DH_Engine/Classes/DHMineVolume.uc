@@ -45,24 +45,18 @@ var()   bool                    bIsAlsoNoArtyVolume; // leveler can set this vol
 var     float                   ActivationTime;      // time this MV was activated - used in workaround fix to bug if player teleports into MV, & also useful in subclasses
 var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to use for warning messages, so can be replaced by custom messages in a subclass
 
-var     bool                     bClientActive;
-
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bClientActive;
-}
-
-// simulated function bool ServerMineVolumeActive()
-// {
-//     Log("server");
-//     return bClientActive;
-// }
+var int                             Index;           // Where our activation state is stored in DHGRI.DHMineVolumeIsActives
+var private DHGameReplicationInfo   GRI;
 
 // Modified to skip over the Super in ROMineVolume as it was always activating the mine volume & instead we need to use our bInitiallyActive setting
 // We don't need to do anything here as we can leave it to Reset(), which gets called whenever a new round starts, otherwise we just duplicate the same functionality here
 function PostBeginPlay()
 {
+    if (Role == ROLE_Authority)
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
+
     super(Volume).PostBeginPlay();
 }
 
@@ -73,7 +67,6 @@ function Reset()
     if (bInitiallyActive)
     {
         bActive = false; // so that Activate() will 'reactivate' the MV if reset when it is already active
-        bClientActive = bActive;
         Activate();
     }
     else
@@ -88,7 +81,9 @@ function Activate()
     if (!bActive)
     {
         bActive = true;
-        bClientActive = bActive;
+
+        GRI.DHMineVolumeIsActives[Index] = 1;
+
         ActivationTime = Level.TimeSeconds;
         Enable('Touch');
         Enable('UnTouch');
@@ -111,7 +106,9 @@ function Deactivate()
     if (bActive)
     {
         bActive = false;
-        bClientActive = bActive;
+
+        GRI.DHMineVolumeIsActives[Index] = 0;
+
         Disable('Touch');
         Disable('UnTouch');
 

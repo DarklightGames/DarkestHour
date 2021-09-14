@@ -77,7 +77,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         Controller.SteamGetUserName() != "")
     {
         // This converts an underscore to a non-breaking space (0xA0)
-        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", " "));
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", "ï¿½"));
     }
 }
 
@@ -376,6 +376,13 @@ event Opened(GUIComponent Sender)
                 PlayerOwner().ConsoleCommand("set IpDrv.TcpNetDriver KeepAliveTime 0.004");
                 PlayerOwner().SaveConfig();
             }
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v10.0.0")) < 0)
+        {
+            Log("Configuration file is older than v10.0.0, assigning the artillery target toggle keybind");
+
+            SetKeyBindIfAvailable(",", "ToggleSelectedArtilleryTarget");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();

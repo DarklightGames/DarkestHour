@@ -2294,54 +2294,6 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
     }
 }
 
-// A helper function to calculate artillery target information used by spotting scopes
-simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(array<DHGameReplicationInfo.MapMarker> MapMarkers, int YawScaleStep)
-{
-    local vector                                        VehicleLocation, Delta;
-    local rotator                                       VehicleRotation;
-    local int                                           Distance, Deflection, i;
-    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
-    local string                                        SquadName;
-    local DHGameReplicationInfo.MapMarker               MapMarker;
-    local DHPlayer                                      Player;
-
-    Player = DHPlayer(Controller);
-
-    if (Player == none)
-    {
-        return Targets;
-    }
-
-    VehicleLocation = VehWep.Location;
-    VehicleLocation.Z = 0.0;
-
-    VehicleRotation.Yaw = VehWep.Rotation.Yaw;
-    VehicleRotation.Roll = 0;
-    VehicleRotation.Pitch = 0;
-
-    // Prepare target information for each marker
-    for (i = 0; i < MapMarkers.Length; ++i)
-    {
-        MapMarker = MapMarkers[i];
-        Delta = MapMarker.WorldLocation - VehicleLocation;
-        Delta.Z = 0;
-
-        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
-        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
-        SquadName = Player.SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
-
-        TargetInfo.Distance       = Distance;
-        TargetInfo.SquadName      = SquadName;
-        TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
-        TargetInfo.Marker         = MapMarker;
-        Targets[Targets.Length]   = TargetInfo;
-    }
-
-    return Targets;
-}
-
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {

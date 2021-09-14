@@ -3,13 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMapMarker_FireSupport_Smoke extends DHMapMarker_FireSupport_OnMap
+class DHMapMarker_FireSupport_Smoke extends DHMapMarker_FireSupport
     abstract;
 
 defaultproperties
 {
-    MarkerName="On-map mortar barrage (smoke)"
-    TypeName="Smoke"
-    IconColor=(R=160,G=160,B=160,A=100)
-    ActivatedIconColor=(R=160,G=160,B=160,A=255)
+    MarkerName="Smoke request"
 }

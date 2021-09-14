@@ -8,7 +8,6 @@ class DHMortarVehicle extends DHVehicle
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
 var     bool        bCanBeResupplied; // flags that the mortar doesn't have full ammo & so can receive passed ammo
-var     TreeMap_string_Object NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 replication
 {

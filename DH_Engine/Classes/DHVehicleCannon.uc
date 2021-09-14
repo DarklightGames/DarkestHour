@@ -810,10 +810,10 @@ function bool GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
-    
+
     if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        if(!bUsesMags)
+        if (!bUsesMags)
         {
             if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
             {

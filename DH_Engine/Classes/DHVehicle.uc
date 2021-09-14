@@ -1225,12 +1225,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     if (DHP != none)
     {
         DHP.QueueHint(40, true);
-
-        if (IsSpawnVehicle())
-        {
-            DHP.QueueHint(14, true);
-            DHP.QueueHint(16, true);
-        }
     }
 
     super(Vehicle).ClientKDriverEnter(PC);
@@ -3583,7 +3577,7 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    if(Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
         bDidResupply = super.ResupplyAmmo();
 

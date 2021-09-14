@@ -190,8 +190,6 @@ defaultproperties
     Hints(10)=(Title="Mortar Undeploy",Text="To undeploy your mortar, press the %Deploy% key. Undeploying your mortar will reset your elevation and traverse settings.")
     Hints(11)=(Title="Artillery Targeting",Text="You can mark targets for your team's mortar and artillery operators while sighted with your binoculars. Pressing %FIRE% to mark a high-explosive target or press %ALTFIRE% to request a smoke target.")
     Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in artillery strikes!")
-    Hints(14)=(Title="Deployment Vehicle",Text="You are driving a deployment vehicle! When not in an objective and with no enemies nearby, your team can use it as a spawn point!")
-    Hints(16)=(Title="Deployment Vehicle",Text="Deployment vehicles can be critical in the outcome of any battle! Treat them with care! If you need to leave the vehicle, be sure to leave it in a safe area!")
     Hints(20)=(Title="M1 Garand",Text="Firing the last round of an en bloc clip makes a distinctive audible ping indicating that your rifle is out of ammunition. Be careful, the enemy may take advantage of this.")
     Hints(21)=(Title="Lee Enfield No.4",Text="The Lee Enfield No.4 can load two 5-rd stripper clips. After you have fired 5 rounds, you may reload the rifle with one clip. If you fire all your rounds, you will reload with two clips.")
     Hints(22)=(Title="Gewehr 41",Text="The Gewehr 41 can load two 5-rd stripper clips. After you have fired 5 rounds, you may reload the rifle with one clip. If you fire all your rounds, you will reload with two clips.")

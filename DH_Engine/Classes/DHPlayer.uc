@@ -41,16 +41,12 @@ var     globalconfig int        MinDesiredFPS;       // client option used to ca
 // Artillery hits - only for artillery roles
 struct SArtilleryHitInfo
 {
-    var int         ClosestArtilleryRequestIndex;       // position in the markers array
-    var vector      ClosestArtilleryRequestLocation;    // world location of the closest artillery request
     var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
     var int         ExpiryTime;
 };
 var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
 var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
 var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
-var     bool                    bIsArtilleryTargetValid;
-
 var     int                     ArtillerySupportSquadIndex;
 
 // View FOV
@@ -190,7 +186,7 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged, bIsArtilleryTargetValid;
+        bSurrendered, bIQManaged, ArtillerySupportSquadIndex;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -213,8 +209,8 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators, ServerSaveArtilleryTarget,
-        ServerIsArtilleryTargetValid;
+        ServerNotifyRadioman, ServerNotifyArtilleryOperators,
+        ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1028,37 +1024,33 @@ function ServerSaveArtilleryTarget(vector Location)
     SavedArtilleryCoords = Location;
 }
 
+function ServerSaveArtillerySupportSquadIndex(int Index)
+{
+    ArtillerySupportSquadIndex = Index;
+}
+
 // This function checks if the player can call artillery on the selected target.
-function ServerIsArtilleryTargetValid(vector ArtilleryLocation)
+function bool IsArtilleryTargetValid(vector ArtilleryLocation)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
 
-    if (Pawn == none || Pawn.Health <= 0)
+    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+
+    if (VT != none)
     {
-        bValidTarget = false;
-    }
-    else
-    {
-
-        // TODO: we got a tad bit of an issue here! vehicle camera location etc. will be completely different
-
-        VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
-
-        if (VT != none)
-        {
-            bValidTarget = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
+        bValidTarget = !VT.DHIsInNoArtyVolume(DHGameReplicationInfo(GameReplicationInfo));
+        VT.Destroy();
     }
 
-    bIsArtilleryTargetValid = bValidTarget;
+    return bValidTarget;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
 function HitThis(ROArtilleryTrigger RAT) { return; }
 
-// New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
+// New function to determine if the player is operating a vehicle that is marked as artillery
+// TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
 {
     local DHVehicle V;
@@ -1074,7 +1066,7 @@ simulated function bool IsInArtilleryVehicle()
 
     if (V != none)
     {
-        return (V.IsA('DH_LeIG18Gun') || V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self.Pawn));
+        return V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(Pawn);
     }
 
     return false;
@@ -1088,13 +1080,13 @@ simulated function LockArtilleryRequests(int Seconds)
 
     if (GameReplicationInfo != none)
     {
-        self.ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+        ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
     }
 }
 
 simulated function bool IsArtilleryRequestingLocked()
 {
-    return self.ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
+    return ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
 }
 
 simulated function bool IsInSquad()
@@ -2186,19 +2178,16 @@ simulated function bool IsArtillerySpotter()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return (RI.bIsArtilleryOfficer || self.IsSL());
+    return (RI.bIsArtilleryOfficer || IsSL());
 }
 
 simulated function bool IsRadioman()
 {
     local DHRoleInfo RI;
+
     RI = DHRoleInfo(GetRoleInfo());
 
-    if(RI != none)
-    {
-        return RI.bCarriesRadio;
-    }
-    return false;
+    return RI != none && RI.bCarriesRadio;
 }
 
 function ServerNotifyRadioman()
@@ -2239,7 +2228,7 @@ function bool IsPositionOfArtillery(vector Position)
         {
             // to do: refactor checking if GRI.DHArtillery[i].Location == Position
             // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
-            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
                 return true;
             }
@@ -2261,7 +2250,7 @@ function bool IsPositionOfParadrop(vector Position)
           && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
           && GRI.DHArtillery[i].IsParadrop())
         {
-            if(VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
                 // to do: refactor checking if GRI.DHArtillery[i].Location == Position
                 // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
@@ -2291,7 +2280,7 @@ function int GetActiveOffMapSupportNumber()
     return Counter;
 }
 
-function ServerNotifyArtilleryOperators(class<DHMapMarker_FireSupport> MapMarkerClass)
+function ServerNotifyArtilleryOperators(class<DHMapMarker> MapMarkerClass)
 {
     local int                   TeamIndex, SquadIndex;
     local Controller            C;
@@ -7192,42 +7181,143 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-function array<DHGameReplicationInfo.MapMarker> GetArtilleryMapMarkers()
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(int YawScaleStep, rotator VehicleRotation, vector VehicleLocation)
 {
-    local int                                    i, ElapsedTime;
+    local vector                                        Delta;
+    local int                                           Distance, Deflection, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHGameReplicationInfo                         GRI;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalArtilleryRequests;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return Targets;
+    }
+
+    VehicleLocation.Z = 0.0;
+
+    VehicleRotation.Roll = 0;
+    VehicleRotation.Pitch = 0;
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalArtilleryRequests, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalArtilleryRequests.Length; ++i)
+    {
+        if (GlobalArtilleryRequests[i].SquadIndex == ArtillerySupportSquadIndex)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalArtilleryRequests[i];
+        }
+    }
+
+    // Add measurement markers
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+        }
+    }
+
+    // Prepare target information for each marker
+    for (i = 0; i < TargetMapMarkers.Length; ++i)
+    {
+        MapMarker = TargetMapMarkers[i];
+        Delta = MapMarker.WorldLocation - VehicleLocation;
+        Delta.Z = 0;
+
+        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
+        SquadName = SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+
+        if (MapMarker.ExpiryTime != -1)
+        {
+            MarkerTimeout = MapMarker.ExpiryTime - GRI.ElapsedTime;
+        }
+        else
+        {
+            MarkerTimeout = -1;
+        }
+
+        switch (TargetMapMarkers[i].MapMarkerClass.default.Type)
+        {
+            case MT_OnMapArtilleryRequest:
+                // calculate which index does this marker's squad have throughout global on-map artillery requests
+                MarkerIndex = 0;
+                for (j = 0; j < GlobalArtilleryRequests.Length; ++j)
+                {
+                    if (GlobalArtilleryRequests[j].SquadIndex < TargetMapMarkers[i].SquadIndex)
+                    {
+                        ++MarkerIndex;
+                    }
+                }
+                ++MarkerIndex;
+                MarkersTotal = GlobalArtilleryRequests.Length;
+                break;
+            case MT_Measurement:
+                // leave neutral values for measurement markers
+                MarkerIndex = -1;
+                MarkersTotal = -1;
+                break;
+            default:
+                Warn("Unknown artillery marker type in DHPlayer.PrepareTargetInfo()");
+        }
+
+        TargetInfo.Distance       = Distance;
+        TargetInfo.MarkerIndex    = MarkerIndex;
+        TargetInfo.MarkersTotal   = MarkersTotal;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
+        TargetInfo.Marker         = MapMarker;
+        TargetInfo.Timeout        = MarkerTimeout;
+        Targets[Targets.Length]   = TargetInfo;
+    }
+
+    return Targets;
+}
+
+// This function returns all fire support requests visible in the spotting scope
+function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
+{
+    local int                                    i;
     local DHGameReplicationInfo                  GRI;
-    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers, TargetMapMarkers;
-    local DHPlayerReplicationInfo                PRI;
-    local bool                                   bMarkerExpired;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalTargetMarkers;
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (Pawn == none || PRI == none)
+    if (Pawn == none)
     {
         return TargetMapMarkers;
     }
 
-    // Select only fire requests & ruler markers
     GRI = DHGameReplicationInfo(GameReplicationInfo);
-    GRI.GetMapMarkers(self, PublicMapMarkers, GetTeamNum());
-    ElapsedTime = GRI.ElapsedTime;
 
-    for (i = 0; i < PublicMapMarkers.Length; ++i)
+    if (GRI == none)
     {
-        bMarkerExpired = PublicMapMarkers[i].ExpiryTime <= ElapsedTime || PublicMapMarkers[i].ExpiryTime == -1;
-        // Log("i=" $ i @ "SquadIndex=" $ PublicMapMarkers[i].SquadIndex @ ": bMarkerExpired=" $ bMarkerExpired @ ", " @ "PublicMapMarkers[i].ExpiryTime=" $ PublicMapMarkers[i].ExpiryTime @ ", ElapsedTime=" $ ElapsedTime);
-        if (PublicMapMarkers[i].SquadIndex == ArtillerySupportSquadIndex
-          && ClassIsChildOf(PublicMapMarkers[i].MapMarkerClass, class'DHMapMarker_FireSupport')
-          && PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i])
-          && !bMarkerExpired)
+        return TargetMapMarkers;
+    }
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalTargetMarkers, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalTargetMarkers.Length; ++i)
+    {
+        if (GlobalTargetMarkers[i].SquadIndex == ArtillerySupportSquadIndex)
         {
-            TargetMapMarkers[TargetMapMarkers.Length] = PublicMapMarkers[i];
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalTargetMarkers[i];
         }
     }
 
+    // Add measurement markers
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (ClassIsChildOf(PersonalMapMarkers[i].MapMarkerClass, class'DHMapMarker_Ruler'))
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
         {
             TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
         }
@@ -7391,6 +7481,159 @@ exec function DebugStartRound()
     }
 }
 
+function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker> MapMarkerClass)
+{
+    if (MapMarkerClass == none
+      || !(MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
+        || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+    {
+        return;
+    }
+
+    if (IsArtilleryRequestingLocked())
+    {
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
+    }
+    else
+    {
+        LockArtilleryRequests(ArtilleryLockingPeriod);
+        AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+
+        if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
+        {
+            ServerNotifyRadioman();
+        }
+        else if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
+        {
+            ServerNotifyArtilleryOperators(MapMarkerClass);
+        }
+        else
+        {
+            Warn("Something went wrong when adding the artillery request. Artillery operators and radiomen won't be notified.");
+        }
+
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+    }
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportError(class<DHMapMarker> FireSupportRequestClass)
+{
+    local int SquadMembersCount;
+    local DHGameReplicationInfo GRI;
+    local DHSquadReplicationInfo SRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    SRI = SquadReplicationInfo;
+
+    if (GRI == none || SRI == none || FireSupportRequestClass == none
+      || !(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+        || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
+    {
+        return FSE_Fatal;
+    }
+
+    if (!IsArtillerySpotter())
+    {
+        return FSE_InsufficientPrivileges;
+    }
+
+    switch (FireSupportRequestClass.default.Type)
+    {
+        case MT_OffMapArtilleryRequest:
+            if (GRI.bOffMapArtilleryEnabled[GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        case MT_OnMapArtilleryRequest:
+            if (GRI.bOnMapArtilleryEnabled[GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        default:
+            Warn("Unknown artillery type class passed to GetFireSupportError");
+            return FSE_Fatal;
+    }
+
+    SquadMembersCount = SRI.GetMemberCount(GetTeamNum(), GetSquadIndex());
+
+    if (Level.NetMode != NM_Standalone && SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    {
+        return FSE_NotEnoughSquadmates;
+    }
+
+    return FSE_None;
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(class<DHMapMarker> FireSupportRequestClass, vector WorldLocation)
+{
+    local DHFireSupport.EFireSupportError Error;
+
+    Error = GetFireSupportError(FireSupportRequestClass);
+
+    if (Error != FSE_None)
+    {
+        return Error;
+    }
+
+    if (!IsArtilleryTargetValid(WorldLocation))
+    {
+        return FSE_InvalidLocation;
+    }
+
+    return FSE_None;
+}
+
+exec function ToggleSelectedArtilleryTarget()
+{
+    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local int i, NewSquadIndex;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    {
+        return;
+    }
+
+    GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
+
+    if (ArtilleryMarkers.Length == 0)
+    {
+        // no artillery markers found, fall back to a neutral index
+        ServerSaveArtillerySupportSquadIndex(-1);
+        return;
+    }
+
+    NewSquadIndex = ArtillerySupportSquadIndex + 1;
+
+    // cycle through all squads in an increasing Round-Robin order
+    // and check if there are available targets that can be selected
+    while (NewSquadIndex != ArtillerySupportSquadIndex)
+    {
+        // look for a map marker made by the squad with the new squad index
+        for (i = 0; i < ArtilleryMarkers.Length; i++)
+        {
+            if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
+            {
+                // we found the marker we were looking for
+
+                ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
+                ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+                return;
+            }
+        }
+
+        // no marker found for the new squad index
+        // try the next squad
+        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+    }
+}
+
 defaultproperties
 {
     CorpseStayTime=15
@@ -7465,6 +7708,5 @@ defaultproperties
     ArtilleryLockingPeriod = 10
 
     MinIQToGrowHead=100
-    bIsArtilleryTargetValid=false
     ArtillerySupportSquadIndex=-1
 }

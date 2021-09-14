@@ -13,7 +13,7 @@ var     float       SpreadYawMax;
 var     float       BlurTime;                 // how long screen blur effect should last when firing
 var     float       BlurEffectScalar;         // scale for the screen blur when firing
 var     int         PlayerResupplyAmounts[2]; // the amount of each round type supplied by another player
-var   class<Projectile>   NewProjectileClass;
+var     bool        bLastUpdatedPrimaryAmmo;  // net client records last ammo type passed to server, so can decide if needs to update server
 
 // Mortar elevation
 var     float       Elevation;                // current elevation setting, in degrees
@@ -40,16 +40,18 @@ replication
 simulated function CheckUpdateFiringSettings()
 {
     local byte NumElevationIncrements;
-    if (Elevation != LastUpdatedElevation || ProjectileClass != NewProjectileClass)
+
+    if (Elevation != LastUpdatedElevation || (bLastUpdatedPrimaryAmmo && ProjectileClass != PrimaryProjectileClass))
     {
         LastUpdatedElevation = Elevation;
+        bLastUpdatedPrimaryAmmo = ProjectileClass == PrimaryProjectileClass;
         NumElevationIncrements = byte((Elevation - ElevationMinimum) / ElevationStride);
 
-        if (NewProjectileClass == PrimaryProjectileClass)
+        if (bLastUpdatedPrimaryAmmo)
         {
             ServerSetFiringSettings(NumElevationIncrements);
         }
-        else if (NewProjectileClass == SecondaryProjectileClass)
+        else
         {
             ServerSetFiringSettings(NumElevationIncrements + 100);
         }
@@ -184,7 +186,6 @@ function Fire(Controller C)
 {
     if (ProjectileClass != none)
     {
-        Log("ProjectileClass:" @ ProjectileClass);
         // Normal mortar fire
         if (!bDebugCalibrate)
         {
@@ -233,13 +234,13 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // This only happens locally on a net client & any changed ammo type is only passed to the server on firing or the player exiting the mortar
 simulated function ToggleRoundType()
 {
-    if (NewProjectileClass == PrimaryProjectileClass)
+    if (ProjectileClass == PrimaryProjectileClass)
     {
-        NewProjectileClass = SecondaryProjectileClass;
+        ProjectileClass = SecondaryProjectileClass;
     }
     else
     {
-        NewProjectileClass = PrimaryProjectileClass;
+        ProjectileClass = PrimaryProjectileClass;
     }
 
     PlayClickSound();

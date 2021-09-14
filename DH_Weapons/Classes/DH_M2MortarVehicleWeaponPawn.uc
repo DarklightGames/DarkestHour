@@ -22,5 +22,5 @@ defaultproperties
     HUDHighExplosiveTexture=Texture'DH_Mortars_tex.60mmMortarM2.M49A2-HE'
     HUDSmokeTexture=Texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
     HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcA'
-    ArtillerySpottingScope=class'DH_Engine.DHArtillerySpottingScope_AlliedMortar'
+    ArtillerySpottingScope=class'DH_Weapons.DHArtillerySpottingScope_AlliedMortar'
 }

@@ -15,7 +15,7 @@ var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
 
-var class<DHMapMarker_ArtilleryHit> ActiveArtilleryMarkerClass;
+var class<DHMapMarker> ActiveArtilleryMarkerClass;
 
 replication
 {

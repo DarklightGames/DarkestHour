@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMapMarker_Enemy_Vehicle extends DHMapMarker_Enemy;
+class DHMapMarker_Enemy_Vehicle extends DHMapMarker_Enemy
+    abstract;
 
 defaultproperties
 {

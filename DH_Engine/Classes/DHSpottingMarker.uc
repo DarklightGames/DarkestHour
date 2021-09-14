@@ -6,6 +6,7 @@
 class DHSpottingMarker extends Actor;
 
 var FadeColor FC;
+var bool      bIsDisabled;
 
 simulated function PostBeginPlay()
 {
@@ -63,5 +64,6 @@ defaultproperties
     bUseCylinderCollision=false
     bStatic=false
     bWorldGeometry=false
+    bIsDisabled=true
 }
 

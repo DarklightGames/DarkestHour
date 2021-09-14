@@ -74,7 +74,7 @@ function Destroyed()
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
     LastSpawnedShell = none;
-    GRI.InvalidateBarrageMarker(TeamIndex, self.ActiveArtilleryMarkerClass);
+    GRI.InvalidateOffMapArtilleryMarker(TeamIndex);
 }
 
 // Modified from deprecated ROArtillerySpawner to fix log errors causing 1 extra salvo & 1 extra shell per salvo (& re-factored a little to optimise)
@@ -99,7 +99,7 @@ function Timer()
 
         if (VT != none)
         {
-            if (VT.IsInNoArtyVolume())
+            if (VT.DHIsInNoArtyVolume(GRI))
             {
                 bInvalid = true;
 
@@ -208,5 +208,5 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 defaultproperties
 {
-    ActiveArtilleryMarkerClass=class'DHMapMarker_ArtilleryHit_OngoingBarrage'
+    ActiveArtilleryMarkerClass=class'DHMapMarker_OngoingBarrage'
 }

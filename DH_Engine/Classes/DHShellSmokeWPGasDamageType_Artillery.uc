@@ -3,14 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMapMarker_Squad_Move extends DHMapMarker_Squad
+class DHShellSmokeWPGasDamageType_Artillery extends DHShellSmokeWPGasDamageType
     abstract;
 
 defaultproperties
 {
-    BroadcastedMessageIndex=3
-    MarkerName="Squad Move"
-    IconColor=(R=165,G=2,B=255,A=255)
-    IconMaterial=Material'DH_InterfaceArt2_tex.Icons.move'
-    bShouldDrawBeeLine=true
+    bIsArtilleryExplosion=true
 }

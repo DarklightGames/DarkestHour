@@ -50,6 +50,6 @@ defaultproperties
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
-    ArtillerySpottingScope=class'DH_Engine.DHArtillerySpottingScope_M7Priest'
+    ArtillerySpottingScope=class'DH_Vehicles.DHArtillerySpottingScope_M7Priest'
 }
 

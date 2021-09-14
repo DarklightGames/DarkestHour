@@ -72,15 +72,6 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
-// Artillery Hit Location
-struct SArtilleryHitLocation
-{
-    var vector HitLocation;
-    var int ElapsedTime;
-};
-
-var SArtilleryHitLocation    ArtilleryHitLocation;
-
 struct SRangeTableRecord
 {
     var float Mils;     // Pitch, in mils.
@@ -94,7 +85,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NumMGMags, ArtilleryHitLocation;
+        NumMGMags;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)

@@ -5,26 +5,6 @@
 
 class DHMapMarker_AdminParadrop extends DHMapMarker
     abstract;
-
-static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
-{
-    return PRI != none &&
-           (PRI.bAdmin ||
-            PRI.bSilentAdmin ||
-            (PRI.Level != none &&
-             PRI.Level.NetMode == NM_Standalone));
-}
-
-static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return true;
-}
-
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return true;
-}
-
 defaultproperties
 {
     MarkerName="ADMIN: Paradrop"
@@ -33,6 +13,10 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
+    Type=MT_Admin
     OverwritingRule=UNIQUE
     Scope=PERSONAL
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
+    Permissions_CanPlace(0)=ADMIN
 }

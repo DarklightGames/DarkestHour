@@ -16,4 +16,6 @@ defaultproperties
     LifeSpan=20.0
     SpeedFudgeScale=1.0
     HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
+    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType_Artillery'
+    ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType_Artillery'
 }

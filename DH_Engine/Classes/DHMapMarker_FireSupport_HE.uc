@@ -3,13 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport_OnMap
+class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport
     abstract;
 
 defaultproperties
 {
-    MarkerName="On-map mortar barrage (HE)"
-    TypeName="HE"
-    IconColor=(R=255,G=0,B=0,A=100)
-    ActivatedIconColor=(R=255,G=0,B=0,A=255)
+    MarkerName="HE request"
 }

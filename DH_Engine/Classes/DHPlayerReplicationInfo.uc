@@ -106,12 +106,30 @@ simulated function bool IsPatron()
 simulated function bool IsRadioman()
 {
     local DHPlayer PC;
+
     PC = DHPlayer(Owner);
-    if(PC != none)
-    {
-        return PC.IsRadioman();
-    }
-    return false;
+
+    return PC != none && PC.IsRadioman();
+}
+
+simulated function bool IsArtilleryOperator()
+{
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    return PC != none && PC.IsArtilleryOperator();
+}
+
+simulated function bool IsArtillerySpotter()
+{
+    local DHPlayer PC;
+    PC = DHPlayer(Owner);
+    return PC != none && PC.IsArtillerySpotter();
+}
+
+simulated function bool IsAdmin()
+{
+    return self.bAdmin || self.bSilentAdmin
+      || (self.Level != none && self.Level.NetMode == NM_Standalone);
 }
 
 // Will return true if passed two players that are in the same squad.

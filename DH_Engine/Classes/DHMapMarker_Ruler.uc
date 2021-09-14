@@ -7,22 +7,6 @@
 class DHMapMarker_Ruler extends DHMapMarker
     abstract;
 
-static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
-{
-    return true;
-}
-
-static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return true;
-}
-
-// Personal marker: only visible to owner.
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return true;
-}
-
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local vector PlayerLocation;
@@ -53,6 +37,10 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4
     bShouldShowOnCompass=true
+    Type=MT_Measurement
     OverwritingRule=UNIQUE
     Scope=PERSONAL
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ALL)
+    Permissions_CanPlace(0)=ALL
 }
