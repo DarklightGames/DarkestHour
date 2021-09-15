@@ -83,12 +83,14 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
-// where does the curvature on the yaw dial start, 0 <= YawDialRoundingConstant <= 1
-// relative to the yaw dial's length
+// Where does the curvature on the yaw dial start, 0 <= YawDialRoundingConstant <= 0.5
+// Relative to the yaw dial's length
+// Should be smaller (eg. 0.1) for dials with short traverse range and bigger otherwise (eg. 0.4)
 var     float               YawDialRoundingConstant;
 
-// where does the curvature on the pitch dial start, 0 <= PitchDialRoundingConstant <= 1
-// relative to the pitch dial's length
+// Where does the curvature on the pitch dial start, 0 <= PitchDialRoundingConstant <= 0.5
+// Relative to the pitch dial's length
+// Should be smaller (eg. 0.1) for dials with short traverse range and bigger otherwise (eg. 0.4)
 var     float               PitchDialRoundingConstant;
 
 enum ETargetWidgetLineType
@@ -386,9 +388,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     C.Font = C.TinyFont;
 
     // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = IndicatorTopLeftCornerX;
+    C.CurX = IndicatorTopLeftCornerX + default.YawIndicatorLength * default.YawDialRoundingConstant;
     C.CurY = IndicatorTopLeftCornerY;
-    C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
+    C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength * (1 - 2 * default.YawDialRoundingConstant));
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
@@ -469,6 +471,12 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
+            // Offset of the tick relative to the dial's length
+            RelativeTickPostion = (Index * IndicatorStep) / default.YawIndicatorLength;
+
+            // The new tick position on the "curved" surface of the dial
+            TickPosition = IndicatorTopLeftCornerX + class'UInterp'.static.DialRounding(RelativeTickPostion, default.YawDialRoundingConstant) * default.YawIndicatorLength;
+            
             C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
             C.CurX = IndicatorTopLeftCornerX;
             TickBuckets[Index] = TickBuckets[Index] + 1;
@@ -483,7 +491,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             if (Index < 0)
             {
                 // Left side
-                C.SetPos(IndicatorTopLeftCornerX - 10, IndicatorTopLeftCornerY);
+                C.SetPos(IndicatorTopLeftCornerX + default.YawDialRoundingConstant * default.YawIndicatorLength - 10, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, default.TargetTickLength);
 
                 ++TargetTickCountLeft;
@@ -491,7 +499,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             else
             {
                 // Right side
-                C.SetPos(IndicatorTopLeftCornerX + default.YawIndicatorLength + 2, IndicatorTopLeftCornerY);
+                C.SetPos(IndicatorTopLeftCornerX + (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength + 2, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, default.TargetTickLength);
 
                 ++TargetTickCountRight;

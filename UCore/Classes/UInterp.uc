@@ -104,6 +104,11 @@ static final function float Mimi(float T)
 
 static final function float DialRounding(float x, float A)
 {
+    if(A > 0.5 || A < 0.0)
+    {
+        Warn("Function DialRounding is not defined for A=" $ x);
+        return 0/0;
+    }
     if (x >= 0 && x <= 0.5)
     {
         return 0.5 - (0.5 - A) * cos(3.14 * x);
@@ -113,7 +118,7 @@ static final function float DialRounding(float x, float A)
         return 0.5 - (0.5 - A) * cos(3.14 * x);
     }
 
-    Warn("Function DialRounding is not defined for" @ x);
+    Warn("Function DialRounding is not defined for x=" $ x);
     return 0/0;
 }
 
