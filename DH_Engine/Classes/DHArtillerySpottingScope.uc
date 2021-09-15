@@ -83,6 +83,14 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
+// where does the curvature on the yaw dial start, 0 <= YawDialRoundingConstant <= 1
+// relative to the yaw dial's length
+var     float               YawDialRoundingConstant;
+
+// where does the curvature on the pitch dial start, 0 <= PitchDialRoundingConstant <= 1
+// relative to the pitch dial's length
+var     float               PitchDialRoundingConstant;
+
 enum ETargetWidgetLineType
 {
     TWLT_Header,
@@ -359,7 +367,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local DHPlayer PC;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local bool bSelectedMarkerNotAvailable;
-    local float ShadeQuotient, RelativeTickPostion, TickOffset, x;
+    local float RelativeTickPostion, TickPosition, x;
 
     if (PRI == none || C == none)
     {
@@ -467,7 +475,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
             // Draw a target tick on the yaw indicator
 
-            C.DrawVertical(TickOffset, default.TargetTickLength);
+            C.DrawVertical(TickPosition, default.TargetTickLength);
         }
         else
         {
@@ -501,8 +509,6 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber));
 
-        ShadeQuotient = -(Shade / 255.0 - 0.5);
-
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(Yaw, default.YawScaleStep));
 
@@ -517,33 +523,26 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         C.StrLen(Label, TextWidth, TextHeight);
 
         YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
-        
-        x = (Index * IndicatorStep) / default.YawIndicatorLength;
 
-        if (x < 0.5)
-        {
-            RelativeTickPostion = 0.5 - 0.4 * cos(3.14 * x);
-        }
-        else
-        {
-            RelativeTickPostion = 0.5 - 0.4 * cos(3.14 * x);
-        }
+        // Offset of the tick relative to the dial's length
+        RelativeTickPostion = (Index * IndicatorStep) / default.YawIndicatorLength;
 
-        TickOffset =  IndicatorTopLeftCornerX + RelativeTickPostion * default.YawIndicatorLength;
+        // The new tick position on the "curved" surface of the dial
+        TickPosition = IndicatorTopLeftCornerX + class'UInterp'.static.DialRounding(RelativeTickPostion, default.YawDialRoundingConstant) * default.YawIndicatorLength;
 
         C.CurY = IndicatorTopLeftCornerY - 5.0;
-        C.CurX = TickOffset;
+        C.CurX = TickPosition;
         
         switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
         {
             case ShortTick:
-                C.DrawVertical(TickOffset, -default.SmallSizeTickLength);
+                C.DrawVertical(TickPosition, -default.SmallSizeTickLength);
                 break;
             case MediumLengthTick:
-                C.DrawVertical(TickOffset, -default.MiddleSizeTickLength);
+                C.DrawVertical(TickPosition, -default.MiddleSizeTickLength);
                 break;
             case LongTick:
-                C.DrawVertical(TickOffset, -default.LargeSizeTickLength);
+                C.DrawVertical(TickPosition, -default.LargeSizeTickLength);
                 break;
         }
         if (default.YawSegmentSchema[YawSegmentSchemaIndex].bShouldDrawLabel)
@@ -560,7 +559,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
                     break;
             }
-            C.CurX = TickOffset - TextWidth * 0.5 + 2;
+            C.CurX = TickPosition - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
 
@@ -575,7 +574,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber + float(i)/default.YawIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                C.CurX = i + IndicatorTopLeftCornerX + TickOffset;
+                C.CurX = i + IndicatorTopLeftCornerX + TickPosition;
                 C.DrawRect(Texture'WhiteSquareTexture', 1, default.StrikeThroughThickness);
             }
         }
@@ -588,7 +587,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber - float(i)/default.YawIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                C.CurX = (-i) + IndicatorTopLeftCornerX + TickOffset;
+                C.CurX = (-i) + IndicatorTopLeftCornerX + TickPosition;
                 C.DrawRect(Texture'WhiteSquareTexture', -1, default.StrikeThroughThickness);
             }
         }
@@ -767,4 +766,7 @@ defaultproperties
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
     TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
+
+    YawDialRoundingConstant=0.1
+    PitchDialRoundingConstant=0.1
 }
