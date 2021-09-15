@@ -359,6 +359,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local DHPlayer PC;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local bool bSelectedMarkerNotAvailable;
+    local float ShadeQuotient, RelativeTickPostion, TickOffset, x;
 
     if (PRI == none || C == none)
     {
@@ -466,7 +467,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
             // Draw a target tick on the yaw indicator
 
-            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, default.TargetTickLength);
+            C.DrawVertical(TickOffset, default.TargetTickLength);
         }
         else
         {
@@ -500,6 +501,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber));
 
+        ShadeQuotient = -(Shade / 255.0 - 0.5);
+
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(Yaw, default.YawScaleStep));
 
@@ -513,20 +516,34 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Get the label's length
         C.StrLen(Label, TextWidth, TextHeight);
 
-        C.CurY = IndicatorTopLeftCornerY - 5.0;
-        C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
-
         YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
+        
+        x = (Index * IndicatorStep) / default.YawIndicatorLength;
+
+        if (x < 0.5)
+        {
+            RelativeTickPostion = 0.5 - 0.4 * cos(3.14 * x);
+        }
+        else
+        {
+            RelativeTickPostion = 0.5 - 0.4 * cos(3.14 * x);
+        }
+
+        TickOffset =  IndicatorTopLeftCornerX + RelativeTickPostion * default.YawIndicatorLength;
+
+        C.CurY = IndicatorTopLeftCornerY - 5.0;
+        C.CurX = TickOffset;
+        
         switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
         {
             case ShortTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
+                C.DrawVertical(TickOffset, -default.SmallSizeTickLength);
                 break;
             case MediumLengthTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.MiddleSizeTickLength);
+                C.DrawVertical(TickOffset, -default.MiddleSizeTickLength);
                 break;
             case LongTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
+                C.DrawVertical(TickOffset, -default.LargeSizeTickLength);
                 break;
         }
         if (default.YawSegmentSchema[YawSegmentSchemaIndex].bShouldDrawLabel)
@@ -543,7 +560,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
                     break;
             }
-            C.CurX = C.CurX - TextWidth * 0.5 + 2;
+            C.CurX = TickOffset - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
 
@@ -558,7 +575,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber + float(i)/default.YawIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                C.CurX = i + IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
+                C.CurX = i + IndicatorTopLeftCornerX + TickOffset;
                 C.DrawRect(Texture'WhiteSquareTexture', 1, default.StrikeThroughThickness);
             }
         }
@@ -571,7 +588,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisibleYawSegmentsNumber - float(i)/default.YawIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                C.CurX = (-i) + IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
+                C.CurX = (-i) + IndicatorTopLeftCornerX + TickOffset;
                 C.DrawRect(Texture'WhiteSquareTexture', -1, default.StrikeThroughThickness);
             }
         }
