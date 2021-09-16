@@ -85,12 +85,12 @@ var     color               Red;
 
 // Where does the curvature on the yaw dial start, 0 <= YawDialRoundingConstant <= 0.5
 // Relative to the yaw dial's length
-// Should be smaller (eg. 0.1) for dials with short traverse range and bigger otherwise (eg. 0.4)
+// Should be smaller (eg. 0.05) for dials with short traverse range and bigger otherwise (eg. 0.1)
 var     float               YawDialRoundingConstant;
 
 // Where does the curvature on the pitch dial start, 0 <= PitchDialRoundingConstant <= 0.5
 // Relative to the pitch dial's length
-// Should be smaller (eg. 0.1) for dials with short traverse range and bigger otherwise (eg. 0.4)
+// Should be smaller (eg. 0.05) for dials with short traverse range and bigger otherwise (eg. 0.1)
 var     float               PitchDialRoundingConstant;
 
 enum ETargetWidgetLineType

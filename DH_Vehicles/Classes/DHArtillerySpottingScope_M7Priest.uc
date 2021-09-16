@@ -51,7 +51,7 @@ defaultproperties
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
     
-    NumberOfYawSegments = 2;
+    NumberOfYawSegments = 4;
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)
@@ -63,5 +63,6 @@ defaultproperties
     YawSegmentSchema(8)=(Shape=ShortTick)
     YawSegmentSchema(9)=(Shape=ShortTick)
 
-    YawIndicatorLength=200.0
+    YawIndicatorLength=166.66667
+    YawDialRoundingConstant=0.05
 }
