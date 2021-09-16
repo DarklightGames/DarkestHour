@@ -173,7 +173,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                AvailableCount = GRI.ArtilleryTypeInfos[PC.GetTeamNum()].Limit - GRI.ArtilleryTypeInfos[PC.GetTeamNum()].UsedCount;
+                AvailableCount = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
                 ORI.InfoText = Repl(default.AvailableText, "{0}", AvailableCount);
             }
             else if (FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest)

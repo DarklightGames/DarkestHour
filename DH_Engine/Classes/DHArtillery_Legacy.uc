@@ -74,7 +74,7 @@ function Destroyed()
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
     LastSpawnedShell = none;
-    GRI.InvalidateOffMapArtilleryMarker(TeamIndex);
+    GRI.InvalidateOngoingBarrageMarker(TeamIndex);
 }
 
 // Modified from deprecated ROArtillerySpawner to fix log errors causing 1 extra salvo & 1 extra shell per salvo (& re-factored a little to optimise)

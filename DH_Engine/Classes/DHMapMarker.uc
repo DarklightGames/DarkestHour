@@ -70,6 +70,7 @@ enum EMarkerType
     MT_OffMapArtilleryRequest,
     MT_OnMapArtilleryRequest,
     MT_ArtilleryHit,
+    MT_ArtilleryBarrage,
     MT_Measurement,
     MT_Admin,
     MT_Movement

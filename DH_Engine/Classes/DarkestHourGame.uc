@@ -2118,7 +2118,8 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
         ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
 
-        if (IsArtilleryKill(DHKiller, DamageType) 
+        if (DHKiller != none
+          && IsArtilleryKill(DHKiller, DamageType) 
           && (ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
           && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
         {

@@ -12,7 +12,7 @@ defaultproperties
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
 
     YawScaleStep=5.0
-    PitchScaleStep=5.0
+    PitchScaleStep=10.0
 
     RangeTable(0)=(Pitch=0,Range=115)
     RangeTable(1)=(Pitch=25,Range=200)
@@ -36,19 +36,33 @@ defaultproperties
     RangeTable(19)=(Pitch=475,Range=1750)
     RangeTable(20)=(Pitch=500,Range=1800)
     RangeTable(21)=(Pitch=525,Range=1850)
+
     AngleUnit="mils"
+    
+    NumberOfPitchSegments = 8;
+    PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
+    PitchSegmentSchema(1)=(Shape=ShortTick)
+    PitchSegmentSchema(2)=(Shape=ShortTick)
+    PitchSegmentSchema(3)=(Shape=ShortTick)
+    PitchSegmentSchema(4)=(Shape=ShortTick)
+    PitchSegmentSchema(5)=(Shape=ShortTick)
+    PitchSegmentSchema(6)=(Shape=ShortTick)
+    PitchSegmentSchema(7)=(Shape=ShortTick)
+    PitchSegmentSchema(8)=(Shape=ShortTick)
+    PitchSegmentSchema(9)=(Shape=ShortTick)
+    
+    NumberOfYawSegments = 4;
+    YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
+    YawSegmentSchema(1)=(Shape=ShortTick)
+    YawSegmentSchema(2)=(Shape=ShortTick)
+    YawSegmentSchema(3)=(Shape=ShortTick)
+    YawSegmentSchema(4)=(Shape=ShortTick)
+    YawSegmentSchema(5)=(Shape=ShortTick)
+    YawSegmentSchema(6)=(Shape=ShortTick)
+    YawSegmentSchema(7)=(Shape=ShortTick)
+    YawSegmentSchema(8)=(Shape=ShortTick)
+    YawSegmentSchema(9)=(Shape=ShortTick)
 
-    SegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
-    SegmentSchema(1)=(Shape=ShortTick)
-    SegmentSchema(2)=(Shape=ShortTick)
-    SegmentSchema(3)=(Shape=ShortTick)
-    SegmentSchema(4)=(Shape=ShortTick)
-    SegmentSchema(5)=(Shape=ShortTick)
-    SegmentSchema(6)=(Shape=ShortTick)
-    SegmentSchema(7)=(Shape=ShortTick)
-    SegmentSchema(8)=(Shape=ShortTick)
-    SegmentSchema(9)=(Shape=ShortTick)
-
-    NumberOfYawSegments=8
-    NumberOfPitchSegments=8
+    YawIndicatorLength=166.66667
+    YawDialRoundingConstant=0.05
 }

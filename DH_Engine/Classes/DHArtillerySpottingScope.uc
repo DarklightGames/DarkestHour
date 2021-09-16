@@ -43,7 +43,8 @@ struct SSegmentTick
     var bool                              bShouldDrawLabel;
 };
 
-var array<SSegmentTick>                   SegmentSchema;
+var array<SSegmentTick>                   PitchSegmentSchema;
+var array<SSegmentTick>                   YawSegmentSchema;
 var int                                   NumberOfYawSegments;
 var int                                   NumberOfPitchSegments;
 
@@ -81,6 +82,16 @@ var     color               Green;
 var     color               White;
 var     color               Orange;
 var     color               Red;
+
+// Where does the curvature on the yaw dial start, 0 <= YawDialRoundingConstant <= 0.5
+// Relative to the yaw dial's length
+// Should be smaller (eg. 0.05) for dials with short traverse range and bigger otherwise (eg. 0.1)
+var     float               YawDialRoundingConstant;
+
+// Where does the curvature on the pitch dial start, 0 <= PitchDialRoundingConstant <= 0.5
+// Relative to the pitch dial's length
+// Should be smaller (eg. 0.05) for dials with short traverse range and bigger otherwise (eg. 0.1)
+var     float               PitchDialRoundingConstant;
 
 enum ETargetWidgetLineType
 {
@@ -349,7 +360,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
-    local int i, Yaw, Quotient, Index, SegmentSchemaIndex, VisibleYawSegmentsNumber;
+    local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
@@ -358,6 +369,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local DHPlayer PC;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local bool bSelectedMarkerNotAvailable;
+    local float StrikeThroughEndIndex, StrikeThroughLength, RelativeTickPostion, TickPosition;
+    local float GunYawMaxTruncated, GunYawMinTruncated;
+    local float RealIndicatorStartPosition,  RealIndicatorEndPosition;
 
     if (PRI == none || C == none)
     {
@@ -367,18 +381,23 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
     IndicatorTopLeftCornerY = C.SizeY * 0.95;
 
-    VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.SegmentSchema.Length;
+    VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.YawSegmentSchema.Length;
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, default.YawScaleStep));
     YawLowerBound = CurrentYaw - default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
     YawUpperBound = CurrentYaw + default.YawScaleStep * VisibleYawSegmentsNumber * 0.5;
     IndicatorStep = default.YawIndicatorLength / VisibleYawSegmentsNumber;
+    GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, default.YawScaleStep);
+    GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, default.YawScaleStep);
 
     C.Font = C.TinyFont;
 
+    RealIndicatorStartPosition = IndicatorTopLeftCornerX + default.YawIndicatorLength * default.YawDialRoundingConstant / 2;
+    RealIndicatorEndPosition = RealIndicatorStartPosition + default.YawIndicatorLength * (1 - default.YawDialRoundingConstant);
+
     // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = IndicatorTopLeftCornerX;
+    C.CurX = RealIndicatorStartPosition;
     C.CurY = IndicatorTopLeftCornerY;
-    C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
+    C.DrawHorizontal(IndicatorTopLeftCornerY, RealIndicatorEndPosition - RealIndicatorStartPosition);
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
@@ -443,7 +462,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     for (i = 0; i < Targets.Length; ++i)
     {
         // Draw the target widget on the left panel
-        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)), int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)));
+        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, GunYawMinTruncated, GunYawMaxTruncated);
 
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
@@ -459,13 +478,19 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
+            // Offset of the tick relative to the dial's length
+            RelativeTickPostion = (Index * IndicatorStep) / default.YawIndicatorLength;
+
+            // The new tick position on the "curved" surface of the dial
+            TickPosition = IndicatorTopLeftCornerX + class'UInterp'.static.DialRounding(RelativeTickPostion, default.YawDialRoundingConstant) * default.YawIndicatorLength;
+            
             C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
             C.CurX = IndicatorTopLeftCornerX;
             TickBuckets[Index] = TickBuckets[Index] + 1;
 
             // Draw a target tick on the yaw indicator
 
-            C.DrawVertical(IndicatorTopLeftCornerX + Index * IndicatorStep, default.TargetTickLength);
+            C.DrawVertical(TickPosition, default.TargetTickLength);
         }
         else
         {
@@ -473,7 +498,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             if (Index < 0)
             {
                 // Left side
-                C.SetPos(IndicatorTopLeftCornerX - 10, IndicatorTopLeftCornerY);
+                C.SetPos(RealIndicatorStartPosition - 1.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, default.TargetTickLength);
 
                 ++TargetTickCountLeft;
@@ -481,7 +506,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             else
             {
                 // Right side
-                C.SetPos(IndicatorTopLeftCornerX + default.YawIndicatorLength + 2, IndicatorTopLeftCornerY);
+                C.SetPos(RealIndicatorEndPosition + 0.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, default.TargetTickLength);
 
                 ++TargetTickCountRight;
@@ -512,25 +537,32 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Get the label's length
         C.StrLen(Label, TextWidth, TextHeight);
 
-        C.CurY = IndicatorTopLeftCornerY - 5.0;
-        C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
+        YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
 
-        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
-        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+        // Offset of the tick relative to the dial's length
+        RelativeTickPostion = (Index * IndicatorStep) / default.YawIndicatorLength;
+
+        // The new tick position on the "curved" surface of the dial
+        TickPosition = IndicatorTopLeftCornerX + class'UInterp'.static.DialRounding(RelativeTickPostion, default.YawDialRoundingConstant) * default.YawIndicatorLength;
+
+        C.CurY = IndicatorTopLeftCornerY - 5.0;
+        C.CurX = TickPosition;
+        
+        switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
         {
             case ShortTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.SmallSizeTickLength);
+                C.DrawVertical(TickPosition, -default.SmallSizeTickLength);
                 break;
             case MediumLengthTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.MiddleSizeTickLength);
+                C.DrawVertical(TickPosition, -default.MiddleSizeTickLength);
                 break;
             case LongTick:
-                C.DrawVertical(IndicatorTopLeftCornerX + (Index * IndicatorStep), -default.LargeSizeTickLength);
+                C.DrawVertical(TickPosition, -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
+        if (default.YawSegmentSchema[YawSegmentSchemaIndex].bShouldDrawLabel)
         {
-            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
                     C.CurY = C.CurY - default.SmallSizeTickLength - TextHeight - default.LabelOffset;
@@ -542,25 +574,40 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
                     break;
             }
-            C.CurX = C.CurX - TextWidth * 0.5 + 2;
+            C.CurX = TickPosition - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
+    }
 
-        // Draw a strike-through if this segment is beyond the lower or upper limits.
-        C.CurY = IndicatorTopLeftCornerY - default.SmallSizeTickLength;
+    // Draw a strike-through for values outside of the traverse range
+    C.CurY = IndicatorTopLeftCornerY - default.SmallSizeTickLength;
 
-        if (Yaw < int(class'UMath'.static.Floor(GunYawMin, default.YawScaleStep)))
+    if (YawLowerBound <= GunYawMinTruncated)
+    {
+        StrikeThroughEndIndex = (GunYawMinTruncated - YawLowerBound) / default.YawScaleStep;
+        StrikeThroughLength = class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant) * default.YawIndicatorLength;
+        for(i = default.YawDialRoundingConstant * default.YawIndicatorLength; i < StrikeThroughLength; ++i)
         {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', IndicatorStep, default.StrikeThroughThickness);
-        }
-
-        if (Yaw > int(class'UMath'.static.Floor(GunYawMax, default.YawScaleStep)))
-        {
-            C.CurX = IndicatorTopLeftCornerX + Index * default.YawIndicatorLength / VisibleYawSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', -IndicatorStep, default.StrikeThroughThickness);
+            Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
+            C.SetDrawColor(Shade, Shade, Shade, 255);
+            C.CurX = IndicatorTopLeftCornerX + i;
+            C.DrawRect(Texture'WhiteSquareTexture', -1, default.StrikeThroughThickness);
         }
     }
+
+    if (YawUpperBound >= GunYawMaxTruncated)
+    {
+        StrikeThroughEndIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
+        StrikeThroughLength = (1 - class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant)) * default.YawIndicatorLength;
+        for(i = default.YawIndicatorLength - StrikeThroughLength; i < (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength; ++i)
+        {
+            Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
+            C.SetDrawColor(Shade, Shade, Shade, 255);
+            C.CurX = IndicatorTopLeftCornerX + i;
+            C.DrawRect(Texture'WhiteSquareTexture', 1, default.StrikeThroughThickness);
+        }
+    }
+
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
@@ -569,25 +616,25 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
 simulated static function float GetPitchLowerBound(float CurrentPitch)
 {
-    return CurrentPitch - default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
+    return CurrentPitch - default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
 simulated static function float  GetPitchUpperBound(float CurrentPitch)
 {
-    return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.SegmentSchema.Length * 0.5;
+    return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
 simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, SegmentSchemaIndex;
+    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, i;
     local string Label;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
     IndicatorTopLeftCornerY = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
 
     CurrentPitch += GunPitchOffset;
-    VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.SegmentSchema.Length;
+    VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.PitchSegmentSchema.Length;
 
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch, default.PitchScaleStep);
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
@@ -621,8 +668,8 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         C.CurX = IndicatorTopLeftCornerX - 5.0;
         C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
 
-        SegmentSchemaIndex = abs(Quotient) % default.SegmentSchema.Length;
-        switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+        PitchSegmentSchemaIndex = abs(Quotient) % default.PitchSegmentSchema.Length;
+        switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
         {
             case ShortTick:
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.SmallSizeTickLength);
@@ -634,9 +681,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
-        if (default.SegmentSchema[SegmentSchemaIndex].bShouldDrawLabel)
+        if (default.PitchSegmentSchema[PitchSegmentSchemaIndex].bShouldDrawLabel)
         {
-            switch (default.SegmentSchema[SegmentSchemaIndex].Shape)
+            switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
                     C.CurX = C.CurX - default.SmallSizeTickLength - TextWidth - default.LabelOffset;
@@ -657,15 +704,33 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -IndicatorStep);
+            for(i = 0; i < IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber - float(i)/default.PitchIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                
+                C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
+                C.CurY = (-i) + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, 1);
+            }
         }
 
         // Draw a strike-through if this segment is above the upper limit.
         if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
-            C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
-            C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, IndicatorStep);
+            for(i = 0; i < IndicatorStep; ++i)
+            {
+                // Smooth out the strike-through by splitting it into small portions
+                // For each small portion of the strike-through its color is calculated
+                Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber + float(i)/default.PitchIndicatorLength));
+                C.SetDrawColor(Shade, Shade, Shade, 255);
+                
+                C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
+                C.CurY = i + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
+                C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -1);
+            }
         }
     }
 
@@ -717,4 +782,7 @@ defaultproperties
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
     TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
+
+    YawDialRoundingConstant=0.1
+    PitchDialRoundingConstant=0.1
 }

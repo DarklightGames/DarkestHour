@@ -15,7 +15,7 @@ defaultproperties
     PlayerResupplyAmounts(0)=4
     PlayerResupplyAmounts(1)=1
     FireSoundClass=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
-    RotationsPerSecond=0.007813
+    RotationsPerSecond=0.005
     MaxPositiveYaw=1850
     MaxNegativeYaw=-1850
     Elevation=80.0
