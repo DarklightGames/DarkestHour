@@ -32,13 +32,14 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
 
-    if (!bDud)
+    if (Role == ROLE_Authority && !bDud)
     {
         VT = Spawn(class'DHVolumeTest',,, HitLocation);
 
         if (VT != none)
         {
-            bDud = VT.DHIsInNoArtyVolume(DHGameReplicationInfo(PlayerController(Instigator.Controller).GameReplicationInfo));
+            bDud = VT.DHIsInNoArtyVolume(DHGameReplicationInfo(Level.Game.GameReplicationInfo));
+
             VT.Destroy();
         }
     }
