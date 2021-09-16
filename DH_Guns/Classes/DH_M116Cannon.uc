@@ -38,7 +38,7 @@ defaultproperties
     YawEndConstraint=546.0
     CustomPitchUpLimit=8192 // 45 degrees
     CustomPitchDownLimit=65358 // -5 degrees
-    RotationsPerSecond=0.005 // ~3 degrees per second
+    RotationsPerSecond=0.002
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
