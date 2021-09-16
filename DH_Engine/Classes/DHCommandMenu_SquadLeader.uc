@@ -159,6 +159,8 @@ function bool IsOptionDisabled(int OptionIndex)
         return DHPawn(PC.Pawn) == none || PC.SquadReplicationInfo == none || !PC.SquadReplicationInfo.bAreRallyPointsEnabled;
     case 2: // Construction
         return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
+    case 3: // Player
+        return DHPawn(MenuObject) == none || DHPawn(MenuObject) == PC.Pawn || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
     }
