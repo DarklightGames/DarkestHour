@@ -1695,7 +1695,7 @@ function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
     }
 }
 
-// This is stupid, but for now 
+// This is stupid, but for now
 // there can only be 1 active off-map artillery strike anyway
 function InvalidateOffMapArtilleryMarker(int TeamIndex)
 {
@@ -2061,6 +2061,29 @@ simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
     }
 
     return DHMineVolumeIsActives[MineVolume.Index] == 1;
+}
+
+simulated function int GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
+{
+    local int i, Count;
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
+    {
+        if (LI.ArtilleryTypes[i].TeamIndex == TeamIndex && ArtilleryTypeInfos[i].bIsAvailable)
+        {
+            Count += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+        }
+    }
+
+    return Count;
 }
 
 defaultproperties
