@@ -47,7 +47,7 @@ struct SArtilleryHitInfo
 var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
 var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
 var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
-var     int                     ArtillerySupportSquadIndex;
+var     byte                    ArtillerySupportSquadIndex;
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
