@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DarkestHourGame extends ROTeamGame;
+class DarkestHourGame extends ROTeamGame
+  dependson(DHActorProxy);
 
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
@@ -2312,11 +2313,14 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
 
 function UpdateArtilleryAvailability()
 {
-    local int i;
-    local class<DHVehicle> VehicleClass;
+    local int                           i;
+    local class<DHVehicle>              VehicleClass;
+    local class<DHConstruction_Vehicle> Construction;
+    local DHActorProxy.Context          Context;
+    local DHPlayer                      PC;
 
-    GRI.bOnMapArtilleryEnabled[0] = 0;
-    GRI.bOnMapArtilleryEnabled[0] = 0;
+    GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 0;
+    GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 0;
 
     if (GRI == none || DHLevelInfo == none)
     {
@@ -2328,7 +2332,7 @@ function UpdateArtilleryAvailability()
     {
         if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
         {
-            GRI.bOnMapArtilleryEnabled[0] = 1;
+            GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
             break;
         }
     }
@@ -2337,7 +2341,7 @@ function UpdateArtilleryAvailability()
     {
         if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
         {
-            GRI.bOnMapArtilleryEnabled[1] = 1;
+            GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
             break;
         }
     }
@@ -2357,19 +2361,26 @@ function UpdateArtilleryAvailability()
     // Check if artillery constructions are enabled (on-map artillery)
     for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
+        Construction = class<DHConstruction_Vehicle>(GRI.ConstructionClasses[i]);
         if (GRI.bAreConstructionsEnabled
-          && GRI.ConstructionClasses[i] != none
-          && GRI.ConstructionClasses[i].static.IsArtillery()
-          && !DHLevelInfo.IsConstructionRestricted(GRI.ConstructionClasses[i]))
+          && Construction != none
+          && Construction.static.IsArtillery()
+          && !DHLevelInfo.IsConstructionRestricted(Construction))
         {
-            if (GRI.ConstructionClasses[i].default.TeamOwner == TEAM_Neutral)
+            Context.TeamIndex = AXIS_TEAM_INDEX;
+            VehicleClass = Construction.static.GetVehicleClass(Context); 
+
+            if (VehicleClass != none)
             {
-                GRI.bOnMapArtilleryEnabled[0] = 1;
-                GRI.bOnMapArtilleryEnabled[1] = 1;
+                GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
             }
-            else
+
+            Context.TeamIndex = ALLIES_TEAM_INDEX;
+            VehicleClass = Construction.static.GetVehicleClass(Context); 
+
+            if (VehicleClass != none)
             {
-                GRI.bOnMapArtilleryEnabled[GRI.ConstructionClasses[i].default.TeamOwner] = 1;
+                GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
             }
         }
     }
@@ -2379,8 +2390,8 @@ function UpdateArtilleryAvailability()
     {
         if (DHLevelInfo.ArtilleryTypes[i].TeamIndex == NEUTRAL_TEAM_INDEX)
         {
-            GRI.bOffMapArtilleryEnabled[0] = 1;
-            GRI.bOffMapArtilleryEnabled[1] = 1;
+            GRI.bOffMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
+            GRI.bOffMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
         }
         else if (DHLevelInfo.ArtilleryTypes[DHLevelInfo.ArtilleryTypes[i].TeamIndex].Limit > 0)
         {
