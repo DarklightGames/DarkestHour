@@ -249,7 +249,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
+    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
     Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
 
