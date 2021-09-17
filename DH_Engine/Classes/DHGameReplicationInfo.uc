@@ -174,6 +174,19 @@ struct ArtilleryTypeInfo
 };
 var ArtilleryTypeInfo                   ArtilleryTypeInfos[ARTILLERY_TYPES_MAX];
 
+// to do: add airstrikes
+enum EArtilleryType
+{
+    ArtyType_Barrage,
+    ArtyType_Paradrop
+};
+
+struct SAvailableArtilleryInfoEntry
+{
+    var int Count;
+    var EArtilleryType Type;
+};
+
 var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
@@ -2063,27 +2076,43 @@ simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
     return DHMineVolumeIsActives[MineVolume.Index] == 1;
 }
 
-simulated function int GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
+simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
 {
-    local int i, Count;
+    local int i, ArtilleryCount, ParadropCount;
     local DH_LevelInfo LI;
+    local array<SAvailableArtilleryInfoEntry> Result;
+    local SAvailableArtilleryInfoEntry Entry;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI == none)
     {
-        return 0;
+        return Result;
     }
 
     for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
     {
         if (LI.ArtilleryTypes[i].TeamIndex == TeamIndex && ArtilleryTypeInfos[i].bIsAvailable)
         {
-            Count += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+            switch(LI.ArtilleryTypes[i].ArtilleryClass.default.ArtilleryType)
+            {
+                case ArtyType_Barrage:
+                    ArtilleryCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
+                case ArtyType_Paradrop:
+                    ParadropCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
+            }
         }
     }
+    Entry.Type = ArtyType_Barrage;
+    Entry.Count = ArtilleryCount;
+    Result[0] = Entry;
+    Entry.Type = ArtyType_Paradrop;
+    Entry.Count = ParadropCount;
+    Result[1] = Entry;
 
-    return Count;
+    return Result;
 }
 
 defaultproperties

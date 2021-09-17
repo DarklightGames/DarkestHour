@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DHCommandMenu_FireSupport extends DHCommandMenu
-    dependson(DHFireSupport);
+    dependson(DHFireSupport)
+    dependson(DHGameReplicationInfo);
 
 // TODO: this should belong in the marker class, not here
 var color DisabledColor;
@@ -12,7 +13,8 @@ var color EnabledColor;
 
 var localized string UnavailableText;
 var localized string InvalidTargetText;
-var localized string AvailableText;
+var localized string AvailableArtilleryText;
+var localized string AvailableParadropsText;
 
 var struct SFireSupportState
 {
@@ -142,11 +144,12 @@ function Tick()
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
-    local class<DHMapMarker>              FireSupportRequestClass;
-    local DHSquadReplicationInfo          SRI;
-    local DHPlayer                        PC;
-    local int                             SquadMembersCount, AvailableCount;
-    local DHGameReplicationInfo           GRI;
+    local class<DHMapMarker>                  FireSupportRequestClass;
+    local DHSquadReplicationInfo              SRI;
+    local DHPlayer                            PC;
+    local int                                 i, SquadMembersCount, AvailableBarrages, AvailableParadrops;
+    local array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableArtilleryArray;
+    local DHGameReplicationInfo               GRI;
 
     FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
@@ -173,8 +176,32 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                AvailableCount = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
-                ORI.InfoText = Repl(default.AvailableText, "{0}", AvailableCount);
+                AvailableArtilleryArray = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
+                for(i = 0; i < AvailableArtilleryArray.Length; ++i)
+                {
+                    switch(AvailableArtilleryArray[i].Type)
+                    {
+                        case ArtyType_Barrage:
+                          AvailableBarrages = AvailableArtilleryArray[i].Count;
+                          break;
+                        case ArtyType_Paradrop:
+                          AvailableParadrops = AvailableArtilleryArray[i].Count;
+                          break;
+                    }
+                }
+                ORI.InfoText = "";
+                if (AvailableBarrages > 0)
+                {
+                    ORI.InfoText = Repl(default.AvailableArtilleryText, "{0}", AvailableBarrages);
+                }
+                if (AvailableParadrops > 0)
+                {
+                    if(ORI.InfoText != "")
+                    {
+                        ORI.InfoText $= " / ";
+                    }
+                    ORI.InfoText $= Repl(default.AvailableParadropsText, "{0}", AvailableParadrops);
+                }
             }
             else if (FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest)
             {
@@ -228,7 +255,8 @@ defaultproperties
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"
-    AvailableText="{0} available"
+    AvailableArtilleryText="Artillery: {0}"
+    AvailableParadropsText="Paradrops: {0}"
 
     bShouldTick=true
 

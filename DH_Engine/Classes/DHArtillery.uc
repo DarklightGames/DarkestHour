@@ -5,7 +5,10 @@
 
 class DHArtillery extends Actor
     abstract
-    notplaceable;
+    notplaceable
+    dependson(DHGameReplicationInfo);
+
+var DHGameReplicationInfo.EArtilleryType              ArtilleryType;
 
 var protected localized string  MenuName;
 var Material                    MenuIcon;
