@@ -77,7 +77,7 @@ defaultproperties
     GroupIndex=5
     LifetimeSeconds=120
     Type=MT_OnMapArtilleryRequest
-    OverwritingRule=UNIQUE
+    OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     RequiredSquadMembers=3
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
