@@ -428,8 +428,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     }
                 }
             }
- 
-            if (ArtilleryMarkers.Length > 0 
+
+            if (ArtilleryMarkers.Length > 0
               && (bSelectedMarkerNotAvailable ||  PC.ArtillerySupportSquadIndex == -1))
             {
                 // The player hasn't chosen anything from the available requests
@@ -483,7 +483,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
             // The new tick position on the "curved" surface of the dial
             TickPosition = IndicatorTopLeftCornerX + class'UInterp'.static.DialRounding(RelativeTickPostion, default.YawDialRoundingConstant) * default.YawIndicatorLength;
-            
+
             C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
             C.CurX = IndicatorTopLeftCornerX;
             TickBuckets[Index] = TickBuckets[Index] + 1;
@@ -547,7 +547,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
         C.CurY = IndicatorTopLeftCornerY - 5.0;
         C.CurX = TickPosition;
-        
+
         switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
         {
             case ShortTick:
@@ -710,7 +710,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber - float(i)/default.PitchIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                
+
                 C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
                 C.CurY = (-i) + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
                 C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, 1);
@@ -726,7 +726,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 // For each small portion of the strike-through its color is calculated
                 Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(Index) / VisiblePitchSegmentsNumber + float(i)/default.PitchIndicatorLength));
                 C.SetDrawColor(Shade, Shade, Shade, 255);
-                
+
                 C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
                 C.CurY = i + IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
                 C.DrawRect(Texture'WhiteSquareTexture', default.StrikeThroughThickness, -1);
@@ -755,7 +755,7 @@ defaultproperties
     YawIndicatorLength=300.0
     StrikeThroughThickness=10
 
-    AngleUnit="Â°"
+    AngleUnit="°"
     DistanceUnit="m"
 
     WidgetsPanelX=60
@@ -765,13 +765,13 @@ defaultproperties
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
 
-    LargeSizeTickLength = 30.0
-    MiddleSizeTickLength = 15.0
-    SmallSizeTickLength = 10.0
-    LabelOffset = 10.0
-    IndicatorMiddleTickOffset = 20.0
-    NumberOfYawSegments = 6;
-    NumberOfPitchSegments = 6;
+    LargeSizeTickLength=30.0
+    MiddleSizeTickLength=15.0
+    SmallSizeTickLength=10.0
+    LabelOffset=10.0
+    IndicatorMiddleTickOffset=20.0
+    NumberOfYawSegments=6
+    NumberOfPitchSegments=6
     TargetTickLength=3
 
     Green=(R=0,G=128,B=0,A=255)
