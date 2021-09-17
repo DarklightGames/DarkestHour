@@ -13,6 +13,7 @@ var color EnabledColor;
 
 var localized string UnavailableText;
 var localized string InvalidTargetText;
+var localized string OffMapSupportExhaustedText;
 var localized string AvailableArtilleryText;
 var localized string AvailableParadropsText;
 var localized string AvailableAirstrikesText;
@@ -22,6 +23,8 @@ var struct SFireSupportState
     var DHFireSupport.EFireSupportError Error;
     var vector HitLocation;
 } FireSupportState;
+
+var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 
 function OnSelect(int Index, vector Location)
 {
@@ -95,6 +98,80 @@ function class<DHMapMarker> GetSelectedMapMarkerClass()
     return class<DHMapMarker>(Options[Interaction.SelectedIndex].OptionalObject);
 }
 
+function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<DHMapMarker> FireSupportRequestClass)
+{
+    local int SquadMembersCount;
+    local DHGameReplicationInfo GRI;
+    local DHSquadReplicationInfo SRI;
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    SRI = PC.SquadReplicationInfo;
+
+    if (GRI == none || SRI == none || FireSupportRequestClass == none
+      || !(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+        || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
+    {
+        return FSE_Fatal;
+    }
+
+    if (!PC.IsArtillerySpotter())
+    {
+        return FSE_InsufficientPrivileges;
+    }
+
+    switch (FireSupportRequestClass.default.Type)
+    {
+        case MT_OffMapArtilleryRequest:
+            if (GRI.bOffMapArtilleryEnabled[PC.GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            AvailableOffMapSupportArray = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
+            if(AvailableOffMapSupportArray.Length == 0)
+            {
+                return FSE_Exhausted;
+            }
+            break;
+        case MT_OnMapArtilleryRequest:
+            if (GRI.bOnMapArtilleryEnabled[PC.GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        default:
+            Warn("Unknown artillery type class passed to GetFireSupportError");
+            return FSE_Fatal;
+    }
+
+    SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+
+    if (PC.Level.NetMode != NM_Standalone && SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    {
+        return FSE_NotEnoughSquadmates;
+    }
+
+    return FSE_None;
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportErrorWithLocation(DHPlayer PC, class<DHMapMarker> FireSupportRequestClass, vector WorldLocation)
+{
+    local DHFireSupport.EFireSupportError Error;
+
+    Error = GetFireSupportError(PC, FireSupportRequestClass);
+
+    if (Error != FSE_None)
+    {
+        return Error;
+    }
+
+    if (!PC.IsArtilleryTargetValid(WorldLocation))
+    {
+        return FSE_InvalidLocation;
+    }
+
+    return FSE_None;
+}
+
 function Tick()
 {
     local DHPlayer                PC;
@@ -126,7 +203,7 @@ function Tick()
 
     PC.GetEyeTraceLocation(HitLocation, HitNormal);
 
-    FireSupportState.Error = PC.GetFireSupportErrorWithLocation(GetSelectedMapMarkerClass(), HitLocation);
+    FireSupportState.Error = GetFireSupportErrorWithLocation(PC, GetSelectedMapMarkerClass(), HitLocation);
     FireSupportState.HitLocation = HitLocation;
 
     if (FireSupportState.Error == FSE_None)
@@ -150,7 +227,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHPlayer                                                  PC;
     local int                                                       i, SquadMembersCount;
     local int                                                       AvailableBarrages, AvailableParadrops, AvailableAirstrikes;
-    local array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableArtilleryArray;
     local DHGameReplicationInfo                                     GRI;
 
     FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
@@ -178,16 +254,18 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                AvailableArtilleryArray = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
-                for(i = 0; i < AvailableArtilleryArray.Length; ++i)
+                for(i = 0; i < AvailableOffMapSupportArray.Length; ++i)
                 {
-                    switch(AvailableArtilleryArray[i].Type)
+                    switch(AvailableOffMapSupportArray[i].Type)
                     {
                         case ArtyType_Barrage:
-                          AvailableBarrages = AvailableArtilleryArray[i].Count;
+                          AvailableBarrages = AvailableOffMapSupportArray[i].Count;
                           break;
                         case ArtyType_Paradrop:
-                          AvailableParadrops = AvailableArtilleryArray[i].Count;
+                          AvailableParadrops = AvailableOffMapSupportArray[i].Count;
+                          break;
+                        case ArtyType_Airstrikes:
+                          AvailableAirstrikes = AvailableOffMapSupportArray[i].Count;
                           break;
                     }
                 }
@@ -210,6 +288,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoColor = class'UColor'.default.White;
                 ORI.InfoText[0] = Options[OptionIndex].SubjectText;
             }
+            break;
+        case FSE_Exhausted:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText[0] = default.OffMapSupportExhaustedText;
             break;
         case FSE_NotEnoughSquadmates:
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
@@ -246,7 +328,7 @@ function bool IsOptionDisabled(int OptionIndex)
     FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
 
-    return PC == none || PC.GetFireSupportError(FireSupportRequestClass) != FSE_None;
+    return PC == none || GetFireSupportError(PC, FireSupportRequestClass) != FSE_None;
 }
 
 defaultproperties
@@ -257,6 +339,7 @@ defaultproperties
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"
+    OffMapSupportExhaustedText="Exhausted"
     AvailableArtilleryText="Artillery: {0}"
     AvailableParadropsText="Paradrops: {0}"
     AvailableAirstrikesText="Airstrikes: {0}"

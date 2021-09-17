@@ -1720,7 +1720,8 @@ function InvalidateOngoingBarrageMarker(int TeamIndex)
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
+                if (AlliesMapMarkers[i].MapMarkerClass != none
+                  && AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                 }
@@ -1729,7 +1730,8 @@ function InvalidateOngoingBarrageMarker(int TeamIndex)
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
+                if (AxisMapMarkers[i].MapMarkerClass != none
+                  && AxisMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                 }
@@ -2079,7 +2081,7 @@ simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
 
 simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
 {
-    local int i, ArtilleryCount, ParadropCount;
+    local int i, ArtilleryCount, ParadropCount, AirstrikesCount;
     local DH_LevelInfo LI;
     local array<SAvailableArtilleryInfoEntry> Result;
     local SAvailableArtilleryInfoEntry Entry;
@@ -2103,15 +2105,30 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
                 case ArtyType_Paradrop:
                     ParadropCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
                     break;
+                case ArtyType_Airstrikes:
+                    AirstrikesCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
             }
         }
     }
-    Entry.Type = ArtyType_Barrage;
-    Entry.Count = ArtilleryCount;
-    Result[0] = Entry;
-    Entry.Type = ArtyType_Paradrop;
-    Entry.Count = ParadropCount;
-    Result[1] = Entry;
+    if(ArtilleryCount > 0)
+    {
+        Entry.Type = ArtyType_Barrage;
+        Entry.Count = ArtilleryCount;
+        Result[Result.Length] = Entry;
+    }
+    if(ParadropCount > 0)
+    {
+        Entry.Type = ArtyType_Paradrop;
+        Entry.Count = ParadropCount;
+        Result[Result.Length] = Entry;
+    }
+    if(AirstrikesCount > 0)
+    {
+        Entry.Type = ArtyType_Airstrikes;
+        Entry.Count = AirstrikesCount;
+        Result[Result.Length] = Entry;
+    }
 
     return Result;
 }
