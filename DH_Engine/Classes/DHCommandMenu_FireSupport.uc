@@ -15,6 +15,7 @@ var localized string UnavailableText;
 var localized string InvalidTargetText;
 var localized string AvailableArtilleryText;
 var localized string AvailableParadropsText;
+var localized string AvailableAirstrikesText;
 
 var struct SFireSupportState
 {
@@ -144,12 +145,13 @@ function Tick()
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
-    local class<DHMapMarker>                  FireSupportRequestClass;
-    local DHSquadReplicationInfo              SRI;
-    local DHPlayer                            PC;
-    local int                                 i, SquadMembersCount, AvailableBarrages, AvailableParadrops;
+    local class<DHMapMarker>                                        FireSupportRequestClass;
+    local DHSquadReplicationInfo                                    SRI;
+    local DHPlayer                                                  PC;
+    local int                                                       i, SquadMembersCount;
+    local int                                                       AvailableBarrages, AvailableParadrops, AvailableAirstrikes;
     local array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableArtilleryArray;
-    local DHGameReplicationInfo               GRI;
+    local DHGameReplicationInfo                                     GRI;
 
     FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
@@ -189,36 +191,36 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                           break;
                     }
                 }
-                ORI.InfoText = "";
+                i = 0;
                 if (AvailableBarrages > 0)
                 {
-                    ORI.InfoText = Repl(default.AvailableArtilleryText, "{0}", AvailableBarrages);
+                    ORI.InfoText[i++] = Repl(default.AvailableArtilleryText, "{0}", AvailableBarrages);
                 }
                 if (AvailableParadrops > 0)
                 {
-                    if(ORI.InfoText != "")
-                    {
-                        ORI.InfoText $= " / ";
-                    }
-                    ORI.InfoText $= Repl(default.AvailableParadropsText, "{0}", AvailableParadrops);
+                    ORI.InfoText[i++] = Repl(default.AvailableParadropsText, "{0}", AvailableParadrops);
+                }
+                if (AvailableAirstrikes > 0)
+                {
+                    ORI.InfoText[i++] = Repl(default.AvailableAirstrikesText, "{0}", AvailableAirstrikes);
                 }
             }
             else if (FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                ORI.InfoText = Options[OptionIndex].SubjectText;
+                ORI.InfoText[0] = Options[OptionIndex].SubjectText;
             }
             break;
         case FSE_NotEnoughSquadmates:
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-            ORI.InfoText = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
+            ORI.InfoText[0] = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case FSE_InvalidLocation:
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-            ORI.InfoText = default.InvalidTargetText;
+            ORI.InfoText[0] = default.InvalidTargetText;
             break;
         case FSE_InsufficientPrivileges:
         case FSE_Disabled:
@@ -226,7 +228,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         default:
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-            ORI.InfoText = default.UnavailableText;
+            ORI.InfoText[0] = default.UnavailableText;
             break;
     }
 }
@@ -257,6 +259,7 @@ defaultproperties
     InvalidTargetText="Invalid target"
     AvailableArtilleryText="Artillery: {0}"
     AvailableParadropsText="Paradrops: {0}"
+    AvailableAirstrikesText="Airstrikes: {0}"
 
     bShouldTick=true
 

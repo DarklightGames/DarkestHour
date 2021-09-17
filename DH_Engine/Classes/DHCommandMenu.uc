@@ -6,10 +6,12 @@
 class DHCommandMenu extends Object
     abstract;
 
+const MAX_LABELS = 3;
+
 struct OptionRenderInfo
 {
     var string      OptionName;
-    var string      InfoText;
+    var string      InfoText[MAX_LABELS];
     var Material    InfoIcon;
     var color       InfoColor;
     var string      DescriptionText;
@@ -96,7 +98,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     }
 
     ORI.OptionName = Options[OptionIndex].ActionText;
-    ORI.InfoText = Options[OptionIndex].SubjectText;
+    ORI.InfoText[0] = Options[OptionIndex].SubjectText;
     ORI.InfoColor = class'UColor'.default.White;
     ORI.DescriptionText = Options[OptionIndex].DescriptionText;
 }

@@ -420,15 +420,21 @@ function PostRender(Canvas C)
         C.DrawText(ORI.OptionName);
 
         // Draw subject text
-        C.TextSize(ORI.InfoText, XL, YL);
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
-        C.DrawText(ORI.InfoText);
-        C.DrawColor = ORI.InfoColor;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
-        C.DrawText(ORI.InfoText);
+        for(i = 0; i < arraycount(ORI.InfoText); ++i)
+        {
+            if(ORI.InfoText[i] != "")
+            {
+                C.TextSize(ORI.InfoText[i], XL, YL);
+                C.DrawColor = class'UColor'.default.Black;
+                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  i * YL);
+                C.DrawText(ORI.InfoText[i]);
+                C.DrawColor = ORI.InfoColor;
+                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.SetPos(CenterX - (XL / 2), CenterY - 32 - i * YL);
+                C.DrawText(ORI.InfoText[i]);
+            }
+        }
 
         // Draw action icon
         if (ORI.InfoIcon != none)

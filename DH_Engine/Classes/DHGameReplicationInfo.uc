@@ -178,7 +178,8 @@ var ArtilleryTypeInfo                   ArtilleryTypeInfos[ARTILLERY_TYPES_MAX];
 enum EArtilleryType
 {
     ArtyType_Barrage,
-    ArtyType_Paradrop
+    ArtyType_Paradrop,
+    ArtyType_Airstrikes
 };
 
 struct SAvailableArtilleryInfoEntry
