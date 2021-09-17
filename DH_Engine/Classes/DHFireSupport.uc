@@ -13,7 +13,6 @@ enum EFireSupportError
     FSE_None,
     FSE_Disabled,
     FSE_NotEnoughSquadmates,
-    FSE_InvalidLocation,
     FSE_InsufficientPrivileges,
     FSE_Fatal,
     FSE_Exhausted

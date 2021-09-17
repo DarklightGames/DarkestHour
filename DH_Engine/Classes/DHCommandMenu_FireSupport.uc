@@ -66,12 +66,11 @@ function OnPush()
         return;
     }
 
-    if (PC.SpottingMarker != none)
+    if (PC.SpottingMarker == none)
     {
-        PC.SpottingMarker.Destroy();
+        PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
     }
 
-    PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
     if(PC.SpottingMarker != none)
     {
         PC.GetEyeTraceLocation(HitLocation, HitNormal);
@@ -86,17 +85,28 @@ function OnPush()
             PC.SpottingMarker.SetColor(default.DisabledColor);
         }
     }
+    else
+    {
+        bIsArtilleryTargetValid = false;
+        PC.SpottingMarker.SetColor(default.DisabledColor);
+    }
 }
 
 function OnPop()
 {
     local DHPlayer PC;
+    local float Infinity;
+    local vector V;
 
     PC = GetPlayerController();
 
     if (PC != none && PC.SpottingMarker != none)
     {
-        PC.SpottingMarker.Destroy();
+        Infinity = class'UFloat'.static.Infinity();
+        V.X = -Infinity;
+        V.Y = -Infinity;
+        V.Z = -Infinity;
+        PC.SpottingMarker.SetLocation(V);
     }
 }
 
@@ -169,7 +179,6 @@ function Tick()
 {
     local DHPlayer                PC;
     local vector                  HitLocation, HitNormal;
-    local Color                   C;
     local DHGameReplicationInfo   GRI;
 
     PC = GetPlayerController();
@@ -318,7 +327,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 function bool IsOptionDisabled(int OptionIndex)
 {
     local DHPlayer            PC;
-    local vector              HitLocation, HitNormal;
+    local vector              HitLocation;
 
     if (OptionIndex < 0 
       || OptionIndex >= Options.Length 

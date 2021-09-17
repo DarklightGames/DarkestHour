@@ -2317,7 +2317,6 @@ function UpdateArtilleryAvailability()
     local class<DHVehicle>              VehicleClass;
     local class<DHConstruction_Vehicle> Construction;
     local DHActorProxy.Context          Context;
-    local DHPlayer                      PC;
 
     GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 0;
     GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 0;
