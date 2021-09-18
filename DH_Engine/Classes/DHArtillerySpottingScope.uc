@@ -586,7 +586,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     {
         StrikeThroughEndIndex = (GunYawMinTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughLength = class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant) * default.YawIndicatorLength;
-        for(i = default.YawDialRoundingConstant * default.YawIndicatorLength; i < StrikeThroughLength; ++i)
+        for(i = default.YawDialRoundingConstant * default.YawIndicatorLength; i <= StrikeThroughLength + 1; ++i)
         {
             Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
             C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -599,7 +599,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     {
         StrikeThroughEndIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughLength = (1 - class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant)) * default.YawIndicatorLength;
-        for(i = default.YawIndicatorLength - StrikeThroughLength; i < (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength; ++i)
+        for(i = default.YawIndicatorLength - StrikeThroughLength - 1; i < (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength; ++i)
         {
             Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
             C.SetDrawColor(Shade, Shade, Shade, 255);
