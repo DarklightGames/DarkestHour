@@ -61,39 +61,6 @@ function OnSelect(int OptionIndex, vector Location)
     Interaction.Hide();
 }
 
-function OnPush()
-{
-    local DHPlayer PC;
-
-    PC = GetPlayerController();
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    if (PC.SpottingMarker != none)
-    {
-        PC.SpottingMarker.Destroy();
-    }
-
-    PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
-}
-
-function OnPop()
-{
-    local DHPlayer PC;
-
-    PC = GetPlayerController();
-
-    if (PC == none || PC.SpottingMarker == none)
-    {
-        return;
-    }
-
-    PC.SpottingMarker.Destroy();
-}
-
 function Tick()
 {
     local DHPlayer PC;
@@ -114,4 +81,5 @@ function Tick()
 defaultproperties
 {
     bShouldTick=true
+    bUsesSpottingMarker=true
 }

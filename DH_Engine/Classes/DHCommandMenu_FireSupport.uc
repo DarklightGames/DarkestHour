@@ -7,10 +7,6 @@ class DHCommandMenu_FireSupport extends DHCommandMenu
     dependson(DHFireSupport)
     dependson(DHGameReplicationInfo);
 
-// TODO: this should belong in the marker class, not here
-var color DisabledColor;
-var color EnabledColor;
-
 var localized string UnavailableText;
 var localized string InvalidTargetText;
 var localized string OffMapSupportExhaustedText;
@@ -52,62 +48,6 @@ function OnSelect(int Index, vector Location)
     }
 
     Interaction.Hide();
-}
-
-function OnPush()
-{
-    local DHPlayer PC;
-    local vector HitLocation, HitNormal;
-
-    PC = GetPlayerController();
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    if (PC.SpottingMarker == none)
-    {
-        PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
-    }
-
-    if(PC.SpottingMarker != none)
-    {
-        PC.GetEyeTraceLocation(HitLocation, HitNormal);
-        PC.SpottingMarker.SetLocation(HitLocation);
-        bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
-        if (bIsArtilleryTargetValid)
-        {
-            PC.SpottingMarker.SetColor(default.EnabledColor);
-        }
-        else
-        {
-            PC.SpottingMarker.SetColor(default.DisabledColor);
-        }
-    }
-    else
-    {
-        bIsArtilleryTargetValid = false;
-        PC.SpottingMarker.SetColor(default.DisabledColor);
-    }
-}
-
-function OnPop()
-{
-    local DHPlayer PC;
-    local float Infinity;
-    local vector V;
-
-    PC = GetPlayerController();
-
-    if (PC != none && PC.SpottingMarker != none)
-    {
-        Infinity = class'UFloat'.static.Infinity();
-        V.X = -Infinity;
-        V.Y = -Infinity;
-        V.Z = -Infinity;
-        PC.SpottingMarker.SetLocation(V);
-    }
 }
 
 function class<DHMapMarker> GetMapMarkerClass(int Index)
@@ -203,26 +143,25 @@ function Tick()
         return;
     }
 
-    PC.GetEyeTraceLocation(HitLocation, HitNormal);
     
     if(PC.SpottingMarker != none)
     {
+        PC.GetEyeTraceLocation(HitLocation, HitNormal);
         PC.SpottingMarker.SetLocation(HitLocation);
         PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
         bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
         if (bIsArtilleryTargetValid)
         {
-            PC.SpottingMarker.SetColor(default.EnabledColor);
+            PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
         }
         else
         {
-            PC.SpottingMarker.SetColor(default.DisabledColor);
+            PC.SpottingMarker.SetColor(default.SpottingMarkerDisabledColor);
         }
     }
     else
     {
         bIsArtilleryTargetValid = false;
-        PC.SpottingMarker.SetColor(default.DisabledColor);
     }
 }
 
@@ -364,7 +303,5 @@ defaultproperties
     AvailableAirstrikesText="Airstrikes: {0}"
 
     bShouldTick=true
-
-    DisabledColor=(B=0,G=0,R=255,A=255)
-    EnabledColor=(B=0,G=255,R=0,A=255)
+    bUsesSpottingMarker=true
 }
