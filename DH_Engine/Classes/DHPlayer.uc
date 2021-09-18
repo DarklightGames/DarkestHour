@@ -6814,6 +6814,9 @@ function bool TryToActivateSituationMap()
 
     if (MenuIndex != -1)
     {
+        QueueHint(52, false);
+        QueueHint(53, false);
+
         GUIController.bActive = true;
         HUD.MouseInterfaceStartCapturing();
         HUD.bShowObjectives = true;

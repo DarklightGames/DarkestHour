@@ -197,9 +197,13 @@ defaultproperties
     Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. Lower the bow ramp by pressing %PREVWEAPON% so passengers and yourself can exit. To raise the bow ramp hit %NEXTWEAPON%.")
     Hints(43)=(Title="Resupply Trucks",Text="You are close to a resupply truck. Stand outside the back of the truck to resupply your ammunition.")
     Hints(44)=(Title="Resupply Trucks",Text="You are driving a resupply truck. This vehicle can resupply vehicles, mortars and infantry. Be sure to park it in a safe place.")
-    Hints(46)=(Title="Externally mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")
-    Hints(47)=(Title="Remote controlled MG",Text="This machine gun can only be fired from inside the vehicle, but it is externally mounted and you must unbutton the hatch to reload")
-    Hints(48)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
-    Hints(49)=(Title="Artillery spotting scopes",Text="Use the %NEXTWEAPON% button to enter the spotting scope view")
-    Hints(50)=(Title="Artillery operators",Text="Open map to coordinate fire. Use RMB on a fire request created by Artillery Spotters to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+    Hints(46)=(Title="Externally Mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")
+    Hints(47)=(Title="Remote Controlled MG",Text="This machine gun can only be fired from inside the vehicle, but it is externally mounted and you must unbutton the hatch to reload")
+    Hints(48)=(Title="Externally Mounted MG Reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
+    Hints(49)=(Title="Artillery Spotting Scopes",Text="Use the %NEXTWEAPON% button to enter the spotting scope view")
+    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire request created by an artillery spotters to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+
+    Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing [%JUMP%].")
+    Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
+    Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
 }

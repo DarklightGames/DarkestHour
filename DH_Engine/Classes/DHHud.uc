@@ -2122,6 +2122,11 @@ exec function ShowObjectives()
         MenuIndex = GUIController.FindMenuIndexByName("DH_Interface.DHSituationMapGUIPage");
     }
 
+    if (PC != none)
+    {
+        PC.QueueHint(51, true);
+    }
+
     if (MenuIndex != -1)
     {
         MouseInterfaceStopCapturing();
