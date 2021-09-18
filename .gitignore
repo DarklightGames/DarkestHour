@@ -109,3 +109,4 @@ UserLogs
 *.rus
 .vs/
 *.log
+umodel.cfg
