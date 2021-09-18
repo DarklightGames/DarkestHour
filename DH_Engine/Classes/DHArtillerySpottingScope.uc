@@ -414,7 +414,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
 
             // check if the player has selected any marker
-            bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != -1 && ArtilleryMarkers.Length > 0;
+            bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != 255 && ArtilleryMarkers.Length > 0;
 
             if(bSelectedMarkerNotAvailable)
             {
@@ -430,13 +430,13 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             }
 
             if (ArtilleryMarkers.Length > 0
-              && (bSelectedMarkerNotAvailable ||  PC.ArtillerySupportSquadIndex == -1))
+              && (bSelectedMarkerNotAvailable ||  PC.ArtillerySupportSquadIndex == 255))
             {
                 // The player hasn't chosen anything from the available requests
                 Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
                 Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
             }
-            else if(!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != -1)
+            else if(!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
             {
                 // The player has selected an avilable marker
                 // but there are more to toggle between

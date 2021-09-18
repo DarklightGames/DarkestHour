@@ -560,7 +560,7 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         }
         else if (bDeselectArtilleryTarget && ClickIndex == 0)
         {
-            PC.ServerSaveArtillerySupportSquadIndex(-1);
+            PC.ServerSaveArtillerySupportSquadIndex(255);
             bDeselectArtilleryTarget = False;
         }
         else

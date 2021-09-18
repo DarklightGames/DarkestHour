@@ -7539,7 +7539,7 @@ exec function ToggleSelectedArtilleryTarget()
     if (ArtilleryMarkers.Length == 0)
     {
         // no artillery markers found, fall back to a neutral index
-        ServerSaveArtillerySupportSquadIndex(-1);
+        ServerSaveArtillerySupportSquadIndex(255);
         return;
     }
 
@@ -7642,5 +7642,5 @@ defaultproperties
     ArtilleryLockingPeriod = 10
 
     MinIQToGrowHead=100
-    ArtillerySupportSquadIndex=-1
+    ArtillerySupportSquadIndex=255
 }
