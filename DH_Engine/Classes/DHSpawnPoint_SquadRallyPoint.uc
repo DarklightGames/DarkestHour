@@ -573,6 +573,11 @@ function Destroyed()
     }
 }
 
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return PC != none && PC.IsSquadLeader() && SpawnsRemaining == 1;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHRallyPointButtonStyle"
