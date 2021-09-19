@@ -573,6 +573,15 @@ function Destroyed()
     }
 }
 
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return PC != none
+        && PC.IsSquadLeader()
+        && SpawnsRemaining == 1
+        && PC.SquadReplicationInfo != none
+        && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) > 1;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHRallyPointButtonStyle"
