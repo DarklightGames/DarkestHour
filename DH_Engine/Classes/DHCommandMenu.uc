@@ -111,7 +111,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 function OnPush()
 {
     local DHPlayer PC;
-    local vector HitLocation, HitNormal;
 
     PC = GetPlayerController();
 
@@ -123,13 +122,14 @@ function OnPush()
     if (PC.SpottingMarker == none)
     {
         PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
-        if(PC.SpottingMarker != none)
+
+        if (PC.SpottingMarker != none)
         {
             PC.SpottingMarker.Hide();
         }
     }
-    
-    if(PC.SpottingMarker != none)
+
+    if (PC.SpottingMarker != none)
     {
         PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
     }
@@ -140,7 +140,8 @@ function OnPush()
 function OnPop()
 {
     local DHPlayer PC;
-    if(bUsesSpottingMarker)
+
+    if (bUsesSpottingMarker)
     {
         PC = GetPlayerController();
 

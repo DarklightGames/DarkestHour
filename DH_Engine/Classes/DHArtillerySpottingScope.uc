@@ -228,7 +228,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                 {
                     case MT_OnMapArtilleryRequest:
                         Labels[0] = "SELECTED TARGET ";
-                        if(TargetInfo.MarkersTotal > 1)
+                        if (TargetInfo.MarkersTotal > 1)
                         {
                             Labels[1] = "[" $ TargetInfo.MarkerIndex $ " / " $ TargetInfo.MarkersTotal $ "]";
                             LabelColors[1] = default.Green;
@@ -258,9 +258,10 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                 }
                 break;
             case TWLT_ExpiryTime:
-                if(TargetInfo.Timeout != -1)
+                if (TargetInfo.Timeout != -1)
                 {
                     Labels[0] = class'TimeSpan'.static.ToString(TargetInfo.Timeout);
+
                     if (TargetInfo.Timeout > 10)
                     {
                         LabelColors[0] = default.Green;
@@ -279,10 +280,12 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
             case TWLT_Correction:
                 Deflection = TargetInfo.YawCorrection * default.YawScaleStep + CurrentYaw;
                 Labels[0] = "Correction: ";
+
                 if (Deflection > 0)
                 {
                     Labels[1] = Deflection $ "mils left";
-                    if(CurrentYaw - Deflection < MinimumGunYaw)
+
+                    if (CurrentYaw - Deflection < MinimumGunYaw)
                     {
                         // the target is outside of the upper traverse limit
                         LabelColors[1] = default.Red;
@@ -312,6 +315,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                         LabelColors[1] = default.Orange;
                     }
                 }
+
                 break;
             case TWLT_Distance:
                 C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
@@ -321,13 +325,14 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                 break;
         }
 
-        if(Labels[0] != "")
+        if (Labels[0] != "")
         {
             // Draw whatever there is to be drawn or skip the line
             XL = 0.0;
-            for(LabelIndex = 0; LabelIndex < arraycount(Labels); ++LabelIndex)
+
+            for (LabelIndex = 0; LabelIndex < arraycount(Labels); ++LabelIndex)
             {
-                if(Labels[LabelIndex] != "")
+                if (Labels[LabelIndex] != "")
                 {
                     C.CurX = X - LineOffsetX;
                     C.CurY = Y + LineIndex * default.TargetWidgetLayout.LineHeight;
@@ -337,8 +342,10 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                     LineOffsetX = LineOffsetX - XL;
                 }
             }
+
             ++LineIndex;
         }
+
         ++i;
     }
 
@@ -348,13 +355,13 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
     IconColor = TargetInfo.Marker.MapMarkerClass.static.GetIconColor(PRI, TargetInfo.Marker);
     C.SetDrawColor(IconColor.R, IconColor.G, IconColor.B, IconColor.A);
     C.DrawTile(
-      TargetInfo.Marker.MapMarkerClass.default.IconMaterial,
-      32.0,
-      32.0,
-      TargetInfo.Marker.MapMarkerClass.default.IconCoords.X1,
-      TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
-      TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
-      TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
+        TargetInfo.Marker.MapMarkerClass.default.IconMaterial,
+        32.0,
+        32.0,
+        TargetInfo.Marker.MapMarkerClass.default.IconCoords.X1,
+        TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y1,
+        TargetInfo.Marker.MapMarkerClass.default.IconCoords.X2,
+        TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
 }
 
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
@@ -416,13 +423,13 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             // check if the player has selected any marker
             bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != 255 && ArtilleryMarkers.Length > 0;
 
-            if(bSelectedMarkerNotAvailable)
+            if (bSelectedMarkerNotAvailable)
             {
                 // The player selected some marker
                 // Let's check if that marker is still available
-                for(i = 0; i < ArtilleryMarkers.Length; ++i)
+                for (i = 0; i < ArtilleryMarkers.Length; ++i)
                 {
-                    if(ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
+                    if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
                     {
                         bSelectedMarkerNotAvailable = false;
                     }
@@ -430,19 +437,20 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             }
 
             if (ArtilleryMarkers.Length > 0
-              && (bSelectedMarkerNotAvailable ||  PC.ArtillerySupportSquadIndex == 255))
+              && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
             {
                 // The player hasn't chosen anything from the available requests
                 Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
                 Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
             }
-            else if(!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
+            else if (!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
             {
                 // The player has selected an avilable marker
                 // but there are more to toggle between
                 Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
                 Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
             }
+
             C.CurX = default.WidgetsPanelX - 40;
             C.CurY = default.WidgetsPanelY - 30;
             C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
@@ -586,7 +594,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     {
         StrikeThroughEndIndex = (GunYawMinTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughLength = class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant) * default.YawIndicatorLength;
-        for(i = default.YawDialRoundingConstant * default.YawIndicatorLength; i <= StrikeThroughLength + 1; ++i)
+
+        for (i = default.YawDialRoundingConstant * default.YawIndicatorLength; i <= StrikeThroughLength + 1; ++i)
         {
             Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
             C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -599,7 +608,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     {
         StrikeThroughEndIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughLength = (1 - class'UInterp'.static.DialRounding(StrikeThroughEndIndex / VisibleYawSegmentsNumber, default.YawDialRoundingConstant)) * default.YawIndicatorLength;
-        for(i = default.YawIndicatorLength - StrikeThroughLength - 1; i < (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength; ++i)
+
+        for (i = default.YawIndicatorLength - StrikeThroughLength - 1; i < (1 - default.YawDialRoundingConstant) * default.YawIndicatorLength; ++i)
         {
             Shade = Max(1, 255 * class'UInterp'.static.Mimi(float(i) / default.YawIndicatorLength));
             C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -704,7 +714,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
 
         if (Pitch < int(class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep)))
         {
-            for(i = 0; i < IndicatorStep; ++i)
+            for (i = 0; i < IndicatorStep; ++i)
             {
                 // Smooth out the strike-through by splitting it into small portions
                 // For each small portion of the strike-through its color is calculated
@@ -720,7 +730,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         // Draw a strike-through if this segment is above the upper limit.
         if (Pitch > int(class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep)))
         {
-            for(i = 0; i < IndicatorStep; ++i)
+            for (i = 0; i < IndicatorStep; ++i)
             {
                 // Smooth out the strike-through by splitting it into small portions
                 // For each small portion of the strike-through its color is calculated

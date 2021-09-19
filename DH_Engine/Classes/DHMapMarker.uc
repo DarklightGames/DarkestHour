@@ -152,7 +152,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 
     PC = DHPlayer(PRI.Owner);
 
-    if(default.Scope == SQUAD
+    if (default.Scope == SQUAD
       && (default.RequiredSquadMembers == 0 && PC.SquadReplicationInfo == none
         || PC.SquadReplicationInfo != none
           && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))

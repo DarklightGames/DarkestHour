@@ -420,9 +420,9 @@ function PostRender(Canvas C)
         C.DrawText(ORI.OptionName);
 
         // Draw subject text
-        for(i = 0; i < arraycount(ORI.InfoText); ++i)
+        for (i = 0; i < arraycount(ORI.InfoText); ++i)
         {
-            if(ORI.InfoText[i] != "")
+            if (ORI.InfoText[i] != "")
             {
                 C.TextSize(ORI.InfoText[i], XL, YL);
                 C.DrawColor = class'UColor'.default.Black;

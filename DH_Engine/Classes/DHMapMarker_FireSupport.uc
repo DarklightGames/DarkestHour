@@ -20,7 +20,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         return "";
     }
 
-    if(PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
+    if (PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
     {
         return "Your fire support request";
     }
@@ -39,8 +39,6 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 
         return SquadName @ "-" @ default.MarkerName @ "-" @ (Distance / 5) * 5 $ "m";
     }
-
-    return "";
 }
 
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)

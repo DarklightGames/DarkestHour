@@ -88,8 +88,10 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
             {
                 return FSE_Disabled;
             }
+
             AvailableOffMapSupportArray = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
-            if(AvailableOffMapSupportArray.Length == 0)
+
+            if (AvailableOffMapSupportArray.Length == 0)
             {
                 return FSE_Exhausted;
             }
@@ -143,8 +145,8 @@ function Tick()
         return;
     }
 
-    
-    if(PC.SpottingMarker != none)
+
+    if (PC.SpottingMarker != none)
     {
         PC.GetEyeTraceLocation(HitLocation, HitNormal);
         PC.SpottingMarker.SetLocation(HitLocation);
@@ -174,7 +176,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local int                    AvailableBarrages, AvailableParadrops, AvailableAirstrikes;
     local DHGameReplicationInfo  GRI;
 
-    if(!bIsArtilleryTargetValid)
+    if (!bIsArtilleryTargetValid)
     {
         ORI.InfoColor = class'UColor'.default.Red;
         ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
@@ -192,7 +194,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         return;
     }
 
-    if(!(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+    if (!(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
       || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
     {
         Warn("Unknown marker type passed to DHCommandMenu_FireSupport.GetOptionRenderInfo():" @ FireSupportRequestClass);
@@ -207,7 +209,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                for(i = 0; i < AvailableOffMapSupportArray.Length; ++i)
+
+                for (i = 0; i < AvailableOffMapSupportArray.Length; ++i)
                 {
                     switch(AvailableOffMapSupportArray[i].Type)
                     {
@@ -222,15 +225,19 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                           break;
                     }
                 }
+
                 i = 0;
+
                 if (AvailableBarrages > 0)
                 {
                     ORI.InfoText[i++] = Repl(default.AvailableArtilleryText, "{0}", AvailableBarrages);
                 }
+
                 if (AvailableParadrops > 0)
                 {
                     ORI.InfoText[i++] = Repl(default.AvailableParadropsText, "{0}", AvailableParadrops);
                 }
+
                 if (AvailableAirstrikes > 0)
                 {
                     ORI.InfoText[i++] = Repl(default.AvailableAirstrikesText, "{0}", AvailableAirstrikes);
@@ -266,10 +273,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 function bool IsOptionDisabled(int OptionIndex)
 {
     local DHPlayer            PC;
-    local vector              HitLocation;
 
-    if (OptionIndex < 0 
-      || OptionIndex >= Options.Length 
+    if (OptionIndex < 0
+      || OptionIndex >= Options.Length
       || Options[OptionIndex].OptionalObject == none
       || !bIsArtilleryTargetValid)
     {
@@ -278,7 +284,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     PC = GetPlayerController();
 
-    if(PC != none && PC.SpottingMarker != none)
+    if (PC != none && PC.SpottingMarker != none)
     {
         FireSupportState = GetFireSupportError(PC, GetMapMarkerClass(OptionIndex));
     }
@@ -286,6 +292,7 @@ function bool IsOptionDisabled(int OptionIndex)
     {
         FireSupportState = FSE_Fatal;
     }
+
     return FireSupportState != FSE_None;
 }
 
