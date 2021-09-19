@@ -112,28 +112,26 @@ function OnPush()
 {
     local DHPlayer PC;
 
-    PC = GetPlayerController();
-
-    if (PC == none)
+    if(bUsesSpottingMarker)
     {
-        return;
-    }
+        PC = GetPlayerController();
 
-    if (PC.SpottingMarker == none)
-    {
-        PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
-
-        if (PC.SpottingMarker != none)
+        if (PC == none)
         {
-            PC.SpottingMarker.Hide();
+            return;
+        }
+
+        if (PC.SpottingMarker == none)
+        {
+            PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
+        }
+        
+        if(PC.SpottingMarker != none)
+        {
+            PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
+            PC.SpottingMarker.bHidden = false;
         }
     }
-
-    if (PC.SpottingMarker != none)
-    {
-        PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
-    }
-
 }
 
 // Called when a menu is popped off of the top of the stack
@@ -145,9 +143,9 @@ function OnPop()
     {
         PC = GetPlayerController();
 
-        if (PC != none && PC.SpottingMarker != none)
+        if (PC != none && PC.SpottingMarker != none && !PC.SpottingMarker.bHidden)
         {
-            PC.SpottingMarker.Hide();
+            PC.SpottingMarker.bHidden = true;
         }
     }
 }
