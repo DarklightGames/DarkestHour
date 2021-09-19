@@ -108,4 +108,5 @@ XWebAdmin/
 UserLogs
 *.rus
 .vs/
+.vscode/
 *.log
