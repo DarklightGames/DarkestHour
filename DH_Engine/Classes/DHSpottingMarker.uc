@@ -7,7 +7,6 @@ class DHSpottingMarker extends Actor;
 
 var FadeColor FC;
 var bool      bIsDisabled;
-var vector    NeutralPosition;
 
 simulated function PostBeginPlay()
 {
@@ -23,11 +22,6 @@ simulated function SetColor(color C)
 
     FC.Color2 = C;
     FC.Color2.A = 128;
-}
-
-function Hide()
-{
-    SetLocation(default.NeutralPosition);
 }
 
 function CreateMaterial()
@@ -71,6 +65,4 @@ defaultproperties
     bStatic=false
     bWorldGeometry=false
     bIsDisabled=true
-
-    NeutralPosition=vect(-9999999, -9999999, -9999999)
 

@@ -143,7 +143,6 @@ function Tick()
         return;
     }
 
-    
     if(PC.SpottingMarker != none)
     {
         PC.GetEyeTraceLocation(HitLocation, HitNormal);
