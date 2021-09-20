@@ -198,14 +198,7 @@ state FadeOut
 
         if (MenuAlpha == 0.0)
         {
-            while (!Menus.IsEmpty())
-            {
-                PopMenu();
-            }
-
-            ViewportOwner.InteractionMaster.RemoveInteraction(self);
-
-            OnHidden();
+            TearDown();
         }
     }
 
@@ -213,6 +206,18 @@ state FadeOut
     {
         return false;
     }
+}
+
+function TearDown()
+{
+    while (!Menus.IsEmpty())
+    {
+        PopMenu();
+    }
+
+    ViewportOwner.InteractionMaster.RemoveInteraction(self);
+
+    OnHidden();
 }
 
 function Tick(float DeltaTime)

@@ -112,7 +112,7 @@ function OnPush()
 {
     local DHPlayer PC;
 
-    if(bUsesSpottingMarker)
+    if (bUsesSpottingMarker)
     {
         PC = GetPlayerController();
 
@@ -125,8 +125,8 @@ function OnPush()
         {
             PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
         }
-        
-        if(PC.SpottingMarker != none)
+
+        if (PC.SpottingMarker != none)
         {
             PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
             PC.SpottingMarker.bHidden = false;

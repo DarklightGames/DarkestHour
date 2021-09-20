@@ -6139,6 +6139,11 @@ function OnCommandInteractionHidden()
 
 function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject, optional bool bShouldHideOnLeftMouseRelease)
 {
+    if (CommandInteraction != none)
+    {
+        CommandInteraction.TearDown();
+    }
+
     CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
 
     if (CommandInteraction != none)
