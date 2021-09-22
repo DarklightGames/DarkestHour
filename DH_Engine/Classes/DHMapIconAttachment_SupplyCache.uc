@@ -6,7 +6,7 @@
 class DHMapIconAttachment_SupplyCache extends DHMapIconAttachment
     notplaceable;
 
-simulated delegate function bool IsCacheConstructed() { return true; }
+simulated delegate bool IsCacheConstructed() { return true; }
 function Setup();
 
 function BaseChange()
