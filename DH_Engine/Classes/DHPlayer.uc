@@ -7491,36 +7491,33 @@ exec function DebugStartRound()
 
 function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker> MapMarkerClass)
 {
-    if (MapMarkerClass == none
-      || !(MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-        || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+    if (MapMarkerClass == none)
     {
         return;
     }
-
-    if (IsArtilleryRequestingLocked())
+    switch (MapMarkerClass.default.Type)
     {
-        ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
-    }
-    else
-    {
-        LockArtilleryRequests(ArtilleryLockingPeriod);
-        AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
-
-        if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
-        {
-            ServerNotifyRadioman();
-        }
-        else if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
-        {
+        case MT_OnMapArtilleryRequest:
+            if (IsArtilleryRequestingLocked())
+            {
+                ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
+            }
+            else
+            {
+                LockArtilleryRequests(ArtilleryLockingPeriod);
+                AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+                ServerNotifyRadioman();
+                AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+                ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+            }
+            break;
+        case MT_OffMapArtilleryRequest:
             ServerNotifyArtilleryOperators(MapMarkerClass);
-        }
-        else
-        {
-            Warn("Something went wrong when adding the artillery request. Artillery operators and radiomen won't be notified.");
-        }
-
-        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+            AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+            ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+            break;
+        default:
+            break;
     }
 }
 

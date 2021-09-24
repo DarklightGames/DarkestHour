@@ -5,8 +5,9 @@
 
 class DHFireSupportMessage extends ROCriticalMessage;
 
-var localized string RequestConfirmedText;
-var localized string ArtilleryRequestingLocked;
+var localized string OnMapArtilleryRequestConfirmedText;
+var localized string OffMapArtilleryRequestConfirmedText;
+var localized string OnMapArtilleryRequestingLocked;
 var localized string RadiomanNotification;
 var localized string ArtilleryOperatorNotification;
 
@@ -31,11 +32,15 @@ static function string GetString(
             // Location has been marked.
             MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none
-              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+            if (MapMarkerClass != none)
             {
-                return default.RequestConfirmedText;
+                switch (MapMarkerClass.default.Type)
+                {
+                    case MT_OffMapArtilleryRequest:
+                        return default.OffMapArtilleryRequestConfirmedText;
+                    case MT_OnMapArtilleryRequest:
+                        return default.OnMapArtilleryRequestConfirmedText;
+                }
             }
 
             break;
@@ -47,7 +52,7 @@ static function string GetString(
             {
                 GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
                 Seconds = PC.ArtilleryRequestsUnlockTime - GRI.ElapsedTime;
-                return Repl(default.ArtilleryRequestingLocked, "{seconds}", Seconds);
+                return Repl(default.OnMapArtilleryRequestingLocked, "{seconds}", Seconds);
             }
 
             break;
@@ -85,8 +90,9 @@ static function string GetString(
 
 defaultproperties
 {
-    RequestConfirmedText="Fire support request has been marked."
-    ArtilleryRequestingLocked="You cannot mark another fire support request for another {seconds} seconds."
+    OnMapArtilleryRequestConfirmedText="Requested on-map fire support."
+    OffMapArtilleryRequestConfirmedText="Marked an off-map support target."
+    OnMapArtilleryRequestingLocked="You cannot place another on-map fire support mark for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
 }
