@@ -148,17 +148,24 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
     local int i;
     local bool bIsVisible;
 
-    bIsVisible = false;
-
-    PC = DHPlayer(PRI.Owner);
-
-    if (default.Scope == SQUAD
-      && (default.RequiredSquadMembers == 0 && PC.SquadReplicationInfo == none
-        || PC.SquadReplicationInfo != none
-          && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))
+    if (PRI == none || PRI.Level == none)
     {
         return false;
     }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    if (default.Scope == SQUAD && (default.RequiredSquadMembers == 0 && PC.SquadReplicationInfo == none || PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))
+    {
+        return false;
+    }
+
+    bIsVisible = false;
 
     for (i = 0; i < default.Permissions_CanPlace.Length; i++)
     {

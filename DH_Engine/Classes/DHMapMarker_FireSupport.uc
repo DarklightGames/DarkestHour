@@ -62,8 +62,6 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
     }
 
     return default.IconColor;
-
-    return default.ActivatedIconColor;
 }
 
 defaultproperties

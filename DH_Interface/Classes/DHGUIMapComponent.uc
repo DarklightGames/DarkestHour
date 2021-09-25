@@ -420,7 +420,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     Sender.ContextItems.Length = 0;
 
     // Iterate through existing map markers and check if any were clicked on.
-    GRI.GetMapMarkers(PC, PublicMapMarkers, PC.GetTeamNum());
+    PublicMapMarkers = GRI.GetMapMarkers(PC);
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;

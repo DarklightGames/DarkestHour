@@ -7411,7 +7411,7 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // NOTE: Using vect(0,0,0) as a "null" value might be unreliable.
-    if (GRI != none && L == vect(0,0,0))
+    if (GRI != none && L == vect(0, 0, 0))
     {
         WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
     }

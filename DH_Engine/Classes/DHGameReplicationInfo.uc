@@ -1463,21 +1463,30 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 // will most likely cause "Context expression: Variable is too large (480 bytes, 255 max)" compilation error.
 // You can't access big static arrays of structs from outside of the given object; you have to
 // use a proxy function like this one to retrive elements of a static array as a dynamic array.
-simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+simulated function array<MapMarker> GetMapMarkers(DHPlayer PC)
 {
     local int i;
+    local array<MapMarker> MapMarkers;
 
-    switch (TeamIndex)
+    switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
                 MapMarkers[MapMarkers.Length] = AxisMapMarkers[i];
+            }
             break;
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
                 MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+            }
+            break;
+        default:
             break;
     }
+
+    return MapMarkers;
 }
 
 simulated function bool IsMapMarkerExpired(MapMarker MM)

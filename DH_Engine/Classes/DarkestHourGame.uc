@@ -2120,7 +2120,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
 
         if (DHKiller != none
-          && IsArtilleryKill(DHKiller, DamageType) 
+          && IsArtilleryKill(DHKiller, DamageType)
           && (ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
           && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
         {
@@ -2367,7 +2367,7 @@ function UpdateArtilleryAvailability()
           && !DHLevelInfo.IsConstructionRestricted(Construction))
         {
             Context.TeamIndex = AXIS_TEAM_INDEX;
-            VehicleClass = Construction.static.GetVehicleClass(Context); 
+            VehicleClass = Construction.static.GetVehicleClass(Context);
 
             if (VehicleClass != none)
             {
@@ -2375,7 +2375,7 @@ function UpdateArtilleryAvailability()
             }
 
             Context.TeamIndex = ALLIES_TEAM_INDEX;
-            VehicleClass = Construction.static.GetVehicleClass(Context); 
+            VehicleClass = Construction.static.GetVehicleClass(Context);
 
             if (VehicleClass != none)
             {

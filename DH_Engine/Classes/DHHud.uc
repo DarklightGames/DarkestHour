@@ -2751,7 +2751,7 @@ function DrawCompass(Canvas C)
     }
 }
 
-function DrawMapMarkerOnCompass (Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, AbsoluteCoordsInfo GlobalCoords, class<DHMapMarker> MapMarkerClass, vector Target, vector Current, float XL, float YL)
+function DrawMapMarkerOnCompass(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, AbsoluteCoordsInfo GlobalCoords, class<DHMapMarker> MapMarkerClass, vector Target, vector Current, float XL, float YL)
 {
     local float Angle;
     local rotator RotAngle;
@@ -2961,7 +2961,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Map markers
-        DHGRI.GetMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+        MapMarkers = DHGRI.GetMapMarkers(PC);
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
@@ -3734,7 +3734,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
 
     DrawMapIconAttachments(C, SubCoords, MyMapScale, MapCenter, Viewport);
-    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
+    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport, Player.GetPersonalMarkers());
+    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport, DHGRI.GetMapMarkers(Player));
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
@@ -3810,16 +3811,20 @@ function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapS
     }
 }
 
-function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, array<DHGameReplicationInfo.MapMarker> MapMarkers)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-    local int i, ElapsedTime;
+    local int i;
     local vector L;
-    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
-    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers;
 
     PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     if (DHGRI == none || PC == none || PRI == none)
@@ -3827,43 +3832,21 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         return;
     }
 
-    // Team & squad map markers
-    DHGRI.GetMapMarkers(PC, PublicMapMarkers, PC.GetTeamNum());
-    ElapsedTime = DHGRI.ElapsedTime;
+    Log("--");
 
-    for (i = 0; i < PublicMapMarkers.Length; ++i)
+    for (i = 0; i < MapMarkers.Length; ++i)
     {
-        if (PublicMapMarkers[i].MapMarkerClass != none &&
-            (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
-            PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]))
+        if (MapMarkers[i].MapMarkerClass != none)
         {
-            L.X = float(PublicMapMarkers[i].LocationX) / 255.0;
-            L.Y = float(PublicMapMarkers[i].LocationY) / 255.0;
-            L = DHGRI.GetWorldCoords(L.X, L.Y);
-
-            DrawMapMarkerOnMap(C,
-                               SubCoords,
-                               MyMapScale,
-                               MapCenter,
-                               Viewport,
-                               PublicMapMarkers[i],
-                               L,
-                               PC.Pawn,
-                               PRI);
+            Log("" @ i @ MapMarkers[i].MapMarkerClass);
         }
-    }
 
-    // Personal map markers
-    PersonalMapMarkers = PC.GetPersonalMarkers();
-
-    for (i = 0; i < PersonalMapMarkers.Length; ++i)
-    {
-        if (PersonalMapMarkers[i].MapMarkerClass != none &&
-            (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
-            PersonalMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PersonalMapMarkers[i]))
+        if (MapMarkers[i].MapMarkerClass != none &&
+            (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > DHGRI.ElapsedTime) &&
+            MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
         {
-            L.X = float(PersonalMapMarkers[i].LocationX) / 255.0;
-            L.Y = float(PersonalMapMarkers[i].LocationY) / 255.0;
+            L.X = float(MapMarkers[i].LocationX) / 255.0;
+            L.Y = float(MapMarkers[i].LocationY) / 255.0;
             L = DHGRI.GetWorldCoords(L.X, L.Y);
 
             DrawMapMarkerOnMap(C,
@@ -3871,7 +3854,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                                MyMapScale,
                                MapCenter,
                                Viewport,
-                               PersonalMapMarkers[i],
+                               MapMarkers[i],
                                L,
                                PC.Pawn,
                                PRI);
