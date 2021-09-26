@@ -40,7 +40,7 @@ defaultproperties
     Type=MT_Measurement
     OverwritingRule=UNIQUE
     Scope=PERSONAL
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)
-    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ALL)
-    Permissions_CanPlace(0)=ALL
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
+    Permissions_CanPlace(0)=ERS_ALL
 }

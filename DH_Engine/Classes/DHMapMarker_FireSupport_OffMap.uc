@@ -28,8 +28,11 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
 
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
+    super.OnMapMarkerPlaced(PC, Marker);
+
     PC.ServerSaveArtilleryTarget(Marker.WorldLocation);
 }
+
 static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     PC.ServerSaveArtilleryTarget(vect(0, 0, 0));
@@ -45,4 +48,8 @@ defaultproperties
     Scope=PERSONAL
     OverwritingRule=UNIQUE
     GroupIndex=6
+    Cooldown=3
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=class'DHFireSupportMessage',MessageIndex=2)
+    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedMessageIndex=0
 }

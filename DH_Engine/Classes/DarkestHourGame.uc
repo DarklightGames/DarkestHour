@@ -1629,7 +1629,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     Other.PlayerReplicationInfo.SetPlayerName(S);
 
     // Notify local players
-    if  (bNameChange)
+    if (bNameChange)
     {
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
@@ -2117,14 +2117,14 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
-
-        if (DHKiller != none
-          && IsArtilleryKill(DHKiller, DamageType)
-          && (ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
-          && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
         {
-            DamageType =  class'DHArtilleryKillDamageType';
+            ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
+            if((ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
+                && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+            {
+                DamageType =  class'DHArtilleryKillDamageType';
+            }
         }
 
         // Special handling if this was a spawn kill

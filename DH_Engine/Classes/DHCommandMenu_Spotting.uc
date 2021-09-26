@@ -56,7 +56,7 @@ function OnSelect(int OptionIndex, vector Location)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    PC.ServerAddMapMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
+    PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
 
     Interaction.Hide();
 }

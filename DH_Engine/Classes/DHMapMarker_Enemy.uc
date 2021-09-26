@@ -13,11 +13,11 @@ defaultproperties
     Type=MT_Enemy
     Scope=TEAM
     OverwritingRule=OFF
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ALL)
-    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=SL)
-    Permissions_CanRemove(1)=(LevelSelector=TEAM,RoleSelector=ASL)
-    Permissions_CanRemove(2)=(LevelSelector=TEAM,RoleSelector=PATRON)
-    Permissions_CanPlace(0)=SL
-    Permissions_CanPlace(1)=ASL
-    Permissions_CanPlace(2)=PATRON
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_SL)
+    Permissions_CanRemove(1)=(LevelSelector=TEAM,RoleSelector=ERS_ASL)
+    Permissions_CanRemove(2)=(LevelSelector=TEAM,RoleSelector=ERS_PATRON)
+    Permissions_CanPlace(0)=ERS_SL
+    Permissions_CanPlace(1)=ERS_ASL
+    Permissions_CanPlace(2)=ERS_PATRON
 }

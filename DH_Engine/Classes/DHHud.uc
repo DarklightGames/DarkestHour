@@ -3832,15 +3832,8 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         return;
     }
 
-    Log("--");
-
     for (i = 0; i < MapMarkers.Length; ++i)
     {
-        if (MapMarkers[i].MapMarkerClass != none)
-        {
-            Log("" @ i @ MapMarkers[i].MapMarkerClass);
-        }
-
         if (MapMarkers[i].MapMarkerClass != none &&
             (MapMarkers[i].ExpiryTime == -1 || MapMarkers[i].ExpiryTime > DHGRI.ElapsedTime) &&
             MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))

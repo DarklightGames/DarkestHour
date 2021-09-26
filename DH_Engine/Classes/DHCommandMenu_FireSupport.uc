@@ -37,7 +37,7 @@ function OnSelect(int Index, vector Location)
 
     if (PC.IsArtilleryTargetValid(Location))
     {
-        PC.AddFireSupportRequest(MapLocation, Location, class<DHMapMarker>(Options[Index].OptionalObject));
+        PC.AddMarker(class<DHMapMarker>(Options[Index].OptionalObject), MapLocation.X, MapLocation.Y, Location);
     }
     else
     {

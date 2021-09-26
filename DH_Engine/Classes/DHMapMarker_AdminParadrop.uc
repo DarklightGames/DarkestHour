@@ -16,7 +16,7 @@ defaultproperties
     Type=MT_Admin
     OverwritingRule=UNIQUE
     Scope=PERSONAL
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
-    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ADMIN)
-    Permissions_CanPlace(0)=ADMIN
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ADMIN)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ADMIN)
+    Permissions_CanPlace(0)=ERS_ADMIN
 }

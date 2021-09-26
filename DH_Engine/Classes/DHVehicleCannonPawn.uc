@@ -218,7 +218,7 @@ simulated function DrawHUD(Canvas C)
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
                 }
-                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
+                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none && Player != none)
                 {
                     Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 

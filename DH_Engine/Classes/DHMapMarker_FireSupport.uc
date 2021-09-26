@@ -76,8 +76,12 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     RequiredSquadMembers=3
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
-    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanPlace(0)=ARTILLERY_SPOTTER
+    Cooldown=10
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
+    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=ERS_ARTILLERY_SPOTTER
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_ARTILLERY_OPERATOR,Message=class'DHFireSupportMessage',MessageIndex=3)
+    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedMessageIndex=0
 }

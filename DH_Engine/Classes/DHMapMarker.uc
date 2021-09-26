@@ -24,19 +24,6 @@ enum EOverwritingRule
 };
 var EOverwritingRule    OverwritingRule;
 
-enum ERolePermissions
-{
-    NO_ONE,
-    ALL,
-    SL,
-    ASL,
-    SL_OR_ASL,
-    ARTILLERY_OPERATOR,
-    ARTILLERY_SPOTTER,
-    ADMIN,
-    PATRON
-};
-
 enum ELevelSelector
 {
     SQUAD,
@@ -45,13 +32,27 @@ enum ELevelSelector
 
 struct SVisibilityPermissions
 {
-    var ERolePermissions RoleSelector;
+    var DHGameReplicationInfo.ERoleSelector RoleSelector;
     var ELevelSelector LevelSelector;
 };
 
-var array<ERolePermissions> Permissions_CanPlace;
+var array<DHGameReplicationInfo.ERoleSelector> Permissions_CanPlace;
 var array<SVisibilityPermissions> Permissions_CanSee;
 var array<SVisibilityPermissions> Permissions_CanRemove;
+
+struct SExternalNotification
+{
+    var DHGameReplicationInfo.ERoleSelector RoleSelector;
+    var class<ROCriticalMessage> Message;
+    var int               MessageIndex;
+};
+
+// which roles should be notified in OnMapMarkerPlace()
+var array<SExternalNotification>  OnPlacedExternalNotifications;
+
+// how the player should be notified in OnMapMarkerPlaced()
+var class<ROCriticalMessage>  OnPlacedMessage;
+var int                       OnPlacedMessageIndex;
 
 var localized string    MarkerName;
 var Material            IconMaterial;
@@ -62,6 +63,7 @@ var int                 GroupIndex;             // Used for grouping map markers
 var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 var int                 RequiredSquadMembers;
+var int                 Cooldown;
 
 enum EMarkerType
 {
@@ -85,7 +87,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
     return true;
 }
 
-static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicationInfo PRI)
+static function bool CheckRole(DHGameReplicationInfo.ERoleSelector RoleSelector, DHPlayerReplicationInfo PRI)
 {
     if (PRI == none)
     {
@@ -94,21 +96,19 @@ static function bool CheckRole(ERolePermissions RoleSelector, DHPlayerReplicatio
 
     switch (RoleSelector)
     {
-        case NO_ONE:
-            return false;
-        case ALL:
+        case ERS_ALL:
             return true;
-        case SL:
+        case ERS_SL:
             return PRI.IsSL();
-        case ASL:
+        case ERS_ASL:
             return PRI.IsASL();
-        case ARTILLERY_SPOTTER:
+        case ERS_ARTILLERY_SPOTTER:
             return PRI.IsArtillerySpotter();
-        case ARTILLERY_OPERATOR:
+        case ERS_ARTILLERY_OPERATOR:
             return PRI.IsArtilleryOperator();
-        case ADMIN:
+        case ERS_ADMIN:
             return PRI.IsAdmin();
-        case PATRON:
+        case ERS_PATRON:
             return PRI.IsPatron();
         default:
             return false;
@@ -200,7 +200,40 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
 }
 
 // Override to run specific logic when this marker is placed.
-static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
+// Override it only if it is really necessary.
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    local int i;
+    local DHGameReplicationInfo.ERoleSelector RoleSelector;
+    local class<ROCriticalMessage> Message;
+    local int MessageIndex;
+    local string Text;
+    local DHSquadReplicationInfo SRI;
+
+    // Handle cooldown
+
+    if(Marker.MapMarkerClass.default.Cooldown > 0)
+    {
+        PC.LockMapMarkerPlacing(Marker.MapMarkerClass);
+    }
+
+    // Broadcast notifications
+
+    for (i = 0; i < default.OnPlacedExternalNotifications.Length; ++i)
+    {
+        RoleSelector = default.OnPlacedExternalNotifications[i].RoleSelector;
+        Message = default.OnPlacedExternalNotifications[i].Message;
+        MessageIndex = default.OnPlacedExternalNotifications[i].MessageIndex;
+        PC.ServerNotifyRoles(RoleSelector, Message, MessageIndex, Marker.MapMarkerClass);
+    }
+
+    // Notify the player
+
+    if(Marker.MapMarkerClass.default.OnPlacedMessage != none)
+    {
+        PC.ReceiveLocalizedMessage(Marker.MapMarkerClass.default.OnPlacedMessage, Marker.MapMarkerClass.default.OnPlacedMessageIndex,,, Marker.MapMarkerClass);
+    }
+}
 
 // Override to run specific logic when this marker is removed.
 static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);

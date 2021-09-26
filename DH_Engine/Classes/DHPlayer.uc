@@ -19,6 +19,7 @@ enum EMapMode
 
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
+var     Hashtable_string_int                                    MapMarkerCooldowns;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -45,8 +46,6 @@ struct SArtilleryHitInfo
     var int         ExpiryTime;
 };
 var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
-var     int                     ArtilleryRequestsUnlockTime;  // block on-map artillery requests until this value (seconds)
-var     int                     ArtilleryLockingPeriod;       // how many seconds should the player wait to make 2 consequent artillery requests
 var     byte                    ArtillerySupportSquadIndex;
 
 // View FOV
@@ -196,7 +195,7 @@ replication
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
         ServerClearObstacle, ServerCutConstruction,
-        ServerAddMapMarker, ServerRemoveMapMarker, ServerAddFireSupportMarker,
+        ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
@@ -209,8 +208,7 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRadioman, ServerNotifyArtilleryOperators,
-        ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
+        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -222,7 +220,7 @@ replication
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt;
+        ClientReceiveVotePrompt, ClientSetMapMarkerClassLock;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -243,6 +241,7 @@ event InitInputSystem()
 // Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
@@ -279,6 +278,8 @@ simulated event PostBeginPlay()
             IQManager = Spawn(class'DHIQManager', self);
         }
     }
+
+    MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
 }
 
 simulated event PostNetBeginPlay()
@@ -1070,23 +1071,6 @@ simulated function bool IsInArtilleryVehicle()
     }
 
     return false;
-}
-
-simulated function LockArtilleryRequests(int Seconds)
-{
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GameReplicationInfo != none)
-    {
-        ArtilleryRequestsUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
-    }
-}
-
-simulated function bool IsArtilleryRequestingLocked()
-{
-    return ArtilleryRequestsUnlockTime > GameReplicationInfo.ElapsedTime;
 }
 
 simulated function bool IsInSquad()
@@ -2190,25 +2174,49 @@ simulated function bool IsRadioman()
     return RI != none && RI.bCarriesRadio;
 }
 
-function ServerNotifyRadioman()
+function ServerNotifyRoles(DHGameReplicationInfo.ERoleSelector RoleSelector, class<ROCriticalMessage> Message, int MessageIndex, optional Object OptionalObject)
 {
-    local int                   TeamIndex;
-    local Controller            C;
-    local DHPlayer              OtherPlayer;
-    local DHRoleInfo            DRI;
+    local int        TeamIndex, SquadIndex;
+    local Controller C;
+    local DHPlayer   OtherPlayer;
+    local bool       bRoleFlag;
 
     TeamIndex = GetTeamNum();
+    SquadIndex = GetSquadIndex();
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         OtherPlayer = DHPlayer(C);
-        if (OtherPlayer != none)
+
+        if (OtherPlayer == none || OtherPlayer == self)
         {
-            DRI = DHRoleInfo(OtherPlayer.GetRoleInfo());
-            if (DRI != none && DRI.bCarriesRadio && OtherPlayer.GetTeamNum() == TeamIndex)
-            {
-                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 2,, PlayerReplicationInfo, OtherPlayer);
-            }
+            continue;
+        }
+
+        bRoleFlag = false;
+
+        switch (RoleSelector)
+        {
+            // to do: add other roles
+            case ERS_RADIOMAN:
+                if (OtherPlayer.IsRadioman())
+                {
+                    bRoleFlag = true;
+                }
+                break;
+            case ERS_ARTILLERY_OPERATOR:
+                if (OtherPlayer.IsArtilleryOperator())
+                {
+                    bRoleFlag = true;
+                }
+                break;
+            default:
+                bRoleFlag = false;
+        }
+
+        if (bRoleFlag)
+        {
+            OtherPlayer.ReceiveLocalizedMessage(Message, MessageIndex, PlayerReplicationInfo, OtherPlayer.PlayerReplicationInfo, OptionalObject);
         }
     }
 }
@@ -2278,28 +2286,6 @@ function int GetActiveOffMapSupportNumber()
         }
     }
     return Counter;
-}
-
-function ServerNotifyArtilleryOperators(class<DHMapMarker> MapMarkerClass)
-{
-    local int                   TeamIndex, SquadIndex;
-    local Controller            C;
-    local DHPlayer              OtherPlayer;
-
-    TeamIndex = GetTeamNum();
-    SquadIndex = GetSquadIndex();
-
-    for (C = Level.ControllerList; C != none; C = C.NextController)
-    {
-        OtherPlayer = DHPlayer(C);
-        if (OtherPlayer != none && OtherPlayer != self)
-        {
-            if (OtherPlayer.IsArtilleryOperator() && OtherPlayer.GetTeamNum() == TeamIndex && !(OtherPlayer.IsSL() && OtherPlayer.GetSquadindex() == SquadIndex))
-            {
-                OtherPlayer.Pawn.ReceiveLocalizedMessage(class'DHFireSupportMessage', 3,,, MapMarkerClass);
-            }
-        }
-    }
 }
 
 // Modified to allow mortar operator to make a resupply request
@@ -5792,29 +5778,6 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddFireSupportMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
-{
-    if (ServerAddMapMarker(MapMarkerClass, MapLocationX, MapLocationY, WorldLocation))
-    {
-        // Notify the author that the marker was added.
-        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
-
-        if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
-        {
-            ServerNotifyRadioman();
-        }
-        else if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
-        {
-            ServerNotifyArtilleryOperators(MapMarkerClass);
-        }
-    }
-    else
-    {
-        // "Could not place fire support marker."
-        ReceiveLocalizedMessage(class'DHFireSupportMessage', 4,,, MapMarkerClass);
-    }
-}
-
 function bool ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
@@ -7432,6 +7395,7 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
 {
     local DHGameReplicationInfo GRI;
     local vector                WorldLocation;
+    local int                   MapMarkerPlacingLockTimeout;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -7443,6 +7407,17 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
     else
     {
         WorldLocation = L;
+    }
+
+    if(MarkerClass.default.Cooldown > 0)
+    {
+        MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
+        Log("MapMarkerPlacingLockTimeout:" @ MapMarkerPlacingLockTimeout);
+        if (MapMarkerPlacingLockTimeout > 0)
+        {
+            ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, class'UInteger'.static.Create(MapMarkerPlacingLockTimeout));
+            return;
+        }
     }
 
     if (MarkerClass.default.Scope == PERSONAL)
@@ -7514,33 +7489,75 @@ exec function DebugStartRound()
     }
 }
 
-function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<DHMapMarker> MapMarkerClass)
+function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
 {
-    if (MapMarkerClass == none)
+    local DHGameReplicationInfo GRI;
+    local int ExpiryTime;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if(MapMarkerClass.default.Cooldown > 0)
+    {
+        switch(MapMarkerClass.default.OverwritingRule)
+        {
+            case UNIQUE:
+                MapMarkerCooldowns.Get("" $ MapMarkerClass, ExpiryTime);
+                return ExpiryTime - GRI.ElapsedTime;
+            case UNIQUE_PER_GROUP:
+                // to do: implement an int->int hashmap & use it here
+                MapMarkerCooldowns.Get("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+                return ExpiryTime - GRI.ElapsedTime;
+        }
+    }
+
+    return 0;
+}
+
+function ClientSetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
+{
+    SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
+}
+
+function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
+{
+    local int ExpiryTime;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    
+    if (MapMarkerClass == none || GRI == none || MapMarkerClass.default.Cooldown <= 0)
     {
         return;
     }
 
-    if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
-    {
-        if (IsArtilleryRequestingLocked())
-        {
-            ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
-            return;
-        }
+    ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
 
-        LockArtilleryRequests(ArtilleryLockingPeriod);
-        ServerAddFireSupportMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
-    }
-    else if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
+    if(MapMarkerClass.default.Scope != PERSONAL)
     {
-        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
-
-        AddPersonalMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+        // We are on the server at this point, as this function is called from OnMapMarkerPlaced
+        // which for non-personal markers is executed on the server.
+        // Save the lock expiry time on the client.
+        ClientSetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
     }
     else
     {
-        Warn("Unhandled marker class type in AddFireSupportRequest");
+        // We are on the client here anyway.
+        SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
+    }
+    
+    return;
+}
+
+function SetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
+{
+    switch (MapMarkerClass.default.OverwritingRule)
+    {
+        case UNIQUE:
+            MapMarkerCooldowns.Put("" $ MapMarkerClass, ExpiryTime);
+            break;
+        case UNIQUE_PER_GROUP:
+            MapMarkerCooldowns.Put("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+            break;
     }
 }
 
@@ -7662,9 +7679,6 @@ defaultproperties
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
     PersonalMapMarkerClasses(1)=class'DHMapMarker_AdminParadrop'
-
-    ArtilleryRequestsUnlockTime = 0
-    ArtilleryLockingPeriod = 10
 
     MinIQToGrowHead=100
     ArtillerySupportSquadIndex=255
