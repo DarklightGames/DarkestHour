@@ -264,7 +264,7 @@ static function int GetCooldownSeconds()
 
 defaultproperties
 {
-    QuestionText="Do you want to throw down your weapons and surrender?"
+    QuestionText="Do you want to retreat to fight another day?"
 
     bIsGlobalVote=false
     bNominatorsVoteAutomatically=true

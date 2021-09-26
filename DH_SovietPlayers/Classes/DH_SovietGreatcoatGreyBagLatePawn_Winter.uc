@@ -3,13 +3,14 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_LWPTunicNocoatLatePawnM35 extends DH_LWPPawn; //soviet m35 tunic with polish insignia - should be rare
+class DH_SovietGreatcoatGreyBagLatePawn_Winter extends DH_SovietPawn_Gloves;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharactersSOV_anm.LWP_tunic_nocoat_late'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.sov_greatcoat_bag_late'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
     Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
+    Skins(2)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_greatcoat_grey'
 
     bReversedSkinsSlots=true
 }

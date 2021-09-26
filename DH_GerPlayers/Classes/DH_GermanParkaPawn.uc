@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GermanParkaPawn extends DH_GermanPawn;
+class DH_GermanParkaPawn extends DH_GermanPawn_Gloves;
 
 defaultproperties
 {
