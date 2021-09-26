@@ -149,6 +149,7 @@ function Tick()
         PC.SpottingMarker.SetLocation(HitLocation);
         PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
         bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
+
         if (bIsArtilleryTargetValid)
         {
             PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);

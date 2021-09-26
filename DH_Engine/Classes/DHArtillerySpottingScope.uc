@@ -210,8 +210,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
 
     MaxLines = arraycount(default.TargetWidgetLayout.LineConfig);
 
-    i = 0;
-    while(i < MaxLines)
+    while (i < MaxLines)
     {
         LabelColors[0] = default.White;
         Labels[0] = "";
@@ -221,13 +220,14 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         LineOffsetX = 0;
 
         // Calculate what to draw
-        switch(default.TargetWidgetLayout.LineConfig[i])
+        switch (default.TargetWidgetLayout.LineConfig[i])
         {
             case TWLT_Header:
-                switch(TargetInfo.Marker.MapMarkerClass.default.Type)
+                switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
-                        Labels[0] = "SELECTED TARGET ";
+                        Labels[0] = "SELECTED TARGET";
+
                         if (TargetInfo.MarkersTotal > 1)
                         {
                             Labels[1] = "[" $ TargetInfo.MarkerIndex $ " / " $ TargetInfo.MarkersTotal $ "]";
@@ -243,7 +243,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                 LineOffsetX = default.TargetWidgetLayout.HeaderOffsetX;
                 break;
             case TWLT_MarkerType:
-                switch(TargetInfo.Marker.MapMarkerClass.default.Type)
+                switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
                         Labels[0] = "Squad: ";
@@ -304,7 +304,8 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
                 else
                 {
                     Labels[1] = -Deflection $ "mils right";
-                    if(CurrentYaw - Deflection > MaximumGunYaw)
+
+                    if (CurrentYaw - Deflection > MaximumGunYaw)
                     {
                         // the target is outside of the lower traverse limit
                         LabelColors[1] = default.Red;
@@ -436,8 +437,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 }
             }
 
-            if (ArtilleryMarkers.Length > 0
-              && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
+            if (ArtilleryMarkers.Length > 0 && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
             {
                 // The player hasn't chosen anything from the available requests
                 Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
@@ -524,6 +524,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
     // Start drawing scale ticks
     C.CurY = IndicatorTopLeftCornerY - 5.0;
+
     for (Yaw = YawLowerBound; Yaw <= YawUpperBound; Yaw += default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
@@ -568,6 +569,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 C.DrawVertical(TickPosition, -default.LargeSizeTickLength);
                 break;
         }
+
         if (default.YawSegmentSchema[YawSegmentSchemaIndex].bShouldDrawLabel)
         {
             switch (default.YawSegmentSchema[YawSegmentSchemaIndex].Shape)
@@ -582,6 +584,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                     C.CurY = C.CurY - default.LargeSizeTickLength - TextHeight - default.LabelOffset;
                     break;
             }
+
             C.CurX = TickPosition - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
@@ -678,7 +681,8 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         C.CurX = IndicatorTopLeftCornerX - 5.0;
         C.CurY = IndicatorTopLeftCornerY + Index * default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
 
-        PitchSegmentSchemaIndex = abs(Quotient) % default.PitchSegmentSchema.Length;
+        PitchSegmentSchemaIndex = Abs(Quotient) % default.PitchSegmentSchema.Length;
+
         switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
         {
             case ShortTick:
@@ -691,6 +695,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                 C.DrawHorizontal(IndicatorTopLeftCornerY + (Index * IndicatorStep), -default.LargeSizeTickLength);
                 break;
         }
+
         if (default.PitchSegmentSchema[PitchSegmentSchemaIndex].bShouldDrawLabel)
         {
             switch (default.PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
@@ -705,6 +710,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
                     C.CurX = C.CurX - default.LargeSizeTickLength - TextWidth - default.LabelOffset;
                     break;
             }
+
             C.CurY = C.CurY - TextHeight * 0.5;
             C.DrawText(Label);
         }
