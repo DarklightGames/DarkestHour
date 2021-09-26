@@ -10,6 +10,7 @@ var localized string OffMapArtilleryRequestConfirmedText;
 var localized string OnMapArtilleryRequestingLocked;
 var localized string RadiomanNotification;
 var localized string ArtilleryOperatorNotification;
+var localized string ErrorText;
 
 static function string GetString(
     optional int Switch,
@@ -83,6 +84,11 @@ static function string GetString(
             }
 
             break;
+        case 4:
+            return default.ErrorText;
+            break;
+        default:
+            break;
     }
 
     return "";
@@ -95,5 +101,6 @@ defaultproperties
     OnMapArtilleryRequestingLocked="You cannot place another on-map fire support mark for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
+    ErrorText="Could not place fire support marker."
 }
 

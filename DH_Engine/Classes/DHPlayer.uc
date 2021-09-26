@@ -196,7 +196,7 @@ replication
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
         ServerClearObstacle, ServerCutConstruction,
-        ServerAddMapMarker, ServerRemoveMapMarker,
+        ServerAddMapMarker, ServerRemoveMapMarker, ServerAddFireSupportMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
@@ -5792,7 +5792,30 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
+function ServerAddFireSupportMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
+{
+    if (ServerAddMapMarker(MapMarkerClass, MapLocationX, MapLocationY, WorldLocation))
+    {
+        // Notify the author that the marker was added.
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+
+        if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
+        {
+            ServerNotifyRadioman();
+        }
+        else if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
+        {
+            ServerNotifyArtilleryOperators(MapMarkerClass);
+        }
+    }
+    else
+    {
+        // "Could not place fire support marker."
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 4,,, MapMarkerClass);
+    }
+}
+
+function bool ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -5806,8 +5829,10 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
 
     if (GRI != none)
     {
-        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation, WorldLocation);
+        return GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation, WorldLocation) != -1;
     }
+
+    return false;
 }
 
 function ServerRemoveMapMarker(int MapMarkerIndex)
@@ -7495,29 +7520,27 @@ function AddFireSupportRequest(vector MapLocation, vector WorldLocation, class<D
     {
         return;
     }
-    switch (MapMarkerClass.default.Type)
+
+    if (MapMarkerClass.default.Type == MT_OnMapArtilleryRequest)
     {
-        case MT_OnMapArtilleryRequest:
-            if (IsArtilleryRequestingLocked())
-            {
-                ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
-            }
-            else
-            {
-                LockArtilleryRequests(ArtilleryLockingPeriod);
-                AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
-                ServerNotifyRadioman();
-                AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
-                ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
-            }
-            break;
-        case MT_OffMapArtilleryRequest:
-            ServerNotifyArtilleryOperators(MapMarkerClass);
-            AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
-            ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
-            break;
-        default:
-            break;
+        if (IsArtilleryRequestingLocked())
+        {
+            ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, self);
+            return;
+        }
+
+        LockArtilleryRequests(ArtilleryLockingPeriod);
+        ServerAddFireSupportMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+    }
+    else if (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest)
+    {
+        ReceiveLocalizedMessage(class'DHFireSupportMessage', 0,,, MapMarkerClass);
+
+        AddPersonalMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, WorldLocation);
+    }
+    else
+    {
+        Warn("Unhandled marker class type in AddFireSupportRequest");
     }
 }
 
