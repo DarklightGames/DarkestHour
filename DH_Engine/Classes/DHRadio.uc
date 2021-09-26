@@ -244,7 +244,7 @@ state Requesting extends Busy
         }
 
         // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(ResponseDelaySeconds, false);
+        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
     }
 
     function Timer()
