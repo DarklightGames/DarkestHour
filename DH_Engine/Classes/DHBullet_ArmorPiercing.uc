@@ -496,13 +496,14 @@ defaultproperties
     RoundType=RT_APBULLET
     WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
-    ImpactEffect=class'DH_Effects.DHBulletHitEffect'
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    ShellHitVehicleEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
+    ImpactEffect=class'DH_Effects.DHBulletHitEffectLarge'
+
+    ShellHitWaterEffectClass=class'DH_Effects.DHBulletHitWaterEffectLarge'
+    ShellHitVehicleEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffectLarge' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
     VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-    VehicleDeflectSound=Sound'PTRD_deflect'
+    ShellDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffectLarge'
+    VehicleDeflectSound=sound'ProjectileSounds.PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
 
     DrawType=DT_None
@@ -514,7 +515,7 @@ defaultproperties
 
     // Tracer properties (won't affect ordinary bullet):
     bHasShellTrail=false
-    DrawScale=2.0
+    DrawScale=6.0 // 2.0 **tracer should be bigger than regular .30 cal**
     TracerPullback=150.0
     bBounce=true
     DampenFactor=0.1

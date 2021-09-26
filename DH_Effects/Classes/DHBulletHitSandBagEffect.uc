@@ -223,5 +223,4 @@ defaultproperties
 
     Autodestroy=true
     bnodelete=false
-    CullDistance=3000
 }
