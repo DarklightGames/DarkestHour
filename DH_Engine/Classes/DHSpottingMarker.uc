@@ -65,4 +65,4 @@ defaultproperties
     bStatic=false
     bWorldGeometry=false
     bIsDisabled=true
-
+}
