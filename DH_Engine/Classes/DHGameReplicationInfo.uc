@@ -19,6 +19,7 @@ const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
 const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 32;
+const NO_ARTY_VOLUMES_MAX = 32;
 
 enum VehicleReservationError
 {
@@ -108,7 +109,9 @@ var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 // It is impossible to get DHMineVolume to actually replicate variables so this is needed as proxy.
-var byte                DHMineVolumeIsActives[MINE_VOLUMES_MAX];
+var byte                    DHMineVolumeIsActives[MINE_VOLUMES_MAX];
+var array<RONoArtyVolume>   DHNoArtyVolumes;
+var byte                    DHNoArtyVolumeIsActives[NO_ARTY_VOLUMES_MAX];
 
 var int                 MaxTeamVehicles[2];
 
@@ -275,7 +278,8 @@ replication
         TeamConstructions,
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
-        DHMineVolumeIsActives;
+        DHMineVolumeIsActives,
+        DHNoArtyVolumeIsActives;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -348,6 +352,8 @@ simulated function PostBeginPlay()
 
         RegisterMineVolumes();
     }
+
+    RegisterNoArtyVolumes();
 }
 
 simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
@@ -689,6 +695,11 @@ simulated event Timer()
     if (Role < ROLE_Authority && DHPlayer(Level.GetLocalPlayerController()) != none)
     {
         DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        UpdateNoArtyVolumeStatuses();
     }
 }
 
@@ -2069,7 +2080,7 @@ function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
 }
 
 //==============================================================================
-// MINE VOLUMES
+// MINE & NO ARTY VOLUMES
 //==============================================================================
 
 function RegisterMineVolumes()
@@ -2077,7 +2088,7 @@ function RegisterMineVolumes()
     local DHMineVolume MV;
     local int Index;
 
-    if (ROLE != ROLE_Authority)
+    if (Role != ROLE_Authority)
     {
         return;
     }
@@ -2093,6 +2104,58 @@ function RegisterMineVolumes()
     }
 }
 
+simulated function RegisterNoArtyVolumes()
+{
+    local RONoArtyVolume NAV;
+
+    DHNoArtyVolumes.Length = 0;
+
+    foreach AllActors(class'RONoArtyVolume', NAV)
+    {
+        DHNoArtyVolumes[DHNoArtyVolumes.Length] = NAV;
+    }
+}
+
+// This was, at one point, inside the DHVolumeTest, but in order to make
+// client-side polling possible, we have to update the statuses here and
+// replicate the "active" status to all clients.
+function UpdateNoArtyVolumeStatuses()
+{
+    local int i;
+    local DHSpawnPoint SP;
+    local DHObjective O;
+    local byte bIsActive;
+
+    for (i = 0; i < DHNoArtyVolumes.Length; ++i)
+    {
+        SP = DHSpawnPoint(DHNoArtyVolumes[i].AssociatedActor);
+        O = DHObjective(DHNoArtyVolumes[i].AssociatedActor);
+
+        bIsActive = 0;
+
+        if (SP != none)
+        {
+            if (SP.IsActive())
+            {
+                bIsActive = 1;
+            }
+        }
+        else if (O != none)
+        {
+            if (O.IsActive())
+            {
+                bIsActive = 1;
+            }
+        }
+        else
+        {
+            bIsActive = 1;
+        }
+
+        DHNoArtyVolumeIsActives[i] = bIsActive;
+    }
+}
+
 simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
 {
     if (MineVolume == none || MineVolume.Index < 0 || MineVolume.Index >= MINE_VOLUMES_MAX)
@@ -2101,6 +2164,21 @@ simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
     }
 
     return DHMineVolumeIsActives[MineVolume.Index] == 1;
+}
+
+simulated function bool IsNoArtyVolumeActive(RONoArtyVolume NoArtyVolume)
+{
+    local int i;
+
+    for (i = 0; i < DHNoArtyVolumes.Length; ++i)
+    {
+        if (NoArtyVolume == DHNoArtyVolumes[i])
+        {
+            return DHNoArtyVolumeIsActives[i] == 1;
+        }
+    }
+
+    return false;
 }
 
 simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
@@ -2135,19 +2213,22 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
             }
         }
     }
-    if(ArtilleryCount > 0)
+
+    if (ArtilleryCount > 0)
     {
         Entry.Type = ArtyType_Barrage;
         Entry.Count = ArtilleryCount;
         Result[Result.Length] = Entry;
     }
-    if(ParadropCount > 0)
+
+    if (ParadropCount > 0)
     {
         Entry.Type = ArtyType_Paradrop;
         Entry.Count = ParadropCount;
         Result[Result.Length] = Entry;
     }
-    if(AirstrikesCount > 0)
+
+    if (AirstrikesCount > 0)
     {
         Entry.Type = ArtyType_Airstrikes;
         Entry.Count = AirstrikesCount;
