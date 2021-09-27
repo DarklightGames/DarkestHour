@@ -154,21 +154,6 @@ var private byte        DangerZoneBalance;
 var private byte        OldDangerZoneNeutral;
 var private byte        OldDangerZoneBalance;
 
-
-// Used primarily by DHMapMarkers.
-enum ERoleSelector
-{
-    ERS_ALL,
-    ERS_SL,
-    ERS_ASL,
-    ERS_SL_OR_ASL,
-    ERS_ARTILLERY_OPERATOR,
-    ERS_ARTILLERY_SPOTTER,
-    ERS_RADIOMAN,
-    ERS_ADMIN,
-    ERS_PATRON
-};
-
 // Map markers
 struct MapMarker
 {

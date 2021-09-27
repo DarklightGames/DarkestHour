@@ -2174,12 +2174,12 @@ simulated function bool IsRadioman()
     return RI != none && RI.bCarriesRadio;
 }
 
-function ServerNotifyRoles(DHGameReplicationInfo.ERoleSelector RoleSelector, class<ROCriticalMessage> Message, int MessageIndex, optional Object OptionalObject)
+function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, class<ROCriticalMessage> Message, int MessageIndex, optional Object OptionalObject)
 {
-    local int        TeamIndex, SquadIndex;
-    local Controller C;
-    local DHPlayer   OtherPlayer;
-    local bool       bRoleFlag;
+    local int                     TeamIndex, SquadIndex;
+    local Controller              C;
+    local DHPlayer                OtherPlayer;
+    local DHPlayerReplicationInfo PRI;
 
     TeamIndex = GetTeamNum();
     SquadIndex = GetSquadIndex();
@@ -2193,28 +2193,14 @@ function ServerNotifyRoles(DHGameReplicationInfo.ERoleSelector RoleSelector, cla
             continue;
         }
 
-        bRoleFlag = false;
+        PRI = DHPlayerReplicationInfo(OtherPlayer.PlayerReplicationInfo);
 
-        switch (RoleSelector)
+        if (PRI == none)
         {
-            // to do: add other roles
-            case ERS_RADIOMAN:
-                if (OtherPlayer.IsRadioman())
-                {
-                    bRoleFlag = true;
-                }
-                break;
-            case ERS_ARTILLERY_OPERATOR:
-                if (OtherPlayer.IsArtilleryOperator())
-                {
-                    bRoleFlag = true;
-                }
-                break;
-            default:
-                bRoleFlag = false;
+            continue;
         }
 
-        if (bRoleFlag)
+        if (PRI.CheckRole(RoleSelector))
         {
             OtherPlayer.ReceiveLocalizedMessage(Message, MessageIndex, PlayerReplicationInfo, OtherPlayer.PlayerReplicationInfo, OptionalObject);
         }

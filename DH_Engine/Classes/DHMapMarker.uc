@@ -24,25 +24,22 @@ enum EOverwritingRule
 };
 var EOverwritingRule    OverwritingRule;
 
-enum ELevelSelector
-{
-    SQUAD,
-    TEAM
-};
-
+// Used when evaluating permissions to place/remove/see the marker.
+// LevelSelector determines who should see it: team/squad/the player themself.
+// RoleSelector determines roles which should see the marker. 
 struct SVisibilityPermissions
 {
-    var DHGameReplicationInfo.ERoleSelector RoleSelector;
-    var ELevelSelector LevelSelector;
+    var DHPlayerReplicationInfo.ERoleSelector RoleSelector;
+    var EScopeType                            LevelSelector;
 };
 
-var array<DHGameReplicationInfo.ERoleSelector> Permissions_CanPlace;
+var array<DHPlayerReplicationInfo.ERoleSelector> Permissions_CanPlace;
 var array<SVisibilityPermissions> Permissions_CanSee;
 var array<SVisibilityPermissions> Permissions_CanRemove;
 
 struct SExternalNotification
 {
-    var DHGameReplicationInfo.ERoleSelector RoleSelector;
+    var DHPlayerReplicationInfo.ERoleSelector RoleSelector;
     var class<ROCriticalMessage> Message;
     var int               MessageIndex;
 };
@@ -87,34 +84,6 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
     return true;
 }
 
-static function bool CheckRole(DHGameReplicationInfo.ERoleSelector RoleSelector, DHPlayerReplicationInfo PRI)
-{
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    switch (RoleSelector)
-    {
-        case ERS_ALL:
-            return true;
-        case ERS_SL:
-            return PRI.IsSL();
-        case ERS_ASL:
-            return PRI.IsASL();
-        case ERS_ARTILLERY_SPOTTER:
-            return PRI.IsArtillerySpotter();
-        case ERS_ARTILLERY_OPERATOR:
-            return PRI.IsArtilleryOperator();
-        case ERS_ADMIN:
-            return PRI.IsAdmin();
-        case ERS_PATRON:
-            return PRI.IsPatron();
-        default:
-            return false;
-    }
-}
-
 static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
     local int i;
@@ -131,7 +100,7 @@ static function bool CheckPermissions(array<SVisibilityPermissions> Permissions,
             continue;
         }
 
-        if (CheckRole(Permissions[i].RoleSelector, PRI))
+        if (PRI.CheckRole(Permissions[i].RoleSelector))
         {
             return true;
         }
@@ -169,7 +138,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 
     for (i = 0; i < default.Permissions_CanPlace.Length; i++)
     {
-        bIsVisible = bIsVisible || CheckRole(default.Permissions_CanPlace[i], PRI);
+        bIsVisible = bIsVisible || PRI.CheckRole(default.Permissions_CanPlace[i]);
     }
 
     return bIsVisible;
@@ -204,7 +173,7 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local int i;
-    local DHGameReplicationInfo.ERoleSelector RoleSelector;
+    local DHPlayerReplicationInfo.ERoleSelector RoleSelector;
     local class<ROCriticalMessage> Message;
     local int MessageIndex;
     local string Text;
