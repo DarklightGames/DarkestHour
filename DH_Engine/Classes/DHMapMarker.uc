@@ -115,7 +115,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
 {
     local DHPlayer PC;
     local int i;
-    local bool bIsVisible;
+    local bool bIsPlaceable;
 
     if (PRI == none || PRI.Level == none)
     {
@@ -134,14 +134,14 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
         return false;
     }
 
-    bIsVisible = false;
-
+    bIsPlaceable = false;
+    
     for (i = 0; i < default.Permissions_CanPlace.Length; i++)
     {
-        bIsVisible = bIsVisible || PRI.CheckRole(default.Permissions_CanPlace[i]);
+        bIsPlaceable = bIsPlaceable || PRI.CheckRole(default.Permissions_CanPlace[i]);
     }
 
-    return bIsVisible;
+    return bIsPlaceable;
 }
 
 // Determine if this map marker can be removed by the provided player.
