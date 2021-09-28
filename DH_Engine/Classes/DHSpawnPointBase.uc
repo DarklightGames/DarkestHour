@@ -433,6 +433,11 @@ final function SetTeamIndex(int TeamIndex)
     }
 }
 
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return false;
+}
+
 function OnTeamIndexChanged();
 
 defaultproperties

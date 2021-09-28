@@ -457,8 +457,17 @@ simulated state PostFiring
 
 simulated state RaisingWeapon
 {
-Begin:
-    bHasBeenDrawn = true;
+    simulated function bool IsBusy()
+    {
+        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
@@ -1006,21 +1015,8 @@ simulated function HandleSleeveSwapping()
 
     if (RI != none)
     {
-        if (RI.static.GetSleeveTexture() == none)
-        {
-            Warn("Sleeve texture for role info" @ RI @ "is not set!");
-        }
-
         RoleSleeveTexture = RI.static.GetSleeveTexture();
-
-        /*
-        if (RI.static.GetHandTexture() == none)
-        {
-            Warn("Hand texture for role info" @ RI @ "is not set!");
-        }
-        */
-
-        RoleHandTexture = RI.static.GetHandTexture();
+        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
     }
 
     if (RoleSleeveTexture != none && SleeveNum >= 0)

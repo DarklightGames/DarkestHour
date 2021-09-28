@@ -1200,16 +1200,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
         {
             // The request was denied by the server
-
-            switch (Result)
-            {
-                case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
-                    break;
-                default:
-                    MessageText = SurrenderResponseMessages[Result];
-            }
-
+            MessageText = SurrenderResponseMessages[Result];
             Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
@@ -1915,7 +1906,7 @@ defaultproperties
     SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
-    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[0]="Retreat"
     SurrenderButtonText[1]="Keep fighting"
 
     SurrenderResponseMessages[0]="Fatal error!";
@@ -1926,7 +1917,7 @@ defaultproperties
     SurrenderResponseMessages[5]="You've already surrendered.";
     SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
     SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender.";
     SurrenderResponseMessages[9]="You cannot surrender this early.";
     SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
 
@@ -2324,15 +2315,15 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Surrender"
+    Begin Object Class=DHGUIButton Name=RetreatButtonObject
+        Caption="Retreat"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(2)=KickVoteButtonObject
+    b_MenuOptions(2)=RetreatButtonObject
 
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"
