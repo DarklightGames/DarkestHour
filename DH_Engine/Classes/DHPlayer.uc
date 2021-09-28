@@ -7398,7 +7398,7 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
     if(MarkerClass.default.Cooldown > 0)
     {
         MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
-        Log("MapMarkerPlacingLockTimeout:" @ MapMarkerPlacingLockTimeout);
+
         if (MapMarkerPlacingLockTimeout > 0)
         {
             ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, class'UInteger'.static.Create(MapMarkerPlacingLockTimeout));
@@ -7510,7 +7510,7 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
-    
+
     if (MapMarkerClass == none || GRI == none || MapMarkerClass.default.Cooldown <= 0)
     {
         return;
@@ -7530,7 +7530,7 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
         // We are on the client here anyway.
         SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
     }
-    
+
     return;
 }
 
