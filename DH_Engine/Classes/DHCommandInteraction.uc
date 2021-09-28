@@ -424,7 +424,7 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(ORI.OptionName);
 
-        // Draw subject text
+        // Draw info text
         for (i = 0; i < arraycount(ORI.InfoText); ++i)
         {
             if (ORI.InfoText[i] != "")
@@ -432,11 +432,11 @@ function PostRender(Canvas C)
                 C.TextSize(ORI.InfoText[i], XL, YL);
                 C.DrawColor = class'UColor'.default.Black;
                 C.DrawColor.A = byte(255 * MenuAlpha);
-                C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  i * YL);
+                C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  (i + 1) * YL);
                 C.DrawText(ORI.InfoText[i]);
                 C.DrawColor = ORI.InfoColor;
                 C.DrawColor.A = byte(255 * MenuAlpha);
-                C.SetPos(CenterX - (XL / 2), CenterY - 32 - i * YL);
+                C.SetPos(CenterX - (XL / 2), CenterY - 32 - (i + 1) * YL);
                 C.DrawText(ORI.InfoText[i]);
             }
         }
