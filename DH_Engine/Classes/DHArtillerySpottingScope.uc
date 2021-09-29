@@ -19,13 +19,13 @@ var int PitchDecimalsDial;
 
 struct STargetInfo
 {
-    var int                              Timeout;        // time to expiry [s]
-    var int                              MarkerIndex;        // time to expiry [s]
-    var int                              MarkersTotal;        // time to expiry [s]
-    var int                              Distance;       // distance between the player and the target
-    var int                              YawCorrection;  // how many ticks on the dial is the target deflected from current aiming direction
-    var string                           SquadName;      // name of the squad that requests fire support
-    var DHGameReplicationInfo.MapMarker  Marker;           // Fire_Support or Ruler
+    var int                              Timeout;           // time to expiry [s]
+    var int                              MarkerIndex;       // index in the array of fire requests sorted by squad index
+    var int                              MarkersTotal;      // how many on-map fire support requests are there
+    var int                              Distance;          // distance between the player and the target
+    var int                              YawCorrection;     // how many ticks on the dial is the target deflected from current aiming direction
+    var string                           SquadName;         // name of the squad that requests fire support
+    var DHGameReplicationInfo.MapMarker  Marker;            // Fire_Support or Ruler
 };
 
 enum EShapePrimitive
@@ -61,8 +61,8 @@ var     int                 StrikeThroughThickness;
 var     string              AngleUnit;
 var     string              DistanceUnit;
 
-var     int                 WidgetsPanelX;
-var     int                 WidgetsPanelY;
+var     int                 WidgetsPanelTopLeftX;
+var     int                 WidgetsPanelTopLeftY;
 var     int                 WidgetsPanelEntryHeight;
 
 var     float               SmallSizeTickLength;
@@ -451,8 +451,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
                 Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
             }
 
-            C.CurX = default.WidgetsPanelX - 40;
-            C.CurY = default.WidgetsPanelY - 30;
+            C.CurX = default.WidgetsPanelTopLeftX - 40;
+            C.CurY = default.WidgetsPanelTopLeftY - 30;
             C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
             C.DrawText(Label);
         }
@@ -470,7 +470,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     for (i = 0; i < Targets.Length; ++i)
     {
         // Draw the target widget on the left panel
-        DrawTargetWidget(PRI, C, default.WidgetsPanelX, default.WidgetsPanelY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, GunYawMinTruncated, GunYawMaxTruncated);
+        DrawTargetWidget(PRI, C, default.WidgetsPanelTopLeftX, default.WidgetsPanelTopLeftY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, GunYawMinTruncated, GunYawMaxTruncated);
 
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
@@ -774,8 +774,8 @@ defaultproperties
     AngleUnit="°"
     DistanceUnit="m"
 
-    WidgetsPanelX=60
-    WidgetsPanelY=100
+    WidgetsPanelTopLeftX=60
+    WidgetsPanelTopLeftY=100
     WidgetsPanelEntryHeight=100
 
     RangeHeaderString="Range"

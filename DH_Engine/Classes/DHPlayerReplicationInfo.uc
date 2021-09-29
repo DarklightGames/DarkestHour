@@ -186,7 +186,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     }
 }
 
-function bool CheckRole(ERoleSelector RoleSelector)
+simulated function bool CheckRole(ERoleSelector RoleSelector)
 {
     switch (RoleSelector)
     {
