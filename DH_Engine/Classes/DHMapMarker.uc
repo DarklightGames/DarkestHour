@@ -26,7 +26,7 @@ var EOverwritingRule    OverwritingRule;
 
 // Used when evaluating permissions to place/remove/see the marker.
 // LevelSelector determines who should see it: team/squad/the player themself.
-// RoleSelector determines roles which should see the marker. 
+// RoleSelector determines roles which should see the marker.
 struct SVisibilityPermissions
 {
     var DHPlayerReplicationInfo.ERoleSelector RoleSelector;
@@ -176,8 +176,6 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     local DHPlayerReplicationInfo.ERoleSelector RoleSelector;
     local class<ROCriticalMessage> Message;
     local int MessageIndex;
-    local string Text;
-    local DHSquadReplicationInfo SRI;
 
     // Handle cooldown
 

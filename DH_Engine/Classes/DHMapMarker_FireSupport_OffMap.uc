@@ -30,6 +30,9 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 {
     super.OnMapMarkerPlaced(PC, Marker);
 
+    // Tell the player to find a radio so that they can call in off-map support
+    PC.QueueHint(54, true);
+
     PC.ServerSaveArtilleryTarget(Marker.WorldLocation);
 }
 
