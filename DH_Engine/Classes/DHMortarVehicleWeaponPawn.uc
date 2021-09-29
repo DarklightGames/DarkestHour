@@ -253,6 +253,13 @@ simulated function DrawHUD(Canvas C)
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                 Targets);
+            ArtillerySpottingScope.static.DrawTargets(
+                PRI,
+                C,
+                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                Targets);
         }
 
         ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);

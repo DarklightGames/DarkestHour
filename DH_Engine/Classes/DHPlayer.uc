@@ -5880,6 +5880,7 @@ function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
+    PMM.CreationTime = GRI.ElapsedTime;
     PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
     PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
     PMM.WorldLocation = WorldLocation;

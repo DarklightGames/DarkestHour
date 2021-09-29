@@ -495,6 +495,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
     }
+
     if (!bDeselectArtilleryTarget && !bSelectArtilleryTarget)
     {
         for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)

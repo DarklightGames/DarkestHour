@@ -135,7 +135,7 @@ static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
     }
 
     bIsPlaceable = false;
-    
+
     for (i = 0; i < default.Permissions_CanPlace.Length; i++)
     {
         bIsPlaceable = bIsPlaceable || PRI.CheckRole(default.Permissions_CanPlace[i]);
@@ -209,6 +209,24 @@ static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return "";
+}
+
+static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    local int Distance;
+    local vector V;
+
+    if (PC == none || PC.Pawn == none)
+    {
+        return "";
+    }
+
+    V = PC.Pawn.Location - Marker.WorldLocation;
+    V.Z = 0.0;
+
+    Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
+
+    return (Distance / 5) * 5 $ "m";
 }
 
 defaultproperties

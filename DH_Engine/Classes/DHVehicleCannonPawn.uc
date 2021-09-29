@@ -240,6 +240,13 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                         Targets);
+                    ArtillerySpottingScope.static.DrawTargets(
+                        PRI,
+                        C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                        Targets);
                 }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {

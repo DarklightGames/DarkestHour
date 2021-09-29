@@ -161,7 +161,8 @@ struct MapMarker
     var byte LocationX;                     // Quantized representation of 0.0..1.0 - X coordinate
     var byte LocationY;                     // Quantized representation of 0.0..1.0 - Y coordinate
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
-    var int ExpiryTime;                     // The expiry time, relative to ElapsedTime in GRI
+    var int CreationTime;                     // The time this marker was created, relative to ElapsedTime
+    var int ExpiryTime;                     // The expiry time, relative to ElapsedTime
     var vector WorldLocation;               // World location of the marker
 };
 
@@ -1439,7 +1440,7 @@ simulated function bool IsPlayerCountInRange(int Floor, int Ceiling)
 // MAP MARKERS
 //==============================================================================
 
-simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional out DHGameReplicationInfo.MapMarker MapMarker)
+simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional out MapMarker MapMarker)
 {
     local DHGameReplicationInfo.MapMarker MM;
 
@@ -1572,6 +1573,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     }
 
     M.MapMarkerClass = MapMarkerClass;
+    M.CreationTime = ElapsedTime;
 
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));

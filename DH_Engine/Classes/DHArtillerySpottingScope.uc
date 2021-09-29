@@ -195,7 +195,7 @@ simulated static function DrawRangeTable(Canvas C, float ActiveLowerBoundPitch, 
 }
 
 // A helper function to draw a single widget on the left panel in spotting scope view
-simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw, int MinimumGunYaw, int MaximumGunYaw)
+simulated static function DrawTargetWidget(DHPlayer PC, DHPlayerReplicationInfo PRI, Canvas C, float X, float Y, STargetInfo TargetInfo, float CurrentYaw, int MinimumGunYaw, int MaximumGunYaw)
 {
     local string Labels[2];
     local int Deflection;
@@ -321,7 +321,7 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
             case TWLT_Distance:
                 C.SetDrawColor(default.White.R, default.White.G, default.White.B, default.White.A);
                 Labels[0] = "Distance: ";
-                Labels[1] = (TargetInfo.Distance / 5) * 5 $ "m";
+                Labels[1] = TargetInfo.Marker.MapMarkerClass.static.GetDistanceString(PC, TargetInfo.Marker);
                 LabelColors[1] = default.Green;
                 break;
         }
@@ -365,6 +365,75 @@ simulated static function DrawTargetWidget(DHPlayerReplicationInfo PRI, Canvas C
         TargetInfo.Marker.MapMarkerClass.default.IconCoords.Y2);
 }
 
+simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
+{
+    local int i;
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local float GunYawMaxTruncated, GunYawMinTruncated;
+    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
+    local bool bSelectedMarkerNotAvailable;
+    local string Label;
+
+    PC = DHPlayer(PRI.Owner);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (PC == none || GRI == none)
+    {
+        Log("OUT");
+
+        return;
+    }
+
+    Log("DrawTargets" @ Targets.Length);
+
+    GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, default.YawScaleStep);
+    GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, default.YawScaleStep);
+
+    for (i = 0; i < Targets.Length; ++i)
+    {
+        DrawTargetWidget(PC, PRI, C, default.WidgetsPanelTopLeftX, default.WidgetsPanelTopLeftY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, GunYawMinTruncated, GunYawMaxTruncated);
+    }
+
+    GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
+
+    // check if the player has selected any marker
+    bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != 255 && ArtilleryMarkers.Length > 0;
+
+    if (bSelectedMarkerNotAvailable)
+    {
+        // The player selected some marker
+        // Let's check if that marker is still available
+        for (i = 0; i < ArtilleryMarkers.Length; ++i)
+        {
+            if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
+            {
+                bSelectedMarkerNotAvailable = false;
+                break;
+            }
+        }
+    }
+
+    if (ArtilleryMarkers.Length > 0 && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
+    {
+        // The player hasn't chosen anything from the available requests
+        Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+    }
+    else if (!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
+    {
+        // The player has selected an avilable marker
+        // but there are more to toggle between
+        Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+    }
+
+    Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
+
+    C.CurX = default.WidgetsPanelTopLeftX - 40;
+    C.CurY = default.WidgetsPanelTopLeftY - 30;
+    C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+    C.DrawText(Label);
+}
+
 simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
@@ -373,10 +442,6 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local string Label;
     local color Color;
     local array<int> TickBuckets;
-    local DHGameReplicationInfo GRI;
-    local DHPlayer PC;
-    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
-    local bool bSelectedMarkerNotAvailable;
     local float StrikeThroughEndIndex, StrikeThroughLength, RelativeTickPostion, TickPosition;
     local float GunYawMaxTruncated, GunYawMinTruncated;
     local float RealIndicatorStartPosition,  RealIndicatorEndPosition;
@@ -410,68 +475,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
 
-    // Display hints about selecting artillery targets
-    PC = DHPlayer(PRI.Owner);
-
-    if (PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-
-        if (GRI != none)
-        {
-            GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers, PC.GetTeamNum());
-
-            // check if the player has selected any marker
-            bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != 255 && ArtilleryMarkers.Length > 0;
-
-            if (bSelectedMarkerNotAvailable)
-            {
-                // The player selected some marker
-                // Let's check if that marker is still available
-                for (i = 0; i < ArtilleryMarkers.Length; ++i)
-                {
-                    if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
-                    {
-                        bSelectedMarkerNotAvailable = false;
-                    }
-                }
-            }
-
-            if (ArtilleryMarkers.Length > 0 && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
-            {
-                // The player hasn't chosen anything from the available requests
-                Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
-                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
-            }
-            else if (!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
-            {
-                // The player has selected an avilable marker
-                // but there are more to toggle between
-                Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
-                Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
-            }
-
-            C.CurX = default.WidgetsPanelTopLeftX - 40;
-            C.CurY = default.WidgetsPanelTopLeftY - 30;
-            C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
-            C.DrawText(Label);
-        }
-        else
-        {
-            Warn("DHGameReplicationInfo is null, hints for artillery operators won't work.");
-        }
-    }
-    else
-    {
-        Warn("DHPlayer is null, hints for artillery operators won't work.");
-    }
-
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)
     {
-        // Draw the target widget on the left panel
-        DrawTargetWidget(PRI, C, default.WidgetsPanelTopLeftX, default.WidgetsPanelTopLeftY + default.WidgetsPanelEntryHeight * i, Targets[i], CurrentYaw, GunYawMinTruncated, GunYawMaxTruncated);
-
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
