@@ -110,3 +110,4 @@ UserLogs
 .vs/
 .vscode/
 *.log
+umodel.cfg

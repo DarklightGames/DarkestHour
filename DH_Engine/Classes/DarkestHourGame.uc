@@ -3080,7 +3080,7 @@ function UpdateTeamConstructions()
     // Check for if we can replenish any team constructions
     for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
     {
-        if (GRI.TeamConstructions[i].Limit < DHLevelInfo.TeamConstructions[i].Limit &&
+        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
             DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
             GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
         {
@@ -5839,8 +5839,8 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=9
         Minor=13
-        Patch=0
-        Prerelease="beta.2"
+        Patch=1
+        Prerelease=""
     End Object
     Version=VersionObject
 

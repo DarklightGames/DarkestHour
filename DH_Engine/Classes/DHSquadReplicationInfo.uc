@@ -57,8 +57,6 @@ var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
-var TreeMap_string_int              InvitationExpirations;
-
 var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
@@ -160,9 +158,6 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        // TODO: make sure invitations can't be sent so damned frequently!
-        InvitationExpirations = new class'TreeMap_string_int';
-
         SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
         SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
 

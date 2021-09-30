@@ -11,4 +11,10 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
     DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
+    
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmetSnow'
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
+    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
+    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_whitegloves'
 }
