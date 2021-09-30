@@ -26,8 +26,21 @@ var     bool                bCarriesRadio;          // role can carry radios
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 
-var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
-var     Material            HandTexture;          // the hand texture this role should use
+var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
+
+
+enum EHandType
+{
+    HAND_Automatic,     // Checks the season, if it's winter, gloves, otherwise bare.
+    HAND_Bare,
+    HAND_Gloved,
+    HAND_Custom
+};
+
+var()   EHandType           HandType;
+var     Material            BareHandTexture;            // the hand texture this role should use
+var     Material            GlovedHandTexture;
+var()   Material            CustomHandTexture;
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -186,9 +199,30 @@ function class<ROHeadgear> GetHeadgear()
     return none;
 }
 
-static function Material GetHandTexture()
+function Material GetHandTexture(DH_LevelInfo LI)
 {
-    return default.HandTexture;
+    local EHandType HT;
+
+    HT = HAND_Bare;
+
+    if (HandType == HAND_Automatic && LI != none)
+    {
+        if (LI.Season == SEASON_Winter)
+        {
+            HT = HAND_Gloved;
+        }
+    }
+
+    switch (HT)
+    {
+        case HAND_Gloved:
+            return GlovedHandTexture;
+        case HAND_Custom:
+            return CustomHandTexture;
+        case HAND_Bare:
+        default:
+            return BareHandTexture;
+    }
 }
 
 // New function to check whether a CharacterName for a player record is valid for this role
@@ -221,5 +255,6 @@ defaultproperties
     HeadgearProbabilities(0)=1.0
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false
-    bCarriesRadio=false
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandType=Hand_Bare
 }

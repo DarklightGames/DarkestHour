@@ -2664,6 +2664,12 @@ simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int 
         return 0;
     }
 
+    if (GRI.SpawnPoints[SpawnPointIndex].CanPlayerSpawnImmediately(self))
+    {
+        // Spawn point is allowing this player to spawn immediately!
+        return -1;
+    }
+
     // If player was spawn killed, set the respawn time to be the spawn kill respawn time
     if (bSpawnedKilled)
     {

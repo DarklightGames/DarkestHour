@@ -1021,21 +1021,8 @@ simulated function HandleSleeveSwapping()
 
     if (RI != none)
     {
-        if (RI.static.GetSleeveTexture() == none)
-        {
-            Warn("Sleeve texture for role info" @ RI @ "is not set!");
-        }
-
         RoleSleeveTexture = RI.static.GetSleeveTexture();
-
-        /*
-        if (RI.static.GetHandTexture() == none)
-        {
-            Warn("Hand texture for role info" @ RI @ "is not set!");
-        }
-        */
-
-        RoleHandTexture = RI.static.GetHandTexture();
+        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
     }
 
     if (RoleSleeveTexture != none && SleeveNum >= 0)
