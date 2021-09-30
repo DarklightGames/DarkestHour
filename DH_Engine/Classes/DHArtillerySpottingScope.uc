@@ -380,12 +380,8 @@ simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, flo
 
     if (PC == none || GRI == none)
     {
-        Log("OUT");
-
         return;
     }
-
-    Log("DrawTargets" @ Targets.Length);
 
     GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, default.YawScaleStep);
     GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, default.YawScaleStep);

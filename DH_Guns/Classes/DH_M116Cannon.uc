@@ -2,13 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-
 // [ ] make specific round types
 // [ ] calibrate range table & dials
-// [ ] destroyed meshes
-
-// branch in general:
-// [ ] make RMB the thing that activates the map for use
 
 class DH_M116Cannon extends DHATGunCannon;
 
@@ -31,14 +26,14 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
 
     // Turret movement
-    ManualRotationsPerSecond=0.05
+    ManualRotationsPerSecond=0.015625
     MaxPositiveYaw=546.0
     MaxNegativeYaw=-546.0
     YawStartConstraint=-546.0
     YawEndConstraint=546.0
     CustomPitchUpLimit=8192 // 45 degrees
     CustomPitchDownLimit=65358 // -5 degrees
-    RotationsPerSecond=0.002
+    RotationsPerSecond=0.015625
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
