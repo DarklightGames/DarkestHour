@@ -19,6 +19,7 @@ const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
 const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 32;
+const NO_ARTY_VOLUMES_MAX = 32;
 
 enum VehicleReservationError
 {
@@ -108,7 +109,9 @@ var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 // It is impossible to get DHMineVolume to actually replicate variables so this is needed as proxy.
-var byte                DHMineVolumeIsActives[MINE_VOLUMES_MAX];
+var byte                    DHMineVolumeIsActives[MINE_VOLUMES_MAX];
+var array<RONoArtyVolume>   DHNoArtyVolumes;
+var byte                    DHNoArtyVolumeIsActives[NO_ARTY_VOLUMES_MAX];
 
 var int                 MaxTeamVehicles[2];
 
@@ -158,7 +161,8 @@ struct MapMarker
     var byte LocationX;                     // Quantized representation of 0.0..1.0 - X coordinate
     var byte LocationY;                     // Quantized representation of 0.0..1.0 - Y coordinate
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
-    var int ExpiryTime;                     // The expiry time, relative to ElapsedTime in GRI
+    var int CreationTime;                     // The time this marker was created, relative to ElapsedTime
+    var int ExpiryTime;                     // The expiry time, relative to ElapsedTime
     var vector WorldLocation;               // World location of the marker
 };
 
@@ -173,6 +177,20 @@ struct ArtilleryTypeInfo
     var DHArtillery         ArtilleryActor;             // Artillery actor.
 };
 var ArtilleryTypeInfo                   ArtilleryTypeInfos[ARTILLERY_TYPES_MAX];
+
+// to do: add airstrikes
+enum EArtilleryType
+{
+    ArtyType_Barrage,
+    ArtyType_Paradrop,
+    ArtyType_Airstrikes
+};
+
+struct SAvailableArtilleryInfoEntry
+{
+    var int Count;
+    var EArtilleryType Type;
+};
 
 var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
@@ -246,7 +264,8 @@ replication
         TeamConstructions,
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
-        DHMineVolumeIsActives;
+        DHMineVolumeIsActives,
+        DHNoArtyVolumeIsActives;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -319,6 +338,8 @@ simulated function PostBeginPlay()
 
         RegisterMineVolumes();
     }
+
+    RegisterNoArtyVolumes();
 }
 
 simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
@@ -660,6 +681,11 @@ simulated event Timer()
     if (Role < ROLE_Authority && DHPlayer(Level.GetLocalPlayerController()) != none)
     {
         DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        UpdateNoArtyVolumeStatuses();
     }
 }
 
@@ -1414,7 +1440,7 @@ simulated function bool IsPlayerCountInRange(int Floor, int Ceiling)
 // MAP MARKERS
 //==============================================================================
 
-simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional out DHGameReplicationInfo.MapMarker MapMarker)
+simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional out MapMarker MapMarker)
 {
     local DHGameReplicationInfo.MapMarker MM;
 
@@ -1449,21 +1475,30 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 // will most likely cause "Context expression: Variable is too large (480 bytes, 255 max)" compilation error.
 // You can't access big static arrays of structs from outside of the given object; you have to
 // use a proxy function like this one to retrive elements of a static array as a dynamic array.
-simulated function GetMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+simulated function array<MapMarker> GetMapMarkers(DHPlayer PC)
 {
     local int i;
+    local array<MapMarker> MapMarkers;
 
-    switch (TeamIndex)
+    switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
                 MapMarkers[MapMarkers.Length] = AxisMapMarkers[i];
+            }
             break;
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
                 MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+            }
+            break;
+        default:
             break;
     }
+
+    return MapMarkers;
 }
 
 simulated function bool IsMapMarkerExpired(MapMarker MM)
@@ -1538,6 +1573,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     }
 
     M.MapMarkerClass = MapMarkerClass;
+    M.CreationTime = ElapsedTime;
 
     // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
@@ -1706,7 +1742,8 @@ function InvalidateOngoingBarrageMarker(int TeamIndex)
         case ALLIES_TEAM_INDEX:
             for (i = 0; i < arraycount(AlliesMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
+                if (AlliesMapMarkers[i].MapMarkerClass != none
+                  && AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
                 {
                     AlliesMapMarkers[i].ExpiryTime = 0;
                 }
@@ -1715,7 +1752,8 @@ function InvalidateOngoingBarrageMarker(int TeamIndex)
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); i++)
             {
-                if (AlliesMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
+                if (AxisMapMarkers[i].MapMarkerClass != none
+                  && AxisMapMarkers[i].MapMarkerClass.default.Type == MT_ArtilleryBarrage)
                 {
                     AxisMapMarkers[i].ExpiryTime = 0;
                 }
@@ -2029,7 +2067,7 @@ function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
 }
 
 //==============================================================================
-// MINE VOLUMES
+// MINE & NO ARTY VOLUMES
 //==============================================================================
 
 function RegisterMineVolumes()
@@ -2037,7 +2075,7 @@ function RegisterMineVolumes()
     local DHMineVolume MV;
     local int Index;
 
-    if (ROLE != ROLE_Authority)
+    if (Role != ROLE_Authority)
     {
         return;
     }
@@ -2053,6 +2091,58 @@ function RegisterMineVolumes()
     }
 }
 
+simulated function RegisterNoArtyVolumes()
+{
+    local RONoArtyVolume NAV;
+
+    DHNoArtyVolumes.Length = 0;
+
+    foreach AllActors(class'RONoArtyVolume', NAV)
+    {
+        DHNoArtyVolumes[DHNoArtyVolumes.Length] = NAV;
+    }
+}
+
+// This was, at one point, inside the DHVolumeTest, but in order to make
+// client-side polling possible, we have to update the statuses here and
+// replicate the "active" status to all clients.
+function UpdateNoArtyVolumeStatuses()
+{
+    local int i;
+    local DHSpawnPoint SP;
+    local DHObjective O;
+    local byte bIsActive;
+
+    for (i = 0; i < DHNoArtyVolumes.Length; ++i)
+    {
+        SP = DHSpawnPoint(DHNoArtyVolumes[i].AssociatedActor);
+        O = DHObjective(DHNoArtyVolumes[i].AssociatedActor);
+
+        bIsActive = 0;
+
+        if (SP != none)
+        {
+            if (SP.IsActive())
+            {
+                bIsActive = 1;
+            }
+        }
+        else if (O != none)
+        {
+            if (O.IsActive())
+            {
+                bIsActive = 1;
+            }
+        }
+        else
+        {
+            bIsActive = 1;
+        }
+
+        DHNoArtyVolumeIsActives[i] = bIsActive;
+    }
+}
+
 simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
 {
     if (MineVolume == none || MineVolume.Index < 0 || MineVolume.Index >= MINE_VOLUMES_MAX)
@@ -2063,27 +2153,76 @@ simulated function bool IsMineVolumeActive(DHMineVolume MineVolume)
     return DHMineVolumeIsActives[MineVolume.Index] == 1;
 }
 
-simulated function int GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
+simulated function bool IsNoArtyVolumeActive(RONoArtyVolume NoArtyVolume)
 {
-    local int i, Count;
+    local int i;
+
+    for (i = 0; i < DHNoArtyVolumes.Length; ++i)
+    {
+        if (NoArtyVolume == DHNoArtyVolumes[i])
+        {
+            return DHNoArtyVolumeIsActives[i] == 1;
+        }
+    }
+
+    return false;
+}
+
+simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportCountRemaining(int TeamIndex)
+{
+    local int i, ArtilleryCount, ParadropCount, AirstrikesCount;
     local DH_LevelInfo LI;
+    local array<SAvailableArtilleryInfoEntry> Result;
+    local SAvailableArtilleryInfoEntry Entry;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (LI == none)
     {
-        return 0;
+        return Result;
     }
 
     for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
     {
         if (LI.ArtilleryTypes[i].TeamIndex == TeamIndex && ArtilleryTypeInfos[i].bIsAvailable)
         {
-            Count += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+            switch(LI.ArtilleryTypes[i].ArtilleryClass.default.ArtilleryType)
+            {
+                case ArtyType_Barrage:
+                    ArtilleryCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
+                case ArtyType_Paradrop:
+                    ParadropCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
+                case ArtyType_Airstrikes:
+                    AirstrikesCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+                    break;
+            }
         }
     }
 
-    return Count;
+    if (ArtilleryCount > 0)
+    {
+        Entry.Type = ArtyType_Barrage;
+        Entry.Count = ArtilleryCount;
+        Result[Result.Length] = Entry;
+    }
+
+    if (ParadropCount > 0)
+    {
+        Entry.Type = ArtyType_Paradrop;
+        Entry.Count = ParadropCount;
+        Result[Result.Length] = Entry;
+    }
+
+    if (AirstrikesCount > 0)
+    {
+        Entry.Type = ArtyType_Airstrikes;
+        Entry.Count = AirstrikesCount;
+        Result[Result.Length] = Entry;
+    }
+
+    return Result;
 }
 
 defaultproperties

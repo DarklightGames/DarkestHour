@@ -16,31 +16,7 @@ function bool DHIsInNoArtyVolume(DHGameReplicationInfo GRI)
         // Prevent arty if we're in a no arty volume, unless it's linked to a spawn point/area that isn't active/current
         if (V.IsA('RONoArtyVolume'))
         {
-            if (DHSpawnPoint(V.AssociatedActor) != none)
-            {
-                if (IsActiveSpawnPoint(DHSpawnPoint(V.AssociatedActor)))
-                {
-                    return true;
-                }
-            }
-            else if (RONoArtyVolume(V).AssociatedSpawn != none)
-            {
-                if (IsCurrentSpawnArea(RONoArtyVolume(V).AssociatedSpawn))
-                {
-                    return true;
-                }
-            }
-            else if (DHObjective(V.AssociatedActor) != none)
-            {
-                if (DHObjective(V.AssociatedActor).IsActive())
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
+            return GRI.IsNoArtyVolumeActive(RONoArtyVolume(V));
         }
         // Prevent arty if we're in an active mine volume that is set to also function as a no arty volume
         else if (V.IsA('DHMineVolume'))

@@ -455,28 +455,44 @@ function ResetSquadInfo()
     }
 
     for (i = 0; i < arraycount(AxisAssistantSquadLeaderMemberIndices); ++i)
+    {
         AxisAssistantSquadLeaderMemberIndices[i] = -1;
+    }
 
     for (i = 0; i < arraycount(AxisNames); ++i)
+    {
         AxisNames[i] = "";
+    }
 
     for (i = 0; i < arraycount(AxisLocked); ++i)
+    {
         AxisLocked[i] = 0;
+    }
 
     for (i = 0; i < arraycount(AxisNextRallyPointTimes); ++i)
+    {
         AxisNextRallyPointTimes[i] = 0.0;
+    }
 
     for (i = 0; i < arraycount(AlliesAssistantSquadLeaderMemberIndices); ++i)
+    {
         AlliesAssistantSquadLeaderMemberIndices[i] = -1;
+    }
 
     for (i = 0; i < arraycount(AlliesNames); ++i)
+    {
         AlliesNames[i] = "";
+    }
 
     for (i = 0; i < arraycount(AlliesLocked); ++i)
+    {
         AlliesLocked[i] = 0;
+    }
 
     for (i = 0; i < arraycount(AlliesNextRallyPointTimes); ++i)
+    {
         AlliesNextRallyPointTimes[i] = 0.0;
+    }
 
     SquadBans.Length = 0;
     SquadLeaderDraws.Length = 0;

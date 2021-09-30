@@ -38,8 +38,8 @@ defaultproperties
     RangeTable(21)=(Pitch=525,Range=1850)
 
     AngleUnit="mils"
-    
-    NumberOfPitchSegments = 8;
+
+    NumberOfPitchSegments=8
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
@@ -50,8 +50,8 @@ defaultproperties
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
-    
-    NumberOfYawSegments = 4;
+
+    NumberOfYawSegments=4
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)

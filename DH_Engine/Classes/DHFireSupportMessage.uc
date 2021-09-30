@@ -5,10 +5,12 @@
 
 class DHFireSupportMessage extends ROCriticalMessage;
 
-var localized string RequestConfirmedText;
-var localized string ArtilleryRequestingLocked;
+var localized string OnMapArtilleryRequestConfirmedText;
+var localized string OffMapArtilleryRequestConfirmedText;
+var localized string OnMapArtilleryRequestingLocked;
 var localized string RadiomanNotification;
 var localized string ArtilleryOperatorNotification;
+var localized string ErrorText;
 
 static function string GetString(
     optional int Switch,
@@ -17,13 +19,13 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    local class<DHMapMarker>              MapMarkerClass;
-    local int                             Seconds;
-    local DHGameReplicationInfo           GRI;
-    local DHPlayerReplicationInfo         PRI;
-    local DHSquadReplicationInfo          SRI;
-    local DHPlayer                        PC;
-    local string                          SquadName;
+    local class<DHMapMarker>      MapMarkerClass;
+    local DHPlayerReplicationInfo PRI_1;
+    local DHPlayerReplicationInfo PRI_2;
+    local DHSquadReplicationInfo  SRI;
+    local DHPlayer                PC;
+    local string                  SquadName;
+    local UInteger                LockExpiry;
 
     switch (Switch)
     {
@@ -31,37 +33,46 @@ static function string GetString(
             // Location has been marked.
             MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none
-              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+            if (MapMarkerClass != none)
             {
-                return default.RequestConfirmedText;
+                switch (MapMarkerClass.default.Type)
+                {
+                    case MT_OffMapArtilleryRequest:
+                        return default.OffMapArtilleryRequestConfirmedText;
+                    case MT_OnMapArtilleryRequest:
+                        return default.OnMapArtilleryRequestConfirmedText;
+                }
             }
 
             break;
         case 1:
             // You cannot do another fire support request for another {seconds} seconds.
-            PC = DHPlayer(OptionalObject);
+            LockExpiry = UInteger(OptionalObject);
 
-            if (PC != none && PC.GameReplicationInfo != none)
+            if (LockExpiry != none)
             {
-                GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-                Seconds = PC.ArtilleryRequestsUnlockTime - GRI.ElapsedTime;
-                return Repl(default.ArtilleryRequestingLocked, "{seconds}", Seconds);
+                return Repl(default.OnMapArtilleryRequestingLocked, "{seconds}", LockExpiry.Value);
             }
 
             break;
         case 2:
             // {squad} squad leader has marked a target for artillery barrage.
             // off-map fire support (called by radio)
-            PC = DHPlayer(OptionalObject);                // radioman
-            PRI = DHPlayerReplicationInfo(RelatedPRI_2);  // artillery spotter
+            PRI_1 = DHPlayerReplicationInfo(RelatedPRI_1); // artillery spotter
+            PRI_2 = DHPlayerReplicationInfo(RelatedPRI_2); // radioman
 
-            if (PRI != none && PC != none)
+            if (PRI_1 != none && PRI_2 != none)
             {
-                SRI = PC.SquadReplicationInfo;
-                SquadName = SRI.GetSquadName(PRI.Team.TeamIndex, PRI.SquadIndex);
-                return Repl(default.RadiomanNotification, "{squad}", SquadName);
+                PC = DHPlayer(PRI_2.Owner);
+                if(PC != none)
+                {
+                    SRI = PC.SquadReplicationInfo;
+                    if(SRI != none)
+                    {
+                        SquadName = SRI.GetSquadName(PRI_1.Team.TeamIndex, PRI_1.SquadIndex);
+                        return Repl(default.RadiomanNotification, "{squad}", SquadName);
+                    }
+                }
             }
 
             break;
@@ -70,13 +81,16 @@ static function string GetString(
             // on-map fire support (mortars/Priests/LeIGs etc.)
             MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none
-              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+            if (MapMarkerClass != none)
             {
                 return Repl(default.ArtilleryOperatorNotification, "{type}", MapMarkerClass.default.MarkerName);
             }
 
+            break;
+        case 4:
+            return default.ErrorText;
+            break;
+        default:
             break;
     }
 
@@ -85,9 +99,11 @@ static function string GetString(
 
 defaultproperties
 {
-    RequestConfirmedText="Fire support request has been marked."
-    ArtilleryRequestingLocked="You cannot mark another fire support request for another {seconds} seconds."
+    OnMapArtilleryRequestConfirmedText="Requested on-map fire support."
+    OffMapArtilleryRequestConfirmedText="Marked an off-map support target."
+    OnMapArtilleryRequestingLocked="You cannot place another on-map fire support mark for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
+    ErrorText="Could not place fire support marker."
 }
 

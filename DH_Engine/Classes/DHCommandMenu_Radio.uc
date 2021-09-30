@@ -62,12 +62,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     if (Error == ERROR_None)
     {
         ORI.InfoColor = class'UColor'.default.White;
-        ORI.InfoText = default.AvailableText @ "(" $ Interaction.GRI.ArtilleryTypeInfos[Index].Limit - Interaction.GRI.ArtilleryTypeInfos[Index].UsedCount $ ")";
+        ORI.InfoText[0] = default.AvailableText @ "(" $ Interaction.GRI.ArtilleryTypeInfos[Index].Limit - Interaction.GRI.ArtilleryTypeInfos[Index].UsedCount $ ")";
     }
     else if (Error == ERROR_Cancellable)
     {
         ORI.InfoColor = class'UColor'.default.Yellow;
-        ORI.InfoText = default.CancelText;
+        ORI.InfoText[0] = default.CancelText;
     }
     else
     {
@@ -77,24 +77,24 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         {
             case ERROR_Exhausted:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.ExhaustedText;
+                ORI.InfoText[0] = default.ExhaustedText;
                 break;
             case ERROR_Unqualified:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.UnqualifiedText;
+                ORI.InfoText[0] = default.UnqualifiedText;
                 break;
             case ERROR_Cooldown:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
                 CooldownTimeSeconds = Interaction.GRI.ArtilleryTypeInfos[Index].NextConfirmElapsedTime - Interaction.GRI.ElapsedTime;
-                ORI.InfoText = class'TimeSpan'.static.ToString(CooldownTimeSeconds);
+                ORI.InfoText[0] = class'TimeSpan'.static.ToString(CooldownTimeSeconds);
                 break;
             case ERROR_Ongoing:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
-                ORI.InfoText = default.OngoingText;
+                ORI.InfoText[0] = default.OngoingText;
                 break;
             default:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.UnavailableText;
+                ORI.InfoText[0] = default.UnavailableText;
                 break;
         }
     }

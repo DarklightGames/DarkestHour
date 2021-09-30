@@ -36,7 +36,7 @@ defaultproperties
     PitchScaleStep=0.5
     PitchDecimalsTable=1
 
-    NumberOfPitchSegments = 6;
+    NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
@@ -47,8 +47,8 @@ defaultproperties
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
-    
-    NumberOfYawSegments = 4;
+
+    NumberOfYawSegments=4
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)

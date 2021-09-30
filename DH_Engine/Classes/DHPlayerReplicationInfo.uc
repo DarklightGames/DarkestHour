@@ -15,6 +15,19 @@ enum EPatronTier
     PATRON_Gold
 };
 
+enum ERoleSelector
+{
+    ERS_ALL,
+    ERS_SL,
+    ERS_ASL,
+    ERS_SL_OR_ASL,
+    ERS_ARTILLERY_OPERATOR,
+    ERS_ARTILLERY_SPOTTER,
+    ERS_RADIOMAN,
+    ERS_ADMIN,
+    ERS_PATRON
+};
+
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 
@@ -171,6 +184,33 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
         Canvas.SetPos(4.0, YPos); // bug was here, as it was setting Y draw position to YL not YPos
         Canvas.DrawText("     bIsSpec:" $ bIsSpectator @ "OnlySpec:" $ bOnlySpectator @ "Waiting:" $ bWaitingPlayer @ "Ready:" $ bReadyToPlay @ "OutOfLives:" $ bOutOfLives);
     }
+}
+
+simulated function bool CheckRole(ERoleSelector RoleSelector)
+{
+    switch (RoleSelector)
+    {
+        case ERS_ALL:
+            return true;
+        case ERS_SL:
+            return IsSL();
+        case ERS_ASL:
+            return IsASL();
+        case ERS_ARTILLERY_SPOTTER:
+            return IsArtillerySpotter();
+        case ERS_ARTILLERY_OPERATOR:
+            return IsArtilleryOperator();
+        case ERS_RADIOMAN:
+            return IsRadioman();
+        case ERS_ADMIN:
+            return IsAdmin();
+        case ERS_PATRON:
+            return IsPatron();
+        default:
+            return false;
+    }
+
+    return false;
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round

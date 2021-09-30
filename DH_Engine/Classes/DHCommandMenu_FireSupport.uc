@@ -4,21 +4,18 @@
 //==============================================================================
 
 class DHCommandMenu_FireSupport extends DHCommandMenu
-    dependson(DHFireSupport);
-
-// TODO: this should belong in the marker class, not here
-var color DisabledColor;
-var color EnabledColor;
+    dependson(DHFireSupport)
+    dependson(DHGameReplicationInfo);
 
 var localized string UnavailableText;
 var localized string InvalidTargetText;
-var localized string AvailableText;
+var localized string OffMapSupportExhaustedText;
+var localized string AvailableArtilleryText;
+var localized string AvailableParadropsText;
+var localized string AvailableAirstrikesText;
 
-var struct SFireSupportState
-{
-    var DHFireSupport.EFireSupportError Error;
-    var vector HitLocation;
-} FireSupportState;
+var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
+var bool bIsArtilleryTargetValid;
 
 function OnSelect(int Index, vector Location)
 {
@@ -40,7 +37,7 @@ function OnSelect(int Index, vector Location)
 
     if (PC.IsArtilleryTargetValid(Location))
     {
-        PC.AddFireSupportRequest(MapLocation, Location, class<DHMapMarker>(Options[Index].OptionalObject));
+        PC.AddMarker(class<DHMapMarker>(Options[Index].OptionalObject), MapLocation.X, MapLocation.Y, Location);
     }
     else
     {
@@ -51,52 +48,77 @@ function OnSelect(int Index, vector Location)
     Interaction.Hide();
 }
 
-function OnPush()
+function class<DHMapMarker> GetMapMarkerClass(int Index)
 {
-    local DHPlayer PC;
-
-    PC = GetPlayerController();
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    if (PC.SpottingMarker != none)
-    {
-        PC.SpottingMarker.Destroy();
-    }
-
-    PC.SpottingMarker = PC.Spawn(class'DHSpottingMarker', PC);
-}
-
-function OnPop()
-{
-    local DHPlayer PC;
-
-    PC = GetPlayerController();
-
-    if (PC != none && PC.SpottingMarker != none)
-    {
-        PC.SpottingMarker.Destroy();
-    }
-}
-
-function class<DHMapMarker> GetSelectedMapMarkerClass()
-{
-    if (Interaction.SelectedIndex == -1)
+    if (Index < 0 || Index > Options.Length)
     {
         return none;
     }
 
-    return class<DHMapMarker>(Options[Interaction.SelectedIndex].OptionalObject);
+    return class<DHMapMarker>(Options[Index].OptionalObject);
+}
+
+function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<DHMapMarker> FireSupportRequestClass)
+{
+    local int SquadMembersCount;
+    local DHGameReplicationInfo GRI;
+    local DHSquadReplicationInfo SRI;
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    SRI = PC.SquadReplicationInfo;
+
+    if (GRI == none || SRI == none || FireSupportRequestClass == none
+      || !(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+        || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
+    {
+        return FSE_Fatal;
+    }
+
+    if (!PC.IsArtillerySpotter())
+    {
+        return FSE_InsufficientPrivileges;
+    }
+
+    switch (FireSupportRequestClass.default.Type)
+    {
+        case MT_OffMapArtilleryRequest:
+            if (GRI.bOffMapArtilleryEnabled[PC.GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+
+            AvailableOffMapSupportArray = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
+
+            if (AvailableOffMapSupportArray.Length == 0)
+            {
+                return FSE_Exhausted;
+            }
+            break;
+        case MT_OnMapArtilleryRequest:
+            if (GRI.bOnMapArtilleryEnabled[PC.GetTeamNum()] == 0)
+            {
+                return FSE_Disabled;
+            }
+            break;
+        default:
+            Warn("Unknown artillery type class passed to GetFireSupportError");
+            return FSE_Fatal;
+    }
+
+    SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+
+    if (SquadMembersCount < FireSupportRequestClass.default.RequiredSquadMembers)
+    {
+        return FSE_NotEnoughSquadmates;
+    }
+
+    return FSE_None;
 }
 
 function Tick()
 {
     local DHPlayer                PC;
     local vector                  HitLocation, HitNormal;
-    local Color                   C;
     local DHGameReplicationInfo   GRI;
 
     PC = GetPlayerController();
@@ -121,32 +143,44 @@ function Tick()
         return;
     }
 
-    PC.GetEyeTraceLocation(HitLocation, HitNormal);
-
-    FireSupportState.Error = PC.GetFireSupportErrorWithLocation(GetSelectedMapMarkerClass(), HitLocation);
-    FireSupportState.HitLocation = HitLocation;
-
-    if (FireSupportState.Error == FSE_None)
+    if (PC.SpottingMarker != none)
     {
-        C = default.EnabledColor;
+        PC.GetEyeTraceLocation(HitLocation, HitNormal);
+        PC.SpottingMarker.SetLocation(HitLocation);
+        PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
+        bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
+
+        if (bIsArtilleryTargetValid)
+        {
+            PC.SpottingMarker.SetColor(default.SpottingMarkerEnabledColor);
+        }
+        else
+        {
+            PC.SpottingMarker.SetColor(default.SpottingMarkerDisabledColor);
+        }
     }
     else
     {
-        C = default.DisabledColor;
+        bIsArtilleryTargetValid = false;
     }
-
-    PC.SpottingMarker.SetColor(C);
-    PC.SpottingMarker.SetLocation(HitLocation);
-    PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
 }
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
-    local class<DHMapMarker>              FireSupportRequestClass;
-    local DHSquadReplicationInfo          SRI;
-    local DHPlayer                        PC;
-    local int                             SquadMembersCount, AvailableCount;
-    local DHGameReplicationInfo           GRI;
+    local class<DHMapMarker>     FireSupportRequestClass;
+    local DHSquadReplicationInfo SRI;
+    local DHPlayer               PC;
+    local int                    i, SquadMembersCount;
+    local int                    AvailableBarrages, AvailableParadrops, AvailableAirstrikes;
+    local DHGameReplicationInfo  GRI;
+
+    if (!bIsArtilleryTargetValid)
+    {
+        ORI.InfoColor = class'UColor'.default.Red;
+        ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+        ORI.InfoText[0] = default.InvalidTargetText;
+        return;
+    }
 
     FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
@@ -158,7 +192,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         return;
     }
 
-    if(!(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
+    if (!(FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest
       || FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest))
     {
         Warn("Unknown marker type passed to DHCommandMenu_FireSupport.GetOptionRenderInfo():" @ FireSupportRequestClass);
@@ -167,31 +201,61 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     ORI.OptionName = FireSupportRequestClass.default.MarkerName;
 
-    switch (FireSupportState.Error)
+    switch (GetFireSupportError(PC, FireSupportRequestClass))
     {
         case FSE_None:
             if (FireSupportRequestClass.default.Type == MT_OffMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                AvailableCount = GRI.GetTeamOffMapFireSupportCountRemaining(PC.GetTeamNum());
-                ORI.InfoText = Repl(default.AvailableText, "{0}", AvailableCount);
+
+                for (i = 0; i < AvailableOffMapSupportArray.Length; ++i)
+                {
+                    switch(AvailableOffMapSupportArray[i].Type)
+                    {
+                        case ArtyType_Barrage:
+                          AvailableBarrages = AvailableOffMapSupportArray[i].Count;
+                          break;
+                        case ArtyType_Paradrop:
+                          AvailableParadrops = AvailableOffMapSupportArray[i].Count;
+                          break;
+                        case ArtyType_Airstrikes:
+                          AvailableAirstrikes = AvailableOffMapSupportArray[i].Count;
+                          break;
+                    }
+                }
+
+                i = 0;
+
+                if (AvailableBarrages > 0)
+                {
+                    ORI.InfoText[i++] = Repl(default.AvailableArtilleryText, "{0}", AvailableBarrages);
+                }
+
+                if (AvailableParadrops > 0)
+                {
+                    ORI.InfoText[i++] = Repl(default.AvailableParadropsText, "{0}", AvailableParadrops);
+                }
+
+                if (AvailableAirstrikes > 0)
+                {
+                    ORI.InfoText[i++] = Repl(default.AvailableAirstrikesText, "{0}", AvailableAirstrikes);
+                }
             }
             else if (FireSupportRequestClass.default.Type == MT_OnMapArtilleryRequest)
             {
                 ORI.InfoColor = class'UColor'.default.White;
-                ORI.InfoText = Options[OptionIndex].SubjectText;
+                ORI.InfoText[0] = Options[OptionIndex].SubjectText;
             }
+            break;
+        case FSE_Exhausted:
+            ORI.InfoColor = class'UColor'.default.Red;
+            ORI.InfoText[0] = default.OffMapSupportExhaustedText;
             break;
         case FSE_NotEnoughSquadmates:
             SquadMembersCount = SRI.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-            ORI.InfoText = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
-            break;
-        case FSE_InvalidLocation:
-            ORI.InfoColor = class'UColor'.default.Red;
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-            ORI.InfoText = default.InvalidTargetText;
+            ORI.InfoText[0] = string(SquadMembersCount) @ "/" @ FireSupportRequestClass.default.RequiredSquadMembers;
             break;
         case FSE_InsufficientPrivileges:
         case FSE_Disabled:
@@ -199,39 +263,46 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         default:
             ORI.InfoColor = class'UColor'.default.Red;
             ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-            ORI.InfoText = default.UnavailableText;
+            ORI.InfoText[0] = default.UnavailableText;
             break;
     }
 }
 
 function bool IsOptionDisabled(int OptionIndex)
 {
-    local class<DHMapMarker>  FireSupportRequestClass;
     local DHPlayer            PC;
 
-    if (OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none)
+    if (OptionIndex < 0
+      || OptionIndex >= Options.Length
+      || Options[OptionIndex].OptionalObject == none
+      || !bIsArtilleryTargetValid)
     {
         return true;
     }
 
-    FireSupportRequestClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
 
-    return PC == none || PC.GetFireSupportError(FireSupportRequestClass) != FSE_None;
+    if (PC != none && PC.SpottingMarker != none)
+    {
+        return GetFireSupportError(PC, GetMapMarkerClass(OptionIndex)) != FSE_None;
+    }
+
+    return true;
 }
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_ArtilleryBarrage',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
+    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
     Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"
-    AvailableText="{0} available"
+    OffMapSupportExhaustedText="Exhausted"
+    AvailableArtilleryText="Artillery: {0}"
+    AvailableParadropsText="Paradrops: {0}"
+    AvailableAirstrikesText="Airstrikes: {0}"
 
     bShouldTick=true
-
-    DisabledColor=(B=0,G=0,R=255,A=255)
-    EnabledColor=(B=0,G=255,R=0,A=255)
+    bUsesSpottingMarker=true
 }

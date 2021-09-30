@@ -20,7 +20,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
         return "";
     }
 
-    if(PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
+    if (PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
     {
         return "Your fire support request";
     }
@@ -39,8 +39,6 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
 
         return SquadName @ "-" @ default.MarkerName @ "-" @ (Distance / 5) * 5 $ "m";
     }
-
-    return "";
 }
 
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -64,8 +62,6 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
     }
 
     return default.IconColor;
-
-    return default.ActivatedIconColor;
 }
 
 defaultproperties
@@ -77,11 +73,15 @@ defaultproperties
     GroupIndex=5
     LifetimeSeconds=120
     Type=MT_OnMapArtilleryRequest
-    OverwritingRule=UNIQUE
+    OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     RequiredSquadMembers=3
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
-    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanPlace(0)=ARTILLERY_SPOTTER
+    Cooldown=10
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
+    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=ERS_ARTILLERY_SPOTTER
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_ARTILLERY_OPERATOR,Message=class'DHFireSupportMessage',MessageIndex=3)
+    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedMessageIndex=0
 }

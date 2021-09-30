@@ -55,5 +55,6 @@ defaultproperties
     MenuName="Paratroopers"
     MenuIcon=Material'DH_InterfaceArt2_tex.Icons.paratroopers'
     LifeSpan=90
+    ArtilleryType=ArtyType_Paradrop
 }
 

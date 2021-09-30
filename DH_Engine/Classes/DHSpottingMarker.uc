@@ -66,4 +66,3 @@ defaultproperties
     bWorldGeometry=false
     bIsDisabled=true
 }
-
