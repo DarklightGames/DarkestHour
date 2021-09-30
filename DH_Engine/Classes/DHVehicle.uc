@@ -172,6 +172,7 @@ var     int                                     SupplyCost;             // The a
 
 // Construction
 var     vector                                  ConstructionPlacementOffset;
+var     Mesh                                    ConstructionBaseMesh;
 
 // Spawning
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from

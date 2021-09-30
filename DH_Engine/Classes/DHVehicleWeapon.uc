@@ -16,9 +16,16 @@ var     bool                bInitializedVehicleBase;          // done set up aft
 var     bool                bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
 
 // Turret/MG collision static mesh - new DHCollisionMeshActor allows us to use a collision static mesh with VehicleWeapon
-var     StaticMesh          CollisionStaticMesh;       // specify a valid CollisionStaticMesh in default props & collision static mesh is automatically used
-var     bool                bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
-var   DHCollisionMeshActor  CollisionMeshActor;        // reference to the spawned DHCollisionMeshActor
+struct SCollisionStaticMesh
+{
+    var StaticMesh CollisionStaticMesh;
+    var name AttachBone;    // If '', use YawBone.
+    var bool bWontStopBullet;
+    var bool bWontStopBlastDamage;
+};
+
+var     array<SCollisionStaticMesh> CollisionStaticMeshes;
+var     array<DHCollisionMeshActor> CollisionMeshActors;
 
 // Weapon fire
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
@@ -92,28 +99,40 @@ replication
 // Modified to attach any collision static mesh actor
 simulated function PostBeginPlay()
 {
-    local name AttachBone;
-
     super.PostBeginPlay();
 
-    if (CollisionStaticMesh != none)
+    AttachCollisionMeshes();
+}
+
+simulated function AttachCollisionMeshes()
+{
+    local name AttachBone;
+    local int i;
+    local DHCollisionMeshActor CMA;
+
+    for (i = 0; i < CollisionStaticMeshes.Length; ++i)
     {
         // Default is to attach to yaw bone, so col mesh turns sideways with the weapon
         // But there's an option to attach to pitch bone instead, so col mesh rotates up & down with the weapon, e.g. for gun mantlet
-        if (bAttachColMeshToPitchBone)
-        {
-            AttachBone = PitchBone;
-        }
-        else
+        if (CollisionStaticMeshes[i].AttachBone == '')
         {
             AttachBone = YawBone;
         }
-
-        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, AttachBone);
-
-        // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
-        if (CollisionMeshActor != none)
+        else
         {
+            AttachBone = CollisionStaticMeshes[i].AttachBone;
+        }
+
+        CMA = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMeshes[i].CollisionStaticMesh, AttachBone);
+
+        if (CMA != none)
+        {
+            CMA.bWontStopBullet = CollisionStaticMeshes[i].bWontStopBullet;
+            CMA.bWontStopBlastDamage = CollisionStaticMeshes[i].bWontStopBlastDamage;
+
+            CollisionMeshActors[CollisionMeshActors.Length] = CMA;
+
+            // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
             SetCollision(false, false);
             bBlockZeroExtentTraces = false;
             bBlockNonZeroExtentTraces = false;
@@ -937,10 +956,14 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.HighDetailOverlay);
     }
 
-    if (default.CollisionStaticMesh != none)
+    for (i = 0; i < default.CollisionStaticMeshes.Length; ++i)
     {
-        L.AddPrecacheStaticMesh(default.CollisionStaticMesh);
+        if (default.CollisionStaticMeshes[i].CollisionStaticMesh != none)
+        {
+            L.AddPrecacheStaticMesh(default.CollisionStaticMeshes[i].CollisionStaticMesh);
+        }
     }
+
 }
 
 // Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
@@ -962,6 +985,8 @@ simulated function UpdatePrecacheMaterials()
 // Modified to add projectile classes & collision mesh
 simulated function UpdatePrecacheStaticMeshes()
 {
+    local int i;
+
     super.UpdatePrecacheStaticMeshes();
 
     if (PrimaryProjectileClass != none)
@@ -974,9 +999,12 @@ simulated function UpdatePrecacheStaticMeshes()
         Level.AddPrecacheStaticMesh(SecondaryProjectileClass.default.StaticMesh);
     }
 
-    if (CollisionStaticMesh != none)
+    for (i = 0; i < CollisionStaticMeshes.Length; ++i)
     {
-        Level.AddPrecacheStaticMesh(CollisionStaticMesh);
+        if (CollisionStaticMeshes[i].CollisionStaticMesh != none)
+        {
+            Level.AddPrecacheStaticMesh(CollisionStaticMeshes[i].CollisionStaticMesh);
+        }
     }
 }
 
@@ -1145,11 +1173,16 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
 // Modified to add extra stuff
 simulated function DestroyEffects()
 {
+    local int i;
+
     super.DestroyEffects();
 
-    if (CollisionMeshActor != none)
+    for (i = 0; i < CollisionMeshActors.Length; ++i)
     {
-        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
+        if (CollisionMeshActors[i] != none)
+        {
+            CollisionMeshActors[i].Destroy(); // not actually an effect, but convenient to add here
+        }
     }
 
     if (TurretFireEffect != none)
@@ -1242,6 +1275,6 @@ defaultproperties
     FireIntervalAimLock=0.0 // also means AimLockReleaseTime is deprecated
     bShowAimCrosshair=false
     bInheritVelocity=false
-    
+
     ResupplyInterval=2.5
 }

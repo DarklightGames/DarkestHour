@@ -10,13 +10,20 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
-            // TODO: add artillery for the Allies
+            switch (Context.LevelInfo.AlliedNation)
+            {
+                case NATION_USA:
+                    return class'DH_Guns.DH_M116Gun';
+                default:
+                    break;
+            }
             break;
         case AXIS_TEAM_INDEX:
             return class'DH_Guns.DH_LeIG18Gun';
         default:
             break;
     }
+
     return none;
 }
 
@@ -26,5 +33,6 @@ defaultproperties
     Stages(0)=(Progress=0)
     ProgressMax=9
     bIsArtillery=true
+    SupplyCost=1750
 }
 

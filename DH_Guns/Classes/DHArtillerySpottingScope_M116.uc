@@ -3,35 +3,44 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_AxisMortar extends DHArtillerySpottingScope
+class DHArtillerySpottingScope_M116 extends DHArtillerySpottingScope
     abstract;
 
 defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
 
-    RangeTable(0)=(Range=50,Pitch=86.5)
-    RangeTable(1)=(Range=75,Pitch=85.0)
-    RangeTable(2)=(Range=100,Pitch=83.0)
-    RangeTable(3)=(Range=125,Pitch=81.0)
-    RangeTable(4)=(Range=150,Pitch=79.5)
-    RangeTable(5)=(Range=175,Pitch=77.5)
-    RangeTable(6)=(Range=200,Pitch=75.5)
-    RangeTable(7)=(Range=225,Pitch=73.5)
-    RangeTable(8)=(Range=250,Pitch=71.0)
-    RangeTable(9)=(Range=275,Pitch=69.0)
-    RangeTable(10)=(Range=300,Pitch=66.5)
-    RangeTable(11)=(Range=325,Pitch=63.5)
-    RangeTable(12)=(Range=350,Pitch=60.5)
-    RangeTable(13)=(Range=375,Pitch=57.0)
-    RangeTable(14)=(Range=400,Pitch=51.0)
+    YawScaleStep=10.0
+    PitchScaleStep=5.0
 
-    YawScaleStep=5.0
-    PitchScaleStep=0.5
-    PitchDecimalsTable=1
+    // to do: confirm those values are correct!
+    RangeTable(0)=(Pitch=30,Range=100)
+    RangeTable(1)=(Pitch=55,Range=150)
+    RangeTable(2)=(Pitch=75,Range=200)
+    RangeTable(3)=(Pitch=90,Range=250)
+    RangeTable(4)=(Pitch=115,Range=300)
+    RangeTable(5)=(Pitch=130,Range=350)
+    RangeTable(6)=(Pitch=150,Range=400)
+    RangeTable(7)=(Pitch=175,Range=450)
+    RangeTable(8)=(Pitch=195,Range=500)
+    RangeTable(9)=(Pitch=215,Range=550)
+    RangeTable(10)=(Pitch=235,Range=600)
+    RangeTable(11)=(Pitch=255,Range=650)
+    RangeTable(12)=(Pitch=280,Range=700)
+    RangeTable(13)=(Pitch=300,Range=750)
+    RangeTable(14)=(Pitch=325,Range=800)
+    RangeTable(15)=(Pitch=350,Range=850)
+    RangeTable(16)=(Pitch=380,Range=900)
+    RangeTable(17)=(Pitch=410,Range=950)
+    RangeTable(18)=(Pitch=435,Range=1000)
+    RangeTable(19)=(Pitch=465,Range=1050)
+    RangeTable(20)=(Pitch=500,Range=1100)
+    RangeTable(21)=(Pitch=545,Range=1150)
+    RangeTable(22)=(Pitch=595,Range=1200)
 
-    PitchIndicatorLength=200.0
-    NumberOfPitchSegments=4
+    AngleUnit="mils"
+
+    NumberOfPitchSegments = 6;
     PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
@@ -42,8 +51,8 @@ defaultproperties
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
-
-    NumberOfYawSegments=2
+    
+    NumberOfYawSegments = 4;
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)
@@ -55,7 +64,6 @@ defaultproperties
     YawSegmentSchema(8)=(Shape=ShortTick)
     YawSegmentSchema(9)=(Shape=ShortTick)
 
-    YawIndicatorLength=150.0
-    YawDialRoundingConstant=0.1
+    YawIndicatorLength=200.0
+    YawDialRoundingConstant=0.125
 }
-
