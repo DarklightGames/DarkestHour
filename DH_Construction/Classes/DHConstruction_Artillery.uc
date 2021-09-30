@@ -17,6 +17,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                 default:
                     break;
             }
+            break;
         case AXIS_TEAM_INDEX:
             return class'DH_Guns.DH_LeIG18Gun';
         default:
