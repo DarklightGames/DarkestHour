@@ -22,9 +22,9 @@ struct OptionRenderInfo
 
 struct Option
 {
-    var localized string ActionText;    // TODO: rename Action/Subject to something more understandable
-    var localized string SubjectText;
-    var localized string DescriptionText;
+    var string ActionText;    // TODO: rename Action/Subject to something more understandable
+    var string SubjectText;
+    var string DescriptionText;
     var Material ActionIcon;
     var Material Material;
     var Object OptionalObject;
