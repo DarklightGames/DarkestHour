@@ -2452,8 +2452,8 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     KilledPRI = Killed.PlayerReplicationInfo;
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    // (If message mode is OnDeath or Personal) AND DamageType is not type DHInstantObituaryDamageTypes
-    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
+    // (If message mode is OnDeath or Personal) or DamageType is DHArtilleryDamageType
+    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) || class<DHArtilleryDamageType>(DamageType) == none)
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
@@ -2471,7 +2471,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         return;
     }
 
-    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a DHInstantObituaryDamageTypes
+    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a spawn kill (the remaining DHInstantObituaryDamageTypes)
     // Loop through all controllers & DM each human player
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
