@@ -18,7 +18,14 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
             switch (Context.LevelInfo.AlliedNation)
             {
                 case NATION_USA:
-                    return class'DH_Guns.DH_M116Gun';
+                    if (Context.LevelInfo.Season == SEASON_Winter)
+                    {
+                        return class'DH_Guns.DH_M116Gun_Winter';
+                    }
+                    else
+                    {
+                        return class'DH_Guns.DH_M116Gun';
+                    }
                 default:
                     break;
             }
@@ -40,4 +47,3 @@ defaultproperties
     bIsArtillery=true
     SupplyCost=1750
 }
-
