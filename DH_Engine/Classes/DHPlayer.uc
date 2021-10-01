@@ -1067,7 +1067,7 @@ simulated function bool IsInArtilleryVehicle()
 
     if (V != none)
     {
-        return V.bIsArtilleryVehicle && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(Pawn);
+        return V.bIsArtilleryVehicle;
     }
 
     return false;
@@ -2153,7 +2153,7 @@ simulated function bool IsArtilleryOperator()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return RI != none && RI.bCanUseMortars || IsInArtilleryVehicle();
+    return (RI != none && RI.bCanUseMortars) || IsInArtilleryVehicle();
 }
 
 simulated function bool IsArtillerySpotter()
@@ -7402,7 +7402,7 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
         WorldLocation = L;
     }
 
-    if(MarkerClass.default.Cooldown > 0)
+    if (MarkerClass.default.Cooldown > 0)
     {
         MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
 

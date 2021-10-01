@@ -10,6 +10,6 @@ defaultproperties
     bIsWinterVariant=true
     Skins(0)=Texture'DH_M116_tex.M116.M116_body_winter'
     CannonSkins(0)=Texture'DH_M116_tex.M116.M116_body_winter'
-    DestroyedMeshSkins(0)=Material'DH_M116_tex.destroyed.M116_body_winter_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_M116_tex.destroyed.M116_body_winter_destroyed_fb'
 }
 

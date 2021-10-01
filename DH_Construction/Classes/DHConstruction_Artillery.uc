@@ -10,6 +10,11 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     switch (Context.TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
+            if (Context.LevelInfo == none)
+            {
+                break;
+            }
+
             switch (Context.LevelInfo.AlliedNation)
             {
                 case NATION_USA:

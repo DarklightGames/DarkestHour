@@ -3,13 +3,6 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-// [ ] make specific round types
-// [ ] calibrate range table & dials
-// [ ] destroyed meshes
-
-// branch in general:
-// [ ] make RMB the thing that activates the map for use
-
 class DH_M116Cannon extends DHATGunCannon;
 
 defaultproperties
@@ -31,14 +24,14 @@ defaultproperties
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
 
     // Turret movement
-    ManualRotationsPerSecond=0.05
+    ManualRotationsPerSecond=0.015625
     MaxPositiveYaw=546.0
     MaxNegativeYaw=-546.0
     YawStartConstraint=-546.0
     YawEndConstraint=546.0
     CustomPitchUpLimit=8192 // 45 degrees
     CustomPitchDownLimit=65358 // -5 degrees
-    RotationsPerSecond=0.002
+    RotationsPerSecond=0.015625
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
@@ -47,14 +40,16 @@ defaultproperties
     nProjectileDescriptions(0)="Igr.38 Sprgr"   // TOD: get names of this
     nProjectileDescriptions(1)="Igr.38 HL/A"
 
-    ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'   // TODO: replace with m116 versions
-    PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
+    ProjectileClass=class'DH_Guns.DH_M116CannonShellHE'   // TODO: replace with m116 versions
+    PrimaryProjectileClass=class'DH_Guns.DH_M116CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=60  // TODO: REPLACE
-    InitialSecondaryAmmo=25  // TODO: REPLACE
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
-    SecondarySpread=0.00125  // TODO: REPLACE
+    InitialPrimaryAmmo=30  // TODO: REPLACE
+    InitialSecondaryAmmo=5  // TODO: REPLACE
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
+
+    Spread=0.020
+    SecondarySpread=0.00125
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
