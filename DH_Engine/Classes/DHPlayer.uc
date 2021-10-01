@@ -2216,9 +2216,9 @@ function bool IsPositionOfArtillery(vector Position)
 
     for (i = 0; i < arraycount(GRI.DHArtillery); i++)
     {
-        if (GRI.DHArtillery[i] != none
-          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
-          && !GRI.DHArtillery[i].IsParadrop())
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
+            !GRI.DHArtillery[i].IsParadrop())
         {
             // to do: refactor checking if GRI.DHArtillery[i].Location == Position
             // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
@@ -2240,9 +2240,9 @@ function bool IsPositionOfParadrop(vector Position)
 
     for (i = 0; i < arraycount(GRI.DHArtillery); i++)
     {
-        if (GRI.DHArtillery[i] != none
-          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum()
-          && GRI.DHArtillery[i].IsParadrop())
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
+            GRI.DHArtillery[i].IsParadrop())
         {
             if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
@@ -2265,8 +2265,8 @@ function int GetActiveOffMapSupportNumber()
     Counter = 0;
     for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
     {
-        if (GRI.DHArtillery[i] != none
-          && GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
         {
             Counter++;
         }
@@ -2282,8 +2282,11 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
     RI = DHRoleInfo(GetRoleInfo());
 
     // Only allow if requesting player is a leader role or if he's a machine gunner or mortar operator requesting resupply
-    if (RI != none && (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars)))
-        && ROGameReplicationInfo(GameReplicationInfo) != none && PRI != none && PRI.Team != none)
+    if (RI != none &&
+        (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars))) &&
+        ROGameReplicationInfo(GameReplicationInfo) != none &&
+        PRI != none &&
+        PRI.Team != none)
     {
         ROGameReplicationInfo(GameReplicationInfo).AddHelpRequest(PRI, ObjID, RequestType, RequestLocation); // add to team's HelpRequests array
 

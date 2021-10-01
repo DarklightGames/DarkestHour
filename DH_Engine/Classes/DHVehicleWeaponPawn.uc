@@ -202,8 +202,8 @@ simulated function DrawBinocsOverlay(Canvas C)
         TextureSize = float(BinocsOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / BinocsOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);
+        TileStartPosU = (TextureSize - TilePixelWidth) * 0.5;
+        TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);

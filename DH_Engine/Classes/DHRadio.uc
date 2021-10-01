@@ -125,8 +125,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
-    if (PC.SavedArtilleryCoords == vect(0, 0, 0)
-      && PC.GetActiveOffMapSupportNumber() == 0)
+    if (PC.SavedArtilleryCoords == vect(0, 0, 0) && PC.GetActiveOffMapSupportNumber() == 0)
     {
         return ERROR_NoTarget;
     }
@@ -458,4 +457,3 @@ defaultproperties
     MapIconMaterial=none    // TODO: fill this in
     bShouldShowOnSituationMap=true
 }
-

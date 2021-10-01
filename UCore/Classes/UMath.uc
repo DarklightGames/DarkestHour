@@ -54,5 +54,5 @@ static final function float FlooredDivision(float Value, float Divisor)
 
 static final function float Floor(float Value, float Divisor)
 {
-    return Value - Value%Divisor;
+    return Value - Value % Divisor;
 }

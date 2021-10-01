@@ -87,7 +87,7 @@ function SetViewport(vector Origin, int ZoomLevel)
 
 function vector GetViewportOrigin()
 {
-    return (Viewport.Min + Viewport.Max) / 2.0;
+    return (Viewport.Min + Viewport.Max) * 0.5;
 }
 
 function UpdateSpawnPointPositions()
