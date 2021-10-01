@@ -178,27 +178,29 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
     local int MessageIndex;
 
     // Handle cooldown
-
-    if(Marker.MapMarkerClass.default.Cooldown > 0)
+    if (Marker.MapMarkerClass.default.Cooldown > 0)
     {
         PC.LockMapMarkerPlacing(Marker.MapMarkerClass);
     }
 
     // Broadcast notifications
-
     for (i = 0; i < default.OnPlacedExternalNotifications.Length; ++i)
     {
         RoleSelector = default.OnPlacedExternalNotifications[i].RoleSelector;
         Message = default.OnPlacedExternalNotifications[i].Message;
         MessageIndex = default.OnPlacedExternalNotifications[i].MessageIndex;
+
         PC.ServerNotifyRoles(RoleSelector, Message, MessageIndex, Marker.MapMarkerClass);
     }
 
     // Notify the player
-
-    if(Marker.MapMarkerClass.default.OnPlacedMessage != none)
+    if (Marker.MapMarkerClass.default.OnPlacedMessage != none)
     {
-        PC.ReceiveLocalizedMessage(Marker.MapMarkerClass.default.OnPlacedMessage, Marker.MapMarkerClass.default.OnPlacedMessageIndex,,, Marker.MapMarkerClass);
+        PC.ReceiveLocalizedMessage(
+            Marker.MapMarkerClass.default.OnPlacedMessage,
+            Marker.MapMarkerClass.default.OnPlacedMessageIndex,,,
+            Marker.MapMarkerClass
+            );
     }
 }
 

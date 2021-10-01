@@ -128,14 +128,18 @@ simulated function bool IsRadioman()
 simulated function bool IsArtilleryOperator()
 {
     local DHPlayer PC;
+
     PC = DHPlayer(Owner);
+
     return PC != none && PC.IsArtilleryOperator();
 }
 
 simulated function bool IsArtillerySpotter()
 {
     local DHPlayer PC;
+
     PC = DHPlayer(Owner);
+
     return PC != none && PC.IsArtillerySpotter();
 }
 

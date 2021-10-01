@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] make specific round types
-// [ ] calibrate range table & dials
 
 class DH_M116Cannon extends DHATGunCannon;
 
@@ -42,14 +40,16 @@ defaultproperties
     nProjectileDescriptions(0)="Igr.38 Sprgr"   // TOD: get names of this
     nProjectileDescriptions(1)="Igr.38 HL/A"
 
-    ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'   // TODO: replace with m116 versions
-    PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
+    ProjectileClass=class'DH_Guns.DH_M116CannonShellHE'   // TODO: replace with m116 versions
+    PrimaryProjectileClass=class'DH_Guns.DH_M116CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=60  // TODO: REPLACE
-    InitialSecondaryAmmo=25  // TODO: REPLACE
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
-    SecondarySpread=0.00125  // TODO: REPLACE
+    InitialPrimaryAmmo=30  // TODO: REPLACE
+    InitialSecondaryAmmo=5  // TODO: REPLACE
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
+
+    Spread=0.020
+    SecondarySpread=0.00125
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE

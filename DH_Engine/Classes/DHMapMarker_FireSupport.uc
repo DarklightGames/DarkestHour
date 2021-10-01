@@ -10,8 +10,6 @@ var color             ActivatedIconColor; // for off-map artillery requests
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local int Distance;
-    local vector PlayerLocation, WorldLocation;
     local string SquadName;
     local DHSquadReplicationInfo SRI;
 
@@ -26,18 +24,10 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     }
     else
     {
-        WorldLocation = Marker.WorldLocation;
-        WorldLocation.Z = 0.0;
-
-        PlayerLocation = PC.Pawn.Location;
-        PlayerLocation.Z = 0.0;
-
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
-
         SRI = PC.SquadReplicationInfo;
         SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
 
-        return SquadName @ "-" @ default.MarkerName @ "-" @ (Distance / 5) * 5 $ "m";
+        return SquadName @ "(" $ default.MarkerName $ ")" @ "-" @ GetDistanceString(PC, Marker);
     }
 }
 
