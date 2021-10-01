@@ -5837,10 +5837,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=9
-        Minor=13
-        Patch=1
-        Prerelease=""
+        Major=10
+        Minor=0
+        Patch=0
+        Prerelease="beta.2"
     End Object
     Version=VersionObject
 
