@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll')
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1

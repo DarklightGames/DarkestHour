@@ -2,45 +2,32 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// A marker for measuring distances on the map. Any role can use it.
 
 class DHMapMarker_Ruler extends DHMapMarker
     abstract;
 
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+var int CalculationDurationSeconds;
+var localized string CalculatingString;
+
+static function bool IsDistanceCalculated(GameReplicationInfo GRI, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHRoleInfo RI;
-    local DHPlayer PC;
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-    PC = DHPlayer(PRI.Owner);
-
-    /*
-    if (RI.bCanUseMortars || RI.bCanBeTankCrew)
-    {
-        return true;
-    }
-    */
-
-    return true;
+    return GRI != none && GRI.ElapsedTime >= Marker.CreationTime + default.CalculationDurationSeconds;
 }
 
-static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local vector PlayerLocation;
-    local int Distance;
+    return static.GetDistanceString(PC, Marker);
+}
 
-    if (PC == none || PC.Pawn != none)
+static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    if (!IsDistanceCalculated(PC.GameReplicationInfo, Marker))
     {
-        PlayerLocation = PC.Pawn.Location;
-        PlayerLocation.Z = 0.0;
-        WorldLocation.Z = 0.0;
-
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
-
-        return string((Distance / 5) * 5) $ "m";
+        return default.CalculatingString;
     }
 
-    return "";
+    return super(DHMapMarker).GetDistanceString(PC, Marker);
 }
 
 defaultproperties
@@ -51,6 +38,13 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4
     bShouldShowOnCompass=true
-    bIsUnique=true
-    bIsPersonal=true
+    Type=MT_Measurement
+    OverwritingRule=UNIQUE
+    Scope=PERSONAL
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
+    Permissions_CanPlace(0)=ERS_ALL
+    CalculationDurationSeconds=10
+    CalculatingString="Calculating..."
 }
+

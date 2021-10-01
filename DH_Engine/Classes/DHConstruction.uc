@@ -234,6 +234,9 @@ var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
 var DHPlayer InstigatorController;
 var int CompletionPointValue;
 
+// Artillery
+var bool bIsArtillery;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1171,6 +1174,11 @@ static function float GetPlacementDiameter()
     return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
 }
 
+static function bool IsArtillery()
+{
+    return default.bIsArtillery;
+}
+
 defaultproperties
 {
     TeamOwner=TEAM_Neutral
@@ -1297,4 +1305,6 @@ defaultproperties
     BrokenSoundVolume=5.0
 
     CompletionPointValue=10
+
+    bIsArtillery=false
 }

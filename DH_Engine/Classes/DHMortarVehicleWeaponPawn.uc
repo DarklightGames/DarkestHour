@@ -7,12 +7,6 @@ class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
     abstract
     dependson(DHPlayer);
 
-struct DigitSet
-{
-    var material    DigitTexture;
-    var IntBox      TextureCoords[11];
-};
-
 // Deploying, aiming & firing
 var     class<DHMortarWeapon>   WeaponClass;  // the weapon class for the carried mortar inventory item
 var     float       UndeployingDuration;      // needs literal as server doesn't have HUDOverlay actor & so can't use GetAnimDuration on it
@@ -49,10 +43,18 @@ var     texture     HUDArcTexture;           // the elevation display
 var     TexRotator  HUDArrowTexture;         // indicator icon for current elevation
 var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
 var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
-var     DigitSet    Digits;                  // numerals for showing ammo count
+var     ROHud.NumericWidget AmmoAmount;
+var     ROHud.SpriteWidget AmmoIcon;
 
 // Fire adjustment info
 var     class<DHMapMarker>    TargetMarkerClass;
+
+// mortar periscope & range table handling
+var     int         PeriscopeIndex;
+var     int         ShooterIndex;
+
+var     bool        bWantsToUndeploy;
+var     bool        bWantsToFire;
 
 replication
 {
@@ -128,7 +130,7 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     local string DeflectionSign;
     local vector WeaponLocation, Target;
     local rotator WeaponRotation;
-    local DHPlayer.PersonalMapMarker TargetMarker;
+    local DHGameReplicationInfo.MapMarker TargetMarker;
 
     if (PC == none)
     {
@@ -167,133 +169,121 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     return DeflectionSign $ string(Deflection);
 }
 
+exec function CalibrateFire(int MilsMin, int MilsMax)
+{
+    local int Mils;
+    local DHBallisticProjectile BP;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
+        {
+            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Yaw = 0;
+
+            VehWep.CalcWeaponFire(false);
+            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
+
+            if (BP != none)
+            {
+                BP.bIsCalibrating = true;
+                BP.LifeStart = Level.TimeSeconds;
+                BP.DebugMils = Mils;
+                BP.StartLocation = BP.Location;
+            }
+        }
+    }
+}
+
+simulated function int GetIndex(class<Projectile> ProjectileClass)
+{
+    if (ProjectileClass == VehWep.PrimaryProjectileClass)
+    {
+        return 0;
+    }
+    else if (ProjectileClass == VehWep.PrimaryProjectileClass)
+    {
+        return 1;
+    }
+
+    return -1;
+}
+
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController PC;
-    local vector           Loc;
-    local float            HUDScale, Elevation;
-    local int              SizeX, SizeY, RoundIndex, Traverse;
-    local byte             Quotient, Remainder;
-    local string           TraverseString;
+    local PlayerController                              PC;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHPlayer                                      Player;
+    local DHPlayerReplicationInfo                       PRI;
 
     PC = PlayerController(Controller);
+    Player = DHPlayer(PC);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none || PC.myHud == none || PC.myHud.bHideHud)
     {
-        // Draw HUDOverlay
-        HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
-        HUDOverlay.SetRotation(PC.CalcViewRotation);
-        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-
-        if (PC.myHUD == none || PC.myHUD.bHideHUD)
+        if (DriverPositionIndex == ShooterIndex)
         {
-            return;
-        }
-
-        // Set drawing font & scale
-        C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
-        HUDScale = C.SizeY / 1280.0;
-
-        // Get elevation & traverse
-        Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = class'DHUnits'.static.UnrealToMilliradians(VehWep.CurrentAim.Yaw);
-
-        if (Traverse > 3200) // convert to +/-
-        {
-            Traverse -= 6400;
-        }
-
-        Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-
-        TraverseString = "T: ";
-
-        if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
-        {
-            TraverseString $= "+";
-        }
-
-        TraverseString $= string(Traverse) @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $ GetDeflectionAdjustmentString(DHPlayer(PC));
-
-        // Draw current round type icon
-        RoundIndex = VehWep.GetAmmoIndex();
-
-        if (VehWep.HasAmmo(RoundIndex))
-        {
-            C.SetDrawColor(255, 255, 255, 255);
+            // Draw mortar
+            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+            HUDOverlay.SetRotation(PC.CalcViewRotation);
+            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
         }
         else
         {
-            C.SetDrawColor(128, 128, 128, 255);
+            Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
+
+            PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+
+            // to do: refactor to separate variables (calculate once)
+            ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+            ArtillerySpottingScope.static.DrawRangeTable(C,
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
+            ArtillerySpottingScope.static.DrawPitch(C,
+                DHMortarVehicleWeapon(VehWep).Elevation,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
+                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
+            ArtillerySpottingScope.static.DrawYaw(
+                PRI,
+                C,
+                // without multiplying yaw by (-1) below the yaw readout is reversed
+                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                Targets);
+            ArtillerySpottingScope.static.DrawTargets(
+                PRI,
+                C,
+                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                Targets);
         }
 
-        C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
+        ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
+        AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
 
-        if (RoundIndex == 0)
+        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
+
+        // TODO: holy crap this is bad
+
+        switch (VehWep.GetAmmoIndex())
         {
-            C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-        }
-        else
-        {
-            C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-        }
-
-        // Draw current round type quantity
-        C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-
-        if (VehWep.MainAmmoCharge[RoundIndex] < 10)
-        {
-            Quotient = VehWep.MainAmmoCharge[RoundIndex];
-
-            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
-                Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
-        }
-        else
-        {
-            Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
-            Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
-
-            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
-
-            SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
-            SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
-
-            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
+            case 0:
+                AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
+                break;
+            case 1:
+                AmmoIcon.WidgetTexture = HUDSmokeTexture;
+                break;
+            default:
+            break;
         }
 
-        // Draw current round type name
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-        C.DrawText(VehWep.ProjectileClass.default.Tag);
-
-        // Draw the elevation indicator icon
-        C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
-        C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-
-        HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
-        Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-        Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-        C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
-        C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
-
-        // Draw elevation & traverse text
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-        C.DrawText("E:" @ string(Elevation));
-
-        C.SetDrawColor(255, 255, 255, 255);
-        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-        C.DrawText(TraverseString);
+        ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
     }
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************ MORTAR ENTRY, UNDEPLYING & EXIT *********************** //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -321,6 +311,9 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     if (DHP != none)
     {
+        // Queues up a number of mortar-related hints.
+        DHP.QueueHint(50, false);
+        DHP.QueueHint(49, false);
         DHP.QueueHint(7, false);
         DHP.QueueHint(8, false);
         DHP.QueueHint(9, false);
@@ -342,11 +335,9 @@ function Undeploy()
 {
     local DHMortarWeapon CarriedMortar;
     local Pawn           MortarOperator;
-    local bool           bLocallyControlled;
 
     if (Role == ROLE_Authority && IsInState('Undeploying') && Driver != none)
     {
-        bLocallyControlled = IsLocallyControlled(); // save this as it will have changed when we need to check it later
         MortarOperator = Driver;
         CarriedMortar = Spawn(WeaponClass, MortarOperator);
 
@@ -356,7 +347,7 @@ function Undeploy()
 
             // Standalone or owning listen server destroys mortar vehicle (& all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
             // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
-            if (bLocallyControlled && DHMortarVehicle(VehicleBase) != none)
+            if (DHMortarVehicle(VehicleBase) != none)
             {
                 DHMortarVehicle(VehicleBase).ServerDestroyMortar();
             }
@@ -487,9 +478,32 @@ function CheckCanBeResupplied()
 //  ******************************* ACTIVITY STATES *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        super.HandleEnter();
+        GotoState('Idle');
+    }
+}
+
 // New state where mortar is not busy doing something, so can be fired, exited, undeployed, etc
 simulated state Idle
 {
+    simulated function Tick(float DeltaTime)
+    {
+        if (bWantsToFire && DriverPositionIndex == ShooterIndex)
+        {
+            Fire();
+            bWantsToFire = false;
+        }
+        else if (bWantsToUndeploy && DriverPositionIndex == ShooterIndex && !bTraversing)
+        {
+            Deploy();
+            bWantsToUndeploy = false;
+        }
+    }
+
     simulated function BeginState()
     {
         PlayFirstPersonAnimation(OverlayIdleAnim, true);
@@ -497,15 +511,31 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        if (DriverPositionIndex == ShooterIndex)
         {
-            GotoState('Firing');
+            if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+            {
+                GotoState('Firing');
+            }
+        }
+        else
+        {
+            PrevWeapon();
+            bWantsToFire = true;
         }
     }
 
     simulated exec function Deploy()
     {
-        GotoState('Undeploying');
+        if (DriverPositionIndex == ShooterIndex)
+        {
+            GotoState('Undeploying');
+        }
+        else
+        {
+            PrevWeapon();
+            bWantsToUndeploy = true;
+        }
     }
 
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
@@ -543,7 +573,9 @@ simulated state Busy
     simulated function Fire(optional float F) { }
     simulated exec function SwitchFireMode() { }
     exec function Deploy() { }
-    function bool KDriverLeave(bool bForceLeave) {return false;}
+    function bool KDriverLeave(bool bForceLeave) { return false; }
+    simulated function NextWeapon() { }
+    simulated function PrevWeapon() { }
 }
 
 // New state where player's hand is raising to traverse adjustment knob
@@ -562,6 +594,20 @@ Begin:
 // New state where player's hand is raised on traverse adjustment knob
 simulated state KnobRaised
 {
+    simulated function Tick(float DeltaTime)
+    {
+        if (bWantsToUndeploy && DriverPositionIndex == ShooterIndex && !bTraversing)
+        {
+            bWantsToUndeploy = false;
+            Deploy();
+        }
+        else if (bWantsToFire && !ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        {
+            bWantsToFire = false;
+            GotoState('KnobRaisedToFire');
+        }
+    }
+
     simulated function BeginState()
     {
         PlayFirstPersonAnimation(OverlayKnobIdleAnim, true);
@@ -569,7 +615,12 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
+        if (DriverPositionIndex != ShooterIndex)
+        {
+            PrevWeapon();
+            bWantsToFire  = true;
+        }
+        else if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -577,9 +628,17 @@ simulated state KnobRaised
 
     simulated exec function Deploy()
     {
-        if (!bTraversing)
+        if (DriverPositionIndex == ShooterIndex)
         {
-            GotoState('KnobRaisedToUndeploy');
+            if (!bTraversing)
+            {
+                GotoState('KnobRaisedToUndeploy');
+            }
+        }
+        else
+        {
+            PrevWeapon();
+            bWantsToUndeploy = true;
         }
     }
 
@@ -691,6 +750,16 @@ Begin:
     }
 }
 
+// overriding DHVehicle.ViewTransition to enter 'Idle' state instead of ''
+simulated state ViewTransition
+{
+Begin:
+    HandleTransition();
+    Sleep(ViewTransitionDuration);
+    GotoState('Idle');
+}
+
+
 // New state where mortar is being fired
 // Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
 simulated state Firing extends Busy
@@ -726,6 +795,11 @@ Begin:
 // New state where player's hand is moving from traverse adjustment knob to fire the mortar
 simulated state KnobRaisedToFire extends Busy
 {
+    simulated function PrevWeapon()
+    {
+        global.PrevWeapon();
+    }
+
 Begin:
     if (HUDOverlay != none)
     {
@@ -733,7 +807,14 @@ Begin:
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
     }
 
-    GotoState('Firing');
+    if (DriverPositionIndex == ShooterIndex)
+    {
+        GotoState('Firing');
+    }
+    else
+    {
+        PrevWeapon();
+    }
 }
 
 // New state where player's hand is moving from traverse adjustment knob to undeploy the mortar
@@ -910,11 +991,6 @@ static function StaticPrecache(LevelInfo L)
     {
         L.AddPrecacheMaterial(default.HUDSmokeTexture);
     }
-
-    if (default.Digits.DigitTexture != none)
-    {
-        L.AddPrecacheMaterial(default.Digits.DigitTexture);
-    }
 }
 
 // Modified to add extra material properties
@@ -926,29 +1002,30 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(HUDArrowTexture);
     Level.AddPrecacheMaterial(HUDHighExplosiveTexture);
     Level.AddPrecacheMaterial(HUDSmokeTexture);
-    Level.AddPrecacheMaterial(Digits.DigitTexture);
 }
 
 // Functions emptied out as not relevant to a mortar:
 simulated function SwitchWeapon(byte F);
-function ServerChangeDriverPosition(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
 simulated exec function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return true;
+}
+
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
-    bSinglePositionExposed=true
+    bMultiPosition=true
     ElevationAdjustmentDelay=0.125
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
-
     // View & display
     bDrawMeshInFP=false
     CameraBone="Camera"
     HUDOverlayFOV=90.0
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
-    Digits=(DigitTexture=Texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
     TPCamDistance=128.0
     TPCamDistRange=(Min=128.0,Max=128.0)
     TPCamLookat=(X=0.0,Y=0.0,Z=16.0)
@@ -968,4 +1045,10 @@ defaultproperties
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
+    ShooterIndex=0;
+    PeriscopeIndex=1;
+    OverlayCorrectionY=-60.0;
+
+    AmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    AmmoAmount=(TextureScale=0.25,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=135,OffsetY=-130,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 }

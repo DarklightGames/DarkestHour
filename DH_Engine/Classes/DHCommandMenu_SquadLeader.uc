@@ -5,8 +5,23 @@
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
-var localized string NoPlayerInLineOfSight;
-var localized string InEnemyTerritory;
+var localized string   InEnemyTerritory;
+
+function bool IsPlayerInSight()
+{
+    local DHPlayer PC;
+    local DHPawn P;
+
+    PC = GetPlayerController();
+    P = DHPawn(MenuObject);
+
+    return PC != none && P != none && P != PC.Pawn && P.Health > 0 && PC.GetTeamNum() == P.GetTeamNum();
+}
+
+function Setup()
+{
+    super.Setup();
+}
 
 function OnSelect(int Index, vector Location)
 {
@@ -47,8 +62,9 @@ function OnSelect(int Index, vector Location)
         case 3:
             P = DHPawn(MenuObject);
 
-            if (P != none)
+            if (P != none && P.PlayerReplicationInfo != none)
             {
+                // Player Menu
                 OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
                 if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
@@ -60,6 +76,7 @@ function OnSelect(int Index, vector Location)
                     Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageNonMember", MenuObject);
                 }
             }
+
             return;
         case 4:
             Interaction.PushMenu("DH_Engine.DHCommandMenu_Spotting", MenuObject);
@@ -99,7 +116,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 GRI != none &&
                 GRI.IsInDangerZone(PC.Pawn.Location.X, PC.Pawn.Location.Y, PC.GetTeamNum()))
             {
-                ORI.InfoText = default.InEnemyTerritory;
+                ORI.InfoText[0] = default.InEnemyTerritory;
 
                 if (PC.SquadReplicationInfo.bAllowRallyPointsBehindEnemyLines)
                 {
@@ -115,12 +132,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
                 ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
-            }
-            else
-            {
-                ORI.OptionName = "";
-                ORI.InfoText = default.NoPlayerInLineOfSight;
-                ORI.InfoColor = class'UColor'.default.Yellow;
             }
             break;
         default:
@@ -157,7 +168,6 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    NoPlayerInLineOfSight="No player in sights"
     InEnemyTerritory="In enemy territory"
     Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')

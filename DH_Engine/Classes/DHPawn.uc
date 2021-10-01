@@ -1124,7 +1124,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
             }
             else
             {
-                switch(BoneName)
+                switch (BoneName)
                 {
                     case 'lfoot':
                     case 'lthigh':
@@ -2382,11 +2382,11 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
         }
 
         // Get the ragdoll name
-        if( RagdollOverride != "")
+        if (RagdollOverride != "")
         {
             RagSkelName = RagdollOverride;
         }
-        else if(Species != none)
+        else if (Species != none)
         {
             RagSkelName = Species.static.GetRagSkelName( GetMeshName() );
         }
@@ -2750,7 +2750,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         return;
     }
 
-    if(GunToRotate != none)
+    if (GunToRotate != none)
     {
         GunToRotate.ServerExitRotation();
     }
@@ -3316,7 +3316,7 @@ function CheckGiveBinocs()
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-        if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsAssistantLeader()))
+        if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
         {
             CreateInventory(BinocsClassName);
         }

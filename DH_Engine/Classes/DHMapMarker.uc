@@ -6,31 +6,156 @@
 class DHMapMarker extends Object
     abstract;
 
+// EScopeType replaces DHMapMarker.bIsSquadSpecific and DHMapMarker.bIsVisibleToTeam.
+enum EScopeType
+{
+    PERSONAL,
+    SQUAD,
+    TEAM
+};
+var EScopeType          Scope;
+
+// EOverwritingRule replaces DHMapMarker.bIsUnique and DHMapMarker.bShouldOverwriteGroup.
+enum EOverwritingRule
+{
+    UNIQUE_PER_GROUP,                           // there will always be exactly one or zero markers that have the given GroupIndex
+    UNIQUE,                                     // there will always be exactly one or zero such marker
+    OFF                                        // this marker can be drawn in any number on the map
+};
+var EOverwritingRule    OverwritingRule;
+
+// Used when evaluating permissions to place/remove/see the marker.
+// LevelSelector determines who should see it: team/squad/the player themself.
+// RoleSelector determines roles which should see the marker.
+struct SVisibilityPermissions
+{
+    var DHPlayerReplicationInfo.ERoleSelector RoleSelector;
+    var EScopeType                            LevelSelector;
+};
+
+var array<DHPlayerReplicationInfo.ERoleSelector> Permissions_CanPlace;
+var array<SVisibilityPermissions> Permissions_CanSee;
+var array<SVisibilityPermissions> Permissions_CanRemove;
+
+struct SExternalNotification
+{
+    var DHPlayerReplicationInfo.ERoleSelector RoleSelector;
+    var class<ROCriticalMessage> Message;
+    var int               MessageIndex;
+};
+
+// which roles should be notified in OnMapMarkerPlace()
+var array<SExternalNotification>  OnPlacedExternalNotifications;
+
+// how the player should be notified in OnMapMarkerPlaced()
+var class<ROCriticalMessage>  OnPlacedMessage;
+var int                       OnPlacedMessageIndex;
+
 var localized string    MarkerName;
 var Material            IconMaterial;
 var IntBox              IconCoords;
 var color               IconColor;
-var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
-var bool                bIsSquadSpecific;       // If true, when this marker is placed, it will only be visible to squad members
 var int                 LifetimeSeconds;        // Lifetime, in seconds, of the marker, or -1 for infinite
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
-var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
-var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
+var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
-var bool                bIsPersonal;
+var int                 RequiredSquadMembers;
+var int                 Cooldown;
+
+enum EMarkerType
+{
+    MT_Friendly,
+    MT_Enemy,
+    MT_OffMapArtilleryRequest,
+    MT_OnMapArtilleryRequest,
+    MT_ArtilleryHit,
+    MT_ArtilleryBarrage,
+    MT_Measurement,
+    MT_Admin,
+    MT_Movement
+};
+
+var EMarkerType Type;
 
 // Override this function to determine if this map marker can be used. This
-// function evaluated once at the beginning of the map.
+// function is evaluated once at the beginning of the map.
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
 {
     return true;
 }
 
-// Override this function to determine if this map marker can be placed by
-// the provided player.
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+static function bool CheckPermissions(array<SVisibilityPermissions> Permissions, DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
 {
+    local int i;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < Permissions.Length; i++)
+    {
+        if (Permissions[i].LevelSelector == SQUAD && Marker.SquadIndex != PRI.SquadIndex)
+        {
+            continue;
+        }
+
+        if (PRI.CheckRole(Permissions[i].RoleSelector))
+        {
+            return true;
+        }
+    }
+
     return false;
+}
+
+// Determine if this map marker can be placed by the provided player.
+// Override it only if it is really necessary.
+static function bool CanPlaceMarker(DHPlayerReplicationInfo PRI)
+{
+    local DHPlayer PC;
+    local int i;
+    local bool bIsPlaceable;
+
+    if (PRI == none || PRI.Level == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    if (default.Scope == SQUAD && (default.RequiredSquadMembers == 0 && PC.SquadReplicationInfo == none || PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) < default.RequiredSquadMembers))
+    {
+        return false;
+    }
+
+    bIsPlaceable = false;
+
+    for (i = 0; i < default.Permissions_CanPlace.Length; i++)
+    {
+        bIsPlaceable = bIsPlaceable || PRI.CheckRole(default.Permissions_CanPlace[i]);
+    }
+
+    return bIsPlaceable;
+}
+
+// Determine if this map marker can be removed by the provided player.
+// Override it only if it is really necessary.
+static function bool CanRemoveMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return CheckPermissions(default.Permissions_CanRemove, PRI, Marker);
+}
+
+// Determine if this map marker can be seen by the provided player.
+// Override it only if it is really necessary.
+static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return CheckPermissions(default.Permissions_CanSee, PRI, Marker);
 }
 
 static function color GetBeeLineColor()
@@ -38,44 +163,72 @@ static function color GetBeeLineColor()
     return default.IconColor;
 }
 
+static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+{
+    return default.IconColor;
+}
+
 // Override to run specific logic when this marker is placed.
-static function OnMapMarkerPlaced(DHPlayer PC);
-
-// Override these 2 functions to determine how the marker should be handled when
-// added/removed.
-static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
+// Override it only if it is really necessary.
+static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    if (default.bIsPersonal)
+    local int i;
+    local DHPlayerReplicationInfo.ERoleSelector RoleSelector;
+    local class<ROCriticalMessage> Message;
+    local int MessageIndex;
+
+    // Handle cooldown
+    if (Marker.MapMarkerClass.default.Cooldown > 0)
     {
-        PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
+        PC.LockMapMarkerPlacing(Marker.MapMarkerClass);
     }
-    else
+
+    // Broadcast notifications
+    for (i = 0; i < default.OnPlacedExternalNotifications.Length; ++i)
     {
-        PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
+        RoleSelector = default.OnPlacedExternalNotifications[i].RoleSelector;
+        Message = default.OnPlacedExternalNotifications[i].Message;
+        MessageIndex = default.OnPlacedExternalNotifications[i].MessageIndex;
+
+        PC.ServerNotifyRoles(RoleSelector, Message, MessageIndex, Marker.MapMarkerClass);
+    }
+
+    // Notify the player
+    if (Marker.MapMarkerClass.default.OnPlacedMessage != none)
+    {
+        PC.ReceiveLocalizedMessage(
+            Marker.MapMarkerClass.default.OnPlacedMessage,
+            Marker.MapMarkerClass.default.OnPlacedMessageIndex,,,
+            Marker.MapMarkerClass
+            );
     }
 }
 
-static function RemoveMarker(DHPlayer PC, optional int Index)
-{
-    if (Index < 0)
-    {
-        return;
-    }
-
-    if (default.bIsPersonal)
-    {
-        PC.RemovePersonalMarker(Index);
-    }
-    else
-    {
-        PC.ServerRemoveMapMarker(Index);
-    }
-}
+// Override to run specific logic when this marker is removed.
+static function OnMapMarkerRemoved(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker);
 
 // Override this to have a caption accompany the marker.
-static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return "";
+}
+
+static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    local int Distance;
+    local vector V;
+
+    if (PC == none || PC.Pawn == none)
+    {
+        return "";
+    }
+
+    V = PC.Pawn.Location - Marker.WorldLocation;
+    V.Z = 0.0;
+
+    Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
+
+    return (Distance / 5) * 5 $ "m";
 }
 
 defaultproperties
@@ -83,4 +236,8 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     LifetimeSeconds=-1
     GroupIndex=-1
+    Scope=TEAM
+    OverwritingRule=OFF
+    bShouldShowOnCompass=false
+    RequiredSquadMembers=0
 }

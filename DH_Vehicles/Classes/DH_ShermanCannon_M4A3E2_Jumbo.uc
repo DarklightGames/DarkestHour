@@ -13,7 +13,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.shermancupolat'
     WeaponAttachOffset=(X=6.0,Y=0.0,Z=0.0)
     BeginningIdleAnim="Periscope_idle"
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor

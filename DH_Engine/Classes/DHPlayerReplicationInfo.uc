@@ -15,6 +15,19 @@ enum EPatronTier
     PATRON_Gold
 };
 
+enum ERoleSelector
+{
+    ERS_ALL,
+    ERS_SL,
+    ERS_ASL,
+    ERS_SL_OR_ASL,
+    ERS_ARTILLERY_OPERATOR,
+    ERS_ARTILLERY_SPOTTER,
+    ERS_RADIOMAN,
+    ERS_ADMIN,
+    ERS_PATRON
+};
+
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 
@@ -73,14 +86,24 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+simulated function bool IsSL()
+{
+    return IsSquadLeader();
+}
+
 simulated function bool IsAssistantLeader()
 {
     return IsInSquad() && bIsSquadAssistant;
 }
 
+simulated function bool IsASL()
+{
+    return IsAssistantLeader();
+}
+
 simulated function bool IsSLorASL()
 {
-    return IsInSquad() && (SquadMemberIndex == 0 || bIsSquadAssistant);
+    return IsSL() || IsASL();
 }
 
 simulated function bool IsInSquad()
@@ -91,6 +114,39 @@ simulated function bool IsInSquad()
 simulated function bool IsPatron()
 {
     return PatronTier != PATRON_None;
+}
+
+simulated function bool IsRadioman()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Owner);
+
+    return PC != none && PC.IsRadioman();
+}
+
+simulated function bool IsArtilleryOperator()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Owner);
+
+    return PC != none && PC.IsArtilleryOperator();
+}
+
+simulated function bool IsArtillerySpotter()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Owner);
+
+    return PC != none && PC.IsArtillerySpotter();
+}
+
+simulated function bool IsAdmin()
+{
+    return self.bAdmin || self.bSilentAdmin
+      || (self.Level != none && self.Level.NetMode == NM_Standalone);
 }
 
 // Will return true if passed two players that are in the same squad.
@@ -132,6 +188,33 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
         Canvas.SetPos(4.0, YPos); // bug was here, as it was setting Y draw position to YL not YPos
         Canvas.DrawText("     bIsSpec:" $ bIsSpectator @ "OnlySpec:" $ bOnlySpectator @ "Waiting:" $ bWaitingPlayer @ "Ready:" $ bReadyToPlay @ "OutOfLives:" $ bOutOfLives);
     }
+}
+
+simulated function bool CheckRole(ERoleSelector RoleSelector)
+{
+    switch (RoleSelector)
+    {
+        case ERS_ALL:
+            return true;
+        case ERS_SL:
+            return IsSL();
+        case ERS_ASL:
+            return IsASL();
+        case ERS_ARTILLERY_SPOTTER:
+            return IsArtillerySpotter();
+        case ERS_ARTILLERY_OPERATOR:
+            return IsArtilleryOperator();
+        case ERS_RADIOMAN:
+            return IsRadioman();
+        case ERS_ADMIN:
+            return IsAdmin();
+        case ERS_PATRON:
+            return IsPatron();
+        default:
+            return false;
+    }
+
+    return false;
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round
