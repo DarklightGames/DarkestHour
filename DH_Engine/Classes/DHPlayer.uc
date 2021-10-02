@@ -2188,19 +2188,14 @@ function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, c
     {
         OtherPlayer = DHPlayer(C);
 
-        if (OtherPlayer == none || OtherPlayer == self)
+        if (OtherPlayer == none || OtherPlayer == self || OtherPlayer.GetTeamNum() != TeamIndex)
         {
             continue;
         }
 
         PRI = DHPlayerReplicationInfo(OtherPlayer.PlayerReplicationInfo);
 
-        if (PRI == none)
-        {
-            continue;
-        }
-
-        if (PRI.CheckRole(RoleSelector))
+        if (PRI != none && PRI.CheckRole(RoleSelector))
         {
             OtherPlayer.ReceiveLocalizedMessage(Message, MessageIndex, PlayerReplicationInfo, OtherPlayer.PlayerReplicationInfo, OptionalObject);
         }
