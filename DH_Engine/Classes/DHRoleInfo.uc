@@ -199,7 +199,7 @@ function class<ROHeadgear> GetHeadgear()
     return none;
 }
 
-function Material GetHandTexture(DH_LevelInfo LI)
+simulated function Material GetHandTexture(DH_LevelInfo LI)
 {
     local EHandType HT;
 
