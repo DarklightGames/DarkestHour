@@ -13,14 +13,14 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     local string SquadName;
     local DHSquadReplicationInfo SRI;
 
-    if (PC == none || PC.Pawn == none)
+    if (PC == none || PC.Pawn == none || PC.GameReplicationInfo == none)
     {
         return "";
     }
 
     if (PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
     {
-        return "Your fire support request";
+        return class'TimeSpan'.static.ToString(Marker.ExpiryTime - PC.GameReplicationInfo.ElapsedTime);
     }
     else
     {
@@ -61,7 +61,7 @@ defaultproperties
     IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
-    LifetimeSeconds=120
+    LifetimeSeconds=150
     Type=MT_OnMapArtilleryRequest
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
