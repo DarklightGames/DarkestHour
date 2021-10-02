@@ -37,6 +37,8 @@ var     name        OverlayUndeployingAnim;
 var     float       OverlayKnobLoweringAnimRate;
 var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
+var     int         OverlaySleeveTexNum;
+var     int         OverlayHandTexNum;
 
 // HUD
 var     texture     HUDArcTexture;           // the elevation display
@@ -1015,6 +1017,28 @@ simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
     return true;
 }
 
+// Modified to give the overlay the correct skins for hands and sleeves
+simulated function ActivateOverlay(bool bActive)
+{
+    local DHPlayer PC;
+    local DHRoleInfo RI;
+
+    super.ActivateOverlay(bActive);
+
+    PC = DHPlayer(Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (HUDOverlay != none && RI != none)
+    {
+        HUDOverlay.Skins[OverlaySleeveTexNum] = RI.SleeveTexture;
+        HUDOverlay.Skins[OverlayHandTexNum] = RI.GetHandTexture(PC.GetLevelInfo());
+    }
+}
+
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
@@ -1042,6 +1066,8 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
+    OverlayHandTexNum=0
+    OverlaySleeveTexNum=1
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
