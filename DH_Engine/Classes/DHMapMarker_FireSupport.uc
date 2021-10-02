@@ -65,7 +65,7 @@ defaultproperties
     Type=MT_OnMapArtilleryRequest
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
-    RequiredSquadMembers=3
+    RequiredSquadMembers=2
     Cooldown=10
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
