@@ -2438,6 +2438,24 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
+    // Special case handling for artillery kills. Send message only to the killer & victim.
+    if (class<DHArtilleryDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
+    {
+        // Send DM to a killed human player
+        if (DHPlayer(Killed) != none)
+        {
+            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        // If mode is Personal, also send DM to the killer (if human)
+        if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
+        {
+            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        return;
+    }
+
     // (Message mode is none Or Killed doesn't exist) AND DamageType is not type DHInstantObituaryDamageTypes, then return
     if ((DeathMessageMode == DM_None || Killed == none) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
     {
@@ -2518,7 +2536,7 @@ state RoundInPlay
         local Actor A;
         local int i;
         local ROVehicleFactory ROV;
-        local DH_LevelInfo                    LI;
+        local DH_LevelInfo LI;
 
         LI = DHLevelInfo;
 
