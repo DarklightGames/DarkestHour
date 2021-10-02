@@ -2158,11 +2158,7 @@ simulated function bool IsArtilleryOperator()
 
 simulated function bool IsArtillerySpotter()
 {
-    local DHRoleInfo RI;
-
-    RI = DHRoleInfo(GetRoleInfo());
-
-    return (RI.bIsArtilleryOfficer || IsSL());
+    return IsSquadLeader();
 }
 
 simulated function bool IsRadioman()
@@ -7349,8 +7345,6 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
 simulated function bool CanUseFireSupportMenu()
 {
     local DHPawn P;
-    local DHRoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
 
     if (Pawn == none)
     {
@@ -7366,20 +7360,7 @@ simulated function bool CanUseFireSupportMenu()
         P = DHPawn(Pawn);
     }
 
-    if (P == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (RI == none || PRI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return P != none && IsSquadLeader();
 }
 
 function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)

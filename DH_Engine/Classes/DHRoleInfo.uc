@@ -16,9 +16,7 @@ struct RolePawn
 var()   array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
 var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
 
-var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
-var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 var     bool                bCanCarryExtraAmmo;     // role can carry extra ammo
 var     bool                bSpawnWithExtraAmmo;    // role spawns with extra ammo
 var     bool                bCarriesRadio;          // role can carry radios

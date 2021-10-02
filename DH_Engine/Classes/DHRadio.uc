@@ -145,23 +145,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
 simulated function bool IsPlayerQualified(DHPlayer PC)
 {
-    local DHRoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PC.GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (RI == none || PRI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsSquadLeader();
 }
 
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
