@@ -348,9 +348,9 @@ state SpeechMenuVisible
     function BuildSMMainArray()
     {
         local int i;
-        local bool bSkipCurrent, bCanUseOrderCommands, bCanUseVehicleCommands;
+        local bool bCanUseOrderCommands, bCanUseVehicleCommands;
 
-		SMOffset=0;
+        SMOffset = 0;
         SMArraySize = 0;
 
         bCanUseOrderCommands = CanUseOrderCommands();
@@ -374,63 +374,63 @@ state SpeechMenuVisible
     function BuildSMOrderArray()
     {
         local int i;
-		local class<ROVoicePack> ROVP;
+        local class<ROVoicePack> ROVP;
 
-		SMArraySize = 0;
-		SMOffset=0;
-		PreviousStateName = ROSMS_Main;
+        SMArraySize = 0;
+        SMOffset = 0;
+        PreviousStateName = ROSMS_Main;
 
-		ROVP = GetROVoiceClass();
+        ROVP = GetROVoiceClass();
 
-		if (ROVP == none)
+        if (ROVP == none)
         {
-			return;
+            return;
         }
 
-	    if (CanUseOrderCommands())
-	    {
-			for (i = 0; i < ROVP.Default.numCommands; i++)
-			{
-				if(ROVP.Default.OrderAbbrev[i] != "")
+        if (CanUseOrderCommands())
+        {
+            for (i = 0; i < ROVP.Default.numCommands; i++)
+            {
+                if(ROVP.Default.OrderAbbrev[i] != "")
                 {
-				   SMNameArray[SMArraySize] = ROVP.Default.OrderAbbrev[i];
+                    SMNameArray[SMArraySize] = ROVP.Default.OrderAbbrev[i];
                 }
-				else
+                else
                 {
-				   SMNameArray[SMArraySize] = ROVP.Default.OrderString[i];
+                    SMNameArray[SMArraySize] = ROVP.Default.OrderString[i];
                 }
 
-				SMIndexArray[SMArraySize] = i;
-				SMArraySize++;
-			}
-		}
+                SMIndexArray[SMArraySize] = i;
+                SMArraySize++;
+            }
+        }
     }
 
     // Overriden to give squad leaders the ability to use order commands.
     // TODO: This function could use a refactor
-	function HandleInput(int KeyIn)
-	{
-		local int SelectIndex;
-		local ROPlayerReplicationInfo RORepInfo;
-		local bool bCanUseVehicleCommands;
+    function HandleInput(int KeyIn)
+    {
+        local int SelectIndex;
+        local ROPlayerReplicationInfo;
+        local bool bCanUseVehicleCommands;
 
-		// GO BACK - previous state (might back out of menu);
-		if (KeyIn == -1)
-		{
-			LeaveState();
-			HighlightRow = 0;
-			return;
-		}
+        // GO BACK - previous state (might back out of menu);
+        if (KeyIn == -1)
+        {
+            LeaveState();
+            HighlightRow = 0;
+            return;
+        }
 
-		// TOP LEVEL - we just enter a new state
-		if (ROSMState == ROSMS_Main)
-		{
+        // TOP LEVEL - we just enter a new state
+        if (ROSMState == ROSMS_Main)
+        {
             bCanUseVehicleCommands = CanUseVehicleCommands();
 
             //only leaders are able to issue orders
-		    if (CanUseOrderCommands())
-		    {
-    			// don't show vehicle commands if not in vehicle
+            if (CanUseOrderCommands())
+            {
+                // don't show vehicle commands if not in vehicle
                 if (bCanUseVehicleCommands)
                 {
                         switch (KeyIn)
@@ -457,9 +457,9 @@ state SpeechMenuVisible
                             case 6: SMType = 'TAUNT'; EnterROState(ROSMS_Extras); break;
                         }
                 }
-           	}
-		    else
-		    {
+            }
+            else
+            {
                // Non-leaders, no orders
                if (bCanUseVehicleCommands)
                {
@@ -474,99 +474,99 @@ state SpeechMenuVisible
                         case 7: SMType = 'TAUNT'; EnterROState(ROSMS_Extras); break;
                     }
                 }
-    			else
-    			{
-    			   switch (KeyIn)
-    			   {
-    			       case 1: SMType = 'SUPPORT'; EnterROState(ROSMS_Support); break;
-    			       case 2: SMType = 'ACK'; EnterROState(ROSMS_Ack); break;
-    			       case 3: SMType = 'ENEMY'; EnterROState(ROSMS_Enemy); break;
-    			       case 4: SMType = 'ALERT'; EnterROState(ROSMS_Alert); break;
-    			       case 5: SMType = 'TAUNT'; EnterROState(ROSMS_Extras); break;
-  			       }
-		       }
-		    }
-
-			return;
-		}
-		else if (ROSMState == ROSMS_Commanders)
-		{
-            switch (KeyIn)
-			{
-    			case 1: SMType = 'ATTACK'; EnterROState(ROSMS_Attack);
-                        return;
-    			case 2: SMType = 'DEFEND'; EnterROState(ROSMS_Defend);
-						return;
-		    }
-
-		    if (KeyIn < 3) // Send messages for other orders
-            {
-		       return;
+                else
+                {
+                   switch (KeyIn)
+                   {
+                       case 1: SMType = 'SUPPORT'; EnterROState(ROSMS_Support); break;
+                       case 2: SMType = 'ACK'; EnterROState(ROSMS_Ack); break;
+                       case 3: SMType = 'ENEMY'; EnterROState(ROSMS_Enemy); break;
+                       case 4: SMType = 'ALERT'; EnterROState(ROSMS_Alert); break;
+                       case 5: SMType = 'TAUNT'; EnterROState(ROSMS_Extras); break;
+                   }
+               }
             }
-		}
-		else if (ROSMState == ROSMS_Vehicle_Orders && KeyIn == 1)
-		{
-		    SMType = 'VEH_GOTO'; EnterROState(ROSMS_Vehicle_Goto);
-	        return;
-		}
-		else if (ROSMState == ROSMS_Support && KeyIn == 2)
-		{
-		    SMType = 'HELPAT'; EnterROState(ROSMS_HelpAt);
-	        return;
-		}
-		else if (ROSMState == ROSMS_Alert && KeyIn == 9)
-		{
-		    SMType = 'UNDERATTACK'; EnterROState(ROSMS_UnderAttackAt);
-	        return;
-		}
 
-		// Next page on the same level
-		if (KeyIn == 0)
-		{
-			// Check there is a next page!
-			if (SMArraySize - SMOffset > 9 && SMArraySize != 10)
-			{
-				SMOffset += 9;
-            	return;
+            return;
+        }
+        else if (ROSMState == ROSMS_Commanders)
+        {
+            switch (KeyIn)
+            {
+                case 1: SMType = 'ATTACK'; EnterROState(ROSMS_Attack);
+                        return;
+                case 2: SMType = 'DEFEND'; EnterROState(ROSMS_Defend);
+                        return;
+            }
+
+            if (KeyIn < 3) // Send messages for other orders
+            {
+               return;
+            }
+        }
+        else if (ROSMState == ROSMS_Vehicle_Orders && KeyIn == 1)
+        {
+            SMType = 'VEH_GOTO'; EnterROState(ROSMS_Vehicle_Goto);
+            return;
+        }
+        else if (ROSMState == ROSMS_Support && KeyIn == 2)
+        {
+            SMType = 'HELPAT'; EnterROState(ROSMS_HelpAt);
+            return;
+        }
+        else if (ROSMState == ROSMS_Alert && KeyIn == 9)
+        {
+            SMType = 'UNDERATTACK'; EnterROState(ROSMS_UnderAttackAt);
+            return;
+        }
+
+        // Next page on the same level
+        if (KeyIn == 0)
+        {
+            // Check there is a next page!
+            if (SMArraySize - SMOffset > 9 && SMArraySize != 10)
+            {
+                SMOffset += 9;
+                return;
             }
 
             KeyIn = 10;
-		}
-
-		// Previous page on the same level
-		if (KeyIn == -2)
-		{
-			SMOffset = Max(SMOffset - 9, 0);
-			return;
-		}
-
-		// Otherwise - we have selected something!
-		SelectIndex = SMOffset + KeyIn - 1;
-
-		if (SelectIndex < 0 || SelectIndex >= SMArraySize) // discard - out of range selections.
-        {
-			return;
         }
 
-		// Check if we need to open a new menu to select order target squad
-		if (ROSMState == ROSMS_Attack || ROSMState == ROSMS_Defend || ROSMState == ROSMS_Commanders)
-		{
-		    if (bCheckIfOwnerTeamHasBots())
-		    {
-    		    // Save selected objective
-    		    savedSelectedObjective = SMIndexArray[SelectIndex];
+        // Previous page on the same level
+        if (KeyIn == -2)
+        {
+            SMOffset = Max(SMOffset - 9, 0);
+            return;
+        }
 
-    		    // Generate menu with list of bots
-    		    EnterROState(ROSMS_SelectSquad);
-    		    return;
-    		}
-		}
+        // Otherwise - we have selected something!
+        SelectIndex = SMOffset + KeyIn - 1;
+
+        if (SelectIndex < 0 || SelectIndex >= SMArraySize) // discard - out of range selections.
+        {
+            return;
+        }
+
+        // Check if we need to open a new menu to select order target squad
+        if (ROSMState == ROSMS_Attack || ROSMState == ROSMS_Defend || ROSMState == ROSMS_Commanders)
+        {
+            if (bCheckIfOwnerTeamHasBots())
+            {
+                // Save selected objective
+                savedSelectedObjective = SMIndexArray[SelectIndex];
+
+                // Generate menu with list of bots
+                EnterROState(ROSMS_SelectSquad);
+                return;
+            }
+        }
 
         if (ROSMState == ROSMS_SelectSquad)
-		{
-		    // If this were the squad select menu, we want to have special code to
-		    // handle speech generation (to select proper objective and target
-		    // squad)
+        {
+            // If this were the squad select menu, we want to have special code to
+            // handle speech generation (to select proper objective and target
+            // squad)
             if (SMIndexArray[SelectIndex] != -1)
             {
                 ViewportOwner.Actor.xSpeech(SMType, savedSelectedObjective, PRIs[SMIndexArray[SelectIndex]]);
@@ -575,15 +575,15 @@ state SpeechMenuVisible
             {
                 ViewportOwner.Actor.xSpeech(SMType, savedSelectedObjective, none);
             }
-		}
-		else
+        }
+        else
         {
-        	ViewportOwner.Actor.Speech(SMType, SMIndexArray[SelectIndex], "");
+            ViewportOwner.Actor.Speech(SMType, SMIndexArray[SelectIndex], "");
         }
 
         PlayConsoleSound(SMAcceptSound);
-		GotoState('');
-	}
+        GotoState('');
+    }
 }
 
 exec function VehicleTalk()
@@ -926,7 +926,7 @@ state Typing
 
 function bool CanUseOrderCommands()
 {
-	local DHPlayerReplicationInfo PRI;
+    local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(ViewportOwner.Actor.PlayerReplicationInfo);
 
