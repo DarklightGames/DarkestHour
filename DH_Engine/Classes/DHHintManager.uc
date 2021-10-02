@@ -200,7 +200,7 @@ defaultproperties
     Hints(48)=(Title="Externally Mounted MG Reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
 
     Hints(49)=(Title="Spotting Scope",Text="You are operating an artillery piece equipped with a spotting scope. Press %NEXTWEAPON% to look through the spotting scope.")
-    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire request created by an artillery spotters to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
     Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing %JUMP%.")
     Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
     Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
