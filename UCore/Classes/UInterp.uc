@@ -115,7 +115,7 @@ static final function float DialRounding(float X, float A)
     {
         return 0.5 - (0.5 - A) * Cos(PI * X);
     }
-    else if (x > 0.5 && x <= 1.0)
+    else if (X > 0.5 && X <= 1.0)
     {
         return 0.5 - (0.5 - A) * Cos(PI * X);
     }
