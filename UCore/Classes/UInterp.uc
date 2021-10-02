@@ -77,49 +77,44 @@ static final function float Mimi(float T)
     return 16 * (T ** 2) * ((T - 1) ** 2);
 }
 
-//       ^
-//  1-A -|                                          #####
-//       |                                      ####
-//       |                                  ####
-//       |                               ###
-//       |                             ##
-//       |                            #     |--------|
-//       |                          ##      |~ cos(x)|
-//       |                         #        |--------|
-//       |                         #
-//       |                       ##
-//  0.5 -|                       +
-//       |                      ##
-//       |  |---------|        #
-//       |  |~ -cos(x)|        #
-//       |  |---------|      ##
-//       |                  #
-//       |                ##
-//       |             ###
-//       |         ####
-//       |     ####
-//    A -|#####                  |                        |
+//       ^ 
+//  1   -|                              |--------|     #  
+//       |                              |~-cos(x)|    ##  
+//       |                              |--------|    #    
+//       |                                           #    
+//       |                                         ##     
+//       |                                        #       
+//       |                                      ##        
+//       |                                   ###|        
+//       |                               ####   |         
+//       |                           ####       |         
+//  0.5 -|                    ###+###           |         
+//       |                ####                  |          
+//       |            ####                      |          
+//       |         ###                          |          
+//       |       ##                             |          
+//       |      # |   |--------|                |          
+//       |    ##  |   |~ sin(x)|                |          
+//       |   #    |   |--------|                |          
+//       |  #     |                             |         
+//       |##      |                             |         
+//      -|+       |              |              |      |
 //       +---------------------------------------------------->
-//      0.0                     0.5                      1.0
+//      0.0    (0.5-A)          0.5         (0.5+A)    1.0
 
-static final function float DialRounding(float X, float A)
+static final function float DialRounding(float x, float A)
 {
+    local float V;
+
     if (A > 0.5 || A < 0.0)
     {
-        Warn("Function DialRounding is not defined for A=" $ X);
-
+        Warn("UInterp.DialRounding is not defined for A=" $ x);
         return 0 / 0;
     }
 
-    if (X >= 0 && X <= 0.5)
-    {
-        return 0.5 - (0.5 - A) * Cos(PI * X);
-    }
-    else if (X > 0.5 && X <= 1.0)
-    {
-        return 0.5 - (0.5 - A) * Cos(PI * X);
-    }
+    // transform x in (0, 1) into V in (0.5-A, 0.5+A)
+    V = 0.5 + A * (2 * x - 1);
 
-    return 0.0;
+    // Horner's scheme for 2.2138x**3 - 3.3207x**2 + 2.115x
+    return V * (V * (2.2138 * V) - 3.3207) + 2.115;
 }
-
