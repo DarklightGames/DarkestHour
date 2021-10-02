@@ -2439,7 +2439,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local Controller C;
 
     // Special case handling for artillery kills. Send message only to the killer & victim.
-    if (class<DHArtilleryDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
+    if (class<DHArtilleryKillDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
