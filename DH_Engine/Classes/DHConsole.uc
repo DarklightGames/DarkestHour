@@ -411,7 +411,6 @@ state SpeechMenuVisible
     function HandleInput(int KeyIn)
     {
         local int SelectIndex;
-        local ROPlayerReplicationInfo;
         local bool bCanUseVehicleCommands;
 
         // GO BACK - previous state (might back out of menu);
