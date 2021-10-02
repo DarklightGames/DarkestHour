@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIAttachment extends DHWeaponAttachment;
+class DH_StenMkIIIAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk2_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk3_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'

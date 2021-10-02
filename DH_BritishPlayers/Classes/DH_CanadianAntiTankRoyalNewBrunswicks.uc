@@ -12,4 +12,8 @@ defaultproperties
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
     SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIICWeapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIICWeapon')
 }

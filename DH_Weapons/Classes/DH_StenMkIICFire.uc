@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIFire extends DHAutomaticFire;
+class DH_StenMkIICFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_StenMkIIBullet'
+    ProjectileClass=class'DH_Weapons.DH_StenMkIICBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
     FireRate=0.11 // 540rpm
     Spread=148.0
