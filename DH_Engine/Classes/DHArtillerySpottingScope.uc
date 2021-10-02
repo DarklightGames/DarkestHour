@@ -440,7 +440,6 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     local array<int> TickBuckets;
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, StrikeThroughLength, TickPosition;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float RealIndicatorStartPosition, RealIndicatorEndPosition;
     local float VisualConstant, ShadingConstant;
 
     if (PRI == none || C == none)
@@ -461,13 +460,10 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
     C.Font = C.TinyFont;
 
-    RealIndicatorStartPosition = IndicatorTopLeftCornerX + default.YawIndicatorLength * default.YawDialRoundingConstant / 2;
-    RealIndicatorEndPosition = RealIndicatorStartPosition + default.YawIndicatorLength * (1 - default.YawDialRoundingConstant);
-
     // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = RealIndicatorStartPosition;
+    C.CurX = IndicatorTopLeftCornerX;
     C.CurY = IndicatorTopLeftCornerY;
-    C.DrawHorizontal(IndicatorTopLeftCornerY, RealIndicatorEndPosition - RealIndicatorStartPosition);
+    C.DrawHorizontal(IndicatorTopLeftCornerY, default.YawIndicatorLength);
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TickBuckets.Insert(0, VisibleYawSegmentsNumber);
@@ -507,7 +503,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             if (Index < 0)
             {
                 // Left side
-                C.SetPos(RealIndicatorStartPosition - 1.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
+                C.SetPos(IndicatorTopLeftCornerX - 1.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, default.TargetTickLength);
 
                 ++TargetTickCountLeft;
@@ -515,7 +511,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
             else
             {
                 // Right side
-                C.SetPos(RealIndicatorEndPosition + 0.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
+                C.SetPos(IndicatorTopLeftCornerX + default.YawIndicatorLength + 0.5 * default.TargetTickLength, IndicatorTopLeftCornerY);
                 C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, default.TargetTickLength);
 
                 ++TargetTickCountRight;
@@ -533,7 +529,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
 
         // Calculate color of the current indicator tick
         VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialRoundingConstant);
-        ShadingConstant = 0.5 - abs(VisualConstant - 0.5);
+        ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
         // Log("Index: " $ Index);
         // Log("VisualConstant:" @ VisualConstant);
         // Log("ShadingConstant:" @ ShadingConstant);
@@ -808,6 +804,6 @@ defaultproperties
     TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
 
-    YawDialRoundingConstant=0.3337
+    YawDialRoundingConstant=0.4
     PitchDialRoundingConstant=0.1
 }
