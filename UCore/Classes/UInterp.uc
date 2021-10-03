@@ -77,6 +77,13 @@ static final function float Mimi(float T)
     return 16 * (T ** 2) * ((T - 1) ** 2);
 }
 
+static final function float DialCurvature(float X)
+{
+    // Horner's scheme for -2.1557x**3 + 3.1934x**2 - 0.0562x
+    // This function is a pretty good approximation of the weird function with cos(x) above
+    return X * (X * (-2.1557 * X + 3.1934) - 0.0562);
+}
+
 //       ^ 
 //  1-A -|                                          #####  
 //       |                                      ####       
@@ -102,15 +109,9 @@ static final function float Mimi(float T)
 //       +---------------------------------------------------->
 //      0.0          (0.5-A)    0.5    (0.5+A)           1.0
 
-static final function float Curvature(float X)
-{
-    return X * (X * (-2.1557 * X + 3.1934) - 0.0562);
-}
-
-static final function float DialRounding(float x, float A, optional bool bDebug)
+static final function float DialRounding(float x, float A, float Bottom, float Top, optional bool bDebug)
 {
     local float P, R, S;
-    local float Bottom, Top;
 
     if (A > 0.5 || A < 0.0)
     {
@@ -127,20 +128,14 @@ static final function float DialRounding(float x, float A, optional bool bDebug)
     // transform x in (0, 1) into V in (0.5-A, 0.5+A)
     P = 0.5 + A * (2 * x - 1);
 
-    // Horner's scheme for -2.1557x**3 + 3.1934x**2 - 0.0562x
-    // this function is a pretty good approximation
-    // of the function above
-    R = Curvature(P);
-    Bottom = Curvature(0.5 - A);
-    Top = Curvature(0.5 + A);
+    R = DialCurvature(P);
 
     S = (R - Bottom) / (Top - Bottom);
 
-    if(bDebug)
+    if (bDebug)
     {
         Log("x:" @ x @ ", A:" @ A @ ", P:" @ P @ ", R:" @ R @ ", S:" @ S);
     }
-
 
     return S;
 }

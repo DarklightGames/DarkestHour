@@ -38,7 +38,7 @@ static final function byte SwapFirstPair(byte Num)
 
 // Normal integer division in UnrealScript (truncated division) does this:
 // 1/2      = 0, 3/2     = 1, -1/2   = 0, -3/2   = -1
-// This functions (floored divion) does this:
+// This function (floored divion) does this:
 // 1/2      = 0, 3/2     = 1, -1/2  = -1, -3/2   = -2
 // See more on https://en.wikipedia.org/wiki/Modulo_operation
 static final function float FlooredDivision(float Value, float Divisor)
