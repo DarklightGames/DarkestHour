@@ -7,7 +7,7 @@ class DHVolumeTest extends ROVolumeTest;
 
 // Modified to handle no arty volumes that are linked to a DHSpawnPoint (as well as an old spawn area) or to a DHObjective
 // Also to handle DHMineVolumes that use the option to also act as a NoArtyVolume
-function bool IsInNoArtyVolume()
+function bool DHIsInNoArtyVolume(DHGameReplicationInfo GRI)
 {
     local Volume V;
 
@@ -16,36 +16,12 @@ function bool IsInNoArtyVolume()
         // Prevent arty if we're in a no arty volume, unless it's linked to a spawn point/area that isn't active/current
         if (V.IsA('RONoArtyVolume'))
         {
-            if (DHSpawnPoint(V.AssociatedActor) != none)
-            {
-                if (IsActiveSpawnPoint(DHSpawnPoint(V.AssociatedActor)))
-                {
-                    return true;
-                }
-            }
-            else if (RONoArtyVolume(V).AssociatedSpawn != none)
-            {
-                if (IsCurrentSpawnArea(RONoArtyVolume(V).AssociatedSpawn))
-                {
-                    return true;
-                }
-            }
-            else if (DHObjective(V.AssociatedActor) != none)
-            {
-                if (DHObjective(V.AssociatedActor).IsActive())
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
+            return GRI.IsNoArtyVolumeActive(RONoArtyVolume(V));
         }
         // Prevent arty if we're in an active mine volume that is set to also function as a no arty volume
         else if (V.IsA('DHMineVolume'))
         {
-            if (DHMineVolume(V).bIsAlsoNoArtyVolume && DHMineVolume(V).bActive)
+            if (DHMineVolume(V).bIsAlsoNoArtyVolume && GRI.IsMineVolumeActive(DHMineVolume(V)))
             {
                 return true;
             }
@@ -56,7 +32,6 @@ function bool IsInNoArtyVolume()
             return true;
         }
     }
-
     return false;
 }
 

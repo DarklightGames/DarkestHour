@@ -5,18 +5,20 @@
 
 class DHArtillery extends Actor
     abstract
-    notplaceable;
+    notplaceable
+    dependson(DHGameReplicationInfo);
+
+var DHGameReplicationInfo.EArtilleryType              ArtilleryType;
 
 var protected localized string  MenuName;
 var Material                    MenuIcon;
-
-var Material                    MapIcon;
-var IntBox                      MapIconTextureCoords;
 
 var protected int               TeamIndex;
 var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
+
+var class<DHMapMarker> ActiveArtilleryMarkerClass;
 
 replication
 {
@@ -52,29 +54,7 @@ static function string GetMenuName()
 // Returns true if the specified player is able to request this class of artillery.
 static function bool CanBeRequestedBy(DHPlayer PC)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo RI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-
-    if (RI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsArtillerySpotter();
 }
 
 // These override function are meant to facilitate gathering the limit and
@@ -107,17 +87,19 @@ function SetTeamIndex(int TeamIndex)
     }
 }
 
+simulated function bool IsParadrop()
+{
+    return false;
+}
+
 defaultproperties
 {
     DrawType=DT_None
     RemoteRole=ROLE_SimulatedProxy
-    MenuName="Artillery Barrage"
+    MenuName="Long-Range Artillery"
     bAlwaysRelevant=true
 
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
-
-    MapIcon=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
-    MapIconTextureCoords=(X1=0,Y1=64,X2=63,Y2=127)
 
     bCanBeCancelled=true
 }

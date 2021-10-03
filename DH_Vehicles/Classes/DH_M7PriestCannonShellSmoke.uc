@@ -15,5 +15,7 @@ defaultproperties
     Speed=8962.5         // 198m/s x 75%
     MaxSpeed=8962.5
     LifeSpan=20.0
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'
+    GasDamageClass=class'DH_Engine.DHShellSmokeWPGasDamageType_Artillery'
 }
 

@@ -54,7 +54,7 @@ var int IsExposedPenaltySeconds;
 // Attachments
 var class<DHResupplyAttachment>         ResupplyAttachmentClass;
 var DHResupplyAttachment                ResupplyAttachment;
-var DHResupplyAttachment.EResupplyType  ResupplyType;
+var DHResupplyStrategy.EResupplyType    ResupplyType;
 var float                               ResupplyAttachmentCollisionRadius;
 var float                               ResupplyAttachmentCollisionHeight;
 var float                               ResupplyTime;

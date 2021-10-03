@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     WeaponAttachOffset=(X=8.0,Y=0.0,Z=4.5)
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll')
 
     // Turret armor
     FrontArmorFactor=9.0

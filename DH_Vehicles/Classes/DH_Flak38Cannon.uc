@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll')
     GunnerAttachmentBone="Turret" // gunner doesn't move so we don't need a dedicated attachment bone
 
     // Turret movement

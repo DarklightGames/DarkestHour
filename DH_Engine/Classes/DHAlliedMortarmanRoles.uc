@@ -9,6 +9,7 @@ class DHAlliedMortarmanRoles extends DHAlliedRoles
 defaultproperties
 {
     bCanUseMortars=true
+    bExemptSquadRequirement=true
     MyName="Mortar Operator"
     AltName="Mortar Operator"
     Article="a "
