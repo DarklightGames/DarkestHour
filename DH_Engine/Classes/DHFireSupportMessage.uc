@@ -99,9 +99,9 @@ static function string GetString(
 
 defaultproperties
 {
-    OnMapArtilleryRequestConfirmedText="Requested on-map fire support."
-    OffMapArtilleryRequestConfirmedText="Marked an off-map support target."
-    OnMapArtilleryRequestingLocked="You cannot place another on-map fire support mark for another {seconds} seconds."
+    OnMapArtilleryRequestConfirmedText="Fire support target has been marked."
+    OffMapArtilleryRequestConfirmedText="Long-range fire support target has been marked."
+    OnMapArtilleryRequestingLocked="You cannot place another fire support marker for another {seconds} seconds."
     RadiomanNotification="{squad} squad leader has marked a target for fire support."
     ArtilleryOperatorNotification="A new {type} target has been marked."
     ErrorText="Could not place fire support marker."

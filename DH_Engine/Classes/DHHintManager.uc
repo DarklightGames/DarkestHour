@@ -189,7 +189,7 @@ defaultproperties
     Hints(9)=(Title="Mortar Leaving",Text="You may leave your mortar at any time by pressing the %Use% key. While you are off your mortar, you can retrieve ammunition at a resupply area or from your teammates.")
     Hints(10)=(Title="Mortar Undeploy",Text="To undeploy your mortar, press the %Deploy% key. Undeploying your mortar will reset your elevation and traverse settings.")
     Hints(12)=(Title="Binoculars",Text="You can mark targets for fire support with your binoculars. Bring up your binoculars with %ROIRONSIGHTS%, then press and hold %FIRE% to bring up the fire support menu.")
-    Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in off-map fire support!")
+    Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in long-range fire support!")
 
     Hints(40)=(Title="Vehicle Engines",Text="You have entered a vehicle. To start or stop the engine, press %FIRE%.")
     Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. Lower the bow ramp by pressing %PREVWEAPON% so passengers and yourself can exit. To raise the bow ramp hit %NEXTWEAPON%.")
@@ -204,5 +204,6 @@ defaultproperties
     Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing %JUMP%.")
     Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
     Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
-    Hints(54)=(Title="Find a Radio",Text="You have marked a target for off-map fire support. Find a radio so that you can call it in!")
+    Hints(54)=(Title="Find a Radio",Text="You have marked a target for long-range fire support. Find a radio so that you can call it in!")
 }
+
