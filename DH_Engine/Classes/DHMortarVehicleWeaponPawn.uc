@@ -223,7 +223,7 @@ simulated function DrawHUD(Canvas C)
 
     if (PC != none &&
         !PC.bBehindView &&
-        PC.myHud != none && !PC.myHud.bHideHud &&
+        PC.myHud != none &&
         HUDOverlay != none &&
         !Level.IsSoftwareRendering() &&
         DHMortarVehicleWeapon(VehWep) != none)
@@ -237,13 +237,16 @@ simulated function DrawHUD(Canvas C)
         }
         else
         {
-            Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
-
             PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
             // to do: refactor to separate variables (calculate once)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-            ArtillerySpottingScope.static.DrawRangeTable(C,
+
+            if (!PC.myHud.bHideHud)
+            {
+                Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
+
+                ArtillerySpottingScope.static.DrawRangeTable(C,
                 DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
                 DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawPitch(C,
@@ -265,28 +268,31 @@ simulated function DrawHUD(Canvas C)
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                 Targets);
+            }
         }
 
-        ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
-        AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
-
-        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
-
-        // TODO: holy crap this is bad
-
-        switch (VehWep.GetAmmoIndex())
+        if (!PC.myHud.bHideHUD)
         {
-            case 0:
-                AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
-                break;
-            case 1:
-                AmmoIcon.WidgetTexture = HUDSmokeTexture;
-                break;
-            default:
-            break;
-        }
+            ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
 
-        ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
+            AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
+
+            ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
+
+            switch (VehWep.GetAmmoIndex())
+            {
+                case 0:
+                    AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
+                    break;
+                case 1:
+                    AmmoIcon.WidgetTexture = HUDSmokeTexture;
+                    break;
+                default:
+                break;
+            }
+
+            ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////
