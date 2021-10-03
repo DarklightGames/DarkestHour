@@ -215,15 +215,18 @@ simulated function int GetIndex(class<Projectile> ProjectileClass)
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController                              PC;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHPlayer                                      Player;
+    local DHPlayer                                      PC;
     local DHPlayerReplicationInfo                       PRI;
 
-    PC = PlayerController(Controller);
-    Player = DHPlayer(PC);
+    PC = DHPlayer(Controller);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none || PC.myHud == none || PC.myHud.bHideHud)
+    if (PC != none &&
+        !PC.bBehindView &&
+        PC.myHud != none && !PC.myHud.bHideHud &&
+        HUDOverlay != none &&
+        !Level.IsSoftwareRendering() &&
+        DHMortarVehicleWeapon(VehWep) != none)
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -234,9 +237,9 @@ simulated function DrawHUD(Canvas C)
         }
         else
         {
-            Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
+            Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
-            PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
             // to do: refactor to separate variables (calculate once)
             ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
