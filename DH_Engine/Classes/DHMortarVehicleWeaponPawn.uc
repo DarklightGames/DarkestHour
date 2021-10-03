@@ -218,41 +218,50 @@ simulated function DrawHUD(Canvas C)
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      PC;
     local DHPlayerReplicationInfo                       PRI;
+    local DHHud                                         Hud;
+    local DHMortarVehicleWeapon                         MVW;
+    local int                                           AmmoCount;
 
     PC = DHPlayer(Controller);
+    MVW = DHMortarVehicleWeapon(VehWep);
 
-    if (PC != none &&
-        !PC.bBehindView &&
-        PC.myHud != none &&
-        HUDOverlay != none &&
-        !Level.IsSoftwareRendering() &&
-        DHMortarVehicleWeapon(VehWep) != none)
+    if (PC == none || PC.bBehindView || MVW == none || Level.IsSoftwareRendering() || HUDOverlay == none)
     {
-        if (DriverPositionIndex == ShooterIndex)
+        return;
+    }
+
+    Hud = DHHud(PC.myHUD);
+
+    if (Hud == none)
+    {
+        return;
+    }
+
+    if (DriverPositionIndex == ShooterIndex)
+    {
+        // Draw mortar
+        HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+        HUDOverlay.SetRotation(PC.CalcViewRotation);
+        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+    }
+    else
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        // to do: refactor to separate variables (calculate once)
+        ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+
+        if (!PC.myHud.bHideHud)
         {
-            // Draw mortar
-            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
-            HUDOverlay.SetRotation(PC.CalcViewRotation);
-            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-        }
-        else
-        {
-            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+            Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
-            // to do: refactor to separate variables (calculate once)
-            ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-
-            if (!PC.myHud.bHideHud)
-            {
-                Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
-
-                ArtillerySpottingScope.static.DrawRangeTable(C,
-                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
-                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
+            ArtillerySpottingScope.static.DrawRangeTable(C,
+                MVW.Elevation + MVW.default.ElevationMinimum,
+                MVW.Elevation + MVW.default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawPitch(C,
-                DHMortarVehicleWeapon(VehWep).Elevation,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
+                MVW.Elevation,
+                MVW.default.ElevationMinimum,
+                MVW.default.ElevationMaximum);
             ArtillerySpottingScope.static.DrawYaw(
                 PRI,
                 C,
@@ -268,31 +277,41 @@ simulated function DrawHUD(Canvas C)
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                 class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
                 Targets);
-            }
         }
+    }
 
-        if (!PC.myHud.bHideHUD)
+    if (!Hud.bHideHUD)
+    {
+        Hud.DrawVehicleIcon(C, VehicleBase, self);
+
+        AmmoCount = MVW.MainAmmoCharge[MVW.GetAmmoIndex()];
+        AmmoAmount.Value = AmmoCount;
+
+        switch (MVW.GetAmmoIndex())
         {
-            ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
-
-            AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
-
-            ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
-
-            switch (VehWep.GetAmmoIndex())
-            {
-                case 0:
-                    AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
-                    break;
-                case 1:
-                    AmmoIcon.WidgetTexture = HUDSmokeTexture;
-                    break;
-                default:
+            case 0:
+                AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
                 break;
-            }
-
-            ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
+            case 1:
+                AmmoIcon.WidgetTexture = HUDSmokeTexture;
+                break;
+            default:
+                break;
         }
+
+        if (AmmoCount > 0)
+        {
+            AmmoIcon.Tints[0] = class'UColor'.default.White;
+            AmmoAmount.Tints[0] = class'UColor'.default.White;
+        }
+        else
+        {
+            AmmoIcon.Tints[0] = Hud.WeaponReloadingColor;
+            AmmoAmount.Tints[0] = Hud.WeaponReloadingColor;
+        }
+
+        Hud.DrawSpriteWidget(C, AmmoIcon);
+        Hud.DrawNumericWidget(C, AmmoAmount, Hud.Digits);
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////
