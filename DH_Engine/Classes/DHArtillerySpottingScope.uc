@@ -84,8 +84,8 @@ var     color               Orange;
 var     color               Red;
 
 // Those two fields determine what part of the dial's span will be used
-// to display the dial's scale. The span is equal to (0.5-CONSTANT/2, 0.5+CONSTANT/2) [rads].
-// E.g. YawDialRoundingConstant=0.5 will project the yaw dial on a half-circle.
+// to display the dial's scale. The span is equal to (0.5-SPAN/2, 0.5+SPAN/2) [rads].
+// E.g. YawDialSpan=1 will project the yaw dial on a half-circle.
 var     float               YawDialSpan;    // [rad]
 var     float               PitchDialSpan;  // [rad]
 
