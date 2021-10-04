@@ -83,11 +83,11 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
-// Those two contants determine what part of the dial's span will be used
-// to display the dial's scale. The span is equal to (0.5-CONSTANT, 0.5+CONSTANt) [rads].
-// E.g. YawDialRoundingConstant=0.5 will project the yaw dial's scale on a half-circle.
-var     float               YawDialRoundingConstant;    // [rad]
-var     float               PitchDialRoundingConstant;  // [rad]
+// Those two fields determine what part of the dial's span will be used
+// to display the dial's scale. The span is equal to (0.5-CONSTANT/2, 0.5+CONSTANT/2) [rads].
+// E.g. YawDialRoundingConstant=0.5 will project the yaw dial on a half-circle.
+var     float               YawDialSpan;    // [rad]
+var     float               PitchDialSpan;  // [rad]
 
 enum ETargetWidgetLineType
 {
@@ -456,8 +456,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, default.YawScaleStep);
     GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, default.YawScaleStep);
 
-    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - default.YawDialRoundingConstant);
-    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + default.YawDialRoundingConstant);
+    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - default.YawDialSpan * 0.5);
+    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + default.YawDialSpan * 0.5);
 
     C.Font = C.TinyFont;
 
@@ -476,7 +476,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialRoundingConstant, BottomDialBound, TopDialBound);
+        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
 
         // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
         ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
@@ -531,7 +531,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         Index = (Yaw - YawLowerBound) / default.YawScaleStep;
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialRoundingConstant, BottomDialBound, TopDialBound);
+        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
         
         // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
         ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
@@ -602,7 +602,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
         {
             // Transform the "linear" coordinates to the coordinates on the curved dial
-            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialRoundingConstant, BottomDialBound, TopDialBound);
+            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialSpan, BottomDialBound, TopDialBound);
             
             // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
             ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
@@ -621,7 +621,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
         {
             // Transform the "linear" coordinates to the coordinates on the curved dial
-            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialRoundingConstant, BottomDialBound, TopDialBound);
+            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialSpan, BottomDialBound, TopDialBound);
 
             // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
             ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
@@ -637,7 +637,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
 
     // Transform the "linear" coordinates to the coordinates on the curved dial
-    VisualCoefficient = class'UInterp'.static.DialRounding(0.5, default.YawDialRoundingConstant, BottomDialBound, TopDialBound);
+    VisualCoefficient = class'UInterp'.static.DialRounding(0.5, default.YawDialSpan, BottomDialBound, TopDialBound);
 
     C.DrawVertical(IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength, default.SmallSizeTickLength);
 }
@@ -657,7 +657,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
     local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, i;
     local string Label;
-    local float Bottom, Top;
+    local float BottomDialBound, TopDialBound;
     local float GunPitchMaxTruncated, GunPitchMinTruncated;
     local float VisualConstant, ShadingConstant;
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
@@ -674,8 +674,8 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     IndicatorStep = default.PitchIndicatorLength / VisiblePitchSegmentsNumber;
     GunPitchMaxTruncated = class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, default.PitchScaleStep);
     GunPitchMinTruncated = class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, default.PitchScaleStep);
-    Bottom = class'UInterp'.static.DialCurvature(0.5 - default.PitchDialRoundingConstant);
-    Top = class'UInterp'.static.DialCurvature(0.5 + default.PitchDialRoundingConstant);
+    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - default.PitchDialSpan * 0.5);
+    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + default.PitchDialSpan * 0.5);
 
     C.Font = C.TinyFont;
 
@@ -686,7 +686,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
     
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisiblePitchSegmentsNumber, default.PitchDialRoundingConstant, Bottom, Top);
+        VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisiblePitchSegmentsNumber, default.PitchDialSpan, BottomDialBound, TopDialBound);
 
         // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
         ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
@@ -758,7 +758,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialRoundingConstant, Bottom, Top);
+                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan, BottomDialBound, TopDialBound);
 
                 // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
                 ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
@@ -779,7 +779,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialRoundingConstant, Bottom, Top);
+                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan, BottomDialBound, TopDialBound);
 
                 // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
                 ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
@@ -800,7 +800,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX + default.IndicatorMiddleTickOffset;
-    VisualConstant = class'UInterp'.static.DialRounding(0.5, default.PitchDialRoundingConstant, Bottom, Top);
+    VisualConstant = class'UInterp'.static.DialRounding(0.5, default.PitchDialSpan, BottomDialBound, TopDialBound);
     C.DrawHorizontal(IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength, default.SmallSizeTickLength);
 }
 
@@ -842,6 +842,6 @@ defaultproperties
     TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
 
-    YawDialRoundingConstant=0.4
-    PitchDialRoundingConstant=0.2
+    YawDialSpan=0.8
+    PitchDialSpan=0.4
 }

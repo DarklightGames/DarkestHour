@@ -77,13 +77,6 @@ static final function float Mimi(float T)
     return 16 * (T ** 2) * ((T - 1) ** 2);
 }
 
-static final function float DialCurvature(float X)
-{
-    // Horner's scheme for -2.1557x**3 + 3.1934x**2 - 0.0562x
-    // This function is a pretty good approximation of the weird function with cos(x) above
-    return X * (X * (-2.1557 * X + 3.1934) - 0.0562);
-}
-
 //       ^ 
 //  1-A -|                                          #####  
 //       |                                      ####       
@@ -109,15 +102,25 @@ static final function float DialCurvature(float X)
 //       +---------------------------------------------------->
 //      0.0          (0.5-A)    0.5    (0.5+A)           1.0
 
-static final function float DialRounding(float x, float A, float Bottom, float Top, optional bool bDebug)
+static final function float DialCurvature(float X)
 {
-    local float P, R, S;
+    // Horner's scheme for -2.1557x**3 + 3.1934x**2 - 0.0562x
+    // This function is a pretty good approximation of the weird function with cos(x) above
+    return X * (X * (-2.1557 * X + 3.1934) - 0.0562);
+}
 
-    if (A > 0.5 || A < 0.0)
+static final function float DialRounding(float x, float Span, float LowerAngularBound, float TopAngularBound, optional bool bDebug)
+{
+    local float AngularCoordinate, AngularModifier, NormalizedAngularModifier;
+    local float AngularStretch;
+
+    if (Span > 1.0 || Span < 0.0)
     {
         Warn("UInterp.DialRounding is not defined for A=" $ x);
         return 0 / 0;
     }
+
+    AngularStretch = Span * 0.5;
 
     if (x > 1.0 || x < 0.0)
     {
@@ -126,16 +129,18 @@ static final function float DialRounding(float x, float A, float Bottom, float T
     }
 
     // transform x in (0, 1) into V in (0.5-A, 0.5+A)
-    P = 0.5 + A * (2 * x - 1);
+    AngularCoordinate = 0.5 + AngularStretch * (2 * x - 1);
 
-    R = DialCurvature(P);
+    // get the value of the curvature
+    AngularModifier = DialCurvature(AngularCoordinate);
 
-    S = (R - Bottom) / (Top - Bottom);
+    // normalize the value back to (0, 1)
+    NormalizedAngularModifier = (AngularModifier - LowerAngularBound) / (TopAngularBound - LowerAngularBound);
 
     if (bDebug)
     {
-        Log("x:" @ x @ ", A:" @ A @ ", P:" @ P @ ", R:" @ R @ ", S:" @ S);
+        Log("x:" @ x @ ", AngularStretch:" @ AngularStretch @ ", AngularCoordinate:" @ AngularCoordinate @ ", AngularModifier:" @ AngularModifier @ ", NormalizedAngularModifier:" @ NormalizedAngularModifier);
     }
 
-    return S;
+    return NormalizedAngularModifier;
 }
