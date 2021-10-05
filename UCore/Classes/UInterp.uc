@@ -116,16 +116,18 @@ static final function float DialRounding(float x, float Span, float LowerAngular
 
     if (Span > 1.0 || Span < 0.0)
     {
-        Warn("UInterp.DialRounding is not defined for A=" $ x);
-        return 0 / 0;
+        Warn("UInterp.DialRounding is not defined for Span=" $ Span);
+        Span = FClamp(Span, 0.0, 1.0);
+        Warn("Clamped Span to" @ Span);
     }
 
     AngularStretch = Span * 0.5;
 
     if (x > 1.0 || x < 0.0)
     {
-        Warn("UInterp.DialRounding is not defined for X=" $ x);
-        return 0 / 0;
+        Warn("UInterp.DialRounding is not defined for x=" $ x);
+        x = FClamp(x, 0.0, 1.0);
+        Warn("Clamped x to" @ x);
     }
 
     // transform x in (0, 1) into V in (0.5-A, 0.5+A)
