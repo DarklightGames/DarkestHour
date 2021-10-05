@@ -475,20 +475,26 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
-        // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
-
-        // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
-        ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
         Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
-        Color.R = Max(1, int(Color.R) * ShadingCoefficient);
-        Color.G = Max(1, int(Color.G) * ShadingCoefficient);
-        Color.B = Max(1, int(Color.B) * ShadingCoefficient);
-        C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
+            // Transform the "linear" coordinates to the coordinates on the curved dial
+            VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
+
+            // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
+            ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
+
+            // Do not let the tick be either completly black as it will disappear
+            // or fully bright as it looks silly
+            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
+
+            Color.R = Max(1, int(Color.R) * ShadingCoefficient);
+            Color.G = Max(1, int(Color.G) * ShadingCoefficient);
+            Color.B = Max(1, int(Color.B) * ShadingCoefficient);
+            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+
             // The new tick position on the "curved" surface of the dial
             TickPosition = IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength;
 
@@ -502,6 +508,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         }
         else
         {
+            // Make the tick greyish
+            C.SetDrawColor(Color.R * 0.25, Color.G * 0.25, Color.B * 0.25, 255);
+            
             // Draw stacking horizontal target markers that are off of the dial
             if (Index < 0)
             {
