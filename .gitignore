@@ -111,6 +111,3 @@ UserLogs
 .vscode/
 *.log
 umodel.cfg
-
-System/multi.sh
-System/run.sh
