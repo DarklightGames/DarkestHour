@@ -51,6 +51,8 @@ defaultproperties
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
 
+    PitchIndicatorLength=320
+
     NumberOfYawSegments=4
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)

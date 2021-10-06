@@ -701,11 +701,9 @@ simulated static function DrawPitch(
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
     
-        // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisiblePitchSegmentsNumber, default.PitchDialSpan);
-
-        // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-        ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
+        // Get the cached values
+        VisualConstant = PitchTicksCurvature[Index * IndicatorStep];
+        ShadingConstant = PitchTicksShading[Index * IndicatorStep];
 
         // Calculate color of the current indicator tick
         Shade = Max(1, 255 * ShadingConstant);
@@ -773,11 +771,11 @@ simulated static function DrawPitch(
           
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
-                // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan);
-
-                // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-                ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
+                // Get the cached values
+                VisualConstant = PitchTicksCurvature[i];
+                ShadingConstant = PitchTicksShading[i];
+                
+                // Calculate color of the current indicator tick
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
 
@@ -794,11 +792,11 @@ simulated static function DrawPitch(
 
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
-                // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan);
-
-                // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-                ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
+                // Get the cached values
+                VisualConstant = PitchTicksCurvature[i];
+                ShadingConstant = PitchTicksShading[i];
+                
+                // Calculate color of the current indicator tick
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
 
