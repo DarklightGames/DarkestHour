@@ -226,7 +226,7 @@ simulated static function DrawTargetWidget(DHPlayer PC, DHPlayerReplicationInfo 
 
                         if (TargetInfo.MarkersTotal > 1)
                         {
-                            Labels[1] = "[" $ TargetInfo.MarkerIndex $ " / " $ TargetInfo.MarkersTotal $ "]";
+                            Labels[1] = " [" $ TargetInfo.MarkerIndex $ " / " $ TargetInfo.MarkersTotal $ "]";
                             LabelColors[1] = default.Green;
                         }
                         break;
