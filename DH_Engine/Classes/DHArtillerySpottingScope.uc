@@ -612,7 +612,7 @@ simulated static function DrawYaw(
         StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / default.YawScaleStep);
 
-        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
+        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep + 1; ++i)
         {
             CurvatureCoefficient = YawTicksCurvature[i];
             ShadingCoefficient = YawTicksShading[i];
@@ -646,7 +646,7 @@ simulated static function DrawYaw(
     C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
 
     // Transform the "linear" coordinates to the coordinates on the curved dial
-    CurvatureCoefficient = class'UInterp'.static.DialRounding(0.5, default.YawDialSpan);
+    CurvatureCoefficient = YawTicksCurvature[0.5 * default.YawIndicatorLength];;
 
     C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.SmallSizeTickLength);
 }
@@ -675,7 +675,7 @@ simulated static function DrawPitch(
     local string Label;
     local float BottomDialBound, TopDialBound;
     local float GunPitchMaxTruncated, GunPitchMinTruncated;
-    local float VisualConstant, ShadingConstant;
+    local float CurvatureConstant, ShadingConstant;
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
@@ -702,7 +702,7 @@ simulated static function DrawPitch(
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
     
         // Get the cached values
-        VisualConstant = PitchTicksCurvature[Index * IndicatorStep];
+        CurvatureConstant = PitchTicksCurvature[Index * IndicatorStep];
         ShadingConstant = PitchTicksShading[Index * IndicatorStep];
 
         // Calculate color of the current indicator tick
@@ -722,7 +722,7 @@ simulated static function DrawPitch(
         C.StrLen(Label, TextWidth, TextHeight);
 
         C.CurX = IndicatorTopLeftCornerX - 5.0;
-        TickPosition = IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength;
+        TickPosition = IndicatorTopLeftCornerY + CurvatureConstant * default.PitchIndicatorLength;
 
         PitchSegmentSchemaIndex = Abs(Quotient) % default.PitchSegmentSchema.Length;
 
@@ -772,7 +772,7 @@ simulated static function DrawPitch(
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Get the cached values
-                VisualConstant = PitchTicksCurvature[i];
+                CurvatureConstant = PitchTicksCurvature[i];
                 ShadingConstant = PitchTicksShading[i];
                 
                 // Calculate color of the current indicator tick
@@ -780,7 +780,7 @@ simulated static function DrawPitch(
                 C.SetDrawColor(Shade, Shade, Shade, 255);
 
                 C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
-                C.DrawHorizontal(IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength, default.StrikeThroughThickness);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * default.PitchIndicatorLength, default.StrikeThroughThickness);
             }
         }
 
@@ -790,10 +790,10 @@ simulated static function DrawPitch(
             StrikeThroughStartIndex = 0;
             StrikeThroughEndIndex = ((PitchUpperBound - GunPitchMaxTruncated) / default.PitchScaleStep);
 
-            for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
+            for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep + 1; ++i)
             {
                 // Get the cached values
-                VisualConstant = PitchTicksCurvature[i];
+                CurvatureConstant = PitchTicksCurvature[i];
                 ShadingConstant = PitchTicksShading[i];
                 
                 // Calculate color of the current indicator tick
@@ -801,7 +801,7 @@ simulated static function DrawPitch(
                 C.SetDrawColor(Shade, Shade, Shade, 255);
 
                 C.CurX = IndicatorTopLeftCornerX - default.SmallSizeTickLength;
-                C.DrawHorizontal(IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength, default.StrikeThroughThickness);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * default.PitchIndicatorLength, default.StrikeThroughThickness);
             }
         }
     }
@@ -814,8 +814,8 @@ simulated static function DrawPitch(
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX + default.IndicatorMiddleTickOffset;
-    VisualConstant = class'UInterp'.static.DialRounding(0.5, default.PitchDialSpan);
-    C.DrawHorizontal(IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength, default.SmallSizeTickLength);
+    CurvatureConstant = PitchTicksCurvature[0.5 * default.PitchIndicatorLength];
+    C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * default.PitchIndicatorLength, default.SmallSizeTickLength);
 }
 
 defaultproperties
