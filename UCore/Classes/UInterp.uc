@@ -146,18 +146,3 @@ static final function float DialRounding(float x, float Span, optional bool bDeb
 
     return NormalizedAngularModifier;
 }
-
-static final function float InterpolateLine(float x, float X1, float Y1, float X2, float Y2)
-{
-    local float Quotient;
-
-    if(x < X1 || x > X2)
-    {
-        Warn("UInterp.InterpolateLine is not defined for X1=" $ X1 $ " < x=" $ x $ " < X2=" $ X2 $ ". Clamping x to [X1, X2].");
-        x = FClamp(x, X1, X2);
-    }
-
-    Quotient = (x - X1) / (X2 - X1);
-
-    return Y1 + (Y2 - Y1) * Quotient;
-}

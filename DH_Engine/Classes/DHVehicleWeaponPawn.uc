@@ -63,7 +63,7 @@ replication
 // Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
 simulated function PostBeginPlay()
 {
-    local int i, YawTicksNumber, PitchTicksNumber;
+    local int i, YawIndicatorLength, PitchIndicatorLength;
 
     super.PostBeginPlay();
 
@@ -76,18 +76,18 @@ simulated function PostBeginPlay()
     if(default.ArtillerySpottingScope != none)
     {
         // Calculate curvature & shading coefficients for ticks on artillery scope's dial
-        YawTicksNumber = default.ArtillerySpottingScope.default.NumberOfYawSegments * default.ArtillerySpottingScope.default.YawSegmentSchema.Length;
-        PitchTicksNumber = default.ArtillerySpottingScope.default.NumberOfPitchSegments * default.ArtillerySpottingScope.default.PitchSegmentSchema.Length;
+        YawIndicatorLength = default.ArtillerySpottingScope.default.YawIndicatorLength;
+        PitchIndicatorLength = default.ArtillerySpottingScope.default.PitchIndicatorLength;
         
-        for (i = 0; i < YawTicksNumber; ++i)
+        for (i = 0; i < YawIndicatorLength; ++i)
         {
-            YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawTicksNumber, default.ArtillerySpottingScope.default.YawDialSpan);
+            YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, default.ArtillerySpottingScope.default.YawDialSpan);
             YawTicksShading[i] = 1 - 2 * abs(YawTicksCurvature[i] - 0.5);
         }
         
-        for (i = 0; i < PitchTicksNumber; ++i)
+        for (i = 0; i < PitchIndicatorLength; ++i)
         {
-            PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchTicksNumber, default.ArtillerySpottingScope.default.PitchDialSpan);
+            PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, default.ArtillerySpottingScope.default.PitchDialSpan);
             PitchTicksShading[i] = 1 - 2 * abs(PitchTicksCurvature[i] - 0.5);
         }
     }

@@ -54,8 +54,8 @@ var     texture             SpottingScopeOverlay;       // periscope overlay tex
 
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
 var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
-var     int                 PitchIndicatorLength;       // [px]
-var     int                 YawIndicatorLength;         // [px]
+var     int                 PitchIndicatorLength;       // [px], should be a multiple of number of visible pitch ticks
+var     int                 YawIndicatorLength;         // [px], should be a multiple of number of visible yaw ticks
 var     int                 StrikeThroughThickness;     // [px]
 
 var     string              AngleUnit;
@@ -436,8 +436,8 @@ simulated static function DrawYaw(
     array <float> YawTicksShading,
     array <float> YawTicksCurvature)
 {
-    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
-    local int i, j, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber;
+    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, Shade, TextWidth, TextHeight;
+    local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
@@ -487,11 +487,11 @@ simulated static function DrawYaw(
         Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
         
         // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
-        CurvatureCoefficient = YawTicksCurvature[Index];
+        CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
 
         // How bright this tick should be, do not let the tick be either completly black as it will disappear
         // or fully bright as it just looks unnatural
-        ShadingCoefficient = YawTicksShading[Index];
+        ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
         ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
@@ -544,10 +544,10 @@ simulated static function DrawYaw(
         Index = (Yaw - YawLowerBound) / default.YawScaleStep;
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        CurvatureCoefficient = YawTicksCurvature[Index];
+        CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
         
         // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-        ShadingCoefficient = YawTicksShading[Index];
+        ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
         Shade = Max(1, 255 * ShadingCoefficient);
 
         // Calculate index of the current readout value on the mortar yaw span
@@ -612,31 +612,15 @@ simulated static function DrawYaw(
         StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / default.YawScaleStep);
 
-        for (i = StrikeThroughStartIndex; i < StrikeThroughEndIndex; ++i)
+        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
         {
-            // Prepare X coordinates of neighbors of that point for interpolation
-            StrikeThroughX1 = FClamp(float(i) / VisibleYawSegmentsNumber, 0.0, 1.0);
-            StrikeThroughX2 = FClamp(float(i+1) / VisibleYawSegmentsNumber, 0.0, 1.0);
+            CurvatureCoefficient = YawTicksCurvature[i];
+            ShadingCoefficient = YawTicksShading[i];
+            Shade = Max(1, 255 * ShadingCoefficient);
 
-            // Prepare interpolation bounds for curvature
-            StrikeThroughCurvatureY1 = FClamp(YawTicksCurvature[i], 0.0, 1.0);
-            StrikeThroughCurvatureY2 = FClamp(YawTicksCurvature[i+1], 0.0, 1.0);
-
-            // Prepare interpolation bounds for shading
-            StrikeThroughShadingY1 = FClamp(YawTicksShading[i], 0.0, 1.0);
-            StrikeThroughShadingY2 = FClamp(YawTicksShading[i+1], 0.0, 1.0);
-            
-            for (j = i * IndicatorStep + 1; j < (i + 1) * IndicatorStep; ++j)
-            {
-                // Interpolate values for the point
-                CurvatureCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughCurvatureY1, StrikeThroughX2, StrikeThroughCurvatureY2);
-                ShadingCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughShadingY1, StrikeThroughX2, StrikeThroughShadingY2);
-                Shade = Max(1, 255 * ShadingCoefficient);
-
-                // Draw the tick 
-                C.SetDrawColor(Shade, Shade, Shade, 255);                
-                C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
-            }
+            // Draw the tick 
+            C.SetDrawColor(Shade, Shade, Shade, 255);                
+            C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
         }
     }
 
@@ -645,31 +629,15 @@ simulated static function DrawYaw(
         StrikeThroughStartIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughEndIndex = VisibleYawSegmentsNumber - 1;
       
-        for (i = StrikeThroughStartIndex; i < StrikeThroughEndIndex; ++i)
+        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
         {
-            // Prepare X coordinates of neighbors of that point for interpolation
-            StrikeThroughX1 = FClamp(float(i) / VisibleYawSegmentsNumber, 0.0, 1.0);
-            StrikeThroughX2 = FClamp(float(i+1) / VisibleYawSegmentsNumber, 0.0, 1.0);
+            CurvatureCoefficient = YawTicksCurvature[i];
+            ShadingCoefficient = YawTicksShading[i];
+            Shade = Max(1, 255 * ShadingCoefficient);
 
-            // Prepare interpolation bounds for curvature
-            StrikeThroughCurvatureY1 = FClamp(YawTicksCurvature[i], 0.0, 1.0);
-            StrikeThroughCurvatureY2 = FClamp(YawTicksCurvature[i+1], 0.0, 1.0);
-
-            // Prepare interpolation bounds for shading
-            StrikeThroughShadingY1 = FClamp(YawTicksShading[i], 0.0, 1.0);
-            StrikeThroughShadingY2 = FClamp(YawTicksShading[i+1], 0.0, 1.0);
-            
-            for (j = i * IndicatorStep + 1; j < (i + 1) * IndicatorStep; ++j)
-            {
-                // Interpolate values for the point
-                CurvatureCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughCurvatureY1, StrikeThroughX2, StrikeThroughCurvatureY2);
-                ShadingCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughShadingY1, StrikeThroughX2, StrikeThroughShadingY2);
-                Shade = Max(1, 255 * ShadingCoefficient);
-
-                // Draw the tick 
-                C.SetDrawColor(Shade, Shade, Shade, 255);                
-                C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
-            }
+            // Draw the tick 
+            C.SetDrawColor(Shade, Shade, Shade, 255);                
+            C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
         }
     }
 
