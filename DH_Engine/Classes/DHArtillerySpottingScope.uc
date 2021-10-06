@@ -54,8 +54,8 @@ var     texture             SpottingScopeOverlay;       // periscope overlay tex
 
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
 var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
-var     float               PitchIndicatorLength;       // [px]
-var     float               YawIndicatorLength;         // [px]
+var     int                 PitchIndicatorLength;       // [px]
+var     int                 YawIndicatorLength;         // [px]
 var     int                 StrikeThroughThickness;     // [px]
 
 var     string              AngleUnit;
@@ -453,7 +453,7 @@ simulated static function DrawYaw(
         return;
     }
 
-    IndicatorTopLeftCornerX = C.SizeX * 0.5 - default.YawIndicatorLength * 0.5;
+    IndicatorTopLeftCornerX = C.SizeX * 0.5 - 0.5 * default.YawIndicatorLength;
     IndicatorTopLeftCornerY = C.SizeY * 0.95;
 
     VisibleYawSegmentsNumber = default.NumberOfYawSegments * default.YawSegmentSchema.Length;
@@ -711,7 +711,7 @@ simulated static function DrawPitch(
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
-    IndicatorTopLeftCornerY = C.SizeY * 0.5 - default.PitchIndicatorLength * 0.5;
+    IndicatorTopLeftCornerY = C.SizeY * 0.5 - 0.5 * default.PitchIndicatorLength;
 
     CurrentPitch += GunPitchOffset;
     VisiblePitchSegmentsNumber = default.NumberOfPitchSegments * default.PitchSegmentSchema.Length;
@@ -858,8 +858,8 @@ defaultproperties
     YawScaleStep=1.0
     PitchScaleStep=1.0
 
-    PitchIndicatorLength=300.0
-    YawIndicatorLength=300.0
+    PitchIndicatorLength=300
+    YawIndicatorLength=300
     StrikeThroughThickness=10
 
     AngleUnit="°"
