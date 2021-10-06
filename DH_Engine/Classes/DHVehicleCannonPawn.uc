@@ -232,6 +232,8 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
+                        PitchTicksShading,
+                        PitchTicksCurvature,
                         class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
                     ArtillerySpottingScope.static.DrawYaw(
                         PRI,
@@ -239,7 +241,9 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                        Targets);
+                        Targets,
+                        YawTicksShading,
+                        YawTicksCurvature);
                     ArtillerySpottingScope.static.DrawTargets(
                         PRI,
                         C,

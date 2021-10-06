@@ -54,9 +54,9 @@ var     texture             SpottingScopeOverlay;       // periscope overlay tex
 
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
 var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
-var     float               PitchIndicatorLength;
-var     float               YawIndicatorLength;
-var     int                 StrikeThroughThickness;
+var     float               PitchIndicatorLength;       // [px]
+var     float               YawIndicatorLength;         // [px]
+var     int                 StrikeThroughThickness;     // [px]
 
 var     string              AngleUnit;
 var     string              DistanceUnit;
@@ -426,18 +426,27 @@ simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, flo
     C.DrawText(Label);
 }
 
-simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float CurrentYaw, float GunYawMin, float GunYawMax, array<STargetInfo> Targets)
+simulated static function DrawYaw(
+    DHPlayerReplicationInfo PRI,
+    Canvas C,
+    float CurrentYaw,
+    float GunYawMin,
+    float GunYawMax,
+    array<STargetInfo> Targets,
+    array <float> YawTicksShading,
+    array <float> YawTicksCurvature)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, IndicatorStep, Shade, TextWidth, TextHeight;
-    local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber;
+    local int i, j, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
     local array<int> TickBuckets;
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float VisualCoefficient, ShadingCoefficient;
+    local float CurvatureCoefficient, ShadingCoefficient;
     local float BottomDialBound, TopDialBound;
+    local float StrikeThroughX1, StrikeThroughX2, StrikeThroughCurvatureY1, StrikeThroughCurvatureY2, StrikeThroughShadingY1, StrikeThroughShadingY2;
 
     if (PRI == none || C == none)
     {
@@ -476,27 +485,25 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
         Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
+        
+        // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
+        CurvatureCoefficient = YawTicksCurvature[Index];
+
+        // How bright this tick should be, do not let the tick be either completly black as it will disappear
+        // or fully bright as it just looks unnatural
+        ShadingCoefficient = YawTicksShading[Index];
+        ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
 
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
-            // Transform the "linear" coordinates to the coordinates on the curved dial
-            VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
-
-            // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
-            ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
-
-            // Do not let the tick be either completly black as it will disappear
-            // or fully bright as it looks silly
-            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
-
             Color.R = Max(1, int(Color.R) * ShadingCoefficient);
             Color.G = Max(1, int(Color.G) * ShadingCoefficient);
             Color.B = Max(1, int(Color.B) * ShadingCoefficient);
             C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
             // The new tick position on the "curved" surface of the dial
-            TickPosition = IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength;
+            TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength;
 
             C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
             C.CurX = IndicatorTopLeftCornerX;
@@ -508,9 +515,6 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         }
         else
         {
-            // Make the tick greyish
-            C.SetDrawColor(Color.R * 0.25, Color.G * 0.25, Color.B * 0.25, 255);
-            
             // Draw stacking horizontal target markers that are off of the dial
             if (Index < 0)
             {
@@ -534,16 +538,16 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     // Start drawing scale ticks
     C.CurY = IndicatorTopLeftCornerY - 5.0;
 
-    for (Yaw = YawLowerBound; Yaw <= YawUpperBound; Yaw += default.YawScaleStep)
+    for (Yaw = YawLowerBound; Yaw < YawUpperBound; Yaw += default.YawScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
         Index = (Yaw - YawLowerBound) / default.YawScaleStep;
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualCoefficient = class'UInterp'.static.DialRounding(float(Index) / VisibleYawSegmentsNumber, default.YawDialSpan, BottomDialBound, TopDialBound);
+        CurvatureCoefficient = YawTicksCurvature[Index];
         
-        // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
-        ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
+        // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
+        ShadingCoefficient = YawTicksShading[Index];
         Shade = Max(1, 255 * ShadingCoefficient);
 
         // Calculate index of the current readout value on the mortar yaw span
@@ -562,7 +566,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
         YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
 
         // The new tick position on the "curved" surface of the dial
-        TickPosition = IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength;
+        TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength;
 
         C.CurY = IndicatorTopLeftCornerY - 5.0;
         C.CurX = TickPosition;
@@ -606,38 +610,66 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     if (YawLowerBound < GunYawMinTruncated)
     {
         StrikeThroughStartIndex = 0;
-        StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / default.YawScaleStep) ;
+        StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / default.YawScaleStep);
 
-        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
+        for (i = StrikeThroughStartIndex; i < StrikeThroughEndIndex; ++i)
         {
-            // Transform the "linear" coordinates to the coordinates on the curved dial
-            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialSpan, BottomDialBound, TopDialBound);
+            // Prepare X coordinates of neighbors of that point for interpolation
+            StrikeThroughX1 = FClamp(float(i) / VisibleYawSegmentsNumber, 0.0, 1.0);
+            StrikeThroughX2 = FClamp(float(i+1) / VisibleYawSegmentsNumber, 0.0, 1.0);
+
+            // Prepare interpolation bounds for curvature
+            StrikeThroughCurvatureY1 = FClamp(YawTicksCurvature[i], 0.0, 1.0);
+            StrikeThroughCurvatureY2 = FClamp(YawTicksCurvature[i+1], 0.0, 1.0);
+
+            // Prepare interpolation bounds for shading
+            StrikeThroughShadingY1 = FClamp(YawTicksShading[i], 0.0, 1.0);
+            StrikeThroughShadingY2 = FClamp(YawTicksShading[i+1], 0.0, 1.0);
             
-            // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
-            ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
-            Shade = Max(1, 255 * ShadingCoefficient);
-            C.SetDrawColor(Shade, Shade, Shade, 255);
-            
-            C.DrawVertical(IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
+            for (j = i * IndicatorStep + 1; j < (i + 1) * IndicatorStep; ++j)
+            {
+                // Interpolate values for the point
+                CurvatureCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughCurvatureY1, StrikeThroughX2, StrikeThroughCurvatureY2);
+                ShadingCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughShadingY1, StrikeThroughX2, StrikeThroughShadingY2);
+                Shade = Max(1, 255 * ShadingCoefficient);
+
+                // Draw the tick 
+                C.SetDrawColor(Shade, Shade, Shade, 255);                
+                C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
+            }
         }
     }
 
     if (YawUpperBound > GunYawMaxTruncated)
     {
         StrikeThroughStartIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
-        StrikeThroughEndIndex = VisibleYawSegmentsNumber;
+        StrikeThroughEndIndex = VisibleYawSegmentsNumber - 1;
       
-        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
+        for (i = StrikeThroughStartIndex; i < StrikeThroughEndIndex; ++i)
         {
-            // Transform the "linear" coordinates to the coordinates on the curved dial
-            VisualCoefficient = class'UInterp'.static.DialRounding(float(i) / default.YawIndicatorLength, default.YawDialSpan, BottomDialBound, TopDialBound);
+            // Prepare X coordinates of neighbors of that point for interpolation
+            StrikeThroughX1 = FClamp(float(i) / VisibleYawSegmentsNumber, 0.0, 1.0);
+            StrikeThroughX2 = FClamp(float(i+1) / VisibleYawSegmentsNumber, 0.0, 1.0);
 
-            // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
-            ShadingCoefficient = 1 - 2 * abs(VisualCoefficient - 0.5);
-            Shade = Max(1, 255 * ShadingCoefficient);
-            C.SetDrawColor(Shade, Shade, Shade, 255);
+            // Prepare interpolation bounds for curvature
+            StrikeThroughCurvatureY1 = FClamp(YawTicksCurvature[i], 0.0, 1.0);
+            StrikeThroughCurvatureY2 = FClamp(YawTicksCurvature[i+1], 0.0, 1.0);
 
-            C.DrawVertical(IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
+            // Prepare interpolation bounds for shading
+            StrikeThroughShadingY1 = FClamp(YawTicksShading[i], 0.0, 1.0);
+            StrikeThroughShadingY2 = FClamp(YawTicksShading[i+1], 0.0, 1.0);
+            
+            for (j = i * IndicatorStep + 1; j < (i + 1) * IndicatorStep; ++j)
+            {
+                // Interpolate values for the point
+                CurvatureCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughCurvatureY1, StrikeThroughX2, StrikeThroughCurvatureY2);
+                ShadingCoefficient = class'UInterp'.static.InterpolateLine(float(j) / default.YawIndicatorLength, StrikeThroughX1, StrikeThroughShadingY1, StrikeThroughX2, StrikeThroughShadingY2);
+                Shade = Max(1, 255 * ShadingCoefficient);
+
+                // Draw the tick 
+                C.SetDrawColor(Shade, Shade, Shade, 255);                
+                C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
+            }
         }
     }
 
@@ -646,9 +678,9 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI, Canvas C, float C
     C.CurY = IndicatorTopLeftCornerY + default.IndicatorMiddleTickOffset;
 
     // Transform the "linear" coordinates to the coordinates on the curved dial
-    VisualCoefficient = class'UInterp'.static.DialRounding(0.5, default.YawDialSpan, BottomDialBound, TopDialBound);
+    CurvatureCoefficient = class'UInterp'.static.DialRounding(0.5, default.YawDialSpan);
 
-    C.DrawVertical(IndicatorTopLeftCornerX + VisualCoefficient * default.YawIndicatorLength, default.SmallSizeTickLength);
+    C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.SmallSizeTickLength);
 }
 
 simulated static function float GetPitchLowerBound(float CurrentPitch)
@@ -661,7 +693,14 @@ simulated static function float  GetPitchUpperBound(float CurrentPitch)
     return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
-simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitchMin, float GunPitchMax, optional float GunPitchOffset)
+simulated static function DrawPitch(
+    Canvas C,
+    float CurrentPitch,
+    float GunPitchMin,
+    float GunPitchMax,
+    array <float> PitchTicksShading,
+    array <float> PitchTicksCurvature,
+    optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
     local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, i;
@@ -695,9 +734,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
     
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisiblePitchSegmentsNumber, default.PitchDialSpan, BottomDialBound, TopDialBound);
+        VisualConstant = class'UInterp'.static.DialRounding(float(Index) / VisiblePitchSegmentsNumber, default.PitchDialSpan);
 
-        // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
+        // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
         ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
 
         // Calculate color of the current indicator tick
@@ -767,9 +806,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan, BottomDialBound, TopDialBound);
+                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan);
 
-                // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
+                // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
                 ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -788,9 +827,9 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Transform the "linear" coordinates to the coordinates on the curved dial
-                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan, BottomDialBound, TopDialBound);
+                VisualConstant = class'UInterp'.static.DialRounding(float(i) / default.PitchIndicatorLength, default.PitchDialSpan);
 
-                // Calculate shading (this transformation of VisualCoefficient gives an eye-pleasing shading)
+                // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
                 ShadingConstant = 1 - 2 * abs(VisualConstant - 0.5);
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -809,7 +848,7 @@ simulated static function DrawPitch(Canvas C, float CurrentPitch, float GunPitch
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX + default.IndicatorMiddleTickOffset;
-    VisualConstant = class'UInterp'.static.DialRounding(0.5, default.PitchDialSpan, BottomDialBound, TopDialBound);
+    VisualConstant = class'UInterp'.static.DialRounding(0.5, default.PitchDialSpan);
     C.DrawHorizontal(IndicatorTopLeftCornerY + VisualConstant * default.PitchIndicatorLength, default.SmallSizeTickLength);
 }
 
@@ -851,6 +890,6 @@ defaultproperties
     TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
 
-    YawDialSpan=0.8
+    YawDialSpan=0.6   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.4
 }

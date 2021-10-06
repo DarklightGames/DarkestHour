@@ -109,10 +109,10 @@ static final function float DialCurvature(float X)
     return X * (X * (-2.1557 * X + 3.1934) - 0.0562);
 }
 
-static final function float DialRounding(float x, float Span, float LowerAngularBound, float TopAngularBound, optional bool bDebug)
+static final function float DialRounding(float x, float Span, optional bool bDebug)
 {
     local float AngularCoordinate, AngularModifier, NormalizedAngularModifier;
-    local float AngularStretch;
+    local float AngularStretch, LowerAngularBound, TopAngularBound;
 
     if (Span > 1.0 || Span < 0.0)
     {
@@ -121,6 +121,8 @@ static final function float DialRounding(float x, float Span, float LowerAngular
     }
 
     AngularStretch = Span * 0.5;
+    LowerAngularBound = class'UInterp'.static.DialCurvature(0.5 - AngularStretch);
+    TopAngularBound = class'UInterp'.static.DialCurvature(0.5 + AngularStretch);
 
     if (x > 1.0 || x < 0.0)
     {
@@ -143,4 +145,19 @@ static final function float DialRounding(float x, float Span, float LowerAngular
     }
 
     return NormalizedAngularModifier;
+}
+
+static final function float InterpolateLine(float x, float X1, float Y1, float X2, float Y2)
+{
+    local float Quotient;
+
+    if(x < X1 || x > X2)
+    {
+        Warn("UInterp.InterpolateLine is not defined for X1=" $ X1 $ " < x=" $ x $ " < X2=" $ X2 $ ". Clamping x to [X1, X2].");
+        x = FClamp(x, X1, X2);
+    }
+
+    Quotient = (x - X1) / (X2 - X1);
+
+    return Y1 + (Y2 - Y1) * Quotient;
 }
