@@ -24,7 +24,7 @@ defaultproperties
     PenetrationMag=750.0
     Damage=350.0   //680 gramms TNT
     DamageRadius=950.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType_Artillery'
     HullFireChance=0.8
     EngineFireChance=0.8
 
