@@ -446,7 +446,6 @@ simulated static function DrawYaw(
     local float GunYawMaxTruncated, GunYawMinTruncated;
     local float CurvatureCoefficient, ShadingCoefficient;
     local float BottomDialBound, TopDialBound;
-    local float StrikeThroughX1, StrikeThroughX2, StrikeThroughCurvatureY1, StrikeThroughCurvatureY2, StrikeThroughShadingY1, StrikeThroughShadingY2;
 
     if (PRI == none || C == none)
     {
@@ -670,8 +669,8 @@ simulated static function DrawPitch(
     array <float> PitchTicksCurvature,
     optional float GunPitchOffset)
 {
-    local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, IndicatorStep, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, i;
+    local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
+    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
     local string Label;
     local float BottomDialBound, TopDialBound;
     local float GunPitchMaxTruncated, GunPitchMinTruncated;
@@ -696,10 +695,10 @@ simulated static function DrawPitch(
     C.Font = C.TinyFont;
 
     // Start drawing scale ticks
-    for (Pitch = PitchLowerBound; Pitch <= PitchUpperBound; Pitch += default.PitchScaleStep)
+    for (Pitch = PitchLowerBound; Pitch < PitchUpperBound; Pitch += default.PitchScaleStep)
     {
         // Calculate index of the tick in the indicator reference frame
-        Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep;
+        Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep - 1;
     
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index * IndicatorStep];
@@ -785,7 +784,7 @@ simulated static function DrawPitch(
         }
 
         // Draw a strike-through if this segment is above the upper limit.
-        if (PitchUpperBound > GunPitchMaxTruncated)
+        if (PitchUpperBound >= GunPitchMaxTruncated)
         {
             StrikeThroughStartIndex = 0;
             StrikeThroughEndIndex = ((PitchUpperBound - GunPitchMaxTruncated) / default.PitchScaleStep);
