@@ -18,5 +18,5 @@ defaultproperties
     Scope=TEAM
     LifetimeSeconds=-1
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
-    Permissions_CanPlace(0)=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=(ERS_ARTILLERY_SPOTTER)
 }
