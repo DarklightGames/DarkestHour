@@ -256,31 +256,32 @@ simulated function DrawHUD(Canvas C)
             Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
             ArtillerySpottingScope.static.DrawRangeTable(C,
-                MVW.Elevation + MVW.default.ElevationMinimum,
-                MVW.Elevation + MVW.default.ElevationMaximum);
+                                                         MVW.Elevation + MVW.default.ElevationMinimum,
+                                                         MVW.Elevation + MVW.default.ElevationMaximum);
+
             ArtillerySpottingScope.static.DrawPitch(C,
-                MVW.Elevation,
-                MVW.default.ElevationMinimum,
-                MVW.default.ElevationMaximum,
-                PitchTicksShading,
-                PitchTicksCurvature);
-            ArtillerySpottingScope.static.DrawYaw(
-                PRI,
-                C,
-                // without multiplying yaw by (-1) below the yaw readout is reversed
-                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                Targets,
-                YawTicksShading,
-                YawTicksCurvature);
-            ArtillerySpottingScope.static.DrawTargets(
-                PRI,
-                C,
-                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                Targets);
+                                                    MVW.Elevation,
+                                                    MVW.default.ElevationMinimum,
+                                                    MVW.default.ElevationMaximum,
+                                                    PitchTicksShading,
+                                                    PitchTicksCurvature);
+
+            ArtillerySpottingScope.static.DrawYaw(PRI,
+                                                  C,
+                                                  // without multiplying yaw by (-1) below the yaw readout is reversed
+                                                  class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                                                  Targets,
+                                                  YawTicksShading,
+                                                  YawTicksCurvature);
+
+            ArtillerySpottingScope.static.DrawTargets(PRI,
+                                                      C,
+                                                      class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                                                      Targets);
         }
     }
 

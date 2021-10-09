@@ -73,18 +73,18 @@ simulated function PostBeginPlay()
         LastPositionIndex = InitialPositionIndex;
     }
 
-    if(default.ArtillerySpottingScope != none)
+    if (default.ArtillerySpottingScope != none)
     {
         // Calculate curvature & shading coefficients for ticks on artillery scope's dial
         YawIndicatorLength = default.ArtillerySpottingScope.default.YawIndicatorLength;
         PitchIndicatorLength = default.ArtillerySpottingScope.default.PitchIndicatorLength;
-        
+
         for (i = 0; i < YawIndicatorLength; ++i)
         {
             YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, default.ArtillerySpottingScope.default.YawDialSpan);
             YawTicksShading[i] = 1 - 2 * abs(YawTicksCurvature[i] - 0.5);
         }
-        
+
         for (i = 0; i < PitchIndicatorLength; ++i)
         {
             PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, default.ArtillerySpottingScope.default.PitchDialSpan);

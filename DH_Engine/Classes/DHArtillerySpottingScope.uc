@@ -426,15 +426,14 @@ simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, flo
     C.DrawText(Label);
 }
 
-simulated static function DrawYaw(
-    DHPlayerReplicationInfo PRI,
-    Canvas C,
-    float CurrentYaw,
-    float GunYawMin,
-    float GunYawMax,
-    array<STargetInfo> Targets,
-    array <float> YawTicksShading,
-    array <float> YawTicksCurvature)
+simulated static function DrawYaw(DHPlayerReplicationInfo PRI,
+                                  Canvas C,
+                                  float CurrentYaw,
+                                  float GunYawMin,
+                                  float GunYawMax,
+                                  array<STargetInfo> Targets,
+                                  array<float> YawTicksShading,
+                                  array<float> YawTicksCurvature)
 {
     local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, Shade, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
@@ -484,7 +483,7 @@ simulated static function DrawYaw(
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / default.YawScaleStep);
 
         Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
-        
+
         // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
         CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
 
@@ -544,7 +543,7 @@ simulated static function DrawYaw(
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
         CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
-        
+
         // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
         ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
         Shade = Max(1, 255 * ShadingCoefficient);
@@ -617,8 +616,8 @@ simulated static function DrawYaw(
             ShadingCoefficient = YawTicksShading[i];
             Shade = Max(1, 255 * ShadingCoefficient);
 
-            // Draw the tick 
-            C.SetDrawColor(Shade, Shade, Shade, 255);                
+            // Draw the tick
+            C.SetDrawColor(Shade, Shade, Shade, 255);
             C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
         }
     }
@@ -627,15 +626,15 @@ simulated static function DrawYaw(
     {
         StrikeThroughStartIndex = (GunYawMaxTruncated - YawLowerBound) / default.YawScaleStep;
         StrikeThroughEndIndex = VisibleYawSegmentsNumber - 1;
-      
+
         for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
         {
             CurvatureCoefficient = YawTicksCurvature[i];
             ShadingCoefficient = YawTicksShading[i];
             Shade = Max(1, 255 * ShadingCoefficient);
 
-            // Draw the tick 
-            C.SetDrawColor(Shade, Shade, Shade, 255);                
+            // Draw the tick
+            C.SetDrawColor(Shade, Shade, Shade, 255);
             C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength, default.StrikeThroughThickness);
         }
     }
@@ -660,14 +659,13 @@ simulated static function float  GetPitchUpperBound(float CurrentPitch)
     return CurrentPitch + default.PitchScaleStep * default.NumberOfPitchSegments * default.PitchSegmentSchema.Length * 0.5;
 }
 
-simulated static function DrawPitch(
-    Canvas C,
-    float CurrentPitch,
-    float GunPitchMin,
-    float GunPitchMax,
-    array <float> PitchTicksShading,
-    array <float> PitchTicksCurvature,
-    optional float GunPitchOffset)
+simulated static function DrawPitch(Canvas C,
+                                    float CurrentPitch,
+                                    float GunPitchMin,
+                                    float GunPitchMax,
+                                    array<float> PitchTicksShading,
+                                    array<float> PitchTicksCurvature,
+                                    optional float GunPitchOffset)
 {
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
     local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
@@ -699,7 +697,7 @@ simulated static function DrawPitch(
     {
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / default.PitchScaleStep - 1;
-    
+
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index * IndicatorStep];
         ShadingConstant = PitchTicksShading[Index * IndicatorStep];
@@ -767,13 +765,13 @@ simulated static function DrawPitch(
         {
             StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMinTruncated - PitchLowerBound) / default.PitchScaleStep;
             StrikeThroughEndIndex = VisiblePitchSegmentsNumber;
-          
+
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
                 // Get the cached values
                 CurvatureConstant = PitchTicksCurvature[i];
                 ShadingConstant = PitchTicksShading[i];
-                
+
                 // Calculate color of the current indicator tick
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
@@ -794,7 +792,7 @@ simulated static function DrawPitch(
                 // Get the cached values
                 CurvatureConstant = PitchTicksCurvature[i];
                 ShadingConstant = PitchTicksShading[i];
-                
+
                 // Calculate color of the current indicator tick
                 Shade = Max(1, 255 * ShadingConstant);
                 C.SetDrawColor(Shade, Shade, Shade, 255);
