@@ -18,7 +18,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=6.000000,Max=16.000000))
@@ -50,7 +50,7 @@ defaultproperties
         FadeInEndTime=0.150000
         Opacity=0.65
         MaxParticles=5
-        name="brown_puffs"
+        Name="brown_puffs"
         StartLocationOffset=(X=30.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -83,7 +83,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=12
-        name="chips_up"
+        Name="chips_up"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=5.000000,Max=10.000000)
         UseRotationFrom=PTRS_Actor
@@ -115,7 +115,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.35
         MaxParticles=4
-        name="lite_spike"
+        Name="lite_spike"
         StartLocationOffset=(X=-10.000000)
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=85.000000))
@@ -141,7 +141,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.4
         MaxParticles=8 // 15
-        name="sparks"
+        Name="sparks"
         StartLocationOffset=(X=5.000000)
         SizeScale(0)=(RelativeSize=2.000000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.50)
@@ -168,7 +168,7 @@ defaultproperties
         Opacity=0.55
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="burst"
+        Name="burst"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -203,7 +203,7 @@ defaultproperties
         FadeOutStartTime=0.250000
         Opacity=0.2
         MaxParticles=3
-        name="heavy_dust"
+        Name="heavy_dust"
         StartLocationRange=(X=(Min=-10.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.250000))
@@ -240,7 +240,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=6
-        name="side_chunks"
+        Name="side_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.60000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -266,7 +266,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=4
-        name="bullet_hole"
+        Name="bullet_hole"
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))

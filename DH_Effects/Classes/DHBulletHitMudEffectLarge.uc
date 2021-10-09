@@ -37,7 +37,7 @@ defaultproperties
         Opacity=0.85
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="impact"
+        Name="impact"
         UseRotationFrom=PTRS_Actor
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=30.000000,Max=45.000000),Y=(Min=35.000000,Max=45.000000),Z=(Min=85.000000))
@@ -63,7 +63,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=42,G=54,R=59,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         MaxParticles=3
-        name="base_chunks"
+        Name="base_chunks"
         //StartLocationOffset=(X=5.000000)
         UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
@@ -103,7 +103,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.150000
         MaxParticles=7
-        name="random_chunks"
+        Name="random_chunks"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -140,7 +140,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=34,G=46,R=51,A=255))
         //FadeOutStartTime=0.150000
         MaxParticles=15
-        name="main_chunks"
+        Name="main_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -175,7 +175,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=59,G=76,R=85,A=255))
         FadeOutStartTime=0.10000
         MaxParticles=4
-        name="ground_splash"
+        Name="ground_splash"
         StartLocationRange=(X=(Min=-10.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.150000))
@@ -206,7 +206,7 @@ defaultproperties
         //Opacity=0.85
         FadeOutStartTime=0.150000
         MaxParticles=1
-        name="burst"
+        Name="burst"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))

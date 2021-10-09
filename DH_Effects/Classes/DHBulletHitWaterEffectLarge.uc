@@ -27,7 +27,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="water_ring"
+        Name="water_ring"
         UseRotationFrom=PTRS_Actor
         SpinCCWorCW=(X=0.000000,Y=0.000000,Z=0.000000)
         SpinsPerSecondRange=(X=(Min=-0.100000,Max=0.100000))
@@ -58,7 +58,7 @@ defaultproperties
         Opacity=0.25
         FadeOutStartTime=0.35
         MaxParticles=15
-        name="drops"
+        Name="drops"
         InitialParticlesPerSecond=200.000000
         Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
         LifetimeRange=(Min=0.5,Max=0.75)
@@ -177,7 +177,7 @@ defaultproperties
         FadeOutStartTime=0.250000
         Opacity=0.5
         MaxParticles=1
-        name="mist_plume"
+        Name="mist_plume"
         StartLocationRange=(X=(Min=45.000000,Max=75.000000),Y=(Min=-10.0,Max=10.0),Z=(Min=-10.0,Max=10.0))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.7200000,Max=0.780000))
@@ -212,7 +212,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.8
         MaxParticles=1
-        name="impact_spike"
+        Name="impact_spike"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
@@ -242,7 +242,7 @@ defaultproperties
         Opacity=0.35
         FadeOutStartTime=0.250000
         MaxParticles=1
-        name="mist_plume2"
+        Name="mist_plume2"
         StartLocationRange=(X=(Min=25.000000,Max=50.000000),Y=(Min=-10.0,Max=10.0),Z=(Min=-10.0,Max=10.0))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.7200000,Max=0.780000))
@@ -277,7 +277,7 @@ defaultproperties
         FadeOutStartTime=0.500000
         Opacity=0.25
         MaxParticles=20
-        name="big_drops"
+        Name="big_drops"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.250000,Max=0.350000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))

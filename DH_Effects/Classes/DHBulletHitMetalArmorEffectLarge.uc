@@ -69,7 +69,7 @@ defaultproperties
         FadeOutStartTime=0.250000
         Opacity=0.35
         MaxParticles=4
-        name="heavy_dust"
+        Name="heavy_dust"
         StartLocationRange=(X=(Min=-10.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.250000))
@@ -106,7 +106,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.6
         MaxParticles=1
-        name="large_exit"
+        Name="large_exit"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
@@ -133,7 +133,7 @@ defaultproperties
         //Opacity=0.85
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="spark_burst"
+        Name="spark_burst"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
@@ -163,7 +163,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=4
-        name="SparkGroups"
+        Name="SparkGroups"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
@@ -184,7 +184,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.200000
-        name="sparks"
+        Name="sparks"
         MaxParticles=8
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=1.000000,Max=3.000000),Y=(Min=1.000000,Max=3.000000),Z=(Min=1.000000,Max=3.000000))
@@ -212,7 +212,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         //FadeOutStartTime=0.150000
         MaxParticles=15
-        name="shrapnel_spray"
+        Name="shrapnel_spray"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.70000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))

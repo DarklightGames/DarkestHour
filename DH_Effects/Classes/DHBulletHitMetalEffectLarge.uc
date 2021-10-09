@@ -59,7 +59,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.3
         MaxParticles=4
-        name="light_smoke"
+        Name="light_smoke"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.150000,Max=0.150000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -151,7 +151,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=4
-        name="SparkGroups"
+        Name="SparkGroups"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
@@ -175,7 +175,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=147,G=147,R=147,A=255))
         Opacity=0.75
         MaxParticles=2
-        name="fabric_smoke"
+        Name="fabric_smoke"
         UseRotationFrom=PTRS_Actor
         //SpinsPerSecondRange=(X=(Min=0.15000,Max=0.2500000))
         //StartSpinRange=(X=(Min=-0.500000,Max=0.500000))

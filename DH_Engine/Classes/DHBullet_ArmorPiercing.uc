@@ -503,7 +503,7 @@ defaultproperties
     VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
     ShellDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffectLarge'
-    VehicleDeflectSound=sound'ProjectileSounds.PTRD_deflect'
+    VehicleDeflectSound=Sound'ProjectileSounds.PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
 
     DrawType=DT_None

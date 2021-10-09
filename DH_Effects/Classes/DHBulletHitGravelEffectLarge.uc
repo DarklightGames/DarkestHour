@@ -19,7 +19,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=12.000000,Max=16.000000))
@@ -50,7 +50,7 @@ defaultproperties
         FadeOutStartTime=0.2500000
         FadeInEndTime=0.1
         MaxParticles=4
-        name="dust_cloud"
+        Name="dust_cloud"
         StartLocationOffset=(Z=-25.000000)
         UseRotationFrom=PTRS_Actor
         StartLocationRange=(X=(Min=-10.000000,Max=10.000000),Y=(Min=-10.000000,Max=10.000000))
@@ -83,7 +83,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.2
         MaxParticles=12
-        name="fine_grains"
+        Name="fine_grains"
         StartLocationOffset=(X=10.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.250000))
@@ -116,7 +116,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.50
         MaxParticles=2
-        name="impact"
+        Name="impact"
         StartLocationRange=(X=(Min=-5.000000,Max=-10.000000))
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=30.000000,Max=45.000000),Y=(Min=30.000000,Max=45.000000),Z=(Min=85.000000))
@@ -145,7 +145,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
         FadeOutStartTime=0.500000
         MaxParticles=12
-        name="main_chunks"
+        Name="main_chunks"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -180,7 +180,7 @@ defaultproperties
         FadeOutStartTime=0.20
         FadeInEndTime=0.1
         MaxParticles=2
-        name="light_dust"
+        Name="light_dust"
         StartLocationOffset=(X=-20.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=1.000000)

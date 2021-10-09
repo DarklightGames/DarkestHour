@@ -19,7 +19,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.600000
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=8.000000,Max=12.000000))
@@ -51,7 +51,7 @@ defaultproperties
         FadeInEndTime=0.150000
         Opacity=0.3
         MaxParticles=5
-        name="puffs"
+        Name="puffs"
         StartLocationOffset=(X=30.000000)
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
@@ -116,7 +116,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.5
         MaxParticles=1
-        name="blue_spike"
+        Name="blue_spike"
         StartLocationRange=(X=(Min=-5.000000,Max=-10.000000))
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=25.000000,Max=35.000000),Y=(Min=25.000000,Max=35.000000),Z=(Min=120.0))
@@ -170,7 +170,7 @@ defaultproperties
         FadeOutStartTime=0.150000
         Opacity=0.4
         MaxParticles=1
-        name="white_spike"
+        Name="white_spike"
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
@@ -199,7 +199,7 @@ defaultproperties
         Opacity=0.55
         FadeOutStartTime=0.1
         MaxParticles=1
-        name="ice_burst"
+        Name="ice_burst"
         UseRotationFrom=PTRS_Actor
         StartLocationOffset=(X=10.000000)
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
