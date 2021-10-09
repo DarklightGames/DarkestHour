@@ -202,7 +202,7 @@ defaultproperties
         Height=0.05
         Width=0.9
         Justification=0
-        FontName="ROInterface.fntROMainMenu""
+        FontName="ROInterface.fntROMainMenu"
         bWrapText=false
     End Object
     Operations(4)=OpLoading

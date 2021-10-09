@@ -5,51 +5,6 @@
 
 class DH_Sdkfz2341Cannon extends DHVehicleAutoCannon;
 
-// Extra collision static mesh actors for the mesh covers over turret, which open & close like a hatch:
-var     DHCollisionMeshActor  TurretCoverColMeshLeft;
-var     DHCollisionMeshActor  TurretCoverColMeshRight;
-var     StaticMesh            TurretCoverColStaticMeshLeft;
-var     StaticMesh            TurretCoverColStaticMeshRight;
-
-// Modified to attach 2 extra collision static mesh actors, to represent the mesh covers over the turret, which open & close like a hatch as the player unbuttons/buttons
-// These collision actors are set so they won't stop bullets or blast damage, as they are only mesh, but will stop grenades, as they were designed for
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    // Matt: would use SM literals here as it's a one-off, but weirdly it won't compile ("Missing StaticMesh name") because mesh and/or group name begin with a number!
-    TurretCoverColMeshLeft = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshLeft, 'com_hatch_L');
-    TurretCoverColMeshRight = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshRight, 'com_hatch_R');
-
-    if (TurretCoverColMeshLeft != none)
-    {
-        TurretCoverColMeshLeft.bWontStopBullet = true;
-        TurretCoverColMeshLeft.bWontStopBlastDamage = true;
-    }
-
-    if (TurretCoverColMeshRight != none)
-    {
-        TurretCoverColMeshRight.bWontStopBullet = true;
-        TurretCoverColMeshRight.bWontStopBlastDamage = true;
-    }
-}
-
-// Modified to include extra collision static mesh actors (not actually effects, but convenient to add here)
-simulated function DestroyEffects()
-{
-    super.DestroyEffects();
-
-    if (TurretCoverColMeshLeft != none)
-    {
-        TurretCoverColMeshLeft.Destroy();
-    }
-
-    if (TurretCoverColMeshRight != none)
-    {
-        TurretCoverColMeshRight.Destroy();
-    }
-}
-
 defaultproperties
 {
     // Cannon mesh
@@ -58,9 +13,9 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
     Skins(2)=Texture'Weapons1st_tex.MG.mg42_barrel'
     Skins(3)=Texture'Weapons1st_tex.MG.mg42'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll'
-    TurretCoverColStaticMeshLeft=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll'
-    TurretCoverColStaticMeshRight=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll')
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll',AttachBone="com_hatch_L",bWontStopBullet=true,bWontStopBlastDamage=true)
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll',AttachBone="com_hatch_R",bWontStopBullet=true,bWontStopBlastDamage=true)
     FireEffectScale=1.3 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=20.0,Y=-25.0,Z=10.0)
 

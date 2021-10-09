@@ -308,6 +308,8 @@ defaultproperties
     Captions_Weapons(12)="Increase Vehicle Smoke Launcher Range/Rotation Setting"
     Bindings_Weapons(13)="DecreaseSmokeLauncherSetting"
     Captions_Weapons(13)="Decrease Vehicle Smoke Launcher Range/Rotation Setting"
+    Bindings_Weapons(14)="ToggleSelectedArtilleryTarget"
+    Captions_Weapons(14)="Toggle Selected Artillery Target"
 
     // Overriden & Additional Communications keybinds
     Bindings_Comm(3)="SquadTalk"

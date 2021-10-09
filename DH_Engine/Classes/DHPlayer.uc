@@ -17,16 +17,9 @@ enum EMapMode
     MODE_Squads
 };
 
-struct PersonalMapMarker
-{
-    var class<DHMapMarker> MapMarkerClass;
-    var float MapLocationX;
-    var float MapLocationY;
-    var vector WorldLocation;
-};
-
-var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
-var     private array<PersonalMapMarker>    PersonalMapMarkers;
+var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
+var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
+var     Hashtable_string_int                                    MapMarkerCooldowns;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -45,6 +38,15 @@ var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
+
+// Artillery hits - only for artillery roles
+struct SArtilleryHitInfo
+{
+    var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
+    var int         ExpiryTime;
+};
+var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
+var     byte                    ArtillerySupportSquadIndex;
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
@@ -162,11 +164,13 @@ var     rotator                 LazyCamRotationTarget;
 // Surrender
 var     bool                    bSurrendered;
 
-// Paradrops
+// Admin-initialed paradrops
 var     class<DHMapMarker>      ParadropMarkerClass;
 var     float                   ParadropHeight;
 var     float                   ParadropSpreadModifier;
 
+// Spotting
+var     DHSpottingMarker        SpottingMarker;
 var     DHIQManager             IQManager;
 var     int                     MinIQToGrowHead;
 var     bool                    bIQManaged;
@@ -181,7 +185,7 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged;
+        bSurrendered, bIQManaged, ArtillerySupportSquadIndex;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -190,7 +194,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
-        ServerSaveArtilleryTarget, ServerClearObstacle, ServerCutConstruction,
+        ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
@@ -203,7 +207,8 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam;
+        ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
+        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -215,7 +220,7 @@ replication
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt;
+        ClientReceiveVotePrompt, ClientSetMapMarkerClassLock;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -236,6 +241,7 @@ event InitInputSystem()
 // Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
@@ -272,6 +278,8 @@ simulated event PostBeginPlay()
             IQManager = Spawn(class'DHIQManager', self);
         }
     }
+
+    MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
 }
 
 simulated event PostNetBeginPlay()
@@ -1012,63 +1020,38 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     }
 }
 
-// Modified to require player to be an arty officer instead of RO's bIsLeader role, to remove check that map contains a radio, & to optimise
-function ServerSaveArtilleryPosition()
+function ServerSaveArtilleryTarget(vector Location)
 {
-    local DHRoleInfo   RI;
+    SavedArtilleryCoords = Location;
+}
+
+function ServerSaveArtillerySupportSquadIndex(int Index)
+{
+    ArtillerySupportSquadIndex = Index;
+}
+
+// This function checks if the player can call artillery on the selected target.
+function bool IsArtilleryTargetValid(vector ArtilleryLocation)
+{
     local DHVolumeTest VT;
-    local DHPawn P;
-    local DHPlayerReplicationInfo PRI;
-    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local bool         bValidTarget;
 
-    if (Pawn == none || Pawn.Weapon == none || !Pawn.Weapon.IsA('DHBinocularsItem'))
+    VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
+
+    if (VT != none)
     {
-        return;
+        bValidTarget = !VT.DHIsInNoArtyVolume(DHGameReplicationInfo(GameReplicationInfo));
+        VT.Destroy();
     }
 
-    P = DHPawn(Pawn);
-
-    if (P == none)
-    {
-        return;
-    }
-
-    RI = P.GetRoleInfo();
-    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-    if (RI != none && RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
-    {
-        TraceStart = Pawn.Location + Pawn.EyePosition();
-        TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-
-        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none && HitNormal != vect(0.0, 0.0, -1.0))
-        {
-            VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-            if (VT != none)
-            {
-                bValidTarget = !VT.IsInNoArtyVolume();
-                VT.Destroy();
-            }
-        }
-
-        if (bValidTarget)
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
-            SavedArtilleryCoords = HitLocation;
-        }
-        else
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
-        }
-    }
+    return bValidTarget;
 }
 
 // Emptied out, as this funcionality has been moved to DHRadio.
 function HitThis(ROArtilleryTrigger RAT) { return; }
 
-// New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
+// New function to determine if the player is operating a vehicle that is marked as artillery
+// TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
 {
     local DHVehicle V;
@@ -1100,123 +1083,16 @@ simulated function bool IsSLorASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
 
-// Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
-// The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
-function ServerArtyStrike()
+simulated function bool IsSL()
 {
-    if (Spawn(class'DHArtillerySpawner', self,, SavedArtilleryCoords, rotator(PhysicsVolume.Gravity)) == none)
-    {
-        Log("Error spawning artillery shell spawner!");
-    }
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSL();
 }
 
-// New function for artillery observer role to mark an artillery target on the map
-function ServerSaveArtilleryTarget(bool bIsSmoke)
+simulated function bool IsASL()
 {
-    local DHGameReplicationInfo GRI;
-    local DHVolumeTest VT;
-    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
-    local int          TeamIndex, i;
-    local bool         bValidTarget, bArtilleryTargetMarked;
-
-    TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-
-    // First check that the artillery target is not in a no arty volume
-    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
-    {
-        VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-        if (VT != none)
-        {
-            bValidTarget = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
-    }
-
-    if (!bValidTarget)
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 0); // "Invalid artillery target"
-        return;
-    }
-
-    TeamIndex = GetTeamNum();
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    HitLocation.Z = 0.0; // zero out the z coordinate for 2D distance checking on round hits
-
-    // Axis team - go through team's artillery targets list to make sure we are able to mark a target & there's an available slot
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.GermanArtilleryTargets); ++i)
-        {
-            // Make sure this player hasn't set an artillery target in the last 30 seconds
-            if (GRI.GermanArtilleryTargets[i].Controller == self && (Level.TimeSeconds - GRI.GermanArtilleryTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 4); // "You cannot mark another artillery target marker yet"
-
-                return;
-            }
-
-            // Find an available slot in our team's artillery targets list (an empty slot or our own current marked target)
-            if (GRI.GermanArtilleryTargets[i].Controller == none || GRI.GermanArtilleryTargets[i].Controller == self || !GRI.GermanArtilleryTargets[i].bIsActive)
-            {
-                GRI.GermanArtilleryTargets[i].bIsActive = true;
-                GRI.GermanArtilleryTargets[i].Controller = self;
-                GRI.GermanArtilleryTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
-                GRI.GermanArtilleryTargets[i].Location = HitLocation;
-                GRI.GermanArtilleryTargets[i].Time = Level.TimeSeconds;
-                GRI.GermanArtilleryTargets[i].bIsSmoke = bIsSmoke;
-
-                bArtilleryTargetMarked = true;
-                break;
-            }
-        }
-    }
-    // Allies team - go through team's artillery targets list to make sure we are able to mark a target & there's an available slot
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.AlliedArtilleryTargets); ++i)
-        {
-            if (GRI.AlliedArtilleryTargets[i].Controller == self && (Level.TimeSeconds - GRI.AlliedArtilleryTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 4);
-
-                return;
-            }
-
-            if (GRI.AlliedArtilleryTargets[i].Controller == none || GRI.AlliedArtilleryTargets[i].Controller == self || !GRI.AlliedArtilleryTargets[i].bIsActive)
-            {
-                GRI.AlliedArtilleryTargets[i].bIsActive = true;
-                GRI.AlliedArtilleryTargets[i].Controller = self;
-                GRI.AlliedArtilleryTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
-                GRI.AlliedArtilleryTargets[i].Location = HitLocation;
-                GRI.AlliedArtilleryTargets[i].Time = Level.TimeSeconds;
-                GRI.AlliedArtilleryTargets[i].bIsSmoke = bIsSmoke;
-
-                bArtilleryTargetMarked = true;
-                break;
-            }
-        }
-    }
-
-    // Display success or failure screen message to player
-    if (bArtilleryTargetMarked)
-    {
-        if (bIsSmoke)
-        {
-            Level.Game.BroadcastLocalizedMessage(class'DHArtilleryTargetMessage', 3, PlayerReplicationInfo); // "PlayerName has marked a mortar high-explosive target"
-        }
-        else
-        {
-            Level.Game.BroadcastLocalizedMessage(class'DHArtilleryTargetMessage', 2, PlayerReplicationInfo); // "PlayerName has marked a mortar smoke target"
-        }
-    }
-    else
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 6); // "There are too many active artillery targets"
-    }
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
 }
+
 
 // Modified to use any distance fog setting for the zone we're in
 simulated function float GetMaxViewDistance()
@@ -1338,7 +1214,7 @@ auto state PlayerWaiting
         {
             SetTimer(0, false);
         }
-        else if(Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
+        else if (Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
         {
             bPendingMapDisplay = false;
             SetTimer(0, false);
@@ -2225,7 +2101,7 @@ function ServerUse()
                 EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
 
                 // End AT Rotation action if player is currently preforming one
-                if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+                if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
                 {
                     DHPawn(Pawn).GunToRotate.ServerExitRotation();
                     DHPawn(Pawn).SwitchToLastWeapon();
@@ -2271,6 +2147,124 @@ simulated function ResetSwayAfterBolt()
     SwayTime = 0.0;
 }
 
+simulated function bool IsArtilleryOperator()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+
+    return (RI != none && RI.bCanUseMortars) || IsInArtilleryVehicle();
+}
+
+simulated function bool IsArtillerySpotter()
+{
+    return IsSquadLeader();
+}
+
+simulated function bool IsRadioman()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+
+    return RI != none && RI.bCarriesRadio;
+}
+
+function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, class<ROCriticalMessage> Message, int MessageIndex, optional Object OptionalObject)
+{
+    local int                     TeamIndex, SquadIndex;
+    local Controller              C;
+    local DHPlayer                OtherPlayer;
+    local DHPlayerReplicationInfo PRI;
+
+    TeamIndex = GetTeamNum();
+    SquadIndex = GetSquadIndex();
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        OtherPlayer = DHPlayer(C);
+
+        if (OtherPlayer == none || OtherPlayer == self || OtherPlayer.GetTeamNum() != TeamIndex)
+        {
+            continue;
+        }
+
+        PRI = DHPlayerReplicationInfo(OtherPlayer.PlayerReplicationInfo);
+
+        if (PRI != none && PRI.CheckRole(RoleSelector))
+        {
+            OtherPlayer.ReceiveLocalizedMessage(Message, MessageIndex, PlayerReplicationInfo, OtherPlayer.PlayerReplicationInfo, OptionalObject);
+        }
+    }
+}
+
+function bool IsPositionOfArtillery(vector Position)
+{
+    local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
+    {
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
+            !GRI.DHArtillery[i].IsParadrop())
+        {
+            // to do: refactor checking if GRI.DHArtillery[i].Location == Position
+            // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function bool IsPositionOfParadrop(vector Position)
+{
+    local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
+    {
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
+            GRI.DHArtillery[i].IsParadrop())
+        {
+            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
+            {
+                // to do: refactor checking if GRI.DHArtillery[i].Location == Position
+                // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function int GetActiveOffMapSupportNumber()
+{
+    local int i, Counter;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    Counter = 0;
+    for (i = 0; i < arraycount(GRI.DHArtillery); ++i)
+    {
+        if (GRI.DHArtillery[i] != none &&
+            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum())
+        {
+            Counter++;
+        }
+    }
+    return Counter;
+}
+
 // Modified to allow mortar operator to make a resupply request
 function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
 {
@@ -2279,8 +2273,11 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
     RI = DHRoleInfo(GetRoleInfo());
 
     // Only allow if requesting player is a leader role or if he's a machine gunner or mortar operator requesting resupply
-    if (RI != none && (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars)))
-        && ROGameReplicationInfo(GameReplicationInfo) != none && PRI != none && PRI.Team != none)
+    if (RI != none &&
+        (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars))) &&
+        ROGameReplicationInfo(GameReplicationInfo) != none &&
+        PRI != none &&
+        PRI.Team != none)
     {
         ROGameReplicationInfo(GameReplicationInfo).AddHelpRequest(PRI, ObjID, RequestType, RequestLocation); // add to team's HelpRequests array
 
@@ -5405,7 +5402,7 @@ function ServerParadropSquad(byte TeamIndex, int SquadIndex, vector DropLocation
 
 simulated function bool GetMarkedParadropLocation(out vector ParadropLocation)
 {
-    local PersonalMapMarker ParadropMarker;
+    local DHGameReplicationInfo.MapMarker ParadropMarker;
 
     ParadropMarker = FindPersonalMarker(ParadropMarkerClass);
 
@@ -5767,7 +5764,7 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+function bool ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -5781,8 +5778,10 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocation
 
     if (GRI != none)
     {
-        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
+        return GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation, WorldLocation) != -1;
     }
+
+    return false;
 }
 
 function ServerRemoveMapMarker(int MapMarkerIndex)
@@ -5800,20 +5799,22 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
         return;
     }
 
-    if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanPlayerUse(PRI))
+    if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanRemoveMarker(PRI, MM))
     {
+        MM.MapMarkerClass.static.OnMapMarkerRemoved(self, MM);
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
 }
 
-function array<PersonalMapMarker> GetPersonalMarkers()
+function array<DHGameReplicationInfo.MapMarker> GetPersonalMarkers()
 {
     return PersonalMapMarkers;
 }
 
-function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+function DHGameReplicationInfo.MapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
 {
     local int i;
+    local DHGameReplicationInfo.MapMarker Marker;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
@@ -5822,6 +5823,8 @@ function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
             return PersonalMapMarkers[i];
         }
     }
+
+    return Marker; // dummy marker
 }
 
 function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
@@ -5837,42 +5840,68 @@ function bool IsPersonalMarkerPlaced(class<DHMapMarker> MapMarkerClass)
     }
 }
 
-function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY, vector WorldLocation)
 {
     local DHGameReplicationInfo GRI;
-    local PersonalMapMarker PMM;
+    local DHGameReplicationInfo.MapMarker PMM;
     local int i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    if (GRI == none || MapMarkerClass == none || MapMarkerClass.default.Scope != PERSONAL)
     {
         return;
     }
 
-    if (MapMarkerClass.default.bIsUnique)
+    switch (MapMarkerClass.default.OverwritingRule)
     {
-        for (i = 0; i < PersonalMapMarkers.Length; ++i)
-        {
-            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        case UNIQUE_PER_GROUP:
+            for (i = 0; i < PersonalMapMarkers.Length; ++i)
             {
-                PersonalMapMarkers.Remove(i, 1);
-                break;
+                if (PersonalMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    PersonalMapMarkers.Remove(i, 1);
+                    break;
+                }
             }
-        }
+            break;
+        case UNIQUE:
+            for (i = 0; i < PersonalMapMarkers.Length; ++i)
+            {
+                if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+                {
+                    PersonalMapMarkers.Remove(i, 1);
+                    break;
+                }
+            }
+            break;
+        case OFF:
+            break;
     }
 
     PMM.MapMarkerClass = MapMarkerClass;
-    PMM.MapLocationX = MapLocationX;
-    PMM.MapLocationY = MapLocationY;
-    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+    PMM.CreationTime = GRI.ElapsedTime;
+    PMM.LocationX = byte(255.0 * FClamp(MapLocationX, 0.0, 1.0));
+    PMM.LocationY = byte(255.0 * FClamp(MapLocationY, 0.0, 1.0));
+    PMM.WorldLocation = WorldLocation;
+
+    if (MapMarkerClass.default.LifetimeSeconds != -1)
+    {
+        PMM.ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    }
+    else
+    {
+        PMM.ExpiryTime = -1;
+    }
 
     PersonalMapMarkers.Insert(0, 1);
     PersonalMapMarkers[0] = PMM;
+    MapMarkerClass.static.OnMapMarkerPlaced(self, PersonalMapMarkers[0]);
 }
 
 function RemovePersonalMarker(int Index)
 {
+    PersonalMapMarkers[Index].MapMarkerClass.static.OnMapMarkerRemoved(self, PersonalMapMarkers[Index]);
     PersonalMapMarkers.Remove(Index, 1);
 }
 
@@ -6078,10 +6107,26 @@ exec function SquadMenu()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
-function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject)
+function OnCommandInteractionHidden()
 {
+    CommandInteraction = none;
+}
+
+function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject, optional bool bShouldHideOnLeftMouseRelease)
+{
+    if (CommandInteraction != none)
+    {
+        CommandInteraction.TearDown();
+    }
+
     CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
-    CommandInteraction.PushMenu(MenuClassName, MenuObject);
+
+    if (CommandInteraction != none)
+    {
+        CommandInteraction.OnHidden = OnCommandInteractionHidden;
+        CommandInteraction.bShouldHideOnLeftMouseRelease = bShouldHideOnLeftMouseRelease;
+        CommandInteraction.PushMenu(MenuClassName, MenuObject);
+    }
 }
 
 exec function ShowOrderMenu()
@@ -6095,7 +6140,7 @@ exec function ShowOrderMenu()
     }
 }
 
-// Returns the menu that should be displayed when ShowCommandMenu is called.
+// Returns the menu that should be displayed when ShowOrderMenu is called.
 function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
 {
     local DHPawn OtherPawn, P;
@@ -6112,7 +6157,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    if (DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
     {
         return false;
     }
@@ -6210,7 +6255,6 @@ exec function HideOrderMenu()
     if (CommandInteraction != none)
     {
         CommandInteraction.Hide();
-        CommandInteraction = none;
     }
 }
 
@@ -6750,6 +6794,9 @@ function bool TryToActivateSituationMap()
 
     if (MenuIndex != -1)
     {
+        QueueHint(52, false);
+        QueueHint(53, false);
+
         GUIController.bActive = true;
         HUD.MouseInterfaceStartCapturing();
         HUD.bShowObjectives = true;
@@ -7117,9 +7164,422 @@ exec function IpFuzz(int Iterations)
     }
 }
 
+simulated function array<DHArtillerySpottingScope.STargetInfo> PrepareTargetInfo(int YawScaleStep, rotator VehicleRotation, vector VehicleLocation)
+{
+    local vector                                        Delta;
+    local int                                           Distance, Deflection, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
+    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
+    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local string                                        SquadName;
+    local DHGameReplicationInfo.MapMarker               MapMarker;
+    local DHGameReplicationInfo                         GRI;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalArtilleryRequests;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return Targets;
+    }
+
+    VehicleLocation.Z = 0.0;
+
+    VehicleRotation.Roll = 0;
+    VehicleRotation.Pitch = 0;
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalArtilleryRequests, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalArtilleryRequests.Length; ++i)
+    {
+        if (GlobalArtilleryRequests[i].SquadIndex == ArtillerySupportSquadIndex)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalArtilleryRequests[i];
+        }
+    }
+
+    // Add measurement markers
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+        }
+    }
+
+    // Prepare target information for each marker
+    for (i = 0; i < TargetMapMarkers.Length; ++i)
+    {
+        MapMarker = TargetMapMarkers[i];
+        Delta = MapMarker.WorldLocation - VehicleLocation;
+        Delta.Z = 0;
+
+        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1)));
+        SquadName = SquadReplicationInfo.GetSquadName(GetTeamNum(), MapMarker.SquadIndex);
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
+
+        if (MapMarker.ExpiryTime != -1)
+        {
+            MarkerTimeout = MapMarker.ExpiryTime - GRI.ElapsedTime;
+        }
+        else
+        {
+            MarkerTimeout = -1;
+        }
+
+        switch (TargetMapMarkers[i].MapMarkerClass.default.Type)
+        {
+            case MT_OnMapArtilleryRequest:
+                // calculate which index does this marker's squad have throughout global on-map artillery requests
+                MarkerIndex = 0;
+                for (j = 0; j < GlobalArtilleryRequests.Length; ++j)
+                {
+                    if (GlobalArtilleryRequests[j].SquadIndex < TargetMapMarkers[i].SquadIndex)
+                    {
+                        ++MarkerIndex;
+                    }
+                }
+                ++MarkerIndex;
+                MarkersTotal = GlobalArtilleryRequests.Length;
+                break;
+            case MT_Measurement:
+                // leave neutral values for measurement markers
+                MarkerIndex = -1;
+                MarkersTotal = -1;
+                break;
+            default:
+                Warn("Unknown artillery marker type in DHPlayer.PrepareTargetInfo()");
+        }
+
+        TargetInfo.Distance       = Distance;
+        TargetInfo.MarkerIndex    = MarkerIndex;
+        TargetInfo.MarkersTotal   = MarkersTotal;
+        TargetInfo.SquadName      = SquadName;
+        TargetInfo.YawCorrection  = Deflection / YawScaleStep;  // normalize deflection to yaw scale
+        TargetInfo.Marker         = MapMarker;
+        TargetInfo.Timeout        = MarkerTimeout;
+        Targets[Targets.Length]   = TargetInfo;
+    }
+
+    return Targets;
+}
+
+// This function returns all fire support requests visible in the spotting scope
+function array<DHGameReplicationInfo.MapMarker> GetSpottingScopeTargets()
+{
+    local int                                    i;
+    local DHGameReplicationInfo                  GRI;
+    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalTargetMarkers;
+
+    if (Pawn == none)
+    {
+        return TargetMapMarkers;
+    }
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return TargetMapMarkers;
+    }
+
+    // Get all global fire support markers excluding player's own
+    GRI.GetGlobalArtilleryMapMarkers(self, GlobalTargetMarkers, GetTeamNum());
+
+    // From all global markers leave only the one selected by the player
+    for (i = 0; i < GlobalTargetMarkers.Length; ++i)
+    {
+        if (GlobalTargetMarkers[i].SquadIndex == ArtillerySupportSquadIndex)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = GlobalTargetMarkers[i];
+        }
+    }
+
+    // Add measurement markers
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass.default.Type == MT_Measurement)
+        {
+            TargetMapMarkers[TargetMapMarkers.Length] = PersonalMapMarkers[i];
+        }
+    }
+
+    return TargetMapMarkers;
+}
+
+simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal)
+{
+    local vector TraceStart, TraceEnd;
+    local Actor A, HitActor;
+
+    if (Pawn == none)
+    {
+        HitLocation = vect(0, 0, 0);
+    }
+
+    TraceStart = CalcViewLocation;
+    TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (A == Pawn ||
+            A.IsA('ROBulletWhipAttachment') ||
+            A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        HitActor = A;
+
+        break;
+    }
+
+    if (HitActor == none)
+    {
+        HitLocation = TraceEnd;
+    }
+}
+
+simulated function bool CanUseFireSupportMenu()
+{
+    local DHPawn P;
+
+    if (Pawn == none)
+    {
+        return false;
+    }
+
+    if (Pawn.IsA('Vehicle'))
+    {
+        P = DHPawn(Vehicle(Pawn).Driver);
+    }
+    else
+    {
+        P = DHPawn(Pawn);
+    }
+
+    return P != none && IsSquadLeader();
+}
+
+function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)
+{
+    local DHGameReplicationInfo GRI;
+    local vector                WorldLocation;
+    local int                   MapMarkerPlacingLockTimeout;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    // NOTE: Using vect(0,0,0) as a "null" value might be unreliable.
+    if (GRI != none && L == vect(0, 0, 0))
+    {
+        WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+    }
+    else
+    {
+        WorldLocation = L;
+    }
+
+    if (MarkerClass.default.Cooldown > 0)
+    {
+        MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
+
+        if (MapMarkerPlacingLockTimeout > 0)
+        {
+            ReceiveLocalizedMessage(class'DHFireSupportMessage', 1,,, class'UInteger'.static.Create(MapMarkerPlacingLockTimeout));
+            return;
+        }
+    }
+
+    if (MarkerClass.default.Scope == PERSONAL)
+    {
+        AddPersonalMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
+    }
+    else
+    {
+        ServerAddMapMarker(MarkerClass, MapLocationX, MapLocationY, WorldLocation);
+    }
+}
+
+exec function DebugAddMapMarker(string MapMarkerClassName, int x, int y)
+{
+    local class<DHMapMarker> MapMarkerClass;
+    local float xx, yy;
+
+    if (IsDebugModeAllowed())
+    {
+        xx = float(x)/10;
+        yy = float(y)/10;
+        MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, class'Class'));
+        Log("adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ xx @ "," @ yy);
+        AddMarker(MapMarkerClass, xx, yy);
+    }
+}
+
+function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
+{
+    if (Index < 0)
+    {
+        return;
+    }
+
+    if (MarkerClass.default.Scope == PERSONAL)
+    {
+        RemovePersonalMarker(Index);
+    }
+    else
+    {
+        ServerRemoveMapMarker(Index);
+    }
+}
+
 simulated exec function ListWeapons()
 {
     class'DHWeaponRegistry'.static.DumpToLog(self);
+}
+
+exec function DebugStartRound()
+{
+    local DHGameReplicationInfo GRI;
+    local DHSetupPhaseManager SPM;
+
+    if (IsDebugModeAllowed())
+    {
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        if (GRI == none || !GRI.bIsInSetupPhase)
+        {
+            return;
+        }
+
+        GRI.SpawningEnableTime = 0;
+
+        foreach AllActors(class'DHSetupPhaseManager', SPM)
+        {
+            SPM.ModifySetupPhaseDuration(3, true);
+        }
+    }
+}
+
+function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
+{
+    local DHGameReplicationInfo GRI;
+    local int ExpiryTime;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if(MapMarkerClass.default.Cooldown > 0)
+    {
+        switch(MapMarkerClass.default.OverwritingRule)
+        {
+            case UNIQUE:
+                MapMarkerCooldowns.Get("" $ MapMarkerClass, ExpiryTime);
+                return ExpiryTime - GRI.ElapsedTime;
+            case UNIQUE_PER_GROUP:
+                // to do: implement an int->int hashmap & use it here
+                MapMarkerCooldowns.Get("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+                return ExpiryTime - GRI.ElapsedTime;
+        }
+    }
+
+    return 0;
+}
+
+function ClientSetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
+{
+    SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
+}
+
+function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
+{
+    local int ExpiryTime;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (MapMarkerClass == none || GRI == none || MapMarkerClass.default.Cooldown <= 0)
+    {
+        return;
+    }
+
+    ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
+
+    if(MapMarkerClass.default.Scope != PERSONAL)
+    {
+        // We are on the server at this point, as this function is called from OnMapMarkerPlaced
+        // which for non-personal markers is executed on the server.
+        // Save the lock expiry time on the client.
+        ClientSetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
+    }
+    else
+    {
+        // We are on the client here anyway.
+        SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
+    }
+
+    return;
+}
+
+function SetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
+{
+    switch (MapMarkerClass.default.OverwritingRule)
+    {
+        case UNIQUE:
+            MapMarkerCooldowns.Put("" $ MapMarkerClass, ExpiryTime);
+            break;
+        case UNIQUE_PER_GROUP:
+            MapMarkerCooldowns.Put("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+            break;
+    }
+}
+
+exec function ToggleSelectedArtilleryTarget()
+{
+    local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local int i, NewSquadIndex;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none || SquadReplicationInfo == none || !PRI.IsArtilleryOperator())
+    {
+        return;
+    }
+
+    GRI.GetGlobalArtilleryMapMarkers(self, ArtilleryMarkers, GetTeamNum());
+
+    if (ArtilleryMarkers.Length == 0)
+    {
+        // no artillery markers found, fall back to a neutral index
+        ServerSaveArtillerySupportSquadIndex(255);
+        return;
+    }
+
+    NewSquadIndex = ArtillerySupportSquadIndex + 1;
+
+    // cycle through all squads in an increasing Round-Robin order
+    // and check if there are available targets that can be selected
+    while (NewSquadIndex != ArtillerySupportSquadIndex)
+    {
+        // look for a map marker made by the squad with the new squad index
+        for (i = 0; i < ArtilleryMarkers.Length; i++)
+        {
+            if (NewSquadIndex == ArtilleryMarkers[i].SquadIndex)
+            {
+                // we found the marker we were looking for
+
+                ServerSaveArtillerySupportSquadIndex(ArtilleryMarkers[i].SquadIndex);
+                ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+                return;
+            }
+        }
+
+        // no marker found for the new squad index
+        // try the next squad
+        NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
+    }
 }
 
 defaultproperties
@@ -7162,8 +7622,8 @@ defaultproperties
     ViewFOVMax=100.0
     ConfigViewFOV=85.0
 
-    // Paradrops
-    ParadropMarkerClass=class'DHMapMarker_Paradrop'
+    // Admin-initialed paradrops
+    ParadropMarkerClass=class'DH_Engine.DHMapMarker_AdminParadrop'
     ParadropHeight=10000
     ParadropSpreadModifier=600
 
@@ -7190,7 +7650,8 @@ defaultproperties
     ToggleDuckIntervalSeconds=0.5
 
     PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
-    PersonalMapMarkerClasses(1)=class'DHMapMarker_Paradrop'
+    PersonalMapMarkerClasses(1)=class'DHMapMarker_AdminParadrop'
 
     MinIQToGrowHead=100
+    ArtillerySupportSquadIndex=255
 }

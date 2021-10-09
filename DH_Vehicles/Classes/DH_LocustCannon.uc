@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_turret'
     Skins(0)=Texture'DH_Locust_tex.Locust_turret_ext'
     Skins(1)=Texture'DH_Locust_tex.Locust_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_collision')
     FireAttachBone="turret"
     FireEffectOffset=(X=-21.0,Y=16.0,Z=35.0)
 

@@ -198,7 +198,7 @@ defaultproperties
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        Acceleration=(Z=-300.000000))
+        Acceleration=(Z=-300.000000)
         ColorScale(0)=(Color=(B=192,G=192,R=192,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         FadeOutStartTime=0.500000

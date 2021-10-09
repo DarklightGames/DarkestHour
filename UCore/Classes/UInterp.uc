@@ -77,3 +77,49 @@ static final function float Mimi(float T)
     return 16 * (T ** 2) * ((T - 1) ** 2);
 }
 
+//       ^
+//  1-A -|                                          #####
+//       |                                      ####
+//       |                                  ####
+//       |                               ###
+//       |                             ##
+//       |                            #     |--------|
+//       |                          ##      |~ cos(x)|
+//       |                         #        |--------|
+//       |                         #
+//       |                       ##
+//  0.5 -|                       +
+//       |                      ##
+//       |  |---------|        #
+//       |  |~ -cos(x)|        #
+//       |  |---------|      ##
+//       |                  #
+//       |                ##
+//       |             ###
+//       |         ####
+//       |     ####
+//    A -|#####                  |                        |
+//       +---------------------------------------------------->
+//      0.0                     0.5                      1.0
+
+static final function float DialRounding(float X, float A)
+{
+    if (A > 0.5 || A < 0.0)
+    {
+        Warn("Function DialRounding is not defined for A=" $ X);
+
+        return 0 / 0;
+    }
+
+    if (X >= 0 && X <= 0.5)
+    {
+        return 0.5 - (0.5 - A) * Cos(PI * X);
+    }
+    else if (X > 0.5 && X <= 1.0)
+    {
+        return 0.5 - (0.5 - A) * Cos(PI * X);
+    }
+
+    return 0.0;
+}
+

@@ -48,4 +48,5 @@ defaultproperties
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_Smoke'
 }

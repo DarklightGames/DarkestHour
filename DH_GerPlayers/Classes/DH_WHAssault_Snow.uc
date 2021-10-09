@@ -12,9 +12,5 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve' //to do:
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnow'
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

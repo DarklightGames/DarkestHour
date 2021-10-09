@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DarkestHourGame extends ROTeamGame;
+class DarkestHourGame extends ROTeamGame
+  dependson(DHActorProxy);
 
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
@@ -112,6 +113,7 @@ enum EArtilleryResponseType
     RESPONSE_Unavailable,
     RESPONSE_Exhausted,
     RESPONSE_BadLocation,
+    RESPONSE_NoTarget,
     RESPONSE_NotQualified,
     RESPONSE_TooSoon,
     RESPONSE_BadRequest
@@ -349,8 +351,6 @@ function PostBeginPlay()
         GRI.AxisHelpRequests[k].OfficerPRI = none;
         GRI.AxisHelpRequests[k].RequestType = 255;
     }
-
-    ResetArtilleryTargets();
 
     if (LevelInfo.OverheadOffset == OFFSET_90)
     {
@@ -1629,7 +1629,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     Other.PlayerReplicationInfo.SetPlayerName(S);
 
     // Notify local players
-    if  (bNameChange)
+    if (bNameChange)
     {
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
@@ -1999,7 +1999,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0); // stops arty co-ords remaining on player's map if he stops being an arty officer
+                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
                     SetCharacter(aPlayer);
                 }
             }
@@ -2011,8 +2011,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
             // Since we're changing roles, clear all associated requests/rally points
             ClearSavedRequestsAndRallyPoints(Playa, false);
-
-            GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
         }
         else
         {
@@ -2068,6 +2066,27 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     }
 }
 
+function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
+{
+    local class<DHShellExplosionDamageType> ExplosionDamageType;
+    local class<DHShellImpactDamageType> ImpactDamageType;
+
+    if (DHKiller == none || !DHKiller.IsArtilleryOperator())
+    {
+        return false;
+    }
+
+    ExplosionDamageType = class<DHShellExplosionDamageType>(DamageType);
+
+    if (ExplosionDamageType != none && ExplosionDamageType.default.bIsArtilleryExplosion)
+    {
+        return true;
+    }
+
+    ImpactDamageType = class<DHShellImpactDamageType>(DamageType);
+    return ImpactDamageType != none && ImpactDamageType.default.bIsArtilleryImpact;
+}
+
 // Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
 // IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
@@ -2075,7 +2094,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i;
+    local int        i, ArtilleryRequestExpiryTime;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
 
     if (Killed == none)
@@ -2095,13 +2114,23 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             Killed.PlayerReplicationInfo.Deaths += 1.0;
         }
 
+        DHKilled = DHPlayer(Killed);
+        DHKiller = DHPlayer(Killer);
+
+        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
+        {
+            ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
+            if((ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
+                && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+            {
+                DamageType =  class'DHArtilleryKillDamageType';
+            }
+        }
+
         // Special handling if this was a spawn kill
         // Suiciding won't count as a spawn kill - did this because suiciding after a combat spawn will not act the same way & thus is not intuitive
         if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).IsSpawnKillProtected() && Killer != Killed)
         {
-            DHKilled = DHPlayer(Killed);
-            DHKiller = DHPlayer(Killer);
-
             DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
 
             if (DHKiller != none && DHKilled != none) // only relevant to player vs player spawn kills
@@ -2282,6 +2311,94 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
     }
 }
 
+function UpdateArtilleryAvailability()
+{
+    local int                           i;
+    local class<DHVehicle>              VehicleClass;
+    local class<DHConstruction_Vehicle> Construction;
+    local DHActorProxy.Context          Context;
+
+    GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 0;
+    GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 0;
+
+    if (GRI == none || DHLevelInfo == none)
+    {
+        return;
+    }
+
+    // Check if mortars are enabled (on-map artillery part 1.)
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    {
+        if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
+        {
+            GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
+            break;
+        }
+    }
+
+    for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+    {
+        if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
+        {
+            GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
+            break;
+        }
+    }
+
+    // Check if artillery vehicles are enabled (on-map artillery part 2.)
+    for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); ++i)
+    {
+        VehicleClass = class<DHVehicle>(GRI.VehiclePoolVehicleClasses[i]);
+
+        if (VehicleClass != none && VehicleClass.default.bIsArtilleryVehicle)
+        {
+            GRI.bOnMapArtilleryEnabled[VehicleClass.default.VehicleTeam] = 1;
+        }
+    }
+
+    // TODO: This won't actually work because some nations don't have an artillery piece in their constructions.
+    // Check if artillery constructions are enabled (on-map artillery)
+    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    {
+        Construction = class<DHConstruction_Vehicle>(GRI.ConstructionClasses[i]);
+        if (GRI.bAreConstructionsEnabled
+          && Construction != none
+          && Construction.static.IsArtillery()
+          && !DHLevelInfo.IsConstructionRestricted(Construction))
+        {
+            Context.TeamIndex = AXIS_TEAM_INDEX;
+            VehicleClass = Construction.static.GetVehicleClass(Context);
+
+            if (VehicleClass != none)
+            {
+                GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
+            }
+
+            Context.TeamIndex = ALLIES_TEAM_INDEX;
+            VehicleClass = Construction.static.GetVehicleClass(Context);
+
+            if (VehicleClass != none)
+            {
+                GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
+            }
+        }
+    }
+
+    // Check if off-map artillery (legacy artillery) is enabled
+    for (i = 0; i < DHLevelInfo.ArtilleryTypes.Length; ++i)
+    {
+        if (DHLevelInfo.ArtilleryTypes[i].TeamIndex == NEUTRAL_TEAM_INDEX)
+        {
+            GRI.bOffMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
+            GRI.bOffMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
+        }
+        else if (DHLevelInfo.ArtilleryTypes[DHLevelInfo.ArtilleryTypes[i].TeamIndex].Limit > 0)
+        {
+            GRI.bOffMapArtilleryEnabled[DHLevelInfo.ArtilleryTypes[i].TeamIndex] = 1;
+        }
+    }
+}
+
 function UpdateAllPlayerScores()
 {
     local Controller C;
@@ -2321,6 +2438,24 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
+    // Special case handling for artillery kills. Send message only to the killer & victim.
+    if (class<DHArtilleryKillDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
+    {
+        // Send DM to a killed human player
+        if (DHPlayer(Killed) != none)
+        {
+            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        // If mode is Personal, also send DM to the killer (if human)
+        if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
+        {
+            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        return;
+    }
+
     // (Message mode is none Or Killed doesn't exist) AND DamageType is not type DHInstantObituaryDamageTypes, then return
     if ((DeathMessageMode == DM_None || Killed == none) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
     {
@@ -2354,7 +2489,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         return;
     }
 
-    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a Spawn Kill
+    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a DHInstantObituaryDamageTypes
     // Loop through all controllers & DM each human player
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
@@ -2401,6 +2536,9 @@ state RoundInPlay
         local Actor A;
         local int i;
         local ROVehicleFactory ROV;
+        local DH_LevelInfo LI;
+
+        LI = DHLevelInfo;
 
         // Begin reseting all round properties!!!
         RoundStartTime = ElapsedTime;
@@ -2552,7 +2690,6 @@ state RoundInPlay
         // Notify players that the map has been updated
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
-        ResetArtilleryTargets();
         GRI.ClearMapMarkers();
 
         // Set reinforcements
@@ -2589,6 +2726,7 @@ state RoundInPlay
             Metrics.OnRoundBegin();
         }
 
+        UpdateArtilleryAvailability();
         UpdateAllPlayerScores();
     }
 
@@ -3175,11 +3313,6 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
             return;
         }
     }
-}
-
-function ResetArtilleryTargets()
-{
-    GRI.ClearAllArtilleryTargets();
 }
 
 // Handle reinforcment checks, this function is called when a player spawns and subtracts a reinforcement, also handles messages
@@ -4112,7 +4245,6 @@ function PlayerLeftTeam(PlayerController P)
     }
 
     GRI.UnreserveVehicle(PC);
-    GRI.ClearArtilleryTarget(PC);
 
     if (SquadReplicationInfo != none)
     {
@@ -4934,7 +5066,6 @@ function NotifyLogout(Controller Exiting)
 
     if (PC != none)
     {
-        GRI.ClearArtilleryTarget(PC);
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -5528,6 +5659,8 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 {
     local ArtilleryResponse Response;
     local DHVolumeTest VT;
+    local DHPlayerReplicationInfo PRI;
+    local vector MapLocation;
     local int Interval;
 
     if (Request == none ||
@@ -5559,13 +5692,17 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
     }
+    else if (Request.Location == vect(0,0,0))
+    {
+        Response.Type = RESPONSE_NoTarget;
+    }
     else
     {
         // Don't let the player call in an artillery strike on a location that has
         // become an active "no artillery" volume after they marked the location.
         VT = Spawn(class'DHVolumeTest', self,, Request.Location);
 
-        if (VT != none && VT.IsInNoArtyVolume())
+        if (VT != none && VT.DHIsInNoArtyVolume(GRI))
         {
             // The requested location is in a no-artillery volume.
             Response.Type = RESPONSE_BadLocation;
@@ -5604,6 +5741,13 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime = GRI.ElapsedTime + Interval;
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].ArtilleryActor = Response.ArtilleryActor;
+
+            if (Response.ArtilleryActor.default.ActiveArtilleryMarkerClass != none)
+            {
+                PRI = DHPlayerReplicationInfo(Request.Sender.PlayerReplicationInfo);
+                GRI.GetMapCoords(Response.ArtilleryActor.Location, MapLocation.X, MapLocation.Y);
+                GRI.AddMapMarker(PRI, Response.ArtilleryActor.default.ActiveArtilleryMarkerClass, MapLocation, Response.ArtilleryActor.Location);
+            }
 
             NotifyPlayersOfMapInfoChange(Request.TeamIndex);
         }
@@ -5711,10 +5855,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=9
-        Minor=13
-        Patch=1
-        Prerelease=""
+        Major=10
+        Minor=0
+        Patch=0
+        Prerelease="beta.3"
     End Object
     Version=VersionObject
 
