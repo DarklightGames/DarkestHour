@@ -111,6 +111,7 @@ var     STargetWidgetLayout TargetWidgetLayout;
 
 var     string              TargetToggleHint;
 var     string              SelectTargetHint;
+var     string              NoTargetsHint;
 
 simulated static function CreateRenderTable(Canvas C)
 {
@@ -370,6 +371,7 @@ simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, flo
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
     local bool bSelectedMarkerNotAvailable;
     local string Label;
+    local Color LabelColor;
 
     PC = DHPlayer(PRI.Owner);
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
@@ -406,23 +408,31 @@ simulated static function DrawTargets(DHPlayerReplicationInfo PRI, Canvas C, flo
         }
     }
 
+    LabelColor = class'UColor'.default.White;
+
     if (ArtilleryMarkers.Length > 0 && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
     {
         // The player hasn't chosen anything from the available requests
         Label = Repl(default.SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+        LabelColor = class'UColor'.default.Green;
     }
     else if (!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
     {
         // The player has selected an avilable marker
         // but there are more to toggle between
         Label = Repl(default.TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+        LabelColor = class'UColor'.default.Green;
+    }
+    else
+    {
+        Label = default.NoTargetsHint;
     }
 
     Label = class'ROTeamGame'.static.ParseLoadingHintNoColor(Label, PC);
 
     C.CurX = default.WidgetsPanelTopLeftX - 40;
     C.CurY = default.WidgetsPanelTopLeftY - 30;
-    C.SetDrawColor(default.Green.R, default.Green.G, default.Green.B, default.Green.A);
+    C.SetDrawColor(LabelColor.R, LabelColor.G, LabelColor.B, LabelColor.A);
     C.DrawText(Label);
 }
 
@@ -850,8 +860,9 @@ defaultproperties
     Red=(R=255,G=0,B=0,A=255)
 
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
-    TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets."
-    SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target."
+    TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets"
+    SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
+    NoTargetsHint="No targets available"
 
     YawDialSpan=0.6   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.4

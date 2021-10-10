@@ -47,9 +47,9 @@ defaultproperties
     ShellCaseEmitterClass=class'DH_Effects.DH_20mmShellCaseEmitter'
     ShellCaseEjectorBone="Gun"
 
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="Elevation_wheel",Scale=-32.0)
-    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="Sight_arm",Scale=-1.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0,RotationAxis=AXIS_Z)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="Elevation_wheel",Scale=-32.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="Sight_arm",Scale=-1.0,RotationAxis=AXIS_Y)
 
     // Animations
     BeginningIdleAnim="optic_idle"

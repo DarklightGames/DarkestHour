@@ -2,15 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [x] elevation wheel
-// [ ] traverse wheel
-// [x] collision mesh for shield/gun
 // [ ] destroyed mesh
-// [ ] winter version ( set up in construction class also)
 // [ ] new ammo types, range calibration table etc.
-// [x] interface art
 // [ ] remove bullet collision from the karma box [is this even possible]?
 // [ ] fix cam animation to not clip through the gunsight
+// [ ] fix size of wheels
+// [ ] final export for the mesh
+//==============================================================================
+// [ x] traverse wheel
+// [x] elevation wheel
+// [x] collision mesh for shield/gun
+// [x] winter version ( set up in construction class also)
+// [x] interface art
 // [x] lock cam during transitions
 // [x] vis sphere
 //==============================================================================

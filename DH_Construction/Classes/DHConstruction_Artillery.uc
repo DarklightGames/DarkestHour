@@ -27,7 +27,14 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                         return class'DH_Guns.DH_M116Gun';
                     }
                 case NATION_USSR:
-                    return class'DH_Guns.DH_M1927Gun';
+                    if (Context.LevelInfo.Season == Season_Winter)
+                    {
+                        return class'DH_Guns.DH_M1927Gun_Winter';
+                    }
+                    else
+                    {
+                        return class'DH_Guns.DH_M1927Gun';
+                    }
                 default:
                     break;
             }

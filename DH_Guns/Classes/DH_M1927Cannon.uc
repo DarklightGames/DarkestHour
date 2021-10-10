@@ -22,8 +22,8 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.Collision.m1927_turret_collision',AttachBone="Turret")
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="elevation_wheel",Scale=-256.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-256.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="elevation_wheel",Scale=-256.0,RotationAxis=AXIS_Y)
 
     // Turret movement
     RotationsPerSecond=0.005

@@ -82,11 +82,19 @@ enum ERotationType
     ROTATION_Pitch
 };
 
+enum EAxis
+{
+    AXIS_X, // roll
+    AXIS_Y, // pitch
+    AXIS_Z  // yaw
+};
+
 struct SGunWheel
 {
-    var ERotationType RotationType;
-    var name          BoneName;
-    var float         Scale;
+    var ERotationType   RotationType;
+    var name            BoneName;
+    var float           Scale;
+    var EAxis           RotationAxis;
 };
 
 var array<SGunWheel> GunWheels;
@@ -2001,6 +2009,7 @@ simulated function UpdateGunWheels()
 {
     local int i;
     local rotator BoneRotation;
+    local int Value;
 
     for (i = 0; i < GunWheels.Length; ++i)
     {
@@ -2009,12 +2018,25 @@ simulated function UpdateGunWheels()
         switch (GunWheels[i].RotationType)
         {
             case ROTATION_Yaw:
-                BoneRotation.Yaw = CurrentAim.Yaw * GunWheels[i].Scale;
+                Value = CurrentAim.Yaw * GunWheels[i].Scale;
                 break;
             case ROTATION_Pitch:
-                BoneRotation.Pitch = CurrentAim.Pitch * GunWheels[i].Scale;
+                Value = CurrentAim.Pitch * GunWheels[i].Scale;
                 break;
             default:
+                break;
+        }
+
+        switch (GunWheels[i].RotationAxis)
+        {
+            case AXIS_X:
+                BoneRotation.Roll = Value;
+                break;
+            case AXIS_Y:
+                BoneRotation.Pitch = Value;
+                break;
+            case AXIS_Z:
+                BoneRotation.Yaw = Value;
                 break;
         }
 

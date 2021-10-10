@@ -21,7 +21,7 @@ defaultproperties
     ShootIntermediateAnim="shoot_close"
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0,RotationAxis=AXIS_Z)
 
     // Turret movement
     ManualRotationsPerSecond=0.015625
