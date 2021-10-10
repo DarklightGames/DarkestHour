@@ -60,6 +60,5 @@ defaultproperties
     YawSegmentSchema(8)=(Shape=ShortTick)
     YawSegmentSchema(9)=(Shape=ShortTick)
 
-    YawIndicatorLength=200.0
-    YawDialRoundingConstant=0.125
+    YawIndicatorLength=200
 }

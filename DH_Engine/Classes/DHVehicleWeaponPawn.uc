@@ -32,8 +32,12 @@ var     float       OverlayCorrectionX;          // scope center correction in p
 var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
-var     int         SpottingScopePositionIndex;
-var     class<DHArtillerySpottingScope>     ArtillerySpottingScope;
+var     int                             SpottingScopePositionIndex;
+var     class<DHArtillerySpottingScope> ArtillerySpottingScope;
+var     array<float>                    YawTicksShading;
+var     array<float>                    PitchTicksShading;
+var     array<float>                    YawTicksCurvature;
+var     array<float>                    PitchTicksCurvature;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
@@ -59,12 +63,33 @@ replication
 // Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
 simulated function PostBeginPlay()
 {
+    local int i, YawIndicatorLength, PitchIndicatorLength;
+
     super.PostBeginPlay();
 
     if (InitialPositionIndex > 0 && Role == ROLE_Authority)
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
+    }
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        // Calculate curvature & shading coefficients for ticks on artillery scope's dial
+        YawIndicatorLength = default.ArtillerySpottingScope.default.YawIndicatorLength;
+        PitchIndicatorLength = default.ArtillerySpottingScope.default.PitchIndicatorLength;
+
+        for (i = 0; i < YawIndicatorLength; ++i)
+        {
+            YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, default.ArtillerySpottingScope.default.YawDialSpan);
+            YawTicksShading[i] = 1 - 2 * abs(YawTicksCurvature[i] - 0.5);
+        }
+
+        for (i = 0; i < PitchIndicatorLength; ++i)
+        {
+            PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, default.ArtillerySpottingScope.default.PitchDialSpan);
+            PitchTicksShading[i] = 1 - 2 * abs(PitchTicksCurvature[i] - 0.5);
+        }
     }
 }
 
