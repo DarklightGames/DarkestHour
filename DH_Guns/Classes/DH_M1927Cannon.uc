@@ -12,10 +12,18 @@ defaultproperties
     Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
     GunnerAttachmentBone="com_player"
 
+    WeaponFireAttachmentBone="Muzzle"
+
     // Animation
     ShootIntermediateAnim="shoot_close"
 
-    WeaponFireAttachmentBone="Muzzle"
+    // Collision meshes
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.Collision.m1927_gun_collision',AttachBone="Gun")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M1927_stc.Collision.m1927_turret_collision',AttachBone="Turret")
+
+    // Gun Wheels
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="elevation_wheel",Scale=-256.0)
 
     // Turret movement
     RotationsPerSecond=0.005
@@ -36,10 +44,12 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=6
+
+    InitialPrimaryAmmo=28
     InitialSecondaryAmmo=4
-    MaxPrimaryAmmo=6
+    MaxPrimaryAmmo=28
     MaxSecondaryAmmo=4
+
     Spread=0.020
     SecondarySpread=0.00125
 

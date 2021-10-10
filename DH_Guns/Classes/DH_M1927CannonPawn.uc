@@ -33,6 +33,8 @@ defaultproperties
     GunsightOverlay=none // spotting scope replaces gunsight
     GunsightSize=0
 
+    bLockCameraDuringTransition=true
+
     OverlayCorrectionX=0
     OverlayCorrectionY=50
 

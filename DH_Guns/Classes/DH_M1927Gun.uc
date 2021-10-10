@@ -2,12 +2,17 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] elevation wheel
+// [x] elevation wheel
 // [ ] traverse wheel
-// [ ] collision mesh for shield/gun
+// [x] collision mesh for shield/gun
 // [ ] destroyed mesh
 // [ ] winter version ( set up in construction class also)
 // [ ] new ammo types, range calibration table etc.
+// [x] interface art
+// [ ] remove bullet collision from the karma box [is this even possible]?
+// [ ] fix cam animation to not clip through the gunsight
+// [x] lock cam during transitions
+// [x] vis sphere
 //==============================================================================
 
 class DH_M1927Gun extends DHATGun;
@@ -38,9 +43,9 @@ defaultproperties
     DestroyedMeshSkins(0)=Material'DH_LeIG18_tex.LeIG18.IG18_2_dest'
     DestroyedMeshSkins(1)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
     DestroyedMeshSkins(2)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
-    VehicleHudImage=Texture'DH_LeIG18_tex.HUD.leig18_body'
-    VehicleHudTurret=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_look'
+    VehicleHudImage=Texture'DH_M1927_tex.interface.m1927_body_hud'
+    VehicleHudTurret=TexRotator'DH_M1927_tex.interface.m1927_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M1927_tex.interface.m1927_turret_look'
     ExitPositions(1)=(X=-75.00,Y=-35.00,Z=50.00)
     ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
