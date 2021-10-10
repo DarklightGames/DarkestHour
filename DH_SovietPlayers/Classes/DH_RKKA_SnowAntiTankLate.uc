@@ -11,4 +11,6 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PTRDWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
+
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmetSnow'
 }

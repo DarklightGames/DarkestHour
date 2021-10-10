@@ -2,10 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// This gun still need a bunch of work, and it's utility is extremely limited
-// because the gun has such a limited yaw range. This gun can be implemented
-// fully once we have the ability to rotate AT guns.
-//==============================================================================
 
 class DH_LeIG18Gun extends DHATGun;
 
@@ -41,9 +37,10 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
-    SupplyCost=2100
+    SupplyCost=2000
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    RotateCooldown=2
     ShadowZOffset=10
     bIsArtilleryVehicle=true
 

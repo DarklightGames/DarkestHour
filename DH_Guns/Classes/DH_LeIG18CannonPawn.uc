@@ -20,7 +20,6 @@ defaultproperties
     CameraBone="gun" //changing here since we don't want pitch, only traverse/yaw of gunsight
 
     GunsightPositions=0
-
     UnbuttonedPositionIndex=0
     SpottingScopePositionIndex=0
     IntermediatePositionIndex=1 // the open sights position (used to play a special 'intermediate' firing anim in that position)

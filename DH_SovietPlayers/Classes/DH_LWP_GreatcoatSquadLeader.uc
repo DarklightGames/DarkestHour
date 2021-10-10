@@ -7,7 +7,10 @@ class DH_LWP_GreatcoatSquadLeader extends DHPOLSergeantRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatBrownSLPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatBrownSLPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatGreySLPawn',Weight=2.0)
+    RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatGreyPawn',Weight=1.0)
+    RolePawns(3)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatGreyBagPawn',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
     Headgear(1)=class'DH_SovietPlayers.DH_LWPHelmet'

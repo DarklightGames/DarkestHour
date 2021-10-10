@@ -8,6 +8,8 @@ class DHSOVSergeantRoles extends DHAlliedSergeantRoles
 
 defaultproperties
 {
+    MyName="Squad leader"
+    PluralName="Squad leaders"
     AltName="Komandir otdeleniya"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
@@ -20,4 +22,5 @@ defaultproperties
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

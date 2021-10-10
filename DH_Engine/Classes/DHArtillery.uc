@@ -54,29 +54,7 @@ static function string GetMenuName()
 // Returns true if the specified player is able to request this class of artillery.
 static function bool CanBeRequestedBy(DHPlayer PC)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo RI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-
-    if (RI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsArtillerySpotter();
 }
 
 // These override function are meant to facilitate gathering the limit and

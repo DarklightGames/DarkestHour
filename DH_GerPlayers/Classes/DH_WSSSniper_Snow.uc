@@ -12,8 +12,8 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetSnow'
     HeadgearProbabilities(0)=1.0
-	
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BHPWeapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ColtM1914Weapon')
+    HandType=Hand_Gloved
 }

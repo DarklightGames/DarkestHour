@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_turret'
     Skins(0)=Texture'DH_Pak39_tex.body.pak39_body'
-    CollisionStaticMesh=StaticMesh'DH_Pak39_stc.Collision.pak39_turret_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak39_stc.Collision.pak39_turret_collision')
     GunnerAttachmentBone="com_player"
 
     // Turret movement

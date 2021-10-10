@@ -108,4 +108,6 @@ XWebAdmin/
 UserLogs
 *.rus
 .vs/
+.vscode/
 *.log
+umodel.cfg

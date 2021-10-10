@@ -9,6 +9,7 @@ class DHAxisMortarmanRoles extends DHAxisRoles
 defaultproperties
 {
     bCanUseMortars=true
+    bExemptSquadRequirement=true
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

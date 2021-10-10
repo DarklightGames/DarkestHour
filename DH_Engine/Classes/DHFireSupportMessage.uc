@@ -5,10 +5,12 @@
 
 class DHFireSupportMessage extends ROCriticalMessage;
 
-var localized string RequestConfirmedText;
-var localized string ArtilleryRequestingLocked;
+var localized string OnMapArtilleryRequestConfirmedText;
+var localized string OffMapArtilleryRequestConfirmedText;
+var localized string OnMapArtilleryRequestingLocked;
 var localized string RadiomanNotification;
 var localized string ArtilleryOperatorNotification;
+var localized string ErrorText;
 
 static function string GetString(
     optional int Switch,
@@ -17,13 +19,12 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    local class<DHMapMarker>              MapMarkerClass;
-    local int                             Seconds;
-    local DHGameReplicationInfo           GRI;
-    local DHPlayerReplicationInfo         PRI;
-    local DHSquadReplicationInfo          SRI;
-    local DHPlayer                        PC;
-    local string                          SquadName;
+    local class<DHMapMarker>      MapMarkerClass;
+    local DHPlayerReplicationInfo PRI_1;
+    local DHPlayerReplicationInfo PRI_2;
+    local DHPlayer                PC;
+    local UInteger                LockExpiry;
+    local string                  S;
 
     switch (Switch)
     {
@@ -31,52 +32,71 @@ static function string GetString(
             // Location has been marked.
             MapMarkerClass = class<DHMapMarker>(OptionalObject);
 
-            if (MapMarkerClass != none
-              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+            if (MapMarkerClass != none)
             {
-                return default.RequestConfirmedText;
+                switch (MapMarkerClass.default.Type)
+                {
+                    case MT_OffMapArtilleryRequest:
+                        return default.OffMapArtilleryRequestConfirmedText;
+                    case MT_OnMapArtilleryRequest:
+                        return default.OnMapArtilleryRequestConfirmedText;
+                }
             }
 
             break;
         case 1:
             // You cannot do another fire support request for another {seconds} seconds.
-            PC = DHPlayer(OptionalObject);
+            LockExpiry = UInteger(OptionalObject);
 
-            if (PC != none && PC.GameReplicationInfo != none)
+            if (LockExpiry != none)
             {
-                GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-                Seconds = PC.ArtilleryRequestsUnlockTime - GRI.ElapsedTime;
-                return Repl(default.ArtilleryRequestingLocked, "{seconds}", Seconds);
+                return Repl(default.OnMapArtilleryRequestingLocked, "{seconds}", LockExpiry.Value);
             }
 
             break;
         case 2:
-            // {squad} squad leader has marked a target for artillery barrage.
+            // {squad} squad has marked a target for long-range fire support.
             // off-map fire support (called by radio)
-            PC = DHPlayer(OptionalObject);                // radioman
-            PRI = DHPlayerReplicationInfo(RelatedPRI_2);  // artillery spotter
+            PRI_1 = DHPlayerReplicationInfo(RelatedPRI_1); // artillery spotter
+            PRI_2 = DHPlayerReplicationInfo(RelatedPRI_2); // radioman
 
-            if (PRI != none && PC != none)
+            if (PRI_2 != none)
             {
-                SRI = PC.SquadReplicationInfo;
-                SquadName = SRI.GetSquadName(PRI.Team.TeamIndex, PRI.SquadIndex);
-                return Repl(default.RadiomanNotification, "{squad}", SquadName);
+                PC = DHPlayer(PRI_2.Owner);
+            }
+
+            if (PC != none && PC.SquadReplicationInfo != none && PRI_1 != none)
+            {
+                return Repl(default.RadiomanNotification, "{squad}", PC.SquadReplicationInfo.GetSquadName(PRI_1.Team.TeamIndex, PRI_1.SquadIndex));
             }
 
             break;
         case 3:
-            // A new {type} target has been marked.
+            // {squad} squad has marked a {type} target for fire support.
             // on-map fire support (mortars/Priests/LeIGs etc.)
-            MapMarkerClass = class<DHMapMarker>(OptionalObject);
+            PRI_1 = DHPlayerReplicationInfo(RelatedPRI_1); // artillery spotter
+            PRI_2 = DHPlayerReplicationInfo(RelatedPRI_2); // radioman
 
-            if (MapMarkerClass != none
-              && (MapMarkerClass.default.Type == MT_OffMapArtilleryRequest
-                || MapMarkerClass.default.Type == MT_OnMapArtilleryRequest))
+            if (PRI_2 != none)
             {
-                return Repl(default.ArtilleryOperatorNotification, "{type}", MapMarkerClass.default.MarkerName);
+                PC = DHPlayer(PRI_2.Owner);
             }
 
+            MapMarkerClass = class<DHMapMarker>(OptionalObject);
+
+            if (MapMarkerClass != none && PRI_1 != none && PC != none && PC.SquadReplicationInfo != none)
+            {
+                S = default.ArtilleryOperatorNotification;
+                S = Repl(S, "{type}", MapMarkerClass.default.MarkerName);
+                S = Repl(S, "{squad}", PC.SquadReplicationInfo.GetSquadName(PRI_1.Team.TeamIndex, PRI_1.SquadIndex));
+
+                return S;
+            }
+
+            break;
+        case 4:
+            return default.ErrorText;
+        default:
             break;
     }
 
@@ -85,9 +105,11 @@ static function string GetString(
 
 defaultproperties
 {
-    RequestConfirmedText="Fire support request has been marked."
-    ArtilleryRequestingLocked="You cannot mark another fire support request for another {seconds} seconds."
-    RadiomanNotification="{squad} squad leader has marked a target for fire support."
-    ArtilleryOperatorNotification="A new {type} target has been marked."
+    OnMapArtilleryRequestConfirmedText="Fire support target has been marked."
+    OffMapArtilleryRequestConfirmedText="Long-range fire support target has been marked."
+    OnMapArtilleryRequestingLocked="You cannot place another fire support marker for another {seconds} seconds."
+    RadiomanNotification="{squad} squad has marked a target for long-range fire support."
+    ArtilleryOperatorNotification="{squad} squad has marked a {type} target for fire support."
+    ErrorText="Could not place fire support marker."
 }
 

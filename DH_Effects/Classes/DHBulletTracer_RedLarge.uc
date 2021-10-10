@@ -26,11 +26,11 @@ defaultproperties
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(R=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=255))
-        Opacity=0.5//0.65
+        Opacity=0.65//0.65
         MaxParticles=1
         SizeScale(0)=(RelativeSize=1.0)
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.25)
-        StartSizeRange=(X=(Min=5.0,Max=6.0))
+        StartSizeRange=(X=(Min=10.0,Max=13.0))
         InitialParticlesPerSecond=2000.0
         Texture=Texture'DH_FX_Tex.effects.dhtrailblur'
         SecondsBeforeInactive=0.0

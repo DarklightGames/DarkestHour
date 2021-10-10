@@ -35,7 +35,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
 
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    
+
     if (GRI == none || PRI == none)
     {
         return;
@@ -44,9 +44,10 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
     GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
 
-    if(PC.ArtillerySupportSquadIndex != -1)
+    if (PC.ArtillerySupportSquadIndex != 255)
     {
         GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+
         for (i = 0; i < MapMarkers.Length; ++i)
         {
             if (PC.ArtillerySupportSquadIndex == MapMarkers[i].SquadIndex)
@@ -58,7 +59,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
                 Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
                 bIsWithinRadius = Distance < Threshold;
 
-                if(bIsWithinRadius)
+                if (bIsWithinRadius)
                 {
                     PC.ArtilleryHitInfo.bIsWithinRadius = true;
                     PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[i].ExpiryTime;
@@ -68,6 +69,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
                     PC.ArtilleryHitInfo.bIsWithinRadius = false;
                     PC.ArtilleryHitInfo.ExpiryTime = 0;
                 }
+
                 return;
             }
         }

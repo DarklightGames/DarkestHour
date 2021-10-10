@@ -11,10 +11,11 @@ defaultproperties
     RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USWinterScarfPawn',Weight=1.0)
     RolePawns(2)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=0.6)
     RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
-    HeadgearProbabilities(0)=0.2
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
-    HeadgearProbabilities(1)=0.4
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
+    HeadgearProbabilities(0)=0.2
+    HeadgearProbabilities(1)=0.4
+    HeadgearProbabilities(2)=0.4
+    HandType=Hand_Gloved
 }

@@ -382,7 +382,7 @@ event Opened(GUIComponent Sender)
         {
             Log("Configuration file is older than v10.0.0, assigning the artillery target toggle keybind");
 
-            SetKeyBindIfAvailable(",", "ToggleSelectedArtilleryTarget");
+            SetKeyBindIfAvailable("Comma", "ToggleSelectedArtilleryTarget");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();

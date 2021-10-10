@@ -1629,7 +1629,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     Other.PlayerReplicationInfo.SetPlayerName(S);
 
     // Notify local players
-    if  (bNameChange)
+    if (bNameChange)
     {
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
@@ -2117,14 +2117,14 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
-
-        if (DHKiller != none
-          && IsArtilleryKill(DHKiller, DamageType) 
-          && (ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
-          && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
         {
-            DamageType =  class'DHArtilleryKillDamageType';
+            ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
+            if((ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
+                && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+            {
+                DamageType =  class'DHArtilleryKillDamageType';
+            }
         }
 
         // Special handling if this was a spawn kill
@@ -2367,7 +2367,7 @@ function UpdateArtilleryAvailability()
           && !DHLevelInfo.IsConstructionRestricted(Construction))
         {
             Context.TeamIndex = AXIS_TEAM_INDEX;
-            VehicleClass = Construction.static.GetVehicleClass(Context); 
+            VehicleClass = Construction.static.GetVehicleClass(Context);
 
             if (VehicleClass != none)
             {
@@ -2375,7 +2375,7 @@ function UpdateArtilleryAvailability()
             }
 
             Context.TeamIndex = ALLIES_TEAM_INDEX;
-            VehicleClass = Construction.static.GetVehicleClass(Context); 
+            VehicleClass = Construction.static.GetVehicleClass(Context);
 
             if (VehicleClass != none)
             {
@@ -2437,6 +2437,24 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 {
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
+
+    // Special case handling for artillery kills. Send message only to the killer & victim.
+    if (class<DHArtilleryKillDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
+    {
+        // Send DM to a killed human player
+        if (DHPlayer(Killed) != none)
+        {
+            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        // If mode is Personal, also send DM to the killer (if human)
+        if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
+        {
+            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        return;
+    }
 
     // (Message mode is none Or Killed doesn't exist) AND DamageType is not type DHInstantObituaryDamageTypes, then return
     if ((DeathMessageMode == DM_None || Killed == none) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
@@ -2518,7 +2536,7 @@ state RoundInPlay
         local Actor A;
         local int i;
         local ROVehicleFactory ROV;
-        local DH_LevelInfo                    LI;
+        local DH_LevelInfo LI;
 
         LI = DHLevelInfo;
 
@@ -3080,7 +3098,7 @@ function UpdateTeamConstructions()
     // Check for if we can replenish any team constructions
     for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
     {
-        if (GRI.TeamConstructions[i].Limit < DHLevelInfo.TeamConstructions[i].Limit &&
+        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
             DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
             GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
         {
@@ -5788,7 +5806,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Gï¿½nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5797,10 +5815,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Mï¿½ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grï¿½schke"
-    GermanNames(12)="Wilhelm Krï¿½ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5837,10 +5855,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=9
-        Minor=13
+        Major=10
+        Minor=0
         Patch=0
-        Prerelease="beta.2"
+        Prerelease="beta.3"
     End Object
     Version=VersionObject
 

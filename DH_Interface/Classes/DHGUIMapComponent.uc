@@ -87,7 +87,7 @@ function SetViewport(vector Origin, int ZoomLevel)
 
 function vector GetViewportOrigin()
 {
-    return (Viewport.Min + Viewport.Max) / 2.0;
+    return (Viewport.Min + Viewport.Max) * 0.5;
 }
 
 function UpdateSpawnPointPositions()
@@ -420,7 +420,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     Sender.ContextItems.Length = 0;
 
     // Iterate through existing map markers and check if any were clicked on.
-    GRI.GetMapMarkers(PC, PublicMapMarkers, PC.GetTeamNum());
+    PublicMapMarkers = GRI.GetMapMarkers(PC);
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;
@@ -495,6 +495,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
     }
+
     if (!bDeselectArtilleryTarget && !bSelectArtilleryTarget)
     {
         for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
@@ -560,7 +561,7 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         }
         else if (bDeselectArtilleryTarget && ClickIndex == 0)
         {
-            PC.ServerSaveArtillerySupportSquadIndex(-1);
+            PC.ServerSaveArtillerySupportSquadIndex(255);
             bDeselectArtilleryTarget = False;
         }
         else

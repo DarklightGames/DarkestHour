@@ -13,6 +13,9 @@ defaultproperties
     Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
     GunnerAttachmentBone="com_player"
 
+    // Animations
+    ShootIntermediateAnim="shoot_close"
+
     // Turret movement
     RotationsPerSecond=0.005
     MaxPositiveYaw=1092.0
@@ -32,10 +35,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
-    InitialPrimaryAmmo=6
-    InitialSecondaryAmmo=4
-    MaxPrimaryAmmo=6
-    MaxSecondaryAmmo=4
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
     Spread=0.020
     SecondarySpread=0.00125
 

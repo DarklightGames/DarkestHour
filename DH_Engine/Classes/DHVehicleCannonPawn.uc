@@ -218,7 +218,7 @@ simulated function DrawHUD(Canvas C)
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
                 }
-                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none)
+                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none && Player != none)
                 {
                     Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
 
@@ -232,8 +232,19 @@ simulated function DrawHUD(Canvas C)
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
                         class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
+                        PitchTicksShading,
+                        PitchTicksCurvature,
                         class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
                     ArtillerySpottingScope.static.DrawYaw(
+                        PRI,
+                        C,
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                        Targets,
+                        YawTicksShading,
+                        YawTicksCurvature);
+                    ArtillerySpottingScope.static.DrawTargets(
                         PRI,
                         C,
                         class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),

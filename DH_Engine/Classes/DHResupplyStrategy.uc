@@ -15,7 +15,7 @@ enum EResupplyType
 
 var float UpdateTime;
 
-delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
+delegate OnPawnResupplied(Pawn P); // Called for every pawn that is resupplied
 
 static function bool CanResupplyType(EResupplyType SourceType, EResupplyType TargetType)
 {
@@ -34,7 +34,7 @@ static function bool CanResupplyType(EResupplyType SourceType, EResupplyType Tar
 
 function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSeconds)
 {
-    local inventory recvr_inv;
+    local Inventory recvr_inv;
     local bool bResupplied;
     local DHPawn P;
     local Vehicle V;
@@ -65,8 +65,10 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             bResupplied = bResupplied || recvr_weapon.FillAmmo();
         }
 
-        if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
-          && RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+        if (TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime &&
+            RI != none &&
+            P.bUsedCarriedMGAmmo &&
+            P.bCarriesExtraAmmo)
         {
             P.bUsedCarriedMGAmmo = false;
             bResupplied = true;
@@ -88,21 +90,19 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     }
 
     // Resupply player carrying a mortar
-    if (CanResupplyType(SourceType, RT_Mortars))
+    if (CanResupplyType(SourceType, RT_Mortars) &&
+        P != none &&
+        TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
     {
-        if (P != none)
-        {
-            if ((TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime))
-            {
-                bResupplied = bResupplied
-                    || (CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
-                    || RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition();
-                P.bUsedCarriedMGAmmo = false;
-            }
-        }
+        bResupplied = bResupplied ||
+                      (CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo) ||
+                      RI != none &&
+                      RI.bCanUseMortars &&
+                      P.ResupplyMortarAmmunition();
+        P.bUsedCarriedMGAmmo = false;
     }
 
-    //Play sound if applicable
+    // Play sound if applicable
     if (bResupplied)
     {
         recvr.LastResupplyTime = TimeSeconds;

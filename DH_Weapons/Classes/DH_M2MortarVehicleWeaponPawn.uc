@@ -7,8 +7,8 @@ class DH_M2MortarVehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 defaultproperties
 {
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionUpAnim="Overlay_Out")
-    DriverPositions(1)=(ViewFOV=20.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In")
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionUpAnim="Overlay_Out",bExposed=true)
+    DriverPositions(1)=(ViewFOV=20.0,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed',TransitionDownAnim="Overlay_In",bExposed=true)
     WeaponClass=class'DH_Weapons.DH_M2MortarWeapon'
     GunClass=class'DH_Weapons.DH_M2MortarVehicleWeapon'
     HUDOverlayClass=class'DH_Weapons.DH_M2MortarOverlay'

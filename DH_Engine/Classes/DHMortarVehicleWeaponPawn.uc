@@ -37,6 +37,8 @@ var     name        OverlayUndeployingAnim;
 var     float       OverlayKnobLoweringAnimRate;
 var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
+var     int         OverlaySleeveTexNum;
+var     int         OverlayHandTexNum;
 
 // HUD
 var     texture     HUDArcTexture;           // the elevation display
@@ -213,56 +215,84 @@ simulated function int GetIndex(class<Projectile> ProjectileClass)
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController                              PC;
     local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHPlayer                                      Player;
+    local DHPlayer                                      PC;
     local DHPlayerReplicationInfo                       PRI;
+    local DHHud                                         Hud;
+    local DHMortarVehicleWeapon                         MVW;
+    local int                                           AmmoCount;
 
-    PC = PlayerController(Controller);
-    Player = DHPlayer(PC);
+    PC = DHPlayer(Controller);
+    MVW = DHMortarVehicleWeapon(VehWep);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none || PC.myHud == none || PC.myHud.bHideHud)
+    if (PC == none || PC.bBehindView || MVW == none || Level.IsSoftwareRendering() || HUDOverlay == none)
     {
-        if (DriverPositionIndex == ShooterIndex)
-        {
-            // Draw mortar
-            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
-            HUDOverlay.SetRotation(PC.CalcViewRotation);
-            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-        }
-        else
-        {
-            Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
+        return;
+    }
 
-            PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+    Hud = DHHud(PC.myHUD);
 
-            // to do: refactor to separate variables (calculate once)
-            ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+    if (Hud == none)
+    {
+        return;
+    }
+
+    if (DriverPositionIndex == ShooterIndex)
+    {
+        // Draw mortar
+        HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+        HUDOverlay.SetRotation(PC.CalcViewRotation);
+        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+    }
+    else
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        // to do: refactor to separate variables (calculate once)
+        ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
+
+        if (!PC.myHud.bHideHud)
+        {
+            Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
+
             ArtillerySpottingScope.static.DrawRangeTable(C,
-                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
-                DHMortarVehicleWeapon(VehWep).Elevation + DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
+                                                         MVW.Elevation + MVW.default.ElevationMinimum,
+                                                         MVW.Elevation + MVW.default.ElevationMaximum);
+
             ArtillerySpottingScope.static.DrawPitch(C,
-                DHMortarVehicleWeapon(VehWep).Elevation,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMinimum,
-                DHMortarVehicleWeapon(VehWep).default.ElevationMaximum);
-            ArtillerySpottingScope.static.DrawYaw(
-                PRI,
-                C,
-                // without multiplying yaw by (-1) below the yaw readout is reversed
-                class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                Targets);
+                                                    MVW.Elevation,
+                                                    MVW.default.ElevationMinimum,
+                                                    MVW.default.ElevationMaximum,
+                                                    PitchTicksShading,
+                                                    PitchTicksCurvature);
+
+            ArtillerySpottingScope.static.DrawYaw(PRI,
+                                                  C,
+                                                  // without multiplying yaw by (-1) below the yaw readout is reversed
+                                                  class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                                                  Targets,
+                                                  YawTicksShading,
+                                                  YawTicksCurvature);
+
+            ArtillerySpottingScope.static.DrawTargets(PRI,
+                                                      C,
+                                                      class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
+                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
+                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
+                                                      Targets);
         }
+    }
 
-        ROHud(PC.myHud).DrawVehicleIcon(C, VehicleBase, self);
-        AmmoAmount.Value = VehWep.MainAmmoCharge[VehWep.GetAmmoIndex()];
+    if (!Hud.bHideHUD)
+    {
+        Hud.DrawVehicleIcon(C, VehicleBase, self);
 
-        ROHud(PC.myHud).DrawSpriteWidget(C, AmmoIcon);
+        AmmoCount = MVW.MainAmmoCharge[MVW.GetAmmoIndex()];
+        AmmoAmount.Value = AmmoCount;
 
-        // TODO: holy crap this is bad
-
-        switch (VehWep.GetAmmoIndex())
+        switch (MVW.GetAmmoIndex())
         {
             case 0:
                 AmmoIcon.WidgetTexture = HUDHighExplosiveTexture;
@@ -271,10 +301,22 @@ simulated function DrawHUD(Canvas C)
                 AmmoIcon.WidgetTexture = HUDSmokeTexture;
                 break;
             default:
-            break;
+                break;
         }
 
-        ROHud(PC.myHud).DrawNumericWidget(C, AmmoAmount, ROHud(PC.myHud).Digits);
+        if (AmmoCount > 0)
+        {
+            AmmoIcon.Tints[0] = class'UColor'.default.White;
+            AmmoAmount.Tints[0] = class'UColor'.default.White;
+        }
+        else
+        {
+            AmmoIcon.Tints[0] = Hud.WeaponReloadingColor;
+            AmmoAmount.Tints[0] = Hud.WeaponReloadingColor;
+        }
+
+        Hud.DrawSpriteWidget(C, AmmoIcon);
+        Hud.DrawNumericWidget(C, AmmoAmount, Hud.Digits);
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1008,6 +1050,28 @@ simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
     return true;
 }
 
+// Modified to give the overlay the correct skins for hands and sleeves
+simulated function ActivateOverlay(bool bActive)
+{
+    local DHPlayer PC;
+    local DHRoleInfo RI;
+
+    super.ActivateOverlay(bActive);
+
+    PC = DHPlayer(Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (HUDOverlay != none && RI != none)
+    {
+        HUDOverlay.Skins[OverlaySleeveTexNum] = RI.SleeveTexture;
+        HUDOverlay.Skins[OverlayHandTexNum] = RI.GetHandTexture(PC.GetLevelInfo());
+    }
+}
+
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
@@ -1035,6 +1099,8 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
+    OverlayHandTexNum=0
+    OverlaySleeveTexNum=1
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'

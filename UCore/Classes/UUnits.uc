@@ -42,6 +42,5 @@ static final function float UnrealToMils(coerce float Unreal)
 
 static final function float MilsToUnreal(coerce float Mils)
 {
-    return RadiansToUnreal(Mils / 1000.0);
+    return RadiansToUnreal(Mils / 0.001);
 }
-

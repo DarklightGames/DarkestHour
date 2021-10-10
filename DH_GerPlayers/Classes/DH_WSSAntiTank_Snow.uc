@@ -12,6 +12,6 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
-
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+    HandType=Hand_Gloved
 }

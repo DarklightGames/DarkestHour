@@ -10,13 +10,13 @@ defaultproperties
     // Turret mesh
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll')
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
     // Turret armor
-    FrontArmorFactor=17.1
+    FrontArmorFactor=13.0
     RightArmorFactor=8.7
     LeftArmorFactor=8.7
     RearArmorFactor=8.7

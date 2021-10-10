@@ -105,18 +105,15 @@ simulated function Fire(float F)
 // Modified to add binoculars hint for artillery observer or artillery officer
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DHPawn P;
+    local DHPlayer PC;
 
     super(ROWeapon).BringUp(PrevWeapon);
 
-    P = DHPawn(Instigator);
+    PC = DHPlayer(Instigator.Controller);
 
-    if (P != none && P.GetRoleInfo() != none && InstigatorIsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
+    if (PC != none && PC.IsArtillerySpotter())
     {
-        if (P.GetRoleInfo().bIsArtilleryOfficer)
-        {
-            DHPlayer(Instigator.Controller).QueueHint(12, true);
-        }
+        PC.QueueHint(12, true);
     }
 }
 

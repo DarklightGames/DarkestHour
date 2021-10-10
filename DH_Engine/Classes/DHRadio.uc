@@ -125,8 +125,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
-    if (PC.SavedArtilleryCoords == vect(0, 0, 0)
-      && PC.GetActiveOffMapSupportNumber() == 0)
+    if (PC.SavedArtilleryCoords == vect(0, 0, 0) && PC.GetActiveOffMapSupportNumber() == 0)
     {
         return ERROR_NoTarget;
     }
@@ -146,23 +145,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
 simulated function bool IsPlayerQualified(DHPlayer PC)
 {
-    local DHRoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PC.GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (RI == none || PRI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsSquadLeader();
 }
 
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
@@ -244,7 +227,7 @@ state Requesting extends Busy
         }
 
         // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(ResponseDelaySeconds, false);
+        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
     }
 
     function Timer()
@@ -458,4 +441,3 @@ defaultproperties
     MapIconMaterial=none    // TODO: fill this in
     bShouldShowOnSituationMap=true
 }
-

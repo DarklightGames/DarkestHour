@@ -10,37 +10,25 @@ var color             ActivatedIconColor; // for off-map artillery requests
 
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local int Distance;
-    local vector PlayerLocation, WorldLocation;
     local string SquadName;
     local DHSquadReplicationInfo SRI;
 
-    if (PC == none || PC.Pawn == none)
+    if (PC == none || PC.Pawn == none || PC.GameReplicationInfo == none)
     {
         return "";
     }
 
-    if(PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
+    if (PC.IsArtillerySpotter() && PC.GetSquadIndex() == Marker.SquadIndex)
     {
-        return "Your fire support request";
+        return class'TimeSpan'.static.ToString(Marker.ExpiryTime - PC.GameReplicationInfo.ElapsedTime);
     }
     else
     {
-        WorldLocation = Marker.WorldLocation;
-        WorldLocation.Z = 0.0;
-
-        PlayerLocation = PC.Pawn.Location;
-        PlayerLocation.Z = 0.0;
-
-        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(WorldLocation - PlayerLocation)));
-
         SRI = PC.SquadReplicationInfo;
         SquadName = SRI.GetSquadName(PC.GetTeamNum(), Marker.SquadIndex);
 
-        return SquadName @ "-" @ default.MarkerName @ "-" @ (Distance / 5) * 5 $ "m";
+        return SquadName @ "(" $ default.MarkerName $ ")" @ "-" @ GetDistanceString(PC, Marker);
     }
-
-    return "";
 }
 
 static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
@@ -64,8 +52,6 @@ static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicatio
     }
 
     return default.IconColor;
-
-    return default.ActivatedIconColor;
 }
 
 defaultproperties
@@ -75,13 +61,17 @@ defaultproperties
     IconMaterial=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     IconCoords=(X1=0,Y1=0,X2=63,Y2=63)
     GroupIndex=5
-    LifetimeSeconds=120
+    LifetimeSeconds=150
     Type=MT_OnMapArtilleryRequest
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
-    RequiredSquadMembers=3
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ARTILLERY_OPERATOR)
-    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ARTILLERY_SPOTTER)
-    Permissions_CanPlace(0)=ARTILLERY_SPOTTER
+    RequiredSquadMembers=2
+    Cooldown=10
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
+    Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
+    Permissions_CanPlace(0)=ERS_ARTILLERY_SPOTTER
+    OnPlacedExternalNotifications(0)=(RoleSelector=ERS_ARTILLERY_OPERATOR,Message=class'DHFireSupportMessage',MessageIndex=3)
+    OnPlacedMessage=class'DHFireSupportMessage'
+    OnPlacedMessageIndex=0
 }

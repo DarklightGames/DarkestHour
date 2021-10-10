@@ -188,11 +188,9 @@ defaultproperties
     Hints(8)=(Title="Artillery Targets",Text="Squad leaders can mark targets that become visible on your map. When a round lands near a target marker, the location of the impact will be marked your map. Use these markers to zero in on your target.")
     Hints(9)=(Title="Mortar Leaving",Text="You may leave your mortar at any time by pressing the %Use% key. While you are off your mortar, you can retrieve ammunition at a resupply area or from your teammates.")
     Hints(10)=(Title="Mortar Undeploy",Text="To undeploy your mortar, press the %Deploy% key. Undeploying your mortar will reset your elevation and traverse settings.")
-    Hints(11)=(Title="Artillery Targeting",Text="You can mark targets for your team's mortar and artillery operators while sighted with your binoculars. Pressing %FIRE% to mark a high-explosive target or press %ALTFIRE% to request a smoke target.")
-    Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in artillery strikes!")
-    Hints(20)=(Title="M1 Garand",Text="Firing the last round of an en bloc clip makes a distinctive audible ping indicating that your rifle is out of ammunition. Be careful, the enemy may take advantage of this.")
-    Hints(21)=(Title="Lee Enfield No.4",Text="The Lee Enfield No.4 can load two 5-rd stripper clips. After you have fired 5 rounds, you may reload the rifle with one clip. If you fire all your rounds, you will reload with two clips.")
-    Hints(22)=(Title="Gewehr 41",Text="The Gewehr 41 can load two 5-rd stripper clips. After you have fired 5 rounds, you may reload the rifle with one clip. If you fire all your rounds, you will reload with two clips.")
+    Hints(12)=(Title="Binoculars",Text="You can mark targets for fire support with your binoculars. Bring up your binoculars with %ROIRONSIGHTS%, then press and hold %FIRE% to bring up the fire support menu.")
+    Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in long-range fire support!")
+
     Hints(40)=(Title="Vehicle Engines",Text="You have entered a vehicle. To start or stop the engine, press %FIRE%.")
     Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. Lower the bow ramp by pressing %PREVWEAPON% so passengers and yourself can exit. To raise the bow ramp hit %NEXTWEAPON%.")
     Hints(43)=(Title="Resupply Trucks",Text="You are close to a resupply truck. Stand outside the back of the truck to resupply your ammunition.")
@@ -200,10 +198,12 @@ defaultproperties
     Hints(46)=(Title="Externally Mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")
     Hints(47)=(Title="Remote Controlled MG",Text="This machine gun can only be fired from inside the vehicle, but it is externally mounted and you must unbutton the hatch to reload")
     Hints(48)=(Title="Externally Mounted MG Reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
-    Hints(49)=(Title="Artillery Spotting Scopes",Text="Use the %NEXTWEAPON% button to enter the spotting scope view")
-    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire request created by an artillery spotters to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
 
-    Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing [%JUMP%].")
+    Hints(49)=(Title="Spotting Scope",Text="You are operating an artillery piece equipped with a spotting scope. Press %NEXTWEAPON% to look through the spotting scope.")
+    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+    Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing %JUMP%.")
     Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
     Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
+    Hints(54)=(Title="Find a Radio",Text="You have marked a target for long-range fire support. Find a radio so that you can call it in!")
 }
+

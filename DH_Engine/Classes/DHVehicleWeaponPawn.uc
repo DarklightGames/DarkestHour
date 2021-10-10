@@ -32,8 +32,12 @@ var     float       OverlayCorrectionX;          // scope center correction in p
 var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
-var     int         SpottingScopePositionIndex;
-var     class<DHArtillerySpottingScope>     ArtillerySpottingScope;
+var     int                             SpottingScopePositionIndex;
+var     class<DHArtillerySpottingScope> ArtillerySpottingScope;
+var     array<float>                    YawTicksShading;
+var     array<float>                    PitchTicksShading;
+var     array<float>                    YawTicksCurvature;
+var     array<float>                    PitchTicksCurvature;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
@@ -59,12 +63,33 @@ replication
 // Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
 simulated function PostBeginPlay()
 {
+    local int i, YawIndicatorLength, PitchIndicatorLength;
+
     super.PostBeginPlay();
 
     if (InitialPositionIndex > 0 && Role == ROLE_Authority)
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
+    }
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        // Calculate curvature & shading coefficients for ticks on artillery scope's dial
+        YawIndicatorLength = default.ArtillerySpottingScope.default.YawIndicatorLength;
+        PitchIndicatorLength = default.ArtillerySpottingScope.default.PitchIndicatorLength;
+
+        for (i = 0; i < YawIndicatorLength; ++i)
+        {
+            YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, default.ArtillerySpottingScope.default.YawDialSpan);
+            YawTicksShading[i] = 1 - 2 * abs(YawTicksCurvature[i] - 0.5);
+        }
+
+        for (i = 0; i < PitchIndicatorLength; ++i)
+        {
+            PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, default.ArtillerySpottingScope.default.PitchDialSpan);
+            PitchTicksShading[i] = 1 - 2 * abs(PitchTicksCurvature[i] - 0.5);
+        }
     }
 }
 
@@ -202,8 +227,8 @@ simulated function DrawBinocsOverlay(Canvas C)
         TextureSize = float(BinocsOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / BinocsOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);
+        TileStartPosU = (TextureSize - TilePixelWidth) * 0.5;
+        TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
@@ -2297,23 +2322,28 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
-    if (VehWep != none && VehWep.CollisionMeshActor != none && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
+    local int i;
+
+    if (VehWep != none && VehWep.CollisionMeshActors.Length > 0 && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
     {
-        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
-        if (VehWep.CollisionMeshActor.DrawType == DT_None)
+        for (i = 0; i < VehWep.CollisionMeshActors.Length; ++i)
         {
-            VehWep.CollisionMeshActor.ToggleVisible();
-        }
-        // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
-        else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
-        {
-            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
-        }
-        // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
-        else
-        {
-            VehWep.CollisionMeshActor.HideOwner(false);
-            VehWep.CollisionMeshActor.ToggleVisible();
+            // If in normal mode, with CSM hidden, we toggle the CSM to be visible
+            if (VehWep.CollisionMeshActors[i].DrawType == DT_None)
+            {
+                VehWep.CollisionMeshActors[i].ToggleVisible();
+            }
+            // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
+            else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+            {
+                VehWep.CollisionMeshActors[i].HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
+            }
+            // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
+            else
+            {
+                VehWep.CollisionMeshActors[i].HideOwner(false);
+                VehWep.CollisionMeshActors[i].ToggleVisible();
+            }
         }
     }
 }

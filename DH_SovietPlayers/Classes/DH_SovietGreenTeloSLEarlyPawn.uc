@@ -12,4 +12,5 @@ defaultproperties
     Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_green01'
 
     bReversedSkinsSlots=true
+
 }
