@@ -26,6 +26,8 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                     {
                         return class'DH_Guns.DH_M116Gun';
                     }
+                case NATION_USSR:
+                    return class'DH_Guns.DH_M1927Gun';
                 default:
                     break;
             }

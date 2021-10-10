@@ -2,6 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// [ ] elevation wheel
+// [ ] traverse wheel
+// [ ] collision mesh for shield/gun
+// [ ] destroyed mesh
+// [ ] winter version ( set up in construction class also)
+// [ ] new ammo types, range calibration table etc.
+//==============================================================================
 
 class DH_M1927Gun extends DHATGun;
 
@@ -19,6 +26,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
+
 defaultproperties
 {
     VehicleNameString="76 mm regimental gun M1927"
@@ -33,13 +41,13 @@ defaultproperties
     VehicleHudImage=Texture'DH_LeIG18_tex.HUD.leig18_body'
     VehicleHudTurret=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_look'
-    VehicleHudOccupantsX(1)=0.4
-    ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
+    ExitPositions(1)=(X=-75.00,Y=-35.00,Z=50.00)
+    ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
-    SupplyCost=2100
+    SupplyCost=2000
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
-    ShadowZOffset=10.0
+    ShadowZOffset=20.0
     bIsArtilleryVehicle=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

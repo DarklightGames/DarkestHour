@@ -12,21 +12,26 @@ defaultproperties
     Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
     GunnerAttachmentBone="com_player"
 
+    // Animation
+    ShootIntermediateAnim="shoot_close"
+
+    WeaponFireAttachmentBone="Muzzle"
+
     // Turret movement
     RotationsPerSecond=0.005
-    MaxPositiveYaw=1092.0
-    MaxNegativeYaw=-1092.0
+    MaxPositiveYaw=546.0
+    MaxNegativeYaw=-546.0
     YawStartConstraint=-1092.0
     YawEndConstraint=1092.0
-    CustomPitchUpLimit=6371
-    CustomPitchDownLimit=65535
+    CustomPitchUpLimit=4550 // +25 degrees
+    CustomPitchDownLimit=64444 // -6 degrees
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
 
-    nProjectileDescriptions(0)="Igr.38 Sprgr"
-    nProjectileDescriptions(1)="Igr.38 HL/A"
+    nProjectileDescriptions(0)="OF-350"
+    nProjectileDescriptions(1)="BP-350M"
 
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
@@ -39,7 +44,7 @@ defaultproperties
     SecondarySpread=0.00125
 
     // Weapon fire
-    WeaponFireOffset=16.0
+    WeaponFireOffset=0
     AddedPitch=0
 
     // Sounds
