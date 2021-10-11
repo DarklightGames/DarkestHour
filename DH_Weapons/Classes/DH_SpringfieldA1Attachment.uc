@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.SpringfieldA1_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldA1_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false

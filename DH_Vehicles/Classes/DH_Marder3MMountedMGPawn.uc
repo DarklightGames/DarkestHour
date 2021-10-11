@@ -48,5 +48,5 @@ defaultproperties
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonGunShakeScale=2.0
     FirstPersonOffsetZScale=1.0
-    bHideMuzzleFlashAboveSights=true
+    bHideMuzzleFlashAboveSights=false //true
 }

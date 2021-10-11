@@ -9,10 +9,11 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.30Cal_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.30cal_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdMG' //class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
+    bSpawnShellsOutBottom=true
     bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_30calBullet'

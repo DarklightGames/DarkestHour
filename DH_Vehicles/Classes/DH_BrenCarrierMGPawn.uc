@@ -26,6 +26,6 @@ defaultproperties
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=1.5
     FirstPersonOffsetZScale=3.0
-    bHideMuzzleFlashAboveSights=true
+    bHideMuzzleFlashAboveSights=false//true
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.Bren_ammo_reload'
 }

@@ -20,6 +20,7 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
 
+
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
 {
@@ -31,8 +32,9 @@ simulated function vector GetTipLocation()
 // Modified to avoid spawning a barrel steam emitter - instead wait until weapon is selected
 simulated function PostBeginPlay()
 {
-    if (Level.NetMode != NM_DedicatedServer && mMuzFlashClass != none)
+    if (Level.NetMode != NM_DedicatedServer)
     {
+        if (mMuzFlashClass != none)
         mMuzFlash3rd = Spawn(mMuzFlashClass);
         AttachToBone(mMuzFlash3rd, MuzzleBoneName);
     }
@@ -128,6 +130,24 @@ simulated function SpawnShells(float Frequency)
 
         Spawn(ROShellCaseClass, Instigator,, SpawnLocation, EjectorRotation);
     }
+}
+
+simulated function WeaponLight()
+{
+    if ( (FlashCount > 0) && !Level.bDropDetail && (Instigator != None)
+        && ((Level.TimeSeconds - LastRenderTime < 0.2) || (PlayerController(Instigator.Controller) != None)) )
+    {
+        if ( Instigator.IsFirstPerson() )
+        {
+            LitWeapon = Instigator.Weapon;
+            LitWeapon.bDynamicLight = true;
+        }
+        else
+            bDynamicLight = true;
+        SetTimer(0.1, false); //reduced from 0.15
+    }
+    else
+        Timer();
 }
 
 // Modified to move functionality for spawning hit effects into a new SpawnHitEffect() function - on an authority role that's still called from here
@@ -409,6 +429,16 @@ defaultproperties
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
     SplashEffect=class'DHBulletHitWaterEffect'
+
+    //Weapon Light
+    bDynamicLight=false
+    LightType=LT_Steady
+    LightEffect=LE_NonIncidence
+    //LightPeriod=3
+    LightBrightness=64
+    LightHue=30
+    LightSaturation=150
+    LightRadius=2.0
 
     // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
     // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")

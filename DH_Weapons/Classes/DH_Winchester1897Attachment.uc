@@ -40,7 +40,7 @@ defaultproperties
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms_3rdP.Winchester1897_3rdP'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdFG42'
     MuzzleBoneName="Muzzle"
     ROShellCaseClass=class'DH_Weapons.DH_3rdShellEjectShotgun'
     ShellEjectionBoneName="ejector"

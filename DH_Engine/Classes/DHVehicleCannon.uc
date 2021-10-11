@@ -2053,7 +2053,7 @@ defaultproperties
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     CannonDustEmitterClass=class'ROEffects.TankCannonDust'
     FireForce="Explosion05"
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    AmbientEffectEmitterClass=class'DH_Effects.DHTankMGEmitter'
     bAmbientEmitterAltFireOnly=true // assumed for a cannon & hard coded into functionality
     AIInfo(0)=(AimError=0.0,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)

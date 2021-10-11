@@ -41,8 +41,8 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="Gun"
-    WeaponFireOffset=40.0
-    AmbientEffectEmitterClass=class'VehicleMGEmitter'
+    WeaponFireOffset=27.0 //40
+    AmbientEffectEmitterClass=class'DH_Effects.DHVehicleMG34Emitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

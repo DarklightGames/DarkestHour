@@ -12,7 +12,7 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
     DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_mg42",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
-//  DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
+    //DriverPositions(1)=(ViewLocation=(X=-10.0,Z=5.0),ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     BinocPositionIndex=1
     bDrawDriverInTP=true

@@ -32,7 +32,7 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0 // originally zero but flash was too far out in front of the muzzle
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter' // originally used 'VehicleMGEmitterUC' but the ejected shell cases spill through the front of the vehicle
+    AmbientEffectEmitterClass=class'DH_Effects.DHTankMGEmitter' // originally used 'VehicleMGEmitterUC' but the ejected shell cases spill through the front of the vehicle
     FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

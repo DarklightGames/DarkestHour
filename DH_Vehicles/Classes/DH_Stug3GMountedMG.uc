@@ -43,7 +43,8 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
+    WeaponFireOffset=-6.0 //40
+    AmbientEffectEmitterClass=class'DH_Effects.DHVehicleMG34Emitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

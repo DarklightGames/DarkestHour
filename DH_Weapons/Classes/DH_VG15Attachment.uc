@@ -10,7 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.VG15_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.vg15_icon'
 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
     bRapidFire=false
     MuzzleBoneName="tip2"

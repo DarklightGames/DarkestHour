@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false

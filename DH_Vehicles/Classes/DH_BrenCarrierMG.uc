@@ -34,7 +34,7 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
+    AmbientEffectEmitterClass=class'DH_Effects.DHTankMGEmitter'
     FireSoundClass=Sound'DH_WeaponSounds.Bren.Bren_Loop011'
     FireEndSound=Sound'DH_WeaponSounds.Bren.Bren_LoopEnd'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

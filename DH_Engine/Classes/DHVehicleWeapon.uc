@@ -333,9 +333,9 @@ function AltFire(Controller C)
         SpawnProjectile(AltFireProjectileClass, true);
     }
 
-    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
     {
-        AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
+       AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
     }
 }
 

@@ -11,7 +11,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.g41_3rd'
     MenuImage=Texture'InterfaceArt2_tex.Menu_weapons.g41'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
 

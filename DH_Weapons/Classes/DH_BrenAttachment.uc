@@ -40,7 +40,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bren_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSquadMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"

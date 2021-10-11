@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.g43'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.g43'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
 
