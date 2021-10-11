@@ -494,17 +494,17 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI,
 
         Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PRI, Targets[i].Marker);
 
-        // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
-        CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
-
-        // How bright this tick should be, do not let the tick be either completly black as it will disappear
-        // or fully bright as it just looks unnatural
-        ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
-        ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
-
         // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
         if (Index < VisibleYawSegmentsNumber && Index >= 0)
         {
+            // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
+            CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
+
+            // How bright this tick should be, do not let the tick be either completly black as it will disappear
+            // or fully bright as it just looks unnatural
+            ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
+            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
+
             Color.R = Max(1, int(Color.R) * ShadingCoefficient);
             Color.G = Max(1, int(Color.G) * ShadingCoefficient);
             Color.B = Max(1, int(Color.B) * ShadingCoefficient);
@@ -523,6 +523,8 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI,
         }
         else
         {
+            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+
             // Draw stacking horizontal target markers that are off of the dial
             if (Index < 0)
             {
@@ -571,7 +573,7 @@ simulated static function DrawYaw(DHPlayerReplicationInfo PRI,
         // Get the label's length
         C.StrLen(Label, TextWidth, TextHeight);
 
-        YawSegmentSchemaIndex = abs(Quotient) % default.YawSegmentSchema.Length;
+        YawSegmentSchemaIndex = Abs(Quotient) % default.YawSegmentSchema.Length;
 
         // The new tick position on the "curved" surface of the dial
         TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * default.YawIndicatorLength;
