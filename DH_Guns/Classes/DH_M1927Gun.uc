@@ -2,12 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] final export for the mesh
-// [ ] fix clipping issue on main bar
-// [ ] destroyed mesh
 // [ ] new ammo types, range calibration table etc.
-// [ ] fix compass icon flashing bug
 //==============================================================================
+// [x] destroyed mesh
+// [x] fix clipping issue on main bar
+// [x] final export for the mesh
 // [x] fix cam animation to not clip through the gunsight
 // [x] arty is unavailable??
 // [x] fixed orientation of the spotting scope
@@ -46,10 +45,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M1927CannonPawn',WeaponBone="body")
     Mesh=SkeletalMesh'DH_M1927_anm.m1927_body'
     Skins(0)=Texture'DH_M1927_tex.world.m1927_body'
-    DestroyedVehicleMesh=StaticMesh'DH_LeIG18_stc.Destroyed.leig18_destro'
-    DestroyedMeshSkins(0)=Material'DH_LeIG18_tex.LeIG18.IG18_2_dest'
-    DestroyedMeshSkins(1)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
-    DestroyedMeshSkins(2)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_M1927_stc.Destroyed.m1927_destroyed'
+    DestroyedMeshSkins(0)=Material'DH_M1927_tex.Destroyed.m1927_body_destroyed'
     VehicleHudImage=Texture'DH_M1927_tex.interface.m1927_body_hud'
     VehicleHudTurret=TexRotator'DH_M1927_tex.interface.m1927_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_M1927_tex.interface.m1927_turret_look'
