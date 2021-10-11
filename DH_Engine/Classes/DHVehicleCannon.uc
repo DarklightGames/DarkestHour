@@ -82,13 +82,6 @@ enum ERotationType
     ROTATION_Pitch
 };
 
-enum EAxis
-{
-    AXIS_X, // roll
-    AXIS_Y, // pitch
-    AXIS_Z  // yaw
-};
-
 struct SGunWheel
 {
     var ERotationType   RotationType;
