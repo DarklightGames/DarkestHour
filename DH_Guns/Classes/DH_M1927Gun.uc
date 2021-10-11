@@ -2,14 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// [ ] final export for the mesh
+// [ ] fix clipping issue on main bar
 // [ ] destroyed mesh
 // [ ] new ammo types, range calibration table etc.
-// [ ] remove bullet collision from the karma box [is this even possible]?
-// [ ] fix cam animation to not clip through the gunsight
-// [ ] fix size of wheels
-// [ ] final export for the mesh
+// [ ] fix compass icon flashing bug
 //==============================================================================
-// [ x] traverse wheel
+// [x] fix cam animation to not clip through the gunsight
+// [x] arty is unavailable??
+// [x] fixed orientation of the spotting scope
+// [x] fix size of wheels
+// [x] remove bullet collision from the karma box [is this even possible]? (seems to be!)
+// [x] traverse wheel
 // [x] elevation wheel
 // [x] collision mesh for shield/gun
 // [x] winter version ( set up in construction class also)
@@ -57,6 +61,7 @@ defaultproperties
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
     ShadowZOffset=20.0
     bIsArtilleryVehicle=true
+    RotateCooldown=2
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

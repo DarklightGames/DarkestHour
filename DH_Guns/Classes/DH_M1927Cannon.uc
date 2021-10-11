@@ -24,13 +24,14 @@ defaultproperties
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-256.0,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="elevation_wheel",Scale=-256.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="spotting_scope",Scale=1.0,RotationAxis=AXIS_Y)
 
     // Turret movement
-    RotationsPerSecond=0.005
-    MaxPositiveYaw=546.0
-    MaxNegativeYaw=-546.0
-    YawStartConstraint=-1092.0
-    YawEndConstraint=1092.0
+    RotationsPerSecond=0.01
+    MaxPositiveYaw=546.0 // 3 degrees
+    MaxNegativeYaw=-546.0 // -3 degrees
+    YawStartConstraint=-546.0 // -3 degrees
+    YawEndConstraint=546.0 // 3 degrees
     CustomPitchUpLimit=4550 // +25 degrees
     CustomPitchDownLimit=64444 // -6 degrees
 
@@ -61,10 +62,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=4.0)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=4.0)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=2.0)
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1.0)
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=3)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=3)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=3)
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1)
 
     bIsArtillery=true
     ResupplyInterval=25.0
