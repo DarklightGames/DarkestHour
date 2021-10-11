@@ -2356,11 +2356,15 @@ function UpdateArtilleryAvailability()
         }
     }
 
+    // Build context struct
+    Context.LevelInfo = DH_LevelInfo(LevelInfo);
+
     // TODO: This won't actually work because some nations don't have an artillery piece in their constructions.
     // Check if artillery constructions are enabled (on-map artillery)
     for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
         Construction = class<DHConstruction_Vehicle>(GRI.ConstructionClasses[i]);
+
         if (GRI.bAreConstructionsEnabled
           && Construction != none
           && Construction.static.IsArtillery()
