@@ -774,14 +774,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
             CurvatureCoefficient = YawTicksCurvature[Index];
 
-            // How bright this tick should be, do not let the tick be either completly black as it will disappear
-            // or fully bright as it just looks unnatural
-            ShadingCoefficient = YawTicksShading[Index];
-            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
-
-            Color.R = Max(1, int(Color.R) * ShadingCoefficient);
-            Color.G = Max(1, int(Color.G) * ShadingCoefficient);
-            Color.B = Max(1, int(Color.B) * ShadingCoefficient);
             C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
             // The new tick position on the "curved" surface of the dial
@@ -845,10 +837,10 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
     local float CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
-    local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
+    local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep;
     local string Label;
     local float BottomDialBound, TopDialBound;
-    local float CurvatureConstant, ShadingConstant;
+    local float CurvatureConstant;
     local float StrikeThroughStart, StrikeThroughEnd;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex, TickPosition;
 
@@ -887,16 +879,8 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
 
-        // TODO: dumb hack to stop the crashing
-        if (Index * IndicatorStep < 0 || Index * IndicatorStep >= PitchTicksCurvature.Length)
-        {
-            continue;
-        }
-
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index];
-
-        // Log("Index = " $ Index $ ", CurvatureConstant = " $ CurvatureConstant);
 
         // Calculate index of the current readout value on the mortar pitch span
         Quotient = class'UMath'.static.FlooredDivision(Pitch, PitchScaleStep);
@@ -916,17 +900,14 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
             case ShortTick:
                 C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -SmallSizeTickLength);
-                Log("drawing ShortTick @ " $ TickPosition);
                 break;
             case MediumLengthTick:
                 C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -MiddleSizeTickLength);
-                Log("drawing MediumLengthTick @ " $ TickPosition);
                 break;
             case LongTick:
                 C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -LargeSizeTickLength);
-                Log("drawing LongTick @ " $ TickPosition);
                 break;
         }
 
@@ -947,7 +928,6 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
             C.CurY = TickPosition - TextHeight * 0.5;
             C.DrawText(Label);
-            // Log("Drawing label: " $ Label);
         }
     }
 

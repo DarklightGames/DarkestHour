@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_LeIG18 extends DHArtillerySpottingScope;
+class DHArtillerySpottingScope_M1927 extends DHArtillerySpottingScope;
 
 defaultproperties
 {
