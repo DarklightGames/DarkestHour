@@ -32,7 +32,7 @@ defaultproperties
     RangeTable(18)=(Range=575,Pitch=52.0)
 
     YawScaleStep=10.0
-    PitchScaleStep=0.5
+    PitchScaleStep=1.0
     PitchDecimalsTable=1
 
     PitchAngleUnit=AU_Degrees

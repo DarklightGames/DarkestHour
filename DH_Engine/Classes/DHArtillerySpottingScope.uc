@@ -93,8 +93,8 @@ var     texture             GradientOverlayY;           // used for dimming the 
 var     float               YawDialSpan;    // [rad]
 var     float               PitchDialSpan;  // [rad]
 
-var     array<float>                    YawTicksShading;
-var     array<float>                    PitchTicksShading;
+var     array<float>                    YawTicksShading;  // used by target ticks on yaw dials
+
 var     array<float>                    YawTicksCurvature;
 var     array<float>                    PitchTicksCurvature;
 
@@ -162,18 +162,21 @@ function CreateRenderTable(Canvas C)
 function CalculateShadingAndCurvature()
 {
     local int i;
+    local int VisibleYawSegmentsNumber, VisiblePitchSegmentsNumber;
+
+    VisibleYawSegmentsNumber = NumberOfYawSegments * YawSegmentSchema.Length;
+    VisiblePitchSegmentsNumber = NumberOfPitchSegments * PitchSegmentSchema.Length;
 
     // Calculate curvature & shading coefficients for ticks on artillery scope's dial
-    for (i = 0; i < YawIndicatorLength; ++i)
+    for (i = 0; i < VisibleYawSegmentsNumber; ++i)
     {
-        YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, YawDialSpan);
+        YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / VisibleYawSegmentsNumber, YawDialSpan);
         YawTicksShading[i] = 1 - 2 * Abs(YawTicksCurvature[i] - 0.5);
     }
 
-    for (i = 0; i < PitchIndicatorLength; ++i)
+    for (i = 0; i < VisiblePitchSegmentsNumber; ++i)
     {
-        PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, PitchDialSpan);
-        PitchTicksShading[i] = 1 - 2 * Abs(PitchTicksCurvature[i] - 0.5);
+        PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / VisiblePitchSegmentsNumber, PitchDialSpan);
     }
 }
 
@@ -624,7 +627,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
     local color Color;
-    local array<int> TickBuckets;
+    local array<int> TargetTickBuckets;
     local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
@@ -657,73 +660,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + YawDialSpan * 0.5);
 
     C.Font = C.TinyFont;
-
-    // Draw a long horizontal bar that imitates edge of the indicator
-    C.CurX = IndicatorTopLeftCornerX;
-    C.CurY = IndicatorTopLeftCornerY;
-    C.DrawHorizontal(IndicatorTopLeftCornerY, YawIndicatorLength);
-
-    // Prepare buckets for ticks so ticks don't get drawn on top of each other
-    TickBuckets.Insert(0, VisibleYawSegmentsNumber);
-
-    // Draw target widgets & target ticks
-    for (i = 0; i < Targets.Length; ++i)
-    {
-        // Which tick on the dial does this target correspond to
-        Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / YawScaleStep);
-
-        Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PC, Targets[i].Marker);
-
-        // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
-        if (Index < VisibleYawSegmentsNumber && Index >= 0)
-        {
-            // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
-            CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
-
-            // How bright this tick should be, do not let the tick be either completly black as it will disappear
-            // or fully bright as it just looks unnatural
-            ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
-            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
-
-            Color.R = Max(1, int(Color.R) * ShadingCoefficient);
-            Color.G = Max(1, int(Color.G) * ShadingCoefficient);
-            Color.B = Max(1, int(Color.B) * ShadingCoefficient);
-            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
-
-            // The new tick position on the "curved" surface of the dial
-            TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength;
-
-            C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TickBuckets[Index];
-            C.CurX = IndicatorTopLeftCornerX;
-            TickBuckets[Index] = TickBuckets[Index] + 1;
-
-            // Draw a target tick on the yaw indicator
-
-            C.DrawVertical(TickPosition, default.TargetTickLength);
-        }
-        else
-        {
-            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
-
-            // Draw stacking horizontal target markers that are off of the dial
-            if (Index < 0)
-            {
-                // Left side
-                C.SetPos(IndicatorTopLeftCornerX - 1.5 * TargetTickLength, IndicatorTopLeftCornerY);
-                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, TargetTickLength);
-
-                ++TargetTickCountLeft;
-            }
-            else
-            {
-                // Right side
-                C.SetPos(IndicatorTopLeftCornerX + YawIndicatorLength + 0.5 * TargetTickLength, IndicatorTopLeftCornerY);
-                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, TargetTickLength);
-
-                ++TargetTickCountRight;
-            }
-        }
-    }
+    C.SetDrawColor(255, 255, 255, 255);
 
     // Start drawing scale ticks
     C.CurY = IndicatorTopLeftCornerY - 5.0;
@@ -734,18 +671,10 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
         Index = (Yaw - YawLowerBound) / YawScaleStep;
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
-        CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
-
-        // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-        ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
-        Shade = Max(1, 255 * ShadingCoefficient);
+        CurvatureCoefficient = YawTicksCurvature[Index];
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(Yaw, YawScaleStep));
-
-        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
-        // text labels completly disappear. I propose to change the color instead of alpha channel
-        // because the background is black anyway. - mimi~
 
         Label = string(int(class'UMath'.static.Floor(Yaw, YawScaleStep)));
 
@@ -799,13 +728,13 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     {
         StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / YawScaleStep);
-        StrikeThroughEnd = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex * IndicatorStep];
+        StrikeThroughEnd = YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex];
 
-        // draw the strike-through
+        // Draw the strike-through
         C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY - SmallSizeTickLength);
         C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughEnd, StrikeThroughThickness);
 
-        // add the dangling tick on the end of the strike-through line
+        // Add the missing tick on the end of the strike-through line
         C.SetPos(IndicatorTopLeftCornerX + StrikeThroughEnd, IndicatorTopLeftCornerY - SmallSizeTickLength);
         C.DrawVertical(IndicatorTopLeftCornerX + StrikeThroughEnd, StrikeThroughThickness);
     }
@@ -813,26 +742,93 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     if (YawUpperBound > GunYawMaxTruncated)
     {
         StrikeThroughStartIndex = (GunYawMaxTruncated - YawLowerBound) / YawScaleStep;
-        StrikeThroughEndIndex = VisibleYawSegmentsNumber;
-        StrikeThroughStart = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughStartIndex * IndicatorStep];
-        StrikeThroughEnd = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex * IndicatorStep - 1];
+        StrikeThroughStart = YawIndicatorLength * YawTicksCurvature[StrikeThroughStartIndex];
+        StrikeThroughEnd = YawIndicatorLength;
 
-        // draw the strike-through
+        // Draw the strike-through
         C.SetPos(IndicatorTopLeftCornerX + StrikeThroughStart, IndicatorTopLeftCornerY - SmallSizeTickLength);
         C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughEnd - StrikeThroughStart, StrikeThroughThickness);
+
+        // Add the missing tick on the end of the strike-through line
+        C.SetPos(IndicatorTopLeftCornerX + StrikeThroughStart, IndicatorTopLeftCornerY - SmallSizeTickLength);
+        C.DrawVertical(IndicatorTopLeftCornerX + StrikeThroughStart, StrikeThroughThickness);
     }
 
-    // draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 15, IndicatorTopLeftCornerY - 2 * LargeSizeTickLength);
-    C.DrawTile(GradientOverlayX, default.YawIndicatorLength + 30, 3 * LargeSizeTickLength, 0, 0, 256, 32);
+    // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
+    C.SetPos(IndicatorTopLeftCornerX - 0.5 * LargeSizeTickLength, IndicatorTopLeftCornerY - 2 * LargeSizeTickLength);
+    C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength, 3 * LargeSizeTickLength, 0, 0, 256, 32);
+
+    // Prepare buckets for ticks so ticks don't get drawn on top of each other
+    TargetTickBuckets.Insert(0, VisibleYawSegmentsNumber);
+
+    // Draw target widgets & target ticks
+    for (i = 0; i < Targets.Length; ++i)
+    {
+        // Which tick on the dial does this target correspond to
+        Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / YawScaleStep);
+
+        Color = Targets[i].Marker.MapMarkerClass.static.GetIconColor(PC, Targets[i].Marker);
+
+        // Draw a tick on the yaw dial only if the target is within bounds of the yaw indicator
+        if (Index < VisibleYawSegmentsNumber && Index >= 0)
+        {
+            // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
+            CurvatureCoefficient = YawTicksCurvature[Index];
+
+            // How bright this tick should be, do not let the tick be either completly black as it will disappear
+            // or fully bright as it just looks unnatural
+            ShadingCoefficient = YawTicksShading[Index];
+            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
+
+            Color.R = Max(1, int(Color.R) * ShadingCoefficient);
+            Color.G = Max(1, int(Color.G) * ShadingCoefficient);
+            Color.B = Max(1, int(Color.B) * ShadingCoefficient);
+            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+
+            // The new tick position on the "curved" surface of the dial
+            TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength;
+
+            C.CurY = IndicatorTopLeftCornerY + 5.0 + 5 * TargetTickBuckets[Index];
+            C.CurX = IndicatorTopLeftCornerX;
+            TargetTickBuckets[Index] = TargetTickBuckets[Index] + 1;
+
+            // Draw a target tick on the yaw indicator
+
+            C.DrawVertical(TickPosition, TargetTickLength);
+        }
+        else
+        {
+            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+
+            // Draw stacking horizontal target markers that are off of the dial
+            if (Index < 0)
+            {
+                // Left side
+                C.SetPos(IndicatorTopLeftCornerX - 1.5 * TargetTickLength, IndicatorTopLeftCornerY);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountLeft * 4, TargetTickLength);
+
+                ++TargetTickCountLeft;
+            }
+            else
+            {
+                // Right side
+                C.SetPos(IndicatorTopLeftCornerX + YawIndicatorLength + 0.5 * TargetTickLength, IndicatorTopLeftCornerY);
+                C.DrawHorizontal(IndicatorTopLeftCornerY + TargetTickCountRight * 4, TargetTickLength);
+
+                ++TargetTickCountRight;
+            }
+        }
+    }
+
+    // Draw a long horizontal bar that imitates edge of the indicator
+    C.CurX = IndicatorTopLeftCornerX;
+    C.CurY = IndicatorTopLeftCornerY;
+    C.DrawHorizontal(IndicatorTopLeftCornerY, YawIndicatorLength);
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurY = IndicatorTopLeftCornerY + IndicatorMiddleTickOffset;
-
-    // Transform the "linear" coordinates to the coordinates on the curved dial
-    CurvatureCoefficient = YawTicksCurvature[0.5 * YawIndicatorLength];;
-
+    CurvatureCoefficient = YawTicksCurvature[0.5 * VisibleYawSegmentsNumber];
     C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength, SmallSizeTickLength);
 }
 
@@ -853,9 +849,9 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
     local string Label;
     local float BottomDialBound, TopDialBound;
-    local float GunPitchMaxTruncated, GunPitchMinTruncated;
     local float CurvatureConstant, ShadingConstant;
-    local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
+    local float StrikeThroughStart, StrikeThroughEnd;
+    local int StrikeThroughEndIndex, StrikeThroughStartIndex, TickPosition;
 
     if (C == none || VWP == none && VWP.VehicleBase != none)
     {
@@ -866,8 +862,10 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     GunPitchOffset = class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch, AU_Unreal, PitchAngleUnit);
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch + GunPitchOffset, PitchScaleStep);
 
-    GunPitchMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit);
-    GunPitchMax = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit);
+    GunPitchMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
+    GunPitchMin = class'UMath'.static.Floor(GunPitchMin, PitchScaleStep);
+    GunPitchMax = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMax(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;
+    GunPitchMax = class'UMath'.static.Floor(GunPitchMax, PitchScaleStep);
 
     IndicatorTopLeftCornerX = C.SizeX * 0.25;
     IndicatorTopLeftCornerY = C.SizeY * 0.5 - 0.5 * PitchIndicatorLength;
@@ -877,12 +875,12 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
     IndicatorStep = PitchIndicatorLength / VisiblePitchSegmentsNumber;
-    GunPitchMaxTruncated = class'UMath'.static.Floor(GunPitchMax + GunPitchOffset, PitchScaleStep);
-    GunPitchMinTruncated = class'UMath'.static.Floor(GunPitchMin + GunPitchOffset, PitchScaleStep);
     BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - PitchDialSpan * 0.5);
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + PitchDialSpan * 0.5);
 
     C.Font = C.TinyFont;
+    C.SetDrawColor(255, 255, 255, 255);
+    C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY);
 
     // Start drawing scale ticks
     for (Pitch = PitchLowerBound; Pitch < PitchUpperBound; Pitch += PitchScaleStep)
@@ -891,19 +889,12 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
 
         // Get the cached values
-        CurvatureConstant = PitchTicksCurvature[Index * IndicatorStep];
-        ShadingConstant = PitchTicksShading[Index * IndicatorStep];
+        CurvatureConstant = PitchTicksCurvature[Index];
 
-        // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * ShadingConstant);
+        // Log("Index = " $ Index $ ", CurvatureConstant = " $ CurvatureConstant);
 
         // Calculate index of the current readout value on the mortar pitch span
         Quotient = class'UMath'.static.FlooredDivision(Pitch, PitchScaleStep);
-
-        // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
-        // text labels completly disappear. I propose to change the color instead of alpha channel
-        // because the background is black anyway. - mimi~
-        C.SetDrawColor(Shade, Shade, Shade, 255);
 
         Label = class'UFloat'.static.Format(Pitch, PitchDecimalsDial);
 
@@ -918,13 +909,19 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         switch (PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
         {
             case ShortTick:
+                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -SmallSizeTickLength);
+                Log("drawing ShortTick @ " $ TickPosition);
                 break;
             case MediumLengthTick:
+                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -MiddleSizeTickLength);
+                Log("drawing MediumLengthTick @ " $ TickPosition);
                 break;
             case LongTick:
+                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -LargeSizeTickLength);
+                Log("drawing LongTick @ " $ TickPosition);
                 break;
         }
 
@@ -945,55 +942,47 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
             C.CurY = TickPosition - TextHeight * 0.5;
             C.DrawText(Label);
-        }
-
-        // Draw a strike-through if this segment is below the lower limit.
-        // Smooth out the strike-through by splitting it into small portions
-        // For each small portion of the strike-through its color is calculated
-
-        C.CurX = IndicatorTopLeftCornerX - SmallSizeTickLength;
-
-        if (PitchLowerBound < GunPitchMinTruncated)
-        {
-            StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMinTruncated - PitchLowerBound) / PitchScaleStep;
-            StrikeThroughEndIndex = VisiblePitchSegmentsNumber;
-
-            for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
-            {
-                // Get the cached values
-                CurvatureConstant = PitchTicksCurvature[i];
-                ShadingConstant = PitchTicksShading[i];
-
-                // Calculate color of the current indicator tick
-                Shade = Max(1, 255 * ShadingConstant);
-                C.SetDrawColor(Shade, Shade, Shade, 255);
-
-                C.CurX = IndicatorTopLeftCornerX - SmallSizeTickLength;
-                C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, StrikeThroughThickness);
-            }
-        }
-
-        // Draw a strike-through if this segment is above the upper limit.
-        if (PitchUpperBound >= GunPitchMaxTruncated)
-        {
-            StrikeThroughStartIndex = 0;
-            StrikeThroughEndIndex = ((PitchUpperBound - GunPitchMaxTruncated) / PitchScaleStep);
-
-            for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep + 1; ++i)
-            {
-                // Get the cached values
-                CurvatureConstant = PitchTicksCurvature[i];
-                ShadingConstant = PitchTicksShading[i];
-
-                // Calculate color of the current indicator tick
-                Shade = Max(1, 255 * ShadingConstant);
-                C.SetDrawColor(Shade, Shade, Shade, 255);
-
-                C.CurX = IndicatorTopLeftCornerX - SmallSizeTickLength;
-                C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, StrikeThroughThickness);
-            }
+            // Log("Drawing label: " $ Label);
         }
     }
+
+    // Draw a strike-through for values outside of the traverse range
+
+    if (PitchLowerBound < GunPitchMin)
+    {
+        StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMin - PitchLowerBound) / PitchScaleStep - 1;
+        StrikeThroughStart = PitchTicksCurvature[StrikeThroughStartIndex] * PitchIndicatorLength;
+        StrikeThroughEnd = PitchIndicatorLength;
+
+        // Draw the strike-through
+        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+        // Add the missing tick on the end of the strike-through line
+        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughStart, StrikeThroughThickness);
+    }
+
+    // Draw a strike-through if this segment is above the upper limit.
+    if (PitchUpperBound > GunPitchMax)
+    {
+        StrikeThroughStartIndex = 0;
+        StrikeThroughEndIndex = (PitchUpperBound - GunPitchMax) / PitchScaleStep - 1;
+        StrikeThroughStart = 0;
+        StrikeThroughEnd = PitchTicksCurvature[StrikeThroughEndIndex] * PitchIndicatorLength;
+
+        // Draw the strike-through
+        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+        // Add the missing tick on the end of the strike-through line
+        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
+    }
+
+    // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
+    C.SetPos(IndicatorTopLeftCornerX - 2 * LargeSizeTickLength, IndicatorTopLeftCornerY - LargeSizeTickLength);
+    C.DrawTile(GradientOverlayY, 3 * LargeSizeTickLength, PitchIndicatorLength + 2 * LargeSizeTickLength, 0, 0, 32, 256);
 
     // Draw a long horizontal bar that imitates edge of the indicator
     C.SetDrawColor(255, 255, 255, 255);
@@ -1003,7 +992,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX + IndicatorMiddleTickOffset;
-    CurvatureConstant = PitchTicksCurvature[0.5 * PitchIndicatorLength];
+    CurvatureConstant = PitchTicksCurvature[0.5 * VisiblePitchSegmentsNumber - 1];
     C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, SmallSizeTickLength);
 }
 
@@ -1047,8 +1036,8 @@ defaultproperties
     SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
     NoTargetsHint="No targets available"
 
-    YawDialSpan=0.6   // 0.6rad ~= 60 degrees
-    PitchDialSpan=0.4
+    YawDialSpan=0.8   // 0.6rad ~= 60 degrees
+    PitchDialSpan=0.5
 
     GradientOverlayX=Texture'DH_FX_Tex.Effects.dials_gradient_x'
     GradientOverlayY=Texture'DH_FX_Tex.Effects.dials_gradient_y'
