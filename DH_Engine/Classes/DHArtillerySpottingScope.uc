@@ -631,7 +631,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float CurvatureCoefficient;
+    local float CurvatureCoefficient, ShadingCoefficient;
     local float BottomDialBound, TopDialBound;
     local float CurrentYaw, GunYawMin, GunYawMax;
 
