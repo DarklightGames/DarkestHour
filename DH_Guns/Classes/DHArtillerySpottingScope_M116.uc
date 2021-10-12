@@ -7,12 +7,11 @@ class DHArtillerySpottingScope_M116 extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'   // TODO: REPLACE
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
     YawScaleStep=10.0
     PitchScaleStep=10.0
 
-    // to do: confirm those values are correct!
     RangeTable(0)=(Range=100,Pitch=20)
     RangeTable(1)=(Range=200,Pitch=50)
     RangeTable(2)=(Range=300,Pitch=80)

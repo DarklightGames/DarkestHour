@@ -7,8 +7,8 @@ class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    // to do: replace with some cool American overlay
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    // to do: replace with some cool American overlay (maybe just the springfield sight)
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
     YawScaleStep=5.0
     PitchScaleStep=10.0

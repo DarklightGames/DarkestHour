@@ -7,8 +7,7 @@ class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    // to do: replace with some cool American overlay
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
     // to do: confirm those values are correct!
     RangeTable(0)=(Range=125,Pitch=84.0)
