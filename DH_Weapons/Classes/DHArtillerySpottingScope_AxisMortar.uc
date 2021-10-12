@@ -26,7 +26,7 @@ defaultproperties
     RangeTable(14)=(Range=400,Pitch=51.0)
 
     YawScaleStep=5.0
-    PitchScaleStep=0.5
+    PitchScaleStep=1.0
     PitchDecimalsTable=1
 
     PitchAngleUnit=AU_Degrees
