@@ -84,7 +84,8 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
-var     texture             GradientOverlay;           // used for dimming the dials
+var     texture             GradientOverlayX;           // used for dimming the dials
+var     texture             GradientOverlayY;           // used for dimming the dials
 
 // Those two fields determine what part of the dial's span will be used
 // to display the dial's scale. The span is equal to (0.5-SPAN/2, 0.5+SPAN/2) [rads].
@@ -624,7 +625,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local string Label;
     local color Color;
     local array<int> TickBuckets;
-    local float StrikeThroughStart, StrikeThroughEnd, StrikeThroughLength, TickPosition;
+    local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
     local float CurvatureCoefficient, ShadingCoefficient;
@@ -823,7 +824,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
 
     // draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
     C.SetPos(IndicatorTopLeftCornerX - 15, IndicatorTopLeftCornerY - 2 * LargeSizeTickLength);
-    C.DrawTile(GradientOverlay, default.YawIndicatorLength + 30, 3 * LargeSizeTickLength, 0, 0, 256, 32);
+    C.DrawTile(GradientOverlayX, default.YawIndicatorLength + 30, 3 * LargeSizeTickLength, 0, 0, 256, 32);
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
@@ -1049,6 +1050,7 @@ defaultproperties
     YawDialSpan=0.6   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.4
 
-    GradientOverlay=Texture'DH_FX_Tex.Effects.dials_gradient'
+    GradientOverlayX=Texture'DH_FX_Tex.Effects.dials_gradient_x'
+    GradientOverlayY=Texture'DH_FX_Tex.Effects.dials_gradient_y'
 }
 
