@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope;
 
 defaultproperties
 {
@@ -36,6 +35,7 @@ defaultproperties
     PitchScaleStep=0.5
     PitchDecimalsTable=1
 
+    PitchAngleUnit=AU_Degrees
     NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)

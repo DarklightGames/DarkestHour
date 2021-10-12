@@ -156,7 +156,9 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     WeaponRotation.Pitch = 0;
 
     Target = TargetMarker.WorldLocation - WeaponLocation;
-    Deflection = -class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
+
+    Deflection = -class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1));
+    Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
 
     if (Abs(Deflection) > 500)
     {
@@ -215,9 +217,7 @@ simulated function int GetIndex(class<Projectile> ProjectileClass)
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
-    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
     local DHPlayer                                      PC;
-    local DHPlayerReplicationInfo                       PRI;
     local DHHud                                         Hud;
     local DHMortarVehicleWeapon                         MVW;
     local int                                           AmmoCount;
@@ -246,43 +246,7 @@ simulated function DrawHUD(Canvas C)
     }
     else
     {
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-        // to do: refactor to separate variables (calculate once)
-        ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-
-        if (!PC.myHud.bHideHud)
-        {
-            Targets = PC.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
-
-            ArtillerySpottingScope.static.DrawRangeTable(C,
-                                                         MVW.Elevation + MVW.default.ElevationMinimum,
-                                                         MVW.Elevation + MVW.default.ElevationMaximum);
-
-            ArtillerySpottingScope.static.DrawPitch(C,
-                                                    MVW.Elevation,
-                                                    MVW.default.ElevationMinimum,
-                                                    MVW.default.ElevationMaximum,
-                                                    PitchTicksShading,
-                                                    PitchTicksCurvature);
-
-            ArtillerySpottingScope.static.DrawYaw(PRI,
-                                                  C,
-                                                  // without multiplying yaw by (-1) below the yaw readout is reversed
-                                                  class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
-                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                                                  class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                                                  Targets,
-                                                  YawTicksShading,
-                                                  YawTicksCurvature);
-
-            ArtillerySpottingScope.static.DrawTargets(PRI,
-                                                      C,
-                                                      class'DHUnits'.static.UnrealToMilliradians(-GetGunYaw()),
-                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                                                      class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                                                      Targets);
-        }
+        DrawSpottingScopeOverlay(C);
     }
 
     if (!Hud.bHideHUD)
@@ -909,6 +873,54 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
             PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
         }
     }
+}
+
+simulated function int GetGunYaw()
+{
+    // The yaw is reversed, for some reason, on the mortars (probably the bone is upside down?)
+    return -super.GetGunYaw();
+}
+
+simulated function int GetGunPitch()
+{
+    local DHMortarVehicleWeapon MVW;
+
+    MVW = DHMortarVehicleWeapon(VehWep);
+
+    if (MVW != none)
+    {
+        return class'UUnits'.static.DegreesToUnreal(MVW.Elevation);
+    }
+
+    return 0;
+}
+
+simulated function int GetGunPitchMin()
+{
+    local DHMortarVehicleWeapon MVW;
+
+    MVW = DHMortarVehicleWeapon(VehWep);
+
+    if (MVW != none)
+    {
+        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMinimum);
+    }
+
+    return 0;
+}
+
+simulated function int GetGunPitchMax()
+{
+    local DHMortarVehicleWeapon MVW;
+
+    MVW = DHMortarVehicleWeapon(VehWep);
+
+    if (MVW != none)
+    {
+        return class'UUnits'.static.DegreesToUnreal(MVW.default.ElevationMaximum);
+    }
+
+    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

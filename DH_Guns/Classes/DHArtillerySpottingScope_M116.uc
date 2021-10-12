@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_M116 extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_M116 extends DHArtillerySpottingScope;
 
 defaultproperties
 {
@@ -32,8 +31,6 @@ defaultproperties
     RangeTable(15)=(Range=1600,Pitch=570)
     RangeTable(16)=(Range=1700,Pitch=660)
     RangeTable(17)=(Range=1750,Pitch=750)
-
-    AngleUnit="mils"
 
     NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)

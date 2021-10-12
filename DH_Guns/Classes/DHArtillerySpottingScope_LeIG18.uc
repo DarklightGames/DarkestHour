@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_LeIG18 extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_LeIG18 extends DHArtillerySpottingScope;
 
 defaultproperties
 {
@@ -37,8 +36,6 @@ defaultproperties
     RangeTable(20)=(Pitch=501,Range=1100)
     RangeTable(21)=(Pitch=545,Range=1150)
     RangeTable(22)=(Pitch=593,Range=1200)
-
-    AngleUnit="mils"
 
     NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)

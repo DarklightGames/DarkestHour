@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope;
 
 defaultproperties
 {
@@ -36,8 +35,6 @@ defaultproperties
     RangeTable(19)=(Pitch=475,Range=1750)
     RangeTable(20)=(Pitch=500,Range=1800)
     RangeTable(21)=(Pitch=525,Range=1850)
-
-    AngleUnit="mils"
 
     NumberOfPitchSegments=8
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)

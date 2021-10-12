@@ -46,7 +46,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
 
     if (PC.ArtillerySupportSquadIndex != 255)
     {
-        GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers, PC.GetTeamNum());
+        GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
