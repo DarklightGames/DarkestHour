@@ -84,6 +84,8 @@ var     color               White;
 var     color               Orange;
 var     color               Red;
 
+var     texture             GradientOverlay;           // used for dimming the dials
+
 // Those two fields determine what part of the dial's span will be used
 // to display the dial's scale. The span is equal to (0.5-SPAN/2, 0.5+SPAN/2) [rads].
 // E.g. YawDialSpan=1 will project the yaw dial on a half-circle.
@@ -622,7 +624,8 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local string Label;
     local color Color;
     local array<int> TickBuckets;
-    local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
+    local float StrikeThroughStart, StrikeThroughEnd, StrikeThroughLength, TickPosition;
+    local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
     local float CurvatureCoefficient, ShadingCoefficient;
     local float BottomDialBound, TopDialBound;
@@ -742,7 +745,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
         // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
         // text labels completly disappear. I propose to change the color instead of alpha channel
         // because the background is black anyway. - mimi~
-        C.SetDrawColor(Shade, Shade, Shade, 255);
 
         Label = string(int(class'UMath'.static.Floor(Yaw, YawScaleStep)));
 
@@ -791,41 +793,37 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw a strike-through for values outside of the traverse range
-    C.CurY = IndicatorTopLeftCornerY - SmallSizeTickLength;
 
     if (YawLowerBound < GunYawMinTruncated)
     {
         StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / YawScaleStep);
+        StrikeThroughEnd = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex * IndicatorStep];
 
-        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep + 1; ++i)
-        {
-            CurvatureCoefficient = YawTicksCurvature[i];
-            ShadingCoefficient = YawTicksShading[i];
-            Shade = Max(1, 255 * ShadingCoefficient);
+        // draw the strike-through
+        C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY - SmallSizeTickLength);
+        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughEnd, StrikeThroughThickness);
 
-            // Draw the tick
-            C.SetDrawColor(Shade, Shade, Shade, 255);
-            C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength, StrikeThroughThickness);
-        }
+        // add the dangling tick on the end of the strike-through line
+        C.SetPos(IndicatorTopLeftCornerX + StrikeThroughEnd, IndicatorTopLeftCornerY - SmallSizeTickLength);
+        C.DrawVertical(IndicatorTopLeftCornerX + StrikeThroughEnd, StrikeThroughThickness);
     }
 
     if (YawUpperBound > GunYawMaxTruncated)
     {
         StrikeThroughStartIndex = (GunYawMaxTruncated - YawLowerBound) / YawScaleStep;
-        StrikeThroughEndIndex = VisibleYawSegmentsNumber - 1;
+        StrikeThroughEndIndex = VisibleYawSegmentsNumber;
+        StrikeThroughStart = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughStartIndex * IndicatorStep];
+        StrikeThroughEnd = default.YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex * IndicatorStep - 1];
 
-        for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
-        {
-            CurvatureCoefficient = YawTicksCurvature[i];
-            ShadingCoefficient = YawTicksShading[i];
-            Shade = Max(1, 255 * ShadingCoefficient);
-
-            // Draw the tick
-            C.SetDrawColor(Shade, Shade, Shade, 255);
-            C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength, StrikeThroughThickness);
-        }
+        // draw the strike-through
+        C.SetPos(IndicatorTopLeftCornerX + StrikeThroughStart, IndicatorTopLeftCornerY - SmallSizeTickLength);
+        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughEnd - StrikeThroughStart, StrikeThroughThickness);
     }
+
+    // draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
+    C.SetPos(IndicatorTopLeftCornerX - 15, IndicatorTopLeftCornerY - 2 * LargeSizeTickLength);
+    C.DrawTile(GradientOverlay, default.YawIndicatorLength + 30, 3 * LargeSizeTickLength, 0, 0, 256, 32);
 
     // Draw current value indicator (middle tick)
     C.SetDrawColor(255, 255, 255, 255);
@@ -1050,5 +1048,7 @@ defaultproperties
 
     YawDialSpan=0.6   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.4
+
+    GradientOverlay=Texture'DH_FX_Tex.Effects.dials_gradient'
 }
 
