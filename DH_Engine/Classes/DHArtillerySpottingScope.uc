@@ -622,7 +622,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
 function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetInfo> Targets)
 {
-    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, Shade, TextWidth, TextHeight;
+    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
@@ -631,7 +631,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float CurvatureCoefficient, ShadingCoefficient;
+    local float CurvatureCoefficient;
     local float BottomDialBound, TopDialBound;
     local float CurrentYaw, GunYawMin, GunYawMax;
 
@@ -723,7 +723,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw a strike-through for values outside of the traverse range
-
     if (YawLowerBound < GunYawMinTruncated)
     {
         StrikeThroughStartIndex = 0;
@@ -846,7 +845,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
     local float CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
+    local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
     local string Label;
     local float BottomDialBound, TopDialBound;
     local float CurvatureConstant, ShadingConstant;
@@ -887,6 +886,12 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     {
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
+
+        // TODO: dumb hack to stop the crashing
+        if (Index * IndicatorStep < 0 || Index * IndicatorStep >= PitchTicksCurvature.Length)
+        {
+            continue;
+        }
 
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index];
@@ -974,7 +979,6 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Draw the strike-through
         C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
         C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
-
         // Add the missing tick on the end of the strike-through line
         C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
         C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);

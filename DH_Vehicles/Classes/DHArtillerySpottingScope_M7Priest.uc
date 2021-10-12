@@ -35,6 +35,9 @@ defaultproperties
     RangeTable(19)=(Pitch=475,Range=1750)
     RangeTable(20)=(Pitch=500,Range=1800)
     RangeTable(21)=(Pitch=525,Range=1850)
+    RangeTable(22)=(Pitch=550,Range=1900)
+    RangeTable(23)=(Pitch=575,Range=1925)
+    RangeTable(24)=(Pitch=600,Range=1955)
 
     NumberOfPitchSegments=8
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
