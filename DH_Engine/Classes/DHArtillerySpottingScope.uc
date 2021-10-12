@@ -631,7 +631,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float CurvatureCoefficient, ShadingCoefficient;
+    local float CurvatureCoefficient;
     local float BottomDialBound, TopDialBound;
     local float CurrentYaw, GunYawMin, GunYawMax;
 
@@ -965,8 +965,8 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 2 * LargeSizeTickLength, IndicatorTopLeftCornerY - LargeSizeTickLength);
-    C.DrawTile(GradientOverlayY, 3 * LargeSizeTickLength, PitchIndicatorLength + 2 * LargeSizeTickLength, 0, 0, 32, 256);
+    C.SetPos(IndicatorTopLeftCornerX - 3 * LargeSizeTickLength, IndicatorTopLeftCornerY - LargeSizeTickLength);
+    C.DrawTile(GradientOverlayY, 3 * LargeSizeTickLength, PitchIndicatorLength + 3 * LargeSizeTickLength, 0, 0, 32, 256);
 
     // Draw a long horizontal bar that imitates edge of the indicator
     C.SetDrawColor(255, 255, 255, 255);
