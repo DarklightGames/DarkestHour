@@ -40,5 +40,6 @@ defaultproperties
 
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
-    ArtillerySpottingScope=class'DH_Guns.DHArtillerySpottingScope_LeIG18'
+
+    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_LeIG18'
 }
