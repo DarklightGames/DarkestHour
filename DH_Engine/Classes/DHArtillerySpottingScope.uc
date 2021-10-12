@@ -93,8 +93,6 @@ var     texture             GradientOverlayY;           // used for dimming the 
 var     float               YawDialSpan;    // [rad]
 var     float               PitchDialSpan;  // [rad]
 
-var     array<float>                    YawTicksShading;
-var     array<float>                    PitchTicksShading;
 var     array<float>                    YawTicksCurvature;
 var     array<float>                    PitchTicksCurvature;
 
@@ -167,13 +165,11 @@ function CalculateShadingAndCurvature()
     for (i = 0; i < YawIndicatorLength; ++i)
     {
         YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, YawDialSpan);
-        YawTicksShading[i] = 1 - 2 * Abs(YawTicksCurvature[i] - 0.5);
     }
 
     for (i = 0; i < PitchIndicatorLength; ++i)
     {
         PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, PitchDialSpan);
-        PitchTicksShading[i] = 1 - 2 * Abs(PitchTicksCurvature[i] - 0.5);
     }
 }
 
@@ -619,7 +615,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
 function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetInfo> Targets)
 {
-    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, Shade, TextWidth, TextHeight;
+    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, TextWidth, TextHeight;
     local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
     local int TargetTickCountLeft, TargetTickCountRight;
     local string Label;
@@ -628,7 +624,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float CurvatureCoefficient, ShadingCoefficient;
+    local float CurvatureCoefficient;
     local float BottomDialBound, TopDialBound;
     local float CurrentYaw, GunYawMin, GunYawMax;
 
@@ -682,12 +678,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
 
             // How bright this tick should be, do not let the tick be either completly black as it will disappear
             // or fully bright as it just looks unnatural
-            ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
-            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
-
-            Color.R = Max(1, int(Color.R) * ShadingCoefficient);
-            Color.G = Max(1, int(Color.G) * ShadingCoefficient);
-            Color.B = Max(1, int(Color.B) * ShadingCoefficient);
             C.SetDrawColor(Color.R, Color.G, Color.B, 255);
 
             // The new tick position on the "curved" surface of the dial
@@ -735,10 +725,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
 
         // Transform the "linear" coordinates to the coordinates on the curved dial
         CurvatureCoefficient = YawTicksCurvature[Index * IndicatorStep];
-
-        // Calculate shading (this transformation of CurvatureCoefficient gives an eye-pleasing shading)
-        ShadingCoefficient = YawTicksShading[Index * IndicatorStep];
-        Shade = Max(1, 255 * ShadingCoefficient);
 
         // Calculate index of the current readout value on the mortar yaw span
         Quotient = int(class'UMath'.static.FlooredDivision(Yaw, YawScaleStep));
@@ -794,7 +780,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw a strike-through for values outside of the traverse range
-
     if (YawLowerBound < GunYawMinTruncated)
     {
         StrikeThroughStartIndex = 0;
@@ -831,7 +816,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     C.CurY = IndicatorTopLeftCornerY + IndicatorMiddleTickOffset;
 
     // Transform the "linear" coordinates to the coordinates on the curved dial
-    CurvatureCoefficient = YawTicksCurvature[0.5 * YawIndicatorLength];;
+    CurvatureCoefficient = YawTicksCurvature[0.5 * YawIndicatorLength];
 
     C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength, SmallSizeTickLength);
 }
@@ -850,11 +835,11 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
     local float CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
     local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
-    local int Shade, Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
+    local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep, i;
     local string Label;
     local float BottomDialBound, TopDialBound;
     local float GunPitchMaxTruncated, GunPitchMinTruncated;
-    local float CurvatureConstant, ShadingConstant;
+    local float CurvatureConstant;
     local float StrikeThroughStartIndex, StrikeThroughEndIndex, TickPosition;
 
     if (C == none || VWP == none && VWP.VehicleBase != none)
@@ -890,12 +875,14 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
 
+        // TODO: dumb hack to stop the crashing
+        if (Index * IndicatorStep < 0 || Index * IndicatorStep >= PitchTicksCurvature.Length)
+        {
+            continue;
+        }
+
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index * IndicatorStep];
-        ShadingConstant = PitchTicksShading[Index * IndicatorStep];
-
-        // Calculate color of the current indicator tick
-        Shade = Max(1, 255 * ShadingConstant);
 
         // Calculate index of the current readout value on the mortar pitch span
         Quotient = class'UMath'.static.FlooredDivision(Pitch, PitchScaleStep);
@@ -903,7 +890,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Changing alpha chanel works fine until the value gets lower than ~127 - from this point
         // text labels completly disappear. I propose to change the color instead of alpha channel
         // because the background is black anyway. - mimi~
-        C.SetDrawColor(Shade, Shade, Shade, 255);
+        C.SetDrawColor(255, 255, 255, 255);
 
         Label = class'UFloat'.static.Format(Pitch, PitchDecimalsDial);
 
@@ -960,13 +947,17 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep; ++i)
             {
+                // TODO: dumb hack to stop the crashing
+                if (i < 0 || i >= PitchTicksCurvature.Length)
+                {
+                    continue;
+                }
+
                 // Get the cached values
                 CurvatureConstant = PitchTicksCurvature[i];
-                ShadingConstant = PitchTicksShading[i];
 
                 // Calculate color of the current indicator tick
-                Shade = Max(1, 255 * ShadingConstant);
-                C.SetDrawColor(Shade, Shade, Shade, 255);
+                C.SetDrawColor(255, 255, 255, 255);
 
                 C.CurX = IndicatorTopLeftCornerX - SmallSizeTickLength;
                 C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, StrikeThroughThickness);
@@ -981,13 +972,17 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
             for (i = StrikeThroughStartIndex * IndicatorStep; i < StrikeThroughEndIndex * IndicatorStep + 1; ++i)
             {
+                // TODO: dumb hack to stop the crashing
+                if (i < 0 || i >= PitchTicksCurvature.Length)
+                {
+                    continue;
+                }
+
                 // Get the cached values
                 CurvatureConstant = PitchTicksCurvature[i];
-                ShadingConstant = PitchTicksShading[i];
 
                 // Calculate color of the current indicator tick
-                Shade = Max(1, 255 * ShadingConstant);
-                C.SetDrawColor(Shade, Shade, Shade, 255);
+                C.SetDrawColor(255, 255, 255, 255);
 
                 C.CurX = IndicatorTopLeftCornerX - SmallSizeTickLength;
                 C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, StrikeThroughThickness);
