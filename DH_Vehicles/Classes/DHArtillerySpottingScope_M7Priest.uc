@@ -39,13 +39,13 @@ defaultproperties
     RangeTable(23)=(Pitch=575,Range=1925)
     RangeTable(24)=(Pitch=600,Range=1955)
 
-    NumberOfPitchSegments=8
+    NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
     PitchSegmentSchema(3)=(Shape=ShortTick)
     PitchSegmentSchema(4)=(Shape=ShortTick)
-    PitchSegmentSchema(5)=(Shape=ShortTick)
+    PitchSegmentSchema(5)=(Shape=MediumLengthTick)
     PitchSegmentSchema(6)=(Shape=ShortTick)
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)
