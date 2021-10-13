@@ -7,27 +7,9 @@
 class DHMapMarker_Ruler extends DHMapMarker
     abstract;
 
-var int CalculationDurationSeconds;
-var localized string CalculatingString;
-
-static function bool IsDistanceCalculated(GameReplicationInfo GRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    return GRI != none && GRI.ElapsedTime >= Marker.CreationTime + default.CalculationDurationSeconds;
-}
-
 static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return static.GetDistanceString(PC, Marker);
-}
-
-static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
-{
-    if (!IsDistanceCalculated(PC.GameReplicationInfo, Marker))
-    {
-        return default.CalculatingString;
-    }
-
-    return super(DHMapMarker).GetDistanceString(PC, Marker);
 }
 
 defaultproperties
@@ -44,7 +26,6 @@ defaultproperties
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
     Permissions_CanPlace(0)=ERS_ALL
-    CalculationDurationSeconds=15
-    CalculatingString="Calculating..."
+    ActivationTimeout=15
 }
 

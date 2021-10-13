@@ -121,6 +121,7 @@ var     STargetWidgetLayout TargetWidgetLayout;
 var     string              TargetToggleHint;
 var     string              SelectTargetHint;
 var     string              NoTargetsHint;
+var     string              CalculatingString;
 
 function CreateRenderTable(Canvas C)
 {
@@ -457,48 +458,64 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 Deflection = TargetInfo.YawCorrection * YawScaleStep + CurrentYaw;
                 Labels[0] = "Correction: ";
 
-                if (Deflection > 0)
+                if (TargetInfo.Marker.MapMarkerClass.static.IsMarkerActive(PC, TargetInfo.Marker))
                 {
-                    Labels[1] = Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "left";
-
-                    if (CurrentYaw - Deflection < MinimumGunYaw)
+                    if (Deflection > 0)
                     {
-                        // the target is outside of the upper traverse limit
-                        LabelColors[1] = Red;
+                        Labels[1] = Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "left";
+
+                        if (CurrentYaw - Deflection < MinimumGunYaw)
+                        {
+                            // the target is outside of the upper traverse limit
+                            LabelColors[1] = Red;
+                        }
+                        else
+                        {
+                            // the target is within the traverse range
+                            LabelColors[1] = Orange;
+                        }
+                    }
+                    else if (Deflection == 0)
+                    {
+                        Labels[1] = "0" $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit);
+                        LabelColors[1] = Green;
                     }
                     else
                     {
-                        // the target is within the traverse range
-                        LabelColors[1] = Orange;
+                        Labels[1] = -Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "right";
+
+                        if (CurrentYaw - Deflection > MaximumGunYaw)
+                        {
+                            // the target is outside of the lower traverse limit
+                            LabelColors[1] = Red;
+                        }
+                        else
+                        {
+                            // the target is within the traverse range
+                            LabelColors[1] = Orange;
+                        }
                     }
-                }
-                else if (Deflection == 0)
-                {
-                    Labels[1] = "0" $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit);
-                    LabelColors[1] = Green;
                 }
                 else
                 {
-                    Labels[1] = -Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "right";
-
-                    if (CurrentYaw - Deflection > MaximumGunYaw)
-                    {
-                        // the target is outside of the lower traverse limit
-                        LabelColors[1] = Red;
-                    }
-                    else
-                    {
-                        // the target is within the traverse range
-                        LabelColors[1] = Orange;
-                    }
+                    Labels[1] = default.CalculatingString;
+                    LabelColors[1] = Orange;
                 }
 
                 break;
             case TWLT_Distance:
                 C.SetDrawColor(White.R, White.G, White.B, White.A);
                 Labels[0] = "Distance: ";
-                Labels[1] = TargetInfo.Marker.MapMarkerClass.static.GetDistanceString(PC, TargetInfo.Marker);
-                LabelColors[1] = Green;
+                if (TargetInfo.Marker.MapMarkerClass.static.IsMarkerActive(PC, TargetInfo.Marker))
+                {
+                    Labels[1] = TargetInfo.Marker.MapMarkerClass.static.GetDistanceString(PC, TargetInfo.Marker);
+                    LabelColors[1] = Green;
+                }
+                else
+                {
+                    Labels[1] = default.CalculatingString;
+                    LabelColors[1] = Orange;
+                }
                 break;
         }
 
@@ -637,6 +654,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local float CurvatureCoefficient;
     local float BottomDialBound, TopDialBound;
     local float CurrentYaw, GunYawMin, GunYawMax;
+    local DHGameReplicationInfo.MapMarker Marker;
 
     if (PC == none || C == none || VWP == none)
     {
@@ -766,6 +784,14 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     // Draw target widgets & target ticks
     for (i = 0; i < Targets.Length; ++i)
     {
+        Marker = Targets[i].Marker;
+
+        if (!Marker.MapMarkerClass.static.IsMarkerActive(PC, Marker))
+        {
+            // skip targets that are in the 'calculating' state
+            continue;
+        }
+
         // Which tick on the dial does this target correspond to
         Index = (VisibleYawSegmentsNumber * 0.5) - Targets[i].YawCorrection - int(CurrentYaw / YawScaleStep);
 
@@ -1030,5 +1056,6 @@ defaultproperties
 
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
+    CalculatingString="Calculating..."
 }
 
