@@ -625,8 +625,8 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
 function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetInfo> Targets)
 {
-    local float TextWidth, TextHeight;
-    local int TextWidthTruncated, TextHeightTruncated, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound;
+    local float TextWidthFloat, TextHeightFloat;
+    local int TextWidth, TextHeight, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound;
     local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
     local int TargetTickCountLeft, TargetTickCountRight;
     local int StrikeThroughStart, StrikeThroughEnd, TickPosition;
@@ -634,7 +634,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local int GunYawMaxTruncated, GunYawMinTruncated;
     local int BottomDialBound, TopDialBound;
     local int CurrentYaw, GunYawMin, GunYawMax;
-    local int Shade;
     local array<int> TargetTickBuckets;
     local float CurvatureCoefficient, ShadingCoefficient;
     local string Label;
@@ -684,9 +683,9 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
         Label = string(int(class'UMath'.static.Floor(Yaw, YawScaleStep)));
 
         // Get the label's length
-        C.StrLen(Label, TextWidth, TextHeight);
-        TextWidthTruncated = TextWidth;
-        TextHeightTruncated = TextHeight;
+        C.StrLen(Label, TextWidthFloat, TextHeightFloat);
+        TextWidth = TextWidthFloat;
+        TextHeight = TextHeightFloat;
 
         YawSegmentSchemaIndex = Abs(Quotient) % YawSegmentSchema.Length;
 
@@ -714,17 +713,17 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             switch (YawSegmentSchema[YawSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
-                    C.CurY = C.CurY - SmallSizeTickLength - TextHeightTruncated - LabelOffset;
+                    C.CurY = C.CurY - SmallSizeTickLength - TextHeight - LabelOffset;
                     break;
                 case MediumLengthTick:
-                    C.CurY = C.CurY - MiddleSizeTickLength - TextHeightTruncated - LabelOffset;
+                    C.CurY = C.CurY - MiddleSizeTickLength - TextHeight - LabelOffset;
                     break;
                 case LongTick:
-                    C.CurY = C.CurY - LargeSizeTickLength - TextHeightTruncated - LabelOffset;
+                    C.CurY = C.CurY - LargeSizeTickLength - TextHeight - LabelOffset;
                     break;
             }
 
-            C.CurX = TickPosition - TextWidthTruncated * 0.5 + 2;
+            C.CurX = TickPosition - TextWidth * 0.5 + 2;
             C.DrawText(Label);
         }
     }
@@ -846,8 +845,8 @@ function float GetPitchUpperBound(float CurrentPitch)
 function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
     local int CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
-    local float TextWidth, TextHeight;
-    local int TextWidthTruncated, TextHeightTruncated;
+    local float TextWidthFloat, TextHeightFloat;
+    local int TextWidth, TextHeight;
     local int Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound;
     local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep;
     local int BottomDialBound, TopDialBound;
@@ -900,9 +899,9 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         Label = class'UFloat'.static.Format(Pitch, PitchDecimalsDial);
 
         // Get the label's length
-        C.StrLen(Label, TextWidth, TextHeight);
-        TextWidthTruncated = TextWidth;
-        TextHeightTruncated = TextHeight;
+        C.StrLen(Label, TextWidthFloat, TextHeightFloat);
+        TextWidth = TextWidthFloat;
+        TextHeight = TextHeightFloat;
 
         C.CurX = IndicatorTopLeftCornerX - 5.0;
         TickPosition = IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength;
@@ -927,17 +926,17 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
             switch (PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
-                    C.CurX = C.CurX - SmallSizeTickLength - TextWidthTruncated - LabelOffset;
+                    C.CurX = C.CurX - SmallSizeTickLength - TextWidth - LabelOffset;
                     break;
                 case MediumLengthTick:
-                    C.CurX = C.CurX - MiddleSizeTickLength - TextWidthTruncated - LabelOffset;
+                    C.CurX = C.CurX - MiddleSizeTickLength - TextWidth - LabelOffset;
                     break;
                 case LongTick:
-                    C.CurX = C.CurX - LargeSizeTickLength - TextWidthTruncated - LabelOffset;
+                    C.CurX = C.CurX - LargeSizeTickLength - TextWidth - LabelOffset;
                     break;
             }
 
-            C.CurY = TickPosition - TextHeightTruncated * 0.5;
+            C.CurY = TickPosition - TextHeight * 0.5;
             C.DrawText(Label);
         }
     }
