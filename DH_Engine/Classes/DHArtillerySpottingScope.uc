@@ -207,22 +207,23 @@ function UpdateTable(Canvas C, float ActiveLowerBoundPitch, float ActiveUpperBou
 
         bIsTableInitialized = true;
     }
-
-    // TODO: update colors of table values
 }
 
-function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, int YawScaleStep, rotator VehicleRotation, vector VehicleLocation)
+function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, VehicleWeapon VW)
 {
     local vector                                        Delta;
-    local int                                           Distance, Deflection, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
-    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHArtillerySpottingScope.STargetInfo          TargetInfo;
+    local float                                         Deflection;
+    local int                                           Distance, MarkerTimeout, MarkerIndex, MarkersTotal, i, j;
+    local array<STargetInfo>                            Targets;
+    local STargetInfo                                   TargetInfo;
     local string                                        SquadName;
     local DHGameReplicationInfo.MapMarker               MapMarker;
     local DHGameReplicationInfo                         GRI;
-    local array<DHGameReplicationInfo.MapMarker> TargetMapMarkers, GlobalArtilleryRequests, PersonalMapMarkers;
+    local array<DHGameReplicationInfo.MapMarker>        TargetMapMarkers, GlobalArtilleryRequests, PersonalMapMarkers;
+    local rotator WeaponRotation;
+    local vector WeaponLocation;
 
-    if (PC == none || PC.SquadReplicationInfo == none)
+    if (PC == none || PC.SquadReplicationInfo == none || VW == none)
     {
         return Targets;
     }
@@ -234,10 +235,12 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, int YawScaleStep, rot
         return Targets;
     }
 
-    VehicleLocation.Z = 0.0;
+    WeaponLocation = VW.Location;
+    WeaponLocation.Z = 0.0;
 
-    VehicleRotation.Roll = 0;
-    VehicleRotation.Pitch = 0;
+    WeaponRotation = VW.Rotation;
+    WeaponRotation.Roll = 0;
+    WeaponRotation.Pitch = 0;
 
     // Get all global fire support markers excluding player's own
     GRI.GetGlobalArtilleryMapMarkers(PC, GlobalArtilleryRequests);
@@ -267,12 +270,13 @@ function array<STargetInfo> PrepareTargetInfo(DHPlayer PC, int YawScaleStep, rot
     for (i = 0; i < TargetMapMarkers.Length; ++i)
     {
         MapMarker = TargetMapMarkers[i];
-        Delta = MapMarker.WorldLocation - VehicleLocation;
-        Delta.Z = 0;
 
-        // calculate deflection between target's shift (Delta) and vehicle's direction (VehicleRotation)
-        Deflection = class'UVector'.static.SignedAngle(Delta, vector(VehicleRotation), vect(0, 0, 1));
+        Delta = MapMarker.WorldLocation - WeaponLocation;
+        Delta.Z = 0;
+        // calculate deflection between target's shift (Delta) and weapon's direction (VehicleRotation)
+        Deflection = class'UVector'.static.SignedAngle(vector(rotator(Normal(Delta))), vector(WeaponRotation), vect(0, 0, 1));
         Deflection = class'UUnits'.static.ConvertAngleUnit(Deflection, AU_Radians, AU_Milliradians);
+
         SquadName = PC.SquadReplicationInfo.GetSquadName(PC.GetTeamNum(), MapMarker.SquadIndex);
         Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(Delta)));
 
@@ -326,13 +330,12 @@ function Draw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP)
 {
     local array<STargetInfo> Targets;
 
-    if (PC == none || C == none || VWP == none || VWP.Gun == none)
+    if (PC == none || C == none || VWP == none || VWP.VehWep == none)
     {
         return;
     }
 
-    // calculate this inside the artyscope draw function
-    Targets = PrepareTargetInfo(PC, YawScaleStep, VWP.Gun.Rotation, VWP.Gun.Location);   // TODO: extract this out of PC!
+    Targets = PrepareTargetInfo(PC, VWP.VehWep);
 
     // Draw the spotting scope overlay
     DrawSpottingScopeOverlay(C);
@@ -812,12 +815,12 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw a long horizontal bar that imitates edge of the indicator
+    C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX;
     C.CurY = IndicatorTopLeftCornerY;
     C.DrawHorizontal(IndicatorTopLeftCornerY, YawIndicatorLength);
 
     // Draw current value indicator (middle tick)
-    C.SetDrawColor(255, 255, 255, 255);
     C.CurY = IndicatorTopLeftCornerY + IndicatorMiddleTickOffset;
     CurvatureCoefficient = YawTicksCurvature[0.5 * VisibleYawSegmentsNumber];
     C.DrawVertical(IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength, SmallSizeTickLength);
