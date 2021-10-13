@@ -122,8 +122,6 @@ var     string              TargetToggleHint;
 var     string              SelectTargetHint;
 var     string              NoTargetsHint;
 
-var     bool                bDebug;
-
 function CreateRenderTable(Canvas C)
 {
     local int i;
@@ -993,11 +991,6 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     C.DrawHorizontal(TickPosition, SmallSizeTickLength);
 }
 
-exec function DebugScope()
-{
-    bDebug = !bDebug;
-}
-
 defaultproperties
 {
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
@@ -1043,7 +1036,5 @@ defaultproperties
 
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
-
-    bDebug=false
 }
 
