@@ -77,6 +77,7 @@ simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DH
 
     PC.ArtilleryHitInfo.bIsWithinRadius = false;
     PC.ArtilleryHitInfo.ExpiryTime = 0;
+
     return;
 }
 

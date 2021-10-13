@@ -1028,7 +1028,7 @@ defaultproperties
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees
     PitchDialSpan=0.5
 
-    GradientOverlayX=Texture'DH_FX_Tex.Effects.dials_gradient_x'
-    GradientOverlayY=Texture'DH_FX_Tex.Effects.dials_gradient_y'
+    GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
+    GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
 }
 

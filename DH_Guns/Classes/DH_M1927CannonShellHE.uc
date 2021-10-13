@@ -9,8 +9,8 @@ class DH_M1927CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=9988.0 // 662 m/s
-    MaxSpeed=9988.0
+    Speed=6880.0 // arbitrary speed
+    MaxSpeed=9880.0
     ShellDiameter=7.62
     BallisticCoefficient=1.55
 
@@ -28,10 +28,6 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType_Artillery'
     HullFireChance=0.8
     EngineFireChance=0.8
-
-    //Effects
-//    CoronaClass=class'DH_Effects.DHShellTracer_GreenLarge'
-//    ShellTrailClass=class'DH_Effects.DHShellTrail_Green'
 
     //Penetration
     DHPenetrationTable(0)=3.3
