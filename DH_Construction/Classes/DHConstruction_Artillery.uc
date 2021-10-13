@@ -17,6 +17,8 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 
             switch (Context.LevelInfo.AlliedNation)
             {
+                case NATION_Britain:
+                case NATION_Canada:
                 case NATION_USA:
                     if (Context.LevelInfo.Season == SEASON_Winter)
                     {
@@ -26,6 +28,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                     {
                         return class'DH_Guns.DH_M116Gun';
                     }
+                case NATION_Poland:
                 case NATION_USSR:
                     if (Context.LevelInfo.Season == Season_Winter)
                     {
