@@ -116,7 +116,7 @@ defaultproperties
     Records(56)=(ClassName="DH_Weapons.DH_SatchelCharge10lb10sWeapon",WeaponNames=("satchel"))
     Records(57)=(ClassName="DH_Weapons.DH_SpringfieldA1Weapon",WeaponNames=("springfield"))
     Records(58)=(ClassName="DH_Weapons.DH_SpringfieldScopedWeapon",WeaponNames=("springfieldscoped"))
-    Records(59)=(ClassName="DH_Weapons.DH_StenMkIIWeapon",WeaponNames=("sten", "sten2"))
+    Records(59)=(ClassName="DH_Weapons.DH_StenMkIIWeapon",WeaponNames=("sten", "sten2", "stenmk2"))
     Records(60)=(ClassName="DH_Weapons.DH_STG44Weapon",WeaponNames=("stg", "stg44", "mp44"))
     Records(61)=(ClassName="DH_Weapons.DH_StielGranateWeapon",WeaponNames=("stiel"))
     Records(62)=(ClassName="DH_Weapons.DH_SVT38Weapon",WeaponNames=("svt38"))
@@ -148,4 +148,3 @@ defaultproperties
     Records(88)=(ClassName="DH_Weapons.DH_StenMkIIIWeapon",WeaponNames=("stenmk3", "sten3"))
     Records(89)=(ClassName="DH_Weapons.DH_StenMkIICWeapon",WeaponNames=("stenmk2c", "sten2c", "stenc"))
 }
-
