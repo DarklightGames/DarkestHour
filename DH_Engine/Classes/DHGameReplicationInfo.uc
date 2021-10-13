@@ -1506,7 +1506,7 @@ simulated function bool IsMapMarkerExpired(MapMarker MM)
     return MM.ExpiryTime != -1 && MM.ExpiryTime <= ElapsedTime;
 }
 
-simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers, int TeamIndex)
+simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker> MapMarkers)
 {
     local int i;
     local DHPlayerReplicationInfo PRI;
@@ -1527,7 +1527,7 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
 
     bIsArtillerySpotter = PRI.IsArtillerySpotter();
 
-    switch (TeamIndex)
+    switch (PC.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             for (i = 0; i < arraycount(AxisMapMarkers); ++i)
@@ -1558,6 +1558,8 @@ simulated function GetGlobalArtilleryMapMarkers(DHPlayer PC, out array<MapMarker
                     MapMarkers[MapMarkers.Length] = Marker;
                 }
             }
+            break;
+        default:
             break;
     }
 }

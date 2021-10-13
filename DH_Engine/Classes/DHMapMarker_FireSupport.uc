@@ -31,24 +31,26 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     }
 }
 
-static function color GetIconColor(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
+static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
-    local DHPlayer PC;
-
-    if (PRI == none)
+    if (PC == none)
     {
         return default.IconColor;
     }
 
-    PC = DHPlayer(PRI.Owner);
-
-    if (PC != none
-        && PC.IsArtilleryOperator()
-        && PC.ArtillerySupportSquadIndex == Marker.SquadIndex
-        || PC.IsArtillerySpotter()
-        && PRI.SquadIndex == Marker.SquadIndex)
+    if (PC.IsArtilleryOperator())
     {
-        return default.ActivatedIconColor;
+        if (PC.ArtillerySupportSquadIndex == Marker.SquadIndex)
+        {
+            return default.ActivatedIconColor;
+        }
+    }
+    else if (PC.IsArtillerySpotter())
+    {
+        if (PC.GetSquadIndex() == Marker.SquadIndex)
+        {
+            return default.ActivatedIconColor;
+        }
     }
 
     return default.IconColor;

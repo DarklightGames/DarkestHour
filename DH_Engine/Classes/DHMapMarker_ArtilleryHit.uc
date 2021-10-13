@@ -17,6 +17,12 @@ static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplication
         return false;
     }
 
+    if (PRI.Level != none && PRI.Level.NetMode == NM_Standalone)
+    {
+        // For debugging purposes, just let us see our own hits in standalone.
+        return true;
+    }
+
     PC = DHPlayer(PRI.Owner);
 
     return PC != none && PC.ArtilleryHitInfo.bIsWithinRadius;

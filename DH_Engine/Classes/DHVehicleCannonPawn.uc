@@ -190,15 +190,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 // Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
-    local PlayerController                              PC;
-    local float                                         SavedOpacity;
-    local array<DHArtillerySpottingScope.STargetInfo>   Targets;
-    local DHPlayer                                      Player;
-    local DHPlayerReplicationInfo                       PRI;
+    local DHPlayer                  PC;
+    local float                     SavedOpacity;
+    local DHPlayerReplicationInfo   PRI;
 
-    PC = PlayerController(Controller);
-    Player = DHPlayer(PC);
-    PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+    PC = DHPlayer(Controller);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     if (PC != none && !PC.bBehindView && PRI != none)
     {
@@ -218,39 +221,9 @@ simulated function DrawHUD(Canvas C)
                     // Draw the gunsight overlay
                     DrawGunsightOverlay(C);
                 }
-                else if (DriverPositionIndex == SpottingScopePositionIndex && ArtillerySpottingScope != none && Player != none)
+                else if (DriverPositionIndex == SpottingScopePositionIndex)
                 {
-                    Targets = Player.PrepareTargetInfo(ArtillerySpottingScope.default.YawScaleStep, VehWep.Rotation, VehWep.Location);
-
-                    // Draw the spotting scope overlay
-                    // to do: refactor to separate variables (calculate once)
-                    ArtillerySpottingScope.static.DrawSpottingScopeOverlay(C);
-                    ArtillerySpottingScope.static.DrawRangeTable(C,
-                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch) + class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()));
-                    ArtillerySpottingScope.static.DrawPitch(C,
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitch()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunPitchMax()),
-                        PitchTicksShading,
-                        PitchTicksCurvature,
-                        class'DHUnits'.static.UnrealToMilliradians(VehicleBase.Rotation.Pitch));
-                    ArtillerySpottingScope.static.DrawYaw(
-                        PRI,
-                        C,
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                        Targets,
-                        YawTicksShading,
-                        YawTicksCurvature);
-                    ArtillerySpottingScope.static.DrawTargets(
-                        PRI,
-                        C,
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYaw()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMin()),
-                        class'DHUnits'.static.UnrealToMilliradians(GetGunYawMax()),
-                        Targets);
+                    DrawSpottingScopeOverlay(C);
                 }
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {

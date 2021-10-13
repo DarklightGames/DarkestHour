@@ -15,13 +15,13 @@ defaultproperties
 
     // Collision meshes
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_gun_coll',AttachBone="Gun")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_turret_coll',AttachBone="Turret")
+    //CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_turret_coll',AttachBone="Turret")
 
     // Animation
     ShootIntermediateAnim="shoot_close"
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="traverse_wheel",Scale=-128.0,RotationAxis=AXIS_Z)
 
     // Turret movement
     ManualRotationsPerSecond=0.015625
@@ -37,8 +37,8 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
 
-    nProjectileDescriptions(0)="Igr.38 Sprgr"   // TOD: get names of this
-    nProjectileDescriptions(1)="Igr.38 HL/A"
+    nProjectileDescriptions(0)="HE M48"   // TOD: get names of this
+    nProjectileDescriptions(1)="HEAT M66"
 
     ProjectileClass=class'DH_Guns.DH_M116CannonShellHE'   // TODO: replace with m116 versions
     PrimaryProjectileClass=class'DH_Guns.DH_M116CannonShellHE'

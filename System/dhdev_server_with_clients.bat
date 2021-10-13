@@ -8,4 +8,4 @@ if %ERRORLEVEL% GEQ 1 (
     exit /b %ERRORLEVEL%
 )
 
-python ..\tools\test_multiplayer.py DarkestHourDev %*
+python ..\tools\test_multiplayer.py DarkestHourDev DH-Target_Range?Game=DH_Engine.DarkestHourGame

@@ -3789,25 +3789,28 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
     }
 }
 
-function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHGameReplicationInfo.MapMarker MapMarker, vector Target, Pawn P, DHPlayerReplicationInfo PRI)
+function DrawMapMarkerOnMap(DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHGameReplicationInfo.MapMarker MapMarker, vector Target)
 {
     local class<DHMapMarker> MapMarkerClass;
     local string Caption;
-    local DHPlayer PC;
+
+    if (PC == none)
+    {
+        return;
+    }
 
     MapMarkerClass = MapMarker.MapMarkerClass;
-    PC = DHPlayer(PRI.Owner);
     Caption = MapMarkerClass.static.GetCaptionString(PC, MapMarker);
     MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
-    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.static.GetIconColor(PRI, MapMarker);
+    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.static.GetIconColor(PC, MapMarker);
 
     DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
 
-    if (P != none && MapMarkerClass.default.bShouldDrawBeeLine)
+    if (PC.Pawn != none && MapMarkerClass.default.bShouldDrawBeeLine)
     {
         // Draw a bee-line from the player to the map marker.
-        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, P.Location, Target, MapMarkerClass.static.GetBeeLineColor());
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, Target, MapMarkerClass.static.GetBeeLineColor());
     }
 }
 
@@ -3842,15 +3845,14 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
             L.Y = float(MapMarkers[i].LocationY) / 255.0;
             L = DHGRI.GetWorldCoords(L.X, L.Y);
 
-            DrawMapMarkerOnMap(C,
+            DrawMapMarkerOnMap(PC,
+                               C,
                                SubCoords,
                                MyMapScale,
                                MapCenter,
                                Viewport,
                                MapMarkers[i],
-                               L,
-                               PC.Pawn,
-                               PRI);
+                               L);
         }
     }
 }

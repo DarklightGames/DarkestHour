@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_AlliedMortar extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    // to do: replace with some cool American overlay
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
     // to do: confirm those values are correct!
     RangeTable(0)=(Range=125,Pitch=84.0)
@@ -33,9 +31,10 @@ defaultproperties
     RangeTable(18)=(Range=575,Pitch=52.0)
 
     YawScaleStep=10.0
-    PitchScaleStep=0.5
+    PitchScaleStep=1.0
     PitchDecimalsTable=1
 
+    PitchAngleUnit=AU_Degrees
     NumberOfPitchSegments=6
     PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)

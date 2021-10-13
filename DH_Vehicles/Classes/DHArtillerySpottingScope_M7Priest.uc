@@ -3,13 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope
-    abstract;
+class DHArtillerySpottingScope_M7Priest extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    // to do: replace with some cool American overlay
-    SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    // to do: replace with some cool American overlay (maybe just the springfield sight)
+    SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
     YawScaleStep=5.0
     PitchScaleStep=10.0
@@ -36,8 +35,9 @@ defaultproperties
     RangeTable(19)=(Pitch=475,Range=1750)
     RangeTable(20)=(Pitch=500,Range=1800)
     RangeTable(21)=(Pitch=525,Range=1850)
-
-    AngleUnit="mils"
+    RangeTable(22)=(Pitch=550,Range=1900)
+    RangeTable(23)=(Pitch=575,Range=1925)
+    RangeTable(24)=(Pitch=600,Range=1955)
 
     NumberOfPitchSegments=8
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)

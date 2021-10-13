@@ -33,11 +33,8 @@ var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
 var     int                             SpottingScopePositionIndex;
-var     class<DHArtillerySpottingScope> ArtillerySpottingScope;
-var     array<float>                    YawTicksShading;
-var     array<float>                    PitchTicksShading;
-var     array<float>                    YawTicksCurvature;
-var     array<float>                    PitchTicksCurvature;
+var     class<DHArtillerySpottingScope> ArtillerySpottingScopeClass;
+var     DHArtillerySpottingScope        ArtillerySpottingScope;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
@@ -60,36 +57,17 @@ replication
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS ************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
+// Modified so if InitialPositionIndex is not zero, we match position indexes
+// now so when a player gets in, we don't trigger an up transition by changing
+// DriverPositionIndex
 simulated function PostBeginPlay()
 {
-    local int i, YawIndicatorLength, PitchIndicatorLength;
-
     super.PostBeginPlay();
 
     if (InitialPositionIndex > 0 && Role == ROLE_Authority)
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
-    }
-
-    if (default.ArtillerySpottingScope != none)
-    {
-        // Calculate curvature & shading coefficients for ticks on artillery scope's dial
-        YawIndicatorLength = default.ArtillerySpottingScope.default.YawIndicatorLength;
-        PitchIndicatorLength = default.ArtillerySpottingScope.default.PitchIndicatorLength;
-
-        for (i = 0; i < YawIndicatorLength; ++i)
-        {
-            YawTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / YawIndicatorLength, default.ArtillerySpottingScope.default.YawDialSpan);
-            YawTicksShading[i] = 1 - 2 * abs(YawTicksCurvature[i] - 0.5);
-        }
-
-        for (i = 0; i < PitchIndicatorLength; ++i)
-        {
-            PitchTicksCurvature[i] = class'UInterp'.static.DialRounding(float(i) / PitchIndicatorLength, default.ArtillerySpottingScope.default.PitchDialSpan);
-            PitchTicksShading[i] = 1 - 2 * abs(PitchTicksCurvature[i] - 0.5);
-        }
     }
 }
 
@@ -235,6 +213,21 @@ simulated function DrawBinocsOverlay(Canvas C)
 
         C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
+}
+
+simulated function DrawSpottingScopeOverlay(Canvas C)
+{
+    if (Role == ROLE_Authority && Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (ArtillerySpottingScope == none)
+    {
+        ArtillerySpottingScope = new ArtillerySpottingScopeClass;
+    }
+
+    ArtillerySpottingScope.Draw(DHPlayer(Controller), C, self);
 }
 
 // These values are for easily grabbing the range and current value of pitch and yaw values.

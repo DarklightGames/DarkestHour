@@ -54,9 +54,9 @@ defaultproperties
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="TravWheel",Scale=-64.0)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="ElevGear",Scale=-32.0)
-    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="ElevWheel",Scale=-64.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="TravWheel",Scale=-64.0,RotationAxis=AXIS_Z)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="ElevGear",Scale=-32.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="ElevWheel",Scale=-64.0,RotationAxis=AXIS_Y)
 
     // Cannon range settings
     RangeSettings(1)=100
