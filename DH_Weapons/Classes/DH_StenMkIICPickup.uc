@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIAmmo extends DHAmmunition;
+class DH_StenMkIICPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    MaxAmmo=32
-    InitialAmount=32
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
+    InventoryType=class'DH_Weapons.DH_StenMkIICWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.StenMkIIC'
 }

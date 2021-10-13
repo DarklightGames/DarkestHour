@@ -3,20 +3,20 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIFire extends DHAutomaticFire;
+class DH_StenMkIIIFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_StenMkIIBullet'
+    ProjectileClass=class'DH_Weapons.DH_StenMkIIIBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
-    FireRate=0.11 // 540rpm
+    FireRate=0.105 // 570rpm
     Spread=148.0
 
     // Recoil
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=260
-    MaxHorizontalRecoilAngle=100
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=253
+    MaxHorizontalRecoilAngle=93
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
     RecoilFallOffFactor=9.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'

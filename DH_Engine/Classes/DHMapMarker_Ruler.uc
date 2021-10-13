@@ -44,7 +44,7 @@ defaultproperties
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
     Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
     Permissions_CanPlace(0)=ERS_ALL
-    CalculationDurationSeconds=10
+    CalculationDurationSeconds=15
     CalculatingString="Calculating..."
 }
 

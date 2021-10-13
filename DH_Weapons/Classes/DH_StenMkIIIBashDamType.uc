@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIAmmo extends DHAmmunition;
+class DH_StenMkIIIBashDamType extends DHWeaponBashDamageType
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=32
-    InitialAmount=32
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
+    WeaponClass=class'DH_Weapons.DH_StenMkIIIWeapon'
 }

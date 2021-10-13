@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIMeleeFire extends DHMeleeFire;
+class DH_StenMkIICMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_StenMkIIBashDamType'
+    DamageType=class'DH_Weapons.DH_StenMkIICBashDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
     
     BashBackEmptyAnim="bash_pullback_empty"

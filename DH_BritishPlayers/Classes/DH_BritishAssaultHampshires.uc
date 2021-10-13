@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIAmmo extends DHAmmunition;
+class DH_BritishAssaultHampshires extends DHCWAssaultRoles;
 
 defaultproperties
 {
-    MaxAmmo=32
-    InitialAmount=32
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishHampshiresPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_BritishVestHampshiresPawn',Weight=1.0)
 }
