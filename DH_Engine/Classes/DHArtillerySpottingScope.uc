@@ -620,12 +620,19 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
         LabelColor = class'UColor'.default.Green;
     }
-    else if (!bSelectedMarkerNotAvailable && ArtilleryMarkers.Length > 1 && PC.ArtillerySupportSquadIndex != 255)
+    else if (!bSelectedMarkerNotAvailable && PC.ArtillerySupportSquadIndex != 255)
     {
-        // The player has selected an avilable marker
-        // but there are more to toggle between
-        Label = Repl(TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
-        LabelColor = class'UColor'.default.Green;
+        if (ArtilleryMarkers.Length > 1)
+        {
+            // The player has selected an available marker but there are more to toggle between
+            Label = Repl(TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+            LabelColor = class'UColor'.default.Green;
+        }
+        else
+        {
+            // The player has selected the only available marker - do not show any hints
+            Label = "";
+        }
     }
     else
     {
