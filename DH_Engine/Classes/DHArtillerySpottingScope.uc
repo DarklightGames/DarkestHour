@@ -122,6 +122,8 @@ var     string              TargetToggleHint;
 var     string              SelectTargetHint;
 var     string              NoTargetsHint;
 
+var     bool                bDebug;
+
 function CreateRenderTable(Canvas C)
 {
     local int i;
@@ -625,18 +627,20 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
 function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetInfo> Targets)
 {
-    local float IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound, TextWidth, TextHeight;
+    local float TextWidth, TextHeight;
+    local int TextWidthTruncated, TextHeightTruncated, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, YawUpperBound, YawLowerBound;
     local int i, Yaw, Quotient, Index, YawSegmentSchemaIndex, VisibleYawSegmentsNumber, IndicatorStep;
     local int TargetTickCountLeft, TargetTickCountRight;
+    local int StrikeThroughStart, StrikeThroughEnd, TickPosition;
+    local int StrikeThroughEndIndex, StrikeThroughStartIndex;
+    local int GunYawMaxTruncated, GunYawMinTruncated;
+    local int BottomDialBound, TopDialBound;
+    local int CurrentYaw, GunYawMin, GunYawMax;
+    local int Shade;
+    local array<int> TargetTickBuckets;
+    local float CurvatureCoefficient, ShadingCoefficient;
     local string Label;
     local color Color;
-    local array<int> TargetTickBuckets;
-    local float StrikeThroughStart, StrikeThroughEnd, TickPosition;
-    local int StrikeThroughEndIndex, StrikeThroughStartIndex;
-    local float GunYawMaxTruncated, GunYawMinTruncated;
-    local float CurvatureCoefficient;
-    local float BottomDialBound, TopDialBound;
-    local float CurrentYaw, GunYawMin, GunYawMax;
 
     if (PC == none || C == none || VWP == none)
     {
@@ -683,6 +687,8 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
 
         // Get the label's length
         C.StrLen(Label, TextWidth, TextHeight);
+        TextWidthTruncated = TextWidth;
+        TextHeightTruncated = TextHeight;
 
         YawSegmentSchemaIndex = Abs(Quotient) % YawSegmentSchema.Length;
 
@@ -710,17 +716,17 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             switch (YawSegmentSchema[YawSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
-                    C.CurY = C.CurY - SmallSizeTickLength - TextHeight - LabelOffset;
+                    C.CurY = C.CurY - SmallSizeTickLength - TextHeightTruncated - LabelOffset;
                     break;
                 case MediumLengthTick:
-                    C.CurY = C.CurY - MiddleSizeTickLength - TextHeight - LabelOffset;
+                    C.CurY = C.CurY - MiddleSizeTickLength - TextHeightTruncated - LabelOffset;
                     break;
                 case LongTick:
-                    C.CurY = C.CurY - LargeSizeTickLength - TextHeight - LabelOffset;
+                    C.CurY = C.CurY - LargeSizeTickLength - TextHeightTruncated - LabelOffset;
                     break;
             }
 
-            C.CurX = TickPosition - TextWidth * 0.5 + 2;
+            C.CurX = TickPosition - TextWidthTruncated * 0.5 + 2;
             C.DrawText(Label);
         }
     }
@@ -777,7 +783,9 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             // Get the curvature value (the relative position with respect to IndicatorTopLeftCornerX & YawIndicatorLength)
             CurvatureCoefficient = YawTicksCurvature[Index];
 
-            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+            ShadingCoefficient = YawTicksShading[Index];
+            ShadingCoefficient = FClamp(ShadingCoefficient, 0.25, 0.75);
+            C.SetDrawColor(ShadingCoefficient * Color.R, ShadingCoefficient * Color.G, ShadingCoefficient * Color.B, 255);
 
             // The new tick position on the "curved" surface of the dial
             TickPosition = IndicatorTopLeftCornerX + CurvatureCoefficient * YawIndicatorLength;
@@ -787,12 +795,11 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             TargetTickBuckets[Index] = TargetTickBuckets[Index] + 1;
 
             // Draw a target tick on the yaw indicator
-
             C.DrawVertical(TickPosition, TargetTickLength);
         }
         else
         {
-            C.SetDrawColor(Color.R, Color.G, Color.B, 255);
+            C.SetDrawColor(0.75 * Color.R, 0.75 * Color.G, 0.75 * Color.B, 255);
 
             // Draw stacking horizontal target markers that are off of the dial
             if (Index < 0)
@@ -840,14 +847,16 @@ function float GetPitchUpperBound(float CurrentPitch)
 
 function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
-    local float CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
-    local float Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound, TextWidth, TextHeight;
+    local int CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
+    local float TextWidth, TextHeight;
+    local int TextWidthTruncated, TextHeightTruncated;
+    local int Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound;
     local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep;
-    local string Label;
-    local float BottomDialBound, TopDialBound;
-    local float CurvatureConstant;
-    local float StrikeThroughStart, StrikeThroughEnd;
+    local int BottomDialBound, TopDialBound;
+    local int StrikeThroughStart, StrikeThroughEnd;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex, TickPosition;
+    local float CurvatureConstant;
+    local string Label;
 
     if (C == none || VWP == none && VWP.VehicleBase != none)
     {
@@ -894,6 +903,8 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
         // Get the label's length
         C.StrLen(Label, TextWidth, TextHeight);
+        TextWidthTruncated = TextWidth;
+        TextHeightTruncated = TextHeight;
 
         C.CurX = IndicatorTopLeftCornerX - 5.0;
         TickPosition = IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength;
@@ -903,15 +914,12 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         switch (PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
         {
             case ShortTick:
-                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -SmallSizeTickLength);
                 break;
             case MediumLengthTick:
-                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -MiddleSizeTickLength);
                 break;
             case LongTick:
-                C.SetDrawColor(255, 255, 255, 255);
                 C.DrawHorizontal(TickPosition, -LargeSizeTickLength);
                 break;
         }
@@ -921,17 +929,17 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
             switch (PitchSegmentSchema[PitchSegmentSchemaIndex].Shape)
             {
                 case ShortTick:
-                    C.CurX = C.CurX - SmallSizeTickLength - TextWidth - LabelOffset;
+                    C.CurX = C.CurX - SmallSizeTickLength - TextWidthTruncated - LabelOffset;
                     break;
                 case MediumLengthTick:
-                    C.CurX = C.CurX - MiddleSizeTickLength - TextWidth - LabelOffset;
+                    C.CurX = C.CurX - MiddleSizeTickLength - TextWidthTruncated - LabelOffset;
                     break;
                 case LongTick:
-                    C.CurX = C.CurX - LargeSizeTickLength - TextWidth - LabelOffset;
+                    C.CurX = C.CurX - LargeSizeTickLength - TextWidthTruncated - LabelOffset;
                     break;
             }
 
-            C.CurY = TickPosition - TextHeight * 0.5;
+            C.CurY = TickPosition - TextHeightTruncated * 0.5;
             C.DrawText(Label);
         }
     }
@@ -964,6 +972,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
         // Draw the strike-through
         C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
         C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
         // Add the missing tick on the end of the strike-through line
         C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
         C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
@@ -974,15 +983,19 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     C.DrawTile(GradientOverlayY, 3 * LargeSizeTickLength, PitchIndicatorLength + 3 * LargeSizeTickLength, 0, 0, 32, 256);
 
     // Draw a long horizontal bar that imitates edge of the indicator
-    C.SetDrawColor(255, 255, 255, 255);
     C.CurY = IndicatorTopLeftCornerY;
     C.DrawVertical(IndicatorTopLeftCornerX, PitchIndicatorLength);
 
     // Draw current value indicator (middle tick)
-    C.SetDrawColor(255, 255, 255, 255);
     C.CurX = IndicatorTopLeftCornerX + IndicatorMiddleTickOffset;
     CurvatureConstant = PitchTicksCurvature[0.5 * VisiblePitchSegmentsNumber - 1];
-    C.DrawHorizontal(IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength, SmallSizeTickLength);
+    TickPosition = IndicatorTopLeftCornerY + CurvatureConstant * PitchIndicatorLength;
+    C.DrawHorizontal(TickPosition, SmallSizeTickLength);
+}
+
+exec function DebugScope()
+{
+    bDebug = !bDebug;
 }
 
 defaultproperties
@@ -1030,5 +1043,7 @@ defaultproperties
 
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
+
+    bDebug=false
 }
 
