@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIAmmo extends DHAmmunition;
+class DH_StenMkIIIBullet extends DHBullet;
 
 defaultproperties
 {
-    MaxAmmo=32
-    InitialAmount=32
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
+    Speed=22028.0
+    BallisticCoefficient=0.15
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_StenMkIIIDamType'
 }

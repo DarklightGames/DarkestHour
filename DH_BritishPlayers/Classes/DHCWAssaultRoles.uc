@@ -3,17 +3,14 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHCWCorporalRoles extends DHAlliedCorporalRoles
+class DHCWAssaultRoles extends DHAlliedAssaultRoles
     abstract;
 
 defaultproperties
 {
-    MyName="Lance Corporal"
-    AltName="Lance Corporal"
-    PluralName="Lance Corporals"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
+
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
 
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')

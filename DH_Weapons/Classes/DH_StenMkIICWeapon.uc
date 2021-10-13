@@ -3,17 +3,17 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIWeapon extends DHAutoWeapon;
+class DH_StenMkIICWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
     ItemName="Sten MkII"
-    FireModeClass(0)=class'DH_Weapons.DH_StenMkIIFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StenMkIIMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_StenMkIIAttachment'
-    PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
+    FireModeClass(0)=class'DH_Weapons.DH_StenMkIICFire'
+    FireModeClass(1)=class'DH_Weapons.DH_StenMkIICMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_StenMkIICAttachment'
+    PickupClass=class'DH_Weapons.DH_StenMkIICPickup'
 
-    Mesh=SkeletalMesh'DH_Sten_1st.StenMk2_mesh'
+    Mesh=SkeletalMesh'DH_Sten_1st.StenMk2C_mesh'
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
@@ -22,7 +22,7 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    SwayModifyFactor=0.69 // -0.11
+    SwayModifyFactor=0.65 // -0.15
     
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0
