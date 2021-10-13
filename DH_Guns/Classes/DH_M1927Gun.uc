@@ -2,24 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] new ammo types, range calibration table etc.
-//==============================================================================
-// [x] destroyed mesh
-// [x] fix clipping issue on main bar
-// [x] final export for the mesh
-// [x] fix cam animation to not clip through the gunsight
-// [x] arty is unavailable??
-// [x] fixed orientation of the spotting scope
-// [x] fix size of wheels
-// [x] remove bullet collision from the karma box [is this even possible]? (seems to be!)
-// [x] traverse wheel
-// [x] elevation wheel
-// [x] collision mesh for shield/gun
-// [x] winter version ( set up in construction class also)
-// [x] interface art
-// [x] lock cam during transitions
-// [x] vis sphere
-//==============================================================================
 
 class DH_M1927Gun extends DHATGun;
 
@@ -36,7 +18,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
         DHP.QueueHint(50, false);
     }
 }
-
 
 defaultproperties
 {
