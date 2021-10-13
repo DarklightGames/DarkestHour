@@ -757,7 +757,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 0.5 * LargeSizeTickLength, IndicatorTopLeftCornerY - 2 * LargeSizeTickLength);
+    C.SetPos(IndicatorTopLeftCornerX - 0.5 * LargeSizeTickLength, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength);
     C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength, 3 * LargeSizeTickLength, 0, 0, 256, 32);
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
@@ -813,6 +813,8 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
             }
         }
     }
+
+    C.SetDrawColor(255, 255, 255, 255);
 
     // Draw a long horizontal bar that imitates edge of the indicator
     C.SetDrawColor(255, 255, 255, 255);
@@ -968,7 +970,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 3 * LargeSizeTickLength, IndicatorTopLeftCornerY - LargeSizeTickLength);
+    C.SetPos(IndicatorTopLeftCornerX - 3 * LargeSizeTickLength, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength);
     C.DrawTile(GradientOverlayY, 3 * LargeSizeTickLength, PitchIndicatorLength + 3 * LargeSizeTickLength, 0, 0, 32, 256);
 
     // Draw a long horizontal bar that imitates edge of the indicator
