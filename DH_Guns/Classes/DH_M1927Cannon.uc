@@ -59,9 +59,9 @@ defaultproperties
     AddedPitch=0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.T34_76.76mm_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=3)
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=3)
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=3)
