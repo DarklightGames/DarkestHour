@@ -63,6 +63,8 @@ var int                 RequiredSquadMembers;
 var int                 Cooldown;               // [s] reenabling interval between adding two consequent markers
 var int                 ActivationTimeout;      // [s] how long it takes after placing for this marker to become activated
 
+var     string          CalculatingString;
+
 enum EMarkerType
 {
     MT_Friendly,
@@ -238,6 +240,11 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
         return "";
     }
 
+    if(!Marker.MapMarkerClass.static.IsMarkerActive(PC, Marker))
+    {
+        return default.CalculatingString;
+    }
+
     V = PC.Pawn.Location - Marker.WorldLocation;
     V.Z = 0.0;
 
@@ -256,4 +263,5 @@ defaultproperties
     bShouldShowOnCompass=false
     RequiredSquadMembers=0
     ActivationTimeout=0
+    CalculatingString="Calculating..."
 }

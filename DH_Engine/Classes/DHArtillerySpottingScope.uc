@@ -121,7 +121,6 @@ var     STargetWidgetLayout TargetWidgetLayout;
 var     string              TargetToggleHint;
 var     string              SelectTargetHint;
 var     string              NoTargetsHint;
-var     string              CalculatingString;
 
 function CreateRenderTable(Canvas C)
 {
@@ -498,7 +497,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 }
                 else
                 {
-                    Labels[1] = default.CalculatingString;
+                    Labels[1] = TargetInfo.Marker.MapMarkerClass.default.CalculatingString;
                     LabelColors[1] = Orange;
                 }
 
@@ -513,7 +512,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 }
                 else
                 {
-                    Labels[1] = default.CalculatingString;
+                    Labels[1] = TargetInfo.Marker.MapMarkerClass.default.CalculatingString;
                     LabelColors[1] = Orange;
                 }
                 break;
@@ -1063,6 +1062,5 @@ defaultproperties
 
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
-    CalculatingString="Calculating..."
 }
 
