@@ -138,7 +138,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (HitMapMarkerClass != none)
         {
-            SaveHitPostion(HitLocation, HitNormal, HitMapMarkerClass);
+            SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
         }
 
         if (bDebugBallistics)
