@@ -60,7 +60,10 @@ var int                 GroupIndex;             // Used for grouping map markers
 var bool                bShouldShowOnCompass;   // Whether or not this marker is displayed on the compass
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 var int                 RequiredSquadMembers;
-var int                 Cooldown;
+var int                 Cooldown;               // [s] reenabling interval between adding two consequent markers
+var int                 ActivationTimeout;      // [s] how long it takes after placing for this marker to become activated
+
+var     string          CalculatingString;
 
 enum EMarkerType
 {
@@ -168,6 +171,20 @@ static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker 
     return default.IconColor;
 }
 
+static function bool IsMarkerActive(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+{
+    local DHGameReplicationInfo GRI;
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    return GRI != none && GRI.ElapsedTime >= Marker.CreationTime + default.ActivationTimeout;
+}
+
 // Override to run specific logic when this marker is placed.
 // Override it only if it is really necessary.
 static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
@@ -223,6 +240,11 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
         return "";
     }
 
+    if (Marker.MapMarkerClass != none && !Marker.MapMarkerClass.static.IsMarkerActive(PC, Marker))
+    {
+        return default.CalculatingString;
+    }
+
     V = PC.Pawn.Location - Marker.WorldLocation;
     V.Z = 0.0;
 
@@ -240,4 +262,6 @@ defaultproperties
     OverwritingRule=OFF
     bShouldShowOnCompass=false
     RequiredSquadMembers=0
+    ActivationTimeout=0
+    CalculatingString="Calculating..."
 }

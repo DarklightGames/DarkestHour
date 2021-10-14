@@ -14,7 +14,7 @@ var float LifeStart;
 var vector StartLocation;
 var float DebugMils;
 
-simulated function SaveHitPostion(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
+simulated function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
