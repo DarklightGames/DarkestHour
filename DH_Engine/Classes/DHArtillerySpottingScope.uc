@@ -617,7 +617,8 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
     {
         // The player hasn't chosen anything from the available requests
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
-        LabelColor = class'UColor'.default.Green;
+        // Flash the label to get the player's attention
+        LabelColor = class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
     }
     else if (!bSelectedMarkerNotAvailable && PC.ArtillerySupportSquadIndex != 255)
     {
