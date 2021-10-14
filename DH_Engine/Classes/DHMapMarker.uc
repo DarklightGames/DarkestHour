@@ -240,7 +240,7 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
         return "";
     }
 
-    if(!Marker.MapMarkerClass.static.IsMarkerActive(PC, Marker))
+    if (Marker.MapMarkerClass != none && !Marker.MapMarkerClass.static.IsMarkerActive(PC, Marker))
     {
         return default.CalculatingString;
     }
