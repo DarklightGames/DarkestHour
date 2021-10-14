@@ -1058,8 +1058,8 @@ defaultproperties
     Red=(R=255,G=0,B=0,A=255)
 
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
-    TargetToggleHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets"
-    SelectTargetHint="Use [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
+    TargetToggleHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets"
+    SelectTargetHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
     NoTargetsHint="No targets available"
 
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees
