@@ -229,7 +229,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (!bDud)
     {
-        if (HitMapMarkerClass != none)
+        if (Role == ROLE_Authority && HitMapMarkerClass != none)
         {
             SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
         }
