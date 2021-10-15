@@ -1512,7 +1512,7 @@ simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer 
 
     MapMarkers = GetMapMarkers(PC);
 
-    for (i = MapMarkers.Length; i >= 0; --i)
+    for (i = MapMarkers.Length - 1; i >= 0; --i)
     {
         Distance = VSize(MapMarkers[i].WorldLocation - WorldLocation);
 
