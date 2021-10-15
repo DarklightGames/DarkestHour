@@ -57,6 +57,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         {
             // Tell the client to update their personal map marker
             PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
+            break;
         }
     }
 
