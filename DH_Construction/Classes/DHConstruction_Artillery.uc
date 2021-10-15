@@ -58,4 +58,5 @@ defaultproperties
     ProgressMax=9
     bIsArtillery=true
     SupplyCost=1750
+    TeamLimit=4
 }

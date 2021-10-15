@@ -136,11 +136,11 @@ struct STeamConstruction
 {
     var class<DHConstruction> ConstructionClass;
     var byte TeamIndex;
-    var byte Limit;
+    var byte Remaining;
     var int NextIncrementTimeSeconds;
 };
 
-var array<STeamConstruction> TeamConstructions[16];
+var STeamConstruction   TeamConstructions[16];
 
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
@@ -386,7 +386,7 @@ simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex
     return -1;
 }
 
-simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int i;
 
@@ -397,7 +397,7 @@ simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruct
        return -1;
     }
 
-    return TeamConstructions[i].Limit;
+    return TeamConstructions[i].Remaining;
 }
 
 simulated function PostNetBeginPlay()

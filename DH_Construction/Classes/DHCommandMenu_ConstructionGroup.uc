@@ -145,7 +145,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHConstruction> ConstructionClass;
     local DHConstruction.ConstructionError E;
     local DHPlayer PC;
-    local int SquadMemberCount, TeamLimit;
+    local int SquadMemberCount, Remaining;
     local DHGameReplicationInfo GRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
@@ -211,11 +211,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
         if (GRI != none && ORI.DescriptionText == "")
         {
-            TeamLimit = GRI.GetTeamConstructionLimit(PC.GetTeamNum(), ConstructionClass);
+            Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
 
-            if (TeamLimit != -1)
+            // GetTeamConstructionRemaining returns -1 if it can't find anything
+            if (Remaining != -1)
             {
-                ORI.DescriptionText = string(TeamLimit) @ default.RemainingText;
+                ORI.DescriptionText = string(Remaining) @ default.RemainingText;
             }
         }
     }
