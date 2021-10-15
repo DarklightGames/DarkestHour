@@ -2135,12 +2135,10 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     for (i = 0; i < FireSupportMapMarkers.Length; ++i)
                     {
-                        if (FireSupportMapMarkers[i].Author == none)
+                        if (FireSupportMapMarkers[i].Author != none)
                         {
-                            continue;
+                            ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
                         }
-
-                        ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
                     }
                 }
             }
