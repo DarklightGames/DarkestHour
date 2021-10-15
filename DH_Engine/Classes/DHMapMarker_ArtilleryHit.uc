@@ -20,5 +20,5 @@ defaultproperties
     LifetimeSeconds=15
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
     Permissions_CanPlace(0)=ERS_ALL
-    VisibilityRange=50
+    VisibilityRange=150
 }
