@@ -8,5 +8,5 @@ class DHMapMarker_FireSupport_HE extends DHMapMarker_FireSupport
 
 defaultproperties
 {
-    MarkerName="HE request"
+    MarkerName="HE Request"
 }

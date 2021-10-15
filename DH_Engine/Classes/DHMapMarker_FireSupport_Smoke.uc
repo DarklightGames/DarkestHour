@@ -8,5 +8,5 @@ class DHMapMarker_FireSupport_Smoke extends DHMapMarker_FireSupport
 
 defaultproperties
 {
-    MarkerName="Smoke request"
+    MarkerName="Smoke Request"
 }
