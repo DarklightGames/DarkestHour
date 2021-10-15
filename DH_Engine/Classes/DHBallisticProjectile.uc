@@ -48,8 +48,8 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
     for (i = 0; i < MapMarkers.Length; ++i)
     {
         RequestLocation = MapMarkers[i].WorldLocation;
-        RequestLocation.Y = 0.0;
-        HitLocation.Y = 0.0;
+        RequestLocation.Z = 0.0;
+        HitLocation.Z = 0.0;
         Distance = VSize(RequestLocation - HitLocation);
         Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
 
