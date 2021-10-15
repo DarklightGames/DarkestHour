@@ -6,27 +6,8 @@
 class DHMapMarker_ArtilleryHit extends DHMapMarker
     abstract;
 
+// TODO: i don't think this should be responsible for storing the range
 var int VisibilityRange; // [m]
-
-static function bool CanSeeMarker(DHPlayerReplicationInfo PRI, DHGameReplicationInfo.MapMarker Marker)
-{
-    local DHPlayer PC;
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    if (PRI.Level != none && PRI.Level.NetMode == NM_Standalone)
-    {
-        // For debugging purposes, just let us see our own hits in standalone.
-        return true;
-    }
-
-    PC = DHPlayer(PRI.Owner);
-
-    return PC != none && PC.ArtilleryHitInfo.bIsWithinRadius;
-}
 
 defaultproperties
 {
@@ -36,8 +17,8 @@ defaultproperties
     Type=MT_ArtilleryHit
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
-    LifetimeSeconds=15 // 30 seconds
+    LifetimeSeconds=15
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
-    Permissions_CanPlace(0)=ERS_ARTILLERY_OPERATOR
+    Permissions_CanPlace(0)=ERS_ALL
     VisibilityRange=50
 }

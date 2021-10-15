@@ -39,13 +39,6 @@ var     globalconfig string     ROIDHash;            // client ROID hash (this g
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
 
-// Artillery hits - only for artillery roles
-struct SArtilleryHitInfo
-{
-    var bool        bIsWithinRadius;                    // was the hit within the radius of any artillery request?
-    var int         ExpiryTime;
-};
-var     SArtilleryHitInfo       ArtilleryHitInfo;             // the latest artillery hit
 var     byte                    ArtillerySupportSquadIndex;
 
 // View FOV
@@ -220,7 +213,8 @@ replication
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt, ClientSetMapMarkerClassLock;
+        ClientReceiveVotePrompt, ClientSetMapMarkerClassLock,
+        ClientAddPersonalMapMarker;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -235,6 +229,17 @@ event InitInputSystem()
     InputClass = class'DH_Engine.DHPlayerInput';
 
     super(UnrealPlayer).InitInputSystem();
+}
+
+// Allows the server to tell the client to set a personal map marker
+simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass, vector MarkerLocation)
+{
+    local DHGameReplicationInfo GRI;
+    local vector MapLocation;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    GRI.GetMapCoords(MarkerLocation, MapLocation.X, MapLocation.Y);
+    AddPersonalMarker(MapMarkerClass, MapLocation.X, MApLocation.Y, MarkerLocation);
 }
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it

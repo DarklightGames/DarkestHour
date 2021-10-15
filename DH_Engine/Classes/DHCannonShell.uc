@@ -136,7 +136,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             bDidExplosionFX = true;
         }
 
-        if (HitMapMarkerClass != none)
+        if (Role == ROLE_Authority && HitMapMarkerClass != none)
         {
             SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
         }

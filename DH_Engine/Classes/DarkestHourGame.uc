@@ -1142,10 +1142,12 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 }
 
 // Give spotter a point or two for spotting a kill
-function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
+function ScoreFireSupportSpottingAssist(Controller Spotter)
 {
-    // DEPRECATED FOR NOW
-    return;
+    // TODO: remove, debugging info!
+    Broadcast(self, "Awarding spotting assist points to" @ Spotter.PlayerReplicationInfo.PlayerName);
+
+    SendScoreEvent(Spotter, class'DHScoreEvent_FireSupportSpottingAssist'.static.Create());
 }
 
 // Modified to prevent fellow vehicle crewman from getting kills and score for yours
@@ -2094,8 +2096,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i, ArtilleryRequestExpiryTime;
+    local int        i;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
+    local array<DHGameReplicationInfo.MapMarker> FireSupportMapMarkers;
 
     if (Killed == none)
     {
@@ -2119,11 +2122,27 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
         if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
         {
-            ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
-            if((ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
-                && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+            // Check if this kill is in range of any active fire support markers.
+            FireSupportMapMarkers = GRI.GetFireSupportMapMarkersAtLocation(DHKiller, KilledPawn.Location);
+
+            if (FireSupportMapMarkers.Length > 0)
             {
-                DamageType =  class'DHArtilleryKillDamageType';
+                // This kill took place within range of a fire support marker.
+                DamageType = class'DHArtilleryKillDamageType';
+
+                // Award points to the person who made the fire support marker.
+                if (Killer.GetTeamNum() != Killed.GetTeamNum())
+                {
+                    for (i = 0; i < FireSupportMapMarkers.Length; ++i)
+                    {
+                        if (FireSupportMapMarkers[i].Author == none)
+                        {
+                            continue;
+                        }
+
+                        ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
+                    }
+                }
             }
         }
 

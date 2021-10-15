@@ -14,7 +14,7 @@ var float LifeStart;
 var vector StartLocation;
 var float DebugMils;
 
-simulated function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
+function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
@@ -24,7 +24,6 @@ simulated function SaveHitPosition(vector HitLocation, vector HitNormal, class<D
     local float Distance, Threshold;
     local DHPlayerReplicationInfo PRI;
     local vector RequestLocation;
-    local bool bIsWithinRadius;
 
     PC = DHPlayer(InstigatorController);
 
@@ -44,39 +43,22 @@ simulated function SaveHitPosition(vector HitLocation, vector HitNormal, class<D
     GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
 
-    if (PC.ArtillerySupportSquadIndex != 255)
+    GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
+
+    for (i = 0; i < MapMarkers.Length; ++i)
     {
-        GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
+        RequestLocation = MapMarkers[i].WorldLocation;
+        RequestLocation.Y = 0.0;
+        HitLocation.Y = 0.0;
+        Distance = VSize(RequestLocation - HitLocation);
+        Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
 
-        for (i = 0; i < MapMarkers.Length; ++i)
+        if (Distance < Threshold)
         {
-            if (PC.ArtillerySupportSquadIndex == MapMarkers[i].SquadIndex)
-            {
-                RequestLocation = MapMarkers[i].WorldLocation;
-                RequestLocation.Y = 0.0;
-                HitLocation.Y = 0.0;
-                Distance = VSize(RequestLocation - HitLocation);
-                Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
-                bIsWithinRadius = Distance < Threshold;
-
-                if (bIsWithinRadius)
-                {
-                    PC.ArtilleryHitInfo.bIsWithinRadius = true;
-                    PC.ArtilleryHitInfo.ExpiryTime = MapMarkers[i].ExpiryTime;
-                }
-                else
-                {
-                    PC.ArtilleryHitInfo.bIsWithinRadius = false;
-                    PC.ArtilleryHitInfo.ExpiryTime = 0;
-                }
-
-                return;
-            }
+            // Tell the client to update their personal map marker
+            PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
         }
     }
-
-    PC.ArtilleryHitInfo.bIsWithinRadius = false;
-    PC.ArtilleryHitInfo.ExpiryTime = 0;
 
     return;
 }
@@ -85,18 +67,11 @@ simulated function BlowUp(vector HitLocation)
 {
     local float Distance;
 
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && VehicleWeapon != none && bIsCalibrating)
     {
-        if (VehicleWeapon != none)
-        {
+        Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
 
-            if (bIsCalibrating)
-            {
-                Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
-
-                Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
-            }
-        }
+        Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
     }
 }
 
