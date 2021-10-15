@@ -311,7 +311,7 @@ function OnSpawnedByPlayer()
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI == none && LI == none)
+    if (GRI == none == LI == none)
     {
         return;
     }
@@ -467,11 +467,6 @@ auto simulated state Constructing
                 PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
             }
         }
-    }
-
-    simulated function Destroyed()
-    {
-
     }
 
     simulated function bool CanBeBuilt()
