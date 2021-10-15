@@ -237,9 +237,13 @@ simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass,
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    GRI.GetMapCoords(MarkerLocation, MapLocation.X, MapLocation.Y);
-    AddPersonalMarker(MapMarkerClass, MapLocation.X, MApLocation.Y, MarkerLocation);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.GetMapCoords(MarkerLocation, MapLocation.X, MapLocation.Y);
+        AddPersonalMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, MarkerLocation);
+    }
 }
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
