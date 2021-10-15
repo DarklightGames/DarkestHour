@@ -1144,9 +1144,6 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 // Give spotter a point or two for spotting a kill
 function ScoreFireSupportSpottingAssist(Controller Spotter)
 {
-    // TODO: remove, debugging info!
-    Broadcast(self, "Awarding spotting assist points to" @ Spotter.PlayerReplicationInfo.PlayerName);
-
     SendScoreEvent(Spotter, class'DHScoreEvent_FireSupportSpottingAssist'.static.Create());
 }
 
