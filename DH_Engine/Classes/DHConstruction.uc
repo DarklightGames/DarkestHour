@@ -311,7 +311,7 @@ function OnSpawnedByPlayer()
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI == none == LI == none)
+    if (GRI == none && LI == none)
     {
         return;
     }
