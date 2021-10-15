@@ -12,8 +12,8 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
-    WA_Idle="idle_stg44"
-    WA_IdleEmpty="idle_stg44"
+    WA_Idle="idle_sten"
+    WA_IdleEmpty="idle_sten"
     WA_Fire="shoot_sten"
     WA_Reload="reload_sten"
     WA_ReloadEmpty="reload_sten"
