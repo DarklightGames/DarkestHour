@@ -13,5 +13,8 @@ defaultproperties
     Headgear(2)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
 
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
+
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
 }
