@@ -11,9 +11,5 @@ defaultproperties
     RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPGreatcoatGreyBagPawn_Winter',Weight=2.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
     Headgear(0)=class'DH_SovietPlayers.DH_LWPHelmet'
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

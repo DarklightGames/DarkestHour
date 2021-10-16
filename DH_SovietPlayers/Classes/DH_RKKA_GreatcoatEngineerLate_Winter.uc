@@ -12,11 +12,6 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
-    
     HeadgearProbabilities(0)=1.0
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

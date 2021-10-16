@@ -117,7 +117,16 @@ function static string GetMenuName(DHActorProxy.Context Context)
 function UpdateAppearance()
 {
     SetDrawType(DT_Mesh);
-    LinkMesh(VehicleClass.default.Mesh);
+
+    if (VehicleClass.default.ConstructionBaseMesh != none)
+    {
+        LinkMesh(VehicleClass.default.ConstructionBaseMesh);
+    }
+    else
+    {
+        LinkMesh(VehicleClass.default.Mesh);
+    }
+
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 

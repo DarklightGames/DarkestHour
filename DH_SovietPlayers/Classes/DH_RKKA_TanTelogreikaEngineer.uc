@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_RKKA_TanTelogreikaEngineer extends DH_RKKA_TanTelogreikaEngineerEarly;  //to be removed  
+class DH_RKKA_TanTelogreikaEngineer extends DH_RKKA_TanTelogreikaEngineerEarly;  //to be removed
 
 defaultproperties
 {
- 
+}

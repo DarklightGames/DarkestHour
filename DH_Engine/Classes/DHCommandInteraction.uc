@@ -35,6 +35,12 @@ var color               SubmenuColor;
 
 var DHGameReplicationInfo GRI;
 
+var bool                bShouldHideOnLeftMouseRelease;
+
+var Pawn                InstigatorPawn;
+
+delegate                OnHidden();
+
 event Initialized()
 {
     super.Initialized();
@@ -42,6 +48,7 @@ event Initialized()
     Menus = new class'Stack_Object';
 
     GRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
+    InstigatorPawn = ViewportOwner.Actor.Pawn;
 
     GotoState('FadeIn');
 }
@@ -49,6 +56,11 @@ event Initialized()
 function Hide()
 {
     GotoState('FadeOut');
+}
+
+function bool IsHiding()
+{
+    return IsInState('FadeOut');
 }
 
 // Programmatically create the materials used for each option.
@@ -186,12 +198,7 @@ state FadeOut
 
         if (MenuAlpha == 0.0)
         {
-            while (!Menus.IsEmpty())
-            {
-                PopMenu();
-            }
-
-            ViewportOwner.InteractionMaster.RemoveInteraction(self);
+            TearDown();
         }
     }
 
@@ -199,6 +206,18 @@ state FadeOut
     {
         return false;
     }
+}
+
+function TearDown()
+{
+    while (!Menus.IsEmpty())
+    {
+        PopMenu();
+    }
+
+    ViewportOwner.InteractionMaster.RemoveInteraction(self);
+
+    OnHidden();
 }
 
 function Tick(float DeltaTime)
@@ -212,10 +231,15 @@ function Tick(float DeltaTime)
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu())
+    if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu() || PC.Pawn != InstigatorPawn)
     {
         Hide();
         return;
+    }
+
+    if (Menu.bShouldTick)
+    {
+        Menu.Tick();
     }
 
     // Clamp cursor
@@ -288,6 +312,7 @@ function PostRender(Canvas C)
 
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
+    C.DrawColor.A = byte(255 * (MenuAlpha));
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     // Draw outer "beauty" ring
@@ -399,16 +424,22 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(ORI.OptionName);
 
-        // Draw subject text
-        C.TextSize(ORI.InfoText, XL, YL);
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
-        C.DrawText(ORI.InfoText);
-        C.DrawColor = ORI.InfoColor;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
-        C.DrawText(ORI.InfoText);
+        // Draw info text
+        for (i = 0; i < arraycount(ORI.InfoText); ++i)
+        {
+            if (ORI.InfoText[i] != "")
+            {
+                C.TextSize(ORI.InfoText[i], XL, YL);
+                C.DrawColor = class'UColor'.default.Black;
+                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  (i + 1) * YL);
+                C.DrawText(ORI.InfoText[i]);
+                C.DrawColor = ORI.InfoColor;
+                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.SetPos(CenterX - (XL / 2), CenterY - 32 - (i + 1) * YL);
+                C.DrawText(ORI.InfoText[i]);
+            }
+        }
 
         // Draw action icon
         if (ORI.InfoIcon != none)
@@ -446,8 +477,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
-    local Actor A, HitActor;
+    local vector HitLocation, HitNormal;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -478,6 +508,25 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     break;
             }
             break;
+        case IST_Release:
+            switch (Key)
+            {
+                case IK_LeftMouse:
+                    if (bShouldHideOnLeftMouseRelease)
+                    {
+                        if (SelectedIndex >= 0)
+                        {
+                            PC.GetEyeTraceLocation(HitLocation, HitNormal);
+                            OnSelect(SelectedIndex, HitLocation);
+                        }
+
+                        Hide();
+
+                        return false;
+                    }
+                    break;
+            }
+            break;
         case IST_Press:
             switch (Key)
             {
@@ -486,38 +535,13 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // guessing that 99.9% of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
-                    TraceStart = PC.CalcViewLocation;
-                    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
-
-                    foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
-                    {
-                        if (A == PC.Pawn ||
-                            A.IsA('ROBulletWhipAttachment') ||
-                            A.IsA('Volume'))
-                        {
-                            continue;
-                        }
-
-                        HitActor = A;
-
-                        break;
-                    }
-
-                    if (HitActor == none)
-                    {
-                        HitLocation = TraceEnd;
-                    }
-
+                    PC.GetEyeTraceLocation(HitLocation, HitNormal);
                     OnSelect(SelectedIndex, HitLocation);
 
                     return true;
                 case IK_RightMouse:
                     PlaySound(Sound'ROMenuSounds.CharFade');
-
-                    if (Menus.Size() > 1)
-                    {
-                        PopMenu();
-                    }
+                    PopMenu();
                     return true;
                 default:
                     break;

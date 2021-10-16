@@ -145,7 +145,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHConstruction> ConstructionClass;
     local DHConstruction.ConstructionError E;
     local DHPlayer PC;
-    local int SquadMemberCount, TeamLimit;
+    local int SquadMemberCount, Remaining;
     local DHGameReplicationInfo GRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
@@ -174,22 +174,22 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_RestrictedType:
             case ERROR_Fatal:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.NotAvailableText;
+                ORI.InfoText[0] = default.NotAvailableText;
                 break;
             case ERROR_PlayerBusy:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.BusyText;
+                ORI.InfoText[0] = default.BusyText;
                 break;
             case ERROR_TeamLimit:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.TeamLimitText;
+                ORI.InfoText[0] = default.TeamLimitText;
                 break;
             case ERROR_Exhausted:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.ExhaustedText;
+                ORI.InfoText[0] = default.ExhaustedText;
                 if (E.OptionalInteger >= 0)
                 {
-                    ORI.InfoText @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
+                    ORI.InfoText[0] @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
                 }
                 break;
             case ERROR_SquadTooSmall:
@@ -199,11 +199,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 }
 
                 ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-                ORI.InfoText = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
+                ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
                 break;
             default:
                 ORI.InfoIcon = SuppliesIcon;
-                ORI.InfoText = string(ConstructionClass.static.GetSupplyCost(Context));
+                ORI.InfoText[0] = string(ConstructionClass.static.GetSupplyCost(Context));
                 break;
         }
 
@@ -211,11 +211,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
         if (GRI != none && ORI.DescriptionText == "")
         {
-            TeamLimit = GRI.GetTeamConstructionLimit(PC.GetTeamNum(), ConstructionClass);
+            Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
 
-            if (TeamLimit != -1)
+            // GetTeamConstructionRemaining returns -1 if it can't find anything
+            if (Remaining != -1)
             {
-                ORI.DescriptionText = string(TeamLimit) @ default.RemainingText;
+                ORI.DescriptionText = string(Remaining) @ default.RemainingText;
             }
         }
     }

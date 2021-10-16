@@ -91,7 +91,7 @@ function Timer()
 
         if (VT != none)
         {
-            if (VT.IsInNoArtyVolume())
+            if (VT.DHIsInNoArtyVolume(DHGameReplicationInfo(Level.Game.GameReplicationInfo)))
             {
                 bInvalid = true;
 

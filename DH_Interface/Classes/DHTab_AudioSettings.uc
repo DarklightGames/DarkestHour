@@ -40,7 +40,7 @@ function InternalOnChange(GUIComponent Sender)
 {
     super.InternalOnChange(Sender);
 
-    switch(Sender)
+    switch (Sender)
     {
         case nu_AudioChannels:
             NumberOfChannels = nu_AudioChannels.GetValue();

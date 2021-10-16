@@ -9,8 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
     Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
-    CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision'
-    bAttachColMeshToPitchBone=True
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Hetzer_stc.Collision.Hetzer_mantlet_collision',AttachBone="Gun")
 
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000

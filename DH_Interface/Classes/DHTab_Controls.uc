@@ -286,10 +286,12 @@ defaultproperties
     Captions_Game(4)="Lock/Unlock Armored Vehicle"
     Bindings_Game(5)="ShowOrderMenu | OnRelease HideOrderMenu"
     Captions_Game(5)="Squad Orders Menu"
-    Bindings_Game(6)="SquadJoinAuto"
-    Captions_Game(6)="Auto-Join Squad"
-    Bindings_Game(7)="PlaceRallyPoint"
-    Captions_Game(7)="Place Rally Point"
+    Bindings_Game(6)="SquadMenu"
+    Captions_Game(6)="Squad Menu"
+    Bindings_Game(7)="SquadJoinAuto"
+    Captions_Game(7)="Auto-Join Squad"
+    Bindings_Game(8)="PlaceRallyPoint"
+    Captions_Game(8)="Place Rally Point"
 
     // Additional movement keybinds
     Bindings_Movement(12)="ToggleRun"
@@ -306,6 +308,8 @@ defaultproperties
     Captions_Weapons(12)="Increase Vehicle Smoke Launcher Range/Rotation Setting"
     Bindings_Weapons(13)="DecreaseSmokeLauncherSetting"
     Captions_Weapons(13)="Decrease Vehicle Smoke Launcher Range/Rotation Setting"
+    Bindings_Weapons(14)="ToggleSelectedArtilleryTarget"
+    Captions_Weapons(14)="Toggle Selected Artillery Target"
 
     // Overriden & Additional Communications keybinds
     Bindings_Comm(3)="SquadTalk"

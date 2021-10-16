@@ -264,8 +264,13 @@ static function int GetCooldownSeconds()
 
 defaultproperties
 {
-    QuestionText="Do you want to throw down your weapons and surrender?"
+    QuestionText="Do you want to retreat to fight another day?"
 
     bIsGlobalVote=false
     bNominatorsVoteAutomatically=true
+    // Players notoriously refuse to surrender even when they're getting their
+    // asses handed to them and the team is screaming at each other and
+    // completely demoralized. Plus some people are dummies and don't vote.
+    // For everyone's sanity, we set this at 40%.
+    VotesThresholdPercent=0.4
 }
