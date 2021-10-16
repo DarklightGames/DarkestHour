@@ -66,5 +66,5 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02',Duration=4.0)
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03',Duration=2.0)
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-    ResupplyInterval=25.0
+    ResupplyInterval=10.0
 }
