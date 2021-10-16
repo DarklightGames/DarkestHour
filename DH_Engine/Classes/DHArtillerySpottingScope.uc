@@ -604,8 +604,8 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         // and not by the index of the marker in the actual array of targets.
         for (i = 0; i < ArtilleryMarkers.Length; ++i)
         {
-            if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex
-                && (ArtilleryMarkers[i].ExpiryTime > GRI.ElapsedTime))
+            if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex &&
+                ArtilleryMarkers[i].ExpiryTime > GRI.ElapsedTime)
             {
                 bSelectedMarkerAvailable = true;
                 break;
@@ -1071,4 +1071,3 @@ defaultproperties
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
 }
-
