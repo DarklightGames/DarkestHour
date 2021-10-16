@@ -2647,7 +2647,8 @@ state RoundInPlay
         {
             GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
             GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
-            GRI.TeamConstructions[i].Limit = DHLevelInfo.TeamConstructions[i].Limit;
+            GRI.TeamConstructions[i].Remaining = DHLevelInfo.TeamConstructions[i].Limit;
+            GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
         }
 
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
@@ -3109,17 +3110,38 @@ state RoundInPlay
 
 function UpdateTeamConstructions()
 {
-    local int i;
+    local int i, Count;
 
     // Check for if we can replenish any team constructions
     for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
     {
-        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
-            DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
-            GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+        // Check if all available constructions are remaining.
+        if (GRI.TeamConstructions[i].Remaining == DHLevelInfo.TeamConstructions[i].Limit)
         {
-            GRI.TeamConstructions[i].Limit += 1;
-            GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+            continue;
+        }
+
+        // Check if this construction replenishes over time.
+        if (DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0)
+        {
+            // Get the number of extant constructions that this team has on the field.
+            Count = ConstructionManager.CountOf(DHLevelInfo.TeamConstructions[i].TeamIndex, DHLevelInfo.TeamConstructions[i].ConstructionClass);
+
+            // Check if we need to set the NextIncrementTimeSeconds variable
+            // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
+            if (Count < DHLevelInfo.TeamConstructions[i].Limit && GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+            {
+                // Our next increment time has not been set.
+                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+            }
+            else
+            {
+                if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+                {
+                    GRI.TeamConstructions[i].Remaining += 1;
+                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
+                }
+            }
         }
     }
 }
