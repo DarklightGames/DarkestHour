@@ -18,7 +18,7 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=PERSONAL
     LifetimeSeconds=15
-    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ALL)
     Permissions_CanPlace(0)=ERS_ALL
     VisibilityRange=150
 }

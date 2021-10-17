@@ -16,33 +16,24 @@ var float DebugMils;
 
 function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
-    local DHPlayer PC;
+    local DHPlayer PC, SpotterPC;
     local DHGameReplicationInfo GRI;
     local vector MapLocation;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local int i;
     local float Distance, Threshold;
-    local DHPlayerReplicationInfo PRI;
     local vector RequestLocation;
+    local array<int> HitMarkerIndices;
 
     PC = DHPlayer(InstigatorController);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (PC == none)
-    {
-        return;
-    }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (GRI == none || PRI == none)
+    if (PC == none || GRI == none)
     {
         return;
     }
 
     GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
-    PC.AddMarker(MarkerClass, MapLocation.X, MapLocation.Y, HitLocation);
-
     GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
     for (i = 0; i < MapMarkers.Length; ++i)
@@ -55,13 +46,29 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
 
         if (Distance < Threshold)
         {
-            // Tell the client to update their personal map marker
-            PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
-            break;
+            HitMarkerIndices[HitMarkerIndices.Length] = i;
         }
     }
 
-    return;
+    if (HitMarkerIndices.Length > 0)
+    {
+        // Mark the hit on the map for the artillery gunner.
+        PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
+    }
+
+    // For each map marker we hit, mark the hit on the map for the spotter as well.
+    for (i = 0; i < HitMarkerIndices.Length; ++i)
+    {
+        if (MapMarkers[HitMarkerIndices[i]].Author != none)
+        {
+            SpotterPC = DHPlayer(MapMarkers[HitMarkerIndices[i]].Author.Owner);
+
+            if (SpotterPC != none)
+            {
+                SpotterPC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
+            }
+        }
+    }
 }
 
 simulated function BlowUp(vector HitLocation)
