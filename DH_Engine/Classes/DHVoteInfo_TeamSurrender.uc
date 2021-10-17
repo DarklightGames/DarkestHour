@@ -77,7 +77,7 @@ function OnVoteEnded()
     {
         // Inform both teams and end the round after a brief delay.
         G.DelayedEndRound(G.default.SurrenderEndRoundDelaySeconds,
-                          "The {0} won the round because the other team has surrendered",
+                          "The {0} won the round because the other team has retreated",
                           int(!bool(TeamIndex)),
                           class'DHEnemyInformationMsg',
                           1,
