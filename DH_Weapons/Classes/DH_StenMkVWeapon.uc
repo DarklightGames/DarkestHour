@@ -3,28 +3,28 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIWeapon extends DHAutoWeapon;
+class DH_StenMkVWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="STEN Mk.II"
-    FireModeClass(0)=class'DH_Weapons.DH_StenMkIIFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StenMkIIMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_StenMkIIAttachment'
-    PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
+    ItemName="STEN Mk.V"
+    FireModeClass(0)=class'DH_Weapons.DH_StenMkVFire'
+    FireModeClass(1)=class'DH_Weapons.DH_StenMkVMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_StenMkVAttachment'
+    PickupClass=class'DH_Weapons.DH_StenMkVPickup'
 
-    Mesh=SkeletalMesh'DH_Sten_1st.StenMk2_mesh'
+    Mesh=SkeletalMesh'DH_Sten_1st.StenMk5_mesh'
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
-    Skins(2)=Texture'DH_Sten_tex.Sten.StenMk2_tex'
+    Skins(2)=Texture'DH_Sten_tex.Sten.StenMk5_tex'
     HandNum=0
     SleeveNum=1
 
-    SwayModifyFactor=0.69 // -0.11
+    SwayModifyFactor=0.72 // -0.08
 
-    DisplayFOV=90.0
+    DisplayFOV=86.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=65.0
 
@@ -50,8 +50,16 @@ defaultproperties
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
 
-    SelectFireAnim="switchfire"
-    SelectFireIronAnim="Iron_switchfire"
-    SelectFireEmptyAnim="switchfire_empty"
-    SelectFireIronEmptyAnim="Iron_switchfire_empty"
+    bHasBayonet=true
+    BayoAttachAnim="Bayonet_on"
+    BayoDetachAnim="Bayonet_off"
+    BayoAttachEmptyAnim="bayonet_on_empty"
+    BayoDetachEmptyAnim="bayonet_off_empty"
+
+    BayonetBoneName="bayonet"
+
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="Iron_fireswitch"
+    SelectFireEmptyAnim="fireswitch_empty"
+    SelectFireIronEmptyAnim="Iron_fireswitch_empty"
 }
