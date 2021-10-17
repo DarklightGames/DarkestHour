@@ -16,6 +16,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
+    PrimaryWeapons(1)=(Item=none)
+    PrimaryWeapons(2)=(Item=none)
 }
