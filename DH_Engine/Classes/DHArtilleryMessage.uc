@@ -12,8 +12,10 @@ var localized string TooSoonText;
 var localized string ExhaustedText;
 var localized string UnavailableText;
 var localized string BadLocationText;
+var localized string NoTargetText;
 var localized string NotQualifiedText;
 var localized string CancelledText;
+var localized string ActiveTargetChosen;
 
 static function string GetString(
     optional int Switch,
@@ -61,11 +63,15 @@ static function string GetString(
         case 8:
             S = default.CancelledText;
             break;
+        case 9:
+            S = default.NoTargetText;
+            break;
+        case 10:
+            S = default.ActiveTargetChosen;
+            break;
     }
 
-    S = Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
-
-    return S;
+    return Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
 }
 
 defaultproperties
@@ -77,7 +83,9 @@ defaultproperties
     ExhaustedText="{name} has been exhausted."
     UnavailableText="{name} is unavailable at this time."
     BadLocationText="Invalid target location for {name}."
+    NoTargetText="No target location."
     NotQualifiedText="You are not qualified to request a {name}."
     CancelledText="{name} has been cancelled."
+    ActiveTargetChosen="Fire support target selected."
 }
 

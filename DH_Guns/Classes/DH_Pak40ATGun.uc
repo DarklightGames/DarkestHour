@@ -5,8 +5,6 @@
 
 class DH_Pak40ATGun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Pak40_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="7.5cm Pak40 AT gun"

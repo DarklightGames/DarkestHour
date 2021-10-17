@@ -234,6 +234,9 @@ var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
 var DHPlayer InstigatorController;
 var int CompletionPointValue;
 
+// Artillery
+var bool bIsArtillery;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -308,23 +311,23 @@ function OnSpawnedByPlayer()
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI != none && LI != none)
+    if (GRI == none || LI == none)
     {
-        for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+        return;
+    }
+
+    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+    {
+        if (GRI.TeamConstructions[i].ConstructionClass == none)
         {
-            if (GRI.TeamConstructions[i].ConstructionClass == none)
-            {
-                break;
-            }
+            break;
+        }
 
-            if (GRI.TeamConstructions[i].ConstructionClass == Class &&
-                GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
-            {
-                GRI.TeamConstructions[i].Limit = Max(0, GRI.TeamConstructions[i].Limit - 1);
-                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + LI.TeamConstructions[i].ReplenishPeriodSeconds;
-
-                break;
-            }
+        if (GRI.TeamConstructions[i].ConstructionClass == Class &&
+            GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
+        {
+            GRI.TeamConstructions[i].Remaining = Max(0, GRI.TeamConstructions[i].Remaining - 1);
+            break;
         }
     }
 }
@@ -409,6 +412,44 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
+function RefundSupplies(Pawn InstigatedBy)
+{
+    local int i;
+    local DHPawn P;
+    local DHGameReplicationInfo GRI;
+    local DH_LevelInfo LI;
+
+    P = DHPawn(InstigatedBy);
+
+    if (P != none && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == P.GetTeamNum()))
+    {
+        P.RefundSupplies(GetSupplyCost(GetContext()));
+    }
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (GRI == none || LI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+    {
+        if (GRI.TeamConstructions[i].ConstructionClass == none)
+        {
+            break;
+        }
+
+        if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
+            GRI.TeamConstructions[i].ConstructionClass == Class)
+        {
+            GRI.TeamConstructions[i].Remaining = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
+            break;
+        }
+    }
+}
+
 auto simulated state Constructing
 {
     simulated function BeginState()
@@ -443,7 +484,6 @@ auto simulated state Constructing
     {
         local int i;
         local int OldStageIndex;
-        local int SuppliesRefunded;
         local DHGameReplicationInfo GRI;
         local DH_LevelInfo LI;
 
@@ -457,40 +497,20 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            if (bShouldRefundSuppliesOnTearDown &&
-                DHPawn(Instigator) != none &&
-                (NEUTRAL_TEAM_INDEX == TeamIndex || Instigator.GetTeamNum() == TeamIndex))
+            if (bShouldRefundSuppliesOnTearDown)
             {
-                SuppliesRefunded = DHPawn(Instigator).RefundSupplies(GetSupplyCost(GetContext()));
+                RefundSupplies(InstigatedBy);
             }
 
-            if (GRI != none && LI != none && NEUTRAL_TEAM_INDEX != TeamIndex && Instigator.GetTeamNum() == TeamIndex)
+            if (IsPlacedByPlayer())
             {
-                for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
-                {
-                    if (GRI.TeamConstructions[i].ConstructionClass == none)
-                    {
-                        break;
-                    }
-
-                    if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
-                        GRI.TeamConstructions[i].ConstructionClass == Class)
-                    {
-                        GRI.TeamConstructions[i].Limit = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Limit + 1);
-                        break;
-                    }
-                }
+                Destroy();
             }
-
-            if (Owner == none)
+            else
             {
                 // This construction was placed in the editor, so go to the
                 // dummy state.
                 GotoState('Dummy');
-            }
-            else
-            {
-                Destroy();
             }
         }
         else if (Progress >= ProgressMax)
@@ -548,6 +568,11 @@ Begin:
 
         OnProgressChanged(none);
     }
+}
+
+simulated function bool IsPlacedByPlayer()
+{
+    return Owner != none;
 }
 
 simulated state Constructed
@@ -948,7 +973,7 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (GRI.GetTeamConstructionLimit(Context.TeamIndex, default.Class) == 0)
+    if (GRI.GetTeamConstructionRemaining(Context.TeamIndex, default.Class) == 0)
     {
         E.Type = ERROR_Exhausted;
         E.OptionalInteger = GRI.GetTeamConstructionNextIncrementTimeSeconds(Context.TeamIndex, default.Class);
@@ -1171,6 +1196,11 @@ static function float GetPlacementDiameter()
     return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
 }
 
+static function bool IsArtillery()
+{
+    return default.bIsArtillery;
+}
+
 defaultproperties
 {
     TeamOwner=TEAM_Neutral
@@ -1297,4 +1327,6 @@ defaultproperties
     BrokenSoundVolume=5.0
 
     CompletionPointValue=10
+
+    bIsArtillery=false
 }

@@ -17,7 +17,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.75
         MaxParticles=1
-        name="flash"
+        Name="flash"
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=6.000000,Max=9.000000))
@@ -47,7 +47,7 @@ defaultproperties
         Opacity=0.7
         FadeOutStartTime=1.0
         MaxParticles=5
-        name="dust_cloud"
+        Name="dust_cloud"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.150000))
         SizeScale(0)=(RelativeSize=0.500000)
@@ -80,7 +80,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=148,G=198,R=214,A=255))
         ColorScaleRepeats=4.000000
         MaxParticles=20 //15
-        name="fine_grains"
+        Name="fine_grains"
         StartLocationOffset=(X=10.000000)
         //UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.250000))
@@ -112,7 +112,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=121,G=157,R=174,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=121,G=157,R=174,A=255))
         MaxParticles=15
-        name="light_shreds"
+        Name="light_shreds"
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=10.000000,Max=20.000000)
         UseRotationFrom=PTRS_Actor
@@ -140,7 +140,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
         MaxParticles=4
-        name="bullet_hole"
+        Name="bullet_hole"
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=3.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
@@ -168,7 +168,7 @@ defaultproperties
         Opacity=0.5
         FadeOutStartTime=0.140000
         MaxParticles=6
-        name="light_dust"
+        Name="light_dust"
         StartLocationRange=(X=(Min=-10.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=-5.000000,Max=5.000000))
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=0.600000,Max=0.800000))
@@ -203,7 +203,7 @@ defaultproperties
         Opacity=0.2
         FadeOutStartTime=0.25
         MaxParticles=150 //250
-        name="pouring_sand"
+        Name="pouring_sand"
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=0.100000,Max=0.200000))
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
@@ -223,5 +223,4 @@ defaultproperties
 
     Autodestroy=true
     bnodelete=false
-    CullDistance=3000
 }

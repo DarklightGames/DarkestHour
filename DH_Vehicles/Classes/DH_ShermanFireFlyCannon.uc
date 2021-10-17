@@ -13,7 +13,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
     Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
     WeaponAttachOffset=(X=0.0,Y=1.78,Z=4.77)
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col')
 
     // Turret armor
     FrontArmorFactor=7.6

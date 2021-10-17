@@ -8,4 +8,5 @@ class DH_PanzerFaustMeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=class'DH_Weapons.DH_PanzerFaustBashDamType'
+    BashBackAnim="idle"
 }

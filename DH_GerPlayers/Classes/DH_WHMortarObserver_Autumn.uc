@@ -3,13 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_WHMortarObserver_Autumn extends DHGEMortarObserverRoles;
+class DH_WHMortarObserver_Autumn extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaHeerPawnB',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
 }

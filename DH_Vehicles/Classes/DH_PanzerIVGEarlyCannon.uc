@@ -15,7 +15,7 @@ defaultproperties
     HighDetailOverlay=Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
 
     // Turret armor
     bHasAddedSideArmor=true

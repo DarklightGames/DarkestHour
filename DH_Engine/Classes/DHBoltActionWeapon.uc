@@ -316,7 +316,7 @@ simulated state Reloading
         // Give back the unfired round that was in the chamber.
         if (Role == ROLE_Authority)
         {
-            if(!bWaitingToBolt && bCanUseUnfiredRounds)
+            if (!bWaitingToBolt && bCanUseUnfiredRounds)
             {
                 GiveBackAmmo(1);
             }
@@ -326,7 +326,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLoopedStripper;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetStripperReloadTimer();
             }
@@ -337,7 +337,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLooped;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetSingleReloadTimer();
             }
