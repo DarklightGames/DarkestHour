@@ -3,18 +3,17 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_LWPPawn_Gloves extends DH_PolishPawn; 
+class DH_LWPPawn_Gloves extends DH_PolishPawn;
 
-// some faces here are substituted with others because they looked too distinct for a generic bloody texture, 
+// some faces here are substituted with others because they looked too distinct for a generic bloody texture,
 // which is now used to fix the weird invisible head bug due to buggy combiners in this game engine
 
 defaultproperties
 {
-
     Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
     Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face04'
-    
+
     FaceSkins(0)=Combiner'DHSovietCharactersTex.sov_faces.sov_face02gloves' //
     FaceSkins(1)=Combiner'DHSovietCharactersTex.sov_faces.sov_face02gloves'
     FaceSkins(2)=Combiner'DHSovietCharactersTex.sov_faces.sov_face03gloves'

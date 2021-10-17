@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_GermanPawn_Gloves extends DHPawn; 
+class DH_GermanPawn_Gloves extends DHPawn;
 
-// some faces here are substituted with others because they looked too distinct for a generic bloody texture, 
+// some faces here are substituted with others because they looked too distinct for a generic bloody texture,
 // which is now used to fix the weird invisible head bug due to buggy combiners in this game engine
 // to compensate for that, these faces are made more frequent in the balaklava pawns
 
@@ -31,8 +31,8 @@ defaultproperties
     FaceSkins(9)=Combiner'DHGermanCharactersTex.Heads.ger_face10Gloves'
     FaceSkins(10)=Combiner'DHGermanCharactersTex.Heads.ger_face11Gloves'
     FaceSkins(11)=Combiner'DHGermanCharactersTex.Heads.ger_face12Gloves'
-    FaceSkins(12)=Combiner'DHGermanCharactersTex.Heads.ger_face12Gloves' //13 is removed
-    FaceSkins(13)=Combiner'DHGermanCharactersTex.Heads.ger_face15Gloves' //14 is removed
+    FaceSkins(12)=Combiner'DHGermanCharactersTex.Heads.ger_face12Gloves' // 13 is removed
+    FaceSkins(13)=Combiner'DHGermanCharactersTex.Heads.ger_face15Gloves' // 14 is removed
     FaceSkins(14)=Combiner'DHGermanCharactersTex.Heads.ger_face15Gloves'
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"

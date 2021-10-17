@@ -5,7 +5,7 @@
 
 class DH_SovietPawn_Gloves extends DHPawn;
 
-// some faces here are substituted with others because they looked too distinct for a generic bloody texture, 
+// some faces here are substituted with others because they looked too distinct for a generic bloody texture,
 // which is now used to fix the weird invisible head bug due to buggy combiners in this game engine
 // to compensate for that, these faces are made more frequent in the balaklava pawns
 
