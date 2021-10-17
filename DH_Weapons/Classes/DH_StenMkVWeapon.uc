@@ -7,7 +7,7 @@ class DH_StenMkVWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sten MkV"
+    ItemName="STEN Mk.V"
     FireModeClass(0)=class'DH_Weapons.DH_StenMkVFire'
     FireModeClass(1)=class'DH_Weapons.DH_StenMkVMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_StenMkVAttachment'
@@ -17,13 +17,13 @@ defaultproperties
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    
+
     Skins(2)=Texture'DH_Sten_tex.Sten.StenMk5_tex'
     HandNum=0
     SleeveNum=1
 
     SwayModifyFactor=0.72 // -0.08
-    
+
     DisplayFOV=86.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=65.0
@@ -49,13 +49,13 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
-    
+
     bHasBayonet=true
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     BayoAttachEmptyAnim="bayonet_on_empty"
     BayoDetachEmptyAnim="bayonet_off_empty"
-    
+
     BayonetBoneName="bayonet"
 
     SelectFireAnim="fireswitch"
