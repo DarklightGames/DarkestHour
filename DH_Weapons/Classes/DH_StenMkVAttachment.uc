@@ -8,7 +8,7 @@ class DH_StenMkVAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk5_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_icon' //change
+    MenuImage=Texture'DH_Sten_tex.interface.stenmk5' // TODO: Make consistent with other STENs
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
@@ -19,7 +19,7 @@ defaultproperties
     WA_ReloadEmpty="reload_sten_nobayo"
     WA_ProneReload="prone_reload_sten_nobayo"
     WA_ProneReloadEmpty="prone_reload_sten_nobayo"
-    
+
     WA_BayonetIdle="idle_sten"
     WA_BayonetIdleEmpty="idle_sten"
     WA_BayonetFire="shoot_sten"
@@ -27,7 +27,7 @@ defaultproperties
     WA_BayonetReloadEmpty="reload_sten"
     WA_BayonetProneReload="prone_reload_sten"
     WA_BayonetProneReloadEmpty="prone_reload_sten"
-    
+
     WA_BayonetAttach="idle_sten"
     WA_BayonetDetach="idle_sten"
     WA_BayonetAttachProne="idle_sten"
@@ -38,7 +38,7 @@ defaultproperties
     PA_ProneReloadAnim="prone_reload_sten" //
     PA_ReloadEmptyAnim="stand_reload_sten" //
     PA_ProneReloadEmptyAnim="prone_reload_sten"  //
-    
+
     PA_MovementAnims(0)="stand_jogF_mp40"
     PA_MovementAnims(1)="stand_jogB_mp40"
     PA_MovementAnims(2)="stand_jogL_mp40"
@@ -119,7 +119,7 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_mp40"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_mp40"
     PA_IdleProneAnim="prone_idle_mp40"
-    
+
     PA_ProneIdleRestAnim="prone_idle_mp40"
     PA_Fire="stand_shoothip_mp40"
     PA_IronFire="stand_shootiron_mp40"
@@ -183,7 +183,7 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_mp40"
     PA_DodgeAnims(2)="jumpL_mid_mp40"
     PA_DodgeAnims(3)="jumpR_mid_mp40"
-    
+
     PA_BayonetAltFire="stand_stab_kar"
     PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
     PA_ProneBayonetAltFire="prone_idlestrike_bayo"
@@ -191,5 +191,4 @@ defaultproperties
     PA_ProneBayonetAttachAnim="prone_bayattach_kar"
     PA_BayonetDetachAnim="stand_bayremove_kar"
     PA_ProneBayonetDetachAnim="prone_bayremove_kar"
-    
 }
