@@ -40,6 +40,8 @@ simulated function DrawGunsightOverlay(Canvas C)
 
             C.DrawTileScaled(CannonScopeCenter, Scale * ScopeCenterScaleX, Scale * ScopeCenterScaleY);
         }
+
+        DrawGunsightRangeSetting(C);
     }
 }
 

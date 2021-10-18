@@ -262,8 +262,7 @@ simulated function DrawHUD(Canvas C)
 simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
-    local float XL, YL, MapX, MapY, PosX, PosY;
-    local color SavedColor, WhiteColor;
+    local float PosX, PosY;
 
     if (GunsightOverlay != none)
     {
@@ -289,21 +288,7 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
 
-        // Draw range setting in text, if cannon has range settings
-        if (Cannon != none && Cannon.RangeSettings.Length > 0)
-        {
-            C.Style = ERenderStyle.STY_Normal;
-            SavedColor = C.DrawColor;
-            WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
-            C.DrawColor = WhiteColor;
-            MapX = RangePositionX * C.ClipX;
-            MapY = RangePositionY * C.ClipY;
-            C.SetPos(MapX, MapY);
-            C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-            C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-            C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
-            C.DrawColor = SavedColor;
-        }
+        DrawGunsightRangeSetting(C);
 
         // Debug - draw cross on center of screen to check sight overlay is properly centred
         if (bDebugSights)
@@ -324,6 +309,30 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.DrawHorizontal(PosY, PosX - 3.0);
         }
     }
+}
+
+// Draw range setting in text, if cannon has range settings.
+function DrawGunsightRangeSetting(Canvas C)
+{
+    local float XL, YL, MapX, MapY;
+    local color SavedColor, WhiteColor;
+
+    if (Cannon == none || Cannon.RangeSettings.Length <= 0)
+    {
+        return;
+    }
+
+    C.Style = ERenderStyle.STY_Normal;
+    SavedColor = C.DrawColor;
+    WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+    C.DrawColor = WhiteColor;
+    MapX = RangePositionX * C.ClipX;
+    MapY = RangePositionY * C.ClipY;
+    C.SetPos(MapX, MapY);
+    C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+    C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
+    C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+    C.DrawColor = SavedColor;
 }
 
 // New function to draw any textured commander's periscope overlay; modified 2019 to act like Gunsight draw function, since we may eventually have ballistic periscopes
