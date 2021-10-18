@@ -11,13 +11,12 @@ struct RangeSetting
     var int  FirePitch;
     var name IronIdleAnim;
     var name FireIronAnim;
+    var name AssistedReloadAnim;
 };
 
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
 var     bool                    bCanHaveAsssistedReload;      // another friendly player can provide an assisted reload, which is much quicker //COMPAREPIAT added
-var     name                    AssistedMagEmptyReloadAnim;   // 1st person animation for assisted empty reload
-var     name                    AssistedMagPartialReloadAnim; // 1st person animation for assisted partial reload
 var     class<ROFPAmmoRound>    RocketAttachmentClass;
 var     ROFPAmmoRound           RocketAttachment;             // the attached first person ammo round
 var     class<LocalMessage>     WarningMessageClass;
@@ -310,14 +309,7 @@ simulated state AssistedReloading extends Reloading
             UpdateResupplyStatus(true);
         }
 
-        if (IsLoaded())
-        {
-            PlayAnimAndSetTimer(AssistedMagPartialReloadAnim, 1.0, 0.1);
-        }
-        else
-        {
-            PlayAnimAndSetTimer(AssistedMagEmptyReloadAnim, 1.0, 0.1);
-        }
+        PlayAnimAndSetTimer(RangeSettings[RangeIndex].AssistedReloadAnim, 1.0, 0.1);
     }
 
 // Emptied to avoid taking player out of ironsights when someone else is loading them
@@ -494,8 +486,6 @@ defaultproperties
 
     MagEmptyReloadAnims(0)="Reloads"
     MagPartialReloadAnims(0)="Reloads"
-    AssistedMagEmptyReloadAnim="reloadA"
-    AssistedMagPartialReloadAnim="reloadA"
     PutDownAnim="putaway"
     IronIdleAnim=""
 

@@ -20,7 +20,7 @@ defaultproperties
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
 
-    RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
-    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
-    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
+    RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot",AssistedReloadAnim="reloadA")
+    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid",AssistedReloadAnim="reloadA")
+    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar",AssistedReloadAnim="reloadA")
 }

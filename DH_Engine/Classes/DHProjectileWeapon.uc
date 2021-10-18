@@ -307,6 +307,7 @@ simulated exec function LogAmmo()
     }
 }
 
+// Called by animations to force the scope rendering.
 simulated event DHForceRenderScope()
 {
     bForceRenderScope = true;

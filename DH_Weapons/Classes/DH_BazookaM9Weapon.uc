@@ -9,17 +9,25 @@
 // [ ] Interface art
 //==============================================================================
 
-class DH_BazookaWeapon extends DHRocketWeapon;
+class DH_BazookaM9Weapon extends DHRocketWeapon;
 
 defaultproperties
 {
-    ItemName="M1A1 Bazooka"
-    Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m1a1'
+    ItemName="M9A1 Bazooka"
+    Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m9'
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
     FireModeClass(1)=class'DH_Weapons.DH_BazookaMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'
     PickupClass=class'DH_Weapons.DH_BazookaPickup'
+
+    bHasScope=true
+    bForceModelScope=true
+    ScopeOverlay=Texture'DH_Bazooka_tex.FPP.BazookaScopeOverlay'    // TODO: not used though??
+    ScriptedScopeTexture=Texture'DH_Bazooka_tex.FPP.BazookaScopeOverlay'
+    ScopePortalFOV=8.0
+    ScopePortalFOVHigh=8.0
+    LensMaterialID=4
 
     FreeAimRotationSpeed=2.0
 
