@@ -50,7 +50,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         }
     }
 
-    if (HitMarkerIndices.Length > 0)
+    if (HitMarkerIndices.Length > 0 || Level.NetMode == NM_Standalone)
     {
         // Mark the hit on the map for the artillery gunner.
         PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
