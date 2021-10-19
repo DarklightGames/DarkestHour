@@ -21,17 +21,6 @@ simulated function bool WasLastRound()
     return AmmoAmount(0) == 0;
 }
 
-// Modified to add hint about garand's ping noise on clip ejection
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp(PrevWeapon);
-
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
-    {
-        DHPlayer(Instigator.Controller).QueueHint(20, true);
-    }
-}
-
 defaultproperties
 {
     ItemName="M1 Garand"

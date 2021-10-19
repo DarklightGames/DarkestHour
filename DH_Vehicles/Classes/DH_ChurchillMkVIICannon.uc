@@ -10,7 +10,7 @@ defaultproperties
     // Turret mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_turret' // TODO: think cupola & hatches are incorrect - believe should have all round vision cupola
     Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
-    CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col')
     FireAttachBone="Turret"
     FireEffectOffset=(X=12.0,Y=-25.0,Z=60.0)
     FireEffectScale=0.8

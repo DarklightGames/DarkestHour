@@ -13,9 +13,5 @@ defaultproperties
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

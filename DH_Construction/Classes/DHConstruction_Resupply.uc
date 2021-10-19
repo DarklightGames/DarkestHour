@@ -9,7 +9,7 @@ class DHConstruction_Resupply extends DHConstruction
 var class<DHResupplyAttachment>         ResupplyAttachmentClass;
 var DHResupplyAttachment                ResupplyAttachment;
 var int                                 ResupplyCount;
-var DHResupplyAttachment.EResupplyType  ResupplyType;
+var DHResupplyStrategy.EResupplyType    ResupplyType;
 var float                               ResupplyAttachmentCollisionRadius;
 var float                               ResupplyAttachmentCollisionHeight;
 

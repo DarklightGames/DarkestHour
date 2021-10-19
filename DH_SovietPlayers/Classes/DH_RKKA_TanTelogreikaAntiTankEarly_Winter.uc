@@ -11,9 +11,5 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
     HeadgearProbabilities(0)=1.0
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    BareHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
-    CustomHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

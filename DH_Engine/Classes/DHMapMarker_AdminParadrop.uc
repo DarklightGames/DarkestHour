@@ -3,18 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMapMarker_Paradrop extends DHMapMarker
+class DHMapMarker_AdminParadrop extends DHMapMarker
     abstract;
-
-static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
-{
-    return PRI != none &&
-           (PRI.bAdmin ||
-            PRI.bSilentAdmin ||
-            (PRI.Level != none &&
-             PRI.Level.NetMode == NM_Standalone));
-}
-
 defaultproperties
 {
     MarkerName="ADMIN: Paradrop"
@@ -23,6 +13,10 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=5
     bShouldShowOnCompass=false
-    bIsUnique=true
-    bIsPersonal=true
+    Type=MT_Admin
+    OverwritingRule=UNIQUE
+    Scope=PERSONAL
+    Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ADMIN)
+    Permissions_CanRemove(0)=(LevelSelector=TEAM,RoleSelector=ERS_ADMIN)
+    Permissions_CanPlace(0)=ERS_ADMIN
 }

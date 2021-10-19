@@ -5,18 +5,15 @@
 
 class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
 
-#exec OBJ LOAD FILE=Weapon_overlays.utx
-#exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
-
 var     texture     BinocsOverlay;
 var     float       BinocsOverlaySize;
 
 // Functions emptied out or returning false, as binoculars aren't a real weapon
-simulated function bool IsFiring() {return false;}
-simulated event ClientStartFire(int Mode) {return;}
-simulated event StopFire(int Mode) {return;}
-simulated function bool IsBusy() {return false;}
-function bool FillAmmo() {return false;}
+simulated function bool IsFiring() { return false; }
+simulated event ClientStartFire(int Mode) { return; }
+simulated event StopFire(int Mode) { return; }
+simulated function bool IsBusy() { return false; }
+function bool FillAmmo() { return false; }
 
 // Modified to ignore InventoryGroup, so this item can be picked up regardless if its group is occupied
 function bool HandlePickupQuery(Pickup Item)
@@ -92,53 +89,15 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified to add fire button functionality for artillery observer or artillery officer roles to mark targets
 simulated function Fire(float F)
 {
-    local DHRoleInfo RI;
     local DHPlayer   PC;
-    local DHPlayerReplicationInfo PRI;
-    local DHPawn P;
 
     if (bUsingSights && Instigator != none && Instigator.IsLocallyControlled())
     {
-        P = DHPawn(Instigator);
-
-        if (P == none)
-        {
-            return;
-        }
-
-        RI = P.GetRoleInfo();
-        PRI = DHPlayerReplicationInfo(Instigator.PlayerReplicationInfo);
         PC = DHPlayer(Instigator.Controller);
 
-        if (RI == none || PRI == none || PC == none)
+        if (PC != none && PC.CanUseFireSupportMenu())
         {
-            return;
-        }
-
-        // TODO: remove/change mortar observer functionality
-        if (RI.bIsMortarObserver)
-        {
-            PC.ServerSaveArtilleryTarget(false);
-        }
-        else if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
-        {
-            PC.ServerSaveArtilleryPosition();
-        }
-    }
-}
-
-// Modified to add alt fire button functionality for artillery observer to mark smoke targets
-simulated function AltFire(float F)
-{
-    local DHRoleInfo RI;
-
-    if (bUsingSights && DHPawn(Instigator) != none && Instigator.IsLocallyControlled())
-    {
-        RI = DHPawn(Instigator).GetRoleInfo();
-
-        if (RI != none && RI.bIsMortarObserver && DHPlayer(Instigator.Controller) != none)
-        {
-            DHPlayer(Instigator.Controller).ServerSaveArtilleryTarget(true);
+            PC.ShowCommandInteractionWithMenu("DH_Engine.DHCommandMenu_FireSupport", none, true);
         }
     }
 }
@@ -146,22 +105,15 @@ simulated function AltFire(float F)
 // Modified to add binoculars hint for artillery observer or artillery officer
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DHPawn P;
+    local DHPlayer PC;
 
     super(ROWeapon).BringUp(PrevWeapon);
 
-    P = DHPawn(Instigator);
+    PC = DHPlayer(Instigator.Controller);
 
-    if (P != none && P.GetRoleInfo() != none && InstigatorIsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
+    if (PC != none && PC.IsArtillerySpotter())
     {
-        if (P.GetRoleInfo().bIsMortarObserver)
-        {
-            DHPlayer(Instigator.Controller).QueueHint(11, true);
-        }
-        else if (P.GetRoleInfo().bIsArtilleryOfficer)
-        {
-            DHPlayer(Instigator.Controller).QueueHint(12, true);
-        }
+        PC.QueueHint(12, true);
     }
 }
 

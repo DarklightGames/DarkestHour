@@ -13,9 +13,5 @@ defaultproperties
     DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'ROInventory.ROGermanHat'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

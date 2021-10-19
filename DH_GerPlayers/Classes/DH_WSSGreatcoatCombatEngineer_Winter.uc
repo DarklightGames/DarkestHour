@@ -13,9 +13,5 @@ defaultproperties
     DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    
     HandType=Hand_Gloved
-    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    CustomHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

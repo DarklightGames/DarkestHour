@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS2_gun'
     Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
     Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision')
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
@@ -31,7 +31,7 @@ defaultproperties
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(2)="APCR"
 
-    nProjectileDescriptions(0)="BR-271" 
+    nProjectileDescriptions(0)="BR-271"
     nProjectileDescriptions(1)="O-271"
     nProjectileDescriptions(2)="BR-271P"
 

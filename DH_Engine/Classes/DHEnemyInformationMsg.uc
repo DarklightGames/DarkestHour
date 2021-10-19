@@ -29,7 +29,7 @@ static function string GetString(
 defaultproperties
 {
     EnemyIsWeak="The enemy is nearly out of reinforcements, victory is near!"
-    EnemyIsSurrendering="The enemy is surrendering, the battle will be over shortly!"
+    EnemyIsSurrendering="The enemy is retreating, the battle will be over shortly!"
 
     bFadeMessage=true
     bIsUnique=true

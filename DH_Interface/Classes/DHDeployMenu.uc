@@ -1903,23 +1903,23 @@ defaultproperties
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
-    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to retreat."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
     SurrenderButtonText[0]="Retreat"
     SurrenderButtonText[1]="Keep fighting"
 
-    SurrenderResponseMessages[0]="Fatal error!";
-    SurrenderResponseMessages[1]="You haven't picked a team.";
-    SurrenderResponseMessages[2]="Round hasn't started yet.";
-    SurrenderResponseMessages[3]="Surrender vote is disabled.";
-    SurrenderResponseMessages[4]="Vote is already in progress.";
-    SurrenderResponseMessages[5]="You've already surrendered.";
-    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
-    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender.";
-    SurrenderResponseMessages[9]="You cannot surrender this early.";
-    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
+    SurrenderResponseMessages[0]="Fatal error!"
+    SurrenderResponseMessages[1]="You haven't picked a team."
+    SurrenderResponseMessages[2]="Round hasn't started yet."
+    SurrenderResponseMessages[3]="Retreat vote is disabled."
+    SurrenderResponseMessages[4]="Vote is already in progress."
+    SurrenderResponseMessages[5]="You've already retreated."
+    SurrenderResponseMessages[6]="Your team already had a vote to retreat earlier. Try again later."
+    SurrenderResponseMessages[7]="You cannot retreat after the round is over."
+    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
+    SurrenderResponseMessages[9]="You cannot retreat this early."
+    SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 
     MapMode=MODE_Map
     bButtonsEnabled=true

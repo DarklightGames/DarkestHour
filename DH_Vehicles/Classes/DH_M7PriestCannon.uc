@@ -17,7 +17,8 @@ defaultproperties
 
     // Turret movement
     bHasTurret=false
-    ManualRotationsPerSecond=0.02
+    ManualRotationsPerSecond=0.005
+    RotationsPerSecond=0.005
     bLimitYaw=true
     MaxPositiveYaw=5461        // 30 degrees
     MaxNegativeYaw=-2730       // -15 degrees
@@ -40,14 +41,13 @@ defaultproperties
     nProjectileDescriptions(1)="M60 WP"
     nProjectileDescriptions(2)="M67 HEAT"
 
-
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
     MaxPrimaryAmmo=58
     MaxSecondaryAmmo=3
     MaxTertiaryAmmo=8
-    Spread=0.0025
+    Spread=0.01
     SecondarySpread=0.005
     TertiarySpread=0.005
 
@@ -62,8 +62,9 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01',Duration=4.0)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02',Duration=4.0)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03',Duration=2.0)
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
+    ResupplyInterval=10.0
 }
