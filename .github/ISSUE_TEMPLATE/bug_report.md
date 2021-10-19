@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve the game
-title: "[BUG]"
+title: "[Bug]"
 labels: bug
 assignees: ''
 
@@ -23,5 +23,7 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Additional context**
-Add any other context about the problem here.
+**Crash log**
+```
+If you've encountered a crash, copy the log message here.
+```
