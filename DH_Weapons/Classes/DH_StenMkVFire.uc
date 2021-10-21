@@ -7,7 +7,7 @@ class DH_StenMkVFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_StenMkIICBullet'
+    ProjectileClass=class'DH_Weapons.DH_StenMkVBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
     FireRate=0.1016 // 590rpm
     Spread=135.0
