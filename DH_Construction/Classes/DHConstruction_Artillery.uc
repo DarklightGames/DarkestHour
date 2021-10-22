@@ -57,6 +57,6 @@ defaultproperties
     Stages(0)=(Progress=0)
     ProgressMax=9
     bIsArtillery=true
-    SupplyCost=1750
-    TeamLimit=4
+    SupplyCost=1500
+    TeamLimit=3
 }
