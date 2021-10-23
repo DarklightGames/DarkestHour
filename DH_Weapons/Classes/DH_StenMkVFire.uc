@@ -7,7 +7,7 @@ class DH_StenMkVFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_StenMkIICBullet'
+    ProjectileClass=class'DH_Weapons.DH_StenMkVBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
     FireRate=0.1016 // 590rpm
     Spread=135.0
@@ -15,8 +15,8 @@ defaultproperties
     // Recoil
     RecoilRate=0.075
     MaxVerticalRecoilAngle=250
-    MaxHorizontalRecoilAngle=85
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxHorizontalRecoilAngle=80
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
     RecoilFallOffFactor=9.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
@@ -26,9 +26,9 @@ defaultproperties
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     //PreFireAnim="Shoot1_start"
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    ShellIronSightOffset=(X=15.0,Y=0.0,Z=-1.5)
-    ShellRotOffsetIron=(Pitch=-500)
-
+    ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
+    ShellRotOffsetIron=(Pitch=2000)
+    
     FireIronLastAnim="iron_shoot_last"
     FireLastAnim="shoot_last"
 }
