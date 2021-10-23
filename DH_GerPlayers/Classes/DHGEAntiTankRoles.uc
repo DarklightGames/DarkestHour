@@ -15,4 +15,5 @@ defaultproperties
     GivenItems(1)="DH_Weapons.DH_GLWeapon"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

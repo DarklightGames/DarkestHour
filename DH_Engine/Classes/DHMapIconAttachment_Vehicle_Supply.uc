@@ -32,6 +32,7 @@ simulated function Material GetIconMaterial(DHPlayer PC)
         }
 
         TexRotator(RotatedMaterial).Rotation.Yaw = GetMapIconYaw(DHGameReplicationInfo(PC.GameReplicationInfo));
+
         return RotatedMaterial;
     }
 }

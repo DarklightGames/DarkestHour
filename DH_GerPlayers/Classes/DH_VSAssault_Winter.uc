@@ -13,10 +13,9 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'ROInventory.ROGermanHat'
 
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_VG15weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP3008weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_VG15weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch') 
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MP3008weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch') 
-    
     HandType=Hand_Gloved
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
     BareHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'

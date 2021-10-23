@@ -145,7 +145,7 @@ defaultproperties
         StartLocationShape=PTLS_Sphere
         SphereRadiusRange=(Min=15.000000,Max=25.000000)
         UseRotationFrom=PTRS_Actor
-        StartSpinRange=(X=(Min=-0.500000,Max=1.000000),Y=(Min=-0.25,Max=0.5.))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000),Y=(Min=-0.25,Max=0.5))
         SpinsPerSecondRange=(X=(Min=0.5,Max=2.0),Y=(Min=-0.250000,Max=0.250000)) //yaw,pitch,roll (n/a)
         StartSizeRange=(X=(Min=0.080000,Max=0.120000),Y=(Min=0.080000,Max=0.120000),Z=(Min=0.080000,Max=0.120000))
         InitialParticlesPerSecond=1000.000000

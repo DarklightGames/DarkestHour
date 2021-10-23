@@ -386,7 +386,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
-        if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
+        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
         {
             if (P.GetTeamNum() == TeamIndex)
             {
@@ -431,6 +431,11 @@ final function SetTeamIndex(int TeamIndex)
             MapIconAttachment.SetTeamIndex(GetTeamIndex());
         }
     }
+}
+
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return false;
 }
 
 function OnTeamIndexChanged();

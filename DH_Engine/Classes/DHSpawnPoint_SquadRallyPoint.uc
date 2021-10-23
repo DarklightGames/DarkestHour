@@ -54,7 +54,7 @@ var int IsExposedPenaltySeconds;
 // Attachments
 var class<DHResupplyAttachment>         ResupplyAttachmentClass;
 var DHResupplyAttachment                ResupplyAttachment;
-var DHResupplyAttachment.EResupplyType  ResupplyType;
+var DHResupplyStrategy.EResupplyType    ResupplyType;
 var float                               ResupplyAttachmentCollisionRadius;
 var float                               ResupplyAttachmentCollisionHeight;
 var float                               ResupplyTime;
@@ -571,6 +571,15 @@ function Destroyed()
     {
         ResupplyAttachment.Destroy();
     }
+}
+
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return PC != none
+        && PC.IsSquadLeader()
+        && SpawnsRemaining == 1
+        && PC.SquadReplicationInfo != none
+        && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) > 1;
 }
 
 defaultproperties

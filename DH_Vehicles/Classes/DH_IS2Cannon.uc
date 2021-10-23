@@ -14,7 +14,7 @@ defaultproperties
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
-    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2.IS2_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2.IS2_turret_coll')
 
     // Turret armor - JS-2 Model 1943
     FrontArmorFactor=10.0

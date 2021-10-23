@@ -58,7 +58,7 @@ defaultproperties
     // is not important
 
     Records(0)=(ClassName="DH_Weapons.DH_30CalWeapon",WeaponNames=("30cal","30c"))
-    Records(1)=(ClassName="DH_Weapons.DH_AVT40Weapon",WeaponNames=("avt", "avt40"),)
+    Records(1)=(ClassName="DH_Weapons.DH_AVT40Weapon",WeaponNames=("avt", "avt40"))
     Records(2)=(ClassName="DH_Weapons.DH_BARWeapon",WeaponNames=("bar"))
     Records(3)=(ClassName="DH_Weapons.DH_BazookaWeapon",WeaponNames=("bazooka"))
     Records(4)=(ClassName="DH_Weapons.DH_BHPWeapon",WeaponNames=("bhp"))

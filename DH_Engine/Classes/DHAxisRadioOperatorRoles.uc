@@ -13,4 +13,5 @@ defaultproperties
     Article="a "
     PluralName="Radio Operator"
     Limit=1
+    bCarriesRadio=true
 }

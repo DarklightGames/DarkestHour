@@ -13,8 +13,8 @@ defaultproperties
     Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
 
-    FaceSkins(0)=Combiner'DHSovietCharactersTex.sov_faces.sov_face01winter' 
-    FaceSkins(1)=Combiner'DHSovietCharactersTex.sov_faces.sov_face02winter'
+    FaceSkins(0)=Combiner'DHSovietCharactersTex.sov_faces.sov_face01winter'
+    FaceSkins(1)=Combiner'DHSovietCharactersTex.sov_faces.sov_face01winter' // compensation for absence of 01 in the gloved pawn
     FaceSkins(2)=Combiner'DHSovietCharactersTex.sov_faces.sov_face03winter'
     FaceSkins(3)=Combiner'DHSovietCharactersTex.sov_faces.sov_face04winter'
     FaceSkins(4)=Combiner'DHSovietCharactersTex.sov_faces.sov_face05winter'
