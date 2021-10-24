@@ -1,5 +1,5 @@
 @echo off
 pushd %~dp0
-python make.py ../../. -mod DarkestHourDev -dumpint
+call venv\Scripts\activate && python make.py ../../. -mod DarkestHourDev -dumpint && call venv\Scripts\deactivate
 popd
 pause

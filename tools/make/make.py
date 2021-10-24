@@ -3,143 +3,14 @@ import glob
 import sys
 import argparse
 import subprocess
-import configparser
 import shutil
 import json
 from binascii import crc32
 import zipfile
-
-'''
-https://stackoverflow.com/questions/13921323/handling-duplicate-keys-with-configparser
-'''
-
-
-class ConfigParserMultiOpt(configparser.RawConfigParser):
-    """
-    ConfigParser allowing duplicate keys. Values are stored in a list
-    """
-
-    def __init__(self):
-        configparser.RawConfigParser.__init__(self, empty_lines_in_values=False, strict=False)
-
-    def _read(self, fp, fpname):
-        """Parse a sectioned configuration file.
-
-        Each section in a configuration file contains a header, indicated by
-        a name in square brackets (`[]'), plus key/value options, indicated by
-        `name' and `value' delimited with a specific substring (`=' or `:' by
-        default).
-
-        Values can span multiple lines, as long as they are indented deeper
-        than the first line of the value. Depending on the parser's mode, blank
-        lines may be treated as parts of multiline values or ignored.
-
-        Configuration files may include comments, prefixed by specific
-        characters (`#' and `;' by default). Comments may appear on their own
-        in an otherwise empty line or may be entered in lines holding values or
-        section names.
-        """
-        elements_added = set()
-        cursect = None  # None, or a dictionary
-        sectname = None
-        optname = None
-        indent_level = 0
-        e = None  # None, or an exception
-        for lineno, line in enumerate(fp, start=1):
-            comment_start = None
-            # strip inline comments
-            for prefix in self._inline_comment_prefixes:
-                index = line.find(prefix)
-                if index == 0 or (index > 0 and line[index - 1].isspace()):
-                    comment_start = index
-                    break
-            # strip full line comments
-            for prefix in self._comment_prefixes:
-                if line.strip().startswith(prefix):
-                    comment_start = 0
-                    break
-            value = line[:comment_start].strip()
-            if not value:
-                if self._empty_lines_in_values:
-                    # add empty line to the value, but only if there was no
-                    # comment on the line
-                    if (comment_start is None and
-                            cursect is not None and
-                            optname and
-                            cursect[optname] is not None):
-                        cursect[optname].append('')  # newlines added at join
-                else:
-                    # empty line marks end of value
-                    indent_level = sys.maxsize
-                continue
-            # continuation line?
-            first_nonspace = self.NONSPACECRE.search(line)
-            cur_indent_level = first_nonspace.start() if first_nonspace else 0
-            if (cursect is not None and optname and
-                    cur_indent_level > indent_level):
-                cursect[optname].append(value)
-            # a section header or option header?
-            else:
-                indent_level = cur_indent_level
-                # is it a section header?
-                mo = self.SECTCRE.match(value)
-                if mo:
-                    sectname = mo.group('header')
-                    if sectname in self._sections:
-                        if self._strict and sectname in elements_added:
-                            raise configparser.DuplicateSectionError(sectname, fpname, lineno)
-                        cursect = self._sections[sectname]
-                        elements_added.add(sectname)
-                    elif sectname == self.default_section:
-                        cursect = self._defaults
-                    else:
-                        cursect = self._dict()
-                        self._sections[sectname] = cursect
-                        self._proxies[sectname] = configparser.SectionProxy(self, sectname)
-                        elements_added.add(sectname)
-                    # So sections can't start with a continuation line
-                    optname = None
-                # no section header in the file?
-                elif cursect is None:
-                    raise configparser.MissingSectionHeaderError(fpname, lineno, line)
-                # an option line?
-                else:
-                    mo = self._optcre.match(value)
-                    if mo:
-                        optname, vi, optval = mo.group('option', 'vi', 'value')
-                        if not optname:
-                            e = self._handle_error(e, fpname, lineno, line)
-                        optname = self.optionxform(optname.rstrip())
-                        if (self._strict and
-                                (sectname, optname) in elements_added):
-                            raise configparser.DuplicateOptionError(sectname, optname, fpname, lineno)
-                        elements_added.add((sectname, optname))
-                        # This check is fine because the OPTCRE cannot
-                        # match if it would set optval to None
-                        if optval is not None:
-                            optval = optval.strip()
-                            # Check if this optname already exists
-                            if (optname in cursect) and (cursect[optname] is not None):
-                                # If it does, convert it to a tuple if it isn't already one
-                                if not isinstance(cursect[optname], tuple):
-                                    cursect[optname] = tuple(cursect[optname])
-                                cursect[optname] = cursect[optname] + tuple([optval])
-                            else:
-                                cursect[optname] = [optval]
-                        else:
-                            # valueless option handling
-                            cursect[optname] = None
-                    else:
-                        # a non-fatal parsing error occurred. set up the
-                        # exception but keep going. the exception will be
-                        # raised at the end of the file and will contain a
-                        # list of all bogus lines
-                        e = self._handle_error(e, fpname, lineno, line)
-        # if any parsing errors occurred, raise an exception
-        if e:
-            raise e
-        self._join_multiline_values()
-
+import time
+from unrealscriptplus import parse_file, ScriptParseError
+from config import ConfigParserMultiOpt
+import humanfriendly
 
 PACKAGE_OK = 0
 PACKAGE_SOURCE_MISMATCH = 1
@@ -157,6 +28,19 @@ def print_header(s=''):
     i = int(len(header) / 2) - int(len(s) / 2)
     header[i:i + len(s)] = list(s)
     print(''.join(header))
+
+
+def script_parse_error_to_string(f, error):
+    args = error.args[0]
+    variant = args['variant']
+    if variant['type'] == 'parsing':
+        line_col = args['line_col']
+        positives = ', '.join(variant['positives'])
+        return f'Error: {f} ({line_col[0]}) : Expected one of [{positives}]'
+    elif variant['type'] == 'custom':
+        line_col = args['line_col'][0]
+        message = variant['message']
+        return f'Error: {f} ({line_col[0]}) : {message}'
 
 
 def main():
@@ -200,7 +84,6 @@ def main():
     if not os.path.isdir(mod_sys_dir):
         print('error could not resolve mod system directory')
         sys.exit(1)
-
 
     # read the default config
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
@@ -275,6 +158,7 @@ def main():
 
     manifest_path = os.path.join(mod_dir, '.make')
 
+    # if we are doing a clean build, remove the manifest file
     if args.clean and os.path.isfile(manifest_path):
         os.remove(manifest_path)
 
@@ -301,14 +185,18 @@ def main():
         if not args.ignore_dependencies and package_build_count > 0:
             package_status = PACKAGE_CASCADE
 
+        # calculate the package CRC for all of the files in the package
         package_src_dir = os.path.join(args.dir, package, 'Classes')
         package_crc = 0
 
         for root, dirs, filenames in os.walk(package_src_dir):
             for filename in filter(lambda x: x.endswith('.uc'), filenames):
-                with open(os.path.join(root, filename), 'rb') as f:
+                path = os.path.join(root, filename)
+                with open(path, 'rb') as f:
                     package_crc = crc32(f.read(), package_crc)
 
+        # check the package CRC vs the saved package CRC
+        # if there is a mismatch, add the package to the list of changed packages
         if package not in package_crcs or package_crcs[package] != package_crc:
             changed_packages.add(package + '.u')
             package_status = PACKAGE_SOURCE_MISMATCH
@@ -322,103 +210,142 @@ def main():
     up_to_date_packages = set([package for (package, status) in package_statuses.items() if status == PACKAGE_OK])
     packages_to_compile = set([package for (package, status) in package_statuses.items() if status != PACKAGE_OK])
     compiled_packages = set()
-    did_build_succeed = True
 
     ucc_log_path = os.path.join(sys_dir, 'UCC.log')
 
-    # write out an empty log file, so that even if there are no
+    # write out an empty log file, so that even if there are n
     # packages to compile, WOTgreal still has a log file to parse
+    if len(packages_to_compile) == 0:
+        print('No packages were marked for compilation')
+        ucc_log_file = open(ucc_log_path, 'w')
+        ucc_log_file.write('Warning: No packages were marked for compilation')
+        ucc_log_file.close()
+        sys.exit(0)
+
+    print('Scanning files with UnrealScriptPlus...')
+    manifest_mtime = 0
+    if os.path.isfile(manifest_path):
+        manifest_mtime = os.stat(manifest_path).st_mtime
+
+    usp_error_count = 0
+    usp_files_scanned = 0
     ucc_log_file = open(ucc_log_path, 'w')
-    ucc_log_file.write('Warning: No packages were marked for compilation')
+
+    # for files with package source mismatches, find files in those packages that have been modified since
+    # the last successful build and run usp on them
+    usp_start_time = time.monotonic_ns()
+    for package in filter(lambda x: package_statuses[x] == PACKAGE_SOURCE_MISMATCH, packages_to_compile):
+        package_src_dir = os.path.join(args.dir, package[:-2], 'Classes')
+        for root, dirs, filenames in os.walk(package_src_dir):
+            for filename in filter(lambda x: x.endswith('.uc'), filenames):
+                path = os.path.join(root, filename)
+                if os.stat(path).st_mtime >= manifest_mtime:
+                    usp_files_scanned += 1
+                    try:
+                        parse_file(path)
+                    except ScriptParseError as e:
+                        error_string = script_parse_error_to_string(path, e)
+                        ucc_log_file.write(error_string + '\n')
+                        print(error_string)
+                        usp_error_count += 1
+                    except UnicodeEncodeError as e:
+                        ucc_log_file.write(f'Error: {path} (0) : {e}')
+                        usp_error_count += 1
+    usp_duration_ns = time.monotonic_ns() - usp_start_time
     ucc_log_file.close()
 
-    if len(packages_to_compile) > 0:
-        print_header('Build started for mod: {}'.format(args.mod))
+    if usp_files_scanned > 0:
+        print(f"Processed {usp_files_scanned} file(s) in {humanfriendly.format_timespan(usp_duration_ns / 1000000000)}")
 
-        sorted_package_statuses = filter(
-            lambda x: x + '.u' in package_statuses and package_statuses[x + '.u'] != PACKAGE_OK, packages)
-        sorted_package_statuses = [(package, package_statuses[package + '.u']) for package in sorted_package_statuses]
+    if usp_error_count > 0:
+        sys.exit(1)
 
-        for package, status in sorted_package_statuses:
-            print('{}: {}'.format(package, PACKAGE_STATUS_STRINGS[status]))
+    print_header('Build started for mod: {}'.format(args.mod))
 
-        # delete packages marked for compiling from both the root AND mod system folder
-        for package in packages_to_compile:
-            for package_dir in [sys_dir, mod_sys_dir]:
-                package_path = os.path.join(package_dir, package)
-                if os.path.isfile(package_path):
-                    try:
-                        os.remove(package_path)
-                    except OSError:
-                        print(
-                            'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
-                        sys.exit(1)
+    sorted_package_statuses = filter(
+        lambda x: x + '.u' in package_statuses and package_statuses[x + '.u'] != PACKAGE_OK, packages)
+    sorted_package_statuses = [(package, package_statuses[package + '.u']) for package in sorted_package_statuses]
 
-        os.chdir(sys_dir)
+    for package, status in sorted_package_statuses:
+        print('{}: {}'.format(package, PACKAGE_STATUS_STRINGS[status]))
 
-        if not os.path.exists(os.path.join(sys_dir, 'ucc.exe')):
-            print('error: compiler executable not found (do you have the SDK installed?)')
-            sys.exit(1)
+    # delete packages marked for compiling from both the root AND mod system folder
+    for package in packages_to_compile:
+        for package_dir in [sys_dir, mod_sys_dir]:
+            package_path = os.path.join(package_dir, package)
+            if os.path.isfile(package_path):
+                try:
+                    os.remove(package_path)
+                except OSError:
+                    print(
+                        'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
+                    sys.exit(1)
 
-        # run ucc make
-        ucc_args = ['ucc', 'make', '-mod=' + args.mod, '-silentbuild']
-        if args.debug:
-            ucc_args.append('-debug')
-        proc = subprocess.Popen(ucc_args)
-        proc.communicate()
+    os.chdir(sys_dir)
 
-        # store contents of ucc.log before it's overwritten
-        ucc_log_file = open(ucc_log_path, 'rb')
-        ucc_log_contents = ucc_log_file.read()
-        ucc_log_file.close()
+    if not os.path.exists(os.path.join(sys_dir, 'ucc.exe')):
+        print('error: compiler executable not found (do you have the SDK installed?)')
+        sys.exit(1)
 
-        # move compiled packages to mod directory
+    # run ucc make
+    ucc_args = ['ucc', 'make', '-mod=' + args.mod, '-silentbuild']
+    if args.debug:
+        ucc_args.append('-debug')
+    proc = subprocess.Popen(ucc_args)
+    proc.communicate()
+
+    # store contents of ucc.log before it's overwritten
+    ucc_log_file = open(ucc_log_path, 'rb')
+    ucc_log_contents = ucc_log_file.read()
+    ucc_log_file.close()
+
+    # move compiled packages to mod directory
+    for root, dirs, filenames in os.walk(sys_dir):
+        for filename in filenames:
+            if filename in packages_to_compile:
+                shutil.copy(os.path.join(root, filename), mod_sys_dir)
+                os.remove(os.path.join(root, filename))
+                compiled_packages.add(filename)
+
+    # run dumpint on changed and compiled packages
+    if args.dumpint:
+        print('running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
+        processes = []
+        for package in (compiled_packages & changed_packages):
+            processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
+
+        [p.wait() for p in processes]
+
+        # move localization files to mod directory
         for root, dirs, filenames in os.walk(sys_dir):
             for filename in filenames:
-                if filename in packages_to_compile:
+                if filename.replace('.int', '.u') in packages_to_compile:
                     shutil.copy(os.path.join(root, filename), mod_sys_dir)
                     os.remove(os.path.join(root, filename))
-                    compiled_packages.add(filename)
 
-        # run dumpint on changed and compiled packages
-        if args.dumpint:
-            print('running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
-            processes = []
-            for package in (compiled_packages & changed_packages):
-                processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
+    # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
+    ucc_log_file = open(ucc_log_path, 'wb')
+    ucc_log_file.truncate()
+    ucc_log_file.write(ucc_log_contents)
+    ucc_log_file.close()
 
-            [p.wait() for p in processes]
+    did_build_succeed = len(compiled_packages) == len(packages_to_compile)
 
-            # move localization files to mod directory
-            for root, dirs, filenames in os.walk(sys_dir):
-                for filename in filenames:
-                    if filename.replace('.int', '.u') in packages_to_compile:
-                        shutil.copy(os.path.join(root, filename), mod_sys_dir)
-                        os.remove(os.path.join(root, filename))
+    for package_name in compiled_packages:
+        package_name = os.path.splitext(package_name)[0]
+        old_package_crcs[package_name] = package_crcs[package_name]
 
-        # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
-        ucc_log_file = open(ucc_log_path, 'wb')
-        ucc_log_file.truncate()
-        ucc_log_file.write(ucc_log_contents)
-        ucc_log_file.close()
+    # delete the CRCs of changed packages that failed to compile
+    for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
+        package_name = os.path.splitext(package_name)[0]
+        del old_package_crcs[package_name]
 
-        did_build_succeed = len(compiled_packages) == len(packages_to_compile)
-
-        for package_name in compiled_packages:
-            package_name = os.path.splitext(package_name)[0]
-            old_package_crcs[package_name] = package_crcs[package_name]
-
-        # delete the CRCs of changed packages that failed to compile
-        for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
-            package_name = os.path.splitext(package_name)[0]
-            del old_package_crcs[package_name]
-
-        # write package manifest
-        try:
-            with open(manifest_path, 'w') as f:
-                json.dump(old_package_crcs, f)
-        except OSError:
-            print('could not write mod make manifest')
+    # write package manifest
+    try:
+        with open(manifest_path, 'w') as f:
+            json.dump(old_package_crcs, f)
+    except OSError:
+        print('could not write mod make manifest')
 
     print_header('Build: {} succeeded, {} failed, {} skipped, {} up-to-date'.format(
         len(compiled_packages),
