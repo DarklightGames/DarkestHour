@@ -1142,10 +1142,9 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 }
 
 // Give spotter a point or two for spotting a kill
-function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
+function ScoreFireSupportSpottingAssist(Controller Spotter)
 {
-    // DEPRECATED FOR NOW
-    return;
+    SendScoreEvent(Spotter, class'DHScoreEvent_FireSupportSpottingAssist'.static.Create());
 }
 
 // Modified to prevent fellow vehicle crewman from getting kills and score for yours
@@ -2094,8 +2093,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i, ArtilleryRequestExpiryTime;
+    local int        i;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
+    local array<DHGameReplicationInfo.MapMarker> FireSupportMapMarkers;
 
     if (Killed == none)
     {
@@ -2119,11 +2119,25 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
         if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
         {
-            ArtilleryRequestExpiryTime = DHKiller.ArtilleryHitInfo.ExpiryTime;
-            if((ArtilleryRequestExpiryTime == -1 || ArtilleryRequestExpiryTime > ElapsedTime)
-                && DHKiller.ArtilleryHitInfo.bIsWithinRadius)
+            // Check if this kill is in range of any active fire support markers.
+            FireSupportMapMarkers = GRI.GetFireSupportMapMarkersAtLocation(DHKiller, KilledPawn.Location);
+
+            if (FireSupportMapMarkers.Length > 0)
             {
-                DamageType =  class'DHArtilleryKillDamageType';
+                // This kill took place within range of a fire support marker.
+                DamageType = class'DHArtilleryKillDamageType';
+
+                // Award points to the person who made the fire support marker.
+                if (Killer.GetTeamNum() != Killed.GetTeamNum())
+                {
+                    for (i = 0; i < FireSupportMapMarkers.Length; ++i)
+                    {
+                        if (FireSupportMapMarkers[i].Author != none)
+                        {
+                            ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
+                        }
+                    }
+                }
             }
         }
 
@@ -2442,24 +2456,6 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    // Special case handling for artillery kills. Send message only to the killer & victim.
-    if (class<DHArtilleryKillDamageType>(DamageType) != none && (DeathMessageMode == DM_Personal || DeathMessageMode == DM_OnDeath))
-    {
-        // Send DM to a killed human player
-        if (DHPlayer(Killed) != none)
-        {
-            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
-        }
-
-        // If mode is Personal, also send DM to the killer (if human)
-        if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
-        {
-            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
-        }
-
-        return;
-    }
-
     // (Message mode is none Or Killed doesn't exist) AND DamageType is not type DHInstantObituaryDamageTypes, then return
     if ((DeathMessageMode == DM_None || Killed == none) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
     {
@@ -2472,6 +2468,22 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     }
 
     KilledPRI = Killed.PlayerReplicationInfo;
+
+    // Special case handling for artillery kills. Send message only to the killer & victim.
+    if (class<DHArtilleryKillDamageType>(DamageType) != none)
+    {
+        if (DHPlayer(Killed) != none)
+        {
+            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        if (DHPlayer(Killer) != none)
+        {
+            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        return;
+    }
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
     // (If message mode is OnDeath or Personal) AND DamageType is not type DHInstantObituaryDamageTypes
@@ -2493,7 +2505,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         return;
     }
 
-    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a DHInstantObituaryDamageTypes
+    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a DHInstantObituaryDamageTypes (spawn kill)
     // Loop through all controllers & DM each human player
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
@@ -2635,7 +2647,8 @@ state RoundInPlay
         {
             GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
             GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
-            GRI.TeamConstructions[i].Limit = DHLevelInfo.TeamConstructions[i].Limit;
+            GRI.TeamConstructions[i].Remaining = DHLevelInfo.TeamConstructions[i].Limit;
+            GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
         }
 
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
@@ -3097,17 +3110,38 @@ state RoundInPlay
 
 function UpdateTeamConstructions()
 {
-    local int i;
+    local int i, Count;
 
     // Check for if we can replenish any team constructions
     for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
     {
-        if (DHLevelInfo.TeamConstructions[i].Limit - GRI.TeamConstructions[i].Limit > 0 &&
-            DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0 &&
-            GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+        // Check if all available constructions are remaining.
+        if (GRI.TeamConstructions[i].Remaining == DHLevelInfo.TeamConstructions[i].Limit)
         {
-            GRI.TeamConstructions[i].Limit += 1;
-            GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+            continue;
+        }
+
+        // Check if this construction replenishes over time.
+        if (DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0)
+        {
+            // Get the number of extant constructions that this team has on the field.
+            Count = ConstructionManager.CountOf(DHLevelInfo.TeamConstructions[i].TeamIndex, DHLevelInfo.TeamConstructions[i].ConstructionClass);
+
+            // Check if we need to set the NextIncrementTimeSeconds variable
+            // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
+            if (Count < DHLevelInfo.TeamConstructions[i].Limit && GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+            {
+                // Our next increment time has not been set.
+                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+            }
+            else
+            {
+                if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
+                {
+                    GRI.TeamConstructions[i].Remaining += 1;
+                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
+                }
+            }
         }
     }
 }
@@ -5860,9 +5894,9 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=10
-        Minor=0
-        Patch=0
-        Prerelease="beta.3"
+        Minor=1
+        Patch=1
+        Prerelease=""
     End Object
     Version=VersionObject
 

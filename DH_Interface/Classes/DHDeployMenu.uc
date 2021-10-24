@@ -1903,7 +1903,7 @@ defaultproperties
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
-    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to retreat."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
     SurrenderButtonText[0]="Retreat"

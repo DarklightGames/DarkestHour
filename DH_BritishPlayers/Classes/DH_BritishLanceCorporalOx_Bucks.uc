@@ -14,4 +14,7 @@ defaultproperties
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
+
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkVWeapon')
+    PrimaryWeapons(2)=(Item=none)
 }

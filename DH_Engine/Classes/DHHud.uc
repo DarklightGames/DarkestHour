@@ -2789,6 +2789,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     CompassIcons.WidgetTexture = default.CompassIcons.WidgetTexture;
 
@@ -2952,6 +2953,8 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 
     if (PC != none)
     {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
         // Personal markers
         PersonalMapMarkers = PC.GetPersonalMarkers();
 
@@ -2961,15 +2964,23 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Map markers
-        MapMarkers = DHGRI.GetMapMarkers(PC);
-
-        for (i = 0; i < MapMarkers.Length; ++i)
+        if (PRI != none)
         {
-            Target.X = float(MapMarkers[i].LocationX) / 255.0;
-            Target.Y = float(MapMarkers[i].LocationY) / 255.0;
-            Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
+            MapMarkers = DHGRI.GetMapMarkers(PC);
 
-            DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, MapMarkers[i].MapMarkerClass, Target, Current, XL, YL);
+            for (i = 0; i < MapMarkers.Length; ++i)
+            {
+                if (!MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+                {
+                    continue;
+                }
+
+                Target.X = float(MapMarkers[i].LocationX) / 255.0;
+                Target.Y = float(MapMarkers[i].LocationY) / 255.0;
+                Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
+
+                DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, MapMarkers[i].MapMarkerClass, Target, Current, XL, YL);
+            }
         }
 
         // Squad leader
@@ -6044,6 +6055,7 @@ defaultproperties
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarTeamIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
+    NeedsClearedText=" (Not Secured)"
     EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Player figure/health icon

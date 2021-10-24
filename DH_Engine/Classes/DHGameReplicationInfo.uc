@@ -136,11 +136,11 @@ struct STeamConstruction
 {
     var class<DHConstruction> ConstructionClass;
     var byte TeamIndex;
-    var byte Limit;
+    var byte Remaining;
     var int NextIncrementTimeSeconds;
 };
 
-var array<STeamConstruction> TeamConstructions[16];
+var STeamConstruction   TeamConstructions[16];
 
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
@@ -157,11 +157,12 @@ var private byte        OldDangerZoneBalance;
 // Map markers
 struct MapMarker
 {
+    var DHPlayerReplicationInfo Author;
     var class<DHMapMarker> MapMarkerClass;
     var byte LocationX;                     // Quantized representation of 0.0..1.0 - X coordinate
     var byte LocationY;                     // Quantized representation of 0.0..1.0 - Y coordinate
     var byte SquadIndex;                    // The squad index that owns the marker, or -1 if team-wide
-    var int CreationTime;                     // The time this marker was created, relative to ElapsedTime
+    var int CreationTime;                   // The time this marker was created, relative to ElapsedTime
     var int ExpiryTime;                     // The expiry time, relative to ElapsedTime
     var vector WorldLocation;               // World location of the marker
 };
@@ -385,7 +386,7 @@ simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex
     return -1;
 }
 
-simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruction> ConstructionClass)
+simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int i;
 
@@ -396,7 +397,7 @@ simulated function int GetTeamConstructionLimit(int TeamIndex, class<DHConstruct
        return -1;
     }
 
-    return TeamConstructions[i].Limit;
+    return TeamConstructions[i].Remaining;
 }
 
 simulated function PostNetBeginPlay()
@@ -1463,7 +1464,7 @@ simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional
 
     if (MM.MapMarkerClass == none || IsMapMarkerExpired(MM))
     {
-       return false;
+        return false;
     }
 
     MapMarker = MM;
@@ -1496,6 +1497,33 @@ simulated function array<MapMarker> GetMapMarkers(DHPlayer PC)
             break;
         default:
             break;
+    }
+
+    return MapMarkers;
+}
+
+simulated function array<MapMarker> GetFireSupportMapMarkersAtLocation(DHPlayer PC, vector WorldLocation)
+{
+    local int i;
+    local array<MapMarker> MapMarkers;
+    local float Distance, DistanceThreshold;
+
+    DistanceThreshold = class'DHUnits'.static.MetersToUnreal(class'DHMapMarker_ArtilleryHit'.default.VisibilityRange);
+
+    MapMarkers = GetMapMarkers(PC);
+
+    for (i = MapMarkers.Length - 1; i >= 0; --i)
+    {
+        Distance = VSize(MapMarkers[i].WorldLocation - WorldLocation);
+
+        if (IsMapMarkerExpired(MapMarkers[i]) ||
+            MapMarkers[i].MapMarkerClass == none ||
+            MapMarkers[i].MapMarkerClass.default.Type != MT_OnMapArtilleryRequest ||
+            Distance > DistanceThreshold)
+        {
+            MapMarkers.Remove(i, 1);
+            continue;
+        }
     }
 
     return MapMarkers;
@@ -1574,6 +1602,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
         return -1;
     }
 
+    M.Author = PRI;
     M.MapMarkerClass = MapMarkerClass;
     M.CreationTime = ElapsedTime;
 

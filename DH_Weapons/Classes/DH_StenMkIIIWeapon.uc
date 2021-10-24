@@ -7,7 +7,7 @@ class DH_StenMkIIIWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sten MkIII"
+    ItemName="STEN Mk.III"
     FireModeClass(0)=class'DH_Weapons.DH_StenMkIIIFire'
     FireModeClass(1)=class'DH_Weapons.DH_StenMkIIIMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_StenMkIIIAttachment'
@@ -17,13 +17,12 @@ defaultproperties
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    
+
     Skins(2)=Texture'DH_Sten_tex.Sten.StenMk3_tex'
     HandNum=0
     SleeveNum=1
-
-    SwayModifyFactor=0.71 // -0.09
     
+    SwayModifyFactor=0.63 // -0.17
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=65.0

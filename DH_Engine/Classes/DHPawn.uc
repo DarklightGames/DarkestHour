@@ -2388,7 +2388,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
         }
         else if (Species != none)
         {
-            RagSkelName = Species.static.GetRagSkelName( GetMeshName() );
+            RagSkelName = Species.static.GetRagSkelName(GetMeshName());
         }
         else
         {
@@ -2967,6 +2967,32 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
     GotoState('Dying');
 
     PlayDyingAnimation(DamageType, HitLoc);
+}
+
+simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
+{
+    local int i;
+    local FinalBlend FB;
+
+    if (Level.bDropDetail || Level.DetailMode == DM_Low)
+    {
+        Time *= 0.75;
+    }
+
+    // Combiners do not play nice with the overlay system! We have to pre-prime
+    // our skins to use FinalBlend, otherwise the skins will be invisible when
+    // an the overlay material is applied..
+    for (i = 0; i < Skins.Length; ++i)
+    {
+        if (Skins[i].IsA('Combiner'))
+        {
+            FB = new class'FinalBlend';
+            FB.Material = Skins[i];
+            Skins[i] = FB;
+        }
+    }
+
+    super.SetOverlayMaterial(Mat, Time, bOverride);
 }
 
 // Prevent damage overlay from overriding burnt overlay
@@ -7481,7 +7507,7 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=50.0                        // How many second of stamina the player has
+    Stamina=40.0                        // How many second of stamina the player has
     StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
     StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
     CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching

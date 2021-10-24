@@ -563,7 +563,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
     local DHGameReplicationInfo GRI;
     local float GunYawMaxTruncated, GunYawMinTruncated;
     local array<DHGameReplicationInfo.MapMarker> ArtilleryMarkers;
-    local bool bSelectedMarkerNotAvailable;
+    local bool bSelectedMarkerAvailable;
     local string Label;
     local Color LabelColor;
     local float CurrentYaw, GunYawMin, GunYawMax;
@@ -594,18 +594,20 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
     GRI.GetGlobalArtilleryMapMarkers(PC, ArtilleryMarkers);
 
-    // check if the player has selected any marker
-    bSelectedMarkerNotAvailable = PC.ArtillerySupportSquadIndex != 255 && ArtilleryMarkers.Length > 0;
+    bSelectedMarkerAvailable = false;
 
-    if (bSelectedMarkerNotAvailable)
+    if (PC.ArtillerySupportSquadIndex != 255)
     {
-        // The player selected some marker
-        // Let's check if that marker is still available
+        // The player selected some marker - let's check if that marker has not expired yet.
+        // Unfortunately we have to iterate over the whole array
+        // because the selection of the target is driven by squad's number
+        // and not by the index of the marker in the actual array of targets.
         for (i = 0; i < ArtilleryMarkers.Length; ++i)
         {
-            if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex)
+            if (ArtilleryMarkers[i].SquadIndex == PC.ArtillerySupportSquadIndex &&
+                ArtilleryMarkers[i].ExpiryTime > GRI.ElapsedTime)
             {
-                bSelectedMarkerNotAvailable = false;
+                bSelectedMarkerAvailable = true;
                 break;
             }
         }
@@ -613,14 +615,14 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
 
     LabelColor = class'UColor'.default.White;
 
-    if (ArtilleryMarkers.Length > 0 && (bSelectedMarkerNotAvailable || PC.ArtillerySupportSquadIndex == 255))
+    if (ArtilleryMarkers.Length > 0 && (!bSelectedMarkerAvailable || PC.ArtillerySupportSquadIndex == 255))
     {
         // The player hasn't chosen anything from the available requests
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
         // Flash the label to get the player's attention
         LabelColor = class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
     }
-    else if (!bSelectedMarkerNotAvailable && PC.ArtillerySupportSquadIndex != 255)
+    else if (bSelectedMarkerAvailable)
     {
         if (ArtilleryMarkers.Length > 1)
         {
@@ -1069,4 +1071,3 @@ defaultproperties
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
 }
-

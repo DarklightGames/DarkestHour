@@ -7,7 +7,7 @@ class DH_StenMkIIWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sten MkII"
+    ItemName="STEN Mk.II"
     FireModeClass(0)=class'DH_Weapons.DH_StenMkIIFire'
     FireModeClass(1)=class'DH_Weapons.DH_StenMkIIMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_StenMkIIAttachment'
@@ -17,13 +17,13 @@ defaultproperties
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    
+
     Skins(2)=Texture'DH_Sten_tex.Sten.StenMk2_tex'
     HandNum=0
     SleeveNum=1
 
     SwayModifyFactor=0.69 // -0.11
-    
+
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=65.0

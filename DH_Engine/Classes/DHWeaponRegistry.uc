@@ -147,4 +147,5 @@ defaultproperties
     Records(87)=(ClassName="DH_Weapons.DH_BARNoBipodWeapon",WeaponNames=("barnobipod"))
     Records(88)=(ClassName="DH_Weapons.DH_StenMkIIIWeapon",WeaponNames=("stenmk3", "sten3"))
     Records(89)=(ClassName="DH_Weapons.DH_StenMkIICWeapon",WeaponNames=("stenmk2c", "sten2c", "stenc"))
+    Records(90)=(ClassName="DH_Weapons.DH_StenMkVWeapon",WeaponNames=("stenmk5", "sten5"))
 }

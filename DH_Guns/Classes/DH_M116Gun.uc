@@ -25,7 +25,7 @@ defaultproperties
     ShadowZOffset=10.0
     RotateCooldown=2
     ConstructionBaseMesh=Mesh'DH_M116_anm.m116_base'
-    SupplyCost=2000
+    SupplyCost=1500
     bIsArtilleryVehicle=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
