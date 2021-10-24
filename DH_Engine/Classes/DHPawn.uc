@@ -7507,7 +7507,7 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=50.0                        // How many second of stamina the player has
+    Stamina=40.0                        // How many second of stamina the player has
     StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
     StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
     CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching
