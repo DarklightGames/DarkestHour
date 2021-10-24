@@ -13,6 +13,7 @@ defaultproperties
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
+    bAnimNotifiedShellEjects=true
     bRapidFire=false
 
     WA_Idle="idle_enfieldno4"

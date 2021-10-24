@@ -91,7 +91,7 @@ simulated exec function Deploy()
     }
 }
 
-// New function to check whether the player can deploy the mortar where he is, with explanatory screen messages if he can't
+// New function to check whether the player can deploy the mortar where they are, with explanatory screen messages if they can't
 simulated function bool CanDeploy(DHPawn P)
 {
     local Actor        HitActor;
@@ -103,7 +103,7 @@ simulated function bool CanDeploy(DHPawn P)
 
     // Can't deploy if we're busy, raising the weapon, on fire or somehow crawling
     // If we don't check state RaisingWeapon, it allows the player to almost instantaneously redeploy a mortar after undeploying
-    if (P == none || IsBusy() || IsInState('RaisingWeapon') || P.bOnFire || P.bIsCrawling)
+    if (P == none || P.Controller == none || IsBusy() || IsInState('RaisingWeapon') || P.bOnFire || P.bIsCrawling)
     {
         return false;
     }
@@ -112,7 +112,7 @@ simulated function bool CanDeploy(DHPawn P)
 
     // Can't deploy if we're in a no arty volume
     VolumeTest = Spawn(class'DHVolumeTest',,, P.Location);
-    bIsInNoArtyVolume = VolumeTest != none && VolumeTest.IsInNoArtyVolume();
+    bIsInNoArtyVolume = VolumeTest != none && VolumeTest.DHIsInNoArtyVolume(DHGameReplicationInfo(PlayerController(P.Controller).GameReplicationInfo));
     VolumeTest.Destroy();
 
     if (bIsInNoArtyVolume)
@@ -268,7 +268,15 @@ simulated function bool HasAmmo()
 // Implemented to check the DHPawn's ResupplyMortarAmmunition() function when another player tries to give ammo to the mortar carrier
 function bool ResupplyAmmo()
 {
-    return DHPawn(Instigator) != none && DHPawn(Instigator).ResupplyMortarAmmunition();
+    local bool bResupplied;
+    bResupplied = (Level.TimeSeconds > (LastResupplyTimestamp + ResupplyInterval))
+        && DHPawn(Instigator) != none
+        && DHPawn(Instigator).ResupplyMortarAmmunition();
+    if (bResupplied)
+    {
+        LastResupplyTimestamp = Level.TimeSeconds;
+    }
+    return bResupplied;
 }
 
 // Emptied out as mortar uses a different system in ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with check whether the resupply area can resupply mortars

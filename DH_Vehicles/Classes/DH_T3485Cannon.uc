@@ -14,7 +14,7 @@ defaultproperties
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
-    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col')
 
     // Turret armor
     FrontArmorFactor=8.4 //9.0 cm reduced by cast armor modifier 93%

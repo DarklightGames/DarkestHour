@@ -13,7 +13,8 @@ def spawn_client(args, index):
         # 'start',
         cloned_client_path,
         args.multihome,
-        f'-mod={args.mod}'
+        f'-mod={args.mod}',
+        "-log=DHClient_%RANDOM%.log"
     ]
     subprocess.Popen(client_args)
 

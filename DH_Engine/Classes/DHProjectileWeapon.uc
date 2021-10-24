@@ -544,6 +544,11 @@ simulated event StopFire(int Mode)
     }
 }
 
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // Debug execs to enable sight debugging and calibration, to make sure textured sight overlay is exactly centred
 exec function DebugSights()
 {
@@ -559,6 +564,14 @@ exec function CorrectY(float NewValue)
 {
     Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
     OverlayCorrectionY = NewValue;
+}
+
+exec function EmptyMags()
+{
+    if (IsDebugModeAllowed())
+    {
+        PrimaryAmmoArray.Remove(0, PrimaryAmmoArray.Length);
+    }
 }
 
 function SetServerOrientation(rotator NewRotation)
@@ -2004,21 +2017,24 @@ function bool ResupplyAmmo()
 {
     local int i;
 
-    if (bCanBeResupplied && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        for (i = 0; i < NumMagsToResupply; ++i)
+        if (bCanBeResupplied && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {
-            PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
-
-            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+            for (i = 0; i < NumMagsToResupply; ++i)
             {
-                break;
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
+
+                if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+                {
+                    break;
+                }
             }
+
+            UpdateResupplyStatus(true);
+            LastResupplyTimestamp = Level.TimeSeconds;
+            return true;
         }
-
-        UpdateResupplyStatus(true);
-
-        return true;
     }
 
     return false;
@@ -2030,39 +2046,46 @@ function bool FillAmmo()
     local int  InitialAmount, i;
     local bool bDidFillAmmo;
 
-    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
-
-    // If we can carry more mags, add one or more (no. added is FillAmmoMagCount)
-    if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        for (i = 0; i < default.FillAmmoMagCount; ++i)
-        {
-            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
-            bDidFillAmmo = true;
+        InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
-            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
-            {
-                break;
-            }
-        }
-    }
-    // Otherwise, if we already have max mags, try to find a mag that isn't full & swap it for a new full mag
-    else if (FillAmmoMagCount > 0)
-    {
-        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+        // If we can carry more mags, add one or more (no. added is FillAmmoMagCount)
+        if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {
-            if (PrimaryAmmoArray[i] < InitialAmount && i != CurrentMagIndex) // skip over the current mag, as we have to do a manual reload to physically swap that mag out
+            for (i = 0; i < default.FillAmmoMagCount; ++i)
             {
-                PrimaryAmmoArray[i] = InitialAmount;
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
                 bDidFillAmmo = true;
-                break;
+
+                if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+                {
+                    break;
+                }
             }
         }
-    }
+        // Otherwise, if we already have max mags, try to find a mag that isn't full & swap it for a new full mag
+        else if (FillAmmoMagCount > 0)
+        {
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+            {
+                if (PrimaryAmmoArray[i] < InitialAmount && i != CurrentMagIndex) // skip over the current mag, as we have to do a manual reload to physically swap that mag out
+                {
+                    PrimaryAmmoArray[i] = InitialAmount;
+                    bDidFillAmmo = true;
+                    break;
+                }
+            }
+        }
 
-    if (bDidFillAmmo && IsCurrentWeapon())
+        if (bDidFillAmmo && IsCurrentWeapon())
+        {
+            UpdateResupplyStatus(true);
+        }
+    }
+    if (bDidFillAmmo)
     {
-        UpdateResupplyStatus(true);
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidFillAmmo;

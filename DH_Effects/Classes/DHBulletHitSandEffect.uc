@@ -239,7 +239,7 @@ defaultproperties
         UseRandomSubdivision=True
         Acceleration=(Z=-500.0)
         ColorScale(0)=(Color=(B=108,G=158,R=174,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=148,G=198,R=214,A=255)))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=148,G=198,R=214,A=255))
         FadeOutStartTime=0.10000
         Opacity=0.6
         MaxParticles=4

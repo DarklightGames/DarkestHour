@@ -8,7 +8,7 @@ class DH_Cromwell6PdrCannon extends DH_CromwellCannon;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell6pdr_turret_ext'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell6pdr_turret_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell6pdr_turret_Coll')
     ProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShellHE'

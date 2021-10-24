@@ -9,7 +9,7 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_turret_ext'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll')
 
     // Turret armor
     FrontArmorSlope=15.0

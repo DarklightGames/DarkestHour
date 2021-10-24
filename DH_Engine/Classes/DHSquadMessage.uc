@@ -59,6 +59,7 @@ var localized string SquadMergedDestinationMessage;
 var localized string SquadMergeRequestDeniedMessage;
 var localized string SquadMergeRequestDeniedGenericMessage;
 var localized string SquadMergeFailedMessage;
+var localized string SquadTargetSelectionRefused;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -196,6 +197,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.RallyPointExposed;
         case 80:
             return default.RallyPointBehindEnemyLines;
+        case 81:
+            return default.SquadTargetSelectionRefused;
         default:
             break;
     }
@@ -259,6 +262,7 @@ defaultproperties
     SquadMergeRequestDeniedMessage="Your squad merge request was denied by {0} squad."
     SquadMergeRequestDeniedGenericMessage="Your squad merge was denied."
     SquadMergeFailedMessage="The squad merge failed,"
+    SquadTargetSelectionRefused="You are an artillery spotter. You cannot switch the active artillery target to your own marker."
 
     bIsSpecial=false
     bIsConsoleMessage=true

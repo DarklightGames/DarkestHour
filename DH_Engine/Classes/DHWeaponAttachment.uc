@@ -20,6 +20,10 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
 
+var     bool    bUseWeaponLight; // for testing purposes only
+
+var     vector  mMuzFlashOffset; // allows us to customize location of muzzle flash effect
+
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
@@ -37,6 +41,7 @@ simulated function PostBeginPlay()
         if (mMuzFlashClass != none)
         mMuzFlash3rd = Spawn(mMuzFlashClass);
         AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+        mMuzFlash3rd.SetRelativeLocation(mMuzFlashOffset);
     }
 }
 
@@ -134,8 +139,8 @@ simulated function SpawnShells(float Frequency)
 
 simulated function WeaponLight()
 {
-    if ( (FlashCount > 0) && !Level.bDropDetail && (Instigator != None)
-        && ((Level.TimeSeconds - LastRenderTime < 0.2) || (PlayerController(Instigator.Controller) != None)) )
+    if ( (FlashCount > 0) && !Level.bDropDetail && (Instigator != None) && bUseWeaponLight )
+        //&& ((Level.TimeSeconds - LastRenderTime < 0.2) || (PlayerController(Instigator.Controller) != None)) )
     {
         if ( Instigator.IsFirstPerson() )
         {
@@ -429,6 +434,9 @@ defaultproperties
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
     SplashEffect=class'DHBulletHitWaterEffect'
+
+    bUseDynamicLights=true
+    bUseWeaponLight=true
 
     //Weapon Light
     bDynamicLight=false

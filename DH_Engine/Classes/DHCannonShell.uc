@@ -17,6 +17,8 @@ var()   array<RangePoint>   MechanicalRanges;     // the range setting values fo
 var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
 var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
 
+var()   class<DHMapMarker_ArtilleryHit>  HitMapMarkerClass;
+
 simulated function PostBeginPlay()
 {
     // Set a longer lifespan for the shell if there is a possibility of a very long range shot
@@ -132,6 +134,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         {
             SpawnExplosionEffects(HitLocation, HitNormal);
             bDidExplosionFX = true;
+        }
+
+        if (HitMapMarkerClass != none)
+        {
+            SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
         }
 
         if (bDebugBallistics)

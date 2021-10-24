@@ -5,8 +5,6 @@
 
 class DH_Pak38ATGun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Pak40_anm.ukx
-
 simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;

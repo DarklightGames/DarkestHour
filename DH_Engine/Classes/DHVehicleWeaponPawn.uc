@@ -31,6 +31,11 @@ var     float       GunsightSize;                // size of the gunsight overlay
 var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
 
+// Spotting scope overlay
+var     int                             SpottingScopePositionIndex;
+var     class<DHArtillerySpottingScope> ArtillerySpottingScopeClass;
+var     DHArtillerySpottingScope        ArtillerySpottingScope;
+
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
@@ -52,7 +57,9 @@ replication
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS ************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
+// Modified so if InitialPositionIndex is not zero, we match position indexes
+// now so when a player gets in, we don't trigger an up transition by changing
+// DriverPositionIndex
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -198,8 +205,8 @@ simulated function DrawBinocsOverlay(Canvas C)
         TextureSize = float(BinocsOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / BinocsOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        TileStartPosU = (TextureSize - TilePixelWidth) * 0.5;
+        TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
@@ -208,6 +215,70 @@ simulated function DrawBinocsOverlay(Canvas C)
     }
 }
 
+simulated function DrawSpottingScopeOverlay(Canvas C)
+{
+    if (Role == ROLE_Authority && Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (ArtillerySpottingScope == none)
+    {
+        ArtillerySpottingScope = new ArtillerySpottingScopeClass;
+    }
+
+    ArtillerySpottingScope.Draw(DHPlayer(Controller), C, self);
+}
+
+// These values are for easily grabbing the range and current value of pitch and yaw values.
+// Primarily for use in drawing the spotting scope knobs.
+simulated function int GetGunYaw()
+{
+    local int Yaw;
+
+    Yaw = VehWep.CurrentAim.Yaw;
+
+    if (Yaw >= 32768)
+    {
+        Yaw -= 65536;
+    }
+
+    return Yaw;
+}
+
+simulated function int GetGunYawMin()
+{
+    return VehWep.MaxNegativeYaw;
+}
+
+simulated function int GetGunYawMax()
+{
+    return VehWep.MaxPositiveYaw;
+}
+
+simulated function int GetGunPitch()
+{
+    local int Pitch;
+
+    Pitch = VehWep.CurrentAim.Pitch;
+
+    if (Pitch >= 32768)
+    {
+        Pitch -= 65536;
+    }
+
+    return Pitch;
+}
+
+simulated function int GetGunPitchMin()
+{
+    return VehWep.CustomPitchDownLimit - 65535;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return VehWep.CustomPitchUpLimit;
+}
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation
 // Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
 // This is because when we enter a vehicle we now call SetInitialViewRotation(), which is already relative to vehicle
@@ -1691,6 +1762,11 @@ static function StaticPrecache(LevelInfo L)
     {
         default.GunClass.static.StaticPrecache(L);
     }
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        L.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to add extra material properties (no need to call the Super, as it's only in Actor & only caches the Skins array, which a weapon pawn doesn't have)
@@ -1700,6 +1776,11 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(GermanBinocsOverlay);
     Level.AddPrecacheMaterial(SovietBinocsOverlay);
     Level.AddPrecacheMaterial(AlliedBinocsOverlay);
+
+    if (default.ArtillerySpottingScope != none)
+    {
+        Level.AddPrecacheMaterial(default.ArtillerySpottingScope.default.SpottingScopeOverlay);
+    }
 }
 
 // Modified to call Initialize functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
@@ -2234,23 +2315,28 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
-    if (VehWep != none && VehWep.CollisionMeshActor != none && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
+    local int i;
+
+    if (VehWep != none && VehWep.CollisionMeshActors.Length > 0 && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
     {
-        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
-        if (VehWep.CollisionMeshActor.DrawType == DT_None)
+        for (i = 0; i < VehWep.CollisionMeshActors.Length; ++i)
         {
-            VehWep.CollisionMeshActor.ToggleVisible();
-        }
-        // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
-        else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
-        {
-            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
-        }
-        // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
-        else
-        {
-            VehWep.CollisionMeshActor.HideOwner(false);
-            VehWep.CollisionMeshActor.ToggleVisible();
+            // If in normal mode, with CSM hidden, we toggle the CSM to be visible
+            if (VehWep.CollisionMeshActors[i].DrawType == DT_None)
+            {
+                VehWep.CollisionMeshActors[i].ToggleVisible();
+            }
+            // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
+            else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+            {
+                VehWep.CollisionMeshActors[i].HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
+            }
+            // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
+            else
+            {
+                VehWep.CollisionMeshActors[i].HideOwner(false);
+                VehWep.CollisionMeshActors[i].ToggleVisible();
+            }
         }
     }
 }
@@ -2397,6 +2483,7 @@ defaultproperties
     bCustomAiming=true
     bHasAltFire=false
     BinocPositionIndex=-1 // none by default, so set an invalid position
+    SpottingScopePositionIndex=-1
     WeaponFOV=0.0 // neutralise inherited RO value, so unless overridden in subclass we will use the player's default view FOV (i.e. player's normal FOV when on foot)
     DriveAnim=""
     TPCamDistance=300.0
@@ -2416,4 +2503,7 @@ defaultproperties
     bAllowViewChange=false
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+    // RangeString="Range"
+    // ElevationString="Elevation"
 }

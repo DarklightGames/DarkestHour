@@ -7,7 +7,7 @@ class DH_StenMkIIAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=33
+    MaxAmmo=32
     InitialAmount=32
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
 }

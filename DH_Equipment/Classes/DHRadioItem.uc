@@ -42,6 +42,7 @@ simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perha
 simulated function PostBeginPlay()
 {
     local DHPawn P;
+    local DHPlayer PC;
 
     P = DHPawn(Instigator);
 
@@ -51,6 +52,17 @@ simulated function PostBeginPlay()
     }
 
     super.PostBeginPlay();
+
+    if (P != none)
+    {
+        PC = DHPlayer(P.Controller);
+
+        if (PC != none && PC.IsRadioman())
+        {
+            // "You are a radio operator! Stay close to squad leaders so they can call in artillery strikes!"
+            PC.QueueHint(13, false);
+        }
+    }
 }
 
 function AttachToPawn(Pawn P)

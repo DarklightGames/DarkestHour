@@ -12,7 +12,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="loader_attachment"

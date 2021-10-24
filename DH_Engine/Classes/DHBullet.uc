@@ -678,8 +678,6 @@ simulated function Deflect(vector HitNormal)
 
     if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) //14.4 m/s
     {
-        AmbientGlow=0.0;
-        LightBrightness=0.0;
         TracerEffect.Destroy();
     }
 

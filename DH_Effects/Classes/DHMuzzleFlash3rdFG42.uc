@@ -92,7 +92,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.35
         FadeOutStartTime=0.25
-        MaxParticles=100//64
+        MaxParticles=64
         Name="gun_smoke"
         StartLocationRange=(X=(Min=-15.0,Max=20.000000))
         UseRotationFrom=PTRS_Actor
@@ -131,32 +131,36 @@ defaultproperties
     End Object
     Emitters(3)=BeamEmitter'BeamEmitter0'
 
-    Begin Object Class=SparkEmitter Name=SparkEmitter0
-        LineSegmentsRange=(Min=0.500000,Max=1.000000)
-        TimeBetweenSegmentsRange=(Min=0.030000,Max=0.07000)
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter80
+        UseDirectionAs=PTDU_UpAndNormal
+        ProjectionNormal=(X=1.000000,Y=0.500000)
+        UseColorScale=True
         RespawnDeadParticles=False
-        UseSizeScale=True
+        SpinParticles=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        ColorScale(0)=(Color=(B=0,G=165,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.75
-        MaxParticles=6
-        Name="sparks"
-        StartLocationOffset=(X=0.0,Y=0.9,Z=1.25)
-        StartLocationRange=(X=(Min=2.00000,Max=4.000000))
-        SizeScale(0)=(RelativeSize=1.000000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.25)
-        InitialParticlesPerSecond=1000.000000
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
+        ColorScaleRepeats=4
+        MaxParticles=64
+        name="sparks"
         UseRotationFrom=PTRS_Actor
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
-        LifetimeRange=(Min=0.100000,Max=0.100000)
-        StartVelocityRange=(X=(Min=20.000000,Max=100.000000),Y=(Min=-30.000000,Max=35.000000),Z=(Min=-35.000000,Max=25.000000))
+        SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
+        StartSizeRange=(X=(Min=0.55,Max=0.75))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=0.15,Max=0.2)
+        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
     End Object
-    Emitters(4)=SparkEmitter'SparkEmitter0'
+    Emitters(4)=SpriteEmitter'SpriteEmitter80'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter16
+        FadeOut=True
         UseColorScale=True
         RespawnDeadParticles=False
         SpinParticles=True
@@ -170,17 +174,16 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128))
         Opacity=0.75
         Name="barrel_puff"
+        FadeOutStartTime=0.15
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Max=1.000000))
         SizeScale(0)=(RelativeSize=0.200000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=25.000000,Max=50.000000))
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.LightSmoke_8Frame'
-        TextureUSubdivisions=4
-        TextureVSubdivisions=4
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
         LifetimeRange=(Min=0.35,Max=0.5500000)
-        StartVelocityRange=(X=(Min=10.000000,Max=25.000000))
+        StartVelocityRange=(X=(Min=-15.000000,Max=5.000000))
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter16'
 }

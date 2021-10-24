@@ -9,7 +9,6 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[3].InitialParticlesPerSecond=100;
     Emitters[4].SpawnParticle(1);
     Emitters[5].SpawnParticle(6);
-    Emitters[5].InitialParticlesPerSecond=100;
 }
 
 defaultproperties
@@ -101,7 +100,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.35
         FadeOutStartTime=0.25
-        MaxParticles=100//64
+        MaxParticles=64//64
         Name="gun_smoke"
         StartLocationRange=(X=(Min=-5.0,Max=50.000000))
         UseRotationFrom=PTRS_Actor
@@ -111,7 +110,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.000000,Max=15.000000))
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
-        InitialParticlesPerSecond=100
+        //InitialParticlesPerSecond=100
         LifetimeRange=(Min=0.55,Max=1.2)
         StartVelocityRange=(X=(Min=100.000000,Max=300.0),Y=(Min=-25.0000,Max=20.000),Z=(Min=-20.000,Max=25.000))
         VelocityLossRange=(X=(Max=1.000000)) //2.0
@@ -159,7 +158,7 @@ defaultproperties
         ColorScaleRepeats=4
         MaxParticles=64
         name="sparks"
-        StartLocationRange=(X=(Min=-5.0,Max=10.000000))
+        //StartLocationRange=(X=(Min=-5.0,Max=10.000000))
         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))

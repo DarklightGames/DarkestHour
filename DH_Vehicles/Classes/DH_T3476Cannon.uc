@@ -14,7 +14,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
-    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-76_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-76_turret_col')
 
     // Turret armor (model 1941)
     FrontArmorFactor=4.5

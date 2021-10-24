@@ -10,7 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.GreaseGun_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_icon'
 
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"

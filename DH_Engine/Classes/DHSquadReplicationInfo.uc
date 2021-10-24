@@ -222,9 +222,8 @@ function Timer()
             continue;
         }
 
-        // Squad leaders and their assistants should know where their teams'
-        // other squad leaders are.
-        if (PRI.IsSLorASL())
+        // SLs, ASLs and radio operators should know where all squad leaders are.
+        if (PRI.IsSLorASL() || PRI.IsRadioman())
         {
             for (i = 0; i < GetTeamSquadLimit(PC.GetTeamNum()); ++i)
             {
@@ -451,28 +450,44 @@ function ResetSquadInfo()
     }
 
     for (i = 0; i < arraycount(AxisAssistantSquadLeaderMemberIndices); ++i)
+    {
         AxisAssistantSquadLeaderMemberIndices[i] = -1;
+    }
 
     for (i = 0; i < arraycount(AxisNames); ++i)
+    {
         AxisNames[i] = "";
+    }
 
     for (i = 0; i < arraycount(AxisLocked); ++i)
+    {
         AxisLocked[i] = 0;
+    }
 
     for (i = 0; i < arraycount(AxisNextRallyPointTimes); ++i)
+    {
         AxisNextRallyPointTimes[i] = 0.0;
+    }
 
     for (i = 0; i < arraycount(AlliesAssistantSquadLeaderMemberIndices); ++i)
+    {
         AlliesAssistantSquadLeaderMemberIndices[i] = -1;
+    }
 
     for (i = 0; i < arraycount(AlliesNames); ++i)
+    {
         AlliesNames[i] = "";
+    }
 
     for (i = 0; i < arraycount(AlliesLocked); ++i)
+    {
         AlliesLocked[i] = 0;
+    }
 
     for (i = 0; i < arraycount(AlliesNextRallyPointTimes); ++i)
+    {
         AlliesNextRallyPointTimes[i] = 0.0;
+    }
 
     SquadBans.Length = 0;
     SquadLeaderDraws.Length = 0;

@@ -122,12 +122,13 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NotQualified;
     }
 
-    if (PC.SavedArtilleryCoords == vect(0, 0, 0))
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
+    if (PC.SavedArtilleryCoords == vect(0, 0, 0) && PC.GetActiveOffMapSupportNumber() == 0)
     {
         return ERROR_NoTarget;
     }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
     {
@@ -144,23 +145,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
 simulated function bool IsPlayerQualified(DHPlayer PC)
 {
-    local DHRoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PC.GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (RI == none || PRI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsSquadLeader();
 }
 
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
@@ -208,8 +193,8 @@ state Requesting extends Busy
 {
     function BeginState()
     {
-        local SoundGroup RequestSound;
         local DH_LevelInfo LI;
+        local Sound RequestSound;
 
         super.BeginState();
 
@@ -222,13 +207,11 @@ state Requesting extends Busy
 
         if (Request == none ||
             Request.Sender == none ||
-            Request.Location == vect(0, 0, 0) ||
             Request.ArtilleryTypeIndex < 0 ||
             Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass == none ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum())
         {
-            Warn("Invalid request parameters.");
             return;
         }
 
@@ -260,6 +243,8 @@ state Responding extends Busy
         local SoundGroup ResponseSound;
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
+        local DHGameReplicationInfo GRI;
+        local vector MapLocation;
 
         super.BeginState();
 
@@ -276,6 +261,9 @@ state Responding extends Busy
         // Determine the response sound from the response type.
         if (Response.Type == RESPONSE_OK)
         {
+            GRI = DHGameReplicationInfo(Request.Sender.GameReplicationInfo);
+            GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
+
             // "Artillery strike confirmed."
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
             ResponseSound = GetConfirmSound(LI);
@@ -296,6 +284,10 @@ state Responding extends Busy
                 case RESPONSE_BadLocation:
                     // "Invalid target location for {name}."
                     Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 6,,, Request.GetArtilleryClass());
+                    break;
+                case RESPONSE_NoTarget:
+                    // "No target location."
+                    Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 9,,, Request.GetArtilleryClass());
                     break;
                 case RESPONSE_TooSoon:
                     // "{name}s are currently in use, try again soon."
@@ -449,4 +441,3 @@ defaultproperties
     MapIconMaterial=none    // TODO: fill this in
     bShouldShowOnSituationMap=true
 }
-

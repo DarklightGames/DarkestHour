@@ -9,7 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BAR_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
-    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBAR'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdLMG'
+    mMuzFlashOffset=(X=0.0,Y=0.9,Z=1.25)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Tip"
     ShellEjectionBoneName="weapon_eject"

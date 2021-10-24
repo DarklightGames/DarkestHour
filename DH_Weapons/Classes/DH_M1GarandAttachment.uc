@@ -12,6 +12,7 @@ defaultproperties
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
+    bUseWeaponLight=false
 
     WA_Idle="idle_kar98"
     WA_Fire="fire"

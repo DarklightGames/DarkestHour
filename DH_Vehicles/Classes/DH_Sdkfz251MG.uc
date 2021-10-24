@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
     Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 

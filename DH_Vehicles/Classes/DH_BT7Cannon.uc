@@ -11,9 +11,9 @@ defaultproperties
     Mesh=Mesh'DH_BT7_anm.BT7_turret_ext'
     skins(0)=Texture'allies_ahz_vehicles_tex.ext_vehicles.BT7_ext'
     skins(3)=Texture'DH_VehiclesSOV_tex.int_vehicles.T26_turret'
-	skins(4)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
+    skins(4)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
     bUseHighDetailOverlayIndex=false
-    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.BT7.BT7_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.BT7.BT7_turret_coll')
 
     // Turret armor
     FrontArmorFactor=1.5

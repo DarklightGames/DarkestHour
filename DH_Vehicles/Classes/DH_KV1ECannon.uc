@@ -19,13 +19,13 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=-1
     HighDetailOverlay=none
-	
+
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext'
     Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
     Skins(1)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
 
-    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1b_turret_coll'
-	
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.KV1S.KV1b_turret_coll')
+
 
     // Turret armor
     FrontArmorFactor=9.3 //just like with other KVs, turret's front armor is complex and cant be modelled properly. Here it is spherical 90mm armor and areas with flat 75mm armor with added 30mm shields

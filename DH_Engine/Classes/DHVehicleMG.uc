@@ -12,7 +12,7 @@ var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses
 // Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
 {
-    if (NumMGMags < default.NumMGMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval && NumMGMags < default.NumMGMags)
     {
         ++NumMGMags;
 
@@ -21,7 +21,7 @@ function bool ResupplyAmmo()
         {
             AttemptReload();
         }
-
+        LastResupplyTimestamp = Level.TimeSeconds;
         return true;
     }
 
