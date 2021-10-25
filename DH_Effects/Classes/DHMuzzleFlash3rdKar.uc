@@ -76,13 +76,14 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.25
         FadeOutStartTime=0.25
-        MaxParticles=100/64
+        MaxParticles=64
         Name="gun_smoke"
         StartLocationRange=(X=(Min=-15.0,Max=20.000000))
         UseRotationFrom=PTRS_Actor

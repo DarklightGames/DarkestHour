@@ -4,7 +4,7 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
     Emitters[0].SpawnParticle(1);
     Emitters[1].SpawnParticle(1);
-    Emitters[2].SpawnParticle(8);
+    Emitters[2].SpawnParticle(8); //8
     Emitters[2].InitialParticlesPerSecond=100;
     Emitters[3].SpawnParticle(3);
 }
@@ -50,9 +50,10 @@ defaultproperties
         ColorScale(0)=(Color=(B=200,G=200,R=200,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=200,G=200,R=200,A=255))
         Opacity=0.25
+        CoordinateSystem=PTCS_Relative
         MaxParticles=1
         name="spike_smoke"
-        UseRotationFrom=PTRS_Actor
+        UseRotationFrom=PTRS_Normal
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.5000000)
@@ -71,16 +72,18 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.75
         FadeOutStartTime=0.25
+        CoordinateSystem=PTCS_Relative
         MaxParticles=64
         Name="gun_smoke"
         StartLocationRange=(X=(Min=-15.0,Max=20.000000))
-        UseRotationFrom=PTRS_Actor
+        UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=-0.500000,Max=0.500000),Z=(Min=-0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.500000)
@@ -89,7 +92,7 @@ defaultproperties
         Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=0.55,Max=0.85)
+        LifetimeRange=(Min=0.55,Max=1.2)
         StartVelocityRange=(X=(Min=100.000000,Max=200.0),Y=(Min=-25.0000,Max=20.000),Z=(Min=-20.000,Max=25.000))
         VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
         VelocityScale(1)=(RelativeTime=0.500000,RelativeVelocity=(X=0.200000,Y=0.700000,Z=0.700000))
@@ -110,10 +113,11 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
         ColorScaleRepeats=4
-        MaxParticles=30
+        MaxParticles=64
+        CoordinateSystem=PTCS_Relative
         name="sparks"
         StartLocationRange=(X=(Min=-2.0,Max=0.000000))
-        UseRotationFrom=PTRS_Actor
+        UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
         StartSizeRange=(X=(Min=0.5,Max=0.6))

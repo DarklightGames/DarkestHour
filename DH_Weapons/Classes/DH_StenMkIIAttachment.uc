@@ -11,9 +11,10 @@ defaultproperties
     MenuImage=Texture'DH_Sten_tex.interface.stenmk2'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    
+    ShellEjectionOffset=(X=9.0)
+
     MuzzleBoneName="tipnew"
-    ShellEjectionBoneName="weapon_ejectnew"
+    ShellEjectionBoneName="weapon_eject"
 
     WA_Idle="idle_sten"
     WA_IdleEmpty="idle_sten"

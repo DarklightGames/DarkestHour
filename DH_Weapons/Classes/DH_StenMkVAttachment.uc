@@ -9,10 +9,12 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk5_3rd'
     MenuImage=Texture'DH_Sten_tex.interface.stenmk5' // TODO: Make consistent with other STENs
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    ShellEjectionOffset=(X=4.0)
 
     MuzzleBoneName="tipnew"
+    ShellEjectionBoneName="weapon_eject"
 
     WA_Idle="idle_sten_nobayo"
     WA_IdleEmpty="idle_sten_nobayo"

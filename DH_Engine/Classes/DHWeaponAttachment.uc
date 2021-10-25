@@ -22,7 +22,9 @@ var     bool    bSpawnShellsOutBottom;
 
 var     bool    bUseWeaponLight; // for testing purposes only
 
-var     vector  mMuzFlashOffset; // allows us to customize location of muzzle flash effect
+var     vector  mMuzFlashOffset; // allows us to fix the location of muzzle flash effects
+
+var     vector  ShellEjectionOffset; // allows us to fix the location of the shell ejection
 
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
@@ -113,6 +115,9 @@ simulated function SpawnShells(float Frequency)
 {
     local   rotator     EjectorRotation;
     local   vector      SpawnLocation;
+    local   coords      ShellEjectionCoords;
+
+    ShellEjectionCoords = GetBoneCoords(ShellEjectionBoneName);
 
     if (ROShellCaseClass != none && ShellEjectionBoneName != '' && Instigator != none && !Instigator.IsFirstPerson())
     {
@@ -127,7 +132,7 @@ simulated function SpawnShells(float Frequency)
             EjectorRotation = GetBoneRotation(ShellEjectionBoneName);
         }
 
-        SpawnLocation = GetBoneCoords(ShellEjectionBoneName).Origin;
+        SpawnLocation = ShellEjectionCoords.Origin + (ShellEjectionOffset * vect(1,1,1));
 
         EjectorRotation.Pitch += Rand(1700);
         EjectorRotation.Yaw += Rand(1700);

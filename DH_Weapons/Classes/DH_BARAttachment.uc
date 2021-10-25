@@ -12,6 +12,8 @@ defaultproperties
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdLMG'
     mMuzFlashOffset=(X=0.0,Y=0.9,Z=1.25)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    ShellEjectionOffset=(X=3.0,Y=-2.0,Z=1.0)
+
     MuzzleBoneName="Tip"
     ShellEjectionBoneName="weapon_eject"
 

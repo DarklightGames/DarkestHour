@@ -9,10 +9,13 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BARNoBipod_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_NoBipod_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdLMG'
+    mMuzFlashOffset=(X=0.0,Y=0.9,Z=1.25)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    ShellEjectionOffset=(X=3.0,Y=-2.0,Z=1.0)
+
     MuzzleBoneName="Tip"
-    ShellEjectionBoneName="ejector"
+    ShellEjectionBoneName="weapon_eject"
 
     WA_Idle="idle_svt40"
     WA_IdleEmpty="idle_svt40"
@@ -21,7 +24,7 @@ defaultproperties
     WA_ReloadEmpty="reloadhalf_svt40" //bolt is on the other side, so better not use empty reload animation
     WA_ProneReload="prone_reloadhalf_svt40"
     WA_ProneReloadEmpty="prone_reloadhalf_svt40"
-    
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"

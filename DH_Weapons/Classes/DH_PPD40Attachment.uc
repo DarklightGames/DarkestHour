@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.ppd40'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppd40_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
 
     ClientProjectileClass=class'DH_Weapons.DH_PPD40Bullet'

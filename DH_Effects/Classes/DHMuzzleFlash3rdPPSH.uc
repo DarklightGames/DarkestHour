@@ -99,6 +99,7 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
@@ -132,6 +133,7 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
@@ -165,6 +167,7 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
