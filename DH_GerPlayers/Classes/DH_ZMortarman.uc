@@ -11,7 +11,7 @@ defaultproperties
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieHeerPawn',Weight=1.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_ZombieSmockHeerPawn',Weight=0.2)
 
-    HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
+    BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
     SleeveTexture=Texture'DHEventCharactersTex.Arms.german_sleeves_zombie'
 
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'

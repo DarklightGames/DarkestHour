@@ -10,7 +10,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieTankCrewPawn',Weight=1.0)
 
-    HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
+    BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
     SleeveTexture=Texture'DHEventCharactersTex.Arms.german_tanker_sleeves_zombie'
 
     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCap'

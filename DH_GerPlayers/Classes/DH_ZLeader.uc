@@ -19,7 +19,7 @@ defaultproperties
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieLeaderPawn',Weight=1.0)
 
-    HandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
+    BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
     SleeveTexture=Texture'DHEventCharactersTex.Arms.h_sleeves_zombie'
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
