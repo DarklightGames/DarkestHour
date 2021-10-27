@@ -50,11 +50,10 @@ defaultproperties
         ColorScale(0)=(Color=(B=200,G=200,R=200,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=200,G=200,R=200,A=255))
         Opacity=0.25
-        CoordinateSystem=PTCS_Relative
         MaxParticles=1
         name="spike_smoke"
         StartLocationOffset=(X=-5.0)
-        UseRotationFrom=PTRS_Normal
+        UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.5000000)
@@ -79,12 +78,11 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.75
-        CoordinateSystem=PTCS_Relative
         FadeOutStartTime=0.25
         MaxParticles=64
         Name="gun_smoke"
         StartLocationRange=(X=(Min=-15.0,Max=20.000000))
-         UseRotationFrom=PTRS_Normal
+         UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=-0.500000,Max=0.500000),Z=(Min=-0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.500000)
@@ -114,10 +112,9 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
         ColorScaleRepeats=4
-        CoordinateSystem=PTCS_Relative
         MaxParticles=64
         name="sparks"
-        UseRotationFrom=PTRS_Normal
+        UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
         StartSizeRange=(X=(Min=0.55,Max=0.75))

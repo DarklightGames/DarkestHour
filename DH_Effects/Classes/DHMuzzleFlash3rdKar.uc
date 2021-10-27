@@ -23,10 +23,10 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.45
+        CoordinateSystem=PTCS_Relative
         MaxParticles=1
-        //StartLocationOffset=(X=2.000000)
         StartLocationRange=(X=(Min=0.00000,Max=1.000000))
-        UseRotationFrom=PTRS_Actor
+        UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=-0.500000,Max=0.500000),Z=(Min=-0.500000,Max=0.500000))
         StartSpinRange=(X=(Min=-1.000000,Max=1.000000),Y=(Min=-1.000000,Max=1.000000),Z=(Min=-1.000000,Max=1.000000))
         SizeScale(0)=(RelativeSize=1.000000)
@@ -115,7 +115,7 @@ defaultproperties
         MaxParticles=6
         name="sparks"
         StartLocationRange=(X=(Min=0.00000,Max=2.000000))
-        UseRotationFrom=PTRS_Actor
+        UseRotationFrom=PTRS_ACtor
         Texture=Texture'Effects_Tex.explosions.fire_quad'
         LifetimeRange=(Min=0.100000,Max=0.150000)
         StartVelocityRange=(X=(Min=100.000000,Max=150.000000),Y=(Min=-30.000000,Max=35.000000),Z=(Min=-35.000000,Max=25.000000))

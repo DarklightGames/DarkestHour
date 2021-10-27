@@ -6,11 +6,11 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[1].SpawnParticle(1);
     Emitters[2].SpawnParticle(1);
     Emitters[3].SpawnParticle(2);
-    //Emitters[3].InitialParticlesPerSecond=100;
+    Emitters[3].InitialParticlesPerSecond=100;
     Emitters[4].SpawnParticle(2);
-    //Emitters[4].InitialParticlesPerSecond=100;
+    Emitters[4].InitialParticlesPerSecond=100;
     Emitters[5].SpawnParticle(2);
-    //Emitters[5].InitialParticlesPerSecond=100;
+    Emitters[5].InitialParticlesPerSecond=100;
 }
 
 defaultproperties
