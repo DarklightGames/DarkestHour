@@ -8,6 +8,9 @@ class DH_ZLeader extends DHAxisRoles;
 
 defaultproperties
 {
+    VoiceType="DH_GerPlayers.DHZVoice"
+    AltVoiceType="DH_GerPlayers.DHZVoice"
+
     MyName="Der Führer"
     AltName="Der Führer"
     Article=""

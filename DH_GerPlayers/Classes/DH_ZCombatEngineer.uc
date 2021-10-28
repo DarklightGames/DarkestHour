@@ -8,6 +8,9 @@ class DH_ZCombatEngineer extends DHGEEngineerRoles;
 
 defaultproperties
 {
+    VoiceType="DH_GerPlayers.DHZVoice"
+    AltVoiceType="DH_GerPlayers.DHZVoice"
+
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieHeerPawn',Weight=1.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_ZombieSmockHeerPawn',Weight=0.2)
 

@@ -8,6 +8,9 @@ class DH_ZRadioman extends DHGERadioOperatorRoles;
 
 defaultproperties
 {
+    VoiceType="DH_GerPlayers.DHZVoice"
+    AltVoiceType="DH_GerPlayers.DHZVoice"
+
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_ZombieRadioHeerPawn')
 
     BareHandTexture=Texture'DHEventCharactersTex.Arms.hands_zombie'
