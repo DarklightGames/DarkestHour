@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.svt38_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt38_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdMosin'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
 
@@ -23,7 +23,7 @@ defaultproperties
     WA_BayonetDetach="bayremove_svt40"
     WA_BayonetAttachProne="prone_bayattach_svt40"
     WA_BayonetDetachProne="prone_bayremove_svt40"
-    
+
     WA_WorkBolt="idle_svt40"
     WA_BayonetWorkBolt="idle_svt40_bayo"
     WA_BayonetReload="idle_svt40_bayo"

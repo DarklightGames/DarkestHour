@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.luger'
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     bRapidFire=false
 

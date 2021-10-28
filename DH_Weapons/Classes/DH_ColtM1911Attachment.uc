@@ -11,7 +11,8 @@ defaultproperties
     DrawScale=1.25
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
     bRapidFire=false
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
+    mMuzFlashOffset=(X=1.0)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"

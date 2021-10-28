@@ -23,7 +23,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Nagant9130_scoped_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdMosin'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     bRapidFire=false

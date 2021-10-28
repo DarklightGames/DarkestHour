@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.BHP_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.bhp_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     bRapidFire=false
 

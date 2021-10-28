@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.tt33'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     bRapidFire=false
 
