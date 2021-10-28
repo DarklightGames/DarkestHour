@@ -7498,7 +7498,6 @@ defaultproperties
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DHPawn'
-    PlayerChatType=""   // HACK: emptied this out to see if this stops the server crash and other voice chat issues!
     SteamStatsAndAchievementsClass=none
     SpawnPointIndex=-1
     VehiclePoolIndex=-1

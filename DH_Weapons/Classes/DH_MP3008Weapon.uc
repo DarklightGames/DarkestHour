@@ -3,32 +3,33 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkVWeapon extends DHAutoWeapon;
+class DH_MP3008Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="STEN Mk.V"
-    FireModeClass(0)=class'DH_Weapons.DH_StenMkVFire'
-    FireModeClass(1)=class'DH_Weapons.DH_StenMkVMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_StenMkVAttachment'
-    PickupClass=class'DH_Weapons.DH_StenMkVPickup'
+    ItemName="Maschinenpistole 3008"
+    FireModeClass(0)=class'DH_Weapons.DH_MP3008Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_MP3008MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_MP3008Attachment'
+    PickupClass=class'DH_Weapons.DH_MP3008Pickup'
 
-    Mesh=SkeletalMesh'DH_Sten_1st.StenMk5_mesh'
+    Mesh=SkeletalMesh'DH_Sten_1st.MP3008_mesh'
     //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-
-    Skins(2)=Texture'DH_Sten_tex.Sten.StenMk5_tex'
-    HandNum=0
-    SleeveNum=1
+    
+    Skins(2)=Texture'DH_Sten_tex.Sten.mp3008_tex'
+    HandNum=1
+    SleeveNum=0
 
     SwayModifyFactor=0.72 // -0.08
-    DisplayFOV=85.0
+    
+    DisplayFOV=80.0
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=60.0
+    IronSightDisplayFOV=66.0
 
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
@@ -48,15 +49,7 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
-
-    bHasBayonet=true
-    BayoAttachAnim="Bayonet_on"
-    BayoDetachAnim="Bayonet_off"
-    BayoAttachEmptyAnim="bayonet_on_empty"
-    BayoDetachEmptyAnim="bayonet_off_empty"
-
-    BayonetBoneName="bayonet"
-
+    
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="Iron_fireswitch"
     SelectFireEmptyAnim="fireswitch_empty"
