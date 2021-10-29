@@ -5,7 +5,7 @@
 
 class DH_TeamWinRound extends DH_LevelActors;
 
-var() ROSideIndex   TeamToWin;
+var() EROSideIndex   TeamToWin;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {

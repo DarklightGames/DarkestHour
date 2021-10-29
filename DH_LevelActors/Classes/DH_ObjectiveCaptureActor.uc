@@ -6,7 +6,7 @@
 class DH_ObjectiveCaptureActor extends DH_LevelActors;
 
 var()   int             ObjectiveToModify;
-var()   ROSideIndex     TeamToCap;
+var()   EROSideIndex    TeamToCap;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {

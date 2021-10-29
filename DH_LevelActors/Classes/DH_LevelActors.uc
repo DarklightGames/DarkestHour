@@ -8,21 +8,21 @@ class DH_LevelActors extends Actor
     placeable;
 
 //Setup some common enums used throughout the child actors
-enum ROSideIndex
+enum EROSideIndex
 {
     AXIS,
     ALLIES,
     NEUTRAL //Either side can use this vehicle
 };
 
-enum NumModifyType
+enum ENumModifyType
 {
     NMT_Add,
     NMT_Subtract,
     NMT_Set //Will set the value instead of modify it
 };
 
-enum StatusModifyType
+enum EStatusModifyType
 {
     SMT_Activate,
     SMT_Deactivate,

@@ -5,7 +5,7 @@
 
 class DH_ModifyDSMStatus extends DH_ModifyActors;
 
-enum DSMModifyType
+enum EDSMModifyType
 {
     DSM_Destroy,
     DSM_Repair,
@@ -15,7 +15,7 @@ enum DSMModifyType
     DSM_ToggleActiveStatus
 };
 
-var()   DSMModifyType       HowToModify;            // the way in which we will modify the specified destroyable static mesh (DSM) when this actor gets triggered
+var()   EDSMModifyType      HowToModify;            // the way in which we will modify the specified destroyable static mesh (DSM) when this actor gets triggered
 var()   name                DSMToModify;            // the Tag of the DSM that we are set up to modify
 var()   bool                UseRandomness;          // option for random chance of modifying the DSM each time this modify actor is triggered
 var()   int                 RandomPercent;          // percentage chance of modifying the DSM if the UseRandomness option is enabled

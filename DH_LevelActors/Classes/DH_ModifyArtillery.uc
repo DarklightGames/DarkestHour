@@ -13,7 +13,7 @@ class DH_ModifyArtillery extends DH_ModifyActors;
 struct SArtilleryStatusModifier
 {
     var() int              ArtilleryTypeIndex; // in DH_Levelnfo.ArtilleryTypes
-    var() StatusModifyType HowToModify;
+    var() EStatusModifyType HowToModify;
 };
 
 var() array<SArtilleryStatusModifier> ArtilleryStatusModifiers;

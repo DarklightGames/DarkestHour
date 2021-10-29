@@ -6,11 +6,11 @@
 class DH_ModifyReinforcements extends DH_ModifyActors;
 
 var()   bool            bModifyIfDepleted;
-var()   ROSideIndex     TeamToModify; //Neutral will modify both teams
+var()   EROSideIndex    TeamToModify; //Neutral will modify both teams
 var()   bool            UseRandomness;
 var()   int             RandomPercent; // 100 for always succeed, 0 for always fail
 var()   int             ModifyNum;
-var()   NumModifyType   HowToModify;
+var()   ENumModifyType  HowToModify;
 var()   bool            bUseTeamMessage; //Default = true
 var() localized string  Message; //Message to send to team when door is opened
 var()   name            MessageType; //Say,TeamSay,SayDead,TeamSayDead,VehicleSay,CriticalEvent,DeathMessage,
@@ -19,7 +19,7 @@ var()   sound           sound; //sound to play when door is opened
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum;
-    local ROSideIndex ActualSideToModify;
+    local EROSideIndex ActualSideToModify;
     local DHGameReplicationInfo DHGRI;
     local DarkestHourGame DHGame;
     local Controller        C;

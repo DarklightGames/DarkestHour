@@ -5,7 +5,7 @@
 
 class DH_ModifyObjectiveStatus extends DH_ModifyActors;
 
-var() enum eTypeOfRandom
+var() enum ETypeOfRandom
 {
     TR_NoRandom,
     TR_Percentage,
@@ -14,7 +14,7 @@ var() enum eTypeOfRandom
 var()   array<int>          ObjectivesNumsToModify;  //List of objective numbers to potentionally modify
 var()   int                 RandomPercent; //100 for always succeed, 0 for always fail
 var()   int                 MaxNumToModify; //In the random loop, it will stop once this number is hit
-var()   StatusModifyType    HowToModify; //How to modify the objectives that are selected
+var()   EStatusModifyType   HowToModify; //How to modify the objectives that are selected
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {

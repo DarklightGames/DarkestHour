@@ -6,7 +6,7 @@
 class DH_FindAndPassPawn extends DH_LevelActors
     showcategories(Collision,Advanced);
 
-enum FindType
+enum EFindType
 {
     FT_ClassProximity,
     FT_TagProximity,
@@ -14,7 +14,7 @@ enum FindType
 };
 
 //var   int                     DelayTimeBeforeFind; // does this need to be variable?
-var()   FindType                HowToFind;
+var()   EFindType               HowToFind;
 var()   name                    TagToFind;
 var()   array<class<Pawn> >     PawnClassToFind;
 var()   name                    VehicleFactoryTag;

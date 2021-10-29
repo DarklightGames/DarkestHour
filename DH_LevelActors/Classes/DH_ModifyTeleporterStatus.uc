@@ -10,7 +10,7 @@ var     array<teleporter>   TeleReferences;
 var()   string              NewURL; // if set will change the URL of the teleporter
 var()   bool                UseRandomness;
 var()   int                 RandomPercent; // 100 for always succeed, 0 for always fail
-var()   enum    HTModify
+var()   enum EHTModify
 {
     HTM_Activate,
     HTM_Deactivate,

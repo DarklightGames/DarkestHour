@@ -5,7 +5,7 @@
 
 class DH_ModifyDefendingSide extends DH_ModifyActors;
 
-var()   ROSideIndex     NewDefendingSide;
+var()   EROSideIndex     NewDefendingSide;
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {

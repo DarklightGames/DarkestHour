@@ -9,7 +9,7 @@ var()   array<name>             FactoryToModify;
 var     array<ROVehicleFactory> FactoryReference;
 var()   bool                    UseRandomness;
 var()   int                     RandomPercent; // 100 for always succeed, 0 for always fail
-var()   NumModifyType           HowToModifyRespawnLimit;
+var()   ENumModifyType          HowToModifyRespawnLimit;
 var()   int                     MinModifyNum;
 var()   int                     MaxModifyNum;
 

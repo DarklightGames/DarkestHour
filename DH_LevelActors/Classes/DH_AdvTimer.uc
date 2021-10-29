@@ -8,7 +8,7 @@ class DH_AdvTimer extends DH_LevelActors;
 var() localized string  Message;     // message to send to a team when interval is reached
 var() localized string  EndMessage;  // message to send to team when end is reached
 var()   name            MessageType; // Say, TeamSay, SayDead, TeamSayDead, VehicleSay, CriticalEvent, DeathMessage
-var()   ROSideIndex     MessageTeam, EndMessageTeam;
+var()   EROSideIndex    MessageTeam, EndMessageTeam;
 var()   int             TimeMin, TimeMax, MessageIntervalTime;
 var     int             TimeElapsed, TimeActual;
 var()   bool            bAutoStart, bRepeatTimer, bUseMessage, bUseEndMessage, bFireOnce;

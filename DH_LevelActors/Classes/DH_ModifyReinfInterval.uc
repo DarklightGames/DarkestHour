@@ -5,7 +5,7 @@
 
 class DH_ModifyReinfInterval extends DH_ModifyActors;
 
-var()   ROSideIndex         TeamToModify;
+var()   EROSideIndex        TeamToModify;
 var()   int                 NewIntervalTime;
 
 event Trigger(Actor Other, Pawn EventInstigator)

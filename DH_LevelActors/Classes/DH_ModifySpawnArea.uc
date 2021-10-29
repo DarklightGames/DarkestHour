@@ -7,7 +7,7 @@ class DH_ModifySpawnArea extends DH_ModifyActors;
 
 var()   array<name>         SpawnsToModify;
 var     array<ROSpawnArea>  SpawnReference;
-var()   StatusModifyType    HowToModify;
+var()   EStatusModifyType   HowToModify;
 
 function PostBeginPlay()
 {
