@@ -77,7 +77,7 @@ static function string GetString(optional int Type, optional PlayerReplicationIn
 }
 
 // Todo will need to override the draw function and setup flag stuff
-static function int getIconID(
+static function int GetIconID(
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,
     optional PlayerReplicationInfo RelatedPRI_2,

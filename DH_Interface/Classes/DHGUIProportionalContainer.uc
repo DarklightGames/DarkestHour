@@ -74,7 +74,7 @@ function bool InternalPreDraw(Canvas C)
     return false;
 }
 
-function ComponentPosValues getAlignOriginalValues(GUIComponent component)
+function ComponentPosValues GetAlignOriginalValues(GUIComponent component)
 {
         local ComponentPosValues values;
         local int i;

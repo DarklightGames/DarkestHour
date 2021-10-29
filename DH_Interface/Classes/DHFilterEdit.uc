@@ -293,7 +293,7 @@ function string FindMutClassFromFriendly(string friendly)
     return "";
 }
 
-function bool ebPreDraw(canvas Canvas)
+function bool EditBoxPreDraw(canvas Canvas)
 {
     // Reposition
     eb_Name.WinTop = sb_Options.ActualTop() + 36.0;
@@ -346,7 +346,7 @@ defaultproperties
         WinLeft=0.184531
         WinWidth=0.654297
         TabOrder=0
-        OnPreDraw=DHFilterEdit.ebPreDraw
+        OnPreDraw=DHFilterEdit.EditBoxPreDraw
     End Object
     eb_Name=DHmoEditBox'DH_Interface.DHFilterEdit.ebName'
     Begin Object Class=DHmoComboBox Name=cbStats
