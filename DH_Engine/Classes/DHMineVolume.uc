@@ -343,7 +343,7 @@ function bool RelevantVehicleInMineVolume(ROVehicle Vehicle)
 
         i++;
     }
-    until (i > Vehicle.WeaponPawns.Length);
+    until (i > Vehicle.WeaponPawns.Length)
 
     // If vehicle's time is up, blow it up now that we've warned the occupants
     if (bVehicleBeingDestroyed)

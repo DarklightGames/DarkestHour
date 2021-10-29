@@ -6465,7 +6465,7 @@ simulated function int GetValidSpecModeCount()
 
         Mode = ESpectatorMode((int(Mode) + 1) % 4);
     }
-    until (Mode == SPEC_Self);
+    until (Mode == SPEC_Self)
 
     return Count;
 }
@@ -6509,7 +6509,7 @@ function ESpectatorMode GetNextValidSpecMode()
             break;
         }
     }
-    until (NextSpecMode == SpecMode);
+    until (NextSpecMode == SpecMode)
 
     return NextSpecMode;
 }
