@@ -87,12 +87,12 @@ static final function string GetHashString(GUID Hash)
 
 static final function string LittleEndianToHex(int i)
 {
-    const hex = "0123456789abcdef";
+    const HEX = "0123456789abcdef";
 
-    return Mid(hex, i >>  4 & 0xf, 1) $ Mid(hex, i &       0xf, 1)
-         $ Mid(hex, i >> 12 & 0xf, 1) $ Mid(hex, i >>  8 & 0xf, 1)
-         $ Mid(hex, i >> 20 & 0xf, 1) $ Mid(hex, i >> 16 & 0xf, 1)
-         $ Mid(hex, i >> 28 & 0xf, 1) $ Mid(hex, i >> 24 & 0xf, 1);
+    return Mid(HEX, i >>  4 & 0xf, 1) $ Mid(HEX, i &       0xf, 1)
+         $ Mid(HEX, i >> 12 & 0xf, 1) $ Mid(HEX, i >>  8 & 0xf, 1)
+         $ Mid(HEX, i >> 20 & 0xf, 1) $ Mid(HEX, i >> 16 & 0xf, 1)
+         $ Mid(HEX, i >> 28 & 0xf, 1) $ Mid(HEX, i >> 24 & 0xf, 1);
 }
 
 static final function StaticProcessChunks()

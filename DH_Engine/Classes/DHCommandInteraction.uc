@@ -12,7 +12,7 @@ class DHCommandInteraction extends DHInteraction
 const FADE_DURATION = 0.25;
 const INNER_RADIUS = 16.0;
 const OUTER_RADIUS = 32.0;
-const Tau = 6.28318530718;
+const TAU = 6.28318530718;
 
 var Stack_Object        Menus;
 
@@ -250,13 +250,13 @@ function Tick(float DeltaTime)
     if (Menu.Options.Length > 0 && Cursor != vect(0, 0, 0))
     {
         // Calculated the selected index
-        ArcLength = Tau / Menu.SlotCount;
+        ArcLength = TAU / Menu.SlotCount;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
         Theta += class'UUnits'.static.DegreesToRadians(90);
 
         if (Theta < 0)
         {
-            Theta = Tau + Theta;
+            Theta = TAU + Theta;
         }
 
         if (VSize(Cursor) < INNER_RADIUS)
@@ -266,7 +266,7 @@ function Tick(float DeltaTime)
         }
         else
         {
-            SelectedIndex = Menu.GetOptionIndexFromSlotIndex(Menu.SlotCount * (Theta / Tau));
+            SelectedIndex = Menu.GetOptionIndexFromSlotIndex(Menu.SlotCount * (Theta / TAU));
         }
     }
     else
@@ -330,7 +330,7 @@ function PostRender(Canvas C)
         return;
     }
 
-    ArcLength = Tau / Menu.SlotCount;
+    ArcLength = TAU / Menu.SlotCount;
 
     // Draw all the options.
     for (i = 0; i < Menu.SlotCount; ++i)

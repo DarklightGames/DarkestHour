@@ -6,7 +6,7 @@
 class DHMeleeFire extends DHWeaponFire
     abstract;
 
-const SoundRadius = 32.0;
+const SOUND_RADIUS = 32.0;
 
 var   protected float   VulnerableDamageFactor; // damage factor when instigator hits victim from behind or if victim is crawling
 var   protected float   RearAngleArc;       // angle in Unreal rotational units for a player's rear (used to calculate rear melee hits)
@@ -167,11 +167,11 @@ function DoTrace(vector Start, rotator Dir)
 
             if (Weapon.bBayonetMounted)
             {
-                Weapon.PlaySound(PlayerStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(PlayerStabSound, SLOT_None, FireVolume,, SOUND_RADIUS,, true);
             }
             else
             {
-                Weapon.PlaySound(PlayerBashSound, SLOT_None, 1.0,, SoundRadius,, true);
+                Weapon.PlaySound(PlayerBashSound, SLOT_None, 1.0,, SOUND_RADIUS,, true);
             }
          }
     }
@@ -185,11 +185,11 @@ function DoTrace(vector Start, rotator Dir)
 
         if (Weapon.bBayonetMounted)
         {
-            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SOUND_RADIUS,, true);
         }
         else
         {
-            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SOUND_RADIUS,, true);
         }
     }
 }

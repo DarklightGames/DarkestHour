@@ -16,9 +16,9 @@ var     float       LastElevationTime;        // records last time elevation was
 var     bool        bPendingFire;             // player has fired & mortar is about to fire
 
 // Operator ('Driver') animations
-const   IdleAnimIndex = 0;
-const   FiringAnimIndex = 1;
-const   UnflinchAnimIndex = 2;
+const   IDLE_ANIM_INDEX = 0;
+const   FIRING_ANIM_INDEX = 1;
+const   UNFLINCH_ANIM_INDEX = 2;
 
 var     name        DriverFiringAnim;         // anim for player operator when firing
 var     name        DriverUnflinchAnim;       // anim for operator when returning to normal pose after flinching when firing
@@ -728,7 +728,7 @@ simulated state FireToIdle extends Busy
     }
 
 Begin:
-    SetCurrentAnimationIndex(UnflinchAnimIndex);
+    SetCurrentAnimationIndex(UNFLINCH_ANIM_INDEX);
 
     if (Driver != none && Driver.HasAnim(DriverUnflinchAnim))
     {
@@ -780,7 +780,7 @@ simulated state Firing extends Busy
 
 Begin:
     PlayFirstPersonAnimation(OverlayFiringAnim);
-    SetCurrentAnimationIndex(FiringAnimIndex);
+    SetCurrentAnimationIndex(FIRING_ANIM_INDEX);
 
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
     {
@@ -950,7 +950,7 @@ simulated function PlayThirdPersonAnimations()
 {
     switch (CurrentAnimationIndex)
     {
-        case IdleAnimIndex:
+        case IDLE_ANIM_INDEX:
             if (Gun != none)
             {
                 Gun.LoopAnim(Gun.BeginningIdleAnim);
@@ -963,7 +963,7 @@ simulated function PlayThirdPersonAnimations()
 
             break;
 
-        case FiringAnimIndex:
+        case FIRING_ANIM_INDEX:
             if (DHMortarVehicleWeapon(Gun) != none)
             {
                 Gun.PlayAnim(DHMortarVehicleWeapon(Gun).GunFiringAnim);
@@ -976,7 +976,7 @@ simulated function PlayThirdPersonAnimations()
 
             break;
 
-        case UnflinchAnimIndex:
+        case UNFLINCH_ANIM_INDEX:
             if (Gun != none)
             {
                 Gun.LoopAnim(Gun.BeginningIdleAnim);
