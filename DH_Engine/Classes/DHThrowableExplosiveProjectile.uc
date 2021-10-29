@@ -752,7 +752,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Snow:
             DampenFactor = 0.0;
-            DampenFactorParallel = 0.0;;
+            DampenFactorParallel = 0.0;
             break;
 
         case EST_Water:

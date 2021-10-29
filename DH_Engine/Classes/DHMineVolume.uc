@@ -244,7 +244,7 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
 
                 i++;
             }
-            until (i > Vehicle.WeaponPawns.Length);
+            until (i > Vehicle.WeaponPawns.Length)
         }
 
         // If player entered MV, make sure we have a PainTimer running

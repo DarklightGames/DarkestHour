@@ -349,7 +349,7 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
                 Segments.Remove(j - int(Ceil(j % 2.0)), 2);
             }
         }
-        until(InitLength == LineStringsX[i].Points.Length);
+        until(InitLength == LineStringsX[i].Points.Length)
 
         ++i;
     }
