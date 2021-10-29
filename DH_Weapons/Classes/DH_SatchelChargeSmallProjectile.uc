@@ -5,7 +5,3 @@
 
 class DH_SatchelChargeSmallProjectile extends DH_SatchelCharge10lb10sProjectile;
 
-defaultproperties
-{
-
-}

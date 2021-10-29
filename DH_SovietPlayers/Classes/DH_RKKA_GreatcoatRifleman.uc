@@ -5,7 +5,3 @@
 
 class DH_RKKA_GreatcoatRifleman extends DH_RKKA_GreatcoatRiflemanEarly;
 
-defaultproperties
-{
-
-}

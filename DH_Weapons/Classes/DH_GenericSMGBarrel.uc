@@ -5,7 +5,3 @@
 
 class DH_GenericSMGBarrel extends DHWeaponBarrel;
 
-defaultproperties
-{
-
-}

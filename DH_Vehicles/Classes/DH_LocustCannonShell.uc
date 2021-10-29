@@ -5,6 +5,3 @@
 
 class DH_LocustCannonShell extends DH_StuartCannonShell;
 
-defaultproperties
-{
-}

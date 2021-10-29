@@ -5,6 +5,3 @@
 
 class DH_RKKA_TanTelogreikaEngineer extends DH_RKKA_TanTelogreikaEngineerEarly;  //to be removed
 
-defaultproperties
-{
-}

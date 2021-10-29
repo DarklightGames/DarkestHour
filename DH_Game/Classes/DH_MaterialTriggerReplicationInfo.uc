@@ -80,6 +80,3 @@ simulated function Timer()
     }
 }
 
-defaultproperties
-{
-}

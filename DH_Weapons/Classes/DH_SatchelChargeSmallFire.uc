@@ -5,7 +5,3 @@
 
 class DH_SatchelChargeSmallFire extends DH_SatchelCharge10lb10sFire;
 
-defaultproperties
-{
-
-}

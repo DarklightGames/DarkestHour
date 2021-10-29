@@ -49,6 +49,3 @@ function float SuggestDefenseStyle()
     return -0.5;
 }
 
-defaultproperties
-{
-}

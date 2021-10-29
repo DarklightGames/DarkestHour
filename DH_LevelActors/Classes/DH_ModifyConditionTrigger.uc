@@ -49,6 +49,3 @@ event Trigger(Actor Other, Pawn EventInstigator)
         ConditionfalseRef.bEnabled = false;
 }
 
-defaultproperties
-{
-}

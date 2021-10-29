@@ -5,7 +5,3 @@
 
 class DH_ThompsonBarrel extends DHWeaponBarrel;
 
-defaultproperties
-{
-
-}

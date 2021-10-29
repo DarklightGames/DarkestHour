@@ -83,9 +83,3 @@ function Tick(float DeltaTime)
     SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(Gun.Rotation))));
 }
 
-// TODO; we need to run an "update proxy" type thing here, but make the rest of
-// the "update proxy" calls generic enough to be used
-defaultproperties
-{
-}
-

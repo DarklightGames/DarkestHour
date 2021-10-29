@@ -3,6 +3,3 @@
 //-----------------------------------------------------------
 class DHInfantrySpawnPoint extends DHDeprecated;
 
-defaultproperties
-{
-}

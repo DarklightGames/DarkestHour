@@ -5,7 +5,3 @@
 
 class DH_RKKA_StandardSniper extends DH_RKKA_StandardSniperEarly; //to be removed
 
-defaultproperties
-{
-
-}

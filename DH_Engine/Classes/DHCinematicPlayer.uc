@@ -27,6 +27,3 @@ auto state PlayerWaiting
     }
 }
 
-defaultproperties
-{
-}

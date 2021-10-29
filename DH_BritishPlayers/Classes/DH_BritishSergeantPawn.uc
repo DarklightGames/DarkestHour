@@ -5,6 +5,3 @@
 
 class DH_BritishSergeantPawn extends DH_BritishPawn;
 
-defaultproperties
-{
-}

@@ -5,7 +5,3 @@
 
 class DH_RKKA_TanTelogreikaRifleman extends DH_RKKA_TanTelogreikaRiflemanEarly; //to be removed
 
-defaultproperties
-{
-
-}

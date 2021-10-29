@@ -122,6 +122,3 @@ function bool InternalOnClick(GUIComponent Sender)
 }
 */
 
-defaultproperties
-{
-}

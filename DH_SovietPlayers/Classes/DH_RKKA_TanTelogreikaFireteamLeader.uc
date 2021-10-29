@@ -5,7 +5,3 @@
 
 class DH_RKKA_TanTelogreikaFireteamLeader extends DH_RKKA_TanTelogreikaFireteamLeaderEarly ;  //to be removed
 
-defaultproperties
-{
-
-}

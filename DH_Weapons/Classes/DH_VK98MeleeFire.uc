@@ -5,7 +5,3 @@
 
 class DH_VK98MeleeFire extends DH_Kar98MeleeFire;
 
-defaultproperties
-{
-
-}

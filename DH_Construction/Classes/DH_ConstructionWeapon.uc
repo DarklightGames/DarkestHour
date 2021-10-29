@@ -230,6 +230,3 @@ simulated function ResetCursor()
     }
 }
 
-defaultproperties
-{
-}

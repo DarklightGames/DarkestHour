@@ -103,6 +103,3 @@ state LeadInOutLooping
     }
 }
 
-defaultproperties
-{
-}

@@ -5,7 +5,3 @@
 
 class DH_SovietGreatcoatPawn extends DH_SovietGreatcoatGreyEarlyPawn; //eventually should be removed to avoid confusion
 
-defaultproperties
-{
-
-}

@@ -28,6 +28,3 @@ function Reset()
     bFired = false; //Because round reset, bFired should be set back to false
 }
 
-defaultproperties
-{
-}

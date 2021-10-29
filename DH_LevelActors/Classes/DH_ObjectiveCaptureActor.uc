@@ -20,6 +20,3 @@ function Trigger(Actor Other, Pawn EventInstigator)
         DHTeamGame.DHObjectives[ObjectiveToModify].ObjectiveCompleted(none, TeamToCap); //Pass the team to capture
 }
 
-defaultproperties
-{
-}

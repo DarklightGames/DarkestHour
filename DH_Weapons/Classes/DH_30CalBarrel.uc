@@ -5,6 +5,3 @@
 
 class DH_30CalBarrel extends DHWeaponBarrel;
 
-defaultproperties
-{
-}

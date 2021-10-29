@@ -8,6 +8,3 @@ class DHWeaponPickupTouchMessageParameters extends Object;
 var class<Inventory>    InventoryClass;
 var PlayerController    PlayerController;
 
-defaultproperties
-{
-}

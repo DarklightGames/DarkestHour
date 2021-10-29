@@ -5,6 +5,3 @@
 
 class DH_CanadianOfficerRoyalNewBrunswicks extends DHDeprecated;
 
-defaultproperties
-{
-}

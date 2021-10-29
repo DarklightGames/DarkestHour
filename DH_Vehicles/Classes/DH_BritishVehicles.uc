@@ -6,6 +6,3 @@
 class DH_BritishVehicles extends DHVehicleFactory
     abstract;
 
-defaultproperties
-{
-}

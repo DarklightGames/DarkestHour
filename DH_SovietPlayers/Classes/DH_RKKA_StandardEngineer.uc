@@ -5,7 +5,3 @@
 
 class DH_RKKA_StandardEngineer extends DH_RKKA_StandardEngineerEarly;  //to be removed
 
-defaultproperties
-{
-
-}

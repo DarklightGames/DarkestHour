@@ -6,6 +6,3 @@
 class DHActorProxyAttachment extends Actor
     notplaceable;
 
-defaultproperties
-{
-}

@@ -5,6 +5,3 @@
 
 class DH_WHOfficer_SnowTwo extends DHDeprecated;
 
-defaultproperties
-{
-}

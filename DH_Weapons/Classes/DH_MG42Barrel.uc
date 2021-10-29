@@ -5,6 +5,3 @@
 
 class DH_MG42Barrel extends DHWeaponBarrel;
 
-defaultproperties
-{
-}

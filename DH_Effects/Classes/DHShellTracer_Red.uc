@@ -5,6 +5,3 @@
 
 class DHShellTracer_Red extends DHShellTracer;
 
-defaultproperties
-{
-}

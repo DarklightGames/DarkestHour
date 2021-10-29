@@ -5,7 +5,3 @@
 
 class DH_SatchelSmallDamType extends DH_SatchelDamType;
 
-defaultproperties
-{
-
-}

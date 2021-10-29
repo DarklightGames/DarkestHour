@@ -30,6 +30,3 @@ static function string GetString(optional int Switch, optional PlayerReplication
     return S;
 }
 
-defaultproperties
-{
-}

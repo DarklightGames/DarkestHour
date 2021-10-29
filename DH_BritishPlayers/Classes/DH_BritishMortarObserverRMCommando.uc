@@ -5,6 +5,3 @@
 
 class DH_BritishMortarObserverRMCommando extends DHDeprecated;
 
-defaultproperties
-{
-}

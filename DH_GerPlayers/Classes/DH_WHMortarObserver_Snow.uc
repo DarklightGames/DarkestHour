@@ -5,6 +5,3 @@
 
 class DH_WHMortarObserver_Snow extends DHDeprecated;
 
-defaultproperties
-{
-}

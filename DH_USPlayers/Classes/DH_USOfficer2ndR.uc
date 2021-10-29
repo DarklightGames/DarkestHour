@@ -5,6 +5,3 @@
 
 class DH_USOfficer2ndR extends DHDeprecated;
 
-defaultproperties
-{
-}

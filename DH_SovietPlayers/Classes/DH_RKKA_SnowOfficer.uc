@@ -5,6 +5,3 @@
 
 class DH_RKKA_SnowOfficer extends DHDeprecated;
 
-defaultproperties
-{
-}

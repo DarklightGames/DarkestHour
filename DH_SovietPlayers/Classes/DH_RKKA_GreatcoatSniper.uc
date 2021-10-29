@@ -4,7 +4,3 @@
 //==============================================================================
 class DH_RKKA_GreatcoatSniper extends DH_RKKA_GreatcoatSniperEarly;  //to be removed
 
-defaultproperties
-{
-
-}

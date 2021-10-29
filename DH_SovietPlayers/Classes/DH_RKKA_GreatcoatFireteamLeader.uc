@@ -5,7 +5,3 @@
 
 class DH_RKKA_GreatcoatFireteamLeader extends DH_RKKA_GreatcoatFireteamLeaderEarly; //to be removed
 
-defaultproperties
-{
-
-}

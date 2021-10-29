@@ -5,7 +5,3 @@
 
 class DH_SatchelChargeSmallAttachment extends DH_SatchelCharge10lb10sAttachment;
 
-defaultproperties
-{
-
-}

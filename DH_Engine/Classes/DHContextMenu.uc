@@ -74,6 +74,3 @@ final function OnClick(GUIContextMenu Sender, GUIComponent Component, int ClickI
     }
 }
 
-defaultproperties
-{
-}

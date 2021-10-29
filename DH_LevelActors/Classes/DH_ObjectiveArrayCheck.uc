@@ -100,6 +100,3 @@ state Done
     // Do nothing
 }
 
-defaultproperties
-{
-}

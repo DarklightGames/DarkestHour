@@ -32,6 +32,3 @@ function RegisterBroadcastHandler(BroadcastHandler NewBH)
     }
 }
 
-defaultproperties
-{
-}

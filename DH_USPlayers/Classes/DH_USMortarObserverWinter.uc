@@ -5,6 +5,3 @@
 
 class DH_USMortarObserverWinter extends DHDeprecated;
 
-defaultproperties
-{
-}

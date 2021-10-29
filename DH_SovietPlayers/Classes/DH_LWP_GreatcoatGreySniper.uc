@@ -5,6 +5,3 @@
 
 class DH_LWP_GreatcoatGreySniper extends DHDeprecated;
 
-defaultproperties
-{
-}

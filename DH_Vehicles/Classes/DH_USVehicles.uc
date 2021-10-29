@@ -6,6 +6,3 @@
 class DH_USVehicles extends DHVehicleFactory
     abstract;
 
-defaultproperties
-{
-}

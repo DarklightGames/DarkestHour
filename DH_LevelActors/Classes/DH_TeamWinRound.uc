@@ -12,6 +12,3 @@ function Trigger(Actor Other, Pawn EventInstigator)
     ROTeamGame(Level.Game).EndRound(TeamToWin);
 }
 
-defaultproperties
-{
-}

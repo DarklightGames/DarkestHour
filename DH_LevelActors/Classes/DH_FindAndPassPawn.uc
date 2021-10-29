@@ -114,6 +114,3 @@ state Passed
 {
 }
 
-defaultproperties
-{
-}

@@ -5,6 +5,3 @@
 
 class DH_ModifyActors extends DH_LevelActors;
 
-defaultproperties
-{
-}

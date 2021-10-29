@@ -14,7 +14,3 @@ function DoLoginSilent( string Username, string Password)
     }
 }
 
-defaultproperties
-{
-
-}

@@ -5,7 +5,4 @@
 
 class DHCommandMenu_Empty extends DHCommandMenu;
 
-defaultproperties
-{
-}
 

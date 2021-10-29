@@ -43,7 +43,3 @@ function PostBeginPlay()
     Disable('Trigger');
 }
 
-defaultproperties
-{
-}
-

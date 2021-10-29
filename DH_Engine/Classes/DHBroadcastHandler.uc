@@ -325,6 +325,3 @@ function LogMessage(PlayerController Sender, string Msg, coerce string Type)
     }
 }
 
-defaultproperties
-{
-}

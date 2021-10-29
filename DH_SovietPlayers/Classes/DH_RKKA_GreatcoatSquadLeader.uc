@@ -5,7 +5,3 @@
 
 class DH_RKKA_GreatcoatSquadLeader extends DH_RKKA_GreatcoatSquadLeaderEarly;  //to be removed
 
-defaultproperties
-{
-
-}

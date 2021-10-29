@@ -5,6 +5,3 @@
 
 class DH_WSSMortarObserver extends DHDeprecated;
 
-defaultproperties
-{
-}

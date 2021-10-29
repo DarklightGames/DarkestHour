@@ -5,7 +5,3 @@
 
 class DH_SatchelChargeSmallPickup extends DH_SatchelCharge10lb10sPickup;
 
-defaultproperties
-{
-
-}

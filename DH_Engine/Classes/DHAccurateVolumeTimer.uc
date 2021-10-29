@@ -35,6 +35,3 @@ function Timer()
     SetTimer(NextTimerCallTime - Level.TimeSeconds, false);
 }
 
-defaultproperties
-{
-}

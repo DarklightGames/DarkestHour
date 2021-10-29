@@ -5,6 +5,3 @@
 
 class DH_BritishOfficerWorcesters extends DHDeprecated;
 
-defaultproperties
-{
-}

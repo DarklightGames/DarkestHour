@@ -5,6 +5,3 @@
 
 class DH_BritishMortarObserverHampshires extends DHDeprecated;
 
-defaultproperties
-{
-}

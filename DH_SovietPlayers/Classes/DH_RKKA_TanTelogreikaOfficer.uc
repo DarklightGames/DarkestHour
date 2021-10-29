@@ -5,6 +5,3 @@
 
 class DH_RKKA_TanTelogreikaOfficer extends DHDeprecated;
 
-defaultproperties
-{
-}

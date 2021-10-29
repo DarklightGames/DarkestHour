@@ -44,6 +44,3 @@ Begin:
     GotoState('');
 }
 
-defaultproperties
-{
-}

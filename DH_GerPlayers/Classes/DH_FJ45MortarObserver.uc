@@ -5,6 +5,3 @@
 
 class DH_FJ45MortarObserver extends DHDeprecated;
 
-defaultproperties
-{
-}

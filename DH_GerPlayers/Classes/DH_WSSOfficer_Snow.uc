@@ -5,6 +5,3 @@
 
 class DH_WSSOfficer_Snow extends DHDeprecated;
 
-defaultproperties
-{
-}

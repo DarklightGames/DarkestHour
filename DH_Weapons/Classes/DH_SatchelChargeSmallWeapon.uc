@@ -5,7 +5,3 @@
 
 class DH_SatchelChargeSmallWeapon extends DH_SatchelCharge10lb10sWeapon;
 
-defaultproperties
-{
-
-}

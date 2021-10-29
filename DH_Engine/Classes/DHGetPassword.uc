@@ -28,6 +28,3 @@ function RetryPassword()
     Controller.CloseAll(false,True);
 }
 
-defaultproperties
-{
-}

@@ -231,7 +231,4 @@ function Context GetContext()
     return Context;
 }
 
-defaultproperties
-{
-}
 

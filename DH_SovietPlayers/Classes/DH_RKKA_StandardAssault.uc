@@ -5,7 +5,3 @@
 
 class DH_RKKA_StandardAssault extends DH_RKKA_StandardAssaultEarly;
 
-defaultproperties
-{
-
-}

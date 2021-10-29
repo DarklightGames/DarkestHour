@@ -5,6 +5,3 @@
 
 class DH_USMortarObserver29thBeach extends DHDeprecated;
 
-defaultproperties
-{
-}

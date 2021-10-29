@@ -83,6 +83,3 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-defaultproperties
-{
-}

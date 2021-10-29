@@ -5,6 +5,3 @@
 
 class DH_WHOfficer extends DHDeprecated;
 
-defaultproperties
-{
-}

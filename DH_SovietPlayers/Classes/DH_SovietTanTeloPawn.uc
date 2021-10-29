@@ -5,7 +5,3 @@
 
 class DH_SovietTanTeloPawn extends DH_SovietTanTeloEarlyPawn;  //eventually should be deleted to avoid confusion
 
-defaultproperties
-{
-
-}

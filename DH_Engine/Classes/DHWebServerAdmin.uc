@@ -58,6 +58,3 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
     ShowPage(Response, HeaderPage);
 }
 
-defaultproperties
-{
-}

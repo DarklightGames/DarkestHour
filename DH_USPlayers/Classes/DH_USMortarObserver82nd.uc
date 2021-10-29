@@ -5,6 +5,3 @@
 
 class DH_USMortarObserver82nd extends DHDeprecated;
 
-defaultproperties
-{
-}

@@ -13,6 +13,3 @@ function PostBeginPlay()
     Warn("Please change the minefield types to DHMineVolume instead of DH_MineVolume.");
 }
 
-defaultproperties
-{
-}

@@ -5,6 +5,3 @@
 
 class DH_WSSOfficer extends DHDeprecated;
 
-defaultproperties
-{
-}
