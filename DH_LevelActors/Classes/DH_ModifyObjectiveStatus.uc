@@ -19,7 +19,7 @@ var()   StatusModifyType    HowToModify; //How to modify the objectives that are
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum, i;
-    local bool  NewStatus;
+    local bool bNewStatus;
     local DarkestHourGame DHGame;
     local array<int> TempObjNumsModify;
 
@@ -39,8 +39,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
                         DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(false);
                     break;
                     case SMT_Toggle:
-                        NewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
-                        DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
+                        bNewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
+                        DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(bNewStatus);
                     break;
                 }
             }
@@ -60,8 +60,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
                             DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(false);
                         break;
                         case SMT_Toggle:
-                            NewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
-                            DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
+                            bNewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
+                            DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(bNewStatus);
                         break;
                     }
                 }
@@ -86,8 +86,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
                         DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(false);
                     break;
                     case SMT_Toggle:
-                        NewStatus = !DHGame.DHObjectives[TempObjNumsModify[RandomNum]].bActive;
-                        DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(NewStatus);
+                        bNewStatus = !DHGame.DHObjectives[TempObjNumsModify[RandomNum]].bActive;
+                        DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(bNewStatus);
                     break;
                 }
                 //Remove the element in the array so we don't select it again

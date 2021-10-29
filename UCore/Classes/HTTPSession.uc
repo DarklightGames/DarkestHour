@@ -66,11 +66,11 @@ function HTTPCookie SetCookie(string S)
         }
         else if (AttributeName ~= "Secure")
         {
-            Cookie.Secure = true;
+            Cookie.bIsSecure = true;
         }
         else if (AttributeName ~= "HttpOnly")
         {
-            Cookie.HTTPOnly = true;
+            Cookie.bIsHTTPOnly = true;
         }
         else
         {

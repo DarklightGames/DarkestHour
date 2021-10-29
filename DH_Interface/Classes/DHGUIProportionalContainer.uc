@@ -17,12 +17,12 @@ var()      array<ComponentPosValues>    AlignOriginalValues;
 
 function bool ManageComponent(GUIComponent Component)
 {
-        local bool result;
-        result = super.ManageComponent(Component);
+        local bool bResult;
+        bResult = super.ManageComponent(Component);
         InternalPreDraw(none);                  // This is used to position the controls before drawing them
                                                     // (else you see the controls full screen for a split second,
                                                     // which looks kinda odd)
-        return result;
+        return bResult;
 }
 
 function bool InternalPreDraw(Canvas C)

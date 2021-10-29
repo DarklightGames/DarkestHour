@@ -2352,7 +2352,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
     local float             MaxDim;
     local string            RagSkelName;
     local KarmaParamsSkel   SkelParams;
-    local bool              PlayersRagdoll;
+    local bool              bPlayersRagdoll;
     local PlayerController  PC;
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -2365,7 +2365,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
         // Is this the local player's ragdoll?
         if (PC != none && PC.ViewTarget == self)
         {
-            PlayersRagdoll = true;
+            bPlayersRagdoll = true;
         }
 
         if (FRand() < 0.3)
@@ -2375,7 +2375,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
 
         // In low physics detail, if we were not just controlling this pawn,
         // and it has not been rendered in 3 seconds, just destroy it.
-        if ((Level.PhysicsDetailLevel != PDL_High) && !PlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
+        if ((Level.PhysicsDetailLevel != PDL_High) && !bPlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
         {
             Destroy();
             return;
@@ -2528,7 +2528,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
             SetPhysics(PHYS_KarmaRagdoll);
 
             // If viewing this ragdoll, set the flag to indicate that it is 'important'
-            if (PlayersRagdoll)
+            if (bPlayersRagdoll)
             {
                 SkelParams.bKImportantRagdoll = true;
             }
