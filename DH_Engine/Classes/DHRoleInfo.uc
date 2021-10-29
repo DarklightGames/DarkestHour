@@ -27,6 +27,10 @@ var     bool                bRequiresSL;
 
 var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
 
+// Pawn modifiers (implemented for Halloween 2021 event)
+var     float               HealthMultiplier;
+var     bool                bCanPickupWeapons;
+
 
 enum EHandType
 {
@@ -274,4 +278,6 @@ defaultproperties
     BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
     HandType=Hand_Bare
+    HealthMultiplier=1.0
+    bCanPickupWeapons=true
 }

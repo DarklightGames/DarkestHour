@@ -6,24 +6,6 @@
 
 class DH_ZombiePawn extends DHPawn;
 
-simulated function PostBeginPlay()
-{
-    local DarkestHourGame G;
-
-    // Increase zombie health by multiplier set in DH_LevelInfo.
-    if (Role == ROLE_Authority)
-    {
-        G = DarkestHourGame(Level.Game);
-
-        if (G != none && G.DHLevelInfo != none )
-        {
-            Health *= G.DHLevelInfo.ZombieHealthMultiplier;
-        }
-    }
-
-    super.PostBeginPlay();
-}
-
 defaultproperties
 {
     Species=class'DH_Engine.DHSPECIES_Human'
