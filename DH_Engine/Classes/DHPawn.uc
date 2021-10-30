@@ -7432,7 +7432,7 @@ simulated exec function ShellHipOffset(int X, int Y, int Z)
     }
 }
 
-simulated exec function ShellIronSightOffset(float X, float Y, float Z)
+simulated exec function ShellIronSightOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 

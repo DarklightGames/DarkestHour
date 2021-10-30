@@ -978,13 +978,16 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
-simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+simulated exec function SetPlayerViewOffset(int X, int Y, int Z)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         default.PlayerViewOffset.X = X;
         default.PlayerViewOffset.Y = Y;
         default.PlayerViewOffset.Z = Z;
+
+        // Triggers the recalculation of the view offset
+        PlayerViewOffset = default.PlayerViewOffset;
     }
 }
 

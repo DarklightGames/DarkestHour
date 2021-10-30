@@ -77,7 +77,7 @@ simulated function PostBeginPlay()
     }
 }
 
-exec function SetCamPos(float X, float Y, float Z)
+exec function SetCamPos(int X, int Y, int Z)
 {
     if (IsDebugModeAllowed())
     {
