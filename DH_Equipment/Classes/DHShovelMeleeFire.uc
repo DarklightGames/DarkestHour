@@ -33,6 +33,8 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 defaultproperties
 {
     DamageType=class'DH_Equipment.DHShovelBashDamageType'
+    DamageMin=50
+    DamageMax=60
     TraceRange=95.0
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"

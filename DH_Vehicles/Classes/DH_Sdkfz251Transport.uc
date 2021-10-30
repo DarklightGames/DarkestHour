@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DHVehicle;
+class DH_Sdkfz251Transport extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
@@ -17,9 +17,12 @@ defaultproperties
     VehicleMass=8.5
     ReinforcementCost=3
     MaxDesireability=1.2
+    MinRunOverSpeed=300
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
@@ -71,11 +74,11 @@ defaultproperties
     WheelLatFrictionScale=1.5
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=15.0,Y=0.0,Z=-15.0)) // engine
+    Health=500.0
+    HealthMax=500.0
+    DamagedEffectHealthFireFactor=0.2
+    EngineHealth=150.0
+    VehHitpoints(0)=(PointRadius=50.0,PointOffset=(X=120.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.05
@@ -88,6 +91,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=false
 
     // Vehicle destruction
     ExplosionDamage=85.0

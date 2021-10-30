@@ -1,0 +1,15 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2021
+//==============================================================================
+
+class DH_MP3008Bullet extends DHBullet;
+
+defaultproperties
+{
+    Speed=22028.0
+    BallisticCoefficient=0.15
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_MP3008DamType'
+}

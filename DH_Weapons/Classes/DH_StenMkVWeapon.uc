@@ -23,10 +23,9 @@ defaultproperties
     SleeveNum=1
 
     SwayModifyFactor=0.72 // -0.08
-
-    DisplayFOV=86.0
+    DisplayFOV=85.0
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=65.0
+    IronSightDisplayFOV=60.0
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
