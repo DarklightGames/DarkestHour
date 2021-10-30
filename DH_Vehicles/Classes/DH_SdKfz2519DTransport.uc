@@ -38,6 +38,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex8.Destroyed.stummel_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex.Destroyed.halftrack_camo2_dest'
 
     SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.sdkfz_251_9d'
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_body'
