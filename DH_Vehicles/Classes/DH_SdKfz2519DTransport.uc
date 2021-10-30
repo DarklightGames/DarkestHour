@@ -11,7 +11,8 @@ defaultproperties
     VehicleNameString="Sd.Kfz.251/9 Ausf.D Stummel"
     ReinforcementCost=4
     VehicleMass=10.0
-    bIsApc=true
+    bIsApc=false
+    bMustBeTankCommander=true
 
     Health=500
     HealthMax=500.0
