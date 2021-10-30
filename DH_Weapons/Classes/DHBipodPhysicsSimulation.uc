@@ -167,8 +167,8 @@ defaultproperties
     ArmLength=155.0
     YawDeltaFactor=2.0
 
-    BarrelBoneName='Muzzle'
-    BipodBoneName='Bipod'
+    BarrelBoneName="Muzzle"
+    BipodBoneName="Bipod"
 
     bDebugPhysicsSimulation=true    // TODO: make false by default
 
