@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_PanzerIIINCannonShellHEAT extends DHCannonShellHEAT;
+class DH_SdKfz2519CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
@@ -12,29 +12,29 @@ defaultproperties
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
-    //Damage
-    ImpactDamage=350   //~~600 gramms TNT
+    // Damage
+    ImpactDamage=350 // ~600 grams of TNT
     Damage=300.0
     DamageRadius=700.0
 
-    //Effects
+    // Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     bDebugInImperial=false
 
-    //Penetration Gr.38 Hl/B (HEAT) December 1942
-    DHPenetrationTable(0)=8.7
-    DHPenetrationTable(1)=8.7
-    DHPenetrationTable(2)=8.7
-    DHPenetrationTable(3)=8.7
-    DHPenetrationTable(4)=8.7
-    DHPenetrationTable(5)=8.7
-    DHPenetrationTable(6)=8.7
-    DHPenetrationTable(7)=8.7
-    DHPenetrationTable(8)=8.7
-    DHPenetrationTable(9)=8.7
-    DHPenetrationTable(10)=8.7
+    // Penetration Gr.38 Hl (HEAT) June 1940
+    DHPenetrationTable(0)=5.2
+    DHPenetrationTable(1)=5.2
+    DHPenetrationTable(2)=5.2
+    DHPenetrationTable(3)=5.2
+    DHPenetrationTable(4)=5.2
+    DHPenetrationTable(5)=5.2
+    DHPenetrationTable(6)=5.2
+    DHPenetrationTable(7)=5.2
+    DHPenetrationTable(8)=5.2
+    DHPenetrationTable(9)=5.2
+    DHPenetrationTable(10)=5.2
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)
