@@ -74,10 +74,10 @@ defaultproperties
     WheelLatFrictionScale=1.5
 
     // Damage
-    Health=750
-    HealthMax=750
+    Health=500.0
+    HealthMax=500.0
     DamagedEffectHealthFireFactor=0.9
-    EngineHealth=150
+    EngineHealth=150.0
     VehHitpoints(0)=(PointRadius=50.0,PointOffset=(X=-120.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
