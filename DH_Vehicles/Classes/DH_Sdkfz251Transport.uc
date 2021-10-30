@@ -21,6 +21,7 @@ defaultproperties
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
