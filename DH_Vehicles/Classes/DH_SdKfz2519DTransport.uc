@@ -38,13 +38,28 @@ defaultproperties
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
 
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
-    VehicleHudOccupantsX(1)=0.45
-    VehicleHudOccupantsY(1)=0.65
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
+    SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.sdkfz_251_9d'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_turret_look'
 
-    //Add AMMO HIT BOX for 7.5 cm shell storage
+    VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsY(0)=0.4
+    VehicleHudOccupantsX(1)=0.45
+    VehicleHudOccupantsY(1)=0.53
+    VehicleHudOccupantsX(2)=0.0
+    VehicleHudOccupantsY(2)=0.0
+    VehicleHudOccupantsX(3)=0.0
+    VehicleHudOccupantsY(3)=0.0
+    VehicleHudOccupantsX(4)=0.0
+    VehicleHudOccupantsY(4)=0.0
+    VehicleHudOccupantsX(5)=0.0
+    VehicleHudOccupantsY(5)=0.0
+    VehicleHudOccupantsX(6)=0.0
+    VehicleHudOccupantsY(6)=0.0
+    VehicleHudOccupantsX(7)=0.0
+    VehicleHudOccupantsY(7)=0.0
+
     //AmmoIgnitionProbability=0.75  // 0.75 default
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
 }
