@@ -27,11 +27,11 @@ defaultproperties
     TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="HEAT C"
+    ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="SMOKE"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
-    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(1)="Gr.38 Hl"
     nProjectileDescriptions(2)="Nbgr. Kw. K."
 
     InitialPrimaryAmmo=20
