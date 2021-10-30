@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_M3Halftrack extends DHVehicle
+class DH_M3Halftrack extends DHArmoredVehicle
     abstract;
 
 defaultproperties
@@ -18,6 +18,7 @@ defaultproperties
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
 
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'

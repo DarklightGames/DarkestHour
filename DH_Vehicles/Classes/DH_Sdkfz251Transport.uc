@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DHVehicle;
+class DH_Sdkfz251Transport extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
@@ -20,6 +20,7 @@ defaultproperties
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
