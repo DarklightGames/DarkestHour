@@ -23,8 +23,13 @@ var     bool                bCarriesRadio;          // role can carry radios
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
+var     bool                bRequiresSL;
 
 var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
+
+// Pawn modifiers (implemented for Halloween 2021 event)
+var     float               HealthMultiplier;
+var     bool                bCanPickupWeapons;
 
 
 enum EHandType
@@ -273,4 +278,6 @@ defaultproperties
     BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
     HandType=Hand_Bare
+    HealthMultiplier=1.0
+    bCanPickupWeapons=true
 }
