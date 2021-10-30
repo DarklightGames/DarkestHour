@@ -103,6 +103,7 @@ var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
 var     sound       SmokingEngineSound;
+var     bool        bEnableHatchFires;     // allow hatch fires for this vehicle
 
 // Debugging
 var     bool        bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
@@ -930,7 +931,7 @@ simulated function SetFireEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (IsVehicleBurning())
+        if (IsVehicleBurning() && bEnableHatchFires)
         {
             // Hatch fire effects
             if (bOnFire && !bSetHullFireEffects)
@@ -2401,6 +2402,7 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
+    bEnableHatchFires=true
     EngineToHullFireChance=0.05  //increased to 0.1 on all petrol engines
     PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death; reduced to 12 on all diesels
     FireDetonationChance=0.07  //reduced to 0.045 on all diesels

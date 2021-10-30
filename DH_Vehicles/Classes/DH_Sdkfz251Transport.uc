@@ -90,6 +90,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=false
 
     // Vehicle destruction
     ExplosionDamage=85.0

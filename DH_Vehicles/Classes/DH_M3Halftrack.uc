@@ -74,6 +74,7 @@ defaultproperties
     DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=false
 
     // Vehicle destruction
     ExplosionDamage=85.0
