@@ -5776,7 +5776,7 @@ simulated function float BobFunction(float T, float Amplitude, float Frequency, 
     return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
 }
 
-simulated exec function BobAmplitude(optional float F)
+exec simulated function BobAmplitude(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5791,7 +5791,7 @@ simulated exec function BobAmplitude(optional float F)
     }
 }
 
-simulated exec function BobFrequencyY(optional float F)
+exec simulated function BobFrequencyY(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5806,7 +5806,7 @@ simulated exec function BobFrequencyY(optional float F)
     }
 }
 
-simulated exec function BobFrequencyZ(optional float F)
+exec simulated function BobFrequencyZ(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5821,7 +5821,7 @@ simulated exec function BobFrequencyZ(optional float F)
     }
 }
 
-simulated exec function BobDecay(optional float F)
+exec simulated function BobDecay(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -7364,7 +7364,7 @@ exec function RotateAT()
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
-simulated exec function IronSightDisplayFOV(float FOV)
+exec simulated function IronSightDisplayFOV(float FOV)
 {
     local DHProjectileWeapon W;
 
@@ -7381,7 +7381,7 @@ simulated exec function IronSightDisplayFOV(float FOV)
     }
 }
 
-simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7398,7 +7398,7 @@ simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7415,7 +7415,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(int X, int Y, int Z)
+exec simulated function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7432,7 +7432,7 @@ simulated exec function ShellHipOffset(int X, int Y, int Z)
     }
 }
 
-simulated exec function ShellIronSightOffset(int X, int Y, int Z)
+exec simulated function ShellIronSightOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7449,7 +7449,7 @@ simulated exec function ShellIronSightOffset(int X, int Y, int Z)
     }
 }
 
-simulated exec function Give(string WeaponName)
+exec simulated function Give(string WeaponName)
 {
     local string ClassName;
     local int i;

@@ -524,7 +524,7 @@ simulated state Idle
         }
     }
 
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -570,7 +570,7 @@ simulated state Busy
 {
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
     simulated function Fire(optional float F) { }
-    simulated exec function SwitchFireMode() { }
+    exec simulated function SwitchFireMode() { }
     exec function Deploy() { }
     function bool KDriverLeave(bool bForceLeave) { return false; }
     simulated function NextWeapon() { }
@@ -625,7 +625,7 @@ simulated state KnobRaised
         }
     }
 
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -1054,7 +1054,7 @@ simulated function UpdatePrecacheMaterials()
 // Functions emptied out as not relevant to a mortar:
 simulated function SwitchWeapon(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
-simulated exec function ToggleVehicleLock();
+exec simulated function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)

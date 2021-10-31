@@ -2827,7 +2827,7 @@ simulated function SwayHandler(float DeltaTime)
 }
 
 // Modified to not allow IronSighting when transitioning to/from prone
-simulated exec function ROIronSights()
+exec simulated function ROIronSights()
 {
     if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
     {
@@ -3963,7 +3963,7 @@ exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
 }
 
 // Used for finding pesky "raptor" actors sitting at world origin.
-simulated exec function DebugRaptor()
+exec simulated function DebugRaptor()
 {
     local Actor A;
 
@@ -7298,7 +7298,7 @@ function RemoveMarker(class<DHMapMarker> MarkerClass, optional int Index)
     }
 }
 
-simulated exec function ListWeapons()
+exec simulated function ListWeapons()
 {
     class'DHWeaponRegistry'.static.DumpToLog(self);
 }

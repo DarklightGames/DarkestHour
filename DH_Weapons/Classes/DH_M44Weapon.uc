@@ -6,7 +6,7 @@
 class DH_M44Weapon extends DHBoltActionWeapon;
 
 // Modified as this rifle has a fixed bayonet
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
 }
 

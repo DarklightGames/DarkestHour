@@ -12,7 +12,7 @@ var int Patch;
 var string Prerelease;
 var string Metadata;
 
-static final function UVersion FromString(string S)
+final static function UVersion FromString(string S)
 {
     local int i;
     local UVersion V;

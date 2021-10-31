@@ -3386,7 +3386,7 @@ simulated function DestroyAttachments()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Unloading supplies.
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     LoadSupplies();
 }
@@ -3420,7 +3420,7 @@ simulated function UnloadSupplies()
 }
 
 // Loading supplies.
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     UnloadSupplies();
 }

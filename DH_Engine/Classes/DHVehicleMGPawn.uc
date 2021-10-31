@@ -222,7 +222,7 @@ simulated function bool CanReload()
 }
 
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {

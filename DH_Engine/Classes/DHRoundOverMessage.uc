@@ -7,7 +7,7 @@ class DHRoundOverMessage extends RORoundOverMsg
     abstract;
 
 // Overridden to support varying victory music
-static simulated function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+simulated static function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local DH_LevelInfo          LI;
     local DHGameReplicationInfo GRI;

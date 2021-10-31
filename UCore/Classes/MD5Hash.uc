@@ -15,7 +15,7 @@ var private array<byte> StaticData;
 // Instant hash functions - probably not suitable for long input data
 //==============================================================================
 
-static final function GUID GetStringHash(string In)
+final static function GUID GetStringHash(string In)
 {
     local int StrLen, i;
 
@@ -33,7 +33,7 @@ static final function GUID GetStringHash(string In)
     return default.StaticHashValue;
 }
 
-static final function string GetStringHashString(string In)
+final static function string GetStringHashString(string In)
 {
     local int StrLen, i;
 
@@ -54,7 +54,7 @@ static final function string GetStringHashString(string In)
          $ LittleEndianToHex(default.StaticHashValue.D);
 }
 
-static final function GUID GetArrayHash(array<byte> In)
+final static function GUID GetArrayHash(array<byte> In)
 {
     default.StaticData = In;
 
@@ -63,7 +63,7 @@ static final function GUID GetArrayHash(array<byte> In)
     return default.StaticHashValue;
 }
 
-static final function string GetArrayHashString(array<byte> In)
+final static function string GetArrayHashString(array<byte> In)
 {
     default.StaticData = In;
 
@@ -75,7 +75,7 @@ static final function string GetArrayHashString(array<byte> In)
          $ LittleEndianToHex(default.StaticHashValue.D);
 }
 
-static final function string GetHashString(GUID Hash)
+final static function string GetHashString(GUID Hash)
 {
     return LittleEndianToHex(Hash.A) $ LittleEndianToHex(Hash.B)
          $ LittleEndianToHex(Hash.C) $ LittleEndianToHex(Hash.D);
@@ -85,7 +85,7 @@ static final function string GetHashString(GUID Hash)
 // Internal stuff for static instant hashing functions
 //=============================================================================
 
-static final function string LittleEndianToHex(int i)
+final static function string LittleEndianToHex(int i)
 {
     const HEX = "0123456789abcdef";
 
@@ -95,7 +95,7 @@ static final function string LittleEndianToHex(int i)
          $ Mid(HEX, i >> 28 & 0xf, 1) $ Mid(HEX, i >> 24 & 0xf, 1);
 }
 
-static final function StaticProcessChunks()
+final static function StaticProcessChunks()
 {
     local int i;
     local int A, B, C, D;

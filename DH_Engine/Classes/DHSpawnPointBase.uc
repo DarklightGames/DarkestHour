@@ -413,7 +413,7 @@ simulated function int GetSpawnTimePenalty()
     return BaseSpawnTimePenalty;
 }
 
-simulated final function int GetTeamIndex()
+final simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }

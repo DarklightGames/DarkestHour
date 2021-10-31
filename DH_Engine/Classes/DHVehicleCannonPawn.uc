@@ -500,7 +500,7 @@ exec function SwitchFireMode()
 
 // Modified to prevent attempting reload if don't have ammo (saves replicated function call to server) & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (Cannon == none || !Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {

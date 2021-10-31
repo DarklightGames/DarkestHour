@@ -16,7 +16,7 @@ var int Minute;
 var int Second;
 var int Millisecond;
 
-static final function DateTime Now(Actor A)
+final static function DateTime Now(Actor A)
 {
     local DateTime Now;
 

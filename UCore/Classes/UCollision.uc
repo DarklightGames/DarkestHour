@@ -18,7 +18,7 @@ static function bool PointInCylinder(vector Origin, float Radius, float HalfHeig
     return Sqrt(Point.X * Point.X + Point.Y * Point.Y) < Radius && Abs(Point.Z) < HalfHeight;
 }
 
-static private final function byte ComputeOutCode(float X, float Y, Box Viewport)
+final private static function byte ComputeOutCode(float X, float Y, Box Viewport)
 {
     local byte Code;
 
@@ -57,7 +57,7 @@ static private final function byte ComputeOutCode(float X, float Y, Box Viewport
 // Returns true when the line is contained within or intersects the viewport.
 // When the function returns true, the vertex locations ((@X0, @Y0) (@X1, @Y1))
 // are modified to be clipped within the viewport.
-static final function bool ClipLineToViewport(out float X0, out float Y0, out float X1, out float Y1, Box Viewport)
+final static function bool ClipLineToViewport(out float X0, out float Y0, out float X1, out float Y1, Box Viewport)
 {
     // compute OutCodes for P0, P1, and whatever point lies outside the clip rectangle
     local byte OutCode0, OutCode1, OutCodeOut;

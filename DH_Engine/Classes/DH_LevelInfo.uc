@@ -161,7 +161,7 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     return Limit;
 }
 
-static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
+simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;
     local DHPlayer PC;

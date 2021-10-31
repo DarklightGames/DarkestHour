@@ -515,7 +515,7 @@ simulated function bool CanExit()
 
 // New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
 // CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
-simulated exec function ToggleVehicleLock()
+exec simulated function ToggleVehicleLock()
 {
     if (Role == ROLE_Authority || CanPlayerLockVehicle(self))
     {

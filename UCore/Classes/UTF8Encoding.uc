@@ -10,7 +10,7 @@ class UTF8Encoding extends Object
 const BYTE_MASK = 0xBF;
 const BYTE_MARK = 0x80;
 
-static final function array<int> ToBytes(string S)
+final static function array<int> ToBytes(string S)
 {
     local int i, j, c, BytesToWrite;
     local array<int> UTF32Bytes;
@@ -67,7 +67,7 @@ static final function array<int> ToBytes(string S)
     return UTF8Bytes;
 }
 
-static final function string FromBytes(array<int> Bytes)
+final static function string FromBytes(array<int> Bytes)
 {
     local string S;
     local int i, c, ExtraBytesToRead;
@@ -110,7 +110,7 @@ static final function string FromBytes(array<int> Bytes)
     return S;
 }
 
-static private final function int GetTrailingBytesForUTF8(int B)
+final private static function int GetTrailingBytesForUTF8(int B)
 {
     if (B < 0xC0)
     {
@@ -138,7 +138,7 @@ static private final function int GetTrailingBytesForUTF8(int B)
     }
 }
 
-static final private function int GetFirstByteMark(int BytesToWrite)
+final private static function int GetFirstByteMark(int BytesToWrite)
 {
     switch (BytesToWrite)
     {

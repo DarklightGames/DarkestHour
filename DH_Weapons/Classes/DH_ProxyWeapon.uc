@@ -191,7 +191,7 @@ simulated function Fire(float F)
 }
 
 // Modified to simply reset the location rotation of the proxy.
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     ResetCursor();
 }

@@ -69,7 +69,7 @@ simulated function bool WeaponAllowMantle()
 }
 
 // Implemented so pressing the deploy key will attempt to deploy a carried mortar
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     local DHPawn  P;
     local rotator LockedViewRotation;
@@ -297,7 +297,7 @@ simulated function bool StartFire(int Mode) { return false; }
 simulated event StopFire(int Mode);
 simulated function ImmediateStopFire();
 simulated function ROIronSights();
-simulated exec function ROManualReload();
+exec simulated function ROManualReload();
 
 // Modified to allow same InventoryGroup items
 function bool HandlePickupQuery(Pickup Item)

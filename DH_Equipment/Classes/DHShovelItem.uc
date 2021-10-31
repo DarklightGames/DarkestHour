@@ -8,7 +8,7 @@ class DHShovelItem extends DHWeapon
 
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
-simulated exec function ROManualReload() { return; }
+exec simulated function ROManualReload() { return; }
 
 simulated function Fire(float F)
 {

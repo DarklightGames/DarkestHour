@@ -11,7 +11,7 @@ class UFileLog extends Object;
 
 const BUFFER_LIMIT = 1024;
 
-static final function Logf(FileLog F, string S)
+final static function Logf(FileLog F, string S)
 {
     local int i, L;
 

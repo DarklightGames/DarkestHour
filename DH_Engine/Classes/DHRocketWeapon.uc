@@ -34,7 +34,7 @@ replication
 }
 
 // Overridden to cycle the weapon aiming range
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     if (bUsingSights && !IsBusy())
     {
