@@ -20,6 +20,7 @@ var     bool    bHasBeenPossessed;        // fixes players getting new ammunitio
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
+var     bool    bCanPickupWeapons;
 
 // Common Sounds
 // ** We are overwriting ROPawn here to expand for our custom surface types **
@@ -166,6 +167,8 @@ replication
 // Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
+    local DHRoleInfo RI;
+
     super(Pawn).PostBeginPlay();
 
     if (Level.bStartup && !bNoDefaultInventory)
@@ -431,6 +434,10 @@ function PossessedBy(Controller C)
 
         if (RI != none)
         {
+            // Apply role modifiers (implemented for Halloween 2021 event)
+            bCanPickupWeapons = RI.bCanPickupWeapons;
+            Health *= RI.HealthMultiplier;
+
             // Set classes for any ammo pouches based on player's role & weapon selections
             PC = ROPlayer(Controller);
 
@@ -7500,6 +7507,7 @@ defaultproperties
     bCanAutoTraceSelect=true
     HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
     AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
+    bCanPickupWeapons=true
 
     // Movement & impacts
     WalkingPct=0.45
@@ -7507,7 +7515,7 @@ defaultproperties
     MaxFallSpeed=700.0
 
     // Stamina
-    Stamina=50.0                        // How many second of stamina the player has
+    Stamina=40.0                        // How many second of stamina the player has
     StanceChangeStaminaDrain=1.5        // How much stamina is lost by changing stance
     StaminaRecoveryRate=1.8             // How much stamina to recover normally per second
     CrouchStaminaRecoveryRate=1.5       // How much stamina to recover per second while crouching

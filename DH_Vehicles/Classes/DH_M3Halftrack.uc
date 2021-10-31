@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_M3Halftrack extends DHVehicle
+class DH_M3Halftrack extends DHArmoredVehicle
     abstract;
 
 defaultproperties
@@ -15,9 +15,12 @@ defaultproperties
     VehicleMass=8.5
     ReinforcementCost=3
     MaxDesireability=1.2
+    MinRunOverSpeed=300
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
@@ -45,6 +48,11 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    ChassisTorqueScale=0.4
+    bSpecialTankTurning=false
+    TurnDamping=35.0
 
     // Physics wheels properties
     WheelLongFrictionScale=1.25
@@ -56,11 +64,11 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=10.0
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
-    VehHitpoints(0)=(PointRadius=35.0) // engine
+    Health=500.0
+    HealthMax=500.0
+    DamagedEffectHealthFireFactor=0.2
+    EngineHealth=150.0
+    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     DamagedWheelSpeedFactor=0.4
@@ -72,6 +80,7 @@ defaultproperties
     DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=false
 
     // Vehicle destruction
     ExplosionDamage=85.0

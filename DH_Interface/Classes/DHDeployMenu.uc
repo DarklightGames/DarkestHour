@@ -662,7 +662,9 @@ function UpdateRoles()
         }
 
         // If in a squad AND role requires sl/asl AND not a sl/asl AND gametype restricts specialized roles to squads only
-        if (PRI != none && PRI.IsInSquad() && RI.bRequiresSLorASL && !PRI.IsSLorASL() && GRI.GameType.default.bSquadSpecialRolesOnly)
+        if (PRI != none && PRI.IsInSquad() &&
+            ((RI.bRequiresSLorASL && !PRI.IsSLorASL()) || (RI.bRequiresSL && !PRI.IsSquadLeader())) &&
+            GRI.GameType.default.bSquadSpecialRolesOnly)
         {
             S @= "*" $ SquadLeadershipOnlyText $ "*";
             bShouldBeDisabled = true;
