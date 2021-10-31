@@ -131,7 +131,7 @@ final static function StaticProcessChunks()
             W[i] = (default.StaticData[i * 4 + 3] << 24)
                  | (default.StaticData[i * 4 + 2] << 16)
                  | (default.StaticData[i * 4 + 1] << 8)
-                 | (default.StaticData[i * 4]);
+                 | default.StaticData[i * 4];
         }
 
         // initialize hash value for this chunk

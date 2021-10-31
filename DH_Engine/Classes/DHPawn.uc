@@ -5773,7 +5773,7 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 
 simulated function float BobFunction(float T, float Amplitude, float Frequency, float Decay)
 {
-    return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
+    return Amplitude * (Sin(Frequency * T) / (Frequency ** ((Decay / Frequency) * T)));
 }
 
 exec simulated function BobAmplitude(optional float F)

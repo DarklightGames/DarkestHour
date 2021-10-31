@@ -1081,7 +1081,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
     if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += (NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+        HitPointLocation += NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check

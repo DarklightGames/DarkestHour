@@ -1920,7 +1920,7 @@ function PerformReload(optional int Count)
     else
     {
         PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad; // update CurrentMagIndex with current no. of loaded rounds, as it won't have been updated when shots fired
-        CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length); // now cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
+        CurrentMagIndex = ++CurrentMagIndex % PrimaryAmmoArray.Length; // now cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
     }
 
     if (UnloadedMunitionsPolicy == UMP_Consolidate)

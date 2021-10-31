@@ -728,7 +728,7 @@ simulated function PlayerWhizzed(float DistSquared)
     local float Intensity;
 
     // The magic number below is 75% of the radius of DHBulletWhipAttachment squared (we don't want a flinch on the more distant shots)
-    Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
+    Intensity = 1.0 - (FMin(DistSquared, 16875.0) / 16875.0);
 
     // Falloff the FlichMeter based on how much time has passed since we last had flinch
     FlinchMeterValue -= GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
@@ -4666,7 +4666,7 @@ exec function SetWheelOffset(string NewX, string NewY, string NewZ, optional byt
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
             Log(V.VehicleNameString @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
-            V.Wheels[i].WheelPosition += (NewBoneOffset - V.Wheels[i].BoneOffset); // this updates a native code setting (experimentation showed it's a relative offset)
+            V.Wheels[i].WheelPosition += NewBoneOffset - V.Wheels[i].BoneOffset; // this updates a native code setting (experimentation showed it's a relative offset)
             V.Wheels[i].BoneOffset = NewBoneOffset;
         }
     }

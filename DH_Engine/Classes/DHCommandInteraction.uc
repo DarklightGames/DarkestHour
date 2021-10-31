@@ -312,7 +312,7 @@ function PostRender(Canvas C)
 
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
-    C.DrawColor.A = byte(255 * (MenuAlpha));
+    C.DrawColor.A = byte(255 * MenuAlpha);
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     // Draw outer "beauty" ring
@@ -350,7 +350,7 @@ function PostRender(Canvas C)
 
             if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor.A = byte(255 * (MenuAlpha));
+                C.DrawColor.A = byte(255 * MenuAlpha);
             }
             else
             {
