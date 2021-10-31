@@ -14,8 +14,8 @@ defaultproperties
     VoiceType="DH_GerPlayers.DHZVoice"
     AltVoiceType="DH_GerPlayers.DHZVoice"
 
-    MyName="Der Führer"
-    AltName="Der Führer"
+    MyName="Zombie Leader"
+    AltName="Zombie Leader"
     Article=""
     PluralName=""
     Limit=1
