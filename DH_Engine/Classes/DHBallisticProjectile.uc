@@ -6,189 +6,83 @@
 class DHBallisticProjectile extends ROBallisticProjectile
     abstract;
 
-var bool    bIsArtilleryProjectile; // Whether or not we report our hits to be tracked on artillery targets.
-                                    // This should not be set in defaultproperties, but should instead be
-                                    // set in whatever logic block that spawns the projectile.
+var DHVehicleWeapon VehicleWeapon;
+
+// debugging stuff
+var bool bIsCalibrating;
+var float LifeStart;
+var vector StartLocation;
+var float DebugMils;
+
+function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
+{
+    local DHPlayer PC, SpotterPC;
+    local DHGameReplicationInfo GRI;
+    local vector MapLocation;
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local int i;
+    local float Distance, Threshold;
+    local vector RequestLocation;
+    local array<int> HitMarkerIndices;
+
+    PC = DHPlayer(InstigatorController);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (PC == none || GRI == none)
+    {
+        return;
+    }
+
+    GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
+    GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
+
+    for (i = 0; i < MapMarkers.Length; ++i)
+    {
+        RequestLocation = MapMarkers[i].WorldLocation;
+        RequestLocation.Z = 0.0;
+        HitLocation.Z = 0.0;
+        Distance = VSize(RequestLocation - HitLocation);
+        Threshold = class'DHUnits'.static.MetersToUnreal(MarkerClass.default.VisibilityRange);
+
+        if (Distance < Threshold)
+        {
+            HitMarkerIndices[HitMarkerIndices.Length] = i;
+        }
+    }
+
+    if (HitMarkerIndices.Length > 0 || Level.NetMode == NM_Standalone)
+    {
+        // Mark the hit on the map for the artillery gunner.
+        PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
+    }
+
+    // For each map marker we hit, mark the hit on the map for the spotter as well.
+    for (i = 0; i < HitMarkerIndices.Length; ++i)
+    {
+        if (MapMarkers[HitMarkerIndices[i]].Author != none)
+        {
+            SpotterPC = DHPlayer(MapMarkers[HitMarkerIndices[i]].Author.Owner);
+
+            if (SpotterPC != none)
+            {
+                SpotterPC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
+            }
+        }
+    }
+}
 
 simulated function BlowUp(vector HitLocation)
 {
-    if (Role == ROLE_Authority && bIsArtilleryProjectile)
+    local float Distance;
+
+    if (Role == ROLE_Authority && VehicleWeapon != none && bIsCalibrating)
     {
-        SetHitLocation(HitLocation);
+        Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
+
+        Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
     }
-}
-
-// New function to set hit location in team's artillery targets so it's marked on the map for mortar crew
-function SetHitLocation(vector HitLocation)
-{
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo PRI;
-    local int      TeamIndex, ClosestArtilleryTargetIndex;
-    local float    ClosestArtilleryTargetDistance, ArtilleryTargetDistance;
-    local int      i;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none || InstigatorController == none || InstigatorController.Pawn == none)
-    {
-        return;
-    }
-
-    PRI = DHPlayerReplicationInfo(InstigatorController.PlayerReplicationInfo);
-
-    if (PRI == none || PRI.RoleInfo == none)
-    {
-        return;
-    }
-
-    TeamIndex = InstigatorController.GetTeamNum();
-
-    // Zero out the z coordinate for 2D distance checking from targets
-    HitLocation.Z = 0.0;
-
-    ClosestArtilleryTargetIndex = -1;
-    ClosestArtilleryTargetDistance = 1000000000.0;
-
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        // Find the closest artillery target
-        for (i = 0; i < arraycount(GRI.GermanArtilleryTargets); ++i)
-        {
-            if (!GRI.GermanArtilleryTargets[i].bIsActive)
-            {
-                continue;
-            }
-
-            ArtilleryTargetDistance = VSize(GRI.GermanArtilleryTargets[i].Location - HitLocation);
-
-            if (ArtilleryTargetDistance < ClosestArtilleryTargetDistance)
-            {
-                ClosestArtilleryTargetDistance = ArtilleryTargetDistance;
-                ClosestArtilleryTargetIndex = i;
-            }
-        }
-
-        // If we still have a artillery target index of 255, it means none of the targets were close enough
-        if (ClosestArtilleryTargetDistance < class'DHGameReplicationInfo'.default.ArtilleryTargetDistanceThreshold)
-        {
-            // A 1.0 in the Z-component indicates to display the hit on the map
-            HitLocation.Z = 1.0;
-        }
-
-        if (ClosestArtilleryTargetIndex != -1)
-        {
-            GRI.GermanArtilleryTargets[ClosestArtilleryTargetIndex].HitLocation = HitLocation;
-        }
-    }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        // Find the closest artillery target
-        for (i = 0; i < arraycount(GRI.AlliedArtilleryTargets); ++i)
-        {
-            if (!GRI.AlliedArtilleryTargets[i].bIsActive)
-            {
-                continue;
-            }
-
-            ArtilleryTargetDistance = VSize(GRI.AlliedArtilleryTargets[i].Location - HitLocation);
-
-            if (ArtilleryTargetDistance < ClosestArtilleryTargetDistance)
-            {
-                ClosestArtilleryTargetDistance = ArtilleryTargetDistance;
-                ClosestArtilleryTargetIndex = i;
-            }
-        }
-
-        // If we still have a artillery target index of 255, it means none of the targets were close enough
-        if (ClosestArtilleryTargetDistance < class'DHGameReplicationInfo'.default.ArtilleryTargetDistanceThreshold)
-        {
-            // A 1.0 in the Z-component indicates to display the hit on the map
-            HitLocation.Z = 1.0;
-        }
-
-        if (ClosestArtilleryTargetIndex != -1)
-        {
-            GRI.AlliedArtilleryTargets[ClosestArtilleryTargetIndex].HitLocation = HitLocation;
-        }
-    }
-}
-
-// New function to find the closest artillery observer when mortar shell kills an enemy player
-// Used to give additional points to the observer & the mortarman for working together for a kill!
-function Controller GetClosestArtilleryTargetController()
-{
-    local DHGameReplicationInfo GRI;
-    local float Distance, ClosestDistance;
-    local int   ClosestIndex, i;
-
-    ClosestIndex = -1;
-    ClosestDistance = class'DHGameReplicationInfo'.default.ArtilleryTargetDistanceThreshold;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none || InstigatorController == none)
-    {
-        return none;
-    }
-
-    switch (InstigatorController.GetTeamNum())
-    {
-        case AXIS_TEAM_INDEX:
-            for (i = 0; i < arraycount(GRI.GermanArtilleryTargets); ++i)
-            {
-                if (GRI.GermanArtilleryTargets[i].Controller == none)
-                {
-                    continue;
-                }
-
-                Distance = VSize(Location - GRI.GermanArtilleryTargets[i].Location);
-
-                if (Distance <= ClosestDistance)
-                {
-                    ClosestDistance = Distance;
-                    ClosestIndex = i;
-                }
-            }
-
-            if (ClosestIndex == -1)
-            {
-                return none;
-            }
-
-            return GRI.GermanArtilleryTargets[ClosestIndex].Controller;
-
-        case ALLIES_TEAM_INDEX:
-            for (i = 0; i < arraycount(GRI.AlliedArtilleryTargets); ++i)
-            {
-                if (GRI.AlliedArtilleryTargets[i].Controller == none)
-                {
-                    continue;
-                }
-
-                Distance = VSize(Location - GRI.AlliedArtilleryTargets[i].Location);
-
-                if (Distance <= ClosestDistance)
-                {
-                    ClosestDistance = Distance;
-                    ClosestIndex = i;
-                }
-            }
-
-            if (ClosestIndex == -1)
-            {
-                return none;
-            }
-
-            return GRI.AlliedArtilleryTargets[ClosestIndex].Controller;
-
-        default:
-            break;
-    }
-
-    return none;
 }
 
 defaultproperties
 {
 }
-

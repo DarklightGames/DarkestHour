@@ -1200,16 +1200,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
         {
             // The request was denied by the server
-
-            switch (Result)
-            {
-                case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
-                    break;
-                default:
-                    MessageText = SurrenderResponseMessages[Result];
-            }
-
+            MessageText = SurrenderResponseMessages[Result];
             Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
@@ -1912,23 +1903,23 @@ defaultproperties
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
-    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to retreat."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
-    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[0]="Retreat"
     SurrenderButtonText[1]="Keep fighting"
 
-    SurrenderResponseMessages[0]="Fatal error!";
-    SurrenderResponseMessages[1]="You haven't picked a team.";
-    SurrenderResponseMessages[2]="Round hasn't started yet.";
-    SurrenderResponseMessages[3]="Surrender vote is disabled.";
-    SurrenderResponseMessages[4]="Vote is already in progress.";
-    SurrenderResponseMessages[5]="You've already surrendered.";
-    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
-    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
-    SurrenderResponseMessages[9]="You cannot surrender this early.";
-    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
+    SurrenderResponseMessages[0]="Fatal error!"
+    SurrenderResponseMessages[1]="You haven't picked a team."
+    SurrenderResponseMessages[2]="Round hasn't started yet."
+    SurrenderResponseMessages[3]="Retreat vote is disabled."
+    SurrenderResponseMessages[4]="Vote is already in progress."
+    SurrenderResponseMessages[5]="You've already retreated."
+    SurrenderResponseMessages[6]="Your team already had a vote to retreat earlier. Try again later."
+    SurrenderResponseMessages[7]="You cannot retreat after the round is over."
+    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
+    SurrenderResponseMessages[9]="You cannot retreat this early."
+    SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 
     MapMode=MODE_Map
     bButtonsEnabled=true
@@ -2324,15 +2315,15 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Surrender"
+    Begin Object Class=DHGUIButton Name=RetreatButtonObject
+        Caption="Retreat"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(2)=KickVoteButtonObject
+    b_MenuOptions(2)=RetreatButtonObject
 
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"

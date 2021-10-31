@@ -5,17 +5,6 @@
 
 class DH_G41Weapon extends DHBoltActionWeapon;
 
-// Modified to add hint about weapon's two clip loading capacity
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp(PrevWeapon);
-
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
-    {
-        DHPlayer(Instigator.Controller).QueueHint(22, true);
-    }
-}
-
 defaultproperties
 {
     ItemName="Gewehr 41(W)"

@@ -16,7 +16,7 @@ function Setup()
 
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && ClassIsChildOf(GRI.MapMarkerClasses[i], class'DHMapMarker_Enemy'))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].default.Type == MT_Enemy)
         {
             Options.Insert(j, 1);
             Options[j].OptionalObject = GRI.MapMarkerClasses[i];
@@ -56,11 +56,30 @@ function OnSelect(int OptionIndex, vector Location)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    PC.ServerAddMapMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
+    PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
 
     Interaction.Hide();
 }
 
+function Tick()
+{
+    local DHPlayer PC;
+    local vector HitLocation, HitNormal;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.GetEyeTraceLocation(HitLocation, HitNormal);
+    PC.SpottingMarker.SetLocation(HitLocation);
+    PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
+}
+
 defaultproperties
 {
+    bShouldTick=true
+    bUsesSpottingMarker=true
 }

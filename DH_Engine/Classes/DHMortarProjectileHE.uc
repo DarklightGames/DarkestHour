@@ -32,13 +32,14 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
 
-    if (!bDud)
+    if (Role == ROLE_Authority && !bDud)
     {
         VT = Spawn(class'DHVolumeTest',,, HitLocation);
 
         if (VT != none)
         {
-            bDud = VT.IsInNoArtyVolume();
+            bDud = VT.DHIsInNoArtyVolume(DHGameReplicationInfo(Level.Game.GameReplicationInfo));
+
             VT.Destroy();
         }
     }
@@ -190,6 +191,8 @@ defaultproperties
 
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+
+    HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
 
     ShakeRotMag=(Z=100.0)
     ShakeRotRate=(Z=2500.0)

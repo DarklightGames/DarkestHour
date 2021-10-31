@@ -10,8 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M5Gun_anm.M5_gun'
     Skins(0)=Texture'DH_M5Gun_tex.m5.m5'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.M5.M5_gun_collision'
-    bAttachColMeshToPitchBone=true // because the gun shield also tilts back & forth when the gun is elevated // TODO: but query whether shield should move (pretty sure not)
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.M5.M5_gun_collision',AttachBone="Gun")
     GunnerAttachmentBone="com_player"
 
     // Turret movement

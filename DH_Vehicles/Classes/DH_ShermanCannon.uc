@@ -26,7 +26,7 @@ defaultproperties
     Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
     Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int2'
     WeaponAttachOffset=(X=9.0,Y=-2.5,Z=0.0) // this is for M4A1; X=11.5 works better on M4A3 hull
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll')
 
     // Turret armor
     FrontArmorFactor=7.6

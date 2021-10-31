@@ -157,7 +157,8 @@ defaultproperties
     DeveloperIDs(6)="76561197991612787" // Razorneck
     DeveloperIDs(7)="76561198025788618" // WOLFkraut
     DeveloperIDs(8)="76561197992062636" // eksha
-    DeveloperIDs(9)="76561198162915303" // Cpt.Caverne
+    DeveloperIDs(9)="76561197989139694" // mimi
+    DeveloperIDs(10)="76561198020507621" // jwjw
 
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros

@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMortarDamageType extends ROWeaponDamageType
+class DHMortarDamageType extends DHShellImpactDamageType
     abstract;
 
 defaultproperties
 {
+    bIsArtilleryImpact=true
     HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
     TankDamageModifier=0.125
     APCDamageModifier=0.5

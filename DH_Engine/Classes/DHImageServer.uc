@@ -10,15 +10,15 @@ event Query(WebRequest Request, WebResponse Response)
     local string Image;
 
     Image = Request.URI;
-    if( Right(Caps(Image), 4) == ".JPG" || Right(Caps(Image), 5) == ".JPEG" )
+    if (Right(Caps(Image), 4) == ".JPG" || Right(Caps(Image), 5) == ".JPEG")
     {
         Response.SendStandardHeaders("image/jpeg", true);
     }
-    else if( Right(Caps(Image), 4) == ".GIF" )
+    else if (Right(Caps(Image), 4) == ".GIF")
     {
         Response.SendStandardHeaders("image/gif", true);
     }
-    else if( Right(Caps(Image), 4) == ".BMP" )
+    else if (Right(Caps(Image), 4) == ".BMP")
     {
         Response.SendStandardHeaders("image/bmp", true);
     }
@@ -27,10 +27,10 @@ event Query(WebRequest Request, WebResponse Response)
         Response.HTTPError(404);
         return;
     }
+
     Response.IncludeBinaryFile( Path $ Image );
 }
 
 defaultproperties
 {
-
 }

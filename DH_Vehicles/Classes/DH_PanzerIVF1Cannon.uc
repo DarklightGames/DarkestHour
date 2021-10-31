@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panzer4F1_anm.Panzer4F1_turret_ext'
     skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
     skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
 
     //DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
 

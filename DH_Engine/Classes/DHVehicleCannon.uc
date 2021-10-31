@@ -84,9 +84,10 @@ enum ERotationType
 
 struct SGunWheel
 {
-    var ERotationType RotationType;
-    var name          BoneName;
-    var float         Scale;
+    var ERotationType   RotationType;
+    var name            BoneName;
+    var float           Scale;
+    var EAxis           RotationAxis;
 };
 
 var array<SGunWheel> GunWheels;
@@ -811,57 +812,65 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    if (!bUsesMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
+        if (!bUsesMags)
         {
-            ++MainAmmoChargeExtra[0];
-            bDidResupply = true;
+            if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
+            {
+                ++MainAmmoChargeExtra[0];
+                bDidResupply = true;
+            }
+
+            if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
+            {
+                ++MainAmmoChargeExtra[1];
+                bDidResupply = true;
+            }
+
+            if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
+            {
+                ++MainAmmoChargeExtra[2];
+                bDidResupply = true;
+            }
+
+            // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
+            if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
+            {
+                AttemptReload();
+            }
         }
 
-        if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
+        // Coaxial MG
+        if (NumMGMags < default.NumMGMags)
         {
-            ++MainAmmoChargeExtra[1];
+            ++NumMGMags;
             bDidResupply = true;
+
+            // If coaxial MG is out of ammo & waiting to reload & we have a player, try to start a reload
+            if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
+            {
+                AttemptAltReload();
+            }
         }
 
-        if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
+        // Smoke launcher
+        if (SmokeLauncherClass != none && NumSmokeLauncherRounds < SmokeLauncherClass.default.InitialAmmo)
         {
-            ++MainAmmoChargeExtra[2];
+            ++NumSmokeLauncherRounds;
             bDidResupply = true;
-        }
 
-        // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
-        if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
-        {
-            AttemptReload();
+            // If smoke launcher is out of ammo & waiting to reload & we have a player, try to start a reload
+            if (SmokeLauncherReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
+            {
+                AttemptSmokeLauncherReload();
+            }
         }
     }
 
-    // Coaxial MG
-    if (NumMGMags < default.NumMGMags)
+    if (bDidResupply)
     {
-        ++NumMGMags;
-        bDidResupply = true;
-
-        // If coaxial MG is out of ammo & waiting to reload & we have a player, try to start a reload
-        if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
-        {
-            AttemptAltReload();
-        }
-    }
-
-    // Smoke launcher
-    if (SmokeLauncherClass != none && NumSmokeLauncherRounds < SmokeLauncherClass.default.InitialAmmo)
-    {
-        ++NumSmokeLauncherRounds;
-        bDidResupply = true;
-
-        // If smoke launcher is out of ammo & waiting to reload & we have a player, try to start a reload
-        if (SmokeLauncherReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
-        {
-            AttemptSmokeLauncherReload();
-        }
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidResupply;
@@ -1993,6 +2002,7 @@ simulated function UpdateGunWheels()
 {
     local int i;
     local rotator BoneRotation;
+    local int Value;
 
     for (i = 0; i < GunWheels.Length; ++i)
     {
@@ -2001,12 +2011,25 @@ simulated function UpdateGunWheels()
         switch (GunWheels[i].RotationType)
         {
             case ROTATION_Yaw:
-                BoneRotation.Yaw = CurrentAim.Yaw * GunWheels[i].Scale;
+                Value = CurrentAim.Yaw * GunWheels[i].Scale;
                 break;
             case ROTATION_Pitch:
-                BoneRotation.Pitch = CurrentAim.Pitch * GunWheels[i].Scale;
+                Value = CurrentAim.Pitch * GunWheels[i].Scale;
                 break;
             default:
+                break;
+        }
+
+        switch (GunWheels[i].RotationAxis)
+        {
+            case AXIS_X:
+                BoneRotation.Roll = Value;
+                break;
+            case AXIS_Y:
+                BoneRotation.Pitch = Value;
+                break;
+            case AXIS_Z:
+                BoneRotation.Yaw = Value;
                 break;
         }
 
