@@ -217,17 +217,17 @@ simulated function float GetMaxPenetration(vector LaunchLocation, vector HitLoca
 
     DistanceMeters = class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
 
-    if      (DistanceMeters < 100.0)   MaxPenetration = (DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
-    else if (DistanceMeters < 250.0)   MaxPenetration = (DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
-    else if (DistanceMeters < 500.0)   MaxPenetration = (DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
-    else if (DistanceMeters < 750.0)   MaxPenetration = (DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
-    else if (DistanceMeters < 1000.0)  MaxPenetration = (DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
-    else if (DistanceMeters < 1250.0)  MaxPenetration = (DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
-    else if (DistanceMeters < 1500.0)  MaxPenetration = (DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
-    else if (DistanceMeters < 1750.0)  MaxPenetration = (DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
-    else if (DistanceMeters < 2000.0)  MaxPenetration = (DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
-    else if (DistanceMeters < 2500.0)  MaxPenetration = (DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
-    else if (DistanceMeters < 3000.0)  MaxPenetration = (DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
+    if      (DistanceMeters < 100.0)   MaxPenetration = DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0;
+    else if (DistanceMeters < 250.0)   MaxPenetration = DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0;
+    else if (DistanceMeters < 500.0)   MaxPenetration = DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0;
+    else if (DistanceMeters < 750.0)   MaxPenetration = DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0;
+    else if (DistanceMeters < 1000.0)  MaxPenetration = DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0;
+    else if (DistanceMeters < 1250.0)  MaxPenetration = DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0;
+    else if (DistanceMeters < 1500.0)  MaxPenetration = DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0;
+    else if (DistanceMeters < 1750.0)  MaxPenetration = DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0;
+    else if (DistanceMeters < 2000.0)  MaxPenetration = DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0;
+    else if (DistanceMeters < 2500.0)  MaxPenetration = DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0;
+    else if (DistanceMeters < 3000.0)  MaxPenetration = DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0;
     else                               MaxPenetration =  DHPenetrationTable[10];
 
     if (NumDeflections > 0)

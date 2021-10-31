@@ -592,8 +592,8 @@ function SetZoomLevel(int NewZoomLevel)
 // Given a viewport and a location within that viewport, get the frame coordinates.
 function vector ViewportToFrame(Box Viewport, vector Location)
 {
-    Location.X = (Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X)));
-    Location.Y = (Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y)));
+    Location.X = Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X));
+    Location.Y = Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y));
     return Location;
 }
 

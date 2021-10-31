@@ -50,16 +50,16 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
         {
-            CameraLocation += (FPCamPos >> CameraRotation);
+            CameraLocation += FPCamPos >> CameraRotation;
         }
         else if (!IsInState('ViewTransition')) // added check to stop periscope offset being applied while transitioning from periscope to gunsight
         {
-            CameraLocation += (FPCamPos >> Gun.Rotation);
+            CameraLocation += FPCamPos >> Gun.Rotation;
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 

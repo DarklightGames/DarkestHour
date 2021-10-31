@@ -633,7 +633,7 @@ simulated function DoShakeEffect()
             if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
             {
                 BlastShielding = 1.0 - ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
-                Scale -= (0.5 * BlastShielding * Scale);
+                Scale -= 0.5 * BlastShielding * Scale;
                 ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
             }
         }

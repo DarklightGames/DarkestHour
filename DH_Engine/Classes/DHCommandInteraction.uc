@@ -304,8 +304,8 @@ function PostRender(Canvas C)
         return;
     }
 
-    CenterX = (C.ClipX / 2);
-    CenterY = (C.ClipY / 2);
+    CenterX = C.ClipX / 2;
+    CenterY = C.ClipY / 2;
 
     // TODO: get rid of magic numbers
     C.SetPos(CenterX - 8, CenterY - 8);
@@ -447,7 +447,7 @@ function PostRender(Canvas C)
             AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
 
             YL2 = 32;
-            XL2 = (YL2 * AspectRatio);
+            XL2 = YL2 * AspectRatio;
 
             C.DrawColor = ORI.InfoColor;
             C.DrawColor.A = byte(255 * MenuAlpha);

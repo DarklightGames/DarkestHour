@@ -160,7 +160,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if ((bOnGunsight && !bIsPeriscopicGunsight) || (bLockCameraDuringTransition && IsInState('ViewTransition')))
         {
-            CameraLocation += (FPCamPos >> CameraRotation);
+            CameraLocation += FPCamPos >> CameraRotation;
         }
         // In a 'look around' position, we need to make camera offset relative to the vehicle, not the way the player is facing
         else
@@ -177,12 +177,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
                 }
             }
 
-            CameraLocation += (FPCamPos >> BaseRotation);
+            CameraLocation += FPCamPos >> BaseRotation;
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 

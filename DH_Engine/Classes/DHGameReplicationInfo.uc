@@ -1861,8 +1861,8 @@ simulated function vector GetWorldCoords(float X, float Y)
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
-    WorldLocation.X = ((0.5 - X) * MapScale);
-    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation.X = (0.5 - X) * MapScale;
+    WorldLocation.Y = (0.5 - Y) * MapScale;
     WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
@@ -2007,7 +2007,7 @@ function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 
 function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
 {
-    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+    DangerZoneBalance = 128 - Clamp(Factor, -127, 127);
 
     if (!bPostponeUpdate)
     {

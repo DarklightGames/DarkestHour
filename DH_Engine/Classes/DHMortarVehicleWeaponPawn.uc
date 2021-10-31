@@ -110,7 +110,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
             WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
             WeaponAimRot.Roll = Gun.Rotation.Roll;
-            CameraLocation += (FPCamPos >> WeaponAimRot);
+            CameraLocation += FPCamPos >> WeaponAimRot;
         }
 
         // Set camera rotation
@@ -120,7 +120,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         // Finalise the camera with any shake
         if (PC != none)
         {
-            CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+            CameraLocation += PC.ShakeOffset >> PC.Rotation;
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
         }
     }

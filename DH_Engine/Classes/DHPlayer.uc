@@ -510,8 +510,8 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     // Add the freeaim movement in
     if (!bHudLocksPlayerRotation)
     {
-        WeaponBufferRotation.Yaw += (FAAWeaponRotationFactor * DeltaTime * aTurn);
-        WeaponBufferRotation.Pitch += (FAAWeaponRotationFactor * DeltaTime * aLookUp);
+        WeaponBufferRotation.Yaw += FAAWeaponRotationFactor * DeltaTime * aTurn;
+        WeaponBufferRotation.Pitch += FAAWeaponRotationFactor * DeltaTime * aLookUp;
     }
 
     if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
@@ -738,7 +738,7 @@ simulated function PlayerWhizzed(float DistSquared)
     FlinchMeterValue = FMin(FlinchMeterValue + FlinchMeterIncrement, 1.0);
 
     // Intensity is affected by the FlinchMeterValue, the higher the FlinchMeterValue the lower the Intensity
-    Intensity *= (1.0 - FlinchMeterValue);
+    Intensity *= 1.0 - FlinchMeterValue;
 
     AddBlur(0.85, Intensity);
     PlayerFlinched(Intensity);
@@ -1923,7 +1923,7 @@ ignores SeePlayer, HearNoise, Bump;
                 else // check if in deep water (positive trace means we're not)
                 {
                     CheckPoint = Pawn.Location;
-                    CheckPoint.Z -= (Pawn.CollisionHeight + 6.0);
+                    CheckPoint.Z -= Pawn.CollisionHeight + 6.0;
 
                     if (Trace(HitLocation, HitNormal, CheckPoint, Pawn.Location, false) != none)
                     {
@@ -2331,7 +2331,7 @@ function AdjustView(float DeltaTime)
 {
     if (FOVAngle != DesiredFOV)
     {
-        FOVAngle -= (FClamp(10.0 * DeltaTime, 0.0, 1.0) * (FOVAngle - DesiredFOV));
+        FOVAngle -= FClamp(10.0 * DeltaTime, 0.0, 1.0) * (FOVAngle - DesiredFOV);
 
         if (Abs(FOVAngle - DesiredFOV) <= 0.0625)
         {

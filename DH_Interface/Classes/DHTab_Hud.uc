@@ -260,14 +260,14 @@ function SaveSettings()
         {
             if (DHPlayer(PC) != none)
             {
-                DHPlayer(PC).bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
+                DHPlayer(PC).bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
                 PC.ConsoleCommand("set DH_Engine.DHPlayer bShowHints" @ string(HintLevel == 1));
                 DHPlayer(PC).UpdateHintManagement(HintLevel == 1); //true if (new hints), false if (no hints)
                 DHPlayer(PC).SaveConfig();
             }
             else
             {
-                class'DHPlayer'.default.bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
+                class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
                 class'DHPlayer'.static.StaticSaveConfig();
             }
         }

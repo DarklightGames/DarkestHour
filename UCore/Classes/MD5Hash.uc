@@ -113,11 +113,11 @@ final static function StaticProcessChunks()
     }
 
     default.StaticData[i] = 0x80;
-    default.StaticData[default.StaticData.Length - 4] = (i >>> 29);
-    default.StaticData[default.StaticData.Length - 5] = (i >>> 21);
-    default.StaticData[default.StaticData.Length - 6] = (i >>> 13);
-    default.StaticData[default.StaticData.Length - 7] = (i >>>  5);
-    default.StaticData[default.StaticData.Length - 8] = (i <<   3);
+    default.StaticData[default.StaticData.Length - 4] = i >>> 29;
+    default.StaticData[default.StaticData.Length - 5] = i >>> 21;
+    default.StaticData[default.StaticData.Length - 6] = i >>> 13;
+    default.StaticData[default.StaticData.Length - 7] = i >>>  5;
+    default.StaticData[default.StaticData.Length - 8] = i <<   3;
 
     default.StaticHashValue.A = 0x67452301;
     default.StaticHashValue.B = 0xEFCDAB89;

@@ -730,7 +730,7 @@ simulated function HelmetShotOff(rotator RotDir)
         }
 
         DroppedHelmet.Velocity = Velocity + vector(RotDir) * (DroppedHelmet.MaxSpeed * (1.0 + FRand() * 0.5));
-        DroppedHelmet.LifeSpan -= (FRand() * 2.0);
+        DroppedHelmet.LifeSpan -= FRand() * 2.0;
 
         Headgear.Destroy();
         HeadgearClass = none; // server should replicate this but let's make sure by setting it immediately
@@ -3021,7 +3021,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
         }
 
         ShotDir = Normal(Momentum);
-        PushLinVel = (RagDeathVel * ShotDir);
+        PushLinVel = RagDeathVel * ShotDir;
         PushLinVel.Z += RagDeathUpKick * (RagShootStrength * DamageType.default.KDeadLinZVelScale);
 
         PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
@@ -4503,7 +4503,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         return false;
     }
 
-    EndLoc += (7.0 * Direction); // brings us to a total of 60uu out from our starting location, which is how far our animations go
+    EndLoc += 7.0 * Direction; // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
     EndLoc.Z = Location.Z - 22.0; // 36 UU above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
@@ -5125,7 +5125,7 @@ event UpdateEyeHeight(float DeltaTime)
             Smooth = FMin(0.9, 10.0 * DeltaTime);
             OldEyeHeight = EyeHeight;
             EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-            LandBob *= (1 - Smooth);
+            LandBob *= 1 - Smooth;
 
             if (EyeHeight >= BaseEyeHeight - 1.0)
             {
@@ -5184,7 +5184,7 @@ event UpdateEyeHeight(float DeltaTime)
     if (!bJustLanded)
     {
         Smooth = FMin(0.9, 10.0 * DeltaTime / Level.TimeDilation);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (Controller.WantsSmoothedView())
         {
@@ -5201,7 +5201,7 @@ event UpdateEyeHeight(float DeltaTime)
         Smooth = FMin(0.9, 10.0 * DeltaTime);
         OldEyeHeight = EyeHeight;
         EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (EyeHeight >= BaseEyeHeight - 1.0)
         {
@@ -5982,7 +5982,7 @@ function CheckBob(float DeltaTime, vector Y)
         if (LandBob > 0.01)
         {
             AppliedBob += FMin(1.0, 16.0 * DeltaTime) * LandBob;
-            LandBob *= (1.0 - 8.0 * DeltaTime);
+            LandBob *= 1.0 - 8.0 * DeltaTime;
         }
 
         // Play footstep effects (if moving fast enough & not crawling)
@@ -6604,7 +6604,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = Rotation.Yaw;
-            TargetLocation += (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
+            TargetLocation += vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance);
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)
