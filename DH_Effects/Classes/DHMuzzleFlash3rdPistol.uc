@@ -4,12 +4,12 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
     if (FRand() < 0.5)
     {
-        Emitters[1].Opacity = 0.0;
+        Emitters[0].Opacity = 0.0;
         Emitters[4].Opacity = 0.0;
     }
     else
     {
-        Emitters[1].Opacity= 0.35;
+        Emitters[0].Opacity= 0.35;
         Emitters[4].Opacity= 0.35;
     }
 
@@ -19,6 +19,7 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[2].InitialParticlesPerSecond=100;
     Emitters[3].SpawnParticle(6);
     Emitters[4].SpawnParticle(1);
+    Emitters[5].SpawnParticle(1);
 }
 
 defaultproperties
@@ -38,13 +39,13 @@ defaultproperties
         UseRotationFrom=PTRS_Normal
         SpinsPerSecondRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=-0.500000,Max=0.500000),Z=(Min=-0.500000,Max=0.500000))
         StartSpinRange=(X=(Min=-1.000000,Max=1.000000),Y=(Min=-1.000000,Max=1.000000),Z=(Min=-1.000000,Max=1.000000))
-        StartSizeRange=(X=(Min=1.0000,Max=1.500))
+        StartSizeRange=(X=(Min=1.0000,Max=2.00))
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         SubdivisionScale(0)=0.500000
-        LifetimeRange=(Min=0.200000,Max=0.200000)
+        LifetimeRange=(Min=0.100000,Max=0.100000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
@@ -110,8 +111,8 @@ defaultproperties
     Emitters(2)=SpriteEmitter'SpriteEmitter6'
 
     Begin Object Class=SparkEmitter Name=SparkEmitter0
-        LineSegmentsRange=(Min=0.50000,Max=1.000000)
-        TimeBetweenSegmentsRange=(Min=0.050000,Max=0.1000)
+        LineSegmentsRange=(Min=0.30000,Max=0.50000)
+        TimeBetweenSegmentsRange=(Min=0.05,Max=0.08000)
         RespawnDeadParticles=False
         UseRegularSizeScale=False
         UniformSize=True
@@ -130,7 +131,7 @@ defaultproperties
     Emitters(3)=SparkEmitter'SparkEmitter0'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter0
-        BeamDistanceRange=(Min=5.000000,Max=10.000000)
+        BeamDistanceRange=(Min=5.000000,Max=15.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=3
         RespawnDeadParticles=False
@@ -145,11 +146,40 @@ defaultproperties
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
-        StartSizeRange=(X=(Min=5.000000,Max=8.000000),Y=(Min=5.000000,Max=8.000000),Z=(Min=5.000000))
+        StartSizeRange=(X=(Min=5.000000,Max=10.000000),Y=(Min=5.000000,Max=10.000000),Z=(Min=5.000000))
         DrawStyle=PTDS_Brighten
         Texture=Texture'DH_FX_Tex.weapons.pistolflash'
         LifetimeRange=(Min=0.05,Max=0.10000)
         StartVelocityRange=(X=(Min=25.000000,Max=50.000000))
     End Object
     Emitters(4)=BeamEmitter'BeamEmitter0'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter16
+        FadeOut=True
+        UseColorScale=True
+        RespawnDeadParticles=False
+        SpinParticles=True
+        UseSizeScale=True
+        UseRegularSizeScale=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        UseVelocityScale=True
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128))
+        Opacity=0.75
+        CoordinateSystem=PTCS_Relative
+        Name="barrel_puff"
+        FadeOutStartTime=0.15
+        UseRotationFrom=PTRS_Normal
+        StartSpinRange=(X=(Max=1.000000))
+        SizeScale(0)=(RelativeSize=0.200000)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
+        StartSizeRange=(X=(Min=10.000000,Max=20.000000))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        LifetimeRange=(Min=0.55,Max=0.7500000)
+        StartVelocityRange=(X=(Min=-5.000000,Max=10.000000))
+    End Object
+    Emitters(5)=SpriteEmitter'SpriteEmitter16'
 }

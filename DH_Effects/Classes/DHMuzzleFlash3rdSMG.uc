@@ -2,11 +2,24 @@ class DHMuzzleFlash3rdSMG extends ROMuzzleFlash3rd;
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
+    if (FRand() < 0.45)
+    {
+        Emitters[0].Opacity = 0.0;
+        Emitters[4].Opacity = 0.0;
+    }
+    else
+    {
+        Emitters[0].Opacity= 0.35;
+        Emitters[4].Opacity= 0.35;
+    }
+
     Emitters[0].SpawnParticle(1);
     Emitters[1].SpawnParticle(1);
     Emitters[2].SpawnParticle(8); //8
     Emitters[2].InitialParticlesPerSecond=100;
     Emitters[3].SpawnParticle(3);
+    Emitters[4].SpawnParticle(1);
+    Emitters[5].SpawnParticle(1);
 }
 
 defaultproperties
@@ -126,4 +139,58 @@ defaultproperties
         StartVelocityRange=(X=(Min=35.000000,Max=75.000000),Y=(Min=-15.000000,Max=20.000000),Z=(Min=-20.000000,Max=15.000000))
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter80'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter0
+        BeamDistanceRange=(Min=4.000000,Max=8.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=3
+        RespawnDeadParticles=False
+        UseSizeScale=True
+        AutomaticInitialSpawning=False
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        CoordinateSystem=PTCS_Relative
+        Opacity=0.5
+        MaxParticles=1
+        Name="spike_flash"
+        UseRotationFrom=PTRS_Normal
+        SizeScale(0)=(RelativeSize=0.1)
+        SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
+        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=2.000000,Max=5.000000),Y=(Min=2.000000,Max=5.000000),Z=(Min=4.000000))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'DH_FX_Tex.weapons.pistolflash'
+        LifetimeRange=(Min=0.05,Max=0.10000)
+        StartVelocityRange=(X=(Min=25.000000,Max=50.000000))
+    End Object
+    Emitters(4)=BeamEmitter'BeamEmitter0'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter16
+        FadeOut=True
+        UseColorScale=True
+        RespawnDeadParticles=False
+        SpinParticles=True
+        UseSizeScale=True
+        UseRegularSizeScale=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        UseVelocityScale=True
+        ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128))
+        Opacity=0.75
+        CoordinateSystem=PTCS_Relative
+        Name="barrel_puff"
+        FadeOutStartTime=0.15
+        UseRotationFrom=PTRS_Normal
+        StartSpinRange=(X=(Max=1.000000))
+        SizeScale(0)=(RelativeSize=0.200000)
+        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
+        StartSizeRange=(X=(Min=10.000000,Max=20.000000))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        LifetimeRange=(Min=0.55,Max=0.7500000)
+        StartVelocityRange=(X=(Min=-5.000000,Max=10.000000))
+    End Object
+    Emitters(5)=SpriteEmitter'SpriteEmitter16'
 }

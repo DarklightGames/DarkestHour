@@ -10,6 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Thompson_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
+    mMuzFlashOffset=(X=1.0)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
@@ -150,4 +151,5 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_stg44"
     PA_CrouchFireLastShot="crouch_shoot_stg44"
     PA_ProneFireLastShot="prone_shoot_stg44"
+
 }

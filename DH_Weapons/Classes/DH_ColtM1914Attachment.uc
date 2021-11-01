@@ -11,6 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon' //change
     bRapidFire=false
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
+    mMuzFlashOffset=(X=1.5,Y=2.1,Z=0.5)
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
     WA_Idle="idle_tt33"

@@ -10,6 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPistol'
+    mMuzFlashOffset=(X=1.0,Y=0.2,Z=0.5)
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
 
