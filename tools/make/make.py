@@ -56,6 +56,10 @@ def main():
                            help='compresses all build artifacts into a .zip file')
     argparser.add_argument('-debug', required=False, action='store_true', default=False,
                            help='compile debug packages (for use with UDebugger)')
+    argparser.add_argument('-skip_usp', required=False, action='store_true', default=False,
+                           help='skip pre-parsing files with UnrealScriptPlus')
+    argparser.add_argument('-strict', required=False, action='store_true', default=False,
+                           help='treat warnings will be treated as errors')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
@@ -222,43 +226,62 @@ def main():
         ucc_log_file.close()
         sys.exit(0)
 
-    print('Scanning files with UnrealScriptPlus...')
-    manifest_mtime = 0
-    if os.path.isfile(manifest_path):
-        manifest_mtime = os.stat(manifest_path).st_mtime
+    ucc_log_contents = bytearray()
 
-    usp_error_count = 0
-    usp_files_scanned = 0
-    ucc_log_file = open(ucc_log_path, 'w')
+    # UnrealScriptPlus
+    if not args.skip_usp:
+        print('Scanning files with UnrealScriptPlus...')
+        manifest_mtime = 0
+        if os.path.isfile(manifest_path):
+            manifest_mtime = os.stat(manifest_path).st_mtime
 
-    # for files with package source mismatches, find files in those packages that have been modified since
-    # the last successful build and run usp on them
-    usp_start_time = time.monotonic_ns()
-    for package in filter(lambda x: package_statuses[x] == PACKAGE_SOURCE_MISMATCH, packages_to_compile):
-        package_src_dir = os.path.join(args.dir, package[:-2], 'Classes')
-        for root, dirs, filenames in os.walk(package_src_dir):
-            for filename in filter(lambda x: x.endswith('.uc'), filenames):
-                path = os.path.join(root, filename)
-                if os.stat(path).st_mtime >= manifest_mtime:
-                    usp_files_scanned += 1
-                    try:
-                        parse_file(path)
-                    except ScriptParseError as e:
-                        error_string = script_parse_error_to_string(path, e)
-                        ucc_log_file.write(error_string + '\n')
-                        print(error_string)
-                        usp_error_count += 1
-                    except UnicodeEncodeError as e:
-                        ucc_log_file.write(f'Error: {path} (0) : {e}')
-                        usp_error_count += 1
-    usp_duration_ns = time.monotonic_ns() - usp_start_time
-    ucc_log_file.close()
+        usp_error_count = 0
+        usp_files_scanned = 0
+        ucc_log_file = open(ucc_log_path, 'w')
 
-    if usp_files_scanned > 0:
-        print(f"Processed {usp_files_scanned} file(s) in {humanfriendly.format_timespan(usp_duration_ns / 1000000000)}")
+        # for files with package source mismatches, find files in those packages that have been modified since
+        # the last successful build and run usp on them
+        usp_start_time = time.monotonic_ns()
+        for package in filter(lambda x: package_statuses[x] == PACKAGE_SOURCE_MISMATCH, packages_to_compile):
+            package_src_dir = os.path.join(args.dir, package[:-2], 'Classes')
+            for root, dirs, filenames in os.walk(package_src_dir):
+                for filename in filter(lambda x: x.endswith('.uc'), filenames):
+                    path = os.path.join(root, filename)
+                    if os.stat(path).st_mtime >= manifest_mtime:
+                        usp_files_scanned += 1
+                        try:
+                            result = parse_file(path)
+                            if len(result['errors']) > 0:
+                                for error in result['errors']:
+                                    severity = error['severity']
+                                    if severity == 'Error' or args.strict:
+                                        usp_error_count += 1
+                                    line = error['line']
+                                    message = error['message']
+                                    error_string = f'{severity}: {path} ({line}) : {message}'
+                                    ucc_log_file.write(error_string + '\n')
+                                    print(error_string)
+                        except ScriptParseError as e:
+                            print(path)
+                            error_string = script_parse_error_to_string(path, e)
+                            ucc_log_file.write(error_string + '\n')
+                            print(error_string)
+                            usp_error_count += 1
+                        except UnicodeEncodeError as e:
+                            ucc_log_file.write(f'Error: {path} (0) : {e}')
+                            usp_error_count += 1
+        usp_duration_ns = time.monotonic_ns() - usp_start_time
+        ucc_log_file.close()
 
-    if usp_error_count > 0:
-        sys.exit(1)
+        if usp_files_scanned > 0:
+            print(f"Processed {usp_files_scanned} file(s) in {humanfriendly.format_timespan(usp_duration_ns / 1000000000)}")
+
+        if usp_error_count > 0:
+            sys.exit(1)
+
+        ucc_log_file = open(ucc_log_path, 'rb')
+        ucc_log_contents = ucc_log_file.read()
+        ucc_log_file.close()
 
     print_header('Build started for mod: {}'.format(args.mod))
 
@@ -296,7 +319,7 @@ def main():
 
     # store contents of ucc.log before it's overwritten
     ucc_log_file = open(ucc_log_path, 'rb')
-    ucc_log_contents = ucc_log_file.read()
+    ucc_log_contents = b'\n'.join([ucc_log_contents, ucc_log_file.read()])
     ucc_log_file.close()
 
     # move compiled packages to mod directory
