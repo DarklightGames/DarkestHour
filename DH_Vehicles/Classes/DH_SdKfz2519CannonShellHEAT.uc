@@ -23,18 +23,59 @@ defaultproperties
 
     bDebugInImperial=false
 
-    // Penetration Gr.38 Hl (HEAT) June 1940
-    DHPenetrationTable(0)=5.2
-    DHPenetrationTable(1)=5.2
-    DHPenetrationTable(2)=5.2
-    DHPenetrationTable(3)=5.2
-    DHPenetrationTable(4)=5.2
-    DHPenetrationTable(5)=5.2
-    DHPenetrationTable(6)=5.2
-    DHPenetrationTable(7)=5.2
-    DHPenetrationTable(8)=5.2
-    DHPenetrationTable(9)=5.2
-    DHPenetrationTable(10)=5.2
+    // Penetration
+
+    // Gr.38 Hl/C April 1943
+    DHPenetrationTable(0)=11.6
+    DHPenetrationTable(1)=11.6
+    DHPenetrationTable(2)=11.6
+    DHPenetrationTable(3)=11.6
+    DHPenetrationTable(4)=11.6
+    DHPenetrationTable(5)=11.6
+    DHPenetrationTable(6)=11.6
+    DHPenetrationTable(7)=11.6
+    DHPenetrationTable(8)=11.6
+    DHPenetrationTable(9)=11.6
+    DHPenetrationTable(10)=11.6
+
+    // Gr.38 Hl/B December 1942
+    // DHPenetrationTable(0)=8.7
+    // DHPenetrationTable(1)=8.7
+    // DHPenetrationTable(2)=8.7
+    // DHPenetrationTable(3)=8.7
+    // DHPenetrationTable(4)=8.7
+    // DHPenetrationTable(5)=8.7
+    // DHPenetrationTable(6)=8.7
+    // DHPenetrationTable(7)=8.7
+    // DHPenetrationTable(8)=8.7
+    // DHPenetrationTable(9)=8.7
+    // DHPenetrationTable(10)=8.7
+
+    // Gr.38 Hl/A June 1941
+    // DHPenetrationTable(0)=8.1
+    // DHPenetrationTable(1)=8.1
+    // DHPenetrationTable(2)=8.1
+    // DHPenetrationTable(3)=8.1
+    // DHPenetrationTable(4)=8.1
+    // DHPenetrationTable(5)=8.1
+    // DHPenetrationTable(6)=8.1
+    // DHPenetrationTable(7)=8.1
+    // DHPenetrationTable(8)=8.1
+    // DHPenetrationTable(9)=8.1
+    // DHPenetrationTable(10)=8.1
+
+    // Gr.38 Hl June 1940
+    // DHPenetrationTable(0)=5.2
+    // DHPenetrationTable(1)=5.2
+    // DHPenetrationTable(2)=5.2
+    // DHPenetrationTable(3)=5.2
+    // DHPenetrationTable(4)=5.2
+    // DHPenetrationTable(5)=5.2
+    // DHPenetrationTable(6)=5.2
+    // DHPenetrationTable(7)=5.2
+    // DHPenetrationTable(8)=5.2
+    // DHPenetrationTable(9)=5.2
+    // DHPenetrationTable(10)=5.2
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)
