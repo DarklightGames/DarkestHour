@@ -23,7 +23,7 @@ defaultproperties
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEATC'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEAT'
     TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'
 
     ProjectileDescriptions(0)="HE"
@@ -31,8 +31,8 @@ defaultproperties
     ProjectileDescriptions(2)="SMOKE"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
-    nProjectileDescriptions(1)="Gr.38 Hl"
-    nProjectileDescriptions(2)="Nbgr. Kw. K."
+    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Nbgr.Kw.K."
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=6

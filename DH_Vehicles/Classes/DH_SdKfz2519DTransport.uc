@@ -6,26 +6,6 @@
 
 class DH_SdKfz2519DTransport extends DH_Sdkfz251Transport;
 
-// Quick duct-tape hack for setting destroyed combiners.
-// TODO: Either refactor this or make packaged combiners for this vehicle.
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-    local int i;
-
-    for (i = 0; i < DestroyedMeshSkins.Length; ++i)
-    {
-        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-        DestroyedSkin.Material1 = DestroyedMeshSkins[i];
-        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay';
-        DestroyedSkin.FallbackMaterial = DestroyedMeshSkins[i];
-        DestroyedSkin.CombineOperation = CO_Multiply;
-        DestroyedMeshSkins[i] = DestroyedSkin;
-    }
-
-    super(DHVehicle).DestroyAppearance();
-}
-
 defaultproperties
 {
     VehicleNameString="Sd.Kfz.251/9 Ausf.D Stummel"
@@ -57,9 +37,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_9D_Destro'
-    DestroyedMeshSkins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
-    DestroyedMeshSkins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
-    bUsesCodedDestroyedSkins=false
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex8.Destroyed.stummel_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex.Destroyed.halftrack_camo2_dest'
 
     SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.sdkfz_251_9d'
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz2519d_body'
