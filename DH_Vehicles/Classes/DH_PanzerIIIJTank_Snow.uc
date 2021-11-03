@@ -23,7 +23,7 @@ defaultproperties
 {
     bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext_winter'
-	Skins(1)=Texture'GUP_vehicles_tex.WELT_Panzer3_treads'
+    Skins(1)=Texture'GUP_vehicles_tex.WELT_Panzer3_treads'
     Skins(2)=Texture'GUP_vehicles_tex.WELT_Panzer3_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     CannonSkins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext_winter'
