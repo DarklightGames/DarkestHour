@@ -23,9 +23,8 @@ defaultproperties
 {
     bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext_winter'
-    Skins(1)=Texture'GUP_vehicles_tex.WELT_Panzer3_treads'
-    Skins(2)=Texture'GUP_vehicles_tex.WELT_Panzer3_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
+    Skins(2)=Texture'GUP_vehicles_tex.WELT_Panzer4F2_treadsnow'
+    Skins(3)=Texture'GUP_vehicles_tex.WELT_Panzer4F2_treadsnow'
     CannonSkins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext_winter'
     //DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex5.Destroyed.WELT_panzer3_body_winter_dest'
 }
