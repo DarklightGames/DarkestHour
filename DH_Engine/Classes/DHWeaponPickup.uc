@@ -81,7 +81,10 @@ auto state Pickup
 {
     function bool ValidTouch(Actor Other)
     {
-        return !(DHPawn(Other) != none && DHPawn(Other).bOnFire) && super.ValidTouch(Other);
+        return !(DHPawn(Other) != none &&
+                 (DHPawn(Other).bOnFire ||
+                 !DHPawn(Other).bCanPickupWeapons)) &&
+               super.ValidTouch(Other);
     }
 
     function Timer()
