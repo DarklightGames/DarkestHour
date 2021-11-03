@@ -29,6 +29,7 @@ defaultproperties
     Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
+    bUsesCodedDestroyedSkins=false
 
     // Driver
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
@@ -48,6 +49,11 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    ChassisTorqueScale=0.4
+    bSpecialTankTurning=false
+    TurnDamping=35.0
 
     // Physics wheels properties
     WheelLongFrictionScale=1.25

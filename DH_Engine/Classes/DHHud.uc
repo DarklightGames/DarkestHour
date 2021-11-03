@@ -2970,7 +2970,8 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 
             for (i = 0; i < MapMarkers.Length; ++i)
             {
-                if (!MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+                if (MapMarkers[i].MapMarkerClass != none &&
+                    !MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
                 {
                     continue;
                 }

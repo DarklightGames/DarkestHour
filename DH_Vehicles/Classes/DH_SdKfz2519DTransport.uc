@@ -25,15 +25,14 @@ defaultproperties
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
 
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz2519DCannonPawn',WeaponBone="mg_base")
+    PassengerPawns(0)=(AttachBone="",DriveAnim="")
+    PassengerPawns(1)=(AttachBone="",DriveAnim="")
+    PassengerPawns(2)=(AttachBone="",DriveAnim="")
+    PassengerPawns(3)=(AttachBone="",DriveAnim="")
+    PassengerPawns(4)=(AttachBone="",DriveAnim="")
+    PassengerPawns(5)=(AttachBone="",DriveAnim="")
 
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
-
-    PassengerPawns(0)=None
-    PassengerPawns(1)=None
-    PassengerPawns(2)=None
-    PassengerPawns(3)=None
-    PassengerPawns(4)=None
-    PassengerPawns(5)=None
 
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_9_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'

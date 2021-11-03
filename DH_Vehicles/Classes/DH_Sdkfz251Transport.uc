@@ -35,6 +35,7 @@ defaultproperties
     HighDetailOverlayIndex=3
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
+    bUsesCodedDestroyedSkins=false
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
@@ -66,6 +67,11 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    ChassisTorqueScale=0.4
+    bSpecialTankTurning=false
+    TurnDamping=35.0
 
     // Physics wheels properties
     WheelLongFrictionScale=1.25

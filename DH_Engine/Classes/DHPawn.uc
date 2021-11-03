@@ -167,8 +167,6 @@ replication
 // Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
-    local DHRoleInfo RI;
-
     super(Pawn).PostBeginPlay();
 
     if (Level.bStartup && !bNoDefaultInventory)
