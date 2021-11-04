@@ -92,8 +92,10 @@ defaultproperties
     DamagedEffectOffset=(X=-78.0,Y=0.0,Z=25.0)
     FireAttachBone="turret_placement" // we don't need a driver hatch fire since the tank is so tiny. Just spawn a fire right in the middle!
 
+    // Destroyed mesh
+    bUsesCodedDestroyedSkins=false
     DestroyedVehicleMesh=StaticMesh'allies_ahz_vehicles_stc.BT7_destroyed'
-
+    DestroyedMeshSkins(0)=Texture'allies_ahz_destroyed_vehicles_tex.BT7.destroyed_texture'
 
     // Exit positions
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
@@ -115,8 +117,8 @@ defaultproperties
     RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
-    TreadVelocityScale=110.0
-    WheelRotationScale=29250.0
+    TreadVelocityScale=250.0
+    WheelRotationScale=100000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-185,Y=23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-185,Y=-23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
