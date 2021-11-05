@@ -96,7 +96,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc.Destroyed.Hetzer_destroyed'
     DamagedEffectOffset=(X=-60.000000,Y=25.000000)
     BeginningIdleAnim="periscope_idle_out"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bDrawOverlays=True)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_int',TransitionDownAnim="Periscope_in",ViewPitchUpLimit=3500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=3500,ViewNegativeYawLimit=-3000)
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.hetzer_body'
     VehicleHudOccupantsX(0)=0.440000

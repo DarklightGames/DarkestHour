@@ -25,6 +25,6 @@ function RetryPassword()
         PlayerOwner().ClientTravel(RetryURL, TRAVEL_Absolute, false);
     }
 
-    Controller.CloseAll(false,True);
+    Controller.CloseAll(false, true);
 }
 
