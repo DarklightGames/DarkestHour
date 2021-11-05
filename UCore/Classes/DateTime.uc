@@ -142,13 +142,9 @@ function JSONValue ToJSON()
 
 defaultproperties
 {
-    DayOfWeek=0
     Year=1970
     Month=1
     Day=1
-    Hour=0
-    Second=0
-    Millisecond=0
 
     DayOfWeekNames[0]="Sunday"
     DayOfWeekNames[1]="Monday"

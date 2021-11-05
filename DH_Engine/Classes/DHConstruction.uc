@@ -1291,7 +1291,6 @@ defaultproperties
 
     // Progress
     StageIndex=-1
-    Progress=0
     ProgressMax=4
 
     // Damage

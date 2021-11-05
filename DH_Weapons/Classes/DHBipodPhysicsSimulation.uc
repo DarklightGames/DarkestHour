@@ -159,8 +159,6 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
 defaultproperties
 {
-    Angle=0
-    AngularVelocity=0
     AngularDamping=0.01
     GravityScale=100.0
     AngularVelocityThreshold=0.06

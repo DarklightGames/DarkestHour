@@ -1163,9 +1163,6 @@ defaultproperties
     TracerHue=45
     TracerSaturation=128
 
-    HullFireChance=0.0
-    EngineFireChance=0.0
-
     // From deprecated ROAntiVehicleProjectile class:
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
     DampenFactor=1.5 //0.5

@@ -480,7 +480,6 @@ defaultproperties
     BayonetTraceRange=140.0
     MeleeAttackSpread=8.0
     RearAngleArc=16000.0
-    MomentumTransfer=0.0 // was 100 in RO
 
     DamageMin=30
     DamageMax=40

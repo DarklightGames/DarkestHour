@@ -173,7 +173,6 @@ defaultproperties
     FontName="Arial"
     FontSize=10.000000
     Gamma=0.700000
-    Kerning=0
     YPad=1
     XPad=1
     USize=256

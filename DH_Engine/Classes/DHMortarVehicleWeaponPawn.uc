@@ -1111,14 +1111,12 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
-    OverlayHandTexNum=0
     OverlaySleeveTexNum=1
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
-    ShooterIndex=0;
-    PeriscopeIndex=1;
-    OverlayCorrectionY=-60.0;
+    PeriscopeIndex=1
+    OverlayCorrectionY=-60.0
 
     AmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     AmmoAmount=(TextureScale=0.25,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=135,OffsetY=-130,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

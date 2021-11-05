@@ -873,8 +873,6 @@ defaultproperties
     b_SpawnPoints(61)=SpawnPointButton
     b_SpawnPoints(62)=SpawnPointButton
 
-    ZoomLevel=0
-    ZoomLevelMin=0
     ZoomLevelMax=3
     ZoomScaleRange=(Min=0.25,Max=1.0)
     ViewportInterpDuration=0.33

@@ -443,7 +443,6 @@ function OnTeamIndexChanged();
 defaultproperties
 {
     SpawnPointStyle="DHSpawnButtonStyle"
-    BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
     SpawnKillProtectionTime=7.0
