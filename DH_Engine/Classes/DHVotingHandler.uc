@@ -7,8 +7,8 @@ class DHVotingHandler extends xVotingHandler;
 
 var class<VotingReplicationInfo> VotingReplicationInfoClass;
 
-var private config float PatronVoteModifiers[5];
-var         config float MaxVotePower;
+var config private  float    PatronVoteModifiers[5];
+var config          float    MaxVotePower;
 
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;

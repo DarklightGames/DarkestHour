@@ -5,8 +5,8 @@
 
 class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 
-var           noexport int       GameTypeIndex;
-var protected noexport string    FilterPattern;
+var noexport int                GameTypeIndex;
+var noexport protected string   FilterPattern;
 
 // Style for maps that are out of player range
 var(Style)             string    RedListStyleName;
