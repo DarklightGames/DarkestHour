@@ -58,8 +58,8 @@ def main():
                            help='compile debug packages (for use with UDebugger)')
     argparser.add_argument('-skip_usp', required=False, action='store_true', default=False,
                            help='skip pre-parsing files with UnrealScriptPlus')
-    argparser.add_argument('-strict', required=False, action='store_true', default=False,
-                           help='treat warnings will be treated as errors')
+    argparser.add_argument('-strict', required=False, action='store_true', default=True,
+                           help='warnings will be treated as errors')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
@@ -86,7 +86,7 @@ def main():
     mod_sys_dir = os.path.join(mod_dir, 'System')
 
     if not os.path.isdir(mod_sys_dir):
-        print('error could not resolve mod system directory')
+        print('error: could not resolve mod system directory')
         sys.exit(1)
 
     # read the default config
