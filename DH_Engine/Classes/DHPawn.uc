@@ -136,6 +136,9 @@ var int RequiredSquadMembersToReceiveColoredSmoke;
 // (not) DUMB SHIT
 var     DHATGun             GunToRotate;
 
+var     DHBackpack          Backpack;
+var     class<DHBackpack>   BackpackClass;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -291,6 +294,14 @@ simulated function PostNetReceive()
     if (Headgear == none && HeadgearClass != default.HeadgearClass && HeadgearClass != none)
     {
         Headgear = Spawn(HeadgearClass, self);
+    }
+
+    // Backpack
+    if (Backpack == none &&
+        BackpackClass != default.BackpackClass &&
+        BackpackClass != none)
+    {
+        Backpack = Spawn(BackpackClass, self);
     }
 
     if (AmmoPouches.Length == 0 && AmmoPouchClasses[0] != default.AmmoPouchClasses[0] && AmmoPouchClasses[0] != none)
@@ -474,6 +485,7 @@ function PossessedBy(Controller C)
             // Set classes for headgear & severed limbs, based on player's role
             // Any random headgear selection for role gets made here, when pawn first possessed
             HeadgearClass = RI.GetHeadgear();
+            BackpackClass = RI.GetBackpack();
             DetachedArmClass = RI.static.GetArmClass();
             DetachedLegClass = RI.static.GetLegClass();
 
@@ -484,6 +496,11 @@ function PossessedBy(Controller C)
                 if (HeadgearClass != none && HeadgearClass != default.HeadgearClass && Headgear == none)
                 {
                     Headgear = Spawn(HeadgearClass, self);
+                }
+
+                if (BackpackClass != none && BackpackClass != default.BackpackClass && Backpack == none)
+                {
+                    Backpack = Spawn(BackpackClass, self);
                 }
 
                 for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
@@ -5510,6 +5527,11 @@ simulated function StartBurnFX()
         Headgear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
     }
 
+    if (Backpack != none)
+    {
+        Backpack.SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
+    }
+
     for (i = 0; i < AmmoPouches.Length; ++i)
     {
         AmmoPouches[i].SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
@@ -7504,6 +7526,7 @@ defaultproperties
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
     HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
+    BackpackClass=class'DH_Engine.DHBackpack'
     AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
     bCanPickupWeapons=true
 
