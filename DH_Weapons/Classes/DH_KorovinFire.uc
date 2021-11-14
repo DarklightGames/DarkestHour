@@ -8,7 +8,7 @@ class DH_KorovinFire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_KorovinBullet'
-    AmmoClass=class'ROAmmo.PPS43Ammo'
+    AmmoClass=class'DH_Weapons.DH_PPS43Ammo'
     FireRate=0.128 // 470 rpm
     Spread=140.0
 

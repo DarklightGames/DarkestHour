@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIBullet extends DHBullet;
+class DH_ZB30Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    Speed=22028.0
-    BallisticCoefficient=0.15
-    WhizType=2
-    Damage=56.0
-    MyDamageType=class'DH_Weapons.DH_StenMkIIDamType'
+    InventoryType=class'DH_Weapons.DH_ZB30Weapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.ZB30'
 }
+

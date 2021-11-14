@@ -8,7 +8,7 @@ class DH_MP40Fire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
     FireRate=0.13 // 460rpm
     Spread=125.0
 

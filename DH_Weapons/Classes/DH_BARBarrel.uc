@@ -7,8 +7,8 @@ class DH_BARBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    BarrelCoolingRate=3.0
-    FiringHeatIncrement=4.0
-    CriticalTemperature=210.0
-    FailureTemperature=300.0
+    BarrelCoolingRate=2.4
+    FiringHeatIncrement=2.5
+    CriticalTemperature=230.0
+    FailureTemperature=315.0
 }

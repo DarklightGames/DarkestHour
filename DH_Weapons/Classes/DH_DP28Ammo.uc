@@ -3,13 +3,15 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_StenMkIIBullet extends DHBullet;
+class DH_DP28Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    Speed=22028.0
-    BallisticCoefficient=0.15
-    WhizType=2
-    Damage=56.0
-    MyDamageType=class'DH_Weapons.DH_StenMkIIDamType'
+    ItemName="DP27 Magazine"
+    IconMaterial=Material'InterfaceArt_tex.HUD.dp27_ammo'
+    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
+
+    //PickupClass=class'DP28AmmoPickup'
+    MaxAmmo=47
+    InitialAmount=47
 }

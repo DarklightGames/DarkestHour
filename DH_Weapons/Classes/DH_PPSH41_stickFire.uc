@@ -8,7 +8,7 @@ class DH_PPSH41_stickFire extends DHFastAutoFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PPSH41_stickBullet'
-    AmmoClass=class'ROAmmo.PPS43Ammo'
+    AmmoClass=class'DH_Weapons.DH_PPS43Ammo'
     FireRate=0.0667 // 900rpm
     Spread=135.0
 

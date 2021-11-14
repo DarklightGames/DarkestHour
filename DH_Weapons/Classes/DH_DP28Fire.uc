@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
-    AmmoClass=class'ROAmmo.DP28Ammo'
+    AmmoClass=class'DH_Weapons.DH_DP28Ammo'
     FireRate=0.1
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)

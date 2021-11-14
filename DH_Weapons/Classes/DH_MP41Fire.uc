@@ -8,7 +8,7 @@ class DH_MP41Fire extends DH_MP40Fire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP41Bullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
     FireRate=0.12 // 500rpm
     Spread=120.0
 

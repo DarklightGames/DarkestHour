@@ -1,15 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_StenMkIIBullet extends DHBullet;
+class DH_ZB30Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    Speed=22028.0
-    BallisticCoefficient=0.15
-    WhizType=2
-    Damage=56.0
-    MyDamageType=class'DH_Weapons.DH_StenMkIIDamType'
+    BarrelCoolingRate=3.0
+    FiringHeatIncrement=2.5
+    CriticalTemperature=230.0
+    FailureTemperature=315.0
 }
