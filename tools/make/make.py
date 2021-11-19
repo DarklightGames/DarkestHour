@@ -58,7 +58,7 @@ def main():
                            help='compile debug packages (for use with UDebugger)')
     argparser.add_argument('-skip_usp', required=False, action='store_true', default=False,
                            help='skip pre-parsing files with UnrealScriptPlus')
-    argparser.add_argument('-strict', required=False, action='store_true', default=True,
+    argparser.add_argument('-strict', required=False, action='store_true', default=False,
                            help='warnings will be treated as errors')
     args = argparser.parse_args()
 
