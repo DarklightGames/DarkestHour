@@ -1,6 +1,6 @@
 @echo OFF
 cd "%~dp0"
-python ..\tools\make\make.py -mod DarkestHourDev ..
+call ..\tools\make\venv\Scripts\activate.bat && python ..\tools\make\make.py -mod DarkestHourDev ..
 
 if %ERRORLEVEL% GEQ 1 (
     pause
