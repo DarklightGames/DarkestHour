@@ -9,12 +9,12 @@ defaultproperties
 {
     bIsWinterVariant=true
 
-    Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.halftracksnow2_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.halftrack_body_snow'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treadsnow'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treadsnow'
 
-    CannonSkins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_winter_ext'
+    CannonSkins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_snow_ext'
 
-    // TODO: Need a destroyed combiner for the winter variant!
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.halftrack_stripe_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex8.Destroyed.stummel_snow_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex.Destroyed.halftrack_snow_dest'
 }
