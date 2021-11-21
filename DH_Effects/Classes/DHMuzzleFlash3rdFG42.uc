@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2021
+//==============================================================================
+
 class DHMuzzleFlash3rdFG42 extends ROMuzzleFlash3rd;
 
 //Special muzzle effect class for FG42 due to misalignment of 'tip' bone
@@ -110,7 +115,7 @@ defaultproperties
     Emitters(2)=SpriteEmitter'SpriteEmitter6'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter0
-        BeamDistanceRange=(Min=50.000000,Max=95.000000)
+        BeamDistanceRange=(Min=25.000000,Max=60.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=3
         RespawnDeadParticles=False
@@ -121,11 +126,12 @@ defaultproperties
         CoordinateSystem=PTCS_Relative
         MaxParticles=1
         Name="spike_flash"
+        StartLocationRange=(X=(Min=-3.00000,Max=1.000000))
         UseRotationFrom=PTRS_Normal
         SizeScale(0)=(RelativeSize=0.1)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.5000000)
-        StartSizeRange=(X=(Min=5.000000,Max=10.000000),Y=(Min=5.000000,Max=10.000000),Z=(Min=50.000000))
+        StartSizeRange=(X=(Min=5.000000,Max=10.000000),Y=(Min=5.000000,Max=10.000000),Z=(Min=25.000000))
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.explosions.fire_quad'
         LifetimeRange=(Min=0.05,Max=0.10000)
@@ -148,6 +154,7 @@ defaultproperties
         ColorScaleRepeats=4
         MaxParticles=64
         name="sparks"
+        UseRotationFrom=PTRS_Actor
         SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
         StartSizeRange=(X=(Min=0.55,Max=0.75))

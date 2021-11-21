@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2021
+//==============================================================================
+
 class DHMuzzleFlash3rdKar extends ROMuzzleFlash3rd;
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
@@ -103,22 +108,31 @@ defaultproperties
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter6'
 
-    Begin Object Class=SparkEmitter Name=SparkEmitter0
-        LineSegmentsRange=(Min=1.00000,Max=2.000000)
-        TimeBetweenSegmentsRange=(Min=0.050000,Max=0.1000)
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter80
+        UseDirectionAs=PTDU_UpAndNormal
+        ProjectionNormal=(X=1.000000,Y=0.500000)
+        UseColorScale=True
         RespawnDeadParticles=False
+        SpinParticles=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        ColorScale(0)=(Color=(B=0,G=165,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        MaxParticles=6
+        UseRandomSubdivision=True
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
+        ColorScaleRepeats=4
+        MaxParticles=64
         name="sparks"
-        StartLocationRange=(X=(Min=0.00000,Max=2.000000))
-        UseRotationFrom=PTRS_ACtor
-        Texture=Texture'Effects_Tex.explosions.fire_quad'
-        LifetimeRange=(Min=0.100000,Max=0.150000)
-        StartVelocityRange=(X=(Min=100.000000,Max=150.000000),Y=(Min=-30.000000,Max=35.000000),Z=(Min=-35.000000,Max=25.000000))
+        UseRotationFrom=PTRS_Actor
+        SpinsPerSecondRange=(X=(Min=5.00000,Max=10.000000))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
+        StartSizeRange=(X=(Min=0.85,Max=1.25))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=0.15,Max=0.2)
+        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
     End Object
-    Emitters(3)=SparkEmitter'SparkEmitter0'
+    Emitters(3)=SpriteEmitter'SpriteEmitter80'
 }

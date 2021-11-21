@@ -92,7 +92,7 @@ defaultproperties
     bWaitForRelease=true
     FireRate=2.4
     FAProjSpawnOffset=(X=-35.0)
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmoke'
     bAnimNotifiedShellEjects=true
     ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
 

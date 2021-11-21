@@ -10,16 +10,23 @@ var     mesh            EmptyMesh;       // the mesh to swap to after a round is
 
 var     bool            bPanzerfaustAttachment; //Panzerfaust 3rd person muzzle flash needs to be handled differently
 var     name            ExhaustBoneName;
-var     class<Emitter>  mExhFlashClass;
+var     class<Emitter>  mExhFlashClass; //backblast effects
 var     Emitter         mExhFlash3rd;
 
-// Overridden to use standard muzzle flash code for non-Panzerfaust rocket weps
+// Overridden to use standard muzzle flash code and to add back blast fx
 simulated function PostBeginPlay()
 {
-    if (Level.NetMode != NM_DedicatedServer && mMuzFlashClass != none && !bPanzerfaustAttachment)
+    if (Level.NetMode != NM_DedicatedServer)
     {
+        if (mMuzFlashClass != none)
         mMuzFlash3rd = Spawn(mMuzFlashClass);
         AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+        mMuzFlash3rd.SetRelativeLocation(mMuzFlashOffset);
+
+        if (mExhFlashClass != none)
+        mExhFlash3rd = Spawn(mExhFlashClass);
+        AttachToBone(mExhFlash3rd, ExhaustBoneName);
+        //mMuzFlash3rd.SetRelativeLocation(mMuzFlashOffset);
     }
 }
 
@@ -46,21 +53,16 @@ simulated event ThirdPersonEffects()
 
         WeaponLight();
 
-        if (!bPanzerfaustAttachment)
+        if (mMuzFlash3rd != none)
         {
             mMuzFlash3rd.Trigger(self, none);
         }
-        else
+
+        if (mExhFlash3rd != none)
         {
-                mMuzFlash3rd = Spawn(mMuzFlashClass);
-                AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mExhFlash3rd.Trigger(self, none);
         }
 
-        if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')
-        {
-            mExhFlash3rd = Spawn(mExhFlashClass);
-            AttachToBone(mExhFlash3rd, ExhaustBoneName);
-        }
     }
 
     if (FlashCount == 0)

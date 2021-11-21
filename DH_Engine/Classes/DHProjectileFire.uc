@@ -734,6 +734,59 @@ simulated function float GetRecoilGainFalloff(float TimeSeconds)
 }
 
 // Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
+simulated function InitEffects()
+{
+    local coords       EjectBoneCoords;
+    local vector       SpawnLocation, X, Y, Z;
+    local rotator      ShellRotation;
+
+    super.InitEffects();
+
+    if (ShellCaseEjectClass == none)
+    {
+        return;
+    }
+
+    if (ShellCaseEjectClass != None)
+    {
+        ShellEject1st = Weapon.Spawn(ShellCaseEjectClass, Instigator);
+
+        if ( ShellEject1st != None && ShellEmitBone != '')
+        {
+                Weapon.AttachToBone(ShellEject1st, ShellEmitBone);
+                ShellEject1st.SetRelativeLocation(ShellEjectOffset);
+                ShellEject1st.SetRelativeRotation(ShellEjectRotate);
+                ShellEject1st.SetShellVelocity(ShellVelMinX,ShellVelMaxX,ShellVelMinY,ShellVelMaxY,ShellVelMinZ,ShellVelMaxZ);
+        }
+    }
+
+            /*
+            // Get location & rotation to spawn ejected shell case
+            if (IsPlayerHipFiring())
+            {
+                // Have to calculate the the shell ejection bone offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
+                EjectBoneCoords = Weapon.GetBoneCoords(ShellEmitBone);
+                SpawnLocation = Weapon.Location + (0.2 * (EjectBoneCoords.Origin - Weapon.Location));
+                SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) + (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
+                ShellRotation = rotator(-EjectBoneCoords.YAxis);
+                ShellCaseEject1st = Weapon.Spawn(ShellCaseEjectClass, Instigator,, SpawnLocation, ShellRotation);
+                ShellRotation = rotator(EjectBoneCoords.XAxis) + ShellRotOffsetHip;
+            }
+            else
+            {
+                Weapon.GetViewAxes(X, Y, Z);
+                SpawnLocation = Instigator.Location + Instigator.EyePosition();
+                SpawnLocation += (X * ShellIronSightOffset.X) + (Y * ShellIronSightOffset.Y) + (Z * ShellIronSightOffset.Z);
+                ShellRotation = rotator(Y);
+                ShellRotation.Yaw += 16384;
+                ShellCaseEject1st = Weapon.Spawn(ShellCaseEjectClass, Instigator,, SpawnLocation, ShellRotation);
+                ShellRotation = rotator(Y) + ShellRotOffsetIron;
+            }
+            */
+}
+
+/*
+// Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
 simulated function EjectShell()
 {
     local ROShellEject Shell;
@@ -778,6 +831,7 @@ simulated function EjectShell()
         Shell.Velocity = vector(ShellRotation) * (Shell.MinStartSpeed + (FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)));
     }
 }
+*/
 
 defaultproperties
 {

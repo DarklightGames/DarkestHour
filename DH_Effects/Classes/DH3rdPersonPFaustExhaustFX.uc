@@ -3,24 +3,20 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH3rdPersonPFaustExhaustFX extends Emitter;
+class DH3rdPersonPFaustExhaustFX extends ROMuzzleFlash3rd;
+
+simulated function Trigger(Actor Other, Pawn EventInstigator)
+{
+    Emitters[0].SpawnParticle(15);
+    Emitters[0].InitialParticlesPerSecond=100;
+    Emitters[1].SpawnParticle(1); //8
+}
 
 defaultproperties
 {
-    bLightChanged=True
-    AutoDestroy=True
-    Style=STY_Masked
-    bUnlit=true
-    bDirectional=True
-    bNoDelete=false
-    RemoteRole=ROLE_SimulatedProxy
-    bNetTemporary=true
-    bHardAttach=true
-    LifeSpan=8.0
-
-    bSelected=True
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
+        FadeOut=true
         UseColorScale=True
         RespawnDeadParticles=False
         SpinParticles=True
@@ -32,7 +28,8 @@ defaultproperties
         ColorScale(0)=(Color=(B=192,G=192,R=192,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192))
         MaxParticles=15
-        Opacity=0.50
+        Opacity=0.25
+        FadeOutStartTime=1.5
         Name="Smoke"
         StartLocationOffset=(X=-50.000000)
         StartLocationRange=(X=(Min=-5.000000,Max=5.000000))
@@ -40,9 +37,10 @@ defaultproperties
         SpinsPerSecondRange=(X=(Max=0.050000))
         StartSpinRange=(X=(Max=1.000000))
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.000000)
-        InitialParticlesPerSecond=50000.000000
-        DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
         LifetimeRange=(Min=2.500000,Max=3.500000)
         StartVelocityRange=(X=(Min=-300.000000,Max=-1500.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-100.000000,Max=100.000000))
         VelocityLossRange=(X=(Min=1.000000,Max=5.000000),Y=(Min=1.000000,Max=5.000000),Z=(Min=1.000000,Max=5.000000))
@@ -52,61 +50,26 @@ defaultproperties
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-        UseColorScale=True
-        FadeOut=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
-        Acceleration=(X=100.000000)
-        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.500000
-        FadeOutStartTime=0.098000
-        FadeInEndTime=0.080000
-        MaxParticles=10
-        Name="rear flash"
-        StartLocationOffset=(X=-20.000000)
-        StartLocationShape=PTLS_Sphere
-        UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=0.500000,Max=1.000000),Z=(Min=0.500000,Max=1.000000))
-        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=8.000000)
-        StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
-        InitialParticlesPerSecond=5000.000000
-        DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.impact_2frame'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=1
-        LifetimeRange=(Min=0.200000,Max=0.300000)
-        StartVelocityRange=(X=(Min=-200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
-    End Object
-    Emitters(1)=SpriteEmitter'SpriteEmitter1'
-
     Begin Object Class=BeamEmitter Name=BeamEmitter0
         BeamDistanceRange=(Min=100.000000,Max=200.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=3
         UseColorScale=True
         FadeOut=True
-        FadeIn=True
         RespawnDeadParticles=False
         UniformSize=True
+        AutomaticInitialSpawning=False
         StartLocationOffset=(X=-20.000000)
-        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(0)=(Color=(B=0,G=0,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.040000
-        FadeOutStartTime=0.060000
-        FadeInEndTime=0.0
-        MaxParticles=8
+        Opacity=0.1
+        FadeOutStartTime=0.05
+        MaxParticles=1
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=100.0,Max=200.000000),Y=(Min=100.0,Max=200.000000),Z=(Min=100.0,Max=200.000000))
+        StartSizeRange=(X=(Min=100.0,Max=200.000000),Y=(Min=100.0,Max=200.000000),Z=(Min=100.0))
         Texture=Texture'DH_FX_Tex.Effects.Spotlight'
-        LifetimeRange=(Min=0.150000,Max=0.300000)
-        StartVelocityRange=(X=(Min=-50.000000,Max=-50.000000))
+        LifetimeRange=(Min=0.100000,Max=0.150000)
+        StartVelocityRange=(X=(Min=-50.000000,Max=-100.000000))
     End Object
-    Emitters(2)=BeamEmitter'BeamEmitter0'
+    Emitters(1)=BeamEmitter'BeamEmitter0'
 }

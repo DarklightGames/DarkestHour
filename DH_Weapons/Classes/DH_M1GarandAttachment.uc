@@ -10,9 +10,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Garand_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectM1Garand'
     bRapidFire=false
-    bUseWeaponLight=false
+    bUseWeaponLight=true
 
     WA_Idle="idle_kar98"
     WA_Fire="fire"

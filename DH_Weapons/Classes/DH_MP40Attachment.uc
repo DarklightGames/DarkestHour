@@ -10,7 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp40_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectMP40'
 
     WA_Idle="Idle_mp40"
     WA_IdleEmpty="Idle_mp40"

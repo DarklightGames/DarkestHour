@@ -7,7 +7,7 @@ class DH_PanzerFaustAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    bPanzerfaustAttachment=true
+    //bPanzerfaustAttachment=true
     Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
     Skins(0)=Texture'Weapons3rd_tex.German.Panzerfaust_world'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'

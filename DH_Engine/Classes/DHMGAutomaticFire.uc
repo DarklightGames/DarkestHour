@@ -55,7 +55,7 @@ defaultproperties
 
     PackingThresholdTime=0.12
     bUsesTracers=true
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMG'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04

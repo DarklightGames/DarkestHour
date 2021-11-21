@@ -24,6 +24,8 @@ var     bool    bUseWeaponLight; // for testing purposes only
 
 var     vector  mMuzFlashOffset; // allows us to fix the location of muzzle flash effects
 
+var     class<Emitter>          ShellCaseEjectClass; //converting the shell ejection system to emitter-based
+var     Emitter                 ShellCaseEject3rd;
 var     vector  ShellEjectionOffset; // allows us to fix the location of the shell ejection
 
 
@@ -41,9 +43,20 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (mMuzFlashClass != none)
-        mMuzFlash3rd = Spawn(mMuzFlashClass);
-        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-        mMuzFlash3rd.SetRelativeLocation(mMuzFlashOffset);
+        {
+            mMuzFlash3rd = Spawn(mMuzFlashClass);
+            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd.SetRelativeLocation(mMuzFlashOffset);
+        }
+
+        if (ShellCaseEjectClass != none)
+        {
+            ShellCaseEject3rd = Spawn(ShellCaseEjectClass);
+            AttachToBone(ShellCaseEject3rd, ShellEjectionBoneName);
+            ShellCaseEject3rd.SetRelativeLocation(ShellEjectionOffset);
+        }
+
+
     }
 }
 
@@ -111,6 +124,7 @@ simulated function SetBarrelSteamActive(bool bSteaming)
     }
 }
 
+/* Deprecated
 simulated function SpawnShells(float Frequency)
 {
     local   rotator     EjectorRotation;
@@ -141,6 +155,7 @@ simulated function SpawnShells(float Frequency)
         Spawn(ROShellCaseClass, Instigator,, SpawnLocation, EjectorRotation);
     }
 }
+*/
 
 simulated function WeaponLight()
 {
@@ -188,10 +203,17 @@ simulated event ThirdPersonEffects()
             mMuzFlash3rd.Trigger(self, none);
         }
 
+        if (!bAnimNotifiedShellEjects && ShellCaseEject3rd != none)
+        {
+            ShellCaseEject3rd.Trigger(self, none);
+        }
+
+        /* Deprecated
         if (!bAnimNotifiedShellEjects)
         {
             SpawnShells(1.0);
         }
+        */
     }
 
     if (FlashCount == 0)

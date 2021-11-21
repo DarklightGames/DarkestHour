@@ -11,8 +11,8 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdLMG'
     mMuzFlashOffset=(X=0.0,Y=0.9,Z=1.25)
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    ShellEjectionOffset=(X=3.0,Y=-2.0,Z=1.0)
+    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectM1Garand'
+    ShellEjectionOffset=(X=-2.0,Y=-3.0,Z=-0.5)
 
     MuzzleBoneName="Tip"
     ShellEjectionBoneName="weapon_eject"
