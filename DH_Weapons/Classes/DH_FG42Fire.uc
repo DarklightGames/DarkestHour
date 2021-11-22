@@ -33,11 +33,19 @@ defaultproperties
     BipodDeployFireLoopAnim="deploy_shoot_loop"
     BipodDeployFireEndAnim="deploy_shoot_end"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
-    ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
-    ShellRotOffsetIron=(Pitch=500)
-    ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
-    bReverseShellSpawnDirection=true
+    //Ejected shell params
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
+    ShellEjectOffset=(X=0.0,Y=0.2,Z=0.0)
+    ShellVelMinX=200.0
+    ShellVelMaxX=350.0
+    ShellVelMinY=0.0
+    ShellVelMaxY=0.0
+    ShellVelMinZ=-200.0
+    ShellVelMaxZ=-300.0
+
+    //bReverseShellSpawnDirection=true
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMG'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmoke'
 
     ShakeRotTime=0.75
 }

@@ -28,6 +28,9 @@ defaultproperties
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)
     bReverseShellSpawnDirection=true
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stSTG'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmoke'
+
     ShakeRotMag=(X=50.0,Y=50.0,Z=175.0)
     ShakeRotTime=0.75
 }

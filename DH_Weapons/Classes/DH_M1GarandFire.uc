@@ -109,10 +109,20 @@ defaultproperties
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
-    ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
-    ShellHipOffset=(X=0,Y=-3,Z=0)
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
+
+    //Ejected shell params
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
+    ShellEjectOffset=(X=0.0,Y=-2,Z=0.0)
+    ShellVelMinX=200.0
+    ShellVelMaxX=350.0
+    ShellVelMinY=250.0
+    ShellVelMaxY=450.0
+    ShellVelMinZ=200.0
+    ShellVelMaxZ=300.0
+
     FireLastAnim="shoot_last"
     FireIronLastAnim="Iron_Shoot_Last"
-    MuzzleOffset=(X=10)
+    MuzzleBone="Muzzle"
+    MuzzleOffset=(X=4.2,Y=-0.9)
 }

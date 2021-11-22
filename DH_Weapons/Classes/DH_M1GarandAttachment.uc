@@ -10,7 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Garand_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdKar'
-    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectM1Garand'
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd762x54mm'
     bRapidFire=false
     bUseWeaponLight=true
 

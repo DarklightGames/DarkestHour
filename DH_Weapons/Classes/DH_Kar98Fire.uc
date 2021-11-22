@@ -15,7 +15,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellRotOffsetIron=(Pitch=14000)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

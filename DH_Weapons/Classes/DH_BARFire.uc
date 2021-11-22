@@ -22,8 +22,6 @@ defaultproperties
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
-    MuzzleBone=MuzzleNew
-
     // Spread
     HipSpreadModifier=6.0
     Spread=65.0
@@ -36,7 +34,10 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
+    //Effects
+    MuzzleBone=Muzzle
+    MuzzleOffset=(X=-0.5,Z=0.18)
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
 
@@ -46,11 +47,18 @@ defaultproperties
     FireAnim=fire
     FireIronAnim=Iron_fire
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    //Ejected shell params
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
     ShellEmitBone=ejector3
-    ShellRotOffsetHip=(Pitch=-10240)
-    ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
-    ShellRotOffsetIron=(Pitch=500)
+    ShellEjectOffset=(X=2.0,Y=-5.0,Z=-0.5)
+    //ShellEjectRotate=(Yaw=50000)
+    //ShellEjectRotate=(Pitch=25000,Yaw=5000)
+    ShellVelMinX=100.0
+    ShellVelMaxX=350.0
+    ShellVelMinY=250.0
+    ShellVelMaxY=450.0
+    ShellVelMinZ=200.0
+    ShellVelMaxZ=250.0
     bReverseShellSpawnDirection=true
 
     ShakeRotMag=(X=45.0,Y=30.0,Z=120.0)

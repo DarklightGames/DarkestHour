@@ -41,7 +41,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.FG42_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdFG42'
-    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectM1Garand'
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
 

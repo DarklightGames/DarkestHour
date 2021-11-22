@@ -11,7 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdLMG'
     mMuzFlashOffset=(X=0.0,Y=0.9,Z=1.25)
-    ShellCaseEjectClass=class'DH_Effects.DH3rdShellEjectM1Garand'
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd762x54mm'
     ShellEjectionOffset=(X=-2.0,Y=-3.0,Z=-0.5)
 
     MuzzleBoneName="Tip"

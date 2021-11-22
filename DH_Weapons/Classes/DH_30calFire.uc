@@ -15,6 +15,9 @@ defaultproperties
     Spread=75.0
     RecoilRate=0.06
 
+    //Effects
+    MuzzleOffset=(X=1.0)
+
     // Recoil
     MaxVerticalRecoilAngle=500
     MaxHorizontalRecoilAngle=225
