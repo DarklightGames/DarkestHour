@@ -10,7 +10,15 @@ defaultproperties
     Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp40_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
+
+    //EjectedShellParams
     ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd9x19mm'
+    ShellVelMinX=25.0
+    ShellVelMaxX=45.0
+    ShellVelMinY=25.0
+    ShellVelMaxY=45.0
+    ShellVelMinZ=-150.0
+    ShellVelMaxZ=-250.0
 
     WA_Idle="Idle_mp40"
     WA_IdleEmpty="Idle_mp40"

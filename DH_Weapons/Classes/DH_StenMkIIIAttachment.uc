@@ -10,10 +10,17 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.StenMk3_3rd'
     MenuImage=Texture'DH_Sten_tex.interface.stenmk3'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    
     MuzzleBoneName="tipnew"
+
+    //EjectedShellParams
     ShellEjectionBoneName="weapon_ejectnew"
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd9x19mm'
+    ShellVelMinX=25.0
+    ShellVelMaxX=45.0
+    ShellVelMinY=-20.0
+    ShellVelMaxY=25.0
+    ShellVelMinZ=-75.0
+    ShellVelMaxZ=-125.0
 
     WA_Idle="idle_sten"
     WA_IdleEmpty="idle_sten"

@@ -23,7 +23,7 @@ simulated function SetShellVelocity(float MinX, float MaxX, float MinY, float Ma
 defaultproperties
 {
     bOnlyRelevantToOwner = true
-    Style=STY_Normal
+    Style=STY_Particle
 
     bUnlit=true
     bNoDelete=False

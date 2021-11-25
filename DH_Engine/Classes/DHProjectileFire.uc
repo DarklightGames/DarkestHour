@@ -736,9 +736,6 @@ simulated function float GetRecoilGainFalloff(float TimeSeconds)
 // Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
 simulated function InitEffects()
 {
-    local coords       EjectBoneCoords;
-    local vector       SpawnLocation, X, Y, Z;
-    local rotator      ShellRotation;
 
     super.InitEffects();
 

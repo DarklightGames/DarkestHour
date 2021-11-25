@@ -24,7 +24,15 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
-    //ShellEjectClass=class'DH_Effects.DH1stShellEjectMP40'
+
+    //Ejected shell params
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
+    ShellVelMinX=250.0
+    ShellVelMaxX=350.0
+    ShellVelMinY=0.0
+    ShellVelMaxY=-25.0
+    ShellVelMinZ=-50.0
+    ShellVelMaxZ=-100.0
 
     FireIronLastAnim="iron_idle_empty"
     FireLastAnim="shoot_last"

@@ -25,10 +25,16 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g3'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     //PreFireAnim="Shoot1_start"
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    //ShellIronSightOffset=(X=15.0,Y=0.0,Z=-1.5)
-    //ShellRotOffsetIron=(Pitch=-500)
-    
+
+    //Ejected shell params
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
+    ShellVelMinX=250.0
+    ShellVelMaxX=350.0
+    ShellVelMinY=0.0
+    ShellVelMaxY=-25.0
+    ShellVelMinZ=-50.0
+    ShellVelMaxZ=-100.0
+
     FireIronLastAnim="iron_shoot_last"
     FireLastAnim="shoot_last"
 }

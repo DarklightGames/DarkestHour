@@ -10,6 +10,16 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[0].SpawnParticle(1);
 }
 
+simulated function SetShellVelocity(float MinX, float MaxX, float MinY, float MaxY, float MinZ, float MaxZ)
+{
+    Emitters[0].StartVelocityRange.X.Min = MinX;
+    Emitters[0].StartVelocityRange.X.Max = MaxX;
+    Emitters[0].StartVelocityRange.Y.Min = MinY;
+    Emitters[0].StartVelocityRange.Y.Max = MaxY;
+    Emitters[0].StartVelocityRange.Z.Min = MinZ;
+    Emitters[0].StartVelocityRange.Z.Max = MaxZ;
+}
+
 defaultproperties
 {
     Style=STY_Additive

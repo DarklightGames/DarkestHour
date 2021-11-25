@@ -24,9 +24,17 @@ var     bool    bUseWeaponLight; // for testing purposes only
 
 var     vector  mMuzFlashOffset; // allows us to fix the location of muzzle flash effects
 
-var     class<Emitter>          ShellCaseEjectClass; //converting the shell ejection system to emitter-based
-var     Emitter                 ShellCaseEject3rd;
+var     class<DHShellEject3rd>          ShellCaseEjectClass; //converting the shell ejection system to emitter-based
+var     DHShellEject3rd                 ShellEject3rd;
+
 var     vector  ShellEjectionOffset; // allows us to fix the location of the shell ejection
+var     rotator ShellEjectRotate;
+var     float   ShellVelMinX;
+var     float   ShellVelMaxX;
+var     float   ShellVelMinY;
+var     float   ShellVelMaxY;
+var     float   ShellVelMinZ;
+var     float   ShellVelMaxZ;
 
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
@@ -51,12 +59,12 @@ simulated function PostBeginPlay()
 
         if (ShellCaseEjectClass != none)
         {
-            ShellCaseEject3rd = Spawn(ShellCaseEjectClass);
-            AttachToBone(ShellCaseEject3rd, ShellEjectionBoneName);
-            ShellCaseEject3rd.SetRelativeLocation(ShellEjectionOffset);
+            ShellEject3rd = Spawn(ShellCaseEjectClass);
+            AttachToBone(ShellEject3rd, ShellEjectionBoneName);
+            ShellEject3rd.SetRelativeLocation(ShellEjectionOffset);
+            ShellEject3rd.SetRelativeRotation(ShellEjectRotate);
+            ShellEject3rd.SetShellVelocity(ShellVelMinX,ShellVelMaxX,ShellVelMinY,ShellVelMaxY,ShellVelMinZ,ShellVelMaxZ);
         }
-
-
     }
 }
 
@@ -169,7 +177,7 @@ simulated function WeaponLight()
         }
         else
             bDynamicLight = true;
-        SetTimer(0.1, false); //reduced from 0.15
+        SetTimer(0.15, false); //reduced from 0.15
     }
     else
         Timer();
@@ -203,17 +211,10 @@ simulated event ThirdPersonEffects()
             mMuzFlash3rd.Trigger(self, none);
         }
 
-        if (!bAnimNotifiedShellEjects && ShellCaseEject3rd != none)
+        if (!bAnimNotifiedShellEjects && ShellEject3rd != none)
         {
-            ShellCaseEject3rd.Trigger(self, none);
+            ShellEject3rd.Trigger(self, none);
         }
-
-        /* Deprecated
-        if (!bAnimNotifiedShellEjects)
-        {
-            SpawnShells(1.0);
-        }
-        */
     }
 
     if (FlashCount == 0)
@@ -470,10 +471,10 @@ defaultproperties
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
     //LightPeriod=3
-    LightBrightness=64
-    LightHue=30
-    LightSaturation=150
-    LightRadius=2.0
+    LightBrightness=32//64
+    LightHue=20
+    LightSaturation=128
+    LightRadius=3.0
 
     // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
     // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")

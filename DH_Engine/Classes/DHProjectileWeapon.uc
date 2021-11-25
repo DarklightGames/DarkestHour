@@ -2826,11 +2826,11 @@ defaultproperties
 
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
-    LightHue=30
-    LightSaturation=150
-    LightBrightness=255.0
-    LightRadius=4.0
-    LightPeriod=3
+    //LightPeriod=3
+    LightBrightness=32//64
+    LightHue=20
+    LightSaturation=128
+    LightRadius=3.0
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
