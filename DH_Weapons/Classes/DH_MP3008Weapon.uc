@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP3008Pickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.MP3008_mesh'
-    //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
+    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
     

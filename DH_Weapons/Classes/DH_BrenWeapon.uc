@@ -21,7 +21,7 @@ defaultproperties
     BarrelSteamBone="Muzzle"
 
     Mesh=SkeletalMesh'DH_Bren_1st.Bren'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
+    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

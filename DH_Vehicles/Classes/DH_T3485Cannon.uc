@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_T34_anm.T34-85_turret_ext'
     Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
     Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3485_int'
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col')

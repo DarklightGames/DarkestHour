@@ -106,7 +106,7 @@ defaultproperties
     StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
     RumbleSoundBone="body"
-    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"

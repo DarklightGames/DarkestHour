@@ -233,7 +233,7 @@ defaultproperties
     bCanAttachOnBack=false
 
     Mesh=SkeletalMesh'Common_Binoc_1st.binoculars'
-    HighDetailOverlay=shader'Weapons1st_tex.SniperScopes.Binoc_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.SniperScopes.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

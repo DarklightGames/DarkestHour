@@ -14,14 +14,14 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k-scoped-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.k98_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     bHasScope=true
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
     DisplayFOV=83.0
     IronSightDisplayFOV=41.0
     IronSightDisplayFOVHigh=41.0
@@ -29,10 +29,10 @@ defaultproperties
     ScopePortalFOV=8      //very hard to find information on ZF39's field of view, but some places mention 160mm which is roughly 9 degrees
     ScopePortalFOVHigh=8  //however, it is made lower to make scope appear a bit further from the camera, for better visual appearance
     LensMaterialID=5
-    	
+
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
-	
+
     ScopeOverlaySize=0.62
 
     MaxNumPrimaryMags=13

@@ -43,7 +43,7 @@ defaultproperties
     //SecondaryProjectileClass=class'DH_Vehicles.DH_T60CannonShellHE' -- the ShVAK aircraft cannon used HEI but unsure if adopted for the tank version
     ProjectileDescriptions(0)="AP-T"
 
-    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer 
+    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer
     //nProjectileDescriptions(1)="OF" // fragmentary round with tracer (incendiary?)
 
     InitialPrimaryAmmo=58
@@ -67,9 +67,9 @@ defaultproperties
     AltFireOffset=(X=-30.0,Y=-20.0,Z=0.0)
 
     // Sounds
-    CannonFireSound(0)=sound'Vehicle_Weapons.T60.tnshk20_fire01'
-    CannonFireSound(1)=sound'Vehicle_Weapons.T60.tnshk20_fire02'
-    CannonFireSound(2)=sound'Vehicle_Weapons.T60.tnshk20_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.T60.tnshk20_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.T60.tnshk20_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.T60.tnshk20_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_01')

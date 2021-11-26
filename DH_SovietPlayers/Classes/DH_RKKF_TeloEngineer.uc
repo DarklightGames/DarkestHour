@@ -11,7 +11,7 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
 	
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch') 
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch') 
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
 	//SVT was more commonly used by marines than by regular army, so marine engineer gets SVT instead of m38
 }

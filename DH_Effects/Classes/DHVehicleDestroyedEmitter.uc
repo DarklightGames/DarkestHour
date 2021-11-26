@@ -17,7 +17,7 @@ defaultproperties
     bHardAttach=true
     LifeSpan = 8
 
-    AmbientSound=sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
+    AmbientSound=Sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
     SoundRadius=750.0 //experiment
     SoundVolume=255
     bFullVolume=true

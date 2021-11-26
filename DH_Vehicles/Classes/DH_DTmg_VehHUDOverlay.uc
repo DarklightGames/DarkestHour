@@ -12,7 +12,7 @@ defaultproperties
     Skins(1)=Texture'Weapons1st_tex.Arms.russian_sleeves'
     Skins(2)=Texture'Weapons1st_tex.MG.dtmg'
     Skins(3)=Texture'Weapons1st_tex.MG.dtmg_lense'
-    HighDetailOverlay=shader'Weapons1st_tex.MG.dtmg_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.MG.dtmg_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }

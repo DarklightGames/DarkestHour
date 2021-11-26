@@ -99,7 +99,7 @@ defaultproperties
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="body"
-    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble01'
+    RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
     // Visual effects
     //LeftTreadIndex=3

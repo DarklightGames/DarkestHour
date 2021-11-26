@@ -13,7 +13,7 @@ defaultproperties
     skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
 
-    //DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    //DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
 
     // Turret armor
     FrontArmorFactor=5.0

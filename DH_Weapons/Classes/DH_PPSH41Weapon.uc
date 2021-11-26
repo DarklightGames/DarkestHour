@@ -45,7 +45,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-1st'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -61,7 +61,7 @@ defaultproperties
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_emptyC"
     MagEmptyReloadAnims(3)="reload_empty" //standart should be more common
-    
+
     SelectFireAnim="selectfire"
     SelectFireIronAnim="Iron_selectfire"
     SelectFireEmptyAnim="selectfire_empty"

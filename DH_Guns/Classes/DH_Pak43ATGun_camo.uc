@@ -9,5 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Artillery_Tex.Pak43.Pak43_camo'
     CannonSkins(0)=Texture'DH_Artillery_Tex.Pak43.Pak43_camo'
-    DestroyedMeshSkins(0)=combiner'DH_Artillery_Tex.Pak43.Pak43_dest_camo'
+    DestroyedMeshSkins(0)=Combiner'DH_Artillery_Tex.Pak43.Pak43_dest_camo'
 }

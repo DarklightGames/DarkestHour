@@ -60,11 +60,11 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-	// Compared to M4A2 (soviet) Sherman: No wet storage?
+    // Compared to M4A2 (soviet) Sherman: No wet storage?
     Health=565
     HealthMax=565.0
-	EngineHealth=300
-	
+    EngineHealth=300
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel

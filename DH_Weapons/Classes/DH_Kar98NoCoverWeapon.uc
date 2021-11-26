@@ -15,7 +15,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_mesh_nocover'
     Skins(5)=Texture'Weapons1st_tex.Rifles.k98'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.k98_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

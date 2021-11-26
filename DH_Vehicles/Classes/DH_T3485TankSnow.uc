@@ -12,5 +12,5 @@ defaultproperties
     Skins(1)=Texture'allies_vehicles_tex.Treads.T3485_Treadsnow'
     Skins(2)=Texture'allies_vehicles_tex.Treads.T3485_Treadsnow'
     CannonSkins(0)=Texture'allies_vehicles_tex.ext_vehicles.t3485snow_ext'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3485snow_ext_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3485snow_ext_dest'
 }

@@ -135,9 +135,9 @@ defaultproperties
     ExitPositions(1)=(X=-92.0,Y=4.0,Z=150.0)
 
     // Sounds
-    IdleSound=sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.BA64.ba64_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-20,Y=30,Z=-35),ExhaustRotation=(pitch=34000,yaw=-5000,roll=0))

@@ -94,9 +94,9 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.BA64.ba64_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
     RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects

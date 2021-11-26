@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP40Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -27,7 +27,7 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
-    
+
     //alternative reload
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_empty"

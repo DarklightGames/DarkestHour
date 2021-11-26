@@ -20,7 +20,7 @@ defaultproperties
     Skins(3)=Texture'allies_vehicles_tex.int_vehicles.IS2_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
@@ -61,13 +61,13 @@ defaultproperties
     TransRatio=0.09
 
     // Damage
-	// pros: Diesel fuel
-	// cons: high caliber ammorack is more likely to detonate; fuel tanks in the crew compartment
-	// 4 men crew
+    // pros: Diesel fuel
+    // cons: high caliber ammorack is more likely to detonate; fuel tanks in the crew compartment
+    // 4 men crew
     Health=485
     HealthMax=485.0
-	EngineHealth=300
-	AmmoIgnitionProbability=0.9  // 0.75 default
+    EngineHealth=300
+    AmmoIgnitionProbability=0.9  // 0.75 default
     TurretDetonationThreshold=1400.0 // reduced from 1750
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
@@ -80,8 +80,8 @@ defaultproperties
     FireAttachBone="Body"
     FireEffectOffset=(X=170.0,Y=0.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Is2_destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2_ext_dest'
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.IS2_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.IS2_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=250.0,Y=0.0,Z=50.0)        // driver
