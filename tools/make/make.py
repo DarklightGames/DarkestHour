@@ -50,7 +50,7 @@ def main():
     argparser.add_argument('-mod', required=True, help='mod name')
     argparser.add_argument('-ignore_dependencies', required=False, default=False, action='store_true',
                            help='ignore package dependencies')
-    argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
+    argparser.add_argument('-clean', required=False, action='store_true', default=True, help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     argparser.add_argument('-snapshot', required=False, action='store_true', default=False,
                            help='compresses all build artifacts into a .zip file')
@@ -58,8 +58,10 @@ def main():
                            help='compile debug packages (for use with UDebugger)')
     argparser.add_argument('-skip_usp', required=False, action='store_true', default=False,
                            help='skip pre-parsing files with UnrealScriptPlus')
+    argparser.add_argument('-skip_ucc', required=False, action='store_true', default=False,
+                           help='skip running the ucc compiler')
     argparser.add_argument('-strict', required=False, action='store_true', default=False,
-                           help='warnings will be treated as errors')
+                           help='UnrealScriptPlus warnings will be treated as errors')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
@@ -283,6 +285,10 @@ def main():
         ucc_log_contents = ucc_log_file.read()
         ucc_log_file.close()
 
+    if args.skip_ucc:
+        print('skipping compilation because -skip_ucc was passed as an argument to the program')
+        sys.exit(0)
+
     print_header('Build started for mod: {}'.format(args.mod))
 
     sorted_package_statuses = filter(
@@ -329,6 +335,9 @@ def main():
                 shutil.copy(os.path.join(root, filename), mod_sys_dir)
                 os.remove(os.path.join(root, filename))
                 compiled_packages.add(filename)
+
+    # TODO: it would be lovely if we could determine when the package is finished compiling and run dumpint on it
+    # immediately instead of waiting until all the packages are done.
 
     # run dumpint on changed and compiled packages
     if args.dumpint:
