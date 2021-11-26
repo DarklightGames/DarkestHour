@@ -24,6 +24,14 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    ShellRotOffsetIron=(Pitch=1000)
+
+    //EjectedShellParams
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
+    ShellEjectOffset=(X=0.0,Y=-1.0,Z=0.0)
+    ShellVelMinX=200.0
+    ShellVelMaxX=300.0
+    ShellVelMinY=50.0 //200
+    ShellVelMaxY=-50.0 //300.0
+    ShellVelMinZ=-25.0
+    ShellVelMaxZ=25.0)
 }

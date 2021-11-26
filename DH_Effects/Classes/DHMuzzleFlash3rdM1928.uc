@@ -7,14 +7,24 @@ class DHMuzzleFlash3rdM1928 extends ROMuzzleFlash3rd;
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
+    if (FRand() < 0.45)
+    {
+        Emitters[0].Opacity = 0.0;
+        Emitters[4].Opacity = 0.0;
+    }
+    else
+    {
+        Emitters[0].Opacity= 0.35;
+        Emitters[4].Opacity= 0.35;
+    }
+
     Emitters[0].SpawnParticle(1);
     Emitters[1].SpawnParticle(1);
     Emitters[2].SpawnParticle(1);
     Emitters[3].SpawnParticle(4);
     Emitters[3].InitialParticlesPerSecond=100;
-    Emitters[4].SpawnParticle(6);
-    Emitters[4].InitialParticlesPerSecond=100;
-    Emitters[5].SpawnParticle(3);
+    Emitters[4].SpawnParticle(1);
+    Emitters[5].SpawnParticle(4);
 }
 
 defaultproperties
@@ -95,7 +105,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.500000)
         StartSizeRange=(X=(Min=10.000000,Max=15.000000))
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
+        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.55,Max=0.85)
@@ -129,7 +139,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.500000)
         StartSizeRange=(X=(Min=8.000000,Max=12.000000))
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
+        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.55,Max=1.2)
@@ -139,6 +149,31 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter6'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter0
+        BeamDistanceRange=(Min=4.000000,Max=8.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=3
+        RespawnDeadParticles=False
+        UseSizeScale=True
+        AutomaticInitialSpawning=False
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        CoordinateSystem=PTCS_Relative
+        Opacity=0.5
+        MaxParticles=1
+        Name="spike_flash"
+        UseRotationFrom=PTRS_Normal
+        SizeScale(0)=(RelativeSize=0.1)
+        SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)
+        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
+        StartSizeRange=(X=(Min=2.000000,Max=5.000000),Y=(Min=2.000000,Max=5.000000),Z=(Min=4.000000))
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'DH_FX_Tex.weapons.pistolflash'
+        LifetimeRange=(Min=0.05,Max=0.10000)
+        StartVelocityRange=(X=(Min=25.000000,Max=50.000000))
+    End Object
+    Emitters(4)=BeamEmitter'BeamEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter80
         UseDirectionAs=PTDU_UpAndNormal
@@ -167,5 +202,5 @@ defaultproperties
         LifetimeRange=(Min=0.10,Max=0.25)
         StartVelocityRange=(X=(Min=35.000000,Max=75.000000),Y=(Min=-15.000000,Max=20.000000),Z=(Min=-20.000000,Max=15.000000))
     End Object
-    Emitters(4)=SpriteEmitter'SpriteEmitter80'
+    Emitters(5)=SpriteEmitter'SpriteEmitter80'
 }

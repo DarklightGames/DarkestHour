@@ -10,9 +10,18 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.M1928_20rnd_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1928_20rnd_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdM1928'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    mMuzFlashOffset=(X=0.5,Y=0.3)
     MuzzleBoneName="Muzzle"
+
+    //EjectedShellParams
     ShellEjectionBoneName="ejector"
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd9x19mm'
+    ShellVelMinX=200.0
+    ShellVelMaxX=300.0
+    ShellVelMinY=0.0
+    ShellVelMaxY=0.0
+    ShellVelMinZ=-25.0
+    ShellVelMaxZ=25.0
 
     WA_Idle="Idle_thompson"
     WA_IdleEmpty="Idle_thompson"

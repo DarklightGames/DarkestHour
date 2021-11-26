@@ -105,7 +105,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.500000)
         StartSizeRange=(X=(Min=8.000000,Max=12.000000))
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
+        Texture=Texture'Effects_Tex.BulletHits.stonesmokefinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.55,Max=1.2)

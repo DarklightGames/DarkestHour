@@ -11,9 +11,17 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdSMG'
     mMuzFlashOffset=(X=2.0)
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
+
+    //EjectedShellParams
     ShellEjectionBoneName="ejector"
+    ShellCaseEjectClass=class'DH_Effects.DHShellEject3rd9x19mm'
+    ShellVelMinX=150.0
+    ShellVelMaxX=250.0
+    ShellVelMinY=0.0
+    ShellVelMaxY=0.0
+    ShellVelMinZ=-25.0
+    ShellVelMaxZ=25.0
 
     WA_Idle="Idle_GreaseGun"
     WA_IdleEmpty="Idle_GreaseGun"
