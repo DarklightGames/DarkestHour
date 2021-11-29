@@ -312,10 +312,6 @@ simulated event PostNetBeginPlay()
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
         SetLockTankOnEntry(bLockTankOnEntry);
     }
-
-    // Initialize the map database
-    MapDatabase = new class'DHMapDatabase';
-    MapDatabase.Initialize();
 }
 
 // Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
