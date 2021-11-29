@@ -118,6 +118,8 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     if (PC != none)
     {
+        PC.InitializeMapDatabase();
+
         MapDatabase = PC.MapDatabase;
     }
 

@@ -252,7 +252,6 @@ simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass,
 // Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
-
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
@@ -291,6 +290,16 @@ simulated event PostBeginPlay()
     }
 
     MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
+}
+
+simulated function InitializeMapDatabase()
+{
+    // Initialize the map database (for local player only!)
+    if (MapDatabase == none && Level.GetLocalPlayerController() == self)
+    {
+        MapDatabase = new class'DHMapDatabase';
+        MapDatabase.Initialize();
+    }
 }
 
 simulated event PostNetBeginPlay()
