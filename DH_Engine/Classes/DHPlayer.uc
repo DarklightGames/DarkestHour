@@ -120,6 +120,8 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+var     DHMapDatabase           MapDatabase;
+
 // Squad Things
 struct SquadSignal
 {
@@ -301,6 +303,10 @@ simulated event PostNetBeginPlay()
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
         SetLockTankOnEntry(bLockTankOnEntry);
     }
+
+    // Initialize the map database
+    MapDatabase = new class'DHMapDatabase';
+    MapDatabase.Initialize();
 }
 
 // Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)

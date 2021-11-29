@@ -33,8 +33,11 @@ function SetFilterPattern(string FilterPattern)
 
 function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
 {
-    local int m, p, l;
+    local int i, m, p, l;
+    local string MapName;
+    local int FilterTokenMatchCount;
     local array<string> PrefixList;
+    local array<string> FilterTokens;
 
     VRI = LoadVRI;
 
@@ -44,19 +47,47 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
     }
 
     Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
+    Split(Locs(FilterPattern), " ", FilterTokens);
+
+    for (i = FilterTokens.Length - 1; i >= 0; --i)
+    {
+        if (FilterTokens[i] == "")
+        {
+            FilterTokens.Remove(i, 1);
+        }
+    }
 
     for (m = 0; m < VRI.MapList.Length; m++)
     {
         for (p = 0; p < PreFixList.Length; p++)
         {
-            if (Left(VRI.MapList[m].MapName, Len(PrefixList[p])) ~= PrefixList[p] &&
-                (FilterPattern == "" || InStr(Locs(VRI.MapList[m].MapName), FilterPattern) != -1))
+            // Map name without the prefix
+            MapName = Locs(Right(VRI.MapList[m].MapName, Len(VRI.MapList[m].MapName) - Len(PrefixList[p])));
+
+            if (Left(VRI.MapList[m].MapName, Len(PrefixList[p])) ~= PrefixList[p])
             {
-                l = MapVoteData.Length;
-                MapVoteData.Insert(l, 1);
-                MapVoteData[l] = m;
-                AddedItem();
-                break;
+                // Match the tokens in the filter to the name of the map and
+                // ensure that all tokens match.
+                FilterTokenMatchCount = 0;
+
+                for (i = 0; i < FilterTokens.Length; ++i)
+                {
+                    if (InStr(MapName, FilterTokens[i]) == -1)
+                    {
+                        break;
+                    }
+
+                    ++FilterTokenMatchCount;
+                }
+
+                if (FilterTokenMatchCount == FilterTokens.Length)
+                {
+                    l = MapVoteData.Length;
+                    MapVoteData.Insert(l, 1);
+                    MapVoteData[l] = m;
+                    AddedItem();
+                    break;
+                }
             }
         }
     }
@@ -70,16 +101,24 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     local float CellLeft, CellWidth;
     local eMenuState MState;
     local GUIStyles DrawStyle, OldDrawTyle;
-    local array<string> Parts;
     local DHGameReplicationInfo GRI;
     local int Min, Max;
-    local string PlayerRangeString;
+    local DHPlayer PC;
+    local DHMapDatabase MapDatabase;
+    local DHMapDatabase.SMapInfo MI;
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
     if (VRI == none || GRI == none)
     {
         return;
+    }
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none)
+    {
+        MapDatabase = PC.MapDatabase;
     }
 
     // Draw the drag-n-drop outline
@@ -117,97 +156,86 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
-    // Split the mapname string, which may be consolitated with other variables
-    Split(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, ";", Parts);
-
     // Begin Drawing!
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(Parts[0]), FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName), FontScale);
 
-    // Source
-    GetCellLeftWidth(1, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(Parts[0]), FontScale);
-
-    // Allied Side
-    if (Parts.Length >= 2)
+    if (MapDatabase != none && MapDatabase.GetMapInfo(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, MI))
     {
+        // Source
+        GetCellLeftWidth(1, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSourceString(MI.Source), FontScale);
+
+        // Allied Side
         GetCellLeftWidth(2, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
-    }
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
 
-    // Type
-    if (Parts.Length >= 3)
-    {
+        // Type
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[2], FontScale);
-    }
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType), FontScale);
 
-    // Player Range
-    if (Parts.Length >= 4)
-    {
+        // Map Size
         GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
-        Min = int(Parts[3]);
-        Max = int(Parts[4]);
 
-        if (Min > 0 || Max <= GRI.MaxPlayers)
+        class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+
+        // Do a check if the current player count is in bounds of recommended range
+        if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
         {
-            if (Min >= GRI.MaxPlayers)
-            {
-                PlayerRangeString = "(" $ Min $ "+" $ ")";
-            }
-            else if (Max > GRI.MaxPlayers)
-            {
-                PlayerRangeString = "(" $ Min $ "-" $ GRI.MaxPlayers $ ")";
-            }
-            else
-            {
-                PlayerRangeString = "(" $ Min $ "-" $ Max $ ")";
-            }
-
-            // Do a check if the current player count is in bounds of recommended range
-            if (!GRI.IsPlayerCountInRange(Min, Max) && MState != MSAT_Disabled)
-            {
-                DrawStyle = RedListStyle;
-            }
-
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, PlayerRangeString, FontScale);
-            DrawStyle = OldDrawTyle;
+            DrawStyle = RedListStyle;
         }
+
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
+        DrawStyle = OldDrawTyle;
     }
 }
 
 function string GetSortString(int i)
 {
-    local array<string> Parts;
+    local DHPlayer PC;
+    local DHMapDatabase MD;
+    local DHMapDatabase.SMapInfo MI;
+    local bool bHasMapInfo;
 
-    Split(VRI.MapList[i].MapName, ";", Parts);
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none)
+    {
+        MD = PC.MapDatabase;
+
+        if (MD != none)
+        {
+            bHasMapInfo = MD.GetMapInfo(VRI.MapList[i].MapName, MI);
+        }
+    }
+
 
     switch (SortColumn)
     {
         case 0: // Map name
-            if (Parts.Length > 0)
-            {
-                return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
-            }
+            return Locs(class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
         case 1: // Source
-            if (Parts.Length > 1)
+            if (bHasMapInfo)
             {
-                return Caps(class'DHMapList'.static.GetMapSource(Parts[0]));
+                return class'DHMapDatabase'.static.GetMapSourceString(MI.Source);
             }
-            break;
         case 2: // Allied country
-            if (Parts.Length > 2)
+            if (bHasMapInfo)
             {
-                return Caps(Parts[2]);
+                return class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
             }
-        case 4: // Type
-            if (Parts.Length > 3)
+        case 3: // Game Type
+            if (bHasMapInfo)
             {
-                return Caps(Parts[3]);
+                return class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
             }
-            break;
+        case 4: // Map Size
+            if (bHasMapInfo)
+            {
+                return string(int(MI.Size));
+            }
         default:
             break;
     }
@@ -217,12 +245,12 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    // Map Name | Source | Country | Type | Player Range | Quality Control | Author
+    // Map Name | Source | Allied Nation | Game Type | Map Size
     ColumnHeadings(0)="Map Name"
     ColumnHeadings(1)="Source"
-    ColumnHeadings(2)="Country"
-    ColumnHeadings(3)="Type"
-    ColumnHeadings(4)="Player Range"
+    ColumnHeadings(2)="Allied Nation"
+    ColumnHeadings(3)="Game Type"
+    ColumnHeadings(4)="Map Size"
 
     InitColumnPerc(0)=0.25
     InitColumnPerc(1)=0.2
