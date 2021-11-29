@@ -50,7 +50,7 @@ def main():
     argparser.add_argument('-mod', required=True, help='mod name')
     argparser.add_argument('-ignore_dependencies', required=False, default=False, action='store_true',
                            help='ignore package dependencies')
-    argparser.add_argument('-clean', required=False, action='store_true', default=True, help='compile all packages')
+    argparser.add_argument('-clean', required=False, action='store_true', default=False, help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     argparser.add_argument('-snapshot', required=False, action='store_true', default=False,
                            help='compresses all build artifacts into a .zip file')
