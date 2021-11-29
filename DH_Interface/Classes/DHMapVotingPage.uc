@@ -188,7 +188,7 @@ defaultproperties
         WinHeight=0.12
         WinLeft=0.02
         WinTop=0.90
-        Caption="Filter"
+        Caption="Search"
         CaptionWidth=0.074
         OnKeyEvent=InternalOnKeyEvent
         // TabOrder=0
