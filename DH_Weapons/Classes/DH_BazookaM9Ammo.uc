@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BazookaPickup extends DHRocketWeaponPickup;
+class DH_BazookaM9Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_BazookaWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bazooka'
-    // DrawScale=1.33
+    MaxAmmo=1
+    InitialAmount=1
+    IconMaterial=Texture'DH_Bazooka_tex.Interface.bazooka_m9_ammo'
 }

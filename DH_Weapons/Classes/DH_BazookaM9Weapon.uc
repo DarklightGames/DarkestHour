@@ -2,11 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// [ ] add the muzzle bone to the m9 (needed for effects!)
 // [ ] Calibrate range settings
 // [ ] Should not be able to reload while moving
 // [ ] New rocket mesh
 // [ ] New 3rd person weapon mesh
-// [ ] Interface art
+// [ ] weapon selection art
 //==============================================================================
 
 class DH_BazookaM9Weapon extends DHRocketWeapon;
@@ -16,10 +17,10 @@ defaultproperties
     ItemName="M9A1 Bazooka"
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m9'
     TeamIndex=1
-    FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BazookaMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'
-    PickupClass=class'DH_Weapons.DH_BazookaPickup'
+    FireModeClass(0)=class'DH_Weapons.DH_BazookaM9Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_BazookaM9MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_BazookaM9Attachment'
+    PickupClass=class'DH_Weapons.DH_BazookaM9Pickup'
 
     bHasScope=true
     bForceModelScope=true

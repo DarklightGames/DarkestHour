@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BazookaPickup extends DHRocketWeaponPickup;
+class DH_BazookaM9Pickup extends DHRocketWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_BazookaWeapon'
+    InventoryType=class'DH_Weapons.DH_BazookaM9Weapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bazooka'
-    // DrawScale=1.33
+    DrawScale=1.33
 }
