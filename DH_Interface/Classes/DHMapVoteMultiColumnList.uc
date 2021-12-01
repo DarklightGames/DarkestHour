@@ -47,8 +47,11 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
     }
 
     Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
+
+    // Split the filter pattern by whitespace into filter tokens.
     Split(Locs(FilterPattern), " ", FilterTokens);
 
+    // Remove empty filter tokens.
     for (i = FilterTokens.Length - 1; i >= 0; --i)
     {
         if (FilterTokens[i] == "")
@@ -57,17 +60,17 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
         }
     }
 
+    // Iterate through all maps in the map list
     for (m = 0; m < VRI.MapList.Length; m++)
     {
         for (p = 0; p < PreFixList.Length; p++)
         {
-            // Map name without the prefix
-            MapName = Locs(Right(VRI.MapList[m].MapName, Len(VRI.MapList[m].MapName) - Len(PrefixList[p])));
-
             if (Left(VRI.MapList[m].MapName, Len(PrefixList[p])) ~= PrefixList[p])
             {
-                // Match the tokens in the filter to the name of the map and
-                // ensure that all tokens match.
+                // Store the map name without the prefix
+                MapName = Locs(Right(VRI.MapList[m].MapName, Len(VRI.MapList[m].MapName) - Len(PrefixList[p])));
+
+                // Match the tokens in the filter to the name of the map and ensure that all tokens match.
                 FilterTokenMatchCount = 0;
 
                 for (i = 0; i < FilterTokens.Length; ++i)
@@ -80,6 +83,7 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
                     ++FilterTokenMatchCount;
                 }
 
+                // If all tokens match (or there are no tokens at all), add the map to the list.
                 if (FilterTokenMatchCount == FilterTokens.Length)
                 {
                     l = MapVoteData.Length;
