@@ -104,7 +104,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 {
     local float CellLeft, CellWidth;
     local eMenuState MState;
-    local GUIStyles DrawStyle, OldDrawTyle;
+    local GUIStyles DrawStyle, OldDrawStyle;
     local DHGameReplicationInfo GRI;
     local int Min, Max;
     local DHPlayer PC;
@@ -183,7 +183,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
         // Map Size
         GetCellLeftWidth(4, CellLeft, CellWidth);
-        OldDrawTyle = DrawStyle;
+        OldDrawStyle = DrawStyle;
 
         class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
@@ -194,7 +194,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         }
 
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
-        DrawStyle = OldDrawTyle;
+        DrawStyle = OldDrawStyle;
     }
 }
 
