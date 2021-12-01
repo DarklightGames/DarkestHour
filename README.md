@@ -11,7 +11,6 @@ Before cloning this repository, all of the following requirements must be satisf
 
 ### Dependencies & Tools
 * [Git for Windows](https://git-scm.com/downloads)
-* [Git Large File Storage](https://help.github.com/articles/installing-git-large-file-storage/) (modern versions of the Git for Windows installer will have this as a built-in option)
 * [Python ≥3.5.4](https://www.python.org/downloads/) (we use Python to supplement our various build processes)
 
 ### Base game & SDK
