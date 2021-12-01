@@ -40,7 +40,6 @@ struct SMapInfo
 };
 
 var array<SMapInfo>         MapInfos;
-var array<string>           HumanReadableMapNames;
 var HashTable_string_int    MapInfoIndexTable;
 
 function Initialize()
