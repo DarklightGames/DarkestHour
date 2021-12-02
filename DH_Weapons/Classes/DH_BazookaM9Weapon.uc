@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] add the muzzle bone to the m9 (needed for effects!)
 // [ ] Calibrate range settings
 // [ ] Should not be able to reload while moving
-// [ ] New rocket mesh
+// [ ] New rocket mesh (m6a3)
 // [ ] New 3rd person weapon mesh
 // [ ] weapon selection art
+// [ ] animation sounds
 //==============================================================================
 
 class DH_BazookaM9Weapon extends DHRocketWeapon;
@@ -29,6 +29,7 @@ defaultproperties
     ScopePortalFOV=8.0
     ScopePortalFOVHigh=8.0
     LensMaterialID=4
+    ScopeScriptedTextureSize=512
 
     FreeAimRotationSpeed=2.0
 
