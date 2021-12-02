@@ -1132,13 +1132,6 @@ simulated state AttachingBayonet extends WeaponBusy
 
     simulated function BeginState()
     {
-        bBayonetMounted = true;
-
-        if (ROWeaponAttachment(ThirdPersonActor) != none)
-        {
-            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
-        }
-
         if (AmmoAmount(0) == 0 && HasAnim(BayoAttachEmptyAnim))
         {
             PlayAnimAndSetTimer(BayoAttachEmptyAnim, 1.0, 0.1);
@@ -1151,6 +1144,16 @@ simulated state AttachingBayonet extends WeaponBusy
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleBayoAttach();
+        }
+    }
+
+    simulated function EndState()
+    {
+        bBayonetMounted = true;
+
+        if (ROWeaponAttachment(ThirdPersonActor) != none)
+        {
+            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
         }
     }
 
@@ -1181,13 +1184,6 @@ simulated state DetachingBayonet extends WeaponBusy
 
     simulated function BeginState()
     {
-        bBayonetMounted = false;
-
-        if (ROWeaponAttachment(ThirdPersonActor) != none)
-        {
-            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
-        }
-
         if (AmmoAmount(0) == 0 && HasAnim(BayoDetachEmptyAnim))
         {
             PlayAnimAndSetTimer(BayoDetachEmptyAnim, 1.0, 0.1);
@@ -1200,6 +1196,16 @@ simulated state DetachingBayonet extends WeaponBusy
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleBayoDetach();
+        }
+    }
+
+    simulated function EndState()
+    {
+        bBayonetMounted = true;
+
+        if (ROWeaponAttachment(ThirdPersonActor) != none)
+        {
+            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
         }
     }
 

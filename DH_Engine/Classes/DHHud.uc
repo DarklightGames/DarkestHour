@@ -2789,6 +2789,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     CompassIcons.WidgetTexture = default.CompassIcons.WidgetTexture;
 
@@ -2952,6 +2953,8 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 
     if (PC != none)
     {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
         // Personal markers
         PersonalMapMarkers = PC.GetPersonalMarkers();
 
@@ -2961,15 +2964,24 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Map markers
-        MapMarkers = DHGRI.GetMapMarkers(PC);
-
-        for (i = 0; i < MapMarkers.Length; ++i)
+        if (PRI != none)
         {
-            Target.X = float(MapMarkers[i].LocationX) / 255.0;
-            Target.Y = float(MapMarkers[i].LocationY) / 255.0;
-            Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
+            MapMarkers = DHGRI.GetMapMarkers(PC);
 
-            DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, MapMarkers[i].MapMarkerClass, Target, Current, XL, YL);
+            for (i = 0; i < MapMarkers.Length; ++i)
+            {
+                if (MapMarkers[i].MapMarkerClass != none &&
+                    !MapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, MapMarkers[i]))
+                {
+                    continue;
+                }
+
+                Target.X = float(MapMarkers[i].LocationX) / 255.0;
+                Target.Y = float(MapMarkers[i].LocationY) / 255.0;
+                Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
+
+                DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, MapMarkers[i].MapMarkerClass, Target, Current, XL, YL);
+            }
         }
 
         // Squad leader

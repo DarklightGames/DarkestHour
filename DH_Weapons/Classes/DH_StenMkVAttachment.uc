@@ -12,6 +12,8 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
+    MuzzleBoneName="tipnew"
+
     WA_Idle="idle_sten_nobayo"
     WA_IdleEmpty="idle_sten_nobayo"
     WA_Fire="shoot_sten_nobayo"

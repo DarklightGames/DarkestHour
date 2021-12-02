@@ -50,7 +50,7 @@ defaultproperties
     Type=MT_OffMapArtilleryRequest
     Scope=PERSONAL
     OverwritingRule=UNIQUE
-    GroupIndex=6
+    GroupIndex=3
     Cooldown=3
     OnPlacedExternalNotifications(0)=(RoleSelector=ERS_RADIOMAN,Message=class'DHFireSupportMessage',MessageIndex=2)
     OnPlacedMessage=class'DHFireSupportMessage'
