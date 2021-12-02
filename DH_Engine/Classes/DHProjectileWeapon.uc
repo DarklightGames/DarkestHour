@@ -121,7 +121,8 @@ var   Shader            ScopeScriptedShader;        // The shader that combines 
 var   Material          ScriptedTextureFallback;    // The texture to render if the users system doesn't support shaders
 var   Material          ScriptedScopeTexture;       // The reticle texture to use for 3d scopes.
 var   Combiner          ScriptedScopeCombiner;
-var   bool              bForceRenderScope;
+var   bool              bForceRenderScope;          // When true, the 3D scope will be rendered despite the user's settings
+var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each dimension of the scripted scope texture (use powers of two!)
 
 replication
 {
@@ -2747,13 +2748,14 @@ simulated function GetScopeScriptedTextureSize(out int Width, out int Height)
 {
     switch (ScopeDetail)
     {
+        case RO_TextureScope:
         case RO_ModelScope:
-            Width = 512;
-            Height = 512;
+            Width = default.ScopeScriptedTextureSize / 2;
+            Height = default.ScopeScriptedTextureSize / 2;
             break;
         case RO_ModelScopeHigh:
-            Width = 1024;
-            Height = 1024;
+            Width = default.ScopeScriptedTextureSize;
+            Height = default.ScopeScriptedTextureSize;
             break;
     }
 }
@@ -2853,4 +2855,5 @@ defaultproperties
     LensMaterialID=-1
     ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
     ScopeOverlaySize=0.7
+    ScopeScriptedTextureSize=1024
 }
