@@ -1378,7 +1378,6 @@ Begin:
 // New function just to avoid code repetition in different functions
 simulated function SetIronSightFOV()
 {
-    local float  TargetDisplayFOV;
     local vector TargetPVO;
 
     if (InstigatorIsLocalHuman())
@@ -1387,27 +1386,23 @@ simulated function SetIronSightFOV()
         {
             if (ScopeDetail == RO_ModelScopeHigh)
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.XoffsetHighDetail;
             }
             else if (ScopeDetail == RO_ModelScope)
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.XOffsetScoped;
             }
             else
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.PlayerViewOffset;
             }
         }
         else
         {
-            TargetDisplayFOV = default.IronSightDisplayFOV;
             TargetPVO = default.PlayerViewOffset;
         }
 
-        DisplayFOV = TargetDisplayFOV;
+        DisplayFOV = default.IronSightDisplayFOV;
         PlayerViewOffset = TargetPVO;
     }
 }
