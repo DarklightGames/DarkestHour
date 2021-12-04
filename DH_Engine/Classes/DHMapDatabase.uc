@@ -386,5 +386,4 @@ defaultproperties
     MapInfos(156)=(Name="DH-Armored_Voronezh_Clash.rom",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(157)=(Name="DH-Armored_Cagny_Recon_Clash.rom",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(158)=(Name="DH-Jurques_Advance.rom",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(159)=(Name="DH-Jurques_Clash.rom",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Large)
 }
