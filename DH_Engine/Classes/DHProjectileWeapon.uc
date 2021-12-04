@@ -1180,11 +1180,11 @@ simulated state DetachingBayonet extends WeaponBusy
 
     simulated function EndState()
     {
-        bBayonetMounted = true;
+        bBayonetMounted = false;
 
         if (ROWeaponAttachment(ThirdPersonActor) != none)
         {
-            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
+            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
         }
     }
 
