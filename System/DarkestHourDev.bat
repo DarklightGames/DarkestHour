@@ -1,7 +1,7 @@
 @echo OFF
 cd "%~dp0"
 echo 1280 > ..\System\steam_appid.txt
-call ..\tools\make\venv\Scripts\activate.bat && python ..\tools\make\make.py -mod DarkestHourDev ..
+..\tools\make\uccp.exe -q -i --directory .. DarkestHourDev
 
 if %ERRORLEVEL% GEQ 1 (
     pause
