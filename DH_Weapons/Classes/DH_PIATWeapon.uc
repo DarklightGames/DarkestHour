@@ -68,18 +68,28 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
     PickupClass=class'DH_Weapons.DH_PIATPickup'
 
-    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT' // TODO: there is no specularity mask for this weapon
+    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT_1st' // TODO: there is no specularity mask for this weapon
 
     IronSightDisplayFOV=45.0 //25.0
 
     RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
-    MuzzleBone="Warhead"
+    MuzzleBone="rocket"
     InitialNumPrimaryMags=2
     NumMagsToResupply=2
-    MagEmptyReloadAnims(0)="Reload"
-    MagPartialReloadAnims(0)="Reload"
+    IronIdleAnim="idel_loop"
+    MagEmptyReloadAnims(0)="Reload 2"
+    MagPartialReloadAnims(0)="Reload 2"
 
-    RangeSettings(0)=(FirePitch=85,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
-    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
-    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
+    CrawlForwardAnim="crawl_f"
+    CrawlBackwardAnim="crawl_b"
+
+    SprintStartAnim="sprint_start"
+    SprintLoopAnim="sprint_middle"
+    SprintEndAnim="sprint_out"
+
+    FirstSelectAnim="first_draw"
+
+    RangeSettings(0)=(FirePitch=85,IronIdleAnim="iron_loop_50",FireIronAnim="shoot_50")
+    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_loop_100",FireIronAnim="shoot_100")
+    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_loop_150",FireIronAnim="shoot_150")
 }
