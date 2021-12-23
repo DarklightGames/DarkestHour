@@ -134,7 +134,7 @@ simulated function SetImage()
         DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
     }
 
-    if (class'DHMapList'.static.IsMapOfficial(LoadingMapRecord.MapName))
+    if (class'DHMapDatabase'.static.StaticIsMapOfficial(LoadingMapRecord.MapName $ ".rom"))
     {
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
     }
@@ -143,7 +143,7 @@ simulated function SetImage()
         DrawOpImage(Operations[5]).Image = CommunityMapIcon;
     }
 
-    DrawOpText(Operations[6]).Text = class'DHMapList'.static.GetMapSource(LoadingMapRecord.MapName $ ".rom");
+    DrawOpText(Operations[6]).Text = class'DHMapDatabase'.static.StaticGetMapSourceString(LoadingMapRecord.MapName $ ".rom");
 
     DrawOpImage(Operations[0]).Image = M;
 }
