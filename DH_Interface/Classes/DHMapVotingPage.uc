@@ -3,16 +3,41 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMapVotingPage extends MapVotingPage;
+class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
 
 var localized string                            lmsgMapOutOfBounds;
+
+var(DHMapVotingInfo) config array<string>       MapVoteInfo;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
 
 function InternalOnOpen()
 {
+    local int i, m;
+
     super.InternalOnOpen();
+
+    // Loops the Vote Replication Map List, for each map, it loops the client's MapList config and if matches, changes the string
+    if (MVRI != none || !MVRI.bMapVote)
+    {
+        for (m = 0; m < MVRI.MapList.Length; m++)
+        {
+            for (i = 0; i < MapVoteInfo.Length; ++i)
+            {
+                if (MVRI.MapList[m].MapName ~= Left(MapVoteInfo[i], Len(MVRI.MapList[m].MapName)))
+                {
+                    MVRI.MapList[m].MapName = MapVoteInfo[i];
+
+                    // Disable the level completely if it has been blacklisted!
+                    if (InStr(MapVoteInfo[i], "BLACKLISTED") != -1)
+                    {
+                        MVRI.MapList[m].bEnabled = false;
+                    }
+                }
+            }
+        }
+    }
 
     // Fill the filter box in case a pattern is set
     ed_Filter.SetText(DHMapVoteMultiColumnList(lb_MapListBox.List).GetFilterPattern());
@@ -33,15 +58,13 @@ function SendVote(GUIComponent Sender)
     local int MapIndex, GameConfigIndex;
     local DHGameReplicationInfo GRI;
     local int Min, Max;
-    local DHMapDatabase MDB;
-    local DHMapDatabase.SMapInfo MI;
+    local array<string> Parts;
 
     if (PlayerOwner() == none)
     {
         return;
     }
 
-    MDB = DHPlayer(PlayerOwner()).MapDatabase;
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
     if (MVRI == none || GRI == none)
@@ -57,11 +80,15 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
 
-            if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
-            {
-                class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
+            // Split the mapname string, which may be consolitated with other variables
+            Split(MVRI.MapList[MapIndex].MapName, ";", Parts);
 
-                // Do a check if the current player count is in bounds of recommended range or if level has failed QA
+            // Do a check if the current player count is in bounds of recommended range or if level has failed QA
+            if (Parts.Length >= 5) //Require all info
+            {
+                Min = int(Parts[3]);
+                Max = int(Parts[4]);
+
                 if (!GRI.IsPlayerCountInRange(Min, Max))
                 {
                     PlayerOwner().ClientMessage(lmsgMapOutOfBounds);
@@ -188,7 +215,7 @@ defaultproperties
         WinHeight=0.12
         WinLeft=0.02
         WinTop=0.90
-        Caption="Search"
+        Caption="Filter"
         CaptionWidth=0.074
         OnKeyEvent=InternalOnKeyEvent
         // TabOrder=0
