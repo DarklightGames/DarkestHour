@@ -12,7 +12,7 @@ defaultproperties
     bUsesTracers=true
     TracerFrequency=5
     AmmoClass=class'DH_Weapons.DH_BrenAmmo'
-    FireRate=0.12
+    FireRate=0.13 // ~512 rpm (value had to be found experimentally due to an engine bug)
     FAProjSpawnOffset=(X=-28.0)
 
     Spread=70.0

@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_KorovinBullet'
     AmmoClass=class'DH_Weapons.DH_PPS43Ammo'
-    FireRate=0.128 // 470 rpm
+    FireRate=0.14 // ~474 rpm (value had to be found experimentally due to an engine bug)
     Spread=140.0
 
     // Recoil

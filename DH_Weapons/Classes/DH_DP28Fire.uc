@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     AmmoClass=class'DH_Weapons.DH_DP28Ammo'
-    FireRate=0.1
+    FireRate=0.105 // 632 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)
     Spread=70.0

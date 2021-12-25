@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PPD40Bullet'
     AmmoClass=class'DH_Weapons.DH_PPSh41Ammo'
-    FireRate=0.075 // 800rpm
+    FireRate=0.085 // 800rpm (value had to be found experimentally due to an engine bug)
     Spread=135.0
 
     // Recoil

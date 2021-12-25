@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_StenMkIICBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
-    FireRate=0.11 // 540rpm
+    FireRate=0.12 // ~553 rpm (value had to be found experimentally due to an engine bug)
     Spread=148.0
 
     // Recoil

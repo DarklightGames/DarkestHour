@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M712Bullet'
     AmmoClass=class'DH_Weapons.DH_M712Ammo'
-    FireRate=0.066666 // 900rpm
+    FireRate=0.075 // 913 rpm (value had to be found experimentally due to an engine bug)
     Spread=180.0
 
     // Recoil

@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=Class'DH_Weapons.DH_ZB30Bullet'
     AmmoClass=Class'DH_Weapons.DH_FG42Ammo'
-    FireRate=0.1 // 600 rpm
+    FireRate=0.13 // ~512 rpm (value had to be found experimentally due to an engine bug)
     FAProjSpawnOffset=(X=-20.000000)
 
     // Spread

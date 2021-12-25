@@ -33,7 +33,7 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=4.0,OutVal=1.1),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
-    FireRate=0.08
+    FireRate=0.09 // 739 rpm (value had to be found experimentally due to an engine bug)
     bHasSemiAutoFireRate=true
     SemiAutoFireRate=0.18
 }

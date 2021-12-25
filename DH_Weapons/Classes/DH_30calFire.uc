@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_30calBullet'
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AmmoClass=class'DH_Weapons.DH_30CalAmmo'
-    FireRate=0.12
+    FireRate=0.135 // ~500 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     Spread=75.0
     RecoilRate=0.06

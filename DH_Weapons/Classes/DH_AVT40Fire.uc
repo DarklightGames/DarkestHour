@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    FireRate=0.085 // ~700rpm
+    FireRate=0.095 // ~700rpm (value had to be found experimentally due to an engine bug)
     bHasSemiAutoFireRate=true
     SemiAutoFireRate=0.215
     Spread=60.0

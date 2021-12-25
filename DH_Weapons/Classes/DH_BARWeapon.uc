@@ -26,12 +26,12 @@ simulated function UpdateFireRate()
 {
     if (bSlowFireRate)
     {
-        FireMode[0].FireRate = 0.2;  // slow rate 300rpm
+        FireMode[0].FireRate = 0.2;  // slow rate ~330rpm (? to be tested)
 
     }
     else
     {
-        FireMode[0].FireRate = 0.12; // fast rate 500rpm
+        FireMode[0].FireRate = 0.12; // fast rate ~550rpm
     }
 }
 
