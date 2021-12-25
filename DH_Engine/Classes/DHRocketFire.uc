@@ -15,7 +15,16 @@ var     class<DamageType>   ExhaustDamageType;       // damage type for exhaust
 // Modified to prevent firing if RocketWeapon's CanFire() says no
 simulated function bool AllowFire()
 {
-    return DHRocketWeapon(Weapon) != none && DHRocketWeapon(Weapon).CanFire() && super.AllowFire();
+    // Skip CanFire() check on the server to avoid situations where a client
+    // can get a green light to fire before the server does
+    if (Weapon != none && Weapon.Role == ROLE_Authority)
+    {
+        return super.AllowFire();
+    }
+
+    return DHRocketWeapon(Weapon) != none &&
+           DHRocketWeapon(Weapon).CanFire() &&
+           super.AllowFire();
 }
 
 // Modified to add exhaust damage & to call PostFire() on the Weapon
