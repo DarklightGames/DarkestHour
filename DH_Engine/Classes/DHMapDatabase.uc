@@ -390,4 +390,5 @@ defaultproperties
     MapInfos(157)=(Name="DH-Armored_Cagny_Recon_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(158)=(Name="DH-Jurques_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(159)=(Name="DH-Jurques_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    MapInfos(160)=(Name="DH-Les_Champs_de_Losque_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
 }
