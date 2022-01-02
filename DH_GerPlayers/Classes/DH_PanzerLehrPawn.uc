@@ -7,9 +7,11 @@ class DH_PanzerLehrPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_PzLehr_Soldat'
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Lehr'
     Skins(0)=Texture'Characters_tex.ger_heads.ger_face01'
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.Panzer_Lehr_01'
-    Skins(2)=Texture'DHGermanCharactersTex.Gear.Panzer_Lehr_Accessories'
-    bReversedSkinsSlots=false
+    Skins(1)=Texture'DHGermanCharactersTex.Lehr.Panzer_Lehr_01'
+    Skins(2)=Texture'DHGermanCharactersTex.Lehr.Panzer_Lehr_Accessories'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Lehr.Panzer_Lehr_01'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Lehr.Panzer_Lehr_02'
+    bReversedSkinsSlots=true
 }

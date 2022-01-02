@@ -11,6 +11,5 @@ defaultproperties
     Skins(0)=Texture'DHGermanCharactersTex.Heer.Panzer_Lehr_01'
     Skins(1)=Texture'Characters_tex.ger_heads.ger_face01'
 	Skins(3)=Texture'Gear_tex.pouches.ger_ammo'
-
     bReversedSkinsSlots=false
 }
