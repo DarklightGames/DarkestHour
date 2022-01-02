@@ -7459,7 +7459,7 @@ simulated exec function Give(string WeaponName)
     local string ClassName;
     local int i;
 
-    if (!IsDebugModeAllowed())
+    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
     {
         return;
     }
