@@ -3513,7 +3513,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         {
             if (DHGRI.Radios[i] != none &&
                 DHGRI.Radios[i].bShouldShowOnSituationMap &&
-                DHGRI.Radios[i].TeamIndex == OwnerTeam &&
+                (DHGRI.Radios[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.Radios[i].TeamIndex == OwnerTeam) &&
                 DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
                 // MapIconCarriedRadio
