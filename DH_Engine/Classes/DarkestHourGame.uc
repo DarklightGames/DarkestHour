@@ -3249,6 +3249,7 @@ function ResetScores()
 {
     local DHPlayerReplicationInfo   PRI;
     local Controller                C;
+    local int i;
 
     RemainingTime = 60 * TimeLimit;
     ElapsedTime = 0;
@@ -3265,6 +3266,11 @@ function ResetScores()
             PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
             PRI.Score = 0;
         }
+    }
+
+    for (i = 0; i < arraycount(TeamScoreManagers); ++i)
+    {
+        TeamScoreManagers[i].Reset();
     }
 
     GRI.ResetTeamScores();
