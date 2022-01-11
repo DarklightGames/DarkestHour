@@ -66,13 +66,16 @@ struct ScoreboardColumn
     var byte Justification;
 };
 
+struct RowRenderInfo
+{
+    var Color       BackgroundColor;
+};
+
 struct CellRenderInfo
 {
     var string      Text;
     var color       TextColor;
     var byte        Justification;
-    var bool        bDrawBacking;
-    var color       BackingColor;
     var Material    Icon;
     var float       U, V, UL, VL;
 };
@@ -118,8 +121,6 @@ function float GetScoreboardTeamWidth(int TeamIndex)
 function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out CellRenderInfo CRI)
 {
     CRI.Icon = none;
-    CRI.bDrawBacking = true;
-    CRI.BackingColor = PlayerBackgroundColor;
     CRI.Justification = 0;
 
     switch (EScoreboardColumnType(ScoreboardColumnIndex))
@@ -134,6 +135,18 @@ function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out C
     }
 }
 
+function GetScoreboardRowRenderInfo(DHPlayerReplicationInfo PRI, out RowRenderInfo RRI)
+{
+    if (PRI != none && PRI == MyPRI)
+    {
+        RRI.BackgroundColor = SelfBackgroundColor;
+    }
+    else
+    {
+        RRI.BackgroundColor = PlayerBackgroundColor;
+    }
+}
+
 function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplicationInfo PRI, out CellRenderInfo CRI)
 {
     if (PRI == none)
@@ -142,8 +155,6 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
     }
 
     CRI.Icon = none;
-    CRI.bDrawBacking = true;
-    CRI.BackingColor = PlayerBackgroundColor;
     CRI.Justification = ScoreboardColumns[ScoreboardColumnIndex].Justification;
 
     if (PRI.bAdmin)
@@ -160,11 +171,6 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
         {
             CRI.TextColor = class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
         }
-    }
-
-    if (PRI == MyPRI)
-    {
-        CRI.BackingColor = SelfBackgroundColor;
     }
 
     switch (ScoreboardColumns[ScoreboardColumnIndex].Type)
@@ -568,7 +574,7 @@ function UpdateScoreBoard(Canvas C)
 
         if (CalcX(1.0, C) + XL > C.ClipX)
         {
-            DHDrawCell(C, s, 0, X, Y, BaseXPos[1] + MaxTeamWidth, LineHeight, false, HUD.default.WhiteColor);
+            DHDrawCell(C, s, 0, X, Y, BaseXPos[1] + MaxTeamWidth, LineHeight, HUD.default.WhiteColor);
             S = "";
             Y += LineHeight;
 
@@ -587,7 +593,7 @@ function UpdateScoreBoard(Canvas C)
     }
 
     // Finally, draw our spectator line
-    DHDrawCell(C, S, 0, X, Y, BaseXPos[0] + CalcX(GetScoreboardTeamWidth(AXIS_TEAM_INDEX) + GetScoreboardTeamWidth(ALLIES_TEAM_INDEX) + 0.75, C), LineHeight, false, HUD.default.WhiteColor);
+    DHDrawCell(C, S, 0, X, Y, BaseXPos[0] + CalcX(GetScoreboardTeamWidth(AXIS_TEAM_INDEX) + GetScoreboardTeamWidth(ALLIES_TEAM_INDEX) + 0.75, C), LineHeight, HUD.default.WhiteColor);
 }
 
 function string GetColumnTitle(int TeamIndex, int ColumnIndex)
@@ -627,6 +633,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
     local int i, j, SquadIndex;
     local array<int> ScoreboardColumnIndices;
     local CellRenderInfo CRI;
+    local RowRenderInfo RRI;
     local array<DHPlayerReplicationInfo> SquadMembers;
     local float TeamWidth;
     local bool bHasUnassigned;
@@ -654,7 +661,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
 
     TeamWidth = CalcX(GetScoreboardTeamWidth(TeamIndex), C);
 
-    DHDrawCell(C, TeamName @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
+    DHDrawCell(C, TeamName @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, TeamWidth, LineHeight, TeamColor);
 
     Y += LineHeight;
 
@@ -685,7 +692,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         }
 
         // Draw the team info
-        DHDrawCell(C, TeamInfoString, 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
+        DHDrawCell(C, TeamInfoString, 0, X, Y, TeamWidth, LineHeight, TeamColor);
     }
 
     // Draw rounds won/remaining for the team if not limited to 1 round
@@ -700,7 +707,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
 
         Y += LineHeight;
 
-        DHDrawCell(C, S, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        DHDrawCell(C, S, 0, X, Y, MaxTeamWidth, LineHeight, TeamColor);
     }
 
     //==========================================================================
@@ -709,6 +716,8 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
     Y += LineHeight;
 
     ScoreboardColumnIndices = GetScoreboardColumnIndicesForTeam(TeamIndex);
+
+    DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, TeamColor);
 
     for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
     {
@@ -721,9 +730,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 Y,
                 CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
                 LineHeight,
-                true,
                 class'UColor'.default.White,
-                TeamColor,
                 ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial,
                 0.0,
                 0.0,
@@ -739,9 +746,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 Y,
                 CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
                 LineHeight,
-                true,
-                class'UColor'.default.White,
-                TeamColor);
+                class'UColor'.default.White);
         }
 
         X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
@@ -775,7 +780,8 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             X = BaseXPos[TeamIndex];
 
             // Draw the squad header
-            DHDrawCell(C, TabSpaces $ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
+            DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, SquadHeaderColor);
+            DHDrawCell(C, TabSpaces $ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, class'UColor'.default.White);
 
             // Increment the Y value
             Y += LineHeight;
@@ -789,10 +795,13 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             // Draw all squad members
             for (i = 0; i < SquadMembers.Length; ++i)
             {
+                GetScoreboardRowRenderInfo(SquadMembers[i], RRI);
+                DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, RRI.BackgroundColor);
+
                 // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
                 if (i >= MaxPlayersListedPerSide)
                 {
-                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
+                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, class'UColor'.default.White);
                     break;
                 }
 
@@ -801,8 +810,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
                 {
                     GetScoreboardColumnRenderInfo(ScoreboardColumnIndices[j], SquadMembers[i], CRI);
-
-                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking , CRI.TextColor, CRI.BackingColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
+                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.TextColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
                     X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
                 }
 
@@ -834,7 +842,8 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             X = BaseXPos[TeamIndex];
 
             // Draw the unassigned header
-            DHDrawCell(C, TabSpaces $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
+            DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, SquadHeaderColor);
+            DHDrawCell(C, TabSpaces $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, class'UColor'.default.White);
 
             // Increment the Y value
             Y += LineHeight;
@@ -854,10 +863,13 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                     break;
                 }
 
+                GetScoreboardRowRenderInfo(TeamPRI[i], RRI);
+                DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, RRI.BackgroundColor);
+
                 // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
                 if (i >= MaxPlayersListedPerSide)
                 {
-                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
+                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, class'UColor'.default.White);
                     break;
                 }
 
@@ -866,8 +878,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
                 {
                     GetScoreboardColumnRenderInfo(ScoreboardColumnIndices[j], TeamPRI[i], CRI);
-
-                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
+                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.TextColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
                     X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
                 }
 
@@ -885,11 +896,13 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         {
             X = BaseXPos[TeamIndex];
 
+            DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, PlayerBackgroundColor);
+
             // Empty team, display "no players".
             for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
             {
                 GetScoreboardEmptyTeamColumnRenderInfo(ScoreboardColumnIndices[j], CRI);
-                DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
+                DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.TextColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
                 X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
             }
 
@@ -909,10 +922,12 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                     break;
                 }
 
+                DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, PlayerBackgroundColor);
+
                 // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
                 if (i >= MaxPlayersListedPerSide)
                 {
-                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
+                    DHDrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, class'UColor'.default.White);
                     break;
                 }
 
@@ -921,7 +936,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
                 {
                     GetScoreboardColumnRenderInfo(ScoreboardColumnIndices[j], TeamPRI[i], CRI);
-                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
+                    DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.TextColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
                     X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
                 }
 
@@ -929,17 +944,6 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                 Y += LineHeight;
             }
         }
-    }
-
-    // Calculate average ping for team
-    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
-    if (TeamPRI.Length > 0)
-    {
-        AvgPing[TeamIndex] *= 4 / TeamPRI.Length;
-    }
-    else
-    {
-        AvgPing[TeamIndex] = 0;
     }
 
     // Draw team totals
@@ -952,6 +956,8 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
     if (DHGRI.bRoundIsOver)
     {
         // Draw the column headers again.
+        DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, TeamColor);
+
         for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
         {
             if (ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial != none)
@@ -963,9 +969,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                     Y,
                     CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
                     LineHeight,
-                    true,
                     class'UColor'.default.White,
-                    TeamColor,
                     ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial,
                     0.0,
                     0.0,
@@ -981,9 +985,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
                     Y,
                     CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
                     LineHeight,
-                    true,
-                    class'UColor'.default.White,
-                    TeamColor);
+                    class'UColor'.default.White);
             }
 
             X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
@@ -999,11 +1001,13 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         // Rest the base line height
         LineHeight = BaseLineHeight;
 
+        DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, TeamColor);
+
         for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
         {
             GetScoreboardTotalColumnRenderInfo(TeamIndex, ScoreboardColumnIndices[i], CRI);
 
-            DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
+            DHDrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C), LineHeight, CRI.TextColor, CRI.Icon, CRI.U, CRI.V, CRI.UL, CRI.VL);
 
             X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
         }
@@ -1024,8 +1028,6 @@ function GetScoreboardTotalColumnRenderInfo(int TeamIndex, int ColumnIndex, out 
     if (DHGRI != none)
     {
         CRI.Icon = none;
-        CRI.bDrawBacking = true;
-        CRI.BackingColor = class'DHColor'.default.TeamColors[TeamIndex];
         CRI.Justification = ScoreboardColumns[ColumnIndex].Justification;
         CRI.TextColor = class'UColor'.default.White;
 
@@ -1071,19 +1073,13 @@ function DrawRowBackground(Canvas C, float XPos, float YPos, float Width, float 
 }
 
 // Modified to add a drop shadow to the text drawing (& also to remove unused variables)
-function DHDrawCell(Canvas C, coerce string Text, byte Align, float XPos, float YPos, float Width, float Height, bool bDrawBacking, Color F, optional Color B, optional Material Icon, optional float U, optional float V, optional float UL, optional float VL)
+function DHDrawCell(Canvas C, coerce string Text, byte Align, float XPos, float YPos, float Width, float Height, Color F, optional Material Icon, optional float U, optional float V, optional float UL, optional float VL)
 {
     local float XL;
 
     C.SetOrigin(XPos, YPos);
     C.SetClip(XPos + Width, YPos + Height);
     C.SetPos(0.0, 0.0);
-
-    if (bDrawBacking)
-    {
-        C.DrawColor = B;
-        C.DrawRect(Texture'WhiteSquareTexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
-    }
 
     if (Icon != none)
     {
