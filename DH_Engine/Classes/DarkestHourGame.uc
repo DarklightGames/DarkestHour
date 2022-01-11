@@ -4075,6 +4075,22 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
     return true;
 }
 
+exec function DebugObjectiveSpawnDistance(int NewDistanceThreshold)
+{
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none)
+    {
+        Broadcast(self, "Objective Spawn Distance set to" @ NewDistanceThreshold $ "m (was" @ LI.ObjectiveSpawnDistanceThreshold $ "m)");
+
+        LI.ObjectiveSpawnDistanceThreshold = NewDistanceThreshold;
+
+        UpdateObjectiveSpawns();
+    }
+}
+
 // Function which creates objective spawns where they are valid
 function UpdateObjectiveSpawns()
 {
@@ -5894,8 +5910,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=10
-        Minor=2
-        Patch=673
+        Minor=3
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject

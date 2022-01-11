@@ -219,7 +219,7 @@ state Requesting extends Busy
         Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
-        RequestSound = GetRequestSound(LI);
+        RequestSound = GetRequestSound(Request.TeamIndex, LI);
 
         if (Request.Sender.Pawn != none)
         {
@@ -266,7 +266,7 @@ state Responding extends Busy
 
             // "Artillery strike confirmed."
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
-            ResponseSound = GetConfirmSound(LI);
+            ResponseSound = GetConfirmSound(Request.TeamIndex, LI);
         }
         else
         {
@@ -302,7 +302,7 @@ state Responding extends Busy
                     break;
             }
 
-            ResponseSound = GetDenySound(LI);
+            ResponseSound = GetDenySound(Request.TeamIndex, LI);
         }
 
         // Play the response sound.
@@ -393,17 +393,17 @@ function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
     return class<DHVoicePack>(DynamicLoadObject(VoicePackClassName, class'Class'));
 }
 
-function SoundGroup GetRequestSound(DH_LevelInfo LI)
+function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioRequestSound;
 }
 
-function SoundGroup GetConfirmSound(DH_LevelInfo LI)
+function SoundGroup GetConfirmSound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioResponseConfirmSound;
 }
 
-function SoundGroup GetDenySound(DH_LevelInfo LI)
+function SoundGroup GetDenySound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioResponseDenySound;
 }
