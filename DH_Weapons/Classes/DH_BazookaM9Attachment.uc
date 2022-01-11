@@ -2,12 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
+// [ ] Texture for LOD version
+// [ ] Verify that we have a M6A3 rocket for the rocket
+// [ ] Calibrate firing ranges
+//==============================================================================
 
 class DH_BazookaM9Attachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.bazooka_m9_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'

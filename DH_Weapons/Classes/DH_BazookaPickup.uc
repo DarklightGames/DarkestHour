@@ -9,5 +9,5 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_BazookaWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bazooka'
-    // DrawScale=1.33
+    DrawScale=1.25
 }
