@@ -1019,12 +1019,9 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
 
 function GetScoreboardTotalColumnRenderInfo(int TeamIndex, int ColumnIndex, out CellRenderInfo CRI)
 {
-    local DHGameReplicationInfo GRI;
     local int i, Score;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI != none)
+    if (DHGRI != none)
     {
         CRI.Icon = none;
         CRI.bDrawBacking = true;
@@ -1036,23 +1033,23 @@ function GetScoreboardTotalColumnRenderInfo(int TeamIndex, int ColumnIndex, out 
         {
             case COLUMN_Score:
                 Score = 0;
-                for (i = 0; i < arraycount(GRI.TeamScores[TeamIndex].CategoryScores); ++i)
+                for (i = 0; i < arraycount(DHGRI.TeamScores[TeamIndex].CategoryScores); ++i)
                 {
-                    Score += GRI.TeamScores[TeamIndex].CategoryScores[i];
+                    Score += DHGRI.TeamScores[TeamIndex].CategoryScores[i];
                 }
                 CRI.Text = string(Score);
                 break;
             case COLUMN_Kills:
-                CRI.Text = string(GRI.TeamScores[TeamIndex].Kills);
+                CRI.Text = string(DHGRI.TeamScores[TeamIndex].Kills);
                 break;
             case COLUMN_PointsCombat:
-                CRI.Text = string(GRI.TeamScores[TeamIndex].CategoryScores[class'DHScoreCategory_Combat'.default.CategoryIndex]);
+                CRI.Text = string(DHGRI.TeamScores[TeamIndex].CategoryScores[class'DHScoreCategory_Combat'.default.CategoryIndex]);
                 break;
             case COLUMN_PointsSupport:
-                CRI.Text = string(GRI.TeamScores[TeamIndex].CategoryScores[class'DHScoreCategory_Support'.default.CategoryIndex]);
+                CRI.Text = string(DHGRI.TeamScores[TeamIndex].CategoryScores[class'DHScoreCategory_Support'.default.CategoryIndex]);
                 break;
             case COLUMN_Deaths:
-                CRI.Text = string(GRI.TeamScores[TeamIndex].Deaths);
+                CRI.Text = string(DHGRI.TeamScores[TeamIndex].Deaths);
                 break;
             default:
                 CRI.Text = "";
