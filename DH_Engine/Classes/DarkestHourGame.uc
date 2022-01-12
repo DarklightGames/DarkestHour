@@ -2466,18 +2466,22 @@ function UpdatePlayerScore(Controller C)
     local DHPlayer PC;
     local int i;
 
-    PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
     PC = DHPlayer(C);
 
-    if (PRI != none && PC != none)
+    if (PC != none)
     {
-        PRI.Score = PC.ScoreManager.TotalScore;
-        PRI.TotalScore = PC.ScoreManager.TotalScore;
-        PRI.DHKills = PRI.Kills;    // Update the replicated variable kills variable here!
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-        for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+        if (PRI != none)
         {
-            PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+            PRI.Score = PC.ScoreManager.TotalScore;
+            PRI.TotalScore = PC.ScoreManager.TotalScore;
+            PRI.DHKills = PRI.Kills;    // Update the replicated variable kills variable here!
+
+            for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+            {
+                PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+            }
         }
     }
 }
@@ -3249,6 +3253,7 @@ function ResetScores()
 {
     local DHPlayerReplicationInfo   PRI;
     local Controller                C;
+    local DHPlayer                  PC;
     local int i;
 
     RemainingTime = 60 * TimeLimit;
@@ -3261,12 +3266,15 @@ function ResetScores()
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        PC = DHPlayer(C);
+
+        if (PC != none && PC.ScoreManager != none)
         {
-            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-            PRI.Score = 0;
+            PC.ScoreManager.Reset();
         }
     }
+
+    UpdateAllPlayerScores();
 
     for (i = 0; i < arraycount(TeamScoreManagers); ++i)
     {
