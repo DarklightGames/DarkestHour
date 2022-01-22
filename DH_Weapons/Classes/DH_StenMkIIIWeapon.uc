@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_StenMkIIIWeapon extends DHAutoWeapon;
@@ -21,7 +21,7 @@ defaultproperties
     Skins(2)=Texture'DH_Sten_tex.Sten.StenMk3_tex'
     HandNum=0
     SleeveNum=1
-    
+
     SwayModifyFactor=0.63 // -0.17
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0

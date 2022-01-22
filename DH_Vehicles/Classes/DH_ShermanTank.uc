@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanTank extends DHArmoredVehicle; // M4A1 75mm variant (without wet stowage)
@@ -61,7 +61,7 @@ defaultproperties
     Health=565
     HealthMax=565.0
 	EngineHealth=300
-	
+
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ColtM1914Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Colt1914_3rd' 
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Colt1914_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon' //change
     bRapidFire=false
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
