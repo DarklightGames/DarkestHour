@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHScoreManager extends Actor;
+class DHScoreManager extends Object;
 
 const SCORE_CATEGORIES_MAX = 2;
 
@@ -26,6 +26,14 @@ var array<EventScore>       EventScores;
 var array<ScoreEvent>       ScoreEvents;
 
 var class<DHScoreCategory>  ScoreCategoryClasses[SCORE_CATEGORIES_MAX];
+
+// NextScoreManager is the score manager to route score events to once they have been
+// registered in this one. This allows passing score events to a team-specific
+// score manager.
+var DHScoreManager          NextScoreManager;
+
+// When true, the normal limit-per-duration checks are skipped.
+var bool                    bSkipLimits;
 
 // Event listeners for score changes.
 delegate OnCategoryScoreChanged(int CategoryIndex, int Score);
@@ -83,7 +91,7 @@ function Reset()
 
 // Gets the number of limited scoring events for the specified event type (based
 // on the limit duration of the event class in question).
-function int GetCountOfScoreEvents(class<DHScoreEvent> EventClass)
+function int GetCountOfScoreEvents(class<DHScoreEvent> EventClass, GameReplicationInfo GRI)
 {
     local int i;
     local int Count;
@@ -91,7 +99,7 @@ function int GetCountOfScoreEvents(class<DHScoreEvent> EventClass)
     for (i = 0; i < ScoreEvents.Length; ++i)
     {
         if (ScoreEvents[i].EventClass == EventClass &&
-            Level.Game.GameReplicationInfo.ElapsedTime - ScoreEvents[i].TimeSeconds < EventClass.default.LimitDurationSeconds)
+            GRI.ElapsedTime - ScoreEvents[i].TimeSeconds < EventClass.default.LimitDurationSeconds)
         {
             ++Count;
         }
@@ -101,30 +109,30 @@ function int GetCountOfScoreEvents(class<DHScoreEvent> EventClass)
 }
 
 // Trims tracking of limited score events that are older than one minute.
-function TrimScoreEvents()
+function TrimScoreEvents(GameReplicationInfo GRI)
 {
     local int i;
 
     for (i = ScoreEvents.Length - 1; i >= 0; --i)
     {
-        if (Level.Game.GameReplicationInfo.ElapsedTime - ScoreEvents[i].TimeSeconds > ScoreEvents[i].EventClass.default.LimitDurationSeconds)
+        if (GRI.ElapsedTime - ScoreEvents[i].TimeSeconds > ScoreEvents[i].EventClass.default.LimitDurationSeconds)
         {
             ScoreEvents.Remove(i, 1);
         }
     }
 }
 
-function HandleScoreEvent(DHScoreEvent ScoreEvent)
+function HandleScoreEvent(DHScoreEvent ScoreEvent, GameReplicationInfo GRI)
 {
     local int CategoryIndex;
     local int Value;
     local int EventScoreIndex;
     local int ScoreEventCount;
 
-    if (ScoreEvent.default.LimitPerDuration > 0)
+    if (!bSkipLimits && ScoreEvent.default.LimitPerDuration > 0)
     {
-        TrimScoreEvents();
-        ScoreEventCount = GetCountOfScoreEvents(ScoreEvent.Class);
+        TrimScoreEvents(GRI);
+        ScoreEventCount = GetCountOfScoreEvents(ScoreEvent.Class, GRI);
 
         if (ScoreEventCount >= ScoreEvent.default.LimitPerDuration)
         {
@@ -135,7 +143,7 @@ function HandleScoreEvent(DHScoreEvent ScoreEvent)
 
         ScoreEvents.Insert(0, 1);
         ScoreEvents[0].EventClass = ScoreEvent.Class;
-        ScoreEvents[0].TimeSeconds = Level.Game.GameReplicationInfo.ElapsedTime;
+        ScoreEvents[0].TimeSeconds = GRI.ElapsedTime;
     }
 
     Value = ScoreEvent.GetValue();
@@ -165,6 +173,11 @@ function HandleScoreEvent(DHScoreEvent ScoreEvent)
 
     ++EventScores[EventScoreIndex].Count;
     EventScores[EventScoreIndex].Score += Value;
+
+    if (NextScoreManager != none)
+    {
+        NextScoreManager.HandleScoreEvent(ScoreEvent, GRI);
+    }
 }
 
 function int GetEventScoreIndex(class<DHScoreEvent> EventClass)
@@ -221,7 +234,4 @@ defaultproperties
 {
     ScoreCategoryClasses(0)=class'DHScoreCategory_Combat'
     ScoreCategoryClasses(1)=class'DHScoreCategory_Support'
-    RemoteRole=ROLE_None
-    bHidden=true
 }
-
