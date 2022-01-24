@@ -86,9 +86,32 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+// TODO: GET RID OF THIS!
 simulated function bool IsSL()
 {
     return IsSquadLeader();
+}
+
+simulated function bool HasSubordinates(int Count)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsSquadLeader())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    return SRI != none &&
+           Team != none &&
+           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) > Count;
 }
 
 simulated function bool IsAssistantLeader()
