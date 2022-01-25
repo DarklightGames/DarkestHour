@@ -404,6 +404,9 @@ function UpdateAppearance()
             case NATION_Poland:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established';
                 break;
+            case NATION_Czechoslovakia:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CS_backpack_established';
+                break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
                 break;
@@ -433,6 +436,9 @@ function UpdateAppearance()
                 break;
             case NATION_Poland:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack';
+                break;
+            case NATION_Czechoslovakia:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CS_backpack';
                 break;
             default:
                 NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
