@@ -13,9 +13,9 @@ defaultproperties
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
-    HeadgearProbabilities(0)=0.6
-    HeadgearProbabilities(1)=0.2
-    HeadgearProbabilities(2)=0.2
+    HeadgearProbabilities(0)=0.8
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.1
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41_stickWeapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_PPSh41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')

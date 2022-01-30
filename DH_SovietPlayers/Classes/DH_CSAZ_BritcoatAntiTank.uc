@@ -12,9 +12,9 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_CSAZSidecap'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
-    HeadgearProbabilities(0)=0.6
-    HeadgearProbabilities(1)=0.2
-    HeadgearProbabilities(2)=0.2
+    HeadgearProbabilities(0)=0.8
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.1
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
     Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon')
     GivenItems(0)="none"

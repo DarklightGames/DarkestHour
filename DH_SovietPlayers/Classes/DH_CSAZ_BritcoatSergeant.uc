@@ -13,7 +13,7 @@ defaultproperties
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Coat_Sleeves'
     
-    HeadgearProbabilities(0)=0.6
-    HeadgearProbabilities(1)=0.2
-    HeadgearProbabilities(2)=0.2
+    HeadgearProbabilities(0)=0.8
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.1
 }
