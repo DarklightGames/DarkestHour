@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanTank_M4A376W extends DH_ShermanTank_M4A375W; // later 76mm version with HVAP instead of smoke rounds
 
 defaultproperties
-{  
+{
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext_alt'
     VehicleNameString="M4A3(76)W Sherman"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawnA_76mm')

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
@@ -27,7 +27,7 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
-    
+
     //alternative reload
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_empty"

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_ShermanTank_M4A275W_Soviet extends DH_ShermanTank_M4A375W; 
+class DH_ShermanTank_M4A275W_Soviet extends DH_ShermanTank_M4A375W;
 
 defaultproperties
 {
@@ -12,7 +12,7 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext_alt'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A2_soviet'
-	
+
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'  //different sounds because its a diesel engine
     StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
@@ -25,7 +25,7 @@ defaultproperties
     // Visual effects
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' //Sherman M4A2, which was the version with a diesel engine
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-    	
+
     // Movement
 	//different diesel engine
     MaxCriticalSpeed=777.0 // 45 kph
@@ -33,7 +33,7 @@ defaultproperties
     GearRatios(3)=0.62
     GearRatios(4)=0.76
     TransRatio=0.094
-	
+
     // Damage
 	// Compared to A3: diesel fuel
     EngineToHullFireChance=0.05  //standart 0.05 for diesel
@@ -41,8 +41,8 @@ defaultproperties
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1400.0 //diesel and wet stowage
 
-	
-	
+
+
 	//to do: destroyed textures
 }
 

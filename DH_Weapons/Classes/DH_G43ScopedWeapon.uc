@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_G43ScopedWeapon extends DHSniperWeapon;
@@ -36,7 +36,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     ScopeOverlaySize=0.32
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="scope_idle_empty"
     IronBringUpEmpty="scope_in_empty"

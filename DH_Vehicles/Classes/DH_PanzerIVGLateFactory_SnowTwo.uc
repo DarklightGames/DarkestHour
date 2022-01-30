@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIVGLateFactory_SnowTwo extends DH_PanzerIVGLateFactory; // snow topped version of CamoTwo
