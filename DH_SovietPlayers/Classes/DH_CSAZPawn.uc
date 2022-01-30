@@ -8,8 +8,8 @@ class DH_CSAZPawn extends DH_CzechPawn;
 defaultproperties
 {
 
-    Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic'
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.CSAZ_tunic'
+    Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_CSAZ_tunicG'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face04'
 
     ShovelClassName="DH_Equipment.DHShovelItem_Russian"
