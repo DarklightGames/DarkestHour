@@ -8,4 +8,6 @@ class DH_PIATAmmoRound extends ROFPAmmoRound;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb_1st'
+    // RelativeRotation=(Yaw=-16384)
+    DrawScale=5.0
 }

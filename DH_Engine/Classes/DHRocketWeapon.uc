@@ -139,7 +139,7 @@ simulated function NotifyOwnerJumped()
 }
 
 // New function to spawn any RocketAttachment actor (note this may get called by a reload animation notify, so the timing is spot on, e.g. PIAT)
-simulated function SpawnRocketAttachment()
+simulated event SpawnRocketAttachment()
 {
     local vector ProjectileLocation;
 
