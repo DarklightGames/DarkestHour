@@ -18,7 +18,7 @@ const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
 const ARTILLERY_MAX = 8;
-const MINE_VOLUMES_MAX = 32;
+const MINE_VOLUMES_MAX = 64;
 const NO_ARTY_VOLUMES_MAX = 32;
 
 enum VehicleReservationError
