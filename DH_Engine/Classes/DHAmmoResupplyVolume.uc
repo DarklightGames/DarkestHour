@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHAmmoResupplyVolume extends Volume
@@ -27,7 +27,7 @@ var     DHResupplyStrategy ResupplyStrategy;
 function PostBeginPlay()
 {
     super.PostBeginPlay();
-    
+
     ResupplyStrategy = new class'DHResupplyStrategy';
 
     UpdateTime = default.UpdateTime; // force UpdateTime to be default (no overriding it in the editor)

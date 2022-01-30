@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // MD5 hash implementation for UnrealScript by Wormbo.
 // Feel free to modify and optimize for your needs.

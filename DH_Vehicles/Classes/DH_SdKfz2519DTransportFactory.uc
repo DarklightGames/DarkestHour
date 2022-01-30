@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SdKfz2519DTransportFactory extends DH_Sdkfz251Factory;

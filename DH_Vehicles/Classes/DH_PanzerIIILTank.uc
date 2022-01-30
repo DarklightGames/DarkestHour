@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIIILTank extends DHArmoredVehicle;
@@ -62,7 +62,7 @@ defaultproperties
 
     // Damage
 	// pros: 5 men crew
-	// cons: petrol fuel 
+	// cons: petrol fuel
     Health=560
     HealthMax=560.0
 	EngineHealth=300

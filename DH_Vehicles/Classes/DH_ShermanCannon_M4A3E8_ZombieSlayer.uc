@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanCannon_M4A3E8_ZombieSlayer extends DH_ShermanCannon_M4A3E8_Fury;

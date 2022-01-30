@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
@@ -105,6 +105,8 @@ var()   config bool                 bBigBalloony;
 
 // DEBUG
 var     bool                        bDebugConstructions;
+
+var     DHScoreManager              TeamScoreManagers[2];
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -430,6 +432,13 @@ function PostBeginPlay()
         {
             break;
         }
+    }
+
+    // Set up the score managers for each team.
+    for (i = 0; i < arraycount(TeamScoreManagers); ++i)
+    {
+        TeamScoreManagers[i] = new class'DHScoreManager';
+        TeamScoreManagers[i].bSkipLimits = true;
     }
 
     foreach AllActors(class'ROMineVolume', MV)
@@ -1151,6 +1160,7 @@ function ScoreFireSupportSpottingAssist(Controller Spotter)
 function ScoreKill(Controller Killer, Controller Other)
 {
     local DHPlayerReplicationInfo PRI;
+    local int TeamIndex;
 
     if (Killer == Other || Killer == none)
     {
@@ -1169,7 +1179,9 @@ function ScoreKill(Controller Killer, Controller Other)
         if (PRI != none)
         {
             ++PRI.Kills;
-            ++PRI.DHKills;
+
+            // Also add the kill to the team score.
+            GRI.AddKillForTeam(Killer.GetTeamNum());
         }
     }
 
@@ -2093,13 +2105,19 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i;
+    local int        i, TeamIndex;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
     local array<DHGameReplicationInfo.MapMarker> FireSupportMapMarkers;
 
     if (Killed == none)
     {
         return;
+    }
+
+    // Add the death to the team score in GRI.
+    if (GRI != none)
+    {
+        GRI.AddDeathForTeam(Killed.GetTeamNum());
     }
 
     if (Killer != none && Killer.bIsPlayer && Killed.bIsPlayer && DamageType != none)
@@ -2417,6 +2435,21 @@ function UpdateArtilleryAvailability()
     }
 }
 
+function UpdateTeamScores()
+{
+    local int i, j;
+
+    for (i = 0; i < arraycount(TeamScoreManagers); ++i)
+    {
+        // TODO: we should have the kills updated here, only once, to save network traffic
+
+        for (j = 0; j < arraycount(TeamScoreManagers[i].CategoryScores); ++j)
+        {
+            GRI.TeamScores[i].CategoryScores[j] = TeamScoreManagers[i].CategoryScores[j];
+        }
+    }
+}
+
 function UpdateAllPlayerScores()
 {
     local Controller C;
@@ -2433,17 +2466,22 @@ function UpdatePlayerScore(Controller C)
     local DHPlayer PC;
     local int i;
 
-    PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
     PC = DHPlayer(C);
 
-    if (PRI != none && PC != none)
+    if (PC != none)
     {
-        PRI.Score = PC.ScoreManager.TotalScore;
-        PRI.TotalScore = PC.ScoreManager.TotalScore;
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-        for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+        if (PRI != none)
         {
-            PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+            PRI.Score = PC.ScoreManager.TotalScore;
+            PRI.TotalScore = PC.ScoreManager.TotalScore;
+            PRI.DHKills = PRI.Kills;    // Update the replicated variable kills variable here!
+
+            for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+            {
+                PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+            }
         }
     }
 }
@@ -2954,6 +2992,7 @@ state RoundInPlay
         RoundCount++;
 
         UpdateAllPlayerScores();
+        UpdateTeamScores();
 
         if (RoundLimit != 0 && RoundCount >= RoundLimit)
         {
@@ -3214,6 +3253,8 @@ function ResetScores()
 {
     local DHPlayerReplicationInfo   PRI;
     local Controller                C;
+    local DHPlayer                  PC;
+    local int i;
 
     RemainingTime = 60 * TimeLimit;
     ElapsedTime = 0;
@@ -3225,12 +3266,22 @@ function ResetScores()
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        PC = DHPlayer(C);
+
+        if (PC != none && PC.ScoreManager != none)
         {
-            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-            PRI.Score = 0;
+            PC.ScoreManager.Reset();
         }
     }
+
+    UpdateAllPlayerScores();
+
+    for (i = 0; i < arraycount(TeamScoreManagers); ++i)
+    {
+        TeamScoreManagers[i].Reset();
+    }
+
+    GRI.ResetTeamScores();
 }
 
 state RoundOver
@@ -4073,6 +4124,22 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
     }
 
     return true;
+}
+
+exec function DebugObjectiveSpawnDistance(int NewDistanceThreshold)
+{
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none)
+    {
+        Broadcast(self, "Objective Spawn Distance set to" @ NewDistanceThreshold $ "m (was" @ LI.ObjectiveSpawnDistanceThreshold $ "m)");
+
+        LI.ObjectiveSpawnDistanceThreshold = NewDistanceThreshold;
+
+        UpdateObjectiveSpawns();
+    }
 }
 
 // Function which creates objective spawns where they are valid
@@ -5837,7 +5904,7 @@ defaultproperties
     RussianNames(6)="Jeff Duquette"
     RussianNames(7)="Chris Young"
     RussianNames(8)="Kenneth Kjeldsen"
-    RussianNames(9)="John Wayne"
+    RussianNames(9)="Gibson Drukenmiller"
     RussianNames(10)="Clint Eastwood"
     RussianNames(11)="Tom Hanks"
     RussianNames(12)="Leroy Jenkins"
@@ -5894,8 +5961,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=10
-        Minor=2
-        Patch=673
+        Minor=3
+        Patch=4
         Prerelease=""
     End Object
     Version=VersionObject

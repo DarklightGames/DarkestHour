@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M1928_50rndFire extends DHFastAutoFire;
@@ -29,7 +29,7 @@ defaultproperties
     //PreFireAnim="Shoot1_start"
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
-    
+
     FireIronEndAnim="iron_shoot_end"
     FireIronLastAnim="iron_idle_empty"
     FireLastAnim="shoot_end_empty"
