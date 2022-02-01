@@ -11,7 +11,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersSOV_anm.CSAZ_tunic'
     Skins(1)=Texture'DHSovietCharactersTex.RussianTunics.DH_CSAZ_tunicG'
-    Skins(1)=Texture'Characters_tex.rus_heads.rus_face04'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face04'
 
     FaceSkins(0)=Combiner'DHSovietCharactersTex.sov_faces.sov_face02gloves' //
     FaceSkins(1)=Combiner'DHSovietCharactersTex.sov_faces.sov_face02gloves'
