@@ -8,7 +8,7 @@ class DH_PIATWeapon extends DHRocketWeapon;
 // Modified to prevent reloading unless prone or rested (with message) or if weapon is not empty
 simulated function bool AllowReload()
 {
-    if (Instigator == none || (!Instigator.bIsCrawling && !Instigator.bRestingWeapon))
+    if (Instigator == none || !Instigator.bIsCrawling)
     {
         if (Instigator.IsHumanControlled())
         {

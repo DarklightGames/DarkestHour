@@ -10,7 +10,7 @@ var     localized string    NoHipFire,
                             CrouchOrRestToFire,
                             ProneOrRestToFire,
                             NoProneReload,
-                            ProneOrRestToReload,
+                            RestToReload,
                             ShoulderForAssistedReload,
                             CantBeMoving;
 
@@ -37,7 +37,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.NoProneReload;
             break;
         case 5:
-            S = default.ProneOrRestToReload;
+            S = default.RestToReload;
             break;
         case 6:
             S = default.ShoulderForAssistedReload;
@@ -65,7 +65,7 @@ defaultproperties
     CrouchOrRestToFire="You must be crouched or weapon rested to fire the {0}"
     ProneOrRestToFire="You need to be prone or weapon rested to fire the {0}"
     NoProneReload="You cannot reload the {0} while prone"
-    ProneOrRestToReload="You need to be prone or weapon rested to reload the {0}"
+    RestToReload="You need to be prone to reload the {0}"
     ShoulderForAssistedReload="You must shoulder the {0} for an assisted reload"
     CantBeMoving="You must be stationary to fire the {0}"
 }
