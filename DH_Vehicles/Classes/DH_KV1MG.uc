@@ -26,7 +26,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
-    FireInterval=0.1
+    FireInterval=0.105
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'

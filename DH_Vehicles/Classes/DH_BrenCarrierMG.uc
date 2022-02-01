@@ -26,7 +26,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_BrenBullet'
     InitialPrimaryAmmo=30
     NumMGMags=20
-    FireInterval=0.12
+    FireInterval=0.13
     TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'

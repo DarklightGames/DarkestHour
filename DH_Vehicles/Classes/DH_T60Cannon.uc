@@ -43,7 +43,7 @@ defaultproperties
     //SecondaryProjectileClass=class'DH_Vehicles.DH_T60CannonShellHE' -- the ShVAK aircraft cannon used HEI but unsure if adopted for the tank version
     ProjectileDescriptions(0)="AP-T"
 
-    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer 
+    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer
     //nProjectileDescriptions(1)="OF" // fragmentary round with tracer (incendiary?)
 
     InitialPrimaryAmmo=58
@@ -56,7 +56,7 @@ defaultproperties
     AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     InitialAltAmmo=63
     NumMGMags=15
-    AltFireInterval=0.1
+    AltFireInterval=0.105
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
