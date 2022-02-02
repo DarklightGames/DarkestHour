@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PPS43Bullet'
     AmmoClass=class'ROAmmo.PPS43Ammo'
-    FireRate=0.1 // ~662 rpm (value had to be found experimentally due to an engine bug)
+    FireRate=0.095 // ~702 rpm (value had to be found experimentally due to an engine bug)
     Spread=135.0
 
     // Recoil
