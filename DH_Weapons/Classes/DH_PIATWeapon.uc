@@ -70,7 +70,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_PIAT_1st.PIAT_1st' // TODO: there is no specularity mask for this weapon
 
-    IronSightDisplayFOV=45.0 //25.0
+    IronSightDisplayFOV=55.0 //25.0
 
     RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
     MuzzleBone="rocket"
