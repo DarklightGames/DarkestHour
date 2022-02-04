@@ -102,6 +102,7 @@ defaultproperties
     
     DisplayFOV=85.0
     IronSightDisplayFOV=65.0
+    PlayerDeployFOV=65
 
     bHasSelectFire=true
     SelectFireAnim="fireswitch"
