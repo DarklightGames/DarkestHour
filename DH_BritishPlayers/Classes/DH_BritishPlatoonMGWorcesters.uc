@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BritishPlatoonMGWorcesters extends DHCWMachineGunnerRoles;
+class DH_BritishPlatoonMGWorcesters extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishWorcestersPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_BritishVestWorcestersPawn',Weight=1.0)
 }

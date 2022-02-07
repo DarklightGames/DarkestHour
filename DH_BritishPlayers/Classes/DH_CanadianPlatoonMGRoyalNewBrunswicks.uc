@@ -3,13 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_CanadianPlatoonMGRoyalNewBrunswicks extends DHCWMachineGunnerRoles;
+class DH_CanadianPlatoonMGRoyalNewBrunswicks extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianBrunswicksPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestBrunswicksPawn',Weight=1.0)
-    VoiceType="DH_BritishPlayers.DHCanadianVoice"
-    AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }
