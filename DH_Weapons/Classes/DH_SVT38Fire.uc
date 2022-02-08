@@ -8,7 +8,7 @@ class DH_SVT38Fire extends DHSemiAutoFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_SVT38Bullet'
-    AmmoClass=class'ROAmmo.SVT40Ammo'
+    AmmoClass=class'DH_Weapons.DH_SVT38Ammo'
     Spread=55.0
     MaxVerticalRecoilAngle=510
     MaxHorizontalRecoilAngle=190
