@@ -6689,8 +6689,6 @@ function ServerCancelArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 {
     local DHGameReplicationInfo GRI;
-    local DarkestHourGame G;
-    local int TeamIndex;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
