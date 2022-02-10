@@ -9,7 +9,7 @@ class DHPOLMachineGunnerRoles extends DHAlliedMachineGunnerRoles
 defaultproperties
 {
     AltName="Celowniczy KM"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"

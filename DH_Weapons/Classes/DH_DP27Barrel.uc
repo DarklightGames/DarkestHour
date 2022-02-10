@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_DP28DamType extends DHMediumCaliberDamageType
-    abstract;
+class DH_DP27Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_DP28Weapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    FiringHeatIncrement=0.85
 }

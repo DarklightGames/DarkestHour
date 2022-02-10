@@ -3,21 +3,21 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_DP28Attachment extends DHHighROFWeaponAttachment;
+class DH_DP27Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.DP28'
+    Mesh=SkeletalMesh'Weapons3rd_anm.DP28' //change
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=false
     bBarrelCanOverheat=true
 
-    ClientProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    ClientProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     bUsesTracers=true
     TracerFrequency=5
-    ClientTracerClass=class'DH_Weapons.DH_DP28TracerBullet'
+    ClientTracerClass=class'DH_Weapons.DH_DP27TracerBullet'
 
     WA_Idle="idle_DP28"
     WA_IdleEmpty="idle_DP28"
@@ -27,14 +27,14 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_dp28"
     WA_ProneReloadEmpty="prone_reloadempty_dp28"
 
-    PA_MovementAnims(0)="stand_jogF_dp27"
-    PA_MovementAnims(1)="stand_jogB_dp27"
-    PA_MovementAnims(2)="stand_jogL_dp27"
-    PA_MovementAnims(3)="stand_jogR_dp27"
-    PA_MovementAnims(4)="stand_jogFL_dp27"
-    PA_MovementAnims(5)="stand_jogFR_dp27"
-    PA_MovementAnims(6)="stand_jogBL_dp27"
-    PA_MovementAnims(7)="stand_jogBR_dp27"
+    PA_MovementAnims(0)="stand_jogF_kar"
+    PA_MovementAnims(1)="stand_jogB_kar"
+    PA_MovementAnims(2)="stand_jogL_kar"
+    PA_MovementAnims(3)="stand_jogR_kar"
+    PA_MovementAnims(4)="stand_jogFL_kar"
+    PA_MovementAnims(5)="stand_jogFR_kar"
+    PA_MovementAnims(6)="stand_jogBL_kar"
+    PA_MovementAnims(7)="stand_jogBR_kar"
     PA_CrouchAnims(0)="crouch_walkF_dp27"
     PA_CrouchAnims(1)="crouch_walkB_dp27"
     PA_CrouchAnims(2)="crouch_walkL_dp27"
@@ -51,14 +51,14 @@ defaultproperties
     PA_ProneIronAnims(5)="prone_slowcrawlR_dp27"
     PA_ProneIronAnims(6)="prone_slowcrawlB_dp27"
     PA_ProneIronAnims(7)="prone_slowcrawlB_dp27"
-    PA_WalkAnims(0)="stand_walkFrest_dp27"
-    PA_WalkAnims(1)="stand_walkBrest_dp27"
-    PA_WalkAnims(2)="stand_walkLrest_dp27"
-    PA_WalkAnims(3)="stand_walkRrest_dp27"
-    PA_WalkAnims(4)="stand_walkFLrest_dp27"
-    PA_WalkAnims(5)="stand_walkFRrest_dp27"
-    PA_WalkAnims(6)="stand_walkBLrest_dp27"
-    PA_WalkAnims(7)="stand_walkBRrest_dp27"
+    PA_WalkAnims(0)="stand_walkFhip_dp27"
+    PA_WalkAnims(1)="stand_walkBhip_dp27"
+    PA_WalkAnims(2)="stand_walkLhip_dp27"
+    PA_WalkAnims(3)="stand_walkRhip_dp27"
+    PA_WalkAnims(4)="stand_walkFLhip_dp27"
+    PA_WalkAnims(5)="stand_walkFRhip_dp27"
+    PA_WalkAnims(6)="stand_walkBLhip_dp27"
+    PA_WalkAnims(7)="stand_walkBRhip_dp27"
     PA_WalkIronAnims(0)="stand_walkFhip_dp27"
     PA_WalkIronAnims(1)="stand_walkBhip_dp27"
     PA_WalkIronAnims(2)="stand_walkLhip_dp27"
@@ -101,8 +101,8 @@ defaultproperties
     PA_CrouchTurnLeftAnim="crouch_turnL_dp27"
     PA_CrouchIdleRestAnim="crouch_idle_dp27"
     PA_IdleCrouchAnim="crouch_idle_dp27"
-    PA_IdleRestAnim="stand_idlerest_dp27"
-    PA_IdleWeaponAnim="stand_idlerest_dp27"
+    PA_IdleRestAnim="stand_idlehip_dp27"
+    PA_IdleWeaponAnim="stand_idlehip_dp27"
     PA_IdleIronRestAnim="stand_idlehip_dp27"
     PA_IdleIronWeaponAnim="stand_idlehip_dp27"
     PA_IdleCrouchIronWeaponAnim="crouch_idle_dp27"

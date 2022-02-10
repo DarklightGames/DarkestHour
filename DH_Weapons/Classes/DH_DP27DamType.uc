@@ -3,15 +3,11 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_DP28Ammo extends DHAmmunition;
+class DH_DP27DamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    ItemName="DP27 Magazine"
-    IconMaterial=Material'InterfaceArt_tex.HUD.dp27_ammo'
-    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
-
-    //PickupClass=class'DP28AmmoPickup'
-    MaxAmmo=47
-    InitialAmount=47
+    WeaponClass=class'DH_Weapons.DH_DP27Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 }

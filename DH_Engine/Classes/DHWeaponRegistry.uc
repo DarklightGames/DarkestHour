@@ -65,7 +65,7 @@ defaultproperties
     Records(5)=(ClassName="DH_Weapons.DH_BrenWeapon",WeaponNames=("bren"))
     Records(6)=(ClassName="DH_Weapons.DH_C96Weapon",WeaponNames=("c96"))
     Records(7)=(ClassName="DH_Weapons.DH_ColtM1911Weapon",WeaponNames=("colt", "1911"))
-    Records(8)=(ClassName="DH_Weapons.DH_DP28Weapon",WeaponNames=("dp28"))
+    Records(8)=(ClassName="DH_Weapons.DH_DP27Weapon",WeaponNames=("dp27"))
     Records(9)=(ClassName="DH_Weapons.DH_EnfieldNo2Weapon",WeaponNames=("enfield2", "webley"))
     Records(10)=(ClassName="DH_Weapons.DH_EnfieldNo4Weapon",WeaponNames=("enfield", "enfield4"))
     Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfield4scoped"))
