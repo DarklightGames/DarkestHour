@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_DP27Fire extends DHFastAutoFire;
+class DH_DP27Fire extends DHAutomaticFire;
 
 defaultproperties
 {
@@ -23,8 +23,8 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
+    //AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
+    //FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stDP'
     BipodDeployFireAnim="Deploy_shoot_loop"
     BipodDeployFireLoopAnim="Deploy_Shoot_Loop"
