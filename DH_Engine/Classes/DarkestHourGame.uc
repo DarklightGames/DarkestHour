@@ -5828,10 +5828,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         }
         else
         {
-            // Artillery successfully created, assign team.
-            Response.ArtilleryActor.SetTeamIndex(Request.TeamIndex);
-            Response.ArtilleryActor.Requester = Request.Sender;
-
             // Update tracking statistics.
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].UsedCount += 1;
 

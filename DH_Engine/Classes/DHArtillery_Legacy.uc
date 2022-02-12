@@ -24,8 +24,8 @@ var DHGameReplicationInfo GRI;
 // And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
 {
-    local DH_LevelInfo            LI;
-    local float                   StrikeDelay, MaxSalvoDuration;
+    local DH_LevelInfo      LI;
+    local float             StrikeDelay, MaxSalvoDuration;
 
     super.PostBeginPlay();
 
@@ -43,8 +43,17 @@ function PostBeginPlay()
         return;
     }
 
+    // Set the team index based on the team of the authoring player.
+    Requester = PlayerController(Owner);
+
+    if (Requester != none)
+    {
+        SetTeamIndex(Requester.GetTeamNum());
+    }
+
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
     BatterySize = LI.GetBatterySize(TeamIndex);
     SalvoAmount = LI.GetSalvoAmount(TeamIndex);
     SpreadAmount = LI.GetSpreadAmount(TeamIndex);
