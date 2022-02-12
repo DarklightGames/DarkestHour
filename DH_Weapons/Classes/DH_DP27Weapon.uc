@@ -73,8 +73,8 @@ defaultproperties
     SightUpIronBringUp="deploy"
     SightUpIronPutDown="undeploy"
     SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="deploy"  //temp
-    SightUpMagPartialReloadAnim="deploy" //temp
+    SightUpMagEmptyReloadAnim="reload_empty"
+    SightUpMagPartialReloadAnim="reload_half"
      
 //    MagEmptyReloadAnims(0)="reload"
 //    MagPartialReloadAnims(0)="reload"
@@ -87,9 +87,9 @@ defaultproperties
     //CrawlStartAnim="crawl_in"
     //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
-    SelectAnim="Draw"
-    PutDownAnim="Putaway"
+    //SelectAnim="Draw"
+    //PutDownAnim="Putaway"
     
-    FirstSelectAnim="draw1"
+    SelectAnim=crawl_out
     BarrelChangeAnim="BarrelChange"
 }
