@@ -90,6 +90,17 @@ defaultproperties
     //SelectAnim="Draw"
     //PutDownAnim="Putaway"
     
-    SelectAnim=crawl_out
-    BarrelChangeAnim="BarrelChange"
+    IdleEmptyAnim="idle_empty"
+    //SightUpIronBringUpEmpty="deploy_empty"
+    //SightUpIronPutDownEmpty="undeploy_empty"
+    //SightUpIronIdleEmptyAnim="deploy_idle_empty"  TO DO: make these work!
+    SprintStartEmptyAnim="sprint_start_empty"
+    SprintLoopEmptyAnim="sprint_middle_empty"
+    SprintEndEmptyAnim="sprint_end_empty"
+
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+
+    SelectEmptyAnim="draw_empty"
+    PutDownEmptyAnim="putaway_empty"
 }
