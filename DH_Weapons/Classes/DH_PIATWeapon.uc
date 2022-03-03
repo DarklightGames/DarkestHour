@@ -73,12 +73,14 @@ defaultproperties
     IronSightDisplayFOV=55.0 //25.0
 
     RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
-    MuzzleBone="rocket"
+    RocketBone="rocket"
+
+    MuzzleBone="muzzle"
     InitialNumPrimaryMags=2
     NumMagsToResupply=2
-    IronIdleAnim="idel_loop"
-    MagEmptyReloadAnims(0)="Reload 2"
-    MagPartialReloadAnims(0)="Reload 2"
+    IronIdleAnim="idle_loop"
+    MagEmptyReloadAnims(0)="Reload"
+    MagPartialReloadAnims(0)="Reload"
 
     CrawlForwardAnim="crawl_f"
     CrawlBackwardAnim="crawl_b"

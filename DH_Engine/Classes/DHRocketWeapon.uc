@@ -6,6 +6,7 @@
 class DHRocketWeapon extends DHSemiAutoWeapon
     abstract;
 
+// Range Settings
 struct RangeSetting
 {
     var int  FirePitch;
@@ -15,11 +16,17 @@ struct RangeSetting
 
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
+
+// Assisted Reload
 var     bool                    bCanHaveAsssistedReload;      // another friendly player can provide an assisted reload, which is much quicker //COMPAREPIAT added
 var     name                    AssistedMagEmptyReloadAnim;   // 1st person animation for assisted empty reload
 var     name                    AssistedMagPartialReloadAnim; // 1st person animation for assisted partial reload
+
+// Rocket Attachment
 var     class<ROFPAmmoRound>    RocketAttachmentClass;
 var     ROFPAmmoRound           RocketAttachment;             // the attached first person ammo round
+var     name                    RocketBone;
+
 var     class<LocalMessage>     WarningMessageClass;
 
 replication
@@ -145,9 +152,15 @@ simulated event SpawnRocketAttachment()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        ProjectileLocation = GetBoneCoords(MuzzleBone).Origin;
+        if (RocketBone == '')
+        {
+            Log("SpawnRocketAttachment failed, RocketBone not set");
+            return;
+        }
+
+        ProjectileLocation = GetBoneCoords(RocketBone).Origin;
         RocketAttachment = Spawn(RocketAttachmentClass, self,, ProjectileLocation);
-        AttachToBone(RocketAttachment, MuzzleBone);
+        AttachToBone(RocketAttachment, RocketBone);
     }
 }
 

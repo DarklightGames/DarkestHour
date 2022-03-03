@@ -120,6 +120,7 @@ defaultproperties
 
     RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
     MuzzleBone="Warhead"
+    RocketBone="Warhead"
     MaxNumPrimaryMags=1
     InitialNumPrimaryMags=1
     bCanBeResupplied=false
