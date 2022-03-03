@@ -1160,7 +1160,6 @@ function ScoreFireSupportSpottingAssist(Controller Spotter)
 function ScoreKill(Controller Killer, Controller Other)
 {
     local DHPlayerReplicationInfo PRI;
-    local int TeamIndex;
 
     if (Killer == Other || Killer == none)
     {
@@ -2105,7 +2104,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        i, TeamIndex;
+    local int        i;
     local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
     local array<DHGameReplicationInfo.MapMarker> FireSupportMapMarkers;
 
@@ -3251,7 +3250,6 @@ state ResetGameCountdown
 // Modified to reset stashed score in addition to score
 function ResetScores()
 {
-    local DHPlayerReplicationInfo   PRI;
     local Controller                C;
     local DHPlayer                  PC;
     local int i;
@@ -5830,10 +5828,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         }
         else
         {
-            // Artillery successfully created, assign team.
-            Response.ArtilleryActor.SetTeamIndex(Request.TeamIndex);
-            Response.ArtilleryActor.Requester = Request.Sender;
-
             // Update tracking statistics.
             GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].UsedCount += 1;
 
@@ -5962,7 +5956,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=10
         Minor=3
-        Patch=5
+        Patch=7
         Prerelease=""
     End Object
     Version=VersionObject
