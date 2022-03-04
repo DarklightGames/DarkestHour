@@ -113,7 +113,7 @@ function OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
 
         if (PC != none)
         {
-            PC.ServerSetPlayerInfo(255, 255, 255, 255, SpawnPointIndex, 255);
+            PC.ServerSetPlayerInfo(255, 255, PC.DHPrimaryWeapon, PC.DHSecondaryWeapon, SpawnPointIndex, 255);
 
             HUD = DHHud(PC.myHUD);
 
