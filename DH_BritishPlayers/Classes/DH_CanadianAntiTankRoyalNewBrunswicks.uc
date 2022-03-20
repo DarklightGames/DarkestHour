@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_CanadianAntiTankRoyalNewBrunswicks extends DHCWAntiTankRoles;
@@ -12,7 +12,7 @@ defaultproperties
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
     SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIICWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIICWeapon')

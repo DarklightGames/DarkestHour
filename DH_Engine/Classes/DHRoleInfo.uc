@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
@@ -199,7 +199,9 @@ function class<ROHeadgear> GetHeadgear()
         }
     }
 
-    return none;
+    // This fallback is here since it's technically possible for the sum of all probabilities
+    // to be less than 1.0, which screws up the above calculation.
+    return Headgear[0];
 }
 
 simulated function Material GetHandTexture(DH_LevelInfo LI)

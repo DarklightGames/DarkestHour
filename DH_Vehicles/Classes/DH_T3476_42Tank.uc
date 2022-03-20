@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_T3476_42Tank extends DHArmoredVehicle;
@@ -81,7 +81,7 @@ defaultproperties
     Health=470
     HealthMax=470
     EngineHealth=300
-	
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
@@ -93,7 +93,7 @@ defaultproperties
     DamagedEffectOffset=(X=-105.0,Y=0.0,Z=40.0) // adjusted from original
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
-    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.T34.T34m42Des'  
+    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.T34.T34m42Des'
     //DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
     //DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
 

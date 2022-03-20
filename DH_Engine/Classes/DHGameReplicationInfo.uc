@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -62,6 +62,15 @@ enum EArtilleryTypeError
     ERROR_SquadTooSmall,
     ERROR_Cancellable
 };
+
+struct STeamScores
+{
+    var int Kills;
+    var int Deaths;
+    var int CategoryScores[2];
+};
+
+var STeamScores         TeamScores[2];
 
 var class<DHGameType>   GameType;
 
@@ -266,7 +275,8 @@ replication
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
         DHMineVolumeIsActives,
-        DHNoArtyVolumeIsActives;
+        DHNoArtyVolumeIsActives,
+        TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -2254,6 +2264,38 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
     }
 
     return Result;
+}
+
+function AddKillForTeam(int TeamIndex)
+{
+    if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))
+    {
+        ++TeamScores[TeamIndex].Kills;
+    }
+}
+
+function AddDeathForTeam(int TeamIndex)
+{
+    if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))
+    {
+        ++TeamScores[TeamIndex].Deaths;
+    }
+}
+
+function ResetTeamScores()
+{
+    local int i, j;
+
+    for (i = 0; i < arraycount(TeamScores); ++i)
+    {
+        TeamScores[i].Kills = 0;
+        TeamScores[i].Deaths = 0;
+
+        for (j = 0; j < arraycount(TeamScores[i].CategoryScores); ++j)
+        {
+            TeamScores[i].CategoryScores[j] = 0;
+        }
+    }
 }
 
 defaultproperties

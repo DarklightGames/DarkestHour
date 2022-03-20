@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIIIJTank extends DHArmoredVehicle;
@@ -62,8 +62,8 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-	// pros: 5 men crew; short 50mm ammunition is a bit less likely to explode (i assume) 
-	// cons: petrol fuel 
+	// pros: 5 men crew; short 50mm ammunition is a bit less likely to explode (i assume)
+	// cons: petrol fuel
     Health=560
     HealthMax=560.0
 	EngineHealth=300

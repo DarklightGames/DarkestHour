@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_StenMkIICAttachment extends DHWeaponAttachment;
@@ -11,7 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_Sten_tex.interface.stenmk2c'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    
+
     MuzzleBoneName="tipnew"
     ShellEjectionBoneName="weapon_ejectnew"
 

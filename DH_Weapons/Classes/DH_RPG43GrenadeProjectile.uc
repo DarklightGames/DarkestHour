@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_RPG43GrenadeProjectile extends DHThrowableHEATProjectile;
@@ -35,14 +35,14 @@ defaultproperties
 
     // Damage
     ImpactDamage=300
-    Damage=300.0  
+    Damage=300.0
     DamageRadius=700.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
     EngineFireChance=0.7  //weaker HEAT round
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
     // Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' 
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'
     ShellHitDirtEffectClass=class'GrenadeExplosion'
     ShellHitWoodEffectClass=class'GrenadeExplosion'
     ShellHitRockEffectClass=class'GrenadeExplosion'

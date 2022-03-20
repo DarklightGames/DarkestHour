@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SVT38Attachment extends DHWeaponAttachment;
@@ -23,7 +23,7 @@ defaultproperties
     WA_BayonetDetach="bayremove_svt40"
     WA_BayonetAttachProne="prone_bayattach_svt40"
     WA_BayonetDetachProne="prone_bayremove_svt40"
-    
+
     WA_WorkBolt="idle_svt40"
     WA_BayonetWorkBolt="idle_svt40_bayo"
     WA_BayonetReload="idle_svt40_bayo"

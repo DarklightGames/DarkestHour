@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_T3476_42CannonPawn extends DHSovietCannonPawn;
@@ -22,7 +22,7 @@ defaultproperties
     BinocPositionIndex=3
     DrivePos=(X=11.0,Y=3.0,Z=1.1)
     DriveRot=(Pitch=950)
-	
+
 
     //Periscope
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight' //emulating the PT4-7 periscope 2.5x 26' FOV
