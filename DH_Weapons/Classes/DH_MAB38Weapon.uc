@@ -16,15 +16,15 @@ defaultproperties
     Mesh=SkeletalMesh'DH_MAB_1st.MAB38-Mesh'
 
     bUseHighDetailOverlayIndex=false
-    HighDetailOverlayIndex=0
+    HighDetailOverlayIndex=2
     Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
 
-    handnum=1
-    sleevenum=2
+    handnum=0
+    sleevenum=1
 
-    DisplayFOV=90
+    DisplayFOV=85.0
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=40.0
+    IronSightDisplayFOV=60.0
     ZoomOutTime=0.1
     FreeAimRotationSpeed=7.0
 
@@ -39,7 +39,9 @@ defaultproperties
     SelectFireAnim="none"
     SelectFireIronAnim="none"
 
-    MuzzleBone="Muzzle001"
+    FirstSelectAnim="draw_first"
+
+    MuzzleBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
@@ -55,5 +57,6 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
 
     SelectEmptyAnim="draw_empty"
-    PutDownEmptyAnim="put_away_empty"
+    PutDownAnim="putaway"
+    PutDownEmptyAnim="putaway_empty"
 }

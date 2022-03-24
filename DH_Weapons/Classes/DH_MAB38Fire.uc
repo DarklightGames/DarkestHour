@@ -31,6 +31,6 @@ defaultproperties
     ShellRotOffsetIron=(Pitch=25000)
     ShellRotOffsetHip=(Pitch=10000)
 
-    FireIronLastAnim="iron_shoot_last"
+    FireIronLastAnim="iron_shoot_end_empty"
     FireLastAnim="shoot_end_empty"
 }
