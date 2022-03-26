@@ -391,4 +391,8 @@ defaultproperties
     MapInfos(158)=(Name="DH-Jurques_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(159)=(Name="DH-Jurques_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Large)
     MapInfos(160)=(Name="DH-Les_Champs_de_Losque_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(161)=(Name="DH-HedgeHog_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
+    MapInfos(162)=(Name="DH-Godolloi_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(163)=(Name="DH-Winter_Manor_1941_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    MapInfos(164)=(Name="DH-Jurques_DayTwo_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
 }
