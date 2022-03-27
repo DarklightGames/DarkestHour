@@ -9,5 +9,4 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_MAB38Weapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.MAB38'
-    DrawScale=1.4
 }
