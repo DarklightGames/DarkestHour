@@ -33,7 +33,7 @@ defaultproperties
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
-    BarrelSteamBone="Muzzle001"
+    BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
     SelectFireAnim="none"
