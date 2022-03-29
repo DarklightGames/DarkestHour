@@ -324,7 +324,10 @@ simulated function PostBeginPlay()
     {
         for (i = 0; i < ConstructionClassNames.Length; ++i)
         {
-            AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+            if (ConstructionClassNames[i] != none)
+            {
+                AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+            }
         }
 
         LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -2315,7 +2318,6 @@ defaultproperties
     ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    // ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
@@ -2336,10 +2338,9 @@ defaultproperties
     ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
     ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
     ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_GrenadeCrate"
-    ConstructionClassNames(20)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(21)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
 
     // Artillery
     ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"
