@@ -324,7 +324,7 @@ simulated function PostBeginPlay()
     {
         for (i = 0; i < ConstructionClassNames.Length; ++i)
         {
-            if (ConstructionClassNames[i] != none)
+            if (ConstructionClassNames[i] != "")
             {
                 AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
             }
