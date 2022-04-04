@@ -91,13 +91,13 @@ simulated function ArmExplosive()
     }
     else
     {
-        if (bHasReleaseLever)
-        {
-            PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
-        }
-
         if (!bPrimed)
         {
+            if (bHasReleaseLever)
+            {
+                PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
+            }
+
             ServerArmExplosive();
         }
     }
