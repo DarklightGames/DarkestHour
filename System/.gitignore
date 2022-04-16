@@ -8,3 +8,4 @@ UCC.exe
 UccDepend.exe
 UDebugger.exe
 *.pol
+/dhdev_server_with_clients.bat
