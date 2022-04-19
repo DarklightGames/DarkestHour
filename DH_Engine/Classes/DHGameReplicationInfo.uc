@@ -1102,6 +1102,39 @@ simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
     return none;
 }
 
+simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
+{
+    local int i;
+    local DHRoleInfo RI;
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAxisRoles); ++i)
+        {
+            RI = DHAxisRoles[i];
+
+            if (DHAxisRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+        {
+            RI = DHAlliesRoles[i];
+
+            if (DHAlliesRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
 simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team)
 {
     local int i;
