@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -119,6 +119,8 @@ var     Actor                   LookTarget;
 var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
+
+var     DHMapDatabase           MapDatabase;
 
 // Squad Things
 struct SquadSignal
@@ -250,7 +252,6 @@ simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass,
 // Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
-
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
@@ -280,7 +281,7 @@ simulated event PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        ScoreManager = Spawn(class'DHScoreManager', self);
+        ScoreManager = new class'DHScoreManager';
 
         if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
         {
@@ -289,6 +290,16 @@ simulated event PostBeginPlay()
     }
 
     MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
+}
+
+simulated function InitializeMapDatabase()
+{
+    // Initialize the map database (for local player only!)
+    if (MapDatabase == none && Level.GetLocalPlayerController() == self)
+    {
+        MapDatabase = new class'DHMapDatabase';
+        MapDatabase.Initialize();
+    }
 }
 
 simulated event PostNetBeginPlay()
@@ -650,6 +661,7 @@ function bool AllowTextMessage(string Msg)
     {
         return true;
     }
+
     if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 2 || bIsGagged)
     {
         return false;
@@ -3108,6 +3120,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
 function OnTeamChanged()
 {
     local DarkestHourGame G;
+    local int TeamIndex;
 
     G = DarkestHourGame(Level.Game);
 
@@ -3117,6 +3130,22 @@ function OnTeamChanged()
         if (bSurrendered)
         {
             G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+        }
+    }
+
+    // Update the player's linked score manager to their new team's score manager.
+    if (ScoreManager != none)
+    {
+        TeamIndex = GetTeamNum();
+
+        if (TeamIndex >= 0 && TeamIndex < arraycount(G.TeamScoreManagers))
+        {
+            ScoreManager.NextScoreManager = G.TeamScoreManagers[TeamIndex];
+        }
+        else
+        {
+            // Player joined spectators, clear the next score manager.
+            ScoreManager.NextScoreManager = none;
         }
     }
 }
@@ -6659,9 +6688,13 @@ function ServerCancelArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 // Scoring
 function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 {
-    if (ScoreManager != none)
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (ScoreManager != none && GRI != none)
     {
-        ScoreManager.HandleScoreEvent(ScoreEvent);
+        ScoreManager.HandleScoreEvent(ScoreEvent, GRI);
     }
 }
 
@@ -6753,10 +6786,7 @@ simulated function Destroyed()
 
     if (Role == ROLE_Authority)
     {
-        if (ScoreManager != none)
-        {
-            ScoreManager.Destroy();
-        }
+        ScoreManager = none;
 
         if (IQManager != none)
         {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIVGEarlyTank extends DHArmoredVehicle;
@@ -54,10 +54,10 @@ defaultproperties
 
     // Damage
 	// pros: 5 men crew
-	// cons: petrol fuel 
+	// cons: petrol fuel
     Health=565
     HealthMax=565.0
-	EngineHealth=300	
+	EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-100.0,Y=0.0,Z=6.0)) // engine
@@ -112,7 +112,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_Gearly' 
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_Gearly'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

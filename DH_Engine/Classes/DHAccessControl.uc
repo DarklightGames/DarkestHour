@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHAccessControl extends AccessControlINI;
@@ -159,6 +159,8 @@ defaultproperties
     DeveloperIDs(8)="76561197992062636" // eksha
     DeveloperIDs(9)="76561197989139694" // mimi
     DeveloperIDs(10)="76561198020507621" // jwjw
+    DeveloperIDs(11)="76561198176185585" // Backis
+    DeveloperIDs(12)="76561198162915303" // Caverne
 
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros

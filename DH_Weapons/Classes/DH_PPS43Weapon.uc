@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PPS43Weapon extends DHFastAutoWeapon;
@@ -28,7 +28,7 @@ defaultproperties
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
-    
+
     //alternative reload (this is the "normal")
     MagPartialReloadAnims(1)="reload_halfB"
     MagPartialReloadAnims(2)="reload_halfB"

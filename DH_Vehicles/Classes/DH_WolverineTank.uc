@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_WolverineTank extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds
@@ -64,7 +64,7 @@ defaultproperties
     Health=565
     HealthMax=565.0
 	EngineHealth=300
-	
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel

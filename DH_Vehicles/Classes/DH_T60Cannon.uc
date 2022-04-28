@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_T60Cannon extends DHVehicleAutoCannon;
@@ -43,7 +43,7 @@ defaultproperties
     //SecondaryProjectileClass=class'DH_Vehicles.DH_T60CannonShellHE' -- the ShVAK aircraft cannon used HEI but unsure if adopted for the tank version
     ProjectileDescriptions(0)="AP-T"
 
-    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer 
+    nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer
     //nProjectileDescriptions(1)="OF" // fragmentary round with tracer (incendiary?)
 
     InitialPrimaryAmmo=58

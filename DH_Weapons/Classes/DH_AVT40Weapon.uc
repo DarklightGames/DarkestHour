@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_AVT40Weapon extends DHAutoWeapon;
@@ -48,7 +48,7 @@ defaultproperties
     BayoDetachAnim="Bayonet_off"
     BayoAttachEmptyAnim="bayonet_on_empty"
     BayoDetachEmptyAnim="bayonet_off_empty"
-    
+
     BayonetBoneName="bayonet"
 
     IdleEmptyAnim="idle_empty"

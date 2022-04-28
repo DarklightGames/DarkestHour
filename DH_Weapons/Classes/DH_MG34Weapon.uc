@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MG34Weapon extends DHMGWeapon;
@@ -60,6 +60,7 @@ defaultproperties
     PlayerIronsightFOV=90.0
     IronSightDisplayFOV=45.0
     bCanFireFromHip=true
+    FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SVT40ScopedWeapon extends DHSniperWeapon;
@@ -37,7 +37,7 @@ defaultproperties
 
     InitialNumPrimaryMags=7
     MaxNumPrimaryMags=7
-    
+
     MagEmptyReloadAnims(0)="reload_empty"
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_emptyC"

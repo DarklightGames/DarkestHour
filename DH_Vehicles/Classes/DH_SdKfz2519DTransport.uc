@@ -1,10 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2022
 //==============================================================================
-// Late variant
 
 class DH_SdKfz2519DTransport extends DH_Sdkfz251Transport;
+
+// HACK: We can't override default values in PassengerPawns because the
+// system will create weapon pawns even if items in the array are emptied
+// out. Instead we clear out the array manually.
+//
+// TODO:
+//   * Create a common class for hanomag-based vehicles to avoid inheriting
+//     PassengerPawns.
+simulated function PostBeginPlay()
+{
+    PassengerPawns.Length = 0;
+    VehicleHudOccupantsX.Length = 2;
+    VehicleHudOccupantsY.Length = 2;
+
+    super.PostBeginPlay();
+}
 
 defaultproperties
 {
@@ -25,12 +40,6 @@ defaultproperties
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
 
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SdKfz2519DCannonPawn',WeaponBone="mg_base")
-    PassengerPawns(0)=(AttachBone="",DriveAnim="")
-    PassengerPawns(1)=(AttachBone="",DriveAnim="")
-    PassengerPawns(2)=(AttachBone="",DriveAnim="")
-    PassengerPawns(3)=(AttachBone="",DriveAnim="")
-    PassengerPawns(4)=(AttachBone="",DriveAnim="")
-    PassengerPawns(5)=(AttachBone="",DriveAnim="")
 
     ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
 
@@ -49,18 +58,6 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.53
-    VehicleHudOccupantsX(2)=0.0
-    VehicleHudOccupantsY(2)=0.0
-    VehicleHudOccupantsX(3)=0.0
-    VehicleHudOccupantsY(3)=0.0
-    VehicleHudOccupantsX(4)=0.0
-    VehicleHudOccupantsY(4)=0.0
-    VehicleHudOccupantsX(5)=0.0
-    VehicleHudOccupantsY(5)=0.0
-    VehicleHudOccupantsX(6)=0.0
-    VehicleHudOccupantsY(6)=0.0
-    VehicleHudOccupantsX(7)=0.0
-    VehicleHudOccupantsY(7)=0.0
 
     //AmmoIgnitionProbability=0.75  // 0.75 default
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines

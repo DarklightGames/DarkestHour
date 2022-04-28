@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_TigerTank extends DHArmoredVehicle;
@@ -58,12 +58,12 @@ defaultproperties
     GearRatios(4)=0.7
     TransRatio=0.09
     SteerSpeed=50.0
-	
+
     EngineRestartFailChance=0.25  //unreliability
 
     // Damage
-	// pros: 5 men crew, relatively sparsed; 
-	// cons: petrol fuel; a lot of reliability problems with engine/transmission 
+	// pros: 5 men crew, relatively sparsed;
+	// cons: petrol fuel; a lot of reliability problems with engine/transmission
     Health=570
     HealthMax=570.0
     EngineHealth=220  // reduced from 300

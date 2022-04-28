@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MP3008Attachment extends DHWeaponAttachment;
@@ -8,10 +8,10 @@ class DH_MP3008Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mp3008_3rd'
-    MenuImage=Texture'DH_Sten_tex.interface.mp3008' 
+    MenuImage=Texture'DH_Sten_tex.interface.mp3008'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    
+
     MuzzleBoneName="tipnew"
 
     WA_Idle="Idle_mp40"

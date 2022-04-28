@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_KV1Tank extends DH_KV1ETank;  //WIP class, do not use it yet!
@@ -15,7 +15,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV_body_ext'
-    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'  
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
     Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
 
@@ -32,11 +32,11 @@ defaultproperties
 
 
     // Hull armor
-    FrontArmor(0)=(Thickness=7.5,Slope=-30.0,MaxRelativeHeight=6.5,LocationName="lower") 
+    FrontArmor(0)=(Thickness=7.5,Slope=-30.0,MaxRelativeHeight=6.5,LocationName="lower")
     FrontArmor(1)=(Thickness=4.0,Slope=65.0,MaxRelativeHeight=26.0,LocationName="upper")
-    FrontArmor(2)=(Thickness=7.5,Slope=30.0,LocationName="driver plate") 
+    FrontArmor(2)=(Thickness=7.5,Slope=30.0,LocationName="driver plate")
     RightArmor(0)=(Thickness=7.5)
-    LeftArmor(0)=(Thickness=7.5)  
+    LeftArmor(0)=(Thickness=7.5)
     RearArmor(0)=(Thickness=7.0,Slope=-45.0,MaxRelativeHeight=-15.0,LocationName="lower (bottom of curved)")
     RearArmor(1)=(Thickness=7.0,MaxRelativeHeight=8.0,LocationName="lower (flattest curved)") // represents flattest, rear facing part of rounded lower hull
     RearArmor(2)=(Thickness=7.0,Slope=45.0,MaxRelativeHeight=23.5,LocationName="lower (top of curved)")
@@ -52,33 +52,33 @@ defaultproperties
     MaxCriticalSpeed=577.0 // ~34 kph
     GearRatios(4)=0.7
     TransRatio=0.072
-	
+
 	EngineRestartFailChance=0.2 //unreliability of early design +  weight
 
     // Damage
 	// pros: diesel fuel; 5 men crew
-	// cons: fuel tanks in crew compartment; 
+	// cons: fuel tanks in crew compartment;
     Health=565
     HealthMax=565.0
 	EngineHealth=240   //reliability problems due to early design ("child problems") and high weight
-	
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-	
+
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=26.0
     DamagedEffectOffset=(X=-90.0,Y=0.0,Z=40.0)
-    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.Kv1.KV1_Dest' 
+    DestroyedVehicleMesh=StaticMesh'DH_soviet_vehicles_stc.Kv1.KV1_Dest'
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.KV1_body_dest'  //needs non-E variant texture
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
     DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
 
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.KV-1S_body'  
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.KV-1S_body'
     VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_rot'
     VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_look'
     VehicleHudTreadsPosX(0)=0.37
@@ -97,7 +97,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.84
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1' 
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
 
 
 }

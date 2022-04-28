@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SpringfieldA1Fire extends DHBoltFire;
@@ -23,6 +23,6 @@ defaultproperties
     FireAnim="shoot_last"
     FireIronAnim="Iron_shootrest"
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=7500.0)
-	
+
 
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PPSh41Weapon extends DHFastAutoWeapon;
@@ -61,7 +61,7 @@ defaultproperties
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_emptyC"
     MagEmptyReloadAnims(3)="reload_empty" //standart should be more common
-    
+
     SelectFireAnim="selectfire"
     SelectFireIronAnim="Iron_selectfire"
     SelectFireEmptyAnim="selectfire_empty"
