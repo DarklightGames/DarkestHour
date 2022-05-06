@@ -1919,7 +1919,7 @@ defaultproperties
     SurrenderResponseMessages[5]="You've already retreated."
     SurrenderResponseMessages[6]="Your team already had a vote to retreat earlier. Try again later."
     SurrenderResponseMessages[7]="You cannot retreat after the round is over."
-    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
+    // SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
     SurrenderResponseMessages[9]="You cannot retreat this early."
     SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 

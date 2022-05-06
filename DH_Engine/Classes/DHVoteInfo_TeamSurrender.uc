@@ -204,15 +204,6 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
         return false;
     }
 
-    // Reinforcements are above the limit.
-    if (Game.SpawnsAtRoundStart[TeamIndex] >= GRI.SpawnsRemaining[TeamIndex] &&
-        GRI.SpawnsRemaining[TeamIndex] > 0 &&
-        GRI.SpawnsRemaining[TeamIndex] > Game.SpawnsAtRoundStart[TeamIndex] * GetReinforcementsRequiredPercent())
-    {
-        PC.ClientTeamSurrenderResponse(8);
-        return false;
-    }
-
     // Vote in play.
     if (VM.GetVoteIndex(default.Class, TeamIndex) >= 0)
     {
