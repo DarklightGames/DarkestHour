@@ -7,7 +7,7 @@ class DH_FG42Weapon extends DHBipodAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Fallschirmjägergewehr 42"
+    ItemName="Fallschirmjï¿½gergewehr 42"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
@@ -31,9 +31,9 @@ defaultproperties
     SelectFireAnim="switch_fire"
     SelectFireIronAnim="Iron_switch_fire"
     SelectFireBipodIronAnim="deploy_switch_fire"
-    SightUpIronBringUp="Deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="deploy_reload_empty"
-    SightUpMagPartialReloadAnim="deploy_reload_half"
+    IdleToBipodDeploy="Deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="deploy_reload_empty"
+    BipodMagPartialReloadAnim="deploy_reload_half"
 }

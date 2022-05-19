@@ -35,9 +35,9 @@ defaultproperties
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
-    SightUpIronBringUp="Deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="deploy_reload_empty"
-    SightUpMagPartialReloadAnim="deploy_reload_half"
+    IdleToBipodDeploy="Deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="deploy_reload_empty"
+    BipodMagPartialReloadAnim="deploy_reload_half"
 }

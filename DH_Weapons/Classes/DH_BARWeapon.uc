@@ -101,6 +101,10 @@ simulated state Reloading
     }
 }
 
+//============================================================================
+// DEBUG FUNCTIONS FOR BIPOD PHYSICS SIMULATION
+// TODO: move to superclass
+//============================================================================
 simulated exec function PAL(float V)
 {
     if (Level.NetMode == NM_Standalone)
@@ -183,11 +187,10 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
-    SightUpIronBringUp="bipod_in"
-    SightUpIronPutDown="bipod_out"
-    SightUpIronIdleAnim="iron_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    SightUpMagPartialReloadAnim="bipod_reload_half"
-
-    IronBipodDeployAnim="aim_to_Bipod"
+    IdleToBipodDeploy="bipod_in"
+    BipodDeployToIdle="bipod_out"
+    BipodIdleAnim="iron_idle"
+    BipodMagEmptyReloadAnim="bipod_reload_empty"
+    BipodMagPartialReloadAnim="bipod_reload_half"
+    IronToBipodDeploy="aim_to_Bipod"
 }
