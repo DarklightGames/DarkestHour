@@ -40,7 +40,6 @@ simulated function PlayIdle()
 defaultproperties
 {
     Priority=10
-    bHasBipod=true
     bCanBipodDeploy=true
     bCanRestDeploy=false
     bMustReloadWithBipodDeployed=true

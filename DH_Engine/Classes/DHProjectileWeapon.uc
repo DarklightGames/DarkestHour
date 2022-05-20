@@ -35,10 +35,10 @@ var         int         NumMagsToResupply;          // number of ammo mags to ad
 var         array<name> MagEmptyReloadAnims;        // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
 var         array<name> MagPartialReloadAnims;      // anim for reloads when a weapon still has ammo in magazine/box
 
+var         name        BipodIdleAnim;
+var         name        BipodIdleEmptyAnim;
 var         name        BipodMagEmptyReloadAnim;
 var         name        BipodMagPartialReloadAnim;
-
-var         name        BipodIdleAnim;
 
 var         name        IronIdleAnim;               // anim for weapon idling while in iron sight view
 var         name        IronBringUp;                // anim for weapon being brought up to iron sight view
@@ -98,10 +98,10 @@ var     bool                bBarrelDamaged;         // barrel is close to failur
 var     bool                bBarrelFailed;          // barrel overheated and can't be used
 
 // Bipod
-var     bool    bHasBipod;
 var     bool    bCanFireFromHip;                // if true this weapon has a hip firing mode
-var     bool    bCanFireWhileUsingSightsWithBipod;
+var     bool    bMustFireWhileSighted;          // if true, this weapon can only be fired while using sights or bipod
 var     bool    bMustReloadWithBipodDeployed;   // when true, reloads can only occur while bipodded
+
 var     name    IdleToBipodDeploy;          // anim for bipod rest state to deployed state
 var     name    IdleToBipodDeployEmpty;     // anim for bipod rest state to deployed empty state
 var     name    IronToBipodDeploy;
@@ -181,7 +181,7 @@ simulated function PostBeginPlay()
     {
         // Play the right idle animation on the server so that the weapon will be in the right
         // position for hip hire calculations
-        if (bHasBipod && HasAnim(BipodHipIdle))
+        if (bCanBipodDeploy && HasAnim(BipodHipIdle))
         {
             PlayAnim(BipodHipIdle, IdleAnimRate, 0.0);
         }
@@ -636,7 +636,7 @@ simulated function bool ShouldUseFreeAim()
     return bUsesFreeAim 
         && !bUsingSights 
         && !(FireMode[1].IsFiring() && FireMode[1].bMeleeMode)
-        && !(bHasBipod && Instigator != none && Instigator.bBipodDeployed);
+        && !(bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed);
 }
 
 // Modified so bots may use a melee attack if really close to their enemy
@@ -1090,7 +1090,7 @@ simulated exec function Deploy()
     local DHPlayer PC;
     local bool bNewDeployedStatus;
 
-    if (bHasBipod)
+    if (bCanBipodDeploy)
     {
         // Bipod is either deployed or player can deploy the bipod
         if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
@@ -1312,7 +1312,7 @@ function ServerBipodDeploy(bool bNewDeployedStatus)
 // Players can still use crouch to undeploy instantly while proned however
 simulated function bool WeaponAllowCrouchChange()
 {
-    if (bHasBipod && Instigator != none && Instigator.bBipodDeployed && !Instigator.bIsCrawling)
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed && !Instigator.bIsCrawling)
     {
         return false;
     }
@@ -1421,7 +1421,7 @@ Begin:
 // Triggered by ironsights keybind & toggles ironsights/bipod undeployment
 simulated function ROIronSights()
 {
-    if (bHasBipod && Instigator != none && Instigator.bBipodDeployed)
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
     {
         // Bipod is deployed, let's undeploy it.
         ForceUndeploy();
@@ -1748,7 +1748,7 @@ Begin:
 // Modified to handle bipod, ironsight & empty anims
 simulated function PlayIdle()
 {
-    if (bHasBipod && Instigator != none && Instigator.bBipodDeployed && HasAnim(BipodIdleAnim))
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed && HasAnim(BipodIdleAnim))
     {
         LoopAnim(BipodIdleAnim, IdleAnimRate, 0.2);
     }
@@ -1916,16 +1916,17 @@ simulated function PlayEndSprint()
     }
 }
 
-//=============================================================================
-// Reloading/Ammunition
-//=============================================================================
-
 // New function to determine whether a reload is allowed
 simulated function bool AllowReload()
 {
-    if (bHasBipod && bMustReloadWithBipodDeployed && (Instigator == none || !Instigator.bBipodDeployed))
+    // Prevent reload (with message) if bipod not deployed
+    if (bCanBipodDeploy && bMustReloadWithBipodDeployed && (Instigator == none || !Instigator.bBipodDeployed))
     {
-        // Modified to prevent reload (with message) if bipod not deployed
+        if (Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
+        {
+            class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 1);
+        }
+
         return false;
     }
 
@@ -1957,7 +1958,7 @@ function ServerRequestReload()
 {
     if (AllowReload())
     {
-        if (bHasBipod && Instigator != none && Instigator.bBipodDeployed)
+        if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
         {
             GotoState('ReloadingBipod');
         }
@@ -1979,7 +1980,7 @@ function ServerRequestReload()
 
 simulated function ClientDoReload(optional byte NumRounds)
 {
-    if (bHasBipod && Instigator != none && Instigator.bBipodDeployed)
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
     {
         GotoState('ReloadingBipod');
     }
@@ -1994,13 +1995,21 @@ simulated function ClientCancelReload()
     GotoState('Idle');
 }
 
-// Modified to prevent firing unless ironsighted or bipod deployed
+simulated function bool IsSighted()
+{
+    return bUsingSights || (Instigator != none && Instigator.bBipodDeployed);
+}
+
+// Modified to prevent firing if the weapon must be fired while sighted
 simulated function bool ReadyToFire(int Mode)
 {
-    if (bUsingSights || (bHasBipod && Instigator != none && Instigator.bBipodDeployed))
+    if (bMustFireWhileSighted && !IsSighted())
     {
-        return super.ReadyToFire(Mode);
+        // This weapon must be fired while sighted.
+        return false;
     }
+
+    return super.ReadyToFire(Mode);
 }
 
 simulated state Reloading extends WeaponBusy
@@ -2023,6 +2032,8 @@ simulated state Reloading extends WeaponBusy
         }
 
         PlayReload();
+
+        super.BeginState();
     }
 
     simulated function EndState()
@@ -2033,6 +2044,8 @@ simulated state Reloading extends WeaponBusy
         }
 
         bWaitingToBolt = false;
+
+        super.EndState();
     }
 
     // This is overridden because the normal PlayIdle function will play the
@@ -2044,13 +2057,13 @@ simulated state Reloading extends WeaponBusy
 
         if (Instigator.bBipodDeployed)
         {
-            if (AmmoAmount(0) == 0 && HasAnim(IronIdleEmptyAnim))
+            if (AmmoAmount(0) == 0 && HasAnim(BipodIdleEmptyAnim))
             {
-                Anim = IronIdleEmptyAnim;
+                Anim = BipodIdleEmptyAnim;
             }
-            else if (HasAnim(IronIdleAnim))
+            else if (HasAnim(BipodIdleAnim))
             {
-                Anim = IronIdleAnim;
+                Anim = BipodIdleAnim;
             }
         }
         else if (HasAnim(IdleAnim))
@@ -2096,6 +2109,16 @@ Begin:
 // State for reloading with bipod deployed
 simulated state ReloadingBipod extends Reloading
 {
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
+
     simulated function BeginState()
     {
         super.BeginState();
@@ -2185,7 +2208,7 @@ Begin:
 // Returns the reload animation to play given the current state
 simulated function name GetReloadAnim()
 {
-    if (bHasBipod && Instigator != none && Instigator.bBipodDeployed)
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
     {
         if (AmmoAmount(0) > 0 && HasAnim(BipodMagPartialReloadAnim))
         {
@@ -2199,11 +2222,11 @@ simulated function name GetReloadAnim()
     
     if (AmmoAmount(0) > 0 || (bTwoMagsCapacity && CurrentMagCount < 2))
     {
-        PlayAnimAndSetTimer(MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)], 1.0, 0.1);
+        return MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)];
     }
     else
     {
-        PlayAnimAndSetTimer(MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)], 1.0, 0.1);
+        return MagEmptyReloadAnims[Rand(MagEmptyReloadAnims.Length)];
     }
 }
 
@@ -2682,13 +2705,13 @@ simulated event ClientStartFire(int Mode)
 // If the pawn calls Fire() on its Weapon, it appears that ClientStartFire() gets triggered by native code, which is where weapon actually commences firing process
 simulated function Fire(float F)
 {
-    if (!bUsingSights && bHasBipod && InstigatorIsHumanControlled() && !Instigator.bBipodDeployed)
+    // TODO: only do this if you MUST be deployed to fire (new bool!)
+    if (InstigatorIsHumanControlled() && bMustFireWhileSighted && !IsSighted())
     {
         // "You must be deployed to fire your weapon!";
         class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
     }
-
-    if (AmmoAmount(0) < 1 && !IsBusy() && FireMode[0].NoAmmoSound != none)
+    else if (AmmoAmount(0) < 1 && !IsBusy() && FireMode[0].NoAmmoSound != none)
     {
         PlayOwnedSound(FireMode[0].NoAmmoSound, SLOT_None, 1.0,,,, false);
     }

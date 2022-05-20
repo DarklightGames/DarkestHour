@@ -29,7 +29,6 @@ defaultproperties
     BarrelSteamBone="bipod"
 
     PutDownAnim="putaway"
-    MagPartialReloadAnims(0)="Reload"
 
     BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
     MGBeltBones(0)="Case09"

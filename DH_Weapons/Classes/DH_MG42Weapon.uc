@@ -42,7 +42,6 @@ defaultproperties
     BarrelChangeAnim="Bipod_Barrel_Change"
 
     PutDownAnim="putaway"
-    MagPartialReloadAnims(0)="Reload"
 
     BeltBulletClass=class'ROInventory.MG42BeltRound'
     MGBeltBones(0)="Case09"

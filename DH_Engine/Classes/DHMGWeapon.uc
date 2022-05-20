@@ -311,5 +311,8 @@ defaultproperties
     SprintStartAnim="Rest_Sprint_Start"
     SprintLoopAnim="Rest_Sprint_Middle"
     SprintEndAnim="Rest_Sprint_End"
+    BipodMagEmptyReloadAnim="Reload"
+    BipodMagPartialReloadAnim="Reload"
     bSniping=false
+    bMustFireWhileSighted=true
 }

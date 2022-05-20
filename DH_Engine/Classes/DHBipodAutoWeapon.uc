@@ -8,8 +8,6 @@ class DHBipodAutoWeapon extends DHAutoWeapon
 
 defaultproperties
 {
-    bHasBipod=true
-
     bCanBeResupplied=true
     NumMagsToResupply=2
 
@@ -17,11 +15,6 @@ defaultproperties
     ZoomOutTime=0.1
 
     PutDownAnim="putaway"
-    // SightUpIronBringUp="SightUp_iron_in"
-    // SightUpIronPutDown="SightUp_iron_out"
-    // SightUpIronIdleAnim="SightUp_iron_idle"
-    // SightUpMagEmptyReloadAnim="sightup_reload_empty"
-    // SightUpMagPartialReloadAnim="sightup_reload_half"
 
     AIRating=0.7
     CurrentRating=0.7

@@ -151,31 +151,14 @@ simulated function SpawnRocketAttachment()
     }
 }
 
-// New function to check if weapon can fire
-// Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
-simulated function bool CanFire(optional bool bShowFailureMessage)
+simulated function bool ReadyToFire(int Mode)
 {
-    if (InstigatorIsLocallyControlled() && !bUsingSights)
+    if (!CanFire())
     {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
-        }
-
         return false;
     }
 
-    if (VSize(Instigator.Velocity) > 0 || (Instigator.Base != none && VSize(Instigator.Base.Velocity) > 0))
-    {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 7,,, self); // must be stationary to fire
-        }
-
-        return false;
-    }
-
-    return true;
+    return super.ReadyToFire(Mode);
 }
 
 // Modified to check CanFire() & to set firing pitch based on current range setting
@@ -197,6 +180,21 @@ simulated function Fire(float F)
 
         super.Fire(F);
     }
+}
+
+simulated function bool CanFire(optional bool bShowFailureMessage)
+{
+    if (InstigatorIsLocallyControlled() && !bUsingSights)
+    {
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
+        {
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 // Switch the weapon aiming range on the server

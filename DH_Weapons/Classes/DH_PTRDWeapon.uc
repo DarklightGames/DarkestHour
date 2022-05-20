@@ -97,6 +97,10 @@ defaultproperties
     MaxNumPrimaryMags=20
     InitialNumPrimaryMags=20
 
+    bMustFireWhileSighted=true
+
+    BipodMagEmptyReloadAnim="reload"
+    BipodMagPartialReloadAnim="reload"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="Rest_Idle_Empty"

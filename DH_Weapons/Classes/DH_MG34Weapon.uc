@@ -74,6 +74,7 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
     BipodHipToDeploy="Hip_2_Bipod"
-    MagEmptyReloadAnims(0)="Bipod_Reload"
-    MagPartialReloadAnims(0)="Bipod_Reload"
+
+    BipodMagEmptyReloadAnim="Bipod_Reload"
+    BipodMagPartialReloadAnim="Bipod_Reload"
 }
