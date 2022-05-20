@@ -9,4 +9,5 @@ defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb_1st'
     DrawScale=5.0
+    RelativeRotation=(Yaw=16384)
 }

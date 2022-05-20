@@ -24,44 +24,9 @@ simulated function bool AllowReload()
     }
 }
 
-// Modified to prevent crouching while reloading
-simulated state Reloading
-{
-    simulated function bool WeaponAllowCrouchChange()
-    {
-        return false;
-    }
-}
-
-// Modified as PIAT can only be fired when player is prone or weapon is rested
-simulated function bool CanFire(optional bool bShowFailureMessage)
-{
-    if (!bUsingSights)
-    {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 1,,, self); // can't fire from hip
-        }
-
-        return false;
-    }
-
-    if (Instigator == none || (!Instigator.bIsCrawling && !Instigator.bRestingWeapon))
-    {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 3,,, self); // can't fire unless prone or rested
-        }
-
-        return false;
-    }
-
-    return true;
-}
-
 defaultproperties
 {
-    ItemName="PIAT"
+    ItemName="P.I.A.T."
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
     FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
@@ -70,28 +35,19 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_PIAT_1st.PIAT_1st' // TODO: there is no specularity mask for this weapon
 
+    DisplayFOV=90
     IronSightDisplayFOV=55.0 //25.0
 
     RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
-    RocketBone="rocket"
+    RocketBone="bomb"
 
     MuzzleBone="muzzle"
     InitialNumPrimaryMags=2
     NumMagsToResupply=2
-    IronIdleAnim="idle_loop"
-    MagEmptyReloadAnims(0)="Reload"
-    MagPartialReloadAnims(0)="Reload"
+    MagEmptyReloadAnims(0)="reload"
+    MagPartialReloadAnims(0)="reload"
 
-    CrawlForwardAnim="crawl_f"
-    CrawlBackwardAnim="crawl_b"
-
-    SprintStartAnim="sprint_start"
-    SprintLoopAnim="sprint_middle"
-    SprintEndAnim="sprint_out"
-
-    FirstSelectAnim="first_draw"
-
-    RangeSettings(0)=(FirePitch=85,IronIdleAnim="iron_loop_50",FireIronAnim="shoot_50")
-    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_loop_100",FireIronAnim="shoot_100")
-    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_loop_150",FireIronAnim="shoot_150")
+    RangeSettings(0)=(FirePitch=85,IronIdleAnim="iron_idle_050",FireIronAnim="iron_shoot_050")
+    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idle_080",FireIronAnim="iron_shoot_080")
+    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idle_110",FireIronAnim="iron_shoot_110")
 }
