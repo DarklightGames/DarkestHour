@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_DP28Weapon extends DHMGWeapon;
@@ -49,6 +49,6 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
     BipodHipToDeploy="Hip_2_Bipod"
-    MagEmptyReloadAnims(0)="Bipod_Reload"
-    MagPartialReloadAnims(0)="Bipod_Reload_Half"
+    BipodMagEmptyReloadAnim="Bipod_Reload"
+    BipodMagPartialReloadAnim="Bipod_Reload_Half"
 }

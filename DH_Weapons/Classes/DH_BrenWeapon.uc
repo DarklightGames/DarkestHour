@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BrenWeapon extends DHBipodAutoWeapon;
+class DH_BrenWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
@@ -35,9 +35,15 @@ defaultproperties
     bHasSelectFire=true
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
-    SightUpIronBringUp="Deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="deploy_reload_empty"
-    SightUpMagPartialReloadAnim="deploy_reload_half"
+    IdleToBipodDeploy="Deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="deploy_reload_empty"
+    BipodMagPartialReloadAnim="deploy_reload_half"
+
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
+    PutDownAnim="putaway"
 }

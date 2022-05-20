@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -7459,7 +7459,7 @@ simulated exec function Give(string WeaponName)
     local string ClassName;
     local int i;
 
-    if (!IsDebugModeAllowed())
+    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
     {
         return;
     }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // This log function fixes a bug that exists in the FileLog actor where calling
 // Logf with a string larger than 1024 characters will crash the game. To

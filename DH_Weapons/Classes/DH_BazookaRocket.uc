@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BazookaRocket extends DHRocketProjectile;
@@ -32,7 +32,7 @@ defaultproperties
     DHPenetrationTable(4)=9.8
     DHPenetrationTable(5)=9.8
     DHPenetrationTable(6)=9.8
-	
+
 	//Sounds
 	VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     DirtHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'

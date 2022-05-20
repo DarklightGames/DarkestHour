@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHSquadReplicationInfo extends ReplicationInfo;
@@ -753,6 +753,8 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     // "You are no longer the squad leader"
     PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
 
+    MaybeChangeRoleToDefault(PC);
+
     OtherPC = DHPlayer(NewSquadLeader.Owner);
 
     if (OtherPC != none)
@@ -828,6 +830,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     // Remove squad member.
     SetMember(TeamIndex, SquadIndex, SquadMemberIndex, none);
     ResetPlayerSquadInfo(PRI);
+    MaybeChangeRoleToDefault(PC);
 
     // Clear squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
@@ -2633,6 +2636,8 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
         {
             // "You are no longer the assistant squad leader."
             PC.ReceiveLocalizedMessage(class'DHSquadMessage', 71);
+
+            MaybeChangeRoleToDefault(PC);
         }
     }
 
@@ -2660,6 +2665,33 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
 
         // "{0} is now the assistant squad leader."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadMessage', 72, PRI);
+    }
+}
+
+function MaybeChangeRoleToDefault(DHPlayer PC)
+{
+    local DHRoleInfo RI;
+    local DHGameReplicationInfo GRI;
+    local bool bShouldChangeRoleToRifleman;
+    local int DefaultRoleIndex;
+
+    if (PC == none) { return; }
+
+    RI = DHRoleInfo(PC.GetRoleInfo());
+
+    if (RI == none) { return; }
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none) { return; }
+
+    bShouldChangeRoleToRifleman = (!PC.IsSquadLeader() && RI.bRequiresSL) || (!PC.IsSLorASL() && RI.bRequiresSLorASL);
+
+    if (bShouldChangeRoleToRifleman)
+    {
+        DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());
+
+        PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
     }
 }
 
