@@ -17,28 +17,6 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to prevent the exploit of freezing your animations after firing
-simulated event StopFire(int Mode) // TODO: check this shouldn't apply to all MGs, as same override is is applied to all other auto & semi-auto weapons
-{
-    if (FireMode[Mode].bIsFiring)
-    {
-        FireMode[Mode].bInstantStop = true;
-    }
-
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
-    {
-        PlayIdle();
-    }
-
-    FireMode[Mode].bIsFiring = false;
-    FireMode[Mode].StopFiring();
-
-    if (!FireMode[Mode].bFireOnRelease)
-    {
-        ZeroFlashCount(Mode);
-    }
-}
-
 defaultproperties
 {
     ItemName="Maschinengewehr 34"
