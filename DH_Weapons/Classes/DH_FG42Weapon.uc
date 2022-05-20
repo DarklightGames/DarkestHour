@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_FG42Weapon extends DHBipodAutoWeapon;
+class DH_FG42Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Fallschirmjï¿½gergewehr 42"
+    ItemName="Fallschirmjägergewehr 42"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
@@ -36,4 +36,10 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="deploy_reload_empty"
     BipodMagPartialReloadAnim="deploy_reload_half"
+
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
+    PutDownAnim="putaway"
 }

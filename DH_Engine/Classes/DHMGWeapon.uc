@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHMGWeapon extends DHBipodWeapon
+class DHMGWeapon extends DHProjectileWeapon
     abstract;
 
 var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
@@ -313,6 +313,19 @@ defaultproperties
     SprintEndAnim="Rest_Sprint_End"
     BipodMagEmptyReloadAnim="Reload"
     BipodMagPartialReloadAnim="Reload"
-    bSniping=false
+
+    Priority=10
+    bCanBipodDeploy=true
+    bCanRestDeploy=false
+    bMustReloadWithBipodDeployed=true
+    PlayerDeployFOV=60.0
     bMustFireWhileSighted=true
+    
+    IronBringUp="Rest_2_Bipod"
+    IronPutDown="Bipod_2_Rest"
+    IdleAnim="Rest_Idle"
+    BipodIdleAnim="Bipod_Idle"
+    IdleToBipodDeploy="Rest_2_Bipod"
+    BipodDeployToIdle="Bipod_2_Rest"
+    MagEmptyReloadAnims(0)="Reload"
 }

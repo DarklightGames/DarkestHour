@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_PTRDWeapon extends DHBipodWeapon;
+class DH_PTRDWeapon extends DHProjectileWeapon;
 
 // Modified so can't reload unless empty
 simulated function bool AllowReload()
@@ -97,6 +97,10 @@ defaultproperties
     MaxNumPrimaryMags=20
     InitialNumPrimaryMags=20
 
+    bCanBipodDeploy=true
+    bCanRestDeploy=false
+    bMustReloadWithBipodDeployed=true
+    PlayerDeployFOV=60.0
     bMustFireWhileSighted=true
 
     BipodMagEmptyReloadAnim="reload"
@@ -114,4 +118,14 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB"
     CrawlStartEmptyAnim="crawl_in"
     CrawlEndEmptyAnim="crawl_out"
+
+    Priority=10
+    
+    IronBringUp="Rest_2_Bipod"
+    IronPutDown="Bipod_2_Rest"
+    IdleAnim="Rest_Idle"
+    IronIdleAnim="Bipod_Idle"
+    IdleToBipodDeploy="Rest_2_Bipod"
+    BipodDeployToIdle="Bipod_2_Rest"
+    MagEmptyReloadAnims(0)="Reload"
 }

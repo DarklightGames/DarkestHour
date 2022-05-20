@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BrenWeapon extends DHBipodAutoWeapon;
+class DH_BrenWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
@@ -40,4 +40,10 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="deploy_reload_empty"
     BipodMagPartialReloadAnim="deploy_reload_half"
+
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
+    PutDownAnim="putaway"
 }

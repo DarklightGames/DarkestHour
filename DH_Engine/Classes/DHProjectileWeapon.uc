@@ -1764,6 +1764,10 @@ simulated function PlayIdle()
             {
                 LoopAnim(IronIdleEmptyAnim, IdleAnimRate, FastTweenTime);
             }
+            else if (HasAnim(BipodHipIdle))
+            {
+                LoopAnim(BipodHipIdle, IdleAnimRate, 0.2);
+            }
             else if (HasAnim(IronIdleAnim))
             {
                 LoopAnim(IronIdleAnim, IdleAnimRate, FastTweenTime);
@@ -2137,7 +2141,6 @@ simulated state ReloadingBipod extends Reloading
         }
     }
 
-    // TODO: I honestly have no idea what this is for
     simulated function PlayIdle()
     {
         if (Instigator != none && Instigator.bBipodDeployed && HasAnim(BipodIdleAnim))

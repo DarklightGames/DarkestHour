@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BARWeapon extends DHBipodAutoWeapon;
+class DH_BARWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
@@ -193,4 +193,9 @@ defaultproperties
     BipodMagEmptyReloadAnim="bipod_reload_empty"
     BipodMagPartialReloadAnim="bipod_reload_half"
     IronToBipodDeploy="aim_to_Bipod"
+
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
 }
