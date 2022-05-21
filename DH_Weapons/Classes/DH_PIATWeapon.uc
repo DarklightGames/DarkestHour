@@ -7,7 +7,7 @@ class DH_PIATWeapon extends DHRocketWeapon;
 
 defaultproperties
 {
-    ItemName="P.I.A.T."
+    ItemName="PIAT"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
     FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
