@@ -45,7 +45,7 @@ replication
 // Overridden to cycle the weapon aiming range
 simulated exec function SwitchFireMode()
 {
-    if (bUsingSights || (Instigator != none && Instigator.bBipodDeployed) && !IsBusy())
+    if (bUsingSights || IsInstigatorBipodDeployed() && !IsBusy())
     {
         RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeds last range setting
 
@@ -59,7 +59,7 @@ simulated exec function SwitchFireMode()
 // Modified to play the weapon iron animations for different ranges
 simulated function PlayIdle()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (IsInstigatorBipodDeployed())
     {
         if (HasAnim(RangeSettings[RangeIndex].BipodIdleAnim))
         {
@@ -207,7 +207,7 @@ simulated function Fire(float F)
     {
         if (IsLoaded() && DHProjectileFire(FireMode[0]) != none)
         {
-            if (bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+            if (IsSighted())
             {
                 ServerSetFirePitch(RangeSettings[RangeIndex].FirePitch);
             }

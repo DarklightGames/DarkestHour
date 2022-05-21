@@ -41,7 +41,7 @@ simulated function AnimEnd(int channel)
 // Modified so we don't play idle empty anims after a reload
 simulated function PlayIdle()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (IsInstigatorBipodDeployed())
     {
         if (AmmoAmount(0) < 1 && !IsInState('Reloading') && HasAnim(IronIdleEmptyAnim))
         {

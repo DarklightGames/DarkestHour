@@ -630,13 +630,18 @@ function coords GetMuzzleCoords()
     return GetBoneCoords(MuzzleBone);
 }
 
+simulated function bool IsInstigatorBipodDeployed()
+{
+    return Instigator != none && Instigator.bBipodDeployed;
+}
+
 // Modified so no free aim if using ironsights, bipod, or melee attacking
 simulated function bool ShouldUseFreeAim()
 {
     return bUsesFreeAim 
         && !bUsingSights 
         && !(FireMode[1].IsFiring() && FireMode[1].bMeleeMode)
-        && !(bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed);
+        && !(bCanBipodDeploy && IsInstigatorBipodDeployed());
 }
 
 // Modified so bots may use a melee attack if really close to their enemy
@@ -1270,7 +1275,7 @@ Begin:
 // Forces the bipod to undeploy when needed
 simulated function ForceUndeploy()
 {
-    if (!IsBusy() && Instigator != none && Instigator.bBipodDeployed)
+    if (!IsBusy() && IsInstigatorBipodDeployed())
     {
         BipodDeploy(false);
 
@@ -1312,7 +1317,7 @@ function ServerBipodDeploy(bool bNewDeployedStatus)
 // Players can still use crouch to undeploy instantly while proned however
 simulated function bool WeaponAllowCrouchChange()
 {
-    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed && !Instigator.bIsCrawling)
+    if (bCanBipodDeploy && IsInstigatorBipodDeployed() && !Instigator.bIsCrawling)
     {
         return false;
     }
@@ -1668,7 +1673,7 @@ Begin:
 // Takes the weapon out of ironsights or bipod if you jump
 simulated function NotifyOwnerJumped()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (IsInstigatorBipodDeployed())
     {
         if (!IsBusy() || IsInState('DeployingBipod'))
         {
@@ -1760,7 +1765,7 @@ Begin:
 // Modified to handle bipod, ironsight & empty anims
 simulated function PlayIdle()
 {
-    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed && HasAnim(BipodIdleAnim))
+    if (bCanBipodDeploy && IsInstigatorBipodDeployed() && HasAnim(BipodIdleAnim))
     {
         LoopAnim(BipodIdleAnim, IdleAnimRate, 0.2);
     }
@@ -1974,7 +1979,7 @@ function ServerRequestReload()
 {
     if (AllowReload())
     {
-        if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
+        if (bCanBipodDeploy && IsInstigatorBipodDeployed())
         {
             GotoState('ReloadingBipod');
         }
@@ -1996,7 +2001,7 @@ function ServerRequestReload()
 
 simulated function ClientDoReload(optional byte NumRounds)
 {
-    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
+    if (bCanBipodDeploy && IsInstigatorBipodDeployed())
     {
         GotoState('ReloadingBipod');
     }
@@ -2013,7 +2018,7 @@ simulated function ClientCancelReload()
 
 simulated function bool IsSighted()
 {
-    return bUsingSights || (Instigator != none && Instigator.bBipodDeployed);
+    return bUsingSights || IsInstigatorBipodDeployed();
 }
 
 // Modified to prevent firing if the weapon must be fired while sighted
@@ -2155,7 +2160,7 @@ simulated state ReloadingBipod extends Reloading
 
     simulated function PlayIdle()
     {
-        if (Instigator != none && Instigator.bBipodDeployed && HasAnim(BipodIdleAnim))
+        if (IsInstigatorBipodDeployed() && HasAnim(BipodIdleAnim))
         {
             LoopAnim(BipodIdleAnim, IdleAnimRate, 0.2);
         }
@@ -2223,7 +2228,7 @@ Begin:
 // Returns the reload animation to play given the current state
 simulated function name GetReloadAnim()
 {
-    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
+    if (bCanBipodDeploy && IsInstigatorBipodDeployed())
     {
         if (AmmoAmount(0) > 0 && HasAnim(BipodMagPartialReloadAnim))
         {
@@ -2708,7 +2713,7 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified to prevent melee attacks while deployed
 simulated event ClientStartFire(int Mode)
 {
-    if (!FireMode[Mode].bMeleeMode || !(Instigator != none && Instigator.bBipodDeployed))
+    if (!FireMode[Mode].bMeleeMode || !IsInstigatorBipodDeployed())
     {
         super.ClientStartFire(Mode);
     }
@@ -2760,7 +2765,7 @@ function ServerSwitchBarrels()
 
 simulated function bool AllowBarrelChange()
 {
-    return bHasSpareBarrel && Instigator != none && Instigator.bBipodDeployed && !IsInState('ChangingBarrels') && !IsFiring() && !IsBusy();
+    return bHasSpareBarrel && IsInstigatorBipodDeployed() && !IsInState('ChangingBarrels') && !IsFiring() && !IsBusy();
 }
 
 // State where we are changing the barrel
