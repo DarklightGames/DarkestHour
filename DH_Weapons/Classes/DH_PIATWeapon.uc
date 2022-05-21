@@ -5,25 +5,6 @@
 
 class DH_PIATWeapon extends DHRocketWeapon;
 
-// Modified to prevent reloading unless prone or rested (with message) or if weapon is not empty
-simulated function bool AllowReload()
-{
-    if (Instigator == none || !Instigator.bIsCrawling)
-    {
-        if (Instigator.IsHumanControlled())
-        {
-            WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 5,,, self); // can't reload unless prone or rested
-        }
-
-        return false;
-    }
-
-    if (!IsLoaded())
-    {
-        return super(DHProjectileWeapon).AllowReload();
-    }
-}
-
 defaultproperties
 {
     ItemName="P.I.A.T."
@@ -47,7 +28,16 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
-    RangeSettings(0)=(FirePitch=85,IronIdleAnim="iron_idle_050",FireIronAnim="iron_shoot_050")
-    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idle_080",FireIronAnim="iron_shoot_080")
-    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idle_110",FireIronAnim="iron_shoot_110")
+    RangeSettings(0)=(FirePitch=85,IronIdleAnim="iron_idle_050",IronFireAnim="iron_shoot_050",BipodIdleAnim="bipod_idle_050",BipodFireAnim="bipod_shoot_050")
+    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idle_080",IronFireAnim="iron_shoot_080",BipodIdleAnim="bipod_idle_080",BipodFireAnim="bipod_shoot_080")
+    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idle_110",IronFireAnim="iron_shoot_110",BipodIdleAnim="bipod_idle_110",BipodFireAnim="bipod_shoot_110")
+
+    // Bipod
+    bCanBipodDeploy=true
+    bMustReloadWithBipodDeployed=true
+    IdleToBipodDeploy="idle_to_bipod"
+    IronToBipodDeploy="iron_to_bipod"
+    BipodDeployToIdle="bipod_to_idle"
+    BipodMagEmptyReloadAnim="reload"
+    BipodMagPartialReloadAnim="reload"
 }

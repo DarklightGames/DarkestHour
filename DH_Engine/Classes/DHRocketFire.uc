@@ -105,7 +105,14 @@ function PlayFiring()
 
                 if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
                 {
-                    Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+                    if (Instigator != none && Instigator.bBipodDeployed)
+                    {
+                        Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].BipodFireAnim;
+                    }
+                    else
+                    {
+                        Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].IronFireAnim;
+                    }
                 }
                 else
                 {

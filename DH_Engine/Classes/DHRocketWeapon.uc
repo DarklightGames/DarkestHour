@@ -11,7 +11,9 @@ struct RangeSetting
 {
     var int  FirePitch;
     var name IronIdleAnim;
-    var name FireIronAnim;
+    var name IronFireAnim;
+    var name BipodIdleAnim;
+    var name BipodFireAnim;
 };
 
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
@@ -43,7 +45,7 @@ replication
 // Overridden to cycle the weapon aiming range
 simulated exec function SwitchFireMode()
 {
-    if (bUsingSights && !IsBusy())
+    if (bUsingSights || (Instigator != none && Instigator.bBipodDeployed) && !IsBusy())
     {
         RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeds last range setting
 
@@ -57,13 +59,37 @@ simulated exec function SwitchFireMode()
 // Modified to play the weapon iron animations for different ranges
 simulated function PlayIdle()
 {
-    if (bUsingSights && HasAnim(RangeSettings[RangeIndex].IronIdleAnim))
+    if (Instigator != none && Instigator.bBipodDeployed)
     {
-        LoopAnim(RangeSettings[RangeIndex].IronIdleAnim, IdleAnimRate, 0.2);
+        if (HasAnim(RangeSettings[RangeIndex].BipodIdleAnim))
+        {
+            LoopAnim(RangeSettings[RangeIndex].BipodIdleAnim, IdleAnimRate, 0.2);
+        }
+    }
+    else if (bUsingSights)
+    {
+        if (HasAnim(RangeSettings[RangeIndex].IronIdleAnim))
+        {
+            LoopAnim(RangeSettings[RangeIndex].IronIdleAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+        }
     }
     else if (HasAnim(IdleAnim))
     {
         LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+    }
+}
+
+// HACK: Remove this once we move range setting to DHProjectileWeapon.
+// This just ensures that the right idle animation is played at the end of a bipodded reload.
+simulated state ReloadingBipod
+{
+    simulated function PlayIdle()
+    {
+        global.PlayIdle();
     }
 }
 
@@ -181,7 +207,7 @@ simulated function Fire(float F)
     {
         if (IsLoaded() && DHProjectileFire(FireMode[0]) != none)
         {
-            if (bUsingSights)
+            if (bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
             {
                 ServerSetFirePitch(RangeSettings[RangeIndex].FirePitch);
             }
@@ -197,7 +223,7 @@ simulated function Fire(float F)
 
 simulated function bool CanFire(optional bool bShowFailureMessage)
 {
-    if (InstigatorIsLocallyControlled() && !bUsingSights)
+    if (InstigatorIsLocallyControlled() && !(bUsingSights || Instigator.bBipodDeployed))
     {
         if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
@@ -247,7 +273,12 @@ simulated function OutOfAmmo()
 // Modified to prevent reloading if player is prone (with message) or if weapon is not empty
 simulated function bool AllowReload()
 {
-    if (Instigator != none && Instigator.bIsCrawling)
+    if (!super.AllowReload())
+    {
+        return false;
+    }
+
+    if (Instigator != none && Instigator.bIsCrawling && !Instigator.bBipodDeployed)
     {
         if (Instigator.IsHumanControlled())
         {

@@ -9,5 +9,4 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_PIATWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
-    DrawScale=1.23
 }
