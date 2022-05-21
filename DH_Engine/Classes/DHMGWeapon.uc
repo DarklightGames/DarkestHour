@@ -73,31 +73,6 @@ simulated exec function Deploy()
     }
 }
 
-// Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
-simulated function ROIronSights()
-{
-    local DHPlayer PC;
-
-    if (Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
-    {
-        if (Instigator.IsLocallyControlled())
-        {
-            PC = DHPlayer(Instigator.Controller);
-
-            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
-            {
-                return;
-            }
-        }
-
-        Deploy();
-    }
-    else if (bCanFireFromHip)
-    {
-        PerformZoom(!bUsingSights);
-    }
-}
-
 simulated function bool StartFire(int Mode)
 {
     if (super.StartFire(Mode))
