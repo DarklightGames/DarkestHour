@@ -308,11 +308,13 @@ function ServerWorkBolt()
 // Debug logging to show how much ammo we have in our mags
 simulated exec function LogAmmo()
 {
-    local int i;
+    local int i, TotalAmmoCount;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
     {
         Log("Weapon has" @ AmmoAmount(0) @ "rounds loaded and a total of" @ PrimaryAmmoArray.Length @ "mags");
+
+        TotalAmmoCount += AmmoAmount(0);
 
         for (i = 0; i < PrimaryAmmoArray.Length; ++i)
         {
@@ -322,9 +324,12 @@ simulated exec function LogAmmo()
             }
             else
             {
-                Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
+                TotalAmmoCount += PrimaryAmmoArray[i];
+                Log("Stowed mag" @ i @ "has " @ PrimaryAmmoArray[i] @ "ammo");
             }
         }
+
+        Log("Total rounds:" @ TotalAmmoCount);
     }
 }
 
