@@ -25,6 +25,8 @@ var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
+var     StaticMesh              EmptyStaticMesh;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -172,6 +174,12 @@ function InitDroppedPickupFor(Inventory Inv)
                     }
                 }
             }
+        }
+        
+        // If the weapon is empty and we have an empty static mesh variant, show that instead
+        if (EmptyStaticMesh != none && W.AmmoAmount(0) == 0)
+        {
+            SetStaticMesh(EmptyStaticMesh);
         }
     }
 }

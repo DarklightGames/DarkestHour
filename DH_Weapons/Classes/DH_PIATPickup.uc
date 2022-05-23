@@ -5,22 +5,6 @@
 
 class DH_PIATPickup extends DHRocketWeaponPickup;
 
-var StaticMesh  EmptyStaticMesh;
-
-function InitDroppedPickupFor(Inventory Inv)
-{
-    local DHWeapon Weapon;
-
-    super.InitDroppedPickupFor(Inv);
-
-    Weapon = DHWeapon(Inv);
-
-    if (Weapon != none && Weapon.AmmoAmount(0) == 0)
-    {
-        SetStaticMesh(EmptyStaticMesh);
-    }
-}
-
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_PIATWeapon'
