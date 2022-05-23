@@ -96,6 +96,7 @@ var     bool                bBarrelFailed;          // barrel overheated and can
 // Scopes
 var     bool            bHasScope;
 var     bool            bHasModelScope;
+var     bool            bForceModelScope;        // force the use of the 3D scope
 var     float           ScopePortalFOV;          // the FOV to zoom the scope portal by
 var     float           ScopePortalFOVHigh;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
@@ -120,6 +121,8 @@ var   Shader            ScopeScriptedShader;        // The shader that combines 
 var   Material          ScriptedTextureFallback;    // The texture to render if the users system doesn't support shaders
 var   Material          ScriptedScopeTexture;       // The reticle texture to use for 3d scopes.
 var   Combiner          ScriptedScopeCombiner;
+var   bool              bForceRenderScope;          // When true, the 3D scope will be rendered despite the user's settings
+var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each dimension of the scripted scope texture (use powers of two!)
 
 replication
 {
@@ -305,6 +308,12 @@ simulated exec function LogAmmo()
     }
 }
 
+// Called by animations to force the scope rendering.
+simulated event DHForceRenderScope()
+{
+    bForceRenderScope = true;
+}
+
 simulated event RenderOverlays(Canvas Canvas)
 {
     local ROPlayer Playa;
@@ -375,9 +384,9 @@ simulated event RenderOverlays(Canvas Canvas)
         Skins[LensMaterialID] = ScriptedTextureFallback;
     }
 
-    if (bHasScope && bUsingSights)  // TODO: also we shouldn't be in the idlerest animation!
+    if (bHasScope && (bUsingSights || bForceRenderScope))  // TODO: also we shouldn't be in the idlerest animation!
     {
-        if (ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
+        if (bForceModelScope || ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
         {
             if (ShouldDrawPortal() && ScopeScriptedTexture != none)
             {
@@ -482,7 +491,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && bUsingSights && (IsInState('Idle') || IsInState('PostFiring'));
+    return bHasScope && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
@@ -767,6 +776,16 @@ simulated state RaisingWeapon
     }
 }
 
+simulated state Idle
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        bForceRenderScope = false;
+    }
+}
+
 // Modified to support ironsight zoom & empty put away anims
 simulated state LoweringWeapon
 {
@@ -795,6 +814,8 @@ simulated state LoweringWeapon
         {
             ZoomOut();
         }
+
+        bForceRenderScope = false;
 
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
         {
@@ -1363,7 +1384,6 @@ Begin:
 // New function just to avoid code repetition in different functions
 simulated function SetIronSightFOV()
 {
-    local float  TargetDisplayFOV;
     local vector TargetPVO;
 
     if (InstigatorIsLocalHuman())
@@ -1372,27 +1392,23 @@ simulated function SetIronSightFOV()
         {
             if (ScopeDetail == RO_ModelScopeHigh)
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.XoffsetHighDetail;
             }
             else if (ScopeDetail == RO_ModelScope)
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.XOffsetScoped;
             }
             else
             {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.PlayerViewOffset;
             }
         }
         else
         {
-            TargetDisplayFOV = default.IronSightDisplayFOV;
             TargetPVO = default.PlayerViewOffset;
         }
 
-        DisplayFOV = TargetDisplayFOV;
+        DisplayFOV = default.IronSightDisplayFOV;
         PlayerViewOffset = TargetPVO;
     }
 }
@@ -2718,21 +2734,61 @@ simulated function PreTravelCleanUp()
     }
 }
 
-// Handles initializing and swithing between different scope modes
+simulated function float GetScopePortalFOV()
+{
+    switch (ScopeDetail)
+    {
+        case RO_ModelScope:
+            return ScopePortalFOV;
+        case RO_ModelScopeHigh:
+            return ScopePortalFOVHigh;
+    }
+}
+
+simulated function vector GetScopePlayerViewOffset()
+{
+    switch (ScopeDetail)
+    {
+        case RO_ModelScope:
+            return XoffsetScoped;
+        case RO_ModelScopeHigh:
+            return XoffsetHighDetail;
+    }
+}
+
+simulated function GetScopeScriptedTextureSize(out int Width, out int Height)
+{
+    switch (ScopeDetail)
+    {
+        case RO_TextureScope:
+        case RO_ModelScope:
+            Width = default.ScopeScriptedTextureSize / 2;
+            Height = default.ScopeScriptedTextureSize / 2;
+            break;
+        case RO_ModelScopeHigh:
+            Width = default.ScopeScriptedTextureSize;
+            Height = default.ScopeScriptedTextureSize;
+            break;
+    }
+}
+
+// Handles initializing and switching between different scope modes
 simulated function UpdateScopeMode()
 {
+    local int Width, Height;
+
     if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
-        if (ScopeDetail == RO_ModelScope)
+        if (bForceModelScope || ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
         {
-            scopePortalFOV = default.scopePortalFOV;
+            ScopePortalFOV = GetScopePortalFOV();
             IronSightDisplayFOV = default.IronSightDisplayFOV;
             bPlayerFOVZooms = false;
             bHasModelScope = true;
 
             if (bUsingSights)
             {
-                PlayerViewOffset = XoffsetScoped;
+                PlayerViewOffset = GetScopePlayerViewOffset();
             }
 
             if (ScopeScriptedTexture == none)
@@ -2740,56 +2796,15 @@ simulated function UpdateScopeMode()
                 ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
             }
 
+            GetScopeScriptedTextureSize(Width, Height);
+
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(512, 512);
+            ScopeScriptedTexture.SetSize(Width, Height);
             ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
                 // Construct the combiner
-                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
-                ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-                ScriptedScopeCombiner.CombineOperation = CO_Multiply;
-                ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
-                ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
-            }
-
-            if (ScopeScriptedShader == none)
-            {
-                // Construct the scope shader
-                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
-                ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
-                ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-                ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-            }
-
-            bInitializedScope = true;
-        }
-        else if (ScopeDetail == RO_ModelScopeHigh)
-        {
-            ScopePortalFOV = ScopePortalFOVHigh;
-            IronSightDisplayFOV = default.IronSightDisplayFOV;
-            bPlayerFOVZooms = false;
-            bHasModelScope = true;
-
-            if (bUsingSights)
-            {
-                PlayerViewOffset = XoffsetHighDetail;
-            }
-
-            if (ScopeScriptedTexture == none)
-            {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
-            }
-
-            ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(1024, 1024);
-            ScopeScriptedTexture.Client = self;
-
-            if (ScriptedScopeCombiner == none)
-            {
-                // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
                 ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
@@ -2852,4 +2867,5 @@ defaultproperties
     LensMaterialID=-1
     ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
     ScopeOverlaySize=0.7
+    ScopeScriptedTextureSize=1024
 }

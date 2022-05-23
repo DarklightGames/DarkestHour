@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BazookaFire extends DHRocketFire;
+class DH_BazookaM9Fire extends DHRocketFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_BazookaRocket'
-    AmmoClass=class'DH_Weapons.DH_BazookaAmmo'
+    ProjectileClass=class'DH_Weapons.DH_BazookaM9Rocket'
+    AmmoClass=class'DH_Weapons.DH_BazookaM9Ammo'
     //Spread=480.0
     Spread=0.0
     ExhaustDamageType=class'DH_Weapons.DH_BazookaExhaustDamType'

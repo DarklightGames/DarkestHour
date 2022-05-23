@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_BazookaPickup extends DHRocketWeaponPickup;
+class DH_BazookaM9MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_BazookaWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bazooka'
-    DrawScale=1.25
+    DamageType=class'DH_Weapons.DH_BazookaBashDamType'
 }

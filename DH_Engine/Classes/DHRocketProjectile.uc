@@ -6,9 +6,6 @@
 class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAntiVehicleProjectile, but has so much in common with HEAT shell it's simpler & cleaner to extend that
     abstract;
 
-#exec OBJ LOAD FILE=Inf_Weapons.uax
-
-
 var     float               StraightFlightTime; // how long the rocket has propellant & flies straight
 var     bool                bHasSmokeTrail; // some rockets - like the PIAT bomb - don't issue smoke trails
 var     class<Emitter>      RocketSmokeTrailClass;         //modifying RO code here to allow custom smoke trails

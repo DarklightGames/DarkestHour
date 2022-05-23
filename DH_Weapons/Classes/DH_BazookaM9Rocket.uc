@@ -1,9 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2021
+//==============================================================================
+// M6A3 Rocket
 //==============================================================================
 
-class DH_BazookaRocket extends DHRocketProjectile;
+class DH_BazookaM9Rocket extends DHRocketProjectile;
 
 defaultproperties
 {
@@ -19,10 +21,9 @@ defaultproperties
     StraightFlightTime=0.5
 
     //Effects
-    DrawScale=1.33
     bHasSmokeTrail=false // bazooka has no smoke trail irl
     bHasTracer=true // represents glow of burnt out rocket motor
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
     //Penetration
     DHPenetrationTable(0)=9.8
