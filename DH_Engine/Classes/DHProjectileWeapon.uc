@@ -2261,6 +2261,26 @@ simulated function PlayReload()
     PlayAnimAndSetTimer(GetReloadAnim(), 1.0, 0.1);
 }
 
+// Gets the index of the fullest "magazine"
+simulated function int GetFullestMagIndex()
+{
+    local int i, MaxCount, MagIndex;
+
+    MaxCount = -1;
+    MagIndex = -1;
+
+    for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+    {
+        if (PrimaryAmmoArray[i] > MaxCount)
+        {
+            MagIndex = i;
+            MaxCount = PrimaryAmmoArray[i];
+        }
+    }
+
+    return MagIndex;
+}
+
 // New function to do the actual ammo swapping
 function PerformReload(optional int Count)
 {
@@ -2289,12 +2309,6 @@ function PerformReload(optional int Count)
     {
         // Remove current mag, meaning the next one in the array now becomes the new current mag
         PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
-
-        // Loop back to index 0 if we just removed last mag in the array
-        if (CurrentMagIndex >= PrimaryAmmoArray.Length)
-        {
-            CurrentMagIndex = 0;
-        }
     }
     // Check if we are unloading a partial clip and we are consolidating clips
     else if (CurrentMagLoad < FireMode[0].AmmoClass.default.InitialAmount && UnloadedMunitionsPolicy == UMP_Consolidate)
@@ -2302,18 +2316,12 @@ function PerformReload(optional int Count)
         // Remove the current magazine.
         PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 
-        if (CurrentMagIndex >= PrimaryAmmoArray.Length) // loop back to index 0 if we just removed last mag in the array
-        {
-            CurrentMagIndex = 0;
-        }
-
         SavedRoundCount += CurrentMagLoad;
     }
     // Otherwise put the current mag back into player's spare mags
     else
     {
-        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad; // update CurrentMagIndex with current no. of loaded rounds, as it won't have been updated when shots fired
-        CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length); // now cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
+        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad; // update CurrentMagIndex with current no. of loaded rounds, as it won't have been updated when shots fire
     }
 
     if (UnloadedMunitionsPolicy == UMP_Consolidate)
@@ -2325,6 +2333,9 @@ function PerformReload(optional int Count)
             SavedRoundCount -= FireMode[0].AmmoClass.default.InitialAmount;
         }
     }
+
+    // Set the current magazine to the fullest magazine that we have
+    CurrentMagIndex = GetFullestMagIndex();
 
     // Now build up the new ammo 'charge' from the newly loaded mag
     if (!bTwoMagsCapacity)
