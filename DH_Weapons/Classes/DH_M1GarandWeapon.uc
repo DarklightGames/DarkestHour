@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_M1GarandWeapon extends DHSemiAutoWeapon;
+class DH_M1GarandWeapon extends DHProjectileWeapon;
 
 var     bool    bIsLastRound;
 

@@ -3244,4 +3244,8 @@ defaultproperties
     LensMaterialID=-1
     ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
     ScopeOverlaySize=0.7
+
+    IronIdleAnim="Iron_idle"
+    MagEmptyReloadAnims(0)="reload_empty"
+    MagPartialReloadAnims(0)="reload_half"
 }

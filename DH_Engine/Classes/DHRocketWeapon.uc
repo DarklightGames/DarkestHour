@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHRocketWeapon extends DHSemiAutoWeapon
+class DHRocketWeapon extends DHProjectileWeapon
     abstract;
 
 // Range Settings

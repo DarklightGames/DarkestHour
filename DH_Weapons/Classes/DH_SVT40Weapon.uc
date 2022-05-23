@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_SVT40Weapon extends DHSemiAutoWeapon;
+class DH_SVT40Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -33,7 +33,6 @@ defaultproperties
     MagPartialReloadAnims(1)="reload_halfB"
     MagPartialReloadAnims(2)="reload_halfC"
 
-
     bHasBayonet=true
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
@@ -57,4 +56,7 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }
