@@ -519,6 +519,46 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     bHurtEntry = false;
 }
 
+simulated function QueueFiringRangeHint()
+{
+    local DHPlayer PC;
+
+    if (InstigatorIsLocallyControlled())
+    {
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none)
+        {
+            // Hint about changing firing range.
+            PC.QueueHint(60, true);
+        }
+    }
+}
+
+// Modified to hint about the changing firing range.
+// Remove this once that functionality is moved to the superclass.
+state IronSightZoomIn
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        QueueFiringRangeHint();
+    }
+}
+
+// Modified to hint about the changing firing range.
+// Remove this once that functionality is moved to the superclass.
+state DeployingBipod
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        QueueFiringRangeHint();
+    }
+}
+
 defaultproperties
 {
     InventoryGroup=5
