@@ -64,15 +64,6 @@ simulated function RenewAmmoBelt()
     }
 }
 
-// Modified to prevent deploying if player is moving
-simulated exec function Deploy()
-{
-    if (Instigator != none && VSizeSquared(Instigator.Velocity) == 0.0)
-    {
-        super.Deploy();
-    }
-}
-
 simulated function bool StartFire(int Mode)
 {
     if (super.StartFire(Mode))
@@ -151,64 +142,6 @@ Begin:
     }
 
     SetTimer(FastTweenTime, false);
-}
-
-simulated event RenderOverlays(Canvas Canvas)
-{
-    local ROPlayer Playa;
-    local ROPawn   RPawn;
-    local rotator  RollMod;
-    local int      LeanAngle, i;
-
-    if (Instigator == none)
-    {
-        return;
-    }
-
-    Playa = ROPlayer(Instigator.Controller);
-
-    // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
-    Canvas.DrawActor(none, false, true);
-
-    for (i = 0; i < NUM_FIRE_MODES; ++i)
-    {
-        FireMode[i].DrawMuzzleFlash(Canvas);
-    }
-
-    // Adjust weapon position for lean
-    RPawn = ROPawn(Instigator);
-
-    if (RPawn != none && RPawn.LeanAmount != 0.0)
-    {
-        LeanAngle += RPawn.LeanAmount;
-    }
-
-    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
-
-    // Remove the roll component so the weapon doesn't tilt with the terrain
-    RollMod = Instigator.GetViewRotation();
-    RollMod.Roll += LeanAngle;
-
-    if (IsCrawling())
-    {
-        RollMod.Pitch = CrawlWeaponPitch;
-    }
-
-    if (Playa != none)
-    {
-        if (!IsCrawling())
-        {
-            RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
-        }
-
-        RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
-    }
-
-    SetRotation(RollMod);
-
-    bDrawingFirstPerson = true;
-    Canvas.DrawActor(self, false, false, DisplayFOV);
-    bDrawingFirstPerson = false;
 }
 
 simulated state StartSprinting
@@ -293,7 +226,6 @@ defaultproperties
     bCanBipodDeploy=true
     bCanRestDeploy=false
     bMustReloadWithBipodDeployed=true
-    PlayerDeployFOV=60.0
     bMustFireWhileSighted=true
     
     IronBringUp="Rest_2_Bipod"

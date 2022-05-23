@@ -13,8 +13,6 @@ enum EUnloadedMunitionsPolicy
     UMP_Consolidate,    // unloaded munitions will be consolidated into full magazines
 };
 
-var         float       PlayerDeployFOV;
-
 // Ammo/magazines
 var         array<int>  PrimaryAmmoArray;           // the array of magazines and their ammo amounts this weapon has
 var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client (changed from int to byte for more efficient replication)
@@ -101,6 +99,8 @@ var     bool                bBarrelFailed;          // barrel overheated and can
 var     bool    bCanFireFromHip;                // if true this weapon has a hip firing mode
 var     bool    bMustFireWhileSighted;          // if true, this weapon can only be fired while using sights or bipod
 var     bool    bMustReloadWithBipodDeployed;   // when true, reloads can only occur while bipodded
+
+var     float   PlayerDeployFOV;            // the FOV that the player's view will be when the bipod is deployed
 
 var     name    IdleToBipodDeploy;          // anim for bipod rest state to deployed state
 var     name    IdleToBipodDeployEmpty;     // anim for bipod rest state to deployed empty state
@@ -1103,7 +1103,7 @@ simulated exec function Deploy()
     if (bCanBipodDeploy)
     {
         // Bipod is either deployed or player can deploy the bipod
-        if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
+        if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy) && VSize(Instigator.Velocity) == 0.0)
         {
             if (Instigator.IsLocallyControlled())
             {
@@ -1360,21 +1360,19 @@ simulated state DeployingBipod extends WeaponBusy
         }
 
         PlayAnimAndSetTimer(Anim, IronSwitchAnimRate, 0.1);
-
-        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     simulated function EndState()
     {
         SetIronSightFOV();
     }
-
 Begin:
     if (bUsingSights)
     {
         ZoomOut();
-        SetPlayerFOV(GetPlayerIronsightFOV());
     }
+    
+    SetPlayerFOV(PlayerDeployFOV);
 
     if (InstigatorIsLocalHuman())
     {
@@ -2193,7 +2191,7 @@ Begin:
             Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
-        SetPlayerFOV(GetPlayerIronsightFOV());
+        SetPlayerFOV(PlayerDeployFOV);
         SmoothZoom(true);
     }
 }
@@ -3230,6 +3228,7 @@ defaultproperties
     bCanRestDeploy=true
     bCanAttachOnBack=true
     DisplayFOV=70.0
+    PlayerDeployFOV=60.0
     IronSwitchAnimRate=1.0
     FastTweenTime=0.2
     ZoomInTime=0.4

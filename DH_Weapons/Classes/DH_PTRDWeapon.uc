@@ -100,7 +100,6 @@ defaultproperties
     bCanBipodDeploy=true
     bCanRestDeploy=false
     bMustReloadWithBipodDeployed=true
-    PlayerDeployFOV=60.0
     bMustFireWhileSighted=true
 
     BipodMagEmptyReloadAnim="reload"
