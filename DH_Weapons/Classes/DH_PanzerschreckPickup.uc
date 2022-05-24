@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_PanzerschreckPickup extends DHRocketWeaponPickup;
+class DH_PanzerschreckPickup extends DHWeaponPickup;
 
 defaultproperties
 {

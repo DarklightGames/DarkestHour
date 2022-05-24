@@ -281,20 +281,7 @@ simulated function AnimEnd(int Channel)
     }
 }
 
-// Tells bot whether to charge or back off while using this weapon
-function float SuggestAttackStyle()
-{
-    return 0.5;
-}
-
-// Tells bot whether to charge or back off while defending against this weapon
-function float SuggestDefenseStyle()
-{
-    return -0.4;
-}
-
 // Overridden so we don't play idle empty anims after a reload
-
 simulated state Reloading
 {
     simulated function PlayIdle()
@@ -309,8 +296,6 @@ simulated state Reloading
         }
     }
 }
-
-
 
 defaultproperties
 {

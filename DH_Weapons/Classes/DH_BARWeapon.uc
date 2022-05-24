@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BARWeapon extends DHBipodAutoWeapon;
+class DH_BARWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
@@ -101,6 +101,10 @@ simulated state Reloading
     }
 }
 
+//============================================================================
+// DEBUG FUNCTIONS FOR BIPOD PHYSICS SIMULATION
+// TODO: move to superclass
+//============================================================================
 simulated exec function PAL(float V)
 {
     if (Level.NetMode == NM_Standalone)
@@ -183,11 +187,15 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
-    SightUpIronBringUp="bipod_in"
-    SightUpIronPutDown="bipod_out"
-    SightUpIronIdleAnim="iron_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    SightUpMagPartialReloadAnim="bipod_reload_half"
+    IdleToBipodDeploy="bipod_in"
+    BipodDeployToIdle="bipod_out"
+    BipodIdleAnim="iron_idle"
+    BipodMagEmptyReloadAnim="bipod_reload_empty"
+    BipodMagPartialReloadAnim="bipod_reload_half"
+    IronToBipodDeploy="aim_to_Bipod"
 
-    IronBipodDeployAnim="aim_to_Bipod"
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
 }
