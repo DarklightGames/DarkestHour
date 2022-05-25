@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_M1A1CarbineWeapon extends DHSemiAutoWeapon;
+class DH_M1A1CarbineWeapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -35,4 +35,6 @@ defaultproperties
 
     SleeveNum=1
     HandNum=2
+
+    bPlusOneLoading=true
 }

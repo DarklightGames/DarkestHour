@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_SVT40Weapon extends DHSemiAutoWeapon;
+class DH_SVT40Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -24,7 +24,7 @@ defaultproperties
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
-    
+
     MagEmptyReloadAnims(0)="reload_empty"
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_emptyC"
@@ -33,13 +33,12 @@ defaultproperties
     MagPartialReloadAnims(1)="reload_halfB"
     MagPartialReloadAnims(2)="reload_halfC"
 
-
     bHasBayonet=true
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     BayoAttachEmptyAnim="bayonet_on_empty"
     BayoDetachEmptyAnim="bayonet_off_empty"
-    
+
     BayonetBoneName="bayonet"
 
     IdleEmptyAnim="idle_empty"
@@ -57,4 +56,7 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }

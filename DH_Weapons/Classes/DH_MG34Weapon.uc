@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MG34Weapon extends DHMGWeapon;
@@ -14,28 +14,6 @@ simulated function PostNetBeginPlay()
     {
         Log("MG34 detected Mac OS & so switching weapon skin from specularity shader to standard diffuse texture"); // TEMPDEBUG
         Skins[2] = Texture'Weapons1st_tex.MG.mg34';
-    }
-}
-
-// Modified to prevent the exploit of freezing your animations after firing
-simulated event StopFire(int Mode) // TODO: check this shouldn't apply to all MGs, as same override is is applied to all other auto & semi-auto weapons
-{
-    if (FireMode[Mode].bIsFiring)
-    {
-        FireMode[Mode].bInstantStop = true;
-    }
-
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
-    {
-        PlayIdle();
-    }
-
-    FireMode[Mode].bIsFiring = false;
-    FireMode[Mode].StopFiring();
-
-    if (!FireMode[Mode].bFireOnRelease)
-    {
-        ZeroFlashCount(Mode);
     }
 }
 
@@ -60,6 +38,7 @@ defaultproperties
     PlayerIronsightFOV=90.0
     IronSightDisplayFOV=45.0
     bCanFireFromHip=true
+    FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
@@ -73,6 +52,7 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
     BipodHipToDeploy="Hip_2_Bipod"
-    MagEmptyReloadAnims(0)="Bipod_Reload"
-    MagPartialReloadAnims(0)="Bipod_Reload"
+
+    BipodMagEmptyReloadAnim="Bipod_Reload"
+    BipodMagPartialReloadAnim="Bipod_Reload"
 }

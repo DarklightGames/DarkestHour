@@ -1,19 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BARFire extends DHAutomaticFire;
-
-function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
-{
-    super.ModeTick(DeltaTime);
-
-    if (bIsFiring && !AllowFire())
-    {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
 
 defaultproperties
 {

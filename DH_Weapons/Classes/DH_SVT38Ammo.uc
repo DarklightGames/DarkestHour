@@ -1,11 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHRocketWeaponPickup extends DHWeaponPickup
-    abstract;
+class DH_SVT38Ammo extends DHAmmunition;
 
 defaultproperties
 {
+    MaxAmmo=11
+    InitialAmount=10
+    IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
 }

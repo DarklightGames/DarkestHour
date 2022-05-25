@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_StenMkIIFire extends DHAutomaticFire;
@@ -28,7 +28,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)
-    
+
     FireIronLastAnim="iron_shoot_last"
     FireLastAnim="shoot_last"
 }

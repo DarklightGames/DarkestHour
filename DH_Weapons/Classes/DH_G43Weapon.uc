@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_G43Weapon extends DHSemiAutoWeapon;
+class DH_G43Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -23,11 +23,11 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
-    
+
     IronBringUp="iron_in_g43"
     IronPutDown="iron_out_g43"
     IronIdleAnim="Iron_idle_g43"
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"
@@ -43,4 +43,7 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }

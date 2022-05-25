@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PIATFire extends DHRocketFire;
@@ -13,7 +13,7 @@ defaultproperties
     MaxVerticalRecoilAngle=2500
     MaxHorizontalRecoilAngle=1000
     bCausesExhaustDamage=false
-    MuzzleBone=warhead
+    MuzzleBone=muzzle
 
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0

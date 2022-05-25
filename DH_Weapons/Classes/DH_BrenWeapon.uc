@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BrenWeapon extends DHBipodAutoWeapon;  //TO DO: add bipod physics (tried on zb30 and failed)
+class DH_BrenWeapon extends DHAutoWeapon; //TO DO: add bipod physics (tried on zb30 and failed)
 
 defaultproperties
 {
@@ -40,11 +40,12 @@ defaultproperties
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
-    SightUpIronBringUp="deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload"
-    SightUpMagPartialReloadAnim="bipod_reload"
+
+    IdleToBipodDeploy="deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="bipod_reload"
+    BipodMagPartialReloadAnim="bipod_reload"
     
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
@@ -68,4 +69,9 @@ defaultproperties
     
     FirstSelectAnim="draw1"
     BarrelChangeAnim="BarrelChange"
+
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+    ZoomOutTime=0.1
 }

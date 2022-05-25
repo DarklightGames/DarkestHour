@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BazookaWeapon extends DHRocketWeapon;
@@ -35,7 +35,7 @@ defaultproperties
     SelectAnim=Draw
     PutDownAnim=putaway
 
-    RangeSettings(0)=(FirePitch=15,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
-    RangeSettings(1)=(FirePitch=850,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
-    RangeSettings(2)=(FirePitch=2450,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
+    RangeSettings(0)=(FirePitch=15,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot")
+    RangeSettings(1)=(FirePitch=850,IronIdleAnim="iron_idleMid",IronFireAnim="iron_shootMid")
+    RangeSettings(2)=(FirePitch=2450,IronIdleAnim="iron_idleFar",IronFireAnim="iron_shootFar")
 }

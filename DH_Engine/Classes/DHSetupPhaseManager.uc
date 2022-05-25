@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHSetupPhaseManager extends Actor
@@ -279,7 +279,7 @@ state Done
 
 defaultproperties
 {
-    PhaseBoundaryTag='SetupBoundaries'
+    PhaseBoundaryTag="SetupBoundaries"
     PhaseEndReinforcements=(AxisReinforcements=18,AlliesReinforcements=18)
     PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'

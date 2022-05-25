@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_M1CarbineWeapon extends DHSemiAutoWeapon;
+class DH_M1CarbineWeapon extends DHProjectileWeapon;
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -41,4 +41,6 @@ defaultproperties
     MagPartialReloadAnims(0)="reload_half"
 
     MuzzleBone="MuzzleNew2"
+
+    bPlusOneLoading=true
 }

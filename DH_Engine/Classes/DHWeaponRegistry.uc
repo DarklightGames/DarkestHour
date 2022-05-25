@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -149,4 +149,5 @@ defaultproperties
     Records(89)=(ClassName="DH_Weapons.DH_StenMkIICWeapon",WeaponNames=("stenmk2c", "sten2c", "stenc"))
     Records(90)=(ClassName="DH_Weapons.DH_StenMkVWeapon",WeaponNames=("stenmk5", "sten5"))
     Records(91)=(ClassName="DH_Weapons.DH_ZB30Weapon",WeaponNames=("zb30", "zb"))
+    Records(92)=(ClassName="DH_Weapons.DH_MP3008Weapon",WeaponNames=("mp3008"))
 }

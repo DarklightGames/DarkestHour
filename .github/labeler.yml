@@ -1,2 +1,14 @@
-levels:
+edits levels:
   - '**/*.rom'
+
+edits textures:
+  - '**/*.utx'
+
+edits animations:
+  - '**/*.ukx'
+
+edits statics:
+  - '**/*.usx'
+
+edits audio:
+  - '**/*.uax'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_30calWeapon extends DHMGWeapon;
@@ -29,7 +29,6 @@ defaultproperties
     BarrelSteamBone="bipod"
 
     PutDownAnim="putaway"
-    MagPartialReloadAnims(0)="Reload"
 
     BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
     MGBeltBones(0)="Case09"

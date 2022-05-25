@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M1GarandFire extends DHSemiAutoFire;
@@ -99,7 +99,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
-    FireRate=0.25  //higher than SVT or G43 for... balance reasons
+    FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200

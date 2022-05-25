@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_WSSGreatcoatGunner extends DHGEMachineGunnerRoles;
@@ -15,6 +15,5 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ZB30Weapon')
-	
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 }
