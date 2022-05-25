@@ -22,7 +22,7 @@ defaultproperties
     HandNum=1
     SleeveNum=2
     
-    DisplayFOV=85.0
+    DisplayFOV=88.0
     IronSightDisplayFOV=65.0
     PlayerDeployFOV=65
 

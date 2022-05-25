@@ -101,7 +101,7 @@ defaultproperties
     SleeveNum=3
 
     DisplayFOV=85.0
-    IronSightDisplayFOV=65.0
+    IronSightDisplayFOV=60.0
     PlayerDeployFOV=65
 
     bHasSelectFire=true
