@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2020
 //==============================================================================
 
-class DH_ZB30Weapon extends DHBipodAutoWeapon;
+class DH_ZB30Weapon extends DHAutoWeapon;
 
 var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
 
@@ -117,16 +117,16 @@ defaultproperties
     BarrelClass=class'DH_Weapons.DH_ZB30Barrel'
     BarrelSteamBone="Barrel"
 
-    SightUpIronBringUp="deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload"
-    SightUpMagPartialReloadAnim="bipod_reload"
+    IdleToBipodDeploy="deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="bipod_reload"
+    BipodMagPartialReloadAnim="bipod_reload"
 
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
-    IronBipodDeployAnim="iron_deploy"
+    IronToBipodDeploy="iron_deploy"
 
     IronIdleAnim="iron_Idle"
     IronBringUp="iron_in"
@@ -145,4 +145,8 @@ defaultproperties
 
     FirstSelectAnim="draw1"
     BarrelChangeAnim="BarrelChange"
+    
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    ZoomOutTime=0.1
 }

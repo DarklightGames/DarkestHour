@@ -50,7 +50,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
-    IronBipodDeployAnim="iron_deploy"
+    IronToBipodDeploy="iron_deploy"
 
     IronIdleAnim="iron_Idle"
     IronBringUp="iron_in"

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_DP27Weapon extends DHBipodAutoWeapon;
+class DH_DP27Weapon extends DHAutoWeapon;
 
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
@@ -70,11 +70,15 @@ defaultproperties
     
     bPlusOneLoading=false
     
-    SightUpIronBringUp="deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="reload_empty"
-    SightUpMagPartialReloadAnim="reload_half"
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    ZoomOutTime=0.1
+    
+    IdleToBipodDeploy="deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="reload_empty"
+    BipodMagPartialReloadAnim="reload_half"
      
 //    MagEmptyReloadAnims(0)="reload"
 //    MagPartialReloadAnims(0)="reload"

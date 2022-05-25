@@ -14,9 +14,9 @@ defaultproperties
     Headgear(1)=class'ROInventory.ROGermanHat'
 	
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ZB30Weapon') // TO DO: wz28
-    PrimaryWeapons(1)(Item=none)
-    PrimaryWeapons(2)(Item=none)
+    PrimaryWeapons(1)=(Item=none)
+    PrimaryWeapons(2)=(Item=none)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon') // TO DO: some other weird sidearms?
-    SecondaryWeapons(1)(Item=none)
-    SecondaryWeapons(2)(Item=none)
+    SecondaryWeapons(1)=(Item=none)
+    SecondaryWeapons(2)=(Item=none)
 }
