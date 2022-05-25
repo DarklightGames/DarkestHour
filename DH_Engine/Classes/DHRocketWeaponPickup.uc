@@ -5,7 +5,3 @@
 
 class DHRocketWeaponPickup extends DHWeaponPickup
     abstract;
-
-defaultproperties
-{
-}

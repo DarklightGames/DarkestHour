@@ -784,7 +784,7 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
             }
             else if (NextDist < 3000.0 && FastTrace(N.Location, OtherPlayer.Pawn.Location))
             {
-                Score -= (10000.0 - NextDist);
+                Score -= 10000.0 - NextDist;
             }
             else if (NumPlayers + NumBots == 2)
             {
@@ -1005,9 +1005,9 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     }
     else
     {
-        TeamSizeFactor = ((float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5));
-        TeamRatios[0] = (TeamSizeFactor + 0.5);
-        TeamRatios[1] = (1.0 - (TeamSizeFactor + 0.5));
+        TeamSizeFactor = (float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5);
+        TeamRatios[0] = TeamSizeFactor + 0.5;
+        TeamRatios[1] = 1.0 - (TeamSizeFactor + 0.5);
     }
 
     TeamSizeRatings[0] = TeamRatios[0] * TeamSizes[0];
@@ -1353,7 +1353,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    bSpectator = (ParseOption(Options, "SpectatorOnly") ~= "1");
+    bSpectator = ParseOption(Options, "SpectatorOnly") ~= "1";
 
     if (AccessControl != none)
     {
