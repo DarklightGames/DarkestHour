@@ -16,6 +16,7 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
 
     Spread=70.0
+    HipSpreadModifier=6.0
 
     // Recoil
     RecoilRate=0.075
@@ -25,6 +26,8 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=6.0
 
+    FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
+    
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
@@ -32,9 +35,9 @@ defaultproperties
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)
     bReverseShellSpawnDirection=true
-    BipodDeployFireAnim="deploy_shoot_loop"
-    BipodDeployFireLoopAnim="deploy_shoot_loop"
-    BipodDeployFireEndAnim="deploy_shoot_end"
+    BipodDeployFireAnim="deploy_shoot"
+    FireIronAnim="iron_shoot"
+    FireAnim="shoot"
     ShakeRotMag=(X=50.0,Y=50.0,Z=175.0)
     ShakeRotTime=0.75
 }

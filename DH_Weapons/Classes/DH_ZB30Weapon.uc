@@ -83,7 +83,7 @@ simulated exec function PCOR(float V)
 defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
-    
+
     ItemName="ZB vz.30 Machine Gun"
 
     FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
@@ -99,7 +99,7 @@ defaultproperties
     Skins(1)=Shader'Weapons1st_tex.Bullets.kar98k_stripper_s'
     HandNum=2
     SleeveNum=3
-    
+
     DisplayFOV=85.0
     IronSightDisplayFOV=65.0
     PlayerDeployFOV=65
@@ -116,13 +116,13 @@ defaultproperties
     InitialBarrels=2
     BarrelClass=class'DH_Weapons.DH_ZB30Barrel'
     BarrelSteamBone="Barrel"
-    
+
     SightUpIronBringUp="deploy"
     SightUpIronPutDown="undeploy"
     SightUpIronIdleAnim="deploy_idle"
     SightUpMagEmptyReloadAnim="bipod_reload"
     SightUpMagPartialReloadAnim="bipod_reload"
-    
+
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
@@ -142,7 +142,7 @@ defaultproperties
     IdleAnim="Idle"
     SelectAnim="Draw"
     PutDownAnim="Putaway"
-    
+
     FirstSelectAnim="draw1"
     BarrelChangeAnim="BarrelChange"
 }
