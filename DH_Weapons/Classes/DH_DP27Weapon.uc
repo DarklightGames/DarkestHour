@@ -55,8 +55,8 @@ defaultproperties
     Skins(2)=shader'Weapons1st_tex.MG.dp28_s'
     Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.DP_extra'
 
-    DisplayFOV=85.0
-    IronSightDisplayFOV=55.0
+    DisplayFOV=80.0
+    IronSightDisplayFOV=65.0
     PlayerDeployFOV=65
 
     MaxNumPrimaryMags=4
@@ -92,7 +92,7 @@ defaultproperties
     //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
     //SelectAnim="Draw"
-    //PutDownAnim="Putaway"
+    PutDownAnim="Putaway"
     
     IdleEmptyAnim="idle_empty"
     //SightUpIronBringUpEmpty="deploy_empty"

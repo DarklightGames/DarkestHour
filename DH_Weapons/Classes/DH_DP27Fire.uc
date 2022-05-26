@@ -17,11 +17,13 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=630
-    MaxHorizontalRecoilAngle=260
+    PctBipodDeployRecoil=0.075 // 0.1 by default
+    MaxVerticalRecoilAngle=840  // these values are high because of custom recoil modifier for bipod being 0.075
+    MaxHorizontalRecoilAngle=340
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=10.0,OutVal=1.3),(InVal=16.0,OutVal=0.8),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
+
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
