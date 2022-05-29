@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_GerRadioItem extends DHRadioItem;
-
-defaultproperties
-{
-}

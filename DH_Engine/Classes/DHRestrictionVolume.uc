@@ -8,7 +8,3 @@ class DHRestrictionVolume extends Volume;
 var()   bool                            bNoSquadRallyPoints;
 var()   bool                            bNoConstructions;
 var()   array<class<DHConstruction> >   ConstructionClasses;
-
-defaultproperties
-{
-}

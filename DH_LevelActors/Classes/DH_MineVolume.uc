@@ -12,7 +12,3 @@ function PostBeginPlay()
     Level.Game.Broadcast(self, "Level uses DH_MineVolume, but should be using DHMineVolume!!!", 'Say');
     Warn("Please change the minefield types to DHMineVolume instead of DH_MineVolume.");
 }
-
-defaultproperties
-{
-}

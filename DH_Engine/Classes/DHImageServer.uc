@@ -30,7 +30,3 @@ event Query(WebRequest Request, WebResponse Response)
 
     Response.IncludeBinaryFile( Path $ Image );
 }
-
-defaultproperties
-{
-}

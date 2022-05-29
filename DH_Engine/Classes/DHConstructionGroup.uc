@@ -19,8 +19,3 @@ static function bool SortFunction(Object LHS, Object RHS)
 {
     return class<DHConstructionGroup>(LHS).default.SortOrder > class<DHConstructionGroup>(RHS).default.SortOrder;
 }
-
-defaultproperties
-{
-}
-

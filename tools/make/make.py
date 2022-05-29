@@ -361,7 +361,7 @@ def main():
             sys.exit(1)
 
         # run ucc make
-        ucc_args = ['ucc', 'make', '-mod=' + args.mod, '-silentbuild']
+        ucc_args = ['ucc', 'make', '-mod=' + args.mod]
         if args.debug:
             ucc_args.append('-debug')
         proc = subprocess.Popen(ucc_args)

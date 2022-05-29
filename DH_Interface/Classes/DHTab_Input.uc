@@ -73,7 +73,7 @@ function OnInputChange(GUIComponent Sender)
 
         if (DHPlayer(PC) != none)
         {
-            DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();;
+            DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();
             DHPlayer(PC).SaveConfig();
         }
     }

@@ -12,6 +12,4 @@ function Trigger(Actor Other, Pawn EventInstigator)
     Level.ServerTravel(LevelName, false);
 }
 
-defaultproperties
-{
-}
+

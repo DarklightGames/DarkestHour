@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_LWOfficer extends DHDeprecated;
-
-defaultproperties
-{
-}

@@ -63,7 +63,3 @@ simulated function PostTouch(Actor Other)
         }
     }
 }
-
-defaultproperties
-{
-}

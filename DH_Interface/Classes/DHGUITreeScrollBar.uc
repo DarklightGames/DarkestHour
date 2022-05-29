@@ -100,7 +100,3 @@ delegate AlignThumb()
 
     GripPos = FClamp(NewPos, 0.0, 1.0);
 }
-
-defaultproperties
-{
-}

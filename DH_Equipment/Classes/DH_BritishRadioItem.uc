@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishRadioItem extends DHRadioItem;
-
-defaultproperties
-{
-}

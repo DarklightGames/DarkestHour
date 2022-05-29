@@ -47,7 +47,3 @@ event Trigger(Actor Other, Pawn EventInstigator)
             TriggerEvent(EventToTrigger, self, none);
     }
 }
-
-defaultproperties
-{
-}

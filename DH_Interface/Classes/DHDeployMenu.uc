@@ -525,7 +525,7 @@ function UpdateVehicles(optional bool bShowAlert)
     local float            RespawnTime;
     local int              i, j;
     local string           S;
-    local DHGameReplicationInfo.VehicleReservationError VRE;
+    local DHGameReplicationInfo.EVehicleReservationError VRE;
 
     if (GRI == none)
     {

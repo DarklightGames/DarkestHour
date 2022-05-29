@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_12thSSOfficer extends DHDeprecated;
-
-defaultproperties
-{
-}

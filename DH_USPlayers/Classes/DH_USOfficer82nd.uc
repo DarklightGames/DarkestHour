@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_USOfficer82nd extends DHDeprecated;
-
-defaultproperties
-{
-}

@@ -5,7 +5,4 @@
 
 class DH_RKKA_TanTelogreikaGunner extends DH_RKKA_TanTelogreikaGunnerEarly;  //to be removed
 
-defaultproperties
-{
 
-}

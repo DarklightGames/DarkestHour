@@ -42,7 +42,7 @@ function string ToString()
     return S;
 }
 
-static final function INet4Address FromString(string S)
+final static function INet4Address FromString(string S)
 {
     local INet4Address Address;
     local string T;

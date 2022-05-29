@@ -226,7 +226,7 @@ state Active
 
         if (MetricsObject != none)
         {
-            MetricsObject.IsEstablished = true;
+            MetricsObject.bIsEstablished = true;
         }
 
         OnUpdated();
