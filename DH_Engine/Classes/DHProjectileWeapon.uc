@@ -538,7 +538,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && bUsingSights && (IsInState('Idle') || IsInState('PostFiring'));
+    return bHasScope && bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
