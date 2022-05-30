@@ -26,9 +26,6 @@ var float AngularAcceleration;
 var float AngularVelocity;
 var float InstantaneousAngularAcceleration;
 
-var bool    bDebugPhysicsSimulation;
-var float   NextDebugPrintTimeSeconds;
-
 var float OldInstigatorYaw;
 
 function Initialize(DHBipodPhysicsSettings Settings)
@@ -143,12 +140,4 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     // Set the bone's rotation
     BipodBoneRotation.Pitch = class'UUnits'.static.RadiansToUnreal(Angle);
     Weapon.SetBoneRotation(Settings.BipodBoneName, BipodBoneRotation);
-
-    if (bDebugPhysicsSimulation)
-    {
-        if (Weapon.Level.TimeSeconds > NextDebugPrintTimeSeconds)
-        {
-            NextDebugPrintTimeSeconds = Weapon.Level.TimeSeconds + 0.5f;
-        }
-    }
 }
