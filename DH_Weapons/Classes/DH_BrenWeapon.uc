@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BrenWeapon extends DHAutoWeapon; //TO DO: add bipod physics (tried on zb30 and failed)
+class DH_BrenWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
@@ -39,7 +39,6 @@ defaultproperties
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
-
 
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"

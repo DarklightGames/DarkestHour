@@ -11,8 +11,7 @@
 
 class DHBipodPhysicsSimulation extends Object;
 
-var name BarrelBoneName;
-var name BipodBoneName;
+var DHBipodPhysicsSettings Settings;
 
 var bool bIsLocked;
 var bool bIsLocking;
@@ -23,22 +22,19 @@ var float LockStartTimeSeconds;
 var float LockEndTimeSeconds;
 
 var float Angle;
-var float AngleMin;
-var float AngleMax;
-var float ArmLength;
 var float AngularAcceleration;
-var float AngularDamping;
 var float AngularVelocity;
-var float GravityScale;
-var float YawDeltaFactor;
 var float InstantaneousAngularAcceleration;
-var float AngularVelocityThreshold;    // The angular velocity must be greater than or equal to this value in order for the bipod to move.
-var float CoefficientOfRestitution;
 
 var bool    bDebugPhysicsSimulation;
 var float   NextDebugPrintTimeSeconds;
 
 var float OldInstigatorYaw;
+
+function Initialize(DHBipodPhysicsSettings Settings)
+{
+    self.Settings = Settings;
+}
 
 function Impulse(float ImpulseAngularAcceleration)
 {
@@ -77,7 +73,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     local float T;
     local float AngleExcess;
 
-    if (Weapon == none || Weapon.Instigator == none || bIsLocked)
+    if (Settings == none || Weapon == none || Weapon.Instigator == none || bIsLocked)
     {
         return;
     }
@@ -101,44 +97,44 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     InstigatorYaw = class'UUnits'.static.UnrealToRadians(Controller.Rotation.Yaw);
 
     // Angular acceleration imparted by the weapon's rotation in the world
-    YawDeltaAngularAcceleration = -1.0 * ((InstigatorYaw - OldInstigatorYaw) * YawDeltaFactor);
+    YawDeltaAngularAcceleration = -1.0 * ((InstigatorYaw - OldInstigatorYaw) * Settings.YawDeltaFactor);
 
     // Update the instigator yaw for the next frame
     OldInstigatorYaw = InstigatorYaw;
 
     // Get the barrel bone roll (so that we know which way is down!)
-    BarrelBoneRotation = Weapon.GetBoneRotation(BarrelBoneName);
+    BarrelBoneRotation = Weapon.GetBoneRotation(Settings.BarrelBoneName);
     BarrelRoll = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Roll - 16384);
     BarrelPitch = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Pitch);
     BarrelPitch = FClamp(BarrelPitch, class'UUnits'.static.DegreesToRadians(-90), class'UUnits'.static.DegreesToRadians(90));
 
-    PendulumForce = (-1 * GravityScale / ArmLength) * Sin(Angle - BarrelRoll) * Cos(BarrelPitch);
+    PendulumForce = (-1 * Settings.GravityScale / Settings.ArmLength) * Sin(Angle - BarrelRoll) * Cos(BarrelPitch);
 
     AngularAcceleration = PendulumForce + YawDeltaAngularAcceleration + InstantaneousAngularAcceleration;
 
     AngularVelocity += AngularAcceleration;
 
-    if (Abs(AngularVelocity) < AngularVelocityThreshold)
+    if (Abs(AngularVelocity) < Settings.AngularVelocityThreshold)
     {
         AngularVelocity = 0;
     }
 
-    Angle += AngularVelocity * ((AngularDamping ** DeltaTime) - 1.0) / Loge(AngularDamping);
-    AngularVelocity *= AngularDamping ** DeltaTime;
+    Angle += AngularVelocity * ((Settings.AngularDamping ** DeltaTime) - 1.0) / Loge(Settings.AngularDamping);
+    AngularVelocity *= Settings.AngularDamping ** DeltaTime;
 
     // Collision Bounciness (this is technically wrong!!)
     // Clamp the angle and apply
-    if (Angle < AngleMin)
+    if (Angle < Settings.AngleMin)
     {
-        AngleExcess = Angle - AngleMin;
-        Angle = AngleMin - AngleExcess;
-        AngularVelocity = -AngleExcess * CoefficientOfRestitution;
+        AngleExcess = Angle - Settings.AngleMin;
+        Angle = Settings.AngleMin - AngleExcess;
+        AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
     }
-    else if (Angle > AngleMax)
+    else if (Angle > Settings.AngleMax)
     {
-        AngleExcess = Angle - AngleMax;
-        Angle = AngleMax - AngleExcess;
-        AngularVelocity = -AngleExcess * CoefficientOfRestitution;
+        AngleExcess = Angle - Settings.AngleMax;
+        Angle = Settings.AngleMax - AngleExcess;
+        AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
     }
 
     // Reset instantaneous angular acceleration.
@@ -146,7 +142,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
     // Set the bone's rotation
     BipodBoneRotation.Pitch = class'UUnits'.static.RadiansToUnreal(Angle);
-    Weapon.SetBoneRotation(BipodBoneName, BipodBoneRotation);
+    Weapon.SetBoneRotation(Settings.BipodBoneName, BipodBoneRotation);
 
     if (bDebugPhysicsSimulation)
     {
@@ -156,28 +152,3 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
         }
     }
 }
-
-defaultproperties
-{
-    Angle=0
-    AngularVelocity=0
-    AngularDamping=0.01
-    GravityScale=100.0
-    AngularVelocityThreshold=0.06
-    ArmLength=155.0
-    YawDeltaFactor=2.0
-
-    BarrelBoneName="Muzzle"
-    BipodBoneName="Bipod"
-
-    bDebugPhysicsSimulation=true    // TODO: make false by default
-
-    bIsLocking=false
-    bIsLocked=false
-
-    // ~35 degrees either way
-    AngleMin=-0.60
-    AngleMax=0.60
-    CoefficientOfRestitution=0.5
-}
-

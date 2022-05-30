@@ -5,81 +5,6 @@
 
 class DH_ZB30Weapon extends DHAutoWeapon;
 
-var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // TODO: in future, move this to the super-class!
-        BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
-        BipodPhysicsSimulation.BarrelBoneName = 'Barrel';
-        BipodPhysicsSimulation.BipodBoneName = 'bipod_base';
-    }
-}
-
-simulated function BipodDeploy(bool bNewDeployedStatus)
-{
-    super.BipodDeploy(bNewDeployedStatus);
-
-    if (BipodPhysicsSimulation != none)
-    {
-        if (bNewDeployedStatus)
-        {
-            BipodPhysicsSimulation.LockBipod(self, 0, 0.5);
-        }
-        else
-        {
-            BipodPhysicsSimulation.UnlockBipod();
-        }
-    }
-}
-
-simulated exec function PAL(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.ArmLength = V;
-    }
-}
-
-simulated exec function PAD(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.AngularDamping = V;
-    }
-}
-
-simulated exec function PGS(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.GravityScale = V;
-    }
-}
-
-simulated exec function PYDF(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.YawDeltaFactor = V;
-    }
-}
-
-simulated exec function PAVT(float V)
-{
-    BipodPhysicsSimulation.AngularVelocityThreshold = V;
-}
-
-simulated exec function PCOR(float V)
-{
-    BipodPhysicsSimulation.CoefficientOfRestitution = V;
-}
-
-
 defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
@@ -149,4 +74,12 @@ defaultproperties
     bCanBipodDeploy=true
     bCanBeResupplied=true
     ZoomOutTime=0.1
+
+    // Bipod Physics
+    bDoBipodPhysicsSimulation=true
+    Begin Object Class=DHBipodPhysicsSettings Name=DHBarBipodPhysicsSettings
+        BarrelBoneName="Barrel"
+        BipodBoneName="bipod_base"
+    End Object
+    BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }
