@@ -57,7 +57,7 @@ defaultproperties
     // NOTE: Feel free to insert new records anywhere in this list, the order
     // is not important
 
-    Records(0)=(ClassName="DH_Weapons.DH_30CalWeapon",WeaponNames=("30cal","30c"))
+    Records(0)=(ClassName="DH_Weapons.DH_30CalWeapon",WeaponNames=("30cal","m1919"))
     Records(1)=(ClassName="DH_Weapons.DH_AVT40Weapon",WeaponNames=("avt", "avt40"))
     Records(2)=(ClassName="DH_Weapons.DH_BARWeapon",WeaponNames=("bar"))
     Records(3)=(ClassName="DH_Weapons.DH_BazookaWeapon",WeaponNames=("bazooka"))
@@ -150,4 +150,6 @@ defaultproperties
     Records(90)=(ClassName="DH_Weapons.DH_StenMkVWeapon",WeaponNames=("stenmk5", "sten5"))
     Records(91)=(ClassName="DH_Weapons.DH_ZB30Weapon",WeaponNames=("zb30", "zb"))
     Records(92)=(ClassName="DH_Weapons.DH_MP3008Weapon",WeaponNames=("mp3008"))
+    Records(93)=(ClassName="DH_Weapons.DH_GeratPWeapon",WeaponNames=("geratp"))
+    Records(94)=(ClassName="DH_Weapons.DH_Stg44ScopedWeapon",WeaponNames=("stg44scoped", "mp44scoped"))
 }
