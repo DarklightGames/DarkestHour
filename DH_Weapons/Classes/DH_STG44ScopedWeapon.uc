@@ -31,8 +31,8 @@ defaultproperties
     ScopeOverlaySize=0.32
     SwayModifyFactor=0.83 // scope makes it slightly heavier
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=43.4
-    IronSightDisplayFOVHigh=43.4
+    IronSightDisplayFOV=41.6
+    IronSightDisplayFOVHigh=41.6
     DisplayFOV=90.0
     ZoomOutTime=0.1
 
