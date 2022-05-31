@@ -7,7 +7,7 @@ class DH_M38Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin-Nagant M38 Carbine"
+    ItemName="Mosin M38 Carbine"
     SwayModifyFactor=0.55  // -0.05
     FireModeClass(0)=class'DH_Weapons.DH_M38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_M38MeleeFire'

@@ -7,7 +7,7 @@ class DH_STG44ScopedWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sturmgewehr 44 ZF4"
+    ItemName="Sturmgewehr 44 (ZF4)"
     FireModeClass(0)=class'DH_Weapons.DH_STG44ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_STG44ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_STG44ScopedAttachment'

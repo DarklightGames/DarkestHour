@@ -7,7 +7,7 @@ class DH_Kar98ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Karabiner 98k"
+    ItemName="Karabiner 98k (ZF39)"
     FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
