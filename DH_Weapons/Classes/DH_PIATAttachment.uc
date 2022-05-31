@@ -106,8 +106,8 @@ defaultproperties
     PA_CrouchIdleRestAnim="crouch_idle_piat"
 
     PA_IdleCrouchAnim="crouch_idle_piat"
-    PA_IdleRestAnim="stand_idlehip_piat"
-    PA_IdleWeaponAnim="stand_idlehip_piat"
+    PA_IdleRestAnim="stand_idlerest_piat"
+    PA_IdleWeaponAnim="stand_idlerest_piat"
     PA_IdleIronRestAnim="stand_idleiron_piat"
     PA_IdleIronWeaponAnim="stand_idleiron_piat"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_piat"
