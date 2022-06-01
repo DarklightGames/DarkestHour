@@ -7,6 +7,7 @@ class DH_M44MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
+    FireRate=0.23 // -0.02
     BayonetDamageType=class'DH_Weapons.DH_M44BayonetDamType'
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
