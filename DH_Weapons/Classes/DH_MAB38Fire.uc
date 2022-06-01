@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MAB38Bullet'
     AmmoClass=class'DH_MAB38Ammo'
     FAProjSpawnOffset=(X=-28.0)
-    FireRate=0.1 //600 per minute
+    FireRate=0.115 // ~575 rpm (value had to be found experimentally due to an engine bug)
 
     Spread=120.0
 

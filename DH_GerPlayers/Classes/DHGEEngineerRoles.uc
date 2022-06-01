@@ -14,6 +14,7 @@ defaultproperties
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     GivenItems(2)="DH_Weapons.DH_GLWeapon"
+    GivenItems(3)="DH_Equipment.DHShovelItem_German"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'

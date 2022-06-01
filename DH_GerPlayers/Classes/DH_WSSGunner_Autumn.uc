@@ -12,5 +12,6 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
 
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ZB30Weapon')
     SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_C96Weapon')
 }

@@ -7,43 +7,70 @@ class DH_BrenWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    SwayModifyFactor=1.2 // Increased sway (0.8 is default otherwise)
+    SwayModifyFactor=1.15 // Increased sway (0.8 is default otherwise)
 
-    ItemName="Bren Mk.IV"
+    ItemName="Bren Mk.II"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'
+    //FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'  /no melee!
     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
     PickupClass=class'DH_Weapons.DH_BrenPickup'
+    
+    Mesh=SkeletalMesh'DH_ZB_1st.BrenMk2_1st'
+    bUseHighDetailOverlayIndex=false
+    Skins(0)=Texture'DH_Bren_tex.one.Bren_D'
+    HandNum=1
+    SleeveNum=2
+    
+    DisplayFOV=88.0
+    IronSightDisplayFOV=65.0
+    PlayerDeployFOV=65
 
-    InitialBarrels=1
+    bHasSelectFire=true
+    SelectFireAnim="fireswitch"
+    SelectFireIronAnim="iron_fireswitch"
+    SelectFireBipodIronAnim="deploy_fireswitch"
+
+    InitialBarrels=2
     BarrelClass=class'DH_Weapons.DH_BrenBarrel'
-    BarrelSteamBone="Muzzle"
-
-    Mesh=SkeletalMesh'DH_Bren_1st.Bren'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
-    FreeAimRotationSpeed=2.0
+    BarrelSteamBone="Barrel"
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=45.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 
-    bHasSelectFire=true
-    SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
-
-    IdleToBipodDeploy="Deploy"
+    IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
     BipodIdleAnim="deploy_idle"
-    BipodMagEmptyReloadAnim="deploy_reload_empty"
-    BipodMagPartialReloadAnim="deploy_reload_half"
+    BipodMagEmptyReloadAnim="bipod_reload"
+    BipodMagPartialReloadAnim="bipod_reload"
+    
+    MagEmptyReloadAnims(0)="reload"
+    MagPartialReloadAnims(0)="reload"
+
+    IronToBipodDeploy="iron_deploy"
+
+    IronIdleAnim="iron_Idle"
+    IronBringUp="iron_in"
+    IronPutDown="iron_out"
+    IronIdleAnim_"iron_idle"
+    SprintStartAnim="Sprint_Start"
+    SprintLoopAnim="sprint_middle"
+    SprintEndAnim="Sprint_End"
+    //CrawlForwardAnim="crawl_F"
+    //CrawlBackwardAnim="crawl_B"
+    //CrawlStartAnim="crawl_in"
+    //CrawlEndAnim="crawl_out"
+    IdleAnim="Idle"
+    SelectAnim="Draw"
+    PutDownAnim="Putaway"
+    
+    FirstSelectAnim="draw1"
+    BarrelChangeAnim="BarrelChange"
 
     bCanBipodDeploy=true
     bCanBeResupplied=true
     NumMagsToResupply=2
     ZoomOutTime=0.1
-    PutDownAnim="putaway"
 }

@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_STG44Bullet'
     AmmoClass=class'ROAmmo.STG44Ammo'
     FAProjSpawnOffset=(X=-28.0)
-    FireRate=0.14
+    FireRate=0.135 // ~491rpm  (value had to be found experimentally due to an engine bug)
 
     Spread=65.0
 

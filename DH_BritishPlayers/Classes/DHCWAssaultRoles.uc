@@ -14,6 +14,7 @@ defaultproperties
 
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
+    GivenItems(0)="DH_Equipment.DHShovelItem_US"
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
     HeadgearProbabilities(0)=0.1

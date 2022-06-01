@@ -7,7 +7,7 @@ class DH_GreaseGunAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=31
+    MaxAmmo=30
     InitialAmount=30
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_ammo'
 }

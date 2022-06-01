@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_BrenMeleeFire extends DHMeleeFire;
+class DH_GeratPPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    DamageType=class'DH_Weapons.DH_BrenBashDamType'
+    InventoryType=class'DH_Weapons.DH_GeratPWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GeratP'
 }

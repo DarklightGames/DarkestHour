@@ -9,5 +9,5 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_PIATWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
-    EmptyStaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT_empty'
+    //EmptyStaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT_empty'
 }

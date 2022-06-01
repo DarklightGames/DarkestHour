@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_DP28Pickup extends DHWeaponPickup;
+class DH_DP27DamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_DP28Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.DP28'
-    BarrelSteamEmitterOffset=(X=0.0,Y=-25.0,Z=5.0)
+    WeaponClass=class'DH_Weapons.DH_DP27Weapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 }

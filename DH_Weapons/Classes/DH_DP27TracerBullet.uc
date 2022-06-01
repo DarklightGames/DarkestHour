@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_DP28TracerBullet extends DH_DP28Bullet;
+class DH_DP27TracerBullet extends DH_DP27Bullet;
 
 defaultproperties
 {

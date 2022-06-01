@@ -114,6 +114,10 @@ var     name    BipodHipToDeploy;           // anim for bipod hip state to deplo
 var     name    BipodDeployToHip;           // anim for bipod deployed state to hip state
 var     name    BipodDeployToIdleEmpty;     // anim for bipod deployed state to rest empty state
 
+var     bool                        bDoBipodPhysicsSimulation;
+var     DHBipodPhysicsSettings      BipodPhysicsSettings;
+var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
+
 // Scopes
 var     bool            bHasScope;
 var     bool            bHasModelScope;
@@ -194,10 +198,34 @@ simulated function PostBeginPlay()
         }
     }
 
+    if (InstigatorIsLocallyControlled())
+    {
+        CreateBipodPhysicsSimulation();
+    }
+
     if (bHasScope)
     {
         ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
         UpdateScopeMode();
+    }
+}
+
+simulated function CreateBipodPhysicsSimulation()
+{
+    if (bDoBipodPhysicsSimulation && BipodPhysicsSettings != none)
+    {
+        BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
+        BipodPhysicsSimulation.Initialize(BipodPhysicsSettings);
+    }
+}
+
+event WeaponTick(float DeltaTime)
+{
+    super.WeaponTick(DeltaTime);
+
+    if (BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.PhysicsTick(self, DeltaTime);
     }
 }
 
@@ -519,7 +547,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring'))));
+    return bHasScope && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
@@ -1380,6 +1408,11 @@ simulated state DeployingBipod extends WeaponBusy
             Anim = IdleToBipodDeploy;
         }
 
+        if (BipodPhysicsSimulation != none)
+        {
+           BipodPhysicsSimulation.LockBipod(self, 0, 0.5);
+        }
+
         PlayAnimAndSetTimer(Anim, IronSwitchAnimRate, 0.1);
     }
 
@@ -1417,6 +1450,11 @@ simulated state UndeployingBipod extends WeaponBusy
         else
         {
             PlayAnimAndSetTimer(BipodDeployToIdle, IronSwitchAnimRate, 0.1);
+        }
+
+        if (BipodPhysicsSimulation != none)
+        {
+            BipodPhysicsSimulation.UnlockBipod();
         }
 
         ResetPlayerFOV();
@@ -3233,6 +3271,57 @@ simulated function UpdateScopeMode()
 
             bInitializedScope = true;
         }
+    }
+}
+
+//============================================================================
+// DEBUG FUNCTIONS FOR BIPOD PHYSICS SIMULATION
+//============================================================================
+simulated exec function BipodArmLength(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.ArmLength = V;
+    }
+}
+
+simulated exec function BipodAngularDamping(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.AngularDamping = V;
+    }
+}
+
+simulated exec function BipodGravityScale(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.GravityScale = V;
+    }
+}
+
+simulated exec function BipodYawDeltaFactor(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.YawDeltaFactor = V;
+    }
+}
+
+simulated exec function BipodAngularVelocityThreshold(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.AngularVelocityThreshold = V;
+    }
+}
+
+simulated exec function BipodCoefficientOfRestitution(float V)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
+    {
+        BipodPhysicsSimulation.Settings.CoefficientOfRestitution = V;
     }
 }
 

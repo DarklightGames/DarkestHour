@@ -8,8 +8,8 @@ class DH_PPD40Fire extends DHFastAutoFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PPD40Bullet'
-    AmmoClass=class'ROAmmo.SMG71Rd762x25Ammo'
-    FireRate=0.075 // 800rpm
+    AmmoClass=class'DH_Weapons.DH_PPSh41Ammo'
+    FireRate=0.085 // 800rpm (value had to be found experimentally due to an engine bug)
     Spread=135.0
 
     // Recoil

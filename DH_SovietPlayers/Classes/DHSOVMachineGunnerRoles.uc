@@ -9,7 +9,7 @@ class DHSOVMachineGunnerRoles extends DHAlliedMachineGunnerRoles
 defaultproperties
 {
     AltName="Pulemetchik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
