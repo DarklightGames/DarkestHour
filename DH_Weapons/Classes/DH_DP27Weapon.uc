@@ -17,22 +17,6 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to prevent reload (with message) if bipod not deployed
-simulated function bool AllowReload()
-{
-    if (Instigator == none || !Instigator.bBipodDeployed)
-    {
-        if (InstigatorIsHumanControlled())
-        {
-            class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 1);
-        }
-
-        return false;
-    }
-
-    return super.AllowReload();
-}
-
 // Modified to make ironsights key try to deploy/undeploy the bipod (no iron sights for this weapon)
 simulated function ROIronSights()
 {
@@ -73,6 +57,8 @@ defaultproperties
     bCanBipodDeploy=true
     bCanBeResupplied=true
     ZoomOutTime=0.1
+
+    bMustReloadWithBipodDeployed=true
     
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
