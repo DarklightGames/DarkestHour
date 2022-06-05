@@ -11,8 +11,8 @@ defaultproperties
     MyName="Squad leader"
     PluralName="Squad leaders"
     AltName="Komandir otdeleniya"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT38Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT38Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MN9130Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
