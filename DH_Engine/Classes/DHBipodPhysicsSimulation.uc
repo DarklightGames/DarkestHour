@@ -28,6 +28,17 @@ var float InstantaneousAngularAcceleration;
 
 var float OldInstigatorYaw;
 
+function int GetRotationComponent(EAxis Axis, Rotator Rotation)
+{
+    switch (Axis)
+    {
+        case AXIS_X: return Rotation.Roll;
+        case AXIS_Y: return Rotation.Pitch;
+        case AXIS_Z: return Rotation.Yaw;
+        default:     return 0;
+    }
+}
+
 function Initialize(DHBipodPhysicsSettings Settings)
 {
     self.Settings = Settings;
@@ -100,9 +111,9 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     OldInstigatorYaw = InstigatorYaw;
 
     // Get the barrel bone roll (so that we know which way is down!)
-    BarrelBoneRotation = Weapon.GetBoneRotation(Settings.BarrelBoneName);
-    BarrelRoll = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Roll - 16384);
-    BarrelPitch = class'UUnits'.static.UnrealToRadians(BarrelBoneRotation.Pitch);
+    BarrelBoneRotation = Weapon.GetBoneRotation(Settings.BarrelBoneName) + Settings.BarrelBoneRotationOffset;
+    BarrelRoll = class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelRollAxis, BarrelBoneRotation));
+    BarrelPitch = class'UUnits'.static.UnrealToRadians(GetRotationComponent(Settings.BarrelPitchAxis, BarrelBoneRotation));
     BarrelPitch = FClamp(BarrelPitch, class'UUnits'.static.DegreesToRadians(-90), class'UUnits'.static.DegreesToRadians(90));
 
     PendulumForce = (-1 * Settings.GravityScale / Settings.ArmLength) * Sin(Angle - BarrelRoll) * Cos(BarrelPitch);
@@ -121,17 +132,20 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
     // Collision Bounciness (this is technically wrong!!)
     // Clamp the angle and apply
-    if (Angle < Settings.AngleMin)
+    if (Settings.bLimitAngle)
     {
-        AngleExcess = Angle - Settings.AngleMin;
-        Angle = Settings.AngleMin - AngleExcess;
-        AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
-    }
-    else if (Angle > Settings.AngleMax)
-    {
-        AngleExcess = Angle - Settings.AngleMax;
-        Angle = Settings.AngleMax - AngleExcess;
-        AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
+        if (Angle < Settings.AngleMin)
+        {
+            AngleExcess = Angle - Settings.AngleMin;
+            Angle = Settings.AngleMin - AngleExcess;
+            AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
+        }
+        else if (Angle > Settings.AngleMax)
+        {
+            AngleExcess = Angle - Settings.AngleMax;
+            Angle = Settings.AngleMax - AngleExcess;
+            AngularVelocity = -AngleExcess * Settings.CoefficientOfRestitution;
+        }
     }
 
     // Reset instantaneous angular acceleration.

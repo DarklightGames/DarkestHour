@@ -114,6 +114,7 @@ defaultproperties
     // Bipod Physics
     bDoBipodPhysicsSimulation=true
     Begin Object Class=DHBipodPhysicsSettings Name=DHBarBipodPhysicsSettings
+        BarrelBoneRotationOffset=(Roll=-16384)
     End Object
     BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }

@@ -78,8 +78,11 @@ defaultproperties
     // Bipod Physics
     bDoBipodPhysicsSimulation=true
     Begin Object Class=DHBipodPhysicsSettings Name=DHBarBipodPhysicsSettings
-        BarrelBoneName="Barrel"
+        BarrelBoneName="Muzzle"
         BipodBoneName="bipod_base"
+        BarrelRollAxis=AXIS_X
+        BarrelPitchAxis=AXIS_Y
+        BarrelBoneRotationOffset=(Roll=-16384)
     End Object
     BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }

@@ -3279,6 +3279,41 @@ simulated function UpdateScopeMode()
 //============================================================================
 // DEBUG FUNCTIONS FOR BIPOD PHYSICS SIMULATION
 //============================================================================
+
+simulated function EAxis AxisFromString(string S)
+{
+    if (S ~= "X") return AXIS_X;
+    else if (S ~= "Y") return AXIS_Y;
+    else if (S ~= "Z") return AXIS_Z;
+    else return AXIS_X;
+}
+
+simulated exec function BarrelRollAxis(string AxisString)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
+    {
+        BipodPhysicsSettings.BarrelRollAxis = AxisFromString(AxisString);
+    }
+}
+
+simulated exec function BarrelPitchAxis(string AxisString)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
+    {
+        BipodPhysicsSettings.BarrelPitchAxis = AxisFromString(AxisString);
+    }
+}
+
+simulated exec function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
+{
+    if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
+    {
+        BipodPhysicsSettings.BarrelBoneRotationOffset.Pitch = Pitch;
+        BipodPhysicsSettings.BarrelBoneRotationOffset.Yaw = Yaw;
+        BipodPhysicsSettings.BarrelBoneRotationOffset.Roll = Roll;
+    }
+}
+
 simulated exec function BipodArmLength(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)

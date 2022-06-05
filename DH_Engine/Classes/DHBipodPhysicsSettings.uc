@@ -8,6 +8,7 @@
 
 class DHBipodPhysicsSettings extends Object;
 
+var bool bLimitAngle;
 var float AngleMin;
 var float AngleMax;
 var float ArmLength;
@@ -18,6 +19,10 @@ var name BipodBoneName;
 var float CoefficientOfRestitution;
 var float GravityScale;
 var float YawDeltaFactor;
+
+var Rotator BarrelBoneRotationOffset;
+var EAxis BarrelRollAxis;
+var EAxis BarrelPitchAxis;
 
 defaultproperties
 {
@@ -31,4 +36,7 @@ defaultproperties
     CoefficientOfRestitution=0.5
     GravityScale=100.0
     YawDeltaFactor=2.0
+    BarrelRollAxis=AXIS_X
+    BarrelPitchAxis=AXIS_Y
+    bLimitAngle=true
 }

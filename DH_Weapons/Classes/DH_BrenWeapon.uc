@@ -73,4 +73,15 @@ defaultproperties
     bCanBeResupplied=true
     NumMagsToResupply=2
     ZoomOutTime=0.1
+
+    // Bipod Physics (same as the ZB-30, bones are identical)
+    bDoBipodPhysicsSimulation=true
+    Begin Object Class=DHBipodPhysicsSettings Name=DHBarBipodPhysicsSettings
+        BarrelBoneName="Muzzle"
+        BipodBoneName="bipod_base"
+        BarrelRollAxis=AXIS_X
+        BarrelPitchAxis=AXIS_Y
+        BarrelBoneRotationOffset=(Roll=-16384)
+    End Object
+    BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }
