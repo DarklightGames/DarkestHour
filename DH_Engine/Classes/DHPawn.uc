@@ -541,8 +541,11 @@ simulated function AssignInitialPose()
 // Modified to stop "accessed none" log errors on trying to play invalid vehicle DriveAnim
 simulated event AnimEnd(int Channel)
 {
-    local name  WeapAnim, PlayerAnim, Anim;
+    local DHWeaponAttachment WA;
+    local name  Anim;
     local float Frame, Rate;
+
+    WA = DHWeaponAttachment(WeaponAttachment);
 
     if (DrivenVehicle != none)
     {
@@ -569,30 +572,30 @@ simulated event AnimEnd(int Channel)
                 IdleTime = Level.TimeSeconds;
             }
 
-            if (WeaponAttachment != none)
+            if (WA != none)
             {
-                WeaponAttachment.GetAnimParams(0, Anim, Frame, Rate);
+                WA.GetAnimParams(0, Anim, Frame, Rate);
 
-                if (WeaponAttachment.bBayonetAttached)
+                if (WA.bBayonetAttached)
                 {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetIdleEmpty != '' && Anim != WeaponAttachment.WA_BayonetReloadEmpty)
+                    if (WA.bOutOfAmmo && WA.WA_BayonetIdleEmpty != '' && Anim != WA.WA_BayonetReloadEmpty)
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdleEmpty);
+                        WA.LoopAnim(WA.WA_BayonetIdleEmpty);
                     }
-                    else if (WeaponAttachment.WA_BayonetIdle != '')
+                    else if (WA.WA_BayonetIdle != '')
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdle);
+                        WA.LoopAnim(WA.WA_BayonetIdle);
                     }
                 }
                 else
                 {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_IdleEmpty != '' && Anim != WeaponAttachment.WA_ReloadEmpty)
+                    if (WA.bOutOfAmmo && WA.WA_IdleEmpty != '' && Anim != WA.WA_ReloadEmpty)
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_IdleEmpty);
+                        WA.LoopAnim(WA.WA_IdleEmpty);
                     }
-                    else if (WeaponAttachment.WA_Idle != '')
+                    else if (WA.WA_Idle != '')
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_Idle);
+                        WA.LoopAnim(WA.WA_Idle);
                     }
                 }
             }
@@ -611,90 +614,16 @@ simulated event AnimEnd(int Channel)
             WeaponState = GS_GrenadeHoldBack;
             IdleTime = Level.TimeSeconds;
         }
-        else if (WeaponState == GS_PreReload && WeaponAttachment != none)
+        else if (WeaponState == GS_PreReload && WA != none)
         {
-            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
             AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
 
-            if (WeaponAttachment.bOutOfAmmo)
-            {
-                if (bIsCrawling)
-                {
-                    PlayerAnim = WeaponAttachment.PA_ProneReloadEmptyAnim;
-                }
-                else
-                {
-                    PlayerAnim = WeaponAttachment.PA_ReloadEmptyAnim;
-                }
-            }
-            else
-            {
-                if (bIsCrawling)
-                {
-                    PlayerAnim = WeaponAttachment.PA_ProneReloadAnim;
-                }
-                else
-                {
-                    PlayerAnim = WeaponAttachment.PA_ReloadAnim;
-                }
-            }
+            LoopAnim(WA.GetReloadPlayerAnim(self),, 0.0, 1);
 
-            LoopAnim(PlayerAnim,, 0.0, 1);
             WeaponState = GS_ReloadLooped;
             IdleTime = Level.TimeSeconds;
 
-            if (WeaponAttachment.bBayonetAttached)
-            {
-                if (bIsCrawling)
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetProneReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetProneReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_BayonetProneReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetProneReload;
-                    }
-                }
-                else
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_BayonetReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetReload;
-                    }
-                }
-            }
-            else
-            {
-                if (bIsCrawling)
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ProneReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ProneReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_ProneReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ProneReload;
-                    }
-                }
-                else
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ReloadEmpty;
-                    }
-                    else
-                    {
-                        WeapAnim = WeaponAttachment.WA_Reload;
-                    }
-                }
-            }
-
-            WeaponAttachment.LoopAnim(WeapAnim);
+            WA.LoopAnim(WA.GetReloadWeaponAnim(self));
         }
         else if (WeaponState != GS_ReloadLooped && WeaponState != GS_GrenadeHoldBack && WeaponState != GS_FireLooped)
         {
@@ -4016,6 +3945,46 @@ simulated function PlayAssistedReload()
 
         WeaponState = GS_ReloadSingle;
     }
+}
+
+// Play a standard reload on the client
+simulated function PlayStandardReload()
+{
+    local DHWeaponAttachment WA;
+    local name PlayerAnim;
+    local name ChannelRootBone;
+    local bool bGlobalPose;
+
+    WA = DHWeaponAttachment(WeaponAttachment);
+
+    if (WA == none)
+    {
+        return;
+    }
+
+    if (bIsCrawling)
+    {
+        ChannelRootBone = FireRootBone;
+    }
+    else if (WA.bStaticReload)
+    {
+        ChannelRootBone = '';
+        bGlobalPose = True;
+    }
+    else
+    {
+        ChannelRootBone = SpineBone2;
+    }
+
+    PlayerAnim = WA.GetReloadPlayerAnim(self);
+
+    AnimBlendParams(1, 1.0, 0.0, 0.2, ChannelRootBone, bGlobalPose);
+    PlayAnim(PlayerAnim,, 0.1, 1);
+
+    WA.PlayAnim(WA.GetReloadWeaponAnim(self),, 0.1);
+
+    AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
+    WeaponState = GS_ReloadSingle;
 }
 
 // Called on the server. Sends a message to the client to let them know to play the Mantle animation

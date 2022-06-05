@@ -9,9 +9,13 @@ class DHWeaponAttachment extends ROWeaponAttachment
 var     name        PA_AssistedReloadAnim;
 var     name        PA_MortarDeployAnim;
 var     name        WA_MortarDeployAnim;
+var     name        PA_CrouchReloadAnim;
+var     name        PA_CrouchReloadEmptyAnim;
+
+var     bool        bStaticReload; // Reload animations will take over the
+                                   // entire body (useful for deployed weapons).
 
 var     bool        bBarrelCanOverheat;
-
 var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;
@@ -391,6 +395,104 @@ simulated function PlayIdle()
         else if (WA_Idle != '')
         {
             LoopAnim(WA_Idle);
+        }
+    }
+}
+
+simulated function name GetReloadPlayerAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (bOutOfAmmo)
+    {
+        if (Pawn.bIsCrawling)
+        {
+            return PA_ProneReloadEmptyAnim;
+        }
+        else if (Pawn.bIsCrouched && PA_CrouchReloadEmptyAnim != '')
+        {
+            return PA_CrouchReloadEmptyAnim;
+        }
+        else
+        {
+            return PA_ReloadEmptyAnim;
+        }
+    }
+    else
+    {
+        if (Pawn.bIsCrawling)
+        {
+            return PA_ProneReloadAnim;
+        }
+        else if (Pawn.bIsCrouched && PA_CrouchReloadAnim != '')
+        {
+            return PA_CrouchReloadAnim;
+        }
+        else
+        {
+            return PA_ReloadAnim;
+        }
+    }
+}
+
+simulated function name GetReloadWeaponAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (bBayonetAttached)
+    {
+        if (Pawn.bIsCrawling)
+        {
+            if (bOutOfAmmo && WA_BayonetProneReloadEmpty != '')
+            {
+                return WA_BayonetProneReloadEmpty;
+            }
+            else if (WA_BayonetProneReload != '')
+            {
+                return WA_BayonetProneReload;
+            }
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_BayonetReloadEmpty != '')
+            {
+                return WA_BayonetReloadEmpty;
+            }
+            else if (WA_BayonetReload != '')
+            {
+                return WA_BayonetReload;
+            }
+        }
+    }
+    else
+    {
+        if (Pawn.bIsCrawling)
+        {
+            if (bOutOfAmmo && WA_ProneReloadEmpty != '')
+            {
+                return WA_ProneReloadEmpty;
+            }
+            else if (WA_ProneReload != '')
+            {
+                return WA_ProneReload;
+            }
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_ReloadEmpty != '')
+            {
+                return WA_ReloadEmpty;
+            }
+            else
+            {
+                return WA_Reload;
+            }
         }
     }
 }

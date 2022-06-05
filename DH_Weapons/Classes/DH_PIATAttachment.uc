@@ -12,6 +12,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPIAT'
     bHeavy=true
+    bStaticReload=true
     MuzzleBoneName=warhead
 
     WA_Idle="idle_PIAT"
@@ -114,11 +115,6 @@ defaultproperties
     PA_IdleProneAnim="prone_idle_piat"
     PA_ProneIdleRestAnim="prone_idle_piat"
 
-    PA_ReloadAnim="stand_reloadempty_dp27"
-    PA_ProneReloadAnim="prone_reloadempty_dp27"
-    PA_ReloadEmptyAnim="stand_reloadempty_dp27"
-    PA_ProneReloadEmptyAnim="prone_reloadempty_dp27"
-
     PA_Fire="stand_shootiron_piat"
     PA_IronFire="stand_shootiron_piat"
     PA_CrouchFire="crouch_shoot_piat"
@@ -141,6 +137,33 @@ defaultproperties
     PA_MoveStandIronFire(5)="stand_shootFRiron_piat"
     PA_MoveStandIronFire(6)="stand_shootFRiron_piat"
     PA_MoveStandIronFire(7)="stand_shootFLiron_piat"
+
+
+    // RELOAD
+
+    PA_ReloadAnim="stand_reload_piat"
+    PA_CrouchReloadAnim="crouch_reload_piat"
+    PA_CrouchReloadEmptyAnim="crouch_reload_piat"
+    PA_ProneReloadAnim="prone_reload_piat"
+    PA_ReloadEmptyAnim="stand_reload_piat"
+    PA_ProneReloadEmptyAnim="prone_reload_piat"
+
+
+    // DEPLOYMENT
+
+    PA_IdleDeployedAnim="stand_idleiron_piat"
+    PA_IdleDeployedProneAnim="prone_idle_piat"
+    PA_IdleDeployedCrouchAnim="crouch_idledeploy_piat"
+
+    PA_StandWeaponDeployAnim="stand_idleiron_piat"
+    PA_ProneWeaponDeployAnim="prone_idle_piat"
+    PA_StandWeaponUnDeployAnim="stand_idleiron_piat"
+    PA_ProneWeaponUnDeployAnim="prone_idle_piat"
+
+    PA_DeployedFire="stand_shootiron_piat"
+    PA_CrouchDeployedFire="crouch_shootdeploy_piat"
+    PA_ProneDeployedFire="prone_shoot_piat"
+
 
     // UNAVAILABLE
 
