@@ -9,7 +9,8 @@ class DHSOVAssaultRoles extends DHAlliedAssaultRoles
 defaultproperties
 {
     AltName="Avtomatchik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPD40Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
