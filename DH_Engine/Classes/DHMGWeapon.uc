@@ -235,4 +235,6 @@ defaultproperties
     IdleToBipodDeploy="Rest_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     MagEmptyReloadAnims(0)="Reload"
+
+    bCanUseIronsights=false
 }

@@ -147,6 +147,8 @@ var   Combiner          ScriptedScopeCombiner;
 var   bool              bForceRenderScope;          // When true, the 3D scope will be rendered despite the user's settings
 var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each dimension of the scripted scope texture (use powers of two!)
 
+var     bool            bCanUseIronsights;      // allows firing from a shouldered/hipfire position (while not deployed)
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -1505,7 +1507,7 @@ simulated function ROIronSights()
 
         Deploy();
     }
-    else
+    else if (bCanUseIronsights || bCanFireFromHip)
     {
         PerformZoom(!bUsingSights);
     }
@@ -3331,6 +3333,7 @@ defaultproperties
     bUsesFreeAim=true
     bCanRestDeploy=true
     bCanAttachOnBack=true
+    bCanUseIronsights=true
     DisplayFOV=70.0
     PlayerDeployFOV=60.0
     IronSwitchAnimRate=1.0
