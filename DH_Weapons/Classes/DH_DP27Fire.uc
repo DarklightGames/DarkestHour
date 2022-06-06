@@ -53,12 +53,12 @@ defaultproperties
     FireEndAnim="Shoot_End"
 
     FireLastAnim="shoot_last"
-    //BipodDeployFireLastAnim="Deploy_Shoot_Last" TO DO: make this work!
+    BipodDeployFireLastAnim="deploy_shoot_last"
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     //ShellIronSightOffset=(X=15.0,Y=0.0,Z=-5.0)   ejector bone was repositioned, so outcommented those
     //ShellHipOffset=(X=-20.0,Y=0.0,Z=0.0)
-    ShellRotOffsetIron=(Pitch=-16384)  //this is busted and i couldnt fix it. The empty cases should fly downward, but they fly upward no matter what i put in here
+    ShellRotOffsetIron=(Pitch=-16384)  
     ShellRotOffsetHip=(Pitch=-16384)
 
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
