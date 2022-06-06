@@ -5,6 +5,20 @@
 
 class DH_DP27Weapon extends DHFastAutoWeapon;
 
+var name MagRotationBone;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
+    // rotation bone. Until this is fixed, we just hide the bullet for now.
+    if (InstigatorIsLocallyControlled())
+    {
+        SetBoneScale(0, 0.0, 'Round');
+    }
+}
+
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
 {
@@ -21,6 +35,55 @@ simulated function PostNetBeginPlay()
 simulated function ROIronSights()
 {
     Deploy();
+}
+
+//=============================================================================
+// Magazine Rotation
+// 
+// The DP-27 magazine rotates as rounds are expended from it.
+//
+// The DH_DP27Fire class explicitly calls UpdateMagRotation when a shot is
+// fired to accomplish this.
+//
+// The magazine rotation also needs to be updated in other places, such as
+// reload animations and when the gun is first brought up.
+//=============================================================================
+
+// Called from animation notifys to reset the mag rotation during a reload.
+simulated event UpdateMagRotationMidReload()
+{
+    local int MagIndex;
+
+    MagIndex = GetNextMagIndex();
+
+    SetMagRotation(float(PrimaryAmmoArray[MagIndex]) / MaxAmmo(0));
+}
+
+// Updated the magazine rotation based on the number of rounds remaining in the magazine.
+simulated function UpdateMagRotation()
+{
+    SetMagRotation(float(AmmoAmount(0)) / MaxAmmo(0));
+}
+
+// Sets the rotation of the magazine as a percentage of a full rotation (i.e., 0..1)
+simulated function SetMagRotation(float Theta)
+{
+    local Rotator R;
+
+    R.Yaw = Class'UUnits'.static.RadiansToUnreal(Theta * Pi * 2);
+
+    if (MagRotationBone != '')
+    {
+        SetBoneRotation(MagRotationBone, R);
+    }
+}
+
+// Modified to update the magazine rotation.
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    UpdateMagRotation();
 }
 
 defaultproperties
@@ -93,4 +156,6 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="putaway_empty"
+
+    MagRotationBone="MagRotation"
 }

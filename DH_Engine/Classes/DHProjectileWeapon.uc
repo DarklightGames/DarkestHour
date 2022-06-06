@@ -2315,7 +2315,29 @@ simulated function PlayReload()
     PlayAnimAndSetTimer(GetReloadAnim(), 1.0, 0.1);
 }
 
-// Gets the index of the fullest "magazine"
+// Gets the index of the fullest magazine that is not our current magazine.
+// This magazine index will be the next one loaded into the weapon if a
+// a reload were to happen.
+simulated function int GetNextMagIndex()
+{
+    local int i, MaxCount, MagIndex;
+
+    MaxCount = -1;
+    MagIndex = -1;
+
+    for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+    {
+        if (i != CurrentMagIndex && PrimaryAmmoArray[i] > MaxCount)
+        {
+            MagIndex = i;
+            MaxCount = PrimaryAmmoArray[i];
+        }
+    }
+
+    return MagIndex;
+}
+
+// Gets the index of the fullest "magazine", including the current magazine
 simulated function int GetFullestMagIndex()
 {
     local int i, MaxCount, MagIndex;
