@@ -5,8 +5,6 @@
 
 class DH_DP27Fire extends DHFastAutoFire;
 
-
-
 // Modified to rotate the magazine after a shot.
 event ModeDoFire()
 {
@@ -43,7 +41,6 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=10.0,OutVal=1.3),(InVal=16.0,OutVal=0.8),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
-
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
