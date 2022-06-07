@@ -7,7 +7,7 @@ class DH_G43ScopedWeapon extends DHSniperWeapon;
 
 defaultproperties
 {
-    ItemName="Gewehr 43"
+    ItemName="Gewehr 43 (ZF4)"
     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_G43ScopedAttachment'

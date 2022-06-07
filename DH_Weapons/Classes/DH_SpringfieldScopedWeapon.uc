@@ -7,7 +7,7 @@ class DH_SpringfieldScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="M1903A4 Springfield Scoped"
+    ItemName="M1903A4 Springfield (M73 Weaver)"
     FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'

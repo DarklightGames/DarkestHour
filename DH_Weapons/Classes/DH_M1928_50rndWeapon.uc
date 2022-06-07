@@ -36,7 +36,7 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    ItemName="M1928 Thompson /50rnd"
+    ItemName="M1928 Thompson (50rd)"
     SwayModifyFactor=0.94 // +0.14
     FireModeClass(0)=class'DH_Weapons.DH_M1928_50rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
