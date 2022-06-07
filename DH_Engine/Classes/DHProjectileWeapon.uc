@@ -1824,9 +1824,16 @@ Begin:
 // Modified to handle bipod, ironsight & empty anims
 simulated function PlayIdle()
 {
-    if (bCanBipodDeploy && IsInstigatorBipodDeployed() && HasAnim(BipodIdleAnim))
+    if (bCanBipodDeploy && IsInstigatorBipodDeployed())
     {
-        LoopAnim(BipodIdleAnim, IdleAnimRate, 0.2);
+        if (AmmoAmount(0) == 0 && HasAnim(BipodIdleEmptyAnim))
+        {
+            LoopAnim(BipodIdleEmptyAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(BipodIdleAnim))
+        {
+            LoopAnim(BipodIdleAnim, IdleAnimRate, 0.2);
+        }
     }
     else
     {
