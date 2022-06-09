@@ -96,9 +96,9 @@ defaultproperties
     PA_CrouchTurnIronLeftAnim="crouch_turnL_zb30"
     PA_ProneTurnRightAnim="prone_turnR_zb30"
     PA_ProneTurnLeftAnim="prone_turnL_zb30"
-    PA_StandToProneAnim="StandtoProne_zb30"
+    PA_StandToProneAnim="StandtoProne_kar"
     PA_CrouchToProneAnim="CrouchtoProne_zb30"
-    PA_ProneToStandAnim="PronetoStand_zb30"
+    PA_ProneToStandAnim="PronetoStand_kar"
     PA_ProneToCrouchAnim="PronetoCrouch_zb30"
     PA_CrouchTurnRightAnim="crouch_turnR_zb30"
     PA_CrouchTurnLeftAnim="crouch_turnL_zb30"
@@ -160,6 +160,9 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_zb30"
     PA_CrouchFireLastShot="crouch_shoot_zb30"
     PA_ProneFireLastShot="prone_shoot_zb30"
+    
+    PA_DiveToProneStartAnim="prone_diveF_kar"
+    PA_DiveToProneEndAnim="prone_diveend_kar"
     
     WA_Idle="idle_zb30"
     WA_IdleEmpty="idle_zb30"

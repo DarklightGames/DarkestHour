@@ -8,6 +8,7 @@ class DH_SVT40MeleeFire extends DHMeleeFire;
 defaultproperties
 {
     BayonetTraceRange=147.0   // +7, SVT-40 was ~100mm longer than k98k
+    FireRate=0.29 // +0.04
     DamageType=class'DH_Weapons.DH_SVT40BashDamType'
     BayonetDamageType=class'DH_Weapons.DH_SVT40BayonetDamType'
     BayoBackAnim="stab_pullback"

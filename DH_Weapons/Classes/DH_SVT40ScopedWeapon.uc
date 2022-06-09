@@ -7,7 +7,7 @@ class DH_SVT40ScopedWeapon extends DHSniperWeapon;
 
 defaultproperties
 {
-    ItemName="SVT-40 Scoped"
+    ItemName="SVT-40 (PU)"
     FireModeClass(0)=class'DH_Weapons.DH_SVT40ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT40ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SVT40ScopedAttachment'

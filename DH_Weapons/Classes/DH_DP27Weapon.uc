@@ -144,9 +144,10 @@ defaultproperties
     PutDownAnim="Putaway"
     
     IdleEmptyAnim="idle_empty"
-    //SightUpIronBringUpEmpty="deploy_empty"
-    //SightUpIronPutDownEmpty="undeploy_empty"
-    //SightUpIronIdleEmptyAnim="deploy_idle_empty"  TO DO: make these work!
+    IdleToBipodDeployEmpty="deploy_empty"
+    BipodDeployToIdleEmpty="undeploy_empty"
+    BipodIdleEmptyAnim="deploy_idle_empty"
+
     SprintStartEmptyAnim="sprint_start_empty"
     SprintLoopEmptyAnim="sprint_middle_empty"
     SprintEndEmptyAnim="sprint_end_empty"
