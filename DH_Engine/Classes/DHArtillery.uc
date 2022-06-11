@@ -32,6 +32,14 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // Set the team index based on the team of the authoring player.
+        Requester = PlayerController(Owner);
+
+        if (Requester != none)
+        {
+            SetTeamIndex(Requester.GetTeamNum());
+        }
+
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none)
