@@ -20,7 +20,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_GL_1st.GL_mesh'
 
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.stiel_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.stiel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     DisplayFOV=80.0

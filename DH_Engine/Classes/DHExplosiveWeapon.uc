@@ -433,7 +433,7 @@ simulated state WeaponSprinting
             // Make the sprinting animation match the sprinting speed
             LoopSpeed = 1.5;
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct) * 1.5);
+            LoopSpeed = Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct) * 1.5;
 
             Anim = SprintLoopAnim;
 

@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WHOfficer_Greatcoat extends DHDeprecated;
-
-defaultproperties
-{
-}

@@ -5,8 +5,3 @@
 
 class DHInteraction extends Interaction
     abstract;
-
-defaultproperties
-{
-}
-

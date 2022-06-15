@@ -5,7 +5,3 @@
 
 class DHArtilleryDamageType extends ROWeaponDamageType
     abstract;
-
-defaultproperties
-{
-}

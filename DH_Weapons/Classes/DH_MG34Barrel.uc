@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_MG34Barrel extends DHWeaponBarrel;
-
-defaultproperties
-{
-}

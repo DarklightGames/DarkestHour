@@ -5,7 +5,4 @@
 
 class DH_RKKA_StandardSquadLeader extends DH_RKKA_StandardSquadLeaderEarly; //to be removed
 
-defaultproperties
-{
 
-}

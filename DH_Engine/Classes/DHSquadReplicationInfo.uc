@@ -142,9 +142,7 @@ struct RallyPointPlacementResult
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        AxisSquadSize, AlliesSquadSize;
-
-    reliable if (bNetDirty && Role == ROLE_Authority)
+        AxisSquadSize, AlliesSquadSize,
         AxisMembers, AxisNames, AxisLocked, AlliesMembers, AlliesNames,
         AlliesLocked, bAreRallyPointsEnabled, RallyPoints,
         AxisNextRallyPointTimes, AlliesNextRallyPointTimes;

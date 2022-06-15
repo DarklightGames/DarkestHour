@@ -17,7 +17,7 @@ struct CPCmds
     var array<string> Cmds;
 };
 
-enum CategoryIDs
+enum ECategoryIDs
 {
     CID_Movement,
     CID_Looking,
@@ -150,7 +150,7 @@ function LoadCommands()
 }
 
 // Function which replaces "AddBindings" in ROTab_Controls
-function AddControlBindings(string Section_Title, int Num_Elements, CategoryIDs Category_ID)
+function AddControlBindings(string Section_Title, int Num_Elements, ECategoryIDs Category_ID)
 {
     local int i;
     local string BindStr, CaptionStr;

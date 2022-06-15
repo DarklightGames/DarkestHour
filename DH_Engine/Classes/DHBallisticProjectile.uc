@@ -82,7 +82,3 @@ simulated function BlowUp(vector HitLocation)
         Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
     }
 }
-
-defaultproperties
-{
-}

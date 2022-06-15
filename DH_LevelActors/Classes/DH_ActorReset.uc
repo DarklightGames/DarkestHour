@@ -27,7 +27,3 @@ function Trigger(Actor Other, Pawn EventInstigator)
 {
     ActorReference.Reset();
 }
-
-defaultproperties
-{
-}

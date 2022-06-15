@@ -283,7 +283,7 @@ simulated function ForceUndeploy()
 }
 
 // Debug logging to show how much ammo we have in our mags
-simulated exec function LogAmmo()
+exec simulated function LogAmmo()
 {
     local int i;
 
@@ -782,7 +782,7 @@ simulated state LoweringWeapon
     }
 
     // Don't allow the bayo to be attached while lowering the weapon
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
     }
 
@@ -1059,7 +1059,7 @@ simulated function ShowBayonet()
 }
 
 // Triggered by deploy keybind & attempts to attach/detach any bayonet
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     if (bHasBayonet && !IsBusy() && !(FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
     {
@@ -1699,7 +1699,7 @@ simulated function bool AllowReload()
 }
 
 // Triggered by reload keybind & attempts to reload the weapon
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (AllowReload())
     {
@@ -2355,7 +2355,7 @@ simulated function Fire(float F)
 //=============================================================================
 
 // Triggered by change barrel keybind & attempts to swap over the barrels
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     if (AllowBarrelChange())
     {

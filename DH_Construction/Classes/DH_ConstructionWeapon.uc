@@ -229,7 +229,3 @@ simulated function ResetCursor()
         CP.SetConstructionClass(CP.ConstructionClass);
     }
 }
-
-defaultproperties
-{
-}

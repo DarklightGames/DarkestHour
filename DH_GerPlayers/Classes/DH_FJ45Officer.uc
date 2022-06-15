@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_FJ45Officer extends DHDeprecated;
-
-defaultproperties
-{
-}

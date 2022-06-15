@@ -6,7 +6,7 @@
 class DHMeleeFire extends DHWeaponFire
     abstract;
 
-const SoundRadius = 32.0;
+const SOUND_RADIUS = 32.0;
 
 var   protected float   VulnerableDamageFactor; // damage factor when instigator hits victim from behind or if victim is crawling
 var   protected float   RearAngleArc;       // angle in Unreal rotational units for a player's rear (used to calculate rear melee hits)
@@ -20,7 +20,7 @@ var     int             BayonetDamageMin;   // min damage from a bayonet stab
 var     int             BayonetDamageMax;   // max damage from a bayonet stab
 var     float           TraceRange;         // how far to trace for a bash attack
 var     float           BayonetTraceRange;  // how far to trace for a bayonet stab
-var     float           MomentumTransfer;   // how much momentum to pass onto whatever we hit
+var     float           MomentumTransfer;   // how much momentum to pass onto whatever we hit (was 100 in RO)
 var     float           MinHoldTime;        // held for this time or less will do minimum damage/force
 var     float           FullHeldTime;       // held for this long will do max damage
 var     float           MeleeAttackSpread;  // how "large" the impact area of the bayonet strike is - the larger this is, the easier it is to hit, but the less precise the strike is
@@ -167,11 +167,11 @@ function DoTrace(vector Start, rotator Dir)
 
             if (Weapon.bBayonetMounted)
             {
-                Weapon.PlaySound(PlayerStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(PlayerStabSound, SLOT_None, FireVolume,, SOUND_RADIUS,, true);
             }
             else
             {
-                Weapon.PlaySound(PlayerBashSound, SLOT_None, 1.0,, SoundRadius,, true);
+                Weapon.PlaySound(PlayerBashSound, SLOT_None, 1.0,, SOUND_RADIUS,, true);
             }
          }
     }
@@ -185,11 +185,11 @@ function DoTrace(vector Start, rotator Dir)
 
         if (Weapon.bBayonetMounted)
         {
-            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SOUND_RADIUS,, true);
         }
         else
         {
-            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SOUND_RADIUS,, true);
         }
     }
 }
@@ -480,7 +480,6 @@ defaultproperties
     BayonetTraceRange=140.0
     MeleeAttackSpread=8.0
     RearAngleArc=16000.0
-    MomentumTransfer=0.0 // was 100 in RO
 
     DamageMin=30
     DamageMax=40
