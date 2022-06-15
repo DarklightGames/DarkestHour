@@ -7,18 +7,18 @@ class DH_PIATAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
-    EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
+    Mesh=SkeletalMesh'DH_PIAT_3rd.PIAT_3rd'
+    EmptyMesh=SkeletalMesh'DH_PIAT_3rd.PIAT_NoShell_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdPIAT'
     bHeavy=true
     bStaticReload=true
     MuzzleBoneName=warhead
 
-    WA_Idle="idle_PIAT"
-    WA_Fire="idle_PIAT"
-    WA_Reload="idle_PIAT"
-    WA_ProneReload="idle_PIAT"
+    WA_Idle="idle_piat"
+    WA_Fire="idle_piat"
+    WA_Reload="stand_reload_piat"
+    WA_ProneReload="prone_reload_piat"
 
     PA_MovementAnims(0)="stand_jogF_piat"
     PA_MovementAnims(1)="stand_jogB_piat"
