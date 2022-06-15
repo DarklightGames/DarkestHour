@@ -3962,18 +3962,21 @@ simulated function PlayStandardReload()
         return;
     }
 
-    if (bIsCrawling)
-    {
-        ChannelRootBone = FireRootBone;
-    }
-    else if (WA.bStaticReload)
+    if (WA.bStaticReload)
     {
         ChannelRootBone = '';
         bGlobalPose = True;
     }
     else
     {
-        ChannelRootBone = SpineBone2;
+        if (bIsCrawling)
+        {
+            ChannelRootBone = FireRootBone;
+        }
+        else
+        {
+            ChannelRootBone = SpineBone2;
+        }
     }
 
     PlayerAnim = WA.GetReloadPlayerAnim(self);
