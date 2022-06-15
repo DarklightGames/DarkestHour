@@ -24,5 +24,6 @@ defaultproperties
     ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
+    TakeDownProgressInterval=0.1071 // 28 hits
     MinDamagetoHurt=180.0
 }
