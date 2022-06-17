@@ -18,6 +18,7 @@ defaultproperties
     WA_Idle="idle_piat"
     WA_Fire="idle_piat"
     WA_Reload="stand_reload_piat"
+    WA_CrouchReload="crouch_reload_piat"
     WA_ProneReload="prone_reload_piat"
 
     PA_MovementAnims(0)="stand_jogF_piat"

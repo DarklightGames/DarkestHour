@@ -6,11 +6,16 @@
 class DHWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-var     name        PA_AssistedReloadAnim;
 var     name        PA_MortarDeployAnim;
 var     name        WA_MortarDeployAnim;
+
+var     name        PA_AssistedReloadAnim;
 var     name        PA_CrouchReloadAnim;
 var     name        PA_CrouchReloadEmptyAnim;
+var     name        WA_CrouchReload;
+var     name        WA_CrouchReloadEmpty;
+var     name        WA_BayonetCrouchReload;
+var     name        WA_BayonetCrouchReloadEmpty;
 
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
@@ -453,9 +458,20 @@ simulated function name GetReloadWeaponAnim(DHPawn Pawn)
             {
                 return WA_BayonetProneReloadEmpty;
             }
-            else if (WA_BayonetProneReload != '')
+            else
             {
                 return WA_BayonetProneReload;
+            }
+        }
+        else if (Pawn.bIsCrouched && (WA_BayonetCrouchReloadEmpty != '' || WA_BayonetCrouchReload != ''))
+        {
+            if (bOutOfAmmo && WA_BayonetCrouchReloadEmpty != '')
+            {
+                return WA_BayonetCrouchReloadEmpty;
+            }
+            else
+            {
+                return WA_BayonetCrouchReload;
             }
         }
         else
@@ -464,7 +480,7 @@ simulated function name GetReloadWeaponAnim(DHPawn Pawn)
             {
                 return WA_BayonetReloadEmpty;
             }
-            else if (WA_BayonetReload != '')
+            else
             {
                 return WA_BayonetReload;
             }
@@ -478,9 +494,20 @@ simulated function name GetReloadWeaponAnim(DHPawn Pawn)
             {
                 return WA_ProneReloadEmpty;
             }
-            else if (WA_ProneReload != '')
+            else
             {
                 return WA_ProneReload;
+            }
+        }
+        else if (Pawn.bIsCrouched && (WA_CrouchReloadEmpty != '' || WA_CrouchReload != ''))
+        {
+            if (bOutOfAmmo && WA_CrouchReloadEmpty != '')
+            {
+                return WA_CrouchReloadEmpty;
+            }
+            else
+            {
+                return WA_CrouchReload;
             }
         }
         else
