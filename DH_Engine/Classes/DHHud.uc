@@ -4701,7 +4701,7 @@ function DrawCaptureBar(Canvas Canvas)
     Canvas.Font = GetConsoleFont(Canvas);
     Canvas.TextSize(S, XL, YL);
     XPos = (Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0);
-    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - ((CaptureBarBackground.TextureCoords.Y2) * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
+    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - (CaptureBarBackground.TextureCoords.Y2 * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
     Canvas.SetPos(XPos, YPos - YL);
     Canvas.DrawText(S);
 

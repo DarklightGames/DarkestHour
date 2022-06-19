@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishMortarObserverWorcesters extends DHDeprecated;
-
-defaultproperties
-{
-}

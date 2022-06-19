@@ -400,8 +400,8 @@ simulated function DrawPeriscopeOverlay(Canvas C)
         TextureSize = float(PeriscopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);// - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);// - OverlayCorrectionY;
+        TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;// - OverlayCorrectionX;
+        TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;// - OverlayCorrectionY;
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
@@ -516,7 +516,7 @@ simulated function bool CanExit()
 
 // New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
 // CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
-simulated exec function ToggleVehicleLock()
+exec simulated function ToggleVehicleLock()
 {
     if (Role == ROLE_Authority || CanPlayerLockVehicle(self))
     {
@@ -1082,7 +1082,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
     if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += (NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+        HitPointLocation += NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -1106,7 +1106,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
         if (t < DotMM)
         {
             t /= DotMM;
-            Difference -= (t * LineCheck);
+            Difference -= t * LineCheck;
         }
         else
         {

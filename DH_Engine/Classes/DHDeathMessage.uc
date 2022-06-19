@@ -65,7 +65,3 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     return class'GameInfo'.static.ParseKillMessage(KillerName, VictimName, DeathString);
 }
-
-defaultproperties
-{
-}

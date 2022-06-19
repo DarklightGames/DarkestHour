@@ -5,7 +5,4 @@
 
 class DHShellHEImpactDamageType extends DHShellImpactDamageType;
 
-defaultproperties
-{
 
-}

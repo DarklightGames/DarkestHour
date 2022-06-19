@@ -21,7 +21,3 @@ event Trigger(Actor Other, Pawn EventInstigator)
     else
         Level.Game.Broadcast(self, "The Game Was Tie!");
 }
-
-defaultproperties
-{
-}

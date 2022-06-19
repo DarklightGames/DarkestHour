@@ -15,10 +15,10 @@ defaultproperties
     Skins(1)=Texture'allies_vehicles_tex.Treads.T3485_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.T3485_treads'
     Skins(3)=Texture'allies_vehicles_tex.int_vehicles.T3485_int'
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3485_Destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3485_ext_dest'
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3485_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3485_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3485_treads_dest'
     DriveAnim="Vt3485_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T34DriverOverlay'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_85_turret_rot'

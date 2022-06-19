@@ -5,7 +5,4 @@
 
 class DH_RKKA_StandardRifleman extends DH_RKKA_StandardRiflemanEarly;
 
-defaultproperties
-{
 
-}

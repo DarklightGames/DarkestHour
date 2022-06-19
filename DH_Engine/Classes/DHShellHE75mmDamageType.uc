@@ -5,7 +5,3 @@
 
 class DHShellHE75mmDamageType extends DHShellExplosionDamageType
     abstract;
-
-defaultproperties
-{
-}

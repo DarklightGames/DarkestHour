@@ -41,7 +41,3 @@ function bool IsActiveSpawnPoint(DHSpawnPoint SP)
 {
     return SP != none && SP.IsActive();
 }
-
-defaultproperties
-{
-}

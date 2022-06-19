@@ -21,7 +21,7 @@ const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 64;
 const NO_ARTY_VOLUMES_MAX = 32;
 
-enum VehicleReservationError
+enum EVehicleReservationError
 {
     ERROR_None,
     ERROR_Fatal,
@@ -1404,7 +1404,7 @@ simulated function int GetReservableTankCount(int TeamIndex)
     return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
 }
 
-simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<DHVehicle> VC;
 
@@ -1907,8 +1907,8 @@ simulated function vector GetWorldCoords(float X, float Y)
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
-    WorldLocation.X = ((0.5 - X) * MapScale);
-    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation.X = (0.5 - X) * MapScale;
+    WorldLocation.Y = (0.5 - Y) * MapScale;
     WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
@@ -2053,7 +2053,7 @@ function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 
 function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
 {
-    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+    DangerZoneBalance = 128 - Clamp(Factor, -127, 127);
 
     if (!bPostponeUpdate)
     {

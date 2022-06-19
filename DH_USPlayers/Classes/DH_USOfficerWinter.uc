@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_USOfficerWinter extends DHDeprecated;
-
-defaultproperties
-{
-}

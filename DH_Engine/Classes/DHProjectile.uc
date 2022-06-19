@@ -5,7 +5,3 @@
 
 class DHProjectile extends Projectile
     abstract;
-
-defaultproperties
-{
-}

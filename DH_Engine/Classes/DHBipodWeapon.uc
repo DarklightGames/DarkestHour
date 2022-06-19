@@ -77,7 +77,7 @@ simulated function NotifyOwnerJumped()
 }
 
 // Modified to deploy/undeploy bipod, instead of the usual bayonet stuff
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     local DHPlayer PC;
     local bool bNewDeployedStatus;

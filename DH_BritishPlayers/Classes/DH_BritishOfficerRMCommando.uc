@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishOfficerRMCommando extends DHDeprecated;
-
-defaultproperties
-{
-}

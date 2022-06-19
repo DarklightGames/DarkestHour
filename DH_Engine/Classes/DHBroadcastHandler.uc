@@ -324,7 +324,3 @@ function LogMessage(PlayerController Sender, string Msg, coerce string Type)
         G.Metrics.OnTextMessage(Sender, Type, Msg);
     }
 }
-
-defaultproperties
-{
-}

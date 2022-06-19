@@ -159,16 +159,14 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
 defaultproperties
 {
-    Angle=0
-    AngularVelocity=0
     AngularDamping=0.01
     GravityScale=100.0
     AngularVelocityThreshold=0.06
     ArmLength=155.0
     YawDeltaFactor=2.0
 
-    BarrelBoneName='Muzzle'
-    BipodBoneName='Bipod'
+    BarrelBoneName="Muzzle"
+    BipodBoneName="Bipod"
 
     bDebugPhysicsSimulation=true    // TODO: make false by default
 

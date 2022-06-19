@@ -11,5 +11,5 @@ defaultproperties
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Halftrack_body_snow2'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treadsnow'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treadsnow'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.halftrack_stripe_dest' // close enough match that you can't see the difference in destroyed, burning vehicle
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.halftrack_stripe_dest' // close enough match that you can't see the difference in destroyed, burning vehicle
 }

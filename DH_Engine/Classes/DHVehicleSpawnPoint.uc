@@ -3,7 +3,4 @@
 //-----------------------------------------------------------
 class DHVehicleSpawnPoint extends DHDeprecated;
 
-defaultproperties
-{
 
-}

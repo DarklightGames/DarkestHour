@@ -68,7 +68,3 @@ function PawnReferenceIsDead()
         GotoState('Done');
     }
 }
-
-defaultproperties
-{
-}

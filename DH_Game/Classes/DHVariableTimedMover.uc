@@ -102,7 +102,3 @@ state LeadInOutLooping
         super.KeyFrameReached();
     }
 }
-
-defaultproperties
-{
-}

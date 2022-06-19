@@ -26,7 +26,7 @@ exec function SetAltFireOffset(string NewX, string NewY, string NewZ);
 exec function SetAltFireSpawnOffset(float NewValue);
 exec function Deploy();
 function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
-simulated exec function ToggleVehicleLock();
+exec simulated function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 
 defaultproperties

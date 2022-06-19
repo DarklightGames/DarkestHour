@@ -6,8 +6,6 @@
 class DH_SdKfz2519CannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
-
-defaultproperties
 {
     Speed=33073.0
     MaxSpeed=33073.0

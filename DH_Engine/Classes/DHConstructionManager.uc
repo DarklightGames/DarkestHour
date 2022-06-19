@@ -8,7 +8,7 @@ class DHConstructionManager extends Actor
 
 var private array<DHConstruction> Constructions;
 
-static simulated function DHConstructionManager GetInstance(LevelInfo Level)
+simulated static function DHConstructionManager GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;
     local DHPlayer PC;

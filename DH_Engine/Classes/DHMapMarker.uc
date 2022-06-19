@@ -261,7 +261,5 @@ defaultproperties
     Scope=TEAM
     OverwritingRule=OFF
     bShouldShowOnCompass=false
-    RequiredSquadMembers=0
-    ActivationTimeout=0
     CalculatingString="Calculating..."
 }
