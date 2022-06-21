@@ -248,6 +248,8 @@ function ServerSetFirePitch(int AddedPitch)
 // Modified to update the player's reload & resupply status, & to destroy any RocketAttachment
 simulated function PostFire()
 {
+    local DHRocketWeaponAttachment RWA;
+
     if (Role == ROLE_Authority)
     {
         if (PrimaryAmmoArray.Length > 0)
@@ -256,6 +258,13 @@ simulated function PostFire()
         }
 
         UpdateResupplyStatus(true);
+
+        RWA = DHRocketWeaponAttachment(ThirdPersonActor);
+
+        if (RWA != none)
+        {
+            RWA.bOutOfAmmo = true; // IMPORTANT TODO: Don't just assume that we're out of ammo after firing. Check the ammo count!
+        }
     }
 
     if (RocketAttachment != none)
@@ -294,7 +303,7 @@ simulated function bool AllowReload()
     }
 }
 
-// Modified to prevent proning while reloading & to make 3rd person WeaponAttachment switch back to normal mesh if was the EmptyMesh
+// Modified to prevent proning while reloading
 simulated state Reloading
 {
     simulated function BeginState()
@@ -310,23 +319,6 @@ simulated state Reloading
     simulated function bool WeaponAllowProneChange()
     {
         return false;
-    }
-
-    simulated function EndState()
-    {
-        local DHRocketWeaponAttachment WA;
-
-        super.EndState();
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            WA = DHRocketWeaponAttachment(ThirdPersonActor);
-
-            if (WA != none && WA.Mesh == WA.EmptyMesh)
-            {
-                WA.LinkMesh(WA.default.Mesh);
-            }
-        }
     }
 }
 
