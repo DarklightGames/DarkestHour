@@ -40,6 +40,8 @@ simulated function PostBeginPlay()
 
 simulated function PostNetReceive()
 {
+    super.PostNetReceive();
+
     if (bHideWarheadWhenFired && bWarheadVisible == bOutOfAmmo)
     {
         ShowWarhead(!bOutOfAmmo);
