@@ -5,9 +5,6 @@
 
 class DH_Sdkfz251Transport extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
-
 defaultproperties
 {
     // Vehicle properties
