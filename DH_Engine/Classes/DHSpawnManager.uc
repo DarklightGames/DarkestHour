@@ -652,7 +652,8 @@ function SetVehiclePoolMaxSpawnsByTag(name VehiclePoolTag, byte MaxSpawns)
 function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
 {
     local array<byte> VehiclePoolIndices;
-    local int         i;
+    local int         i, NewMax;
+    local byte        VehiclePoolIndex;
 
     if (GRI != none)
     {
@@ -660,16 +661,23 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
 
         for (i = 0; i < VehiclePoolIndices.Length; ++i)
         {
+            VehiclePoolIndex = VehiclePoolIndices[i];
+
             if (Value > 0)
             {
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
             }
 
-            GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]]) + Value, 0, 254);
+            NewMax = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndex]) + Value, 0, 254);
 
-            if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] == 0)
+            GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = NewMax;
+
+            // Add new slots to the list for the vehicle pool.
+            VehiclePools[VehiclePoolIndex].Slots.Length = NewMax;
+
+            if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndex] == 0)
             {
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
             }
         }
     }
@@ -687,6 +695,9 @@ function SetVehiclePoolMaxActiveByTag(name VehiclePoolTag, byte Value)
         for (i = 0; i < VehiclePoolIndices.Length; ++i)
         {
             GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = Value;
+
+            // Update the available number of slots.
+            VehiclePools[VehiclePoolIndices[i]].Slots.Length = Value;
         }
     }
 }
