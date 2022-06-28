@@ -74,7 +74,6 @@ defaultproperties
     GearRatios(4)=0.75
     TransRatio=0.12
 
-
     // Damage
     // pros:
     // cons: petrol fuel;
@@ -98,7 +97,6 @@ defaultproperties
     ExitPositions(0)=(X=250,Y=000,Z=50)
     ExitPositions(1)=(X=-50,Y=000,Z=250)
 
-
     // Sounds
     // replaced sounds from ro1's SU-76 to T-60, because ro1 sound for SU76 doesnt really sound authentic for it, SU-76 used the same engine as on T-60 but doubled
     SoundPitch=32 // half normal pitch = 1 octave lower
@@ -108,11 +106,10 @@ defaultproperties
     RumbleSoundBone="body"
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
 
-    LeftTrackSoundBone="Tread_L"
-    RightTrackSoundBone="Tread_R"
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L09'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R09'
-
+    LeftTrackSoundBone="Track_L"
+    RightTrackSoundBone="Track_R"
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
 
     // Visual effects
     TreadVelocityScale=85.0
