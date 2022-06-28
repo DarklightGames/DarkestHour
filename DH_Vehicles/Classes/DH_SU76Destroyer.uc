@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-
 class DH_SU76Destroyer extends DHArmoredVehicle;
 
 defaultproperties
@@ -25,6 +24,9 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.SU76.SU76_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_SU76CannonPawn',WeaponBone="Turret_Placement")
     //PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-120.0,Y=-50.0,Z=82.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
@@ -33,7 +35,7 @@ defaultproperties
 
     // Driver
     DriverAttachmentBone=driver_attachment
-    DriverPositions(0)=(PositionMesh=Mesh'DH_SU76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=false,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=Mesh'DH_SU76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_close,TransitionUpAnim=driver_hatch_open,ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bExposed=true,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=Mesh'DH_SU76_anm.SU76_body_int',DriverTransitionAnim=VSU76_driver_open,TransitionDownAnim=driver_hatch_close,ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1 // position in array where driver can exit

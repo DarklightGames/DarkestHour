@@ -18,6 +18,7 @@ defaultproperties
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
 
     UnbuttonedPositionIndex=0 // let's commander exit at any position
+    RaisedPositionIndex=2
     BinocPositionIndex=3
 
     bManualTraverseOnly=true
