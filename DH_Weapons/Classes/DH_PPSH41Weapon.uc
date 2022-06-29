@@ -5,6 +5,14 @@
 
 class DH_PPSh41Weapon extends DHFastAutoWeapon;
 
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    // removing wire shooting device from the normal version
+    SetBoneScale(0, 0.0, 'WireCutter');
+}
+
 simulated function bool StartFire(int Mode)
 {
     if (super(DHProjectileWeapon).StartFire(Mode))
