@@ -61,4 +61,6 @@ defaultproperties
     PlayerIronsightFOV=90.0
     bCanFireFromHip=true
     FreeAimRotationSpeed=2.0
+
+    MuzzleBone="MUZZLE_A6"
 }

@@ -15,6 +15,8 @@ defaultproperties
     Spread=75.0
     RecoilRate=0.06
 
+    AddedPitch=25
+
     MuzzleBone="MUZZLE_A6"
 
     ShellEmitBone="ejector_link"
