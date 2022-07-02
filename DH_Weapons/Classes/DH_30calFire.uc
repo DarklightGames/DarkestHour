@@ -15,6 +15,10 @@ defaultproperties
     Spread=75.0
     RecoilRate=0.06
 
+    MuzzleBone="MUZZLE_A6"
+
+    ShellEmitBone="ejector_link"
+
     // Recoil
     MaxVerticalRecoilAngle=500
     MaxHorizontalRecoilAngle=225
@@ -24,13 +28,13 @@ defaultproperties
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=class'DH_Weapons.DH_30cal1stShellEject'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-6.0)
     ShellRotOffsetIron=(Pitch=-1500)
 
-    BipodDeployFireAnim="Shoot_Loop"
-    BipodDeployFireLoopAnim="Shoot_Loop"
-    BipodDeployFireEndAnim="Shoot_End"
+    BipodDeployFireAnim="deploy_shoot_loop"
+    BipodDeployFireLoopAnim="deploy_shoot_loop"
+    BipodDeployFireEndAnim="deploy_shoot_end"
 
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
