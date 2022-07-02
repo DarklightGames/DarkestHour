@@ -9,8 +9,6 @@ var DHSpawnPointBase SpawnPoint;
 
 simulated function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
     if (Role == ROLE_Authority)
     {
         SpawnPoint = Spawn(class'DHSpawnPoint_Parachute', self);
@@ -23,6 +21,8 @@ simulated function PostBeginPlay()
 
         SpawnPoint.SetIsActive(true);
     }
+
+    super.PostBeginPlay();
 }
 
 function OnTeamIndexChanged()

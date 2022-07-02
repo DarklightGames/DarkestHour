@@ -10,10 +10,7 @@ defaultproperties
     // Turret mesh
     Mesh=SkeletalMesh'DH_KV_1and2_anm.KV1b_turret_ext'
     Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'  //to be replaced with new skin that doesnt have armor shields
-    Skins(1)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
-    Skins(2)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
-    Skins(3)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_ext'
-
+    Skins(1)=Texture'DH_VehiclesSOV_tex.int_vehicles.KV1_turret_int'
 
     // Turret armor
     FrontArmorFactor=7.7 //front turret armor has complex shape: it combines spherical 90mm detail and small areas of flat 75mm armor. Unfortunately there is no way to realistically portray it in one value

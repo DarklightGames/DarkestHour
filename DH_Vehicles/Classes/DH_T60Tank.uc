@@ -5,8 +5,6 @@
 
 class DH_T60Tank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_T60_anm.ukx
-
 defaultproperties
 {
     // Vehicle properties
@@ -25,6 +23,9 @@ defaultproperties
     HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.T60_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.T60.T60_visor_Collision',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T60CannonPawn',WeaponBone="Turret_placement")
