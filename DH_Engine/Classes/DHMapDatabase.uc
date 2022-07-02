@@ -395,4 +395,5 @@ defaultproperties
     MapInfos(169)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(170)=(Name="DH-Winter_Stalemate_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(171)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(172)=(Name="DH-Fox_Green_Defence",AlliedNation=NATION_USA,GameType=GAMETYPE_Defence,Size=SIZE_Any)
 }
