@@ -393,6 +393,6 @@ defaultproperties
     MapInfos(167)=(Name="DH-Armored_Vieux_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(168)=(Name="DH-German_Village_Defence",AlliedNation=NATION_Britain,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
     MapInfos(169)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-	MapInfos(170)=(Name="DH-Winter_Stalemate_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(170)=(Name="DH-Winter_Stalemate_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(171)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
 }
