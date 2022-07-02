@@ -3,8 +3,9 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_KV1Tank extends DH_KV1ETank;  //WIP class, do not use it yet!
+class DH_KV1Tank extends DHDeprecated;
 
+/*
 defaultproperties
 {
     // Vehicle properties
@@ -99,3 +100,4 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.72
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
 }
+*/
