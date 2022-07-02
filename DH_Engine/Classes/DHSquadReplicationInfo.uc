@@ -2683,6 +2683,12 @@ function MaybeChangeRoleToDefault(DHPlayer PC)
 
     if (GRI == none) { return; }
 
+    if (!GRI.GameType.default.bSquadSpecialRolesOnly)
+    {
+        // This game type doesn't limit special roles to squad members only. Don't change role.
+        return;
+    }
+
     bShouldChangeRoleToRifleman = (!PC.IsSquadLeader() && RI.bRequiresSL) || (!PC.IsSLorASL() && RI.bRequiresSLorASL);
 
     if (bShouldChangeRoleToRifleman)
