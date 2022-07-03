@@ -14,5 +14,6 @@ defaultproperties
     Article="a "
     PluralName="Light Machine-Gunners"
     Limit=2
+    bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=5
 }
