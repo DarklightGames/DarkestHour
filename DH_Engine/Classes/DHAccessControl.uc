@@ -162,10 +162,13 @@ defaultproperties
     DeveloperIDs(11)="76561198176185585" // Backis
     DeveloperIDs(12)="76561198162915303" // Caverne
 
+    // Mac clients are unable to determine their patron status
+    // normally, so we hard-code these
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
     Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
     Patrons(3)=(ROID="76561198048993064",Tier="lead") // Ches217
     Patrons(4)=(ROID="76561197981301331",Tier="lead") // Monni
     Patrons(5)=(ROID="76561198256117403",Tier="lead") // Vic
+    Patrons(6)=(ROID="76561198847955145",Tier="lead") // MaDeuce
 }
