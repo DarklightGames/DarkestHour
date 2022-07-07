@@ -30,8 +30,8 @@ defaultproperties
     BarrelSteamBone="MUZZLE_A6"
 
     PutDownAnim="putaway"
-    MagEmptyReloadAnims(0)="reload_empty"
-    MagPartialReloadAnims(0)="reload_half"
+    BipodMagEmptyReloadAnim="reload_empty"
+    BipodMagPartialReloadAnim="reload_half"
 
     BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
     MGBeltBones(0)="BELT_01"
@@ -53,9 +53,7 @@ defaultproperties
     IronBringUp="iron_in"
     IronPutDown="iron_out"
     IronIdleAnim="iron_idle"
-    IdleAnim="idle"
-
-    // TODO: ejector links (export as static mesh)
+    IdleAnim="rest_idle"
     
     // Hip Firing
     PlayerIronsightFOV=90.0
@@ -63,4 +61,6 @@ defaultproperties
     FreeAimRotationSpeed=2.0
 
     MuzzleBone="MUZZLE_A6"
+
+    BipodHipToDeploy="Hip_2_Bipod"
 }

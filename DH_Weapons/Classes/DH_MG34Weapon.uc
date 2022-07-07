@@ -51,7 +51,6 @@ defaultproperties
     IronBringUp="Rest_2_Hip"
     IronPutDown="Hip_2_Rest"
     BipodHipIdle="Hip_Idle"
-    BipodHipToDeploy="Hip_2_Bipod"
 
     BipodMagEmptyReloadAnim="Bipod_Reload"
     BipodMagPartialReloadAnim="Bipod_Reload"

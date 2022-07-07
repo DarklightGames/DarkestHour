@@ -233,6 +233,7 @@ defaultproperties
     IdleAnim="Rest_Idle"
     BipodIdleAnim="Bipod_Idle"
     IdleToBipodDeploy="Rest_2_Bipod"
+    IronToBipodDeploy="Hip_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     MagEmptyReloadAnims(0)="Reload"
 
