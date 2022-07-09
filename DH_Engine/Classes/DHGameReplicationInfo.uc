@@ -890,6 +890,30 @@ simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
     return SpawnPoints[SpawnPointIndex];
 }
 
+simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, optional out int OutDesirability)
+{
+    local int i, Desirability;
+    local DHSpawnPointBase SP;
+
+    OutDesirability = -MaxInt;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] != none && SpawnPoints[i].IsVisibleToPlayer(PC)) // TODO: should probably check if we can even spawn here
+        {
+            Desirability = SpawnPoints[i].GetDesirability();
+
+            if (Desirability > OutDesirability)
+            {
+                SP = SpawnPoints[i];
+                OutDesirability = Desirability;
+            }
+        }
+    }
+
+    return SP;
+}
+
 simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
     local DHSpawnPoint_SquadRallyPoint RP;

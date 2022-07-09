@@ -149,39 +149,42 @@ function bool SpawnPlayer(DHPlayer PC)
     local DHPawn P;
     local bool bCombatSpawn;
 
-    if (PC != none)
+    if (PC == none)
     {
-        SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
+        return false;
+    }
+    
+    SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
 
-        if (SP != none)
-        {
-            // We store this value because the spawn point may destroy itself when
-            // calling PerformSpawn, which would invalidate the SP reference here.
-            bCombatSpawn = SP.bCombatSpawn;
-            bResult = SP.PerformSpawn(PC);
-
-            if (bResult)
-            {
-                P = DHPawn(PC.Pawn);
-
-                if (P != none)
-                {
-                    P.SpawnPoint = SP;
-                    P.bCombatSpawned = bCombatSpawn;
-                }
-            }
-            else
-            {
-                // It's possible that the user attempted to spawn a vehicle,
-                // in which case we need to invalidate the spawn reservation.
-                GRI.UnreserveVehicle(PC);
-            }
-
-            return bResult;
-        }
+    if (SP == none)
+    {
+        return false;
     }
 
-    return false;
+
+    // We store the value of bCombatSpawn here because the spawn point may destroy
+    // itself when calling PerformSpawn, which would invalidate the reference.
+    bCombatSpawn = SP.bCombatSpawn;
+    bResult = SP.PerformSpawn(PC);
+
+    if (bResult)
+    {
+        P = DHPawn(PC.Pawn);
+
+        if (P != none)
+        {
+            P.SpawnPoint = SP;
+            P.bCombatSpawned = bCombatSpawn;
+        }
+    }
+    else
+    {
+        // It's possible that the user attempted to spawn a vehicle,
+        // in which case we need to invalidate the spawn reservation.
+        GRI.UnreserveVehicle(PC);
+    }
+
+    return bResult;
 }
 
 function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator SpawnRotation)

@@ -582,6 +582,11 @@ simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
         && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) > 1;
 }
 
+simulated function int GetDesirability()
+{
+    return 4;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHRallyPointButtonStyle"

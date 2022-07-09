@@ -3214,6 +3214,27 @@ state Dead
 {
     ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
 
+    // Checks if there is a more desirable spawn point to use, and invalidates
+    // the player's selected spawn point, forcing the user into the map upon death
+    // to choose their spawn point.
+    function MaybeInvalidateSpawnPoint(DHGameReplicationInfo GRI)
+    {
+        local int MaxDesirability;
+
+        if (SpawnPointIndex == -1)
+        {
+            return;
+        }
+
+        GRI.GetMostDesirableSpawnPoint(self, MaxDesirability);
+
+        if (GRI.SpawnPoints[SpawnPointIndex].GetDesirability() < MaxDesirability)
+        {
+            SpawnPointIndex = -1;
+            bSpawnPointInvalidated = true;
+        }
+    }
+
     function BeginState()
     {
         local DHGameReplicationInfo GRI;
@@ -3227,6 +3248,8 @@ state Dead
             if (GRI != none)
             {
                 LastKilledTime = GRI.ElapsedTime;
+
+                MaybeInvalidateSpawnPoint(GRI);
             }
 
             if (IQManager != none)

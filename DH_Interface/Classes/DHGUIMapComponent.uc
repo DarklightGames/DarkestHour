@@ -151,12 +151,15 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
             if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true))
             {
+                // Spawn is acessible to spawn at, make the button clickable.
                 b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
             else
             {
                 if (SpawnPointIndex != -1 && SpawnPointIndex == b_SpawnPoints[i].Tag)
                 {
+                    // This is our currently selected spawn, but it is inaccessible.
+                    // Deselect the spawn point.
                     SelectSpawnPoint(-1);
                 }
 
@@ -633,7 +636,7 @@ function ZoomIn()
     // Save the old zoom scale.
     OldZoomScale = Viewport.Max.X - Viewport.Min.X;
 
-    // Increment the zoom leve.
+    // Increment the zoom level.
     SetZoomLevel(ZoomLevel + 1);
 
     // Calculate the new zoom scale.
