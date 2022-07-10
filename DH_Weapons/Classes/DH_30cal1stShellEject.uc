@@ -8,5 +8,5 @@ class DH_30cal1stShellEject extends RO1stShellEject;
 defaultproperties
 {
 	StaticMesh=StaticMesh'DH_M1919_stc.1st.m1919_link_1st'
-    DrawScale=5.0
+	DrawScale=2.0
 }
