@@ -50,8 +50,9 @@ defaultproperties
 
     DisplayFOV=86.0
 
-    MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=11
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
+    bCanHaveInitialNumMagsChanged=false  //adding this to provide some benefit over the 30 rounder 
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_ThompsonBarrel'
