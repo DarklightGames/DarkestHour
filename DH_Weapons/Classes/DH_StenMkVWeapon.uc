@@ -22,7 +22,7 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    SwayModifyFactor=0.72 // -0.08
+    SwayModifyFactor=0.62 // -0.08
     DisplayFOV=85.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=60.0

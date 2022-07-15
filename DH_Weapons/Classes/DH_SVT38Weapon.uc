@@ -13,7 +13,7 @@ simulated function int GetStripperClipSize() //modified from 5
 defaultproperties
 {
     ItemName="SVT-38"
-    SwayModifyFactor=0.8 //heavier than SVT-40
+    SwayModifyFactor=0.7 //heavier than SVT-40
     SwayBayonetModifier=1.26
     FireModeClass(0)=class'DH_Weapons.DH_SVT38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT38MeleeFire'

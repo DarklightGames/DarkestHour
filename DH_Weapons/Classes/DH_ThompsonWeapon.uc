@@ -8,7 +8,7 @@ class DH_ThompsonWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1A1 Thompson"
-    SwayModifyFactor=0.88 // +0.08
+    SwayModifyFactor=0.78 // +0.08
     FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'

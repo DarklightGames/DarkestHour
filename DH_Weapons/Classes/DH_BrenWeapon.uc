@@ -7,7 +7,7 @@ class DH_BrenWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    SwayModifyFactor=1.15 // Increased sway (0.8 is default otherwise)
+    SwayModifyFactor=1.15 // Increased sway (0.7 is default otherwise)
 
     ItemName="Bren Mk.II"
     TeamIndex=1
@@ -15,13 +15,13 @@ defaultproperties
     //FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'  /no melee!
     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
     PickupClass=class'DH_Weapons.DH_BrenPickup'
-    
+
     Mesh=SkeletalMesh'DH_ZB_1st.BrenMk2_1st'
     bUseHighDetailOverlayIndex=false
     Skins(0)=Texture'DH_Bren_tex.one.Bren_D'
     HandNum=1
     SleeveNum=2
-    
+
     DisplayFOV=88.0
     IronSightDisplayFOV=65.0
     PlayerDeployFOV=65
@@ -45,7 +45,7 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="bipod_reload"
     BipodMagPartialReloadAnim="bipod_reload"
-    
+
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
@@ -65,7 +65,7 @@ defaultproperties
     IdleAnim="Idle"
     SelectAnim="Draw"
     PutDownAnim="Putaway"
-    
+
     FirstSelectAnim="draw1"
     BarrelChangeAnim="BarrelChange"
 

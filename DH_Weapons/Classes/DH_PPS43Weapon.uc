@@ -8,7 +8,7 @@ class DH_PPS43Weapon extends DHFastAutoWeapon;
 defaultproperties
 {
     ItemName="PPS-43"
-    SwayModifyFactor=0.65 // -0.15 because its a light SMG
+    SwayModifyFactor=0.55 // -0.15 because its a light SMG
     FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
     FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'

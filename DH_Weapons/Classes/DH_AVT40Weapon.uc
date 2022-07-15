@@ -8,7 +8,7 @@ class DH_AVT40Weapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="AVT-40"
-    SwayModifyFactor=0.72 // -0.08
+    SwayModifyFactor=0.66 // -0.04
     FireModeClass(0)=class'DH_Weapons.DH_AVT40Fire'
     FireModeClass(1)=class'DH_Weapons.DH_AVT40MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_AVT40Attachment'
