@@ -17,7 +17,6 @@ defaultproperties
     AddedPitch=25
     MuzzleBone="MUZZLE_A6"
     ShellEmitBone="ejector_link"
-    ShellIronSightOffset=(X=30,Z=-3)
 
     // Recoil
     MaxVerticalRecoilAngle=500
@@ -29,7 +28,7 @@ defaultproperties
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShellEjectClass=class'DH_Weapons.DH_30cal1stShellEject'
-    ShellIronSightOffset=(X=15.0,Y=0.0,Z=-6.0)
+    ShellIronSightOffset=(X=30,Z=-3)
     ShellRotOffsetIron=(Pitch=-1500)
 
     BipodDeployFireAnim="deploy_shoot_loop"
