@@ -5,11 +5,6 @@
 
 class DH_AmericanHelmet2ndRNCOa extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
-}
-
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_GI_Helmet'
