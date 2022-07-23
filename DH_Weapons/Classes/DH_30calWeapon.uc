@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_30calWeapon extends DHMGWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_30calPickup'
 
     Mesh=SkeletalMesh'DH_30Cal_1st.30Cal'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.30calMain_s'
+    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.30calMain_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

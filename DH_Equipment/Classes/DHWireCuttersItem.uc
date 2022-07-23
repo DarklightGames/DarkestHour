@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHWireCuttersItem extends DHWeapon;
@@ -13,7 +13,7 @@ var     DHConstruction      ConstructionBeingCut;
 simulated function bool IsFiring(){return false;}
 function bool FillAmmo(){return false;}
 function bool ResupplyAmmo(){return false;}
-simulated exec function ROManualReload() {return;}
+exec simulated function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;}
 simulated function bool ShouldUseFreeAim() {return false;}
 

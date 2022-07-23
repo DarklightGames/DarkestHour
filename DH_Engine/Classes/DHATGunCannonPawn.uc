@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHATGunCannonPawn extends DHVehicleCannonPawn
@@ -26,7 +26,7 @@ exec function SetAltFireOffset(string NewX, string NewY, string NewZ);
 exec function SetAltFireSpawnOffset(float NewValue);
 exec function Deploy();
 function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
-simulated exec function ToggleVehicleLock();
+exec simulated function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 
 defaultproperties

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // To allow for easier navigation of the construction menus, we break the the
 // constructions down into groups. We allow constructions to assign themselves
@@ -19,8 +19,3 @@ static function bool SortFunction(Object LHS, Object RHS)
 {
     return class<DHConstructionGroup>(LHS).default.SortOrder > class<DHConstructionGroup>(RHS).default.SortOrder;
 }
-
-defaultproperties
-{
-}
-

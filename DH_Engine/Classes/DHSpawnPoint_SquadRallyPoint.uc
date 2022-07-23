@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
@@ -226,7 +226,7 @@ state Active
 
         if (MetricsObject != none)
         {
-            MetricsObject.IsEstablished = true;
+            MetricsObject.bIsEstablished = true;
         }
 
         OnUpdated();
@@ -586,6 +586,11 @@ simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
         && SpawnsRemaining == 1
         && PC.SquadReplicationInfo != none
         && PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) > 1;
+}
+
+simulated function int GetDesirability()
+{
+    return 4;
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHAccessControl extends AccessControlINI;
@@ -147,7 +147,7 @@ defaultproperties
     IPBanned="You cannot join this server, you have been banned."
     SessionBanned="You cannot join this server until it changes level."
 
-    AdminClass=Class'DH_Engine.DHAdmin'
+    AdminClass=class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
@@ -159,11 +159,16 @@ defaultproperties
     DeveloperIDs(8)="76561197992062636" // eksha
     DeveloperIDs(9)="76561197989139694" // mimi
     DeveloperIDs(10)="76561198020507621" // jwjw
+    DeveloperIDs(11)="76561198176185585" // Backis
+    DeveloperIDs(12)="76561198162915303" // Caverne
 
+    // Mac clients are unable to determine their patron status
+    // normally, so we hard-code these
     Patrons(0)=(ROID="76561198066643021",Tier="bronze") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
     Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
     Patrons(3)=(ROID="76561198048993064",Tier="lead") // Ches217
     Patrons(4)=(ROID="76561197981301331",Tier="lead") // Monni
     Patrons(5)=(ROID="76561198256117403",Tier="lead") // Vic
+    Patrons(6)=(ROID="76561198847955145",Tier="lead") // MaDeuce
 }

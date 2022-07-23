@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_FindAndPassPawn extends DH_LevelActors
@@ -13,7 +13,6 @@ enum FindType
     FT_Factory,
 };
 
-//var   int                     DelayTimeBeforeFind; // does this need to be variable?
 var()   FindType                HowToFind;
 var()   name                    TagToFind;
 var()   array<class<Pawn> >     PawnClassToFind;
@@ -111,9 +110,5 @@ state FindFactory
 }
 
 state Passed
-{
-}
-
-defaultproperties
 {
 }

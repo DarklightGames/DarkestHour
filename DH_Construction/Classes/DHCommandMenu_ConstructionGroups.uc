@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroups extends DHCommandMenu
@@ -51,8 +51,3 @@ function OnSelect(int OptionIndex, vector Location)
 {
     Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroup", Options[OptionIndex].OptionalObject);
 }
-
-defaultproperties
-{
-}
-

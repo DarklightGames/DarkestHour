@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIVGEarlyTank extends DHArmoredVehicle;
@@ -18,7 +18,7 @@ defaultproperties
     Skins(2)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CannonSkins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
@@ -54,10 +54,10 @@ defaultproperties
 
     // Damage
 	// pros: 5 men crew
-	// cons: petrol fuel 
+	// cons: petrol fuel
     Health=565
     HealthMax=565.0
-	EngineHealth=300	
+	EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-100.0,Y=0.0,Z=6.0)) // engine
@@ -68,7 +68,7 @@ defaultproperties
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
     DestroyedMeshSkins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' //hide the turret schurzen
 
     // Exit
@@ -112,7 +112,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_Gearly' 
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_Gearly'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

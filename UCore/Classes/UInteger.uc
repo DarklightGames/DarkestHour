@@ -1,12 +1,12 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class UInteger extends Object;
 
 var int Value;
 
-static final function UInteger Create(optional int Value)
+final static function UInteger Create(optional int Value)
 {
     local UInteger I;
 
@@ -16,7 +16,7 @@ static final function UInteger Create(optional int Value)
     return I;
 }
 
-static final function ToBytes(int Integer, optional out byte Byte1, optional out byte Byte2, optional out byte Byte3, optional out byte Byte4)
+final static function ToBytes(int Integer, optional out byte Byte1, optional out byte Byte2, optional out byte Byte3, optional out byte Byte4)
 {
     Byte1 = Integer & 0xFF;
     Byte2 = (Integer >> 8) & 0xFF;
@@ -24,23 +24,23 @@ static final function ToBytes(int Integer, optional out byte Byte1, optional out
     Byte4 = (Integer >> 24) & 0xFF;
 }
 
-static final function int FromBytes(optional byte Byte1, optional byte Byte2, optional byte Byte3, optional byte Byte4)
+final static function int FromBytes(optional byte Byte1, optional byte Byte2, optional byte Byte3, optional byte Byte4)
 {
     return (Byte4 << 24) | (Byte3 << 16) | (Byte2 << 8) | Byte1;
 }
 
-static final function ToShorts(int Integer, optional out int Short1, optional out int Short2)
+final static function ToShorts(int Integer, optional out int Short1, optional out int Short2)
 {
     Short1 = Integer & 0xFFFF;
     Short2 = (Integer >> 16) & 0xFFFF;
 }
 
-static final function int FromShorts(optional int Short1, optional int Short2)
+final static function int FromShorts(optional int Short1, optional int Short2)
 {
     return ((Short2 & 0xFFFF) << 16) | (Short1 & 0xFFFF);
 }
 
-static final function int FromHex(string S)
+final static function int FromHex(string S)
 {
     local int i, j, R;
     local int Factor;

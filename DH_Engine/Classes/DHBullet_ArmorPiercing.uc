@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
     abstract;
 
 // From DHBullet:
-const   MinPenetrateVelocity = 163;
+const   MIN_PENETRATE_VELOCITY = 163;
 
 var     class<DHHitEffect>  ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var     class<ROBulletWhiz> WhizSoundEffect;
@@ -271,7 +271,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 
     // Do any damage
-    if (!HasDeflected() && Role == ROLE_Authority && V > (MinPenetrateVelocity * ScaleFactor))
+    if (!HasDeflected() && Role == ROLE_Authority && V > (MIN_PENETRATE_VELOCITY * ScaleFactor))
     {
         UpdateInstigator();
 

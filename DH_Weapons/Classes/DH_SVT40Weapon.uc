@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SVT40Weapon extends DHSemiAutoWeapon;
@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_SVT40Pickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt40_1st'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.SVT40_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.SVT40_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -24,7 +24,7 @@ defaultproperties
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
-    
+
     MagEmptyReloadAnims(0)="reload_empty"
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_emptyC"
@@ -39,7 +39,7 @@ defaultproperties
     BayoDetachAnim="Bayonet_off"
     BayoAttachEmptyAnim="bayonet_on_empty"
     BayoDetachEmptyAnim="bayonet_off_empty"
-    
+
     BayonetBoneName="bayonet"
 
     IdleEmptyAnim="idle_empty"

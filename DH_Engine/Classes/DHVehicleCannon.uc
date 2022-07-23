@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -551,7 +551,7 @@ function ServerFireSmokeLauncher()
 
         if (SmokeLauncherClass.static.CanRotate() && SmokeLauncherAdjustmentSetting > 0)
         {
-            FireRotation.Yaw += (float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536);
+            FireRotation.Yaw += float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536;
         }
 
         FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
@@ -1713,7 +1713,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
-        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
+        WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
     }
 }
 

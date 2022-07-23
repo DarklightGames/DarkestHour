@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -735,7 +735,7 @@ simulated function HelmetShotOff(rotator RotDir)
         }
 
         DroppedHelmet.Velocity = Velocity + vector(RotDir) * (DroppedHelmet.MaxSpeed * (1.0 + FRand() * 0.5));
-        DroppedHelmet.LifeSpan -= (FRand() * 2.0);
+        DroppedHelmet.LifeSpan -= FRand() * 2.0;
 
         Headgear.Destroy();
         HeadgearClass = none; // server should replicate this but let's make sure by setting it immediately
@@ -2357,7 +2357,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
     local float             MaxDim;
     local string            RagSkelName;
     local KarmaParamsSkel   SkelParams;
-    local bool              PlayersRagdoll;
+    local bool              bPlayersRagdoll;
     local PlayerController  PC;
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -2370,7 +2370,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
         // Is this the local player's ragdoll?
         if (PC != none && PC.ViewTarget == self)
         {
-            PlayersRagdoll = true;
+            bPlayersRagdoll = true;
         }
 
         if (FRand() < 0.3)
@@ -2380,7 +2380,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
 
         // In low physics detail, if we were not just controlling this pawn,
         // and it has not been rendered in 3 seconds, just destroy it.
-        if ((Level.PhysicsDetailLevel != PDL_High) && !PlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
+        if ((Level.PhysicsDetailLevel != PDL_High) && !bPlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
         {
             Destroy();
             return;
@@ -2533,7 +2533,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
             SetPhysics(PHYS_KarmaRagdoll);
 
             // If viewing this ragdoll, set the flag to indicate that it is 'important'
-            if (PlayersRagdoll)
+            if (bPlayersRagdoll)
             {
                 SkelParams.bKImportantRagdoll = true;
             }
@@ -3026,7 +3026,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
         }
 
         ShotDir = Normal(Momentum);
-        PushLinVel = (RagDeathVel * ShotDir);
+        PushLinVel = RagDeathVel * ShotDir;
         PushLinVel.Z += RagDeathUpKick * (RagShootStrength * DamageType.default.KDeadLinZVelScale);
 
         PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
@@ -4508,7 +4508,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         return false;
     }
 
-    EndLoc += (7.0 * Direction); // brings us to a total of 60uu out from our starting location, which is how far our animations go
+    EndLoc += 7.0 * Direction; // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
     EndLoc.Z = Location.Z - 22.0; // 36 UU above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
@@ -5130,7 +5130,7 @@ event UpdateEyeHeight(float DeltaTime)
             Smooth = FMin(0.9, 10.0 * DeltaTime);
             OldEyeHeight = EyeHeight;
             EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-            LandBob *= (1 - Smooth);
+            LandBob *= 1 - Smooth;
 
             if (EyeHeight >= BaseEyeHeight - 1.0)
             {
@@ -5189,7 +5189,7 @@ event UpdateEyeHeight(float DeltaTime)
     if (!bJustLanded)
     {
         Smooth = FMin(0.9, 10.0 * DeltaTime / Level.TimeDilation);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (Controller.WantsSmoothedView())
         {
@@ -5206,7 +5206,7 @@ event UpdateEyeHeight(float DeltaTime)
         Smooth = FMin(0.9, 10.0 * DeltaTime);
         OldEyeHeight = EyeHeight;
         EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (EyeHeight >= BaseEyeHeight - 1.0)
         {
@@ -5778,10 +5778,10 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 
 simulated function float BobFunction(float T, float Amplitude, float Frequency, float Decay)
 {
-    return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
+    return Amplitude * (Sin(Frequency * T) / (Frequency ** ((Decay / Frequency) * T)));
 }
 
-simulated exec function BobAmplitude(optional float F)
+exec simulated function BobAmplitude(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5796,7 +5796,7 @@ simulated exec function BobAmplitude(optional float F)
     }
 }
 
-simulated exec function BobFrequencyY(optional float F)
+exec simulated function BobFrequencyY(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5811,7 +5811,7 @@ simulated exec function BobFrequencyY(optional float F)
     }
 }
 
-simulated exec function BobFrequencyZ(optional float F)
+exec simulated function BobFrequencyZ(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5826,7 +5826,7 @@ simulated exec function BobFrequencyZ(optional float F)
     }
 }
 
-simulated exec function BobDecay(optional float F)
+exec simulated function BobDecay(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5987,7 +5987,7 @@ function CheckBob(float DeltaTime, vector Y)
         if (LandBob > 0.01)
         {
             AppliedBob += FMin(1.0, 16.0 * DeltaTime) * LandBob;
-            LandBob *= (1.0 - 8.0 * DeltaTime);
+            LandBob *= 1.0 - 8.0 * DeltaTime;
         }
 
         // Play footstep effects (if moving fast enough & not crawling)
@@ -6609,7 +6609,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = Rotation.Yaw;
-            TargetLocation += (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
+            TargetLocation += vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance);
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -7369,7 +7369,7 @@ exec function RotateAT()
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
-simulated exec function IronSightDisplayFOV(float FOV)
+exec simulated function IronSightDisplayFOV(float FOV)
 {
     local DHProjectileWeapon W;
 
@@ -7386,7 +7386,7 @@ simulated exec function IronSightDisplayFOV(float FOV)
     }
 }
 
-simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7403,7 +7403,7 @@ simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7420,7 +7420,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(int X, int Y, int Z)
+exec simulated function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7437,7 +7437,7 @@ simulated exec function ShellHipOffset(int X, int Y, int Z)
     }
 }
 
-simulated exec function ShellIronSightOffset(float X, float Y, float Z)
+exec simulated function ShellIronSightOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7454,12 +7454,12 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
-simulated exec function Give(string WeaponName)
+exec simulated function Give(string WeaponName)
 {
     local string ClassName;
     local int i;
 
-    if (!IsDebugModeAllowed())
+    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
     {
         return;
     }

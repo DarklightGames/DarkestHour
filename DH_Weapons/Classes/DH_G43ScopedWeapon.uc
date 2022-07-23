@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_G43ScopedWeapon extends DHSniperWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
 
     Mesh=SkeletalMesh'DH_G43_1st.g43_scoped_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.g43_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -36,7 +36,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     ScopeOverlaySize=0.32
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="scope_idle_empty"
     IronBringUpEmpty="scope_in_empty"

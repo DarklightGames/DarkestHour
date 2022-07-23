@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_GermanAutumnSSPawn extends DH_GermanPawn;
@@ -9,7 +9,7 @@ defaultproperties
 {
     Skins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn'  //shirt
 
-    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn' 
+    BodySkins(2)=Texture'DHGermanCharactersTex.WSS.SS_Autumn'
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }

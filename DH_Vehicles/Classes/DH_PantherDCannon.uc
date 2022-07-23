@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PantherDCannon extends DHVehicleCannon;
@@ -12,7 +12,7 @@ defaultproperties
     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll')
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 

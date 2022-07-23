@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHArtillery extends Actor
@@ -10,7 +10,7 @@ class DHArtillery extends Actor
 
 var DHGameReplicationInfo.EArtilleryType              ArtilleryType;
 
-var protected localized string  MenuName;
+var localized protected string  MenuName;
 var Material                    MenuIcon;
 
 var protected int               TeamIndex;
@@ -32,6 +32,14 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // Set the team index based on the team of the authoring player.
+        Requester = PlayerController(Owner);
+
+        if (Requester != none)
+        {
+            SetTeamIndex(Requester.GetTeamNum());
+        }
+
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHVariableTimedMover extends Mover;
@@ -101,8 +101,4 @@ state LeadInOutLooping
 
         super.KeyFrameReached();
     }
-}
-
-defaultproperties
-{
 }

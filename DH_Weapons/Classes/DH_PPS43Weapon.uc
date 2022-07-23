@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PPS43Weapon extends DHFastAutoWeapon;
@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPS43Pickup'
 
     Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-1st'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPS43_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPS43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -28,7 +28,7 @@ defaultproperties
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
     BarrelSteamBone="Muzzle"
-    
+
     //alternative reload (this is the "normal")
     MagPartialReloadAnims(1)="reload_halfB"
     MagPartialReloadAnims(2)="reload_halfB"

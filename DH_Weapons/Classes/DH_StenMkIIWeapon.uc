@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_StenMkIIWeapon extends DHAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.StenMk2_mesh'
-    //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
+    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 

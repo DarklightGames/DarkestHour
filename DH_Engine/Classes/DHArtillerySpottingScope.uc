@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHArtillerySpottingScope extends Object
@@ -189,8 +189,8 @@ function DrawSpottingScopeOverlay(Canvas C)
         TextureSize = float(SpottingScopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / 0.4 * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-        TileStartPosU = ((TextureSize - TilePixelWidth) * 0.5);
-        TileStartPosV = ((TextureSize - TilePixelHeight) * 0.5);
+        TileStartPosU = (TextureSize - TilePixelWidth) * 0.5;
+        TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
         C.SetPos(0.0, 0.0);
 
         C.DrawColor = class'UColor'.default.White;
@@ -759,7 +759,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     if (YawLowerBound < GunYawMinTruncated)
     {
         StrikeThroughStartIndex = 0;
-        StrikeThroughEndIndex = ((GunYawMinTruncated - YawLowerBound) / YawScaleStep);
+        StrikeThroughEndIndex = (GunYawMinTruncated - YawLowerBound) / YawScaleStep;
         StrikeThroughEnd = YawIndicatorLength * YawTicksCurvature[StrikeThroughEndIndex];
 
         // Draw the strike-through

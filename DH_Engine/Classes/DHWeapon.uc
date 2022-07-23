@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -978,7 +978,7 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
-simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+exec simulated function SetPlayerViewOffset(int X, int Y, int Z)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {

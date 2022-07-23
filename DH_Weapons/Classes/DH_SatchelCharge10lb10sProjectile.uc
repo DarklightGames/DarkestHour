@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
@@ -45,17 +45,7 @@ simulated function BlowUp(vector HitLocation)
 
     if (Role == ROLE_Authority)
     {
-        if (bBounce)
-        {
-            // If the grenade hasn't landed, do 1/3 less damage
-            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
-            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-        else
-        {
-            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         HandleObjSatchels(HitLocation);
         HandleVehicles(HitLocation);
         HandleObstacles(HitLocation);
@@ -229,7 +219,7 @@ defaultproperties
 
     EngineDamageMassThreshold=200.0 //3kg TNT should penetrate any top armor or engine desk and severely damage anything under it (even if it is a Maus tank)
     EngineDamageRadius=240.0 //slightly increased because often it seemed like its not close enough even if its on the engine desk
-    EngineDamageMax=5000.0 
+    EngineDamageMax=5000.0
 
     TreadDamageMassThreshold=200.0
     TreadDamageRadius=100.0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_T3476_42Cannon extends DHVehicleCannon;
@@ -15,7 +15,7 @@ defaultproperties
     //Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
     bUseHighDetailOverlayIndex=false
 
-    //HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    //HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34.T34m42_Turret_Coll')
 
     // Turret armor (model 1942)

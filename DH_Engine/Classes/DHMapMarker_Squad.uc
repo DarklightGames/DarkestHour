@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHMapMarker_Squad extends DHMapMarker
@@ -20,7 +20,6 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 
 defaultproperties
 {
-    BroadcastedMessageIndex=0
     GroupIndex=0
     bShouldShowOnCompass=true
     Type=MT_Movement

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BARWeapon extends DHBipodAutoWeapon;
@@ -101,7 +101,7 @@ simulated state Reloading
     }
 }
 
-simulated exec function PAL(float V)
+exec simulated function PAL(float V)
 {
     if (Level.NetMode == NM_Standalone)
     {
@@ -109,7 +109,7 @@ simulated exec function PAL(float V)
     }
 }
 
-simulated exec function PAD(float V)
+exec simulated function PAD(float V)
 {
     if (Level.NetMode == NM_Standalone)
     {
@@ -117,7 +117,7 @@ simulated exec function PAD(float V)
     }
 }
 
-simulated exec function PGS(float V)
+exec simulated function PGS(float V)
 {
     if (Level.NetMode == NM_Standalone)
     {
@@ -125,7 +125,7 @@ simulated exec function PGS(float V)
     }
 }
 
-simulated exec function PYDF(float V)
+exec simulated function PYDF(float V)
 {
     if (Level.NetMode == NM_Standalone)
     {
@@ -133,12 +133,12 @@ simulated exec function PYDF(float V)
     }
 }
 
-simulated exec function PAVT(float V)
+exec simulated function PAVT(float V)
 {
     BipodPhysicsSimulation.AngularVelocityThreshold = V;
 }
 
-simulated exec function PCOR(float V)
+exec simulated function PCOR(float V)
 {
     BipodPhysicsSimulation.CoefficientOfRestitution = V;
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -270,7 +270,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
         if (ActualLocationAdjustment != 0.0)
         {
-            HitLocation -= (ActualLocationAdjustment * HitNormal);
+            HitLocation -= ActualLocationAdjustment * HitNormal;
         }
 
         if (bSnowDecal && ExplosionDecalSnow != none)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // A simple pendulum simulation to allow bipods to wobble around realistically.
 // All angles are in radians.
@@ -159,16 +159,14 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
 
 defaultproperties
 {
-    Angle=0
-    AngularVelocity=0
     AngularDamping=0.01
     GravityScale=100.0
     AngularVelocityThreshold=0.06
     ArmLength=155.0
     YawDeltaFactor=2.0
 
-    BarrelBoneName='Muzzle'
-    BipodBoneName='Bipod'
+    BarrelBoneName="Muzzle"
+    BipodBoneName="Bipod"
 
     bDebugPhysicsSimulation=true    // TODO: make false by default
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHRocketWeapon extends DHSemiAutoWeapon
@@ -34,7 +34,7 @@ replication
 }
 
 // Overridden to cycle the weapon aiming range
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     if (bUsingSights && !IsBusy())
     {

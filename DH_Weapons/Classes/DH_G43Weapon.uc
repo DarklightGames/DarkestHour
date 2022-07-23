@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_G43Weapon extends DHSemiAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_G43Attachment'
 
     Mesh=SkeletalMesh'DH_G43_1st.G-43-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.G43_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.G43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -23,11 +23,11 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
-    
+
     IronBringUp="iron_in_g43"
     IronPutDown="iron_out_g43"
     IronIdleAnim="Iron_idle_g43"
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"

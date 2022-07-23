@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MP41Weapon extends DHAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp41_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.MP41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -30,11 +30,11 @@ defaultproperties
     bHasSelectFire=true
     SelectFireAnim="select_fire"
     SelectFireIronAnim="Iron_select_fire"
-    
+
     SelectFireSound=Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
 
     bPlusOneLoading=false
-    
+
     //alternative reload
     MagEmptyReloadAnims(1)="reload_emptyB"
 

@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHDangerZone extends Object
     abstract;
 
-static final function vector IndicesToCoords(int X, int Y, float StepX, float StepY, vector Origin)
+final static function vector IndicesToCoords(int X, int Y, float StepX, float StepY, vector Origin)
 {
     local vector L;
 
@@ -16,7 +16,7 @@ static final function vector IndicesToCoords(int X, int Y, float StepX, float St
     return L + Origin;
 }
 
-static final function vector GetInterpCoords(float Value, float ValueA, float ValueB, vector A, vector B)
+final static function vector GetInterpCoords(float Value, float ValueA, float ValueB, vector A, vector B)
 {
     return class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
 }
@@ -127,7 +127,7 @@ static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float Point
     return GetIntensity(GRI, PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
-static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bool bSaddleIn)
+final static function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bool bSaddleIn)
 {
     local array<Intbox> Indices;
     local Intbox North, East, West, South;
@@ -349,7 +349,7 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
                 Segments.Remove(j - int(Ceil(j % 2.0)), 2);
             }
         }
-        until(InitLength == LineStringsX[i].Points.Length);
+        until(InitLength == LineStringsX[i].Points.Length)
 
         ++i;
     }

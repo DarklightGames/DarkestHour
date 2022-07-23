@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHThrowableExplosiveProjectile extends DHProjectile
@@ -595,17 +595,7 @@ function BlowUp(vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
-        if (bBounce)
-        {
-            // If the grenade hasn't landed, do 1/3 less damage
-            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
-            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-        else
-        {
-            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         MakeNoise(1.0);
     }
 }
@@ -633,7 +623,7 @@ simulated function DoShakeEffect()
             if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
             {
                 BlastShielding = 1.0 - ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
-                Scale -= (0.5 * BlastShielding * Scale);
+                Scale -= 0.5 * BlastShielding * Scale;
                 ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
             }
         }
@@ -752,7 +742,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Snow:
             DampenFactor = 0.0;
-            DampenFactorParallel = 0.0;;
+            DampenFactorParallel = 0.0;
             break;
 
         case EST_Water:

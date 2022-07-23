@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
@@ -114,7 +114,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
 
     Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.Panzerfaust_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

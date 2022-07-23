@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanTankA_M4A176W_Early extends DH_ShermanTankA_M4A176W; // earlier version without HVAP (also without muzzle brake or sandbags)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_GLWeapon extends DHExplosiveWeapon;
@@ -20,7 +20,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_GL_1st.GL_mesh'
 
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.stiel_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.stiel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     DisplayFOV=80.0

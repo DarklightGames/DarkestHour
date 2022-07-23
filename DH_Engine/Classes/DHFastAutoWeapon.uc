@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHFastAutoWeapon extends DHAutoWeapon
@@ -47,8 +47,4 @@ function float SuggestAttackStyle()
 function float SuggestDefenseStyle()
 {
     return -0.5;
-}
-
-defaultproperties
-{
 }

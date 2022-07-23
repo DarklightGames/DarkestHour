@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // MD5 hash implementation for UnrealScript by Wormbo.
 // Feel free to modify and optimize for your needs.
@@ -15,7 +15,7 @@ var private array<byte> StaticData;
 // Instant hash functions - probably not suitable for long input data
 //==============================================================================
 
-static final function GUID GetStringHash(string In)
+final static function GUID GetStringHash(string In)
 {
     local int StrLen, i;
 
@@ -33,7 +33,7 @@ static final function GUID GetStringHash(string In)
     return default.StaticHashValue;
 }
 
-static final function string GetStringHashString(string In)
+final static function string GetStringHashString(string In)
 {
     local int StrLen, i;
 
@@ -54,7 +54,7 @@ static final function string GetStringHashString(string In)
          $ LittleEndianToHex(default.StaticHashValue.D);
 }
 
-static final function GUID GetArrayHash(array<byte> In)
+final static function GUID GetArrayHash(array<byte> In)
 {
     default.StaticData = In;
 
@@ -63,7 +63,7 @@ static final function GUID GetArrayHash(array<byte> In)
     return default.StaticHashValue;
 }
 
-static final function string GetArrayHashString(array<byte> In)
+final static function string GetArrayHashString(array<byte> In)
 {
     default.StaticData = In;
 
@@ -75,7 +75,7 @@ static final function string GetArrayHashString(array<byte> In)
          $ LittleEndianToHex(default.StaticHashValue.D);
 }
 
-static final function string GetHashString(GUID Hash)
+final static function string GetHashString(GUID Hash)
 {
     return LittleEndianToHex(Hash.A) $ LittleEndianToHex(Hash.B)
          $ LittleEndianToHex(Hash.C) $ LittleEndianToHex(Hash.D);
@@ -85,17 +85,17 @@ static final function string GetHashString(GUID Hash)
 // Internal stuff for static instant hashing functions
 //=============================================================================
 
-static final function string LittleEndianToHex(int i)
+final static function string LittleEndianToHex(int i)
 {
-    const hex = "0123456789abcdef";
+    const HEX = "0123456789abcdef";
 
-    return Mid(hex, i >>  4 & 0xf, 1) $ Mid(hex, i &       0xf, 1)
-         $ Mid(hex, i >> 12 & 0xf, 1) $ Mid(hex, i >>  8 & 0xf, 1)
-         $ Mid(hex, i >> 20 & 0xf, 1) $ Mid(hex, i >> 16 & 0xf, 1)
-         $ Mid(hex, i >> 28 & 0xf, 1) $ Mid(hex, i >> 24 & 0xf, 1);
+    return Mid(HEX, i >>  4 & 0xf, 1) $ Mid(HEX, i &       0xf, 1)
+         $ Mid(HEX, i >> 12 & 0xf, 1) $ Mid(HEX, i >>  8 & 0xf, 1)
+         $ Mid(HEX, i >> 20 & 0xf, 1) $ Mid(HEX, i >> 16 & 0xf, 1)
+         $ Mid(HEX, i >> 28 & 0xf, 1) $ Mid(HEX, i >> 24 & 0xf, 1);
 }
 
-static final function StaticProcessChunks()
+final static function StaticProcessChunks()
 {
     local int i;
     local int A, B, C, D;
@@ -113,11 +113,11 @@ static final function StaticProcessChunks()
     }
 
     default.StaticData[i] = 0x80;
-    default.StaticData[default.StaticData.Length - 4] = (i >>> 29);
-    default.StaticData[default.StaticData.Length - 5] = (i >>> 21);
-    default.StaticData[default.StaticData.Length - 6] = (i >>> 13);
-    default.StaticData[default.StaticData.Length - 7] = (i >>>  5);
-    default.StaticData[default.StaticData.Length - 8] = (i <<   3);
+    default.StaticData[default.StaticData.Length - 4] = i >>> 29;
+    default.StaticData[default.StaticData.Length - 5] = i >>> 21;
+    default.StaticData[default.StaticData.Length - 6] = i >>> 13;
+    default.StaticData[default.StaticData.Length - 7] = i >>>  5;
+    default.StaticData[default.StaticData.Length - 8] = i <<   3;
 
     default.StaticHashValue.A = 0x67452301;
     default.StaticHashValue.B = 0xEFCDAB89;
@@ -131,7 +131,7 @@ static final function StaticProcessChunks()
             W[i] = (default.StaticData[i * 4 + 3] << 24)
                  | (default.StaticData[i * 4 + 2] << 16)
                  | (default.StaticData[i * 4 + 1] << 8)
-                 | (default.StaticData[i * 4]);
+                 | default.StaticData[i * 4];
         }
 
         // initialize hash value for this chunk

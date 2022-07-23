@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHHud extends ROHud
@@ -3513,7 +3513,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         {
             if (DHGRI.Radios[i] != none &&
                 DHGRI.Radios[i].bShouldShowOnSituationMap &&
-                DHGRI.Radios[i].TeamIndex == OwnerTeam &&
+                (DHGRI.Radios[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.Radios[i].TeamIndex == OwnerTeam) &&
                 DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
                 // MapIconCarriedRadio
@@ -4702,7 +4702,7 @@ function DrawCaptureBar(Canvas Canvas)
     Canvas.Font = GetConsoleFont(Canvas);
     Canvas.TextSize(S, XL, YL);
     XPos = (Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0);
-    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - ((CaptureBarBackground.TextureCoords.Y2) * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
+    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - (CaptureBarBackground.TextureCoords.Y2 * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
     Canvas.SetPos(XPos, YPos - YL);
     Canvas.DrawText(S);
 

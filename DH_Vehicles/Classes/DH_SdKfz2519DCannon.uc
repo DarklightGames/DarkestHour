@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_SdKfz2519DCannon extends DHATGunCannon;
+class DH_SdKfz2519DCannon extends DHVehicleCannon;
 
 defaultproperties
 {
@@ -13,12 +13,21 @@ defaultproperties
     // WeaponAttachOffset=(X=-42.76,Y=0.3,Z=37.95)
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.stummel_ext'
 
+    bHasTurret=false
+    ManualRotationsPerSecond=0.025
+    bLimitYaw=true
     MaxPositiveYaw=2200
     MaxNegativeYaw=-2200
     YawStartConstraint=-2200
     YawEndConstraint=2200
     CustomPitchUpLimit=3400
     CustomPitchDownLimit=65275
+
+    ShakeRotMag=(Z=110.0)
+    ShakeRotRate=(Z=1100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetTime=2.0
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'

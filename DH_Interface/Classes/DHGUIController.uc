@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGUIController extends UT2K4GUIController;
@@ -258,7 +258,7 @@ event bool CloseMenu(optional bool bCancelled)
 
 function PurgeObjectReferences() { }
 
-static simulated event Validate()
+simulated static event Validate()
 {
     if (default.MainMenuOptions.Length < 5)
     {
@@ -266,34 +266,34 @@ static simulated event Validate()
     }
 }
 
-static simulated function string GetServerBrowserPage()
+simulated static function string GetServerBrowserPage()
 {
     Validate();
     return default.MainMenuOptions[0];
 }
 
-static simulated function string GetMultiplayerPage()
+simulated static function string GetMultiplayerPage()
 {
     Validate();
 
     return default.MainMenuOptions[1];
 }
 
-static simulated function string GetInstantActionPage()
+simulated static function string GetInstantActionPage()
 {
     Validate();
 
     return default.MainMenuOptions[2];
 }
 
-static simulated function string GetSettingsPage()
+simulated static function string GetSettingsPage()
 {
     Validate();
 
     return default.MainMenuOptions[3];
 }
 
-static simulated function string GetQuitPage()
+simulated static function string GetQuitPage()
 {
     Validate();
 

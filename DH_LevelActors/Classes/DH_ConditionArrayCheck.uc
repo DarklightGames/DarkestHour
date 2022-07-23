@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ConditionArrayCheck extends DH_LevelActors;
@@ -46,8 +46,4 @@ event Trigger(Actor Other, Pawn EventInstigator)
         if (ConditionReferenceArray[i].bEnabled == bTriggerIf)
             TriggerEvent(EventToTrigger, self, none);
     }
-}
-
-defaultproperties
-{
 }

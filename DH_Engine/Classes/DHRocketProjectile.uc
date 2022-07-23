@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAntiVehicleProjectile, but has so much in common with HEAT shell it's simpler & cleaner to extend that
@@ -182,7 +182,7 @@ defaultproperties
     RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    VehicleDeflectSound=sound'ProjectileSounds.PTRD_deflect' //temp
+    VehicleDeflectSound=Sound'ProjectileSounds.PTRD_deflect' //temp
 
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'

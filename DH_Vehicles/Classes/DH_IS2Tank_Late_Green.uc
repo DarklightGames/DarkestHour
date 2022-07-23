@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_IS2Tank_Late_Green extends DH_IS2Tank_Late; 
+class DH_IS2Tank_Late_Green extends DH_IS2Tank_Late;
 
 defaultproperties
 {

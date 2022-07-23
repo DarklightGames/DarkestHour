@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MP3008Weapon extends DHAutoWeapon;
@@ -14,16 +14,16 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP3008Pickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.MP3008_mesh'
-    //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
+    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    
+
     Skins(2)=Texture'DH_Sten_tex.Sten.mp3008_tex'
     HandNum=1
     SleeveNum=0
 
     SwayModifyFactor=0.72 // -0.08
-    
+
     DisplayFOV=80.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=66.0
@@ -49,7 +49,7 @@ defaultproperties
     CrawlEndEmptyAnim="crawl_out_empty"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
-    
+
     SelectFireAnim="fireswitch"
     SelectFireIronAnim="Iron_fireswitch"
     SelectFireEmptyAnim="fireswitch_empty"

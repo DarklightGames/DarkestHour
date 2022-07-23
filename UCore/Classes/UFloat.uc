@@ -1,12 +1,12 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class UFloat extends Object;
 
 var float Value;
 
-static final function UFloat Create(optional float Value)
+final static function UFloat Create(optional float Value)
 {
     local UFloat F;
 
@@ -16,38 +16,38 @@ static final function UFloat Create(optional float Value)
     return F;
 }
 
-static final function float RandomRange(float Min, float Max)
+final static function float RandomRange(float Min, float Max)
 {
     return Min + (FRand() * (Max - Min));
 }
 
-static final function float Infinity()
+final static function float Infinity()
 {
     return 1.0 / 0.0;
 }
 
-static final function float MaxValue()
+final static function float MaxValue()
 {
     return 3.40282347E+38f;
 }
 
-static final function float MinValue()
+final static function float MinValue()
 {
     return -3.40282347E+38f;
 }
 
-static final function float Epsilon()
+final static function float Epsilon()
 {
     return 1.401298E-45f;
 }
 
-static final function Mod(float Dividend, float Divisor, optional out int Quotient, optional out float Remainder)
+final static function Mod(float Dividend, float Divisor, optional out int Quotient, optional out float Remainder)
 {
     Quotient = int(Dividend / Divisor);
     Remainder = Dividend % Divisor;
 }
 
-static final function string Format(float Value, int Decimals)
+final static function string Format(float Value, int Decimals)
 {
     local int Quotient;
     local float Remainder;

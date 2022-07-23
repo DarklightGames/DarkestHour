@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
@@ -17,7 +17,7 @@ defaultproperties
     //Damage
     ImpactDamage=200
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=75.0 //10.2 gr of TNT 
+    Damage=75.0 //10.2 gr of TNT
     DamageRadius=250
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.25

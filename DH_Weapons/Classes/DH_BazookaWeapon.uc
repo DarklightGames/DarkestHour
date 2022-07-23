@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BazookaWeapon extends DHRocketWeapon;
@@ -17,8 +17,8 @@ defaultproperties
 
     // These specularity shaders exist (for weapon & rocket) but weren't used in DH5.1 - perhaps because they don't look quite right
     // The shine on bare metal parts looms good, but the green painted metal looks more like frost:
-//  Skins(3)=shader'DH_Weapon_tex.Spec_Maps.BazookaShell_s'
-//  HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.Bazooka_s'
+//  Skins(3)=Shader'DH_Weapon_tex.Spec_Maps.BazookaShell_s'
+//  HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.Bazooka_s'
 //  bUseHighDetailOverlayIndex=true
 //  HighDetailOverlayIndex=2
 

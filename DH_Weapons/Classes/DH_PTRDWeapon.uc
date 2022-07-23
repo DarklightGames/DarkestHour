@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PTRDWeapon extends DHBipodWeapon;
@@ -86,7 +86,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PTRDPickup'
 
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.PTRD_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
