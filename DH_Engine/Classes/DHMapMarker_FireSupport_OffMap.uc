@@ -49,6 +49,7 @@ defaultproperties
     IconColor=(R=255,G=255,B=255,A=128)
     Type=MT_OffMapArtilleryRequest
     Scope=PERSONAL
+    RequiredSquadMembers=3
     OverwritingRule=UNIQUE
     GroupIndex=3
     Cooldown=3
