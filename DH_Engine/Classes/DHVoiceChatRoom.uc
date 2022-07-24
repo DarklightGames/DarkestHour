@@ -7,10 +7,6 @@ class DHVoiceChatRoom extends UnrealChatRoom;
 
 var     int     SquadIndex;
 var     float   LocalBroadcastRangeSquared;
-var     int     SubordinatesRequiredToAccessCommand; // TODO: Refactor this
-                                                     // somewhere else so we
-                                                     // could use this var with
-                                                     // the text chat.
 
 // Called after LeaveChannel, or when player exits the server
 // NOTE: overridden to eliminate "has left channel" chat messages, & also to allow more than 32 VoiceIDs
@@ -88,17 +84,9 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
         {
             return true;
         }
-        else if (IsAlliesCommandChannel() &&
-                 MyPRI.IsSLorASL() &&
-                 MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX &&
-                 MyPRI.HasSubordinates(SubordinatesRequiredToAccessCommand))
-        {
-            return true;
-        }
-        else if (IsAxisCommandChannel() &&
-                 MyPRI.IsSLorASL() &&
-                 MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX &&
-                 MyPRI.HasSubordinates(SubordinatesRequiredToAccessCommand))
+        else if (((IsAlliesCommandChannel() && MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX) ||
+                  (IsAxisCommandChannel() && MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX)) &&
+                 MyPRI.CanAccessCommandChannel())
         {
             return true;
         }
@@ -168,5 +156,4 @@ defaultproperties
 {
     SquadIndex=-1
     LocalBroadcastRangeSquared=4000000.0
-    SubordinatesRequiredToAccessCommand=1
 }
