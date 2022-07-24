@@ -11,6 +11,10 @@ var bool        bLockConsoleOpen;
 var bool        bDelayForReconnect;
 var float       DelayWaitTime;
 var string      StoredServerAddress;
+var int         SubordinatesRequiredToAccessCommand; // TODO: Refactor this
+                                                     // somewhere else so we
+                                                     // could use this var with
+                                                     // the text chat.
 
 var array<string>           SayTypes;
 var string                  SayType;
@@ -737,6 +741,7 @@ function UpdateSayType()
 function bool CanUseSayType(string SayType)
 {
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -756,7 +761,9 @@ function bool CanUseSayType(string SayType)
         case "VehicleSay":
             return PC.Pawn != none && PC.Pawn.IsA('Vehicle');
         case "CommandSay":
-            return PC.IsSLorASL();
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+            return PRI.HasSubordinates(SubordinatesRequiredToAccessCommand) &&
+                   PC.IsSLorASL();
     }
 
     return false;
@@ -944,6 +951,7 @@ function bool CanUseVehicleCommands()
 defaultproperties
 {
     NeedPasswordMenuClass="DH_Engine.DHGetPassword" // lol this doesn't even work, had to replace the reference to this with a direct string
+    SubordinatesRequiredToAccessCommand=1
 
     SayType="Say"
     SayTypes(0)="Say"
