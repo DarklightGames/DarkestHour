@@ -97,7 +97,9 @@ var localized   string                      NoneText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
                                             RecommendJoiningSquadText,
-                                            UnassignedPlayersCaptionText;
+                                            UnassignedPlayersCaptionText,
+                                            NonSquadLeaderOnlyText
+                                            ;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -608,14 +610,9 @@ function OnOKButtonClick(byte Button)
 function UpdateRoles()
 {
     local DHRoleInfo RI;
-    local bool       bShouldBeDisabled;
     local int        Count, BotCount, Limit, i;
     local string     S;
-
-    if (PRI == none)
-    {
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    }
+    local DHPlayer.ERoleEnabledResult RoleEnabledResult;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
@@ -634,6 +631,8 @@ function UpdateRoles()
         {
             S = RI.MyName;
         }
+
+        RoleEnabledResult = PC.GetRoleEnabledResult(RI);
 
         GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
@@ -655,26 +654,21 @@ function UpdateRoles()
             S @= "*" $ BotsText $ "*";
         }
 
-        bShouldBeDisabled = PC.GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0;
-
-        // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless AND the role is not excempt
-        if (PRI != none && !PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255 && !RI.bExemptSquadRequirement)
+        switch (RoleEnabledResult)
         {
-            S @= "*" $ SquadOnlyText $ "*";
-            bShouldBeDisabled = true;
+            case RER_SquadOnly:
+                S @= "*" $ SquadOnlyText $ "*";
+                break;
+            case RER_SquadLeaderOnly:
+                S @= "*" $ SquadLeadershipOnlyText $ "*";
+                break;
+            CASE RER_NonSquadLeaderOnly:
+                S @= "*" $ NonSquadLeaderOnlyText $ "*";
+                break;
         }
-
-        // If in a squad AND role requires sl/asl AND not a sl/asl AND gametype restricts specialized roles to squads only
-        if (PRI != none && PRI.IsInSquad() &&
-            ((RI.bRequiresSLorASL && !PRI.IsSLorASL()) || (RI.bRequiresSL && !PRI.IsSquadLeader())) &&
-            GRI.GameType.default.bSquadSpecialRolesOnly)
-        {
-            S @= "*" $ SquadLeadershipOnlyText $ "*";
-            bShouldBeDisabled = true;
-        }
-
+        
         li_Roles.SetItemAtIndex(i, S);
-        li_Roles.SetDisabledAtIndex(i, bShouldBeDisabled);
+        li_Roles.SetDisabledAtIndex(i, RoleEnabledResult != RER_Enabled);
     }
 }
 
@@ -1903,6 +1897,7 @@ defaultproperties
     BotsText="BOTS"
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
+    NonSquadLeaderOnlyText="NON-LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 

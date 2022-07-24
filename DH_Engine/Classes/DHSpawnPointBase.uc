@@ -354,7 +354,7 @@ function SetIsActive(bool bIsActive)
             if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
             {
                 PC.SpawnPointIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }

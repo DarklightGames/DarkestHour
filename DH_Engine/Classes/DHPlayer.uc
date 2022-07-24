@@ -17,6 +17,16 @@ enum EMapMode
     MODE_Squads
 };
 
+enum ERoleEnabledResult
+{
+    RER_Fatal,
+    RER_Enabled,
+    RER_Limit,
+    RER_SquadOnly,
+    RER_SquadLeaderOnly,
+    RER_NonSquadLeaderOnly,
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 var     Hashtable_string_int                                    MapMarkerCooldowns;
@@ -90,7 +100,7 @@ var     int                     LastKilledTime;             // the time at which
 var     int                     NextVehicleSpawnTime;       // the time at which a player can spawn a vehicle next (this gets set when a player spawns a vehicle)
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
-var     bool                    bSpawnPointInvalidated;
+var     bool                    bSpawnParametersInvalidated;
 var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
                                                             // it resets whenever an objective is taken
 // Weapon locking (punishment for spawn killing)
@@ -174,7 +184,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
+        SpawnPointIndex, VehiclePoolIndex, bSpawnParametersInvalidated,
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
@@ -3095,7 +3105,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 SpawnPointIndex = NewSpawnPointIndex;
                 NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
 
-                bSpawnPointInvalidated = false;
+                bSpawnParametersInvalidated = false;
 
                 // Everything is good
                 ClientChangePlayerInfoResult(0);
@@ -3197,7 +3207,7 @@ state DeadSpectating
     {
         super.BeginState();
 
-        if (!PlayerReplicationInfo.bOnlySpectator && bSpawnPointInvalidated)
+        if (!PlayerReplicationInfo.bOnlySpectator && bSpawnParametersInvalidated)
         {
             DeployMenuStartMode = MODE_Map;
             ClientProposeMenu("DH_Interface.DHDeployMenu");
@@ -3231,7 +3241,7 @@ state Dead
         if (GRI.SpawnPoints[SpawnPointIndex].GetDesirability() < MaxDesirability)
         {
             SpawnPointIndex = -1;
-            bSpawnPointInvalidated = true;
+            bSpawnParametersInvalidated = true;
         }
     }
 
@@ -7497,6 +7507,49 @@ exec function ToggleSelectedArtilleryTarget()
         // try the next squad
         NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
     }
+}
+
+// Gets whether or not this player is able to change to this role.
+function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
+{
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+    local int Count, BotCount, Limit;
+    local bool bIsRoleLimitless;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (RI == none || PRI == none || GRI == none) { return RER_Fatal; }
+
+    GRI.GetRoleCounts(RI, Count, BotCount, Limit);
+
+    if (GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0)
+    {
+        return RER_Limit;
+    }
+
+    bIsRoleLimitless = (Limit == 255);
+
+    if (GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
+    {
+        if (!IsInSquad() && !bIsRoleLimitless && !RI.bExemptSquadRequirement)
+        {
+            return RER_SquadOnly;
+        }
+
+        if (IsInSquad() && ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader())))
+        {
+            return RER_SquadLeaderOnly;
+        }
+
+        if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+        {
+            return RER_NonSquadLeaderOnly;
+        }
+    }
+
+    return RER_Enabled;
 }
 
 defaultproperties

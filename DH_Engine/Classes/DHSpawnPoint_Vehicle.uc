@@ -215,7 +215,7 @@ function bool PerformSpawn(DHPlayer PC)
 
     // We failed to deploy, so invalidate spawn point & reset spawn vehicle index & next spawn time
     // Since next spawn time is set when player is reset above, without this the player would be forced to wait to spawn timer again
-    PC.bSpawnPointInvalidated = true;
+    PC.bSpawnParametersInvalidated = true;
     PC.SpawnPointIndex = -1;
     PC.NextSpawnTime = 0;
 
