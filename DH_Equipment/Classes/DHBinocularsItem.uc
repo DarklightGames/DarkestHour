@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
@@ -233,7 +233,7 @@ defaultproperties
     bCanAttachOnBack=false
 
     Mesh=SkeletalMesh'Common_Binoc_1st.binoculars'
-    HighDetailOverlay=shader'Weapons1st_tex.SniperScopes.Binoc_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.SniperScopes.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

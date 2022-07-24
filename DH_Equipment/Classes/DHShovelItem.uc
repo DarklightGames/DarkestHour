@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHShovelItem extends DHWeapon
@@ -8,7 +8,7 @@ class DHShovelItem extends DHWeapon
 
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
-simulated exec function ROManualReload() { return; }
+exec simulated function ROManualReload() { return; }
 
 simulated function Fire(float F)
 {

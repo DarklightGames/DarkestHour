@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // This class exists so Germans can access 88 guns on 1941 maps without breaking
 // historical limits of other heavy guns.
@@ -33,6 +33,20 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 
         // case ALLIES_TEAM_INDEX:
         //     break;
+    }
+}
+
+// Modified because the Flak 88 has huge legs that need to be level on the ground,
+// so we manually override the radius here.
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
+{
+    super.GetCollisionSize(Context, NewRadius, NewHeight);
+
+    switch (Context.TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            NewRadius = 200.0;
+            break;
     }
 }
 

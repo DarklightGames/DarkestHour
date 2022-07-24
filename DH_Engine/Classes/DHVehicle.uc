@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
@@ -700,14 +700,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        CameraLocation += (FPCamPos >> Rotation);
+        CameraLocation += FPCamPos >> Rotation;
     }
 
     // Finalise the camera with any shake
     if (PC != none)
     {
         CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-        CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+        CameraLocation += PC.ShakeOffset >> PC.Rotation;
     }
 }
 
@@ -2586,7 +2586,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
 
     if (VehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += (VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+        HitPointLocation += VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -2610,7 +2610,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
         if (t < DotMM)
         {
             t /= DotMM;
-            Difference -= (t * LineCheck);
+            Difference -= t * LineCheck;
         }
         else
         {
@@ -3386,7 +3386,7 @@ simulated function DestroyAttachments()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Unloading supplies.
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     LoadSupplies();
 }
@@ -3420,7 +3420,7 @@ simulated function UnloadSupplies()
 }
 
 // Loading supplies.
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     UnloadSupplies();
 }

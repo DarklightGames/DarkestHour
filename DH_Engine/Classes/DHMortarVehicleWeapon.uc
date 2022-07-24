@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHMortarVehicleWeapon extends DHVehicleWeapon
@@ -99,7 +99,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         // Adjust projectile's velocity to apply some random distance spread
         if (!bDebugNoSpread)
         {
-            P.Velocity *= (1.0 + ((FRand() - 0.5) * 0.1)); // scale velocity by +/- 5%
+            P.Velocity *= 1.0 + ((FRand() - 0.5) * 0.1); // scale velocity by +/- 5%
         }
 
         // Debug option
@@ -157,7 +157,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     if (WeaponFireOffset != 0.0) // apply any positional offset
     {
         CurrentFireOffset.X = WeaponFireOffset;
-        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
+        WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
     }
 }
 

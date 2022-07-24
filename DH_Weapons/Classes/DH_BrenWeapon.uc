@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BrenWeapon extends DHBipodAutoWeapon;
@@ -21,7 +21,7 @@ defaultproperties
     BarrelSteamBone="Muzzle"
 
     Mesh=SkeletalMesh'DH_Bren_1st.Bren'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
+    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     FreeAimRotationSpeed=2.0

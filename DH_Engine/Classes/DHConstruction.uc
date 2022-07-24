@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -1291,7 +1291,6 @@ defaultproperties
 
     // Progress
     StageIndex=-1
-    Progress=0
     ProgressMax=4
 
     // Damage

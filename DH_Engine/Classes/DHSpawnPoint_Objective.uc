@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 class DHSpawnPoint_Objective extends DHSpawnPoint;
 
@@ -35,6 +35,11 @@ function Timer()
 simulated function bool CanSpawnVehicles()
 {
     return bHasVehicleLocationHints;
+}
+
+simulated function int GetDesirability()
+{
+    return 2;
 }
 
 defaultproperties

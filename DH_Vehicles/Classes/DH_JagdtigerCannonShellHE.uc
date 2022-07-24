@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_JagdtigerCannonShellHE extends DHCannonShellHE;
@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=3.9
 
     //Damage
-    ImpactDamage=2400  //3.6 KG TNT, destroys anything that gets penetrated  by it 
+    ImpactDamage=2400  //3.6 KG TNT, destroys anything that gets penetrated  by it
     Damage=1600.0
     DamageRadius=2100.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)

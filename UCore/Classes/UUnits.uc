@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class UUnits extends Object
@@ -13,7 +13,7 @@ enum EAngleUnit
     AU_Radians
 };
 
-static final function string GetAngleUnitString(EAngleUnit Unit)
+final static function string GetAngleUnitString(EAngleUnit Unit)
 {
     switch (Unit)
     {
@@ -30,7 +30,7 @@ static final function string GetAngleUnitString(EAngleUnit Unit)
     }
 }
 
-static final function float ConvertAngleUnitToUnreal(coerce float Angle, EAngleUnit FromUnit)
+final static function float ConvertAngleUnitToUnreal(coerce float Angle, EAngleUnit FromUnit)
 {
     switch (FromUnit)
     {
@@ -45,7 +45,7 @@ static final function float ConvertAngleUnitToUnreal(coerce float Angle, EAngleU
     }
 }
 
-static final function float ConvertAngleUnit(coerce float Angle, EAngleUnit FromUnit, EAngleUnit ToUnit)
+final static function float ConvertAngleUnit(coerce float Angle, EAngleUnit FromUnit, EAngleUnit ToUnit)
 {
     if (FromUnit == ToUnit)
     {
@@ -68,42 +68,42 @@ static final function float ConvertAngleUnit(coerce float Angle, EAngleUnit From
     }
 }
 
-static final function float DegreesToRadians(coerce float Degrees)
+final static function float DegreesToRadians(coerce float Degrees)
 {
     return Degrees * 0.01745329251994329576923690768489;
 }
 
-static final function float RadiansToDegrees(coerce float Radians)
+final static function float RadiansToDegrees(coerce float Radians)
 {
     return Radians * 57.295779513082320876798154814105;
 }
 
-static final function float DegreesToUnreal(coerce float Degrees)
+final static function float DegreesToUnreal(coerce float Degrees)
 {
     return Degrees * 182.04444444444444444444444444444;
 }
 
-static final function float RadiansToUnreal(coerce float Radians)
+final static function float RadiansToUnreal(coerce float Radians)
 {
     return Radians * 10430.378350470452724949566316381;
 }
 
-static final function float UnrealToDegrees(coerce float Unreal)
+final static function float UnrealToDegrees(coerce float Unreal)
 {
     return Unreal * 0.0054931640625;
 }
 
-static final function float UnrealToRadians(coerce float Unreal)
+final static function float UnrealToRadians(coerce float Unreal)
 {
     return Unreal * 0.000095873799242852576857380474343247;
 }
 
-static final function float UnrealToMils(coerce float Unreal)
+final static function float UnrealToMils(coerce float Unreal)
 {
     return UnrealToRadians(Unreal) * 1000.0;
 }
 
-static final function float MilsToUnreal(coerce float Mils)
+final static function float MilsToUnreal(coerce float Mils)
 {
     return RadiansToUnreal(Mils * 0.001);
 }

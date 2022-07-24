@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanMountedMGPawn extends DHVehicleMGPawn;
@@ -47,7 +47,7 @@ simulated function DrawHUD(Canvas C)
                     // This makes the first person gun appear lower if player raises his head above the gun
                     if (FirstPersonGunRefBone != '' && Gun != none)
                     {
-                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
+                        GunOffset.Z += (Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale;
                     }
 
                     HUDOverlay.SetLocation(PC.CalcViewLocation);

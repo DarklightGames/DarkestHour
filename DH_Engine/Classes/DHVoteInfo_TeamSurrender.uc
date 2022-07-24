@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
@@ -201,15 +201,6 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     if (GetRoundTimeRequiredSeconds() >= GRI.ElapsedTime)
     {
         PC.ClientTeamSurrenderResponse(9);
-        return false;
-    }
-
-    // Reinforcements are above the limit.
-    if (Game.SpawnsAtRoundStart[TeamIndex] >= GRI.SpawnsRemaining[TeamIndex] &&
-        GRI.SpawnsRemaining[TeamIndex] > 0 &&
-        GRI.SpawnsRemaining[TeamIndex] > Game.SpawnsAtRoundStart[TeamIndex] * GetReinforcementsRequiredPercent())
-    {
-        PC.ClientTeamSurrenderResponse(8);
         return false;
     }
 

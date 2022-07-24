@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHArtilleryRequest extends Object;
@@ -14,8 +14,3 @@ simulated function class<DHArtillery> GetArtilleryClass()
 {
     return Sender.GetLevelInfo().ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
 }
-
-defaultproperties
-{
-}
-

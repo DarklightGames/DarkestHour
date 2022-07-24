@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -386,6 +386,9 @@ function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
                     break;
                 case NATION_Poland:
                     VoicePackClassName = "DH_SovietPlayers.DHPolishVoice";
+                    break;
+                case NATION_Czechoslovakia:
+                    VoicePackClassName = "DH_SovietPlayers.DHCzechVoice";
                     break;
             }
     }

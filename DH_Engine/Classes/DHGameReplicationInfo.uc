@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -21,7 +21,7 @@ const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 64;
 const NO_ARTY_VOLUMES_MAX = 32;
 
-enum VehicleReservationError
+enum EVehicleReservationError
 {
     ERROR_None,
     ERROR_Fatal,
@@ -62,6 +62,15 @@ enum EArtilleryTypeError
     ERROR_SquadTooSmall,
     ERROR_Cancellable
 };
+
+struct STeamScores
+{
+    var int Kills;
+    var int Deaths;
+    var int CategoryScores[2];
+};
+
+var STeamScores         TeamScores[2];
 
 var class<DHGameType>   GameType;
 
@@ -266,7 +275,8 @@ replication
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
         DHMineVolumeIsActives,
-        DHNoArtyVolumeIsActives;
+        DHNoArtyVolumeIsActives,
+        TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -314,7 +324,10 @@ simulated function PostBeginPlay()
     {
         for (i = 0; i < ConstructionClassNames.Length; ++i)
         {
-            AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+            if (ConstructionClassNames[i] != "")
+            {
+                AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+            }
         }
 
         LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -877,6 +890,30 @@ simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
     return SpawnPoints[SpawnPointIndex];
 }
 
+simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, optional out int OutDesirability)
+{
+    local int i, Desirability;
+    local DHSpawnPointBase SP;
+
+    OutDesirability = -MaxInt;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] != none && SpawnPoints[i].IsVisibleToPlayer(PC)) // TODO: should probably check if we can even spawn here
+        {
+            Desirability = SpawnPoints[i].GetDesirability();
+
+            if (Desirability > OutDesirability)
+            {
+                SP = SpawnPoints[i];
+                OutDesirability = Desirability;
+            }
+        }
+    }
+
+    return SP;
+}
+
 simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
     local DHSpawnPoint_SquadRallyPoint RP;
@@ -1087,6 +1124,39 @@ simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
     }
 
     return none;
+}
+
+simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
+{
+    local int i;
+    local DHRoleInfo RI;
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAxisRoles); ++i)
+        {
+            RI = DHAxisRoles[i];
+
+            if (DHAxisRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+        {
+            RI = DHAlliesRoles[i];
+
+            if (DHAlliesRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }
 
 simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team)
@@ -1358,7 +1428,7 @@ simulated function int GetReservableTankCount(int TeamIndex)
     return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
 }
 
-simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<DHVehicle> VC;
 
@@ -1861,8 +1931,8 @@ simulated function vector GetWorldCoords(float X, float Y)
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
-    WorldLocation.X = ((0.5 - X) * MapScale);
-    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation.X = (0.5 - X) * MapScale;
+    WorldLocation.Y = (0.5 - Y) * MapScale;
     WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
@@ -2007,7 +2077,7 @@ function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 
 function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
 {
-    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+    DangerZoneBalance = 128 - Clamp(Factor, -127, 127);
 
     if (!bPostponeUpdate)
     {
@@ -2256,6 +2326,38 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
     return Result;
 }
 
+function AddKillForTeam(int TeamIndex)
+{
+    if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))
+    {
+        ++TeamScores[TeamIndex].Kills;
+    }
+}
+
+function AddDeathForTeam(int TeamIndex)
+{
+    if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))
+    {
+        ++TeamScores[TeamIndex].Deaths;
+    }
+}
+
+function ResetTeamScores()
+{
+    local int i, j;
+
+    for (i = 0; i < arraycount(TeamScores); ++i)
+    {
+        TeamScores[i].Kills = 0;
+        TeamScores[i].Deaths = 0;
+
+        for (j = 0; j < arraycount(TeamScores[i].CategoryScores); ++j)
+        {
+            TeamScores[i].CategoryScores[j] = 0;
+        }
+    }
+}
+
 defaultproperties
 {
     bNetNotify=true
@@ -2273,7 +2375,6 @@ defaultproperties
     ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    // ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
@@ -2294,10 +2395,9 @@ defaultproperties
     ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
     ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
     ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_GrenadeCrate"
-    ConstructionClassNames(20)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(21)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
 
     // Artillery
     ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"

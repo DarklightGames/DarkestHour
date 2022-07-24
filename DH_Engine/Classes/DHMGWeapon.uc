@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHMGWeapon extends DHBipodWeapon
@@ -65,7 +65,7 @@ simulated function RenewAmmoBelt()
 }
 
 // Modified to prevent deploying if player is moving
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     if (Instigator != none && VSizeSquared(Instigator.Velocity) == 0.0)
     {

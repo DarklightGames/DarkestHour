@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHMainBaseSupplyCache extends Actor
@@ -15,6 +15,7 @@ enum ETeamOwner
 
 var() ETeamOwner                TeamOwner;                      // Set the team the main cache is for
 var() int                       InitialSupplyCount;             // Initial amount of supply
+var() int                       SupplyCountMax;                 // The max amount of supply
 var() int                       BonusSupplyGenerationRate;
 
 var DHConstructionSupplyAttachment              SupplyAttachment;
@@ -61,8 +62,9 @@ function CreateSupplyAttachment()
     SupplyAttachment.SetBase(self);
     SupplyAttachment.SetTeamIndex(GetTeamIndex());
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
-    SupplyAttachment.SetInitialSupply(InitialSupplyCount);
-    SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
+    SupplyAttachment.SetInitialSupply(Min(InitialSupplyCount, SupplyCountMax));
+    SupplyAttachment.SupplyCountMax = SupplyCountMax;
+    SupplyAttachment.BonusSupplyGenerationRate = BonusSupplyGenerationRate;
     SupplyAttachment.bHidden = true;
 }
 
@@ -78,6 +80,7 @@ defaultproperties
 {
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static_Main'
     InitialSupplyCount=8000
+    SupplyCountMax=8000
     BonusSupplyGenerationRate=500
 
     Texture=Texture'DHEngine_Tex.LevelActor'

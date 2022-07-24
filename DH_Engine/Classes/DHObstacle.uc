@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // This is the placeable obstacle class.
 // This acts simply as an informational actor. The client and server will spawn
@@ -124,7 +124,6 @@ defaultproperties
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
     RemoteRole=ROLE_None
-    SpawnClearedChance=0.0
     TypeIndex=-1
     bDebug=false
     bNoDelete=false

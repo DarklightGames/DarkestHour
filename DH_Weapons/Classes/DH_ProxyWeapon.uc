@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ProxyWeapon extends DHWeapon;
@@ -191,7 +191,7 @@ simulated function Fire(float F)
 }
 
 // Modified to simply reset the location rotation of the proxy.
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     ResetCursor();
 }
@@ -259,8 +259,8 @@ defaultproperties
     CrawlBackwardAnim="crawl_in"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_in"
-    FireModeClass(0)=Class'DH_Weapons.DH_EmptyFire'
-    FireModeClass(1)=Class'DH_Weapons.DH_EmptyFire'
+    FireModeClass(0)=class'DH_Weapons.DH_EmptyFire'
+    FireModeClass(1)=class'DH_Weapons.DH_EmptyFire'
     RestAnim="crawl_in"
     AimAnim="crawl_in"
     RunAnim="crawl_in"
@@ -273,7 +273,7 @@ defaultproperties
     InventoryGroup=1
     PlayerViewOffset=(X=-6.000000,Y=-6.000000,Z=100000.000000)
     PlayerViewPivot=(Roll=-2730)
-    AttachmentClass=Class'DH_Weapons.DH_EmptyAttachment'
+    AttachmentClass=class'DH_Weapons.DH_EmptyAttachment'
     ItemName=" "
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_US'
     bForceSwitch=false

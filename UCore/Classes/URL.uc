@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // https://github.com/php/php-src/blob/c72282a13b12b7e572469eba7a7ce593d900a8a2/ext/standard/url.c
 //==============================================================================
@@ -30,7 +30,7 @@ const URL_ESCAPE = "%";
     secure, so try to avoid it.
     ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" and " "
 */
-static final function string RawUrlEncode(string S)
+final static function string RawUrlEncode(string S)
 {
     ReplaceText(S, ";", "%3B");
     ReplaceText(S, "/", "%2F");
@@ -51,7 +51,7 @@ static final function string RawUrlEncode(string S)
     This will decode URL encoded elements. If bIgnorePlus is set to true '+' will
     not be changed to a space
 */
-static final function string RawUrlDecode(string S, optional bool bIgnorePlus)
+final static function string RawUrlDecode(string S, optional bool bIgnorePlus)
 {
     local int i;
     local string Char;
@@ -82,7 +82,7 @@ static final function string RawUrlDecode(string S, optional bool bIgnorePlus)
     return S;
 }
 
-static final function int GetPortByProtocol(string Protocol)
+final static function int GetPortByProtocol(string Protocol)
 {
     switch (Protocol)
     {
@@ -95,7 +95,7 @@ static final function int GetPortByProtocol(string Protocol)
     return 0;
 }
 
-static final function URL FromString(string S)
+final static function URL FromString(string S)
 {
     local URL URL;
     local int i, j;

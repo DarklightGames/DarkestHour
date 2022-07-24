@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 
-var           noexport int       GameTypeIndex;
-var protected noexport string    FilterPattern;
+var noexport           int       GameTypeIndex;
+var noexport protected string    FilterPattern;
 
 // Style for maps that are out of player range
 var(Style)             string    RedListStyleName;

@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SatchelChargeSmallPickup extends DH_SatchelCharge10lb10sPickup;
+class DH_CSAZFurHatUnfolded extends DH_SovietHeadgear;
 
 defaultproperties
 {
-
+    Mesh=SkeletalMesh'dhgear_anm.Ushanka_unfoldedCS'
+    Skins(0)=Texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
 }

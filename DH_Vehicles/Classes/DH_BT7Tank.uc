@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BT7Tank extends DHArmoredVehicle;
@@ -23,6 +23,9 @@ defaultproperties
     HighDetailOverlay=Material'allies_ahz_vehicles_tex.int_vehicles.BT7_Int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BT7CannonPawn',WeaponBone="Turret_Placement")

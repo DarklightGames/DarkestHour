@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -291,6 +291,9 @@ function Timer()
                 case 4: // Poland
                     i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
                     break;
+                case 5: // Czechoslovakia
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_czechoslovakia';
+                    break;
             }
 
             // This bullshit is used by RO code to circumvent the
@@ -525,7 +528,7 @@ function UpdateVehicles(optional bool bShowAlert)
     local float            RespawnTime;
     local int              i, j;
     local string           S;
-    local DHGameReplicationInfo.VehicleReservationError VRE;
+    local DHGameReplicationInfo.EVehicleReservationError VRE;
 
     if (GRI == none)
     {
@@ -1919,7 +1922,7 @@ defaultproperties
     SurrenderResponseMessages[5]="You've already retreated."
     SurrenderResponseMessages[6]="Your team already had a vote to retreat earlier. Try again later."
     SurrenderResponseMessages[7]="You cannot retreat after the round is over."
-    SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
+    // SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
     SurrenderResponseMessages[9]="You cannot retreat this early."
     SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 

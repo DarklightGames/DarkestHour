@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M38Weapon extends DHBoltActionWeapon;
@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M38Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_Carbine_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

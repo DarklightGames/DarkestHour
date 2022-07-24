@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M3A1HalftrackTransport_Soviet_Snow extends DH_M3A1HalftrackTransport;
@@ -16,6 +16,6 @@ defaultproperties
 
     //to do: destroyed skin
     RandomAttachment=(Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'))
-    DestroyedMeshSkins(0)=combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
-    DestroyedMeshSkins(1)=combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'
+    DestroyedMeshSkins(0)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
+    DestroyedMeshSkins(1)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIVGLateCannon extends DHVehicleCannon;
@@ -13,7 +13,7 @@ defaultproperties
     Skins(1)=Texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
     Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

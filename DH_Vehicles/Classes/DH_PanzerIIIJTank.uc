@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_PanzerIIIJTank extends DHArmoredVehicle;
@@ -21,7 +21,7 @@ defaultproperties
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
 
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="periscope_idle_out"
@@ -62,8 +62,8 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-	// pros: 5 men crew; short 50mm ammunition is a bit less likely to explode (i assume) 
-	// cons: petrol fuel 
+	// pros: 5 men crew; short 50mm ammunition is a bit less likely to explode (i assume)
+	// cons: petrol fuel
     Health=560
     HealthMax=560.0
 	EngineHealth=300

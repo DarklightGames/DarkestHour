@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class UCollision extends Object;
@@ -18,36 +18,36 @@ static function bool PointInCylinder(vector Origin, float Radius, float HalfHeig
     return Sqrt(Point.X * Point.X + Point.Y * Point.Y) < Radius && Abs(Point.Z) < HalfHeight;
 }
 
-static private final function byte ComputeOutCode(float X, float Y, Box Viewport)
+final private static function byte ComputeOutCode(float X, float Y, Box Viewport)
 {
     local byte Code;
 
-    const INSIDE = 0;
-    const _LEFT = 1;
-    const _RIGHT = 2;
-    const BOTTOM = 4;
-    const TOP = 8;
+    const CODE_INSIDE = 0;
+    const CODE_LEFT = 1;
+    const CODE_RIGHT = 2;
+    const CODE_BOTTOM = 4;
+    const CODE_TOP = 8;
 
     if (X < Viewport.Min.X)
     {
         // to the left of clip window
-        Code = Code | _LEFT;
+        Code = Code | CODE_LEFT;
     }
     else if (X > Viewport.Max.X)
     {
         // to the right of clip window
-        Code = Code | _RIGHT;
+        Code = Code | CODE_RIGHT;
     }
 
     if (Y < Viewport.Min.Y)
     {
         // below the clip window
-        Code = Code | BOTTOM;
+        Code = Code | CODE_BOTTOM;
     }
     else if (Y > Viewport.Max.Y)
     {
         // above the clip window
-        Code = Code | TOP;
+        Code = Code | CODE_TOP;
     }
 
     return Code;
@@ -57,7 +57,7 @@ static private final function byte ComputeOutCode(float X, float Y, Box Viewport
 // Returns true when the line is contained within or intersects the viewport.
 // When the function returns true, the vertex locations ((@X0, @Y0) (@X1, @Y1))
 // are modified to be clipped within the viewport.
-static final function bool ClipLineToViewport(out float X0, out float Y0, out float X1, out float Y1, Box Viewport)
+final static function bool ClipLineToViewport(out float X0, out float Y0, out float X1, out float Y1, Box Viewport)
 {
     // compute OutCodes for P0, P1, and whatever point lies outside the clip rectangle
     local byte OutCode0, OutCode1, OutCodeOut;
@@ -103,25 +103,25 @@ static final function bool ClipLineToViewport(out float X0, out float Y0, out fl
             //   y = Y0 + slope * (xm - X0), where xm is xmin or xmax
             // No need to worry about divide-by-zero because, in each case, the
             // OutCode bit being tested guarantees the denominator is non-zero
-            if ((OutCodeOut & TOP) != 0)
+            if ((OutCodeOut & CODE_TOP) != 0)
             {
                 // point is above the clip window
                 X = X0 + (X1 - X0) * (Viewport.Max.Y - Y0) / (Y1 - Y0);
                 Y = Viewport.Max.Y;
             }
-            else if ((OutCodeOut & BOTTOM) != 0)
+            else if ((OutCodeOut & CODE_BOTTOM) != 0)
             {
                 // point is below the clip window
                 X = X0 + (X1 - X0) * (Viewport.Min.Y - Y0) / (Y1 - Y0);
                 Y = Viewport.Min.Y;
             }
-            else if ((OutCodeOut & _RIGHT) != 0)
+            else if ((OutCodeOut & CODE_RIGHT) != 0)
             {
                 // point is to the right of clip window
                 Y = Y0 + (Y1 - Y0) * (Viewport.Max.X - X0) / (X1 - X0);
                 X = Viewport.Max.X;
             }
-            else if ((OutCodeOut & _LEFT) != 0)
+            else if ((OutCodeOut & CODE_LEFT) != 0)
             {
                 // point is to the left of clip window
                 Y = Y0 + (Y1 - Y0) * (Viewport.Min.X - X0) / (X1 - X0);

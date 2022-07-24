@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 // This interaction displays configuable radial menus (DHCommandMenu) with up to
 // 8 different options.
@@ -12,7 +12,7 @@ class DHCommandInteraction extends DHInteraction
 const FADE_DURATION = 0.25;
 const INNER_RADIUS = 16.0;
 const OUTER_RADIUS = 32.0;
-const Tau = 6.28318530718;
+const TAU = 6.28318530718;
 
 var Stack_Object        Menus;
 
@@ -250,13 +250,13 @@ function Tick(float DeltaTime)
     if (Menu.Options.Length > 0 && Cursor != vect(0, 0, 0))
     {
         // Calculated the selected index
-        ArcLength = Tau / Menu.SlotCount;
+        ArcLength = TAU / Menu.SlotCount;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
         Theta += class'UUnits'.static.DegreesToRadians(90);
 
         if (Theta < 0)
         {
-            Theta = Tau + Theta;
+            Theta = TAU + Theta;
         }
 
         if (VSize(Cursor) < INNER_RADIUS)
@@ -266,7 +266,7 @@ function Tick(float DeltaTime)
         }
         else
         {
-            SelectedIndex = Menu.GetOptionIndexFromSlotIndex(Menu.SlotCount * (Theta / Tau));
+            SelectedIndex = Menu.GetOptionIndexFromSlotIndex(Menu.SlotCount * (Theta / TAU));
         }
     }
     else
@@ -304,15 +304,15 @@ function PostRender(Canvas C)
         return;
     }
 
-    CenterX = (C.ClipX / 2);
-    CenterY = (C.ClipY / 2);
+    CenterX = C.ClipX / 2;
+    CenterY = C.ClipY / 2;
 
     // TODO: get rid of magic numbers
     C.SetPos(CenterX - 8, CenterY - 8);
 
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
-    C.DrawColor.A = byte(255 * (MenuAlpha));
+    C.DrawColor.A = byte(255 * MenuAlpha);
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     // Draw outer "beauty" ring
@@ -330,7 +330,7 @@ function PostRender(Canvas C)
         return;
     }
 
-    ArcLength = Tau / Menu.SlotCount;
+    ArcLength = TAU / Menu.SlotCount;
 
     // Draw all the options.
     for (i = 0; i < Menu.SlotCount; ++i)
@@ -350,7 +350,7 @@ function PostRender(Canvas C)
 
             if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor.A = byte(255 * (MenuAlpha));
+                C.DrawColor.A = byte(255 * MenuAlpha);
             }
             else
             {
@@ -447,7 +447,7 @@ function PostRender(Canvas C)
             AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
 
             YL2 = 32;
-            XL2 = (YL2 * AspectRatio);
+            XL2 = YL2 * AspectRatio;
 
             C.DrawColor = ORI.InfoColor;
             C.DrawColor.A = byte(255 * MenuAlpha);

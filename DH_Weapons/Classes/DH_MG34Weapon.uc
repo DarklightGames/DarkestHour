@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_MG34Weapon extends DHMGWeapon;
@@ -53,8 +53,8 @@ defaultproperties
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
     // When overlaid on top of the standard texture, it appears the combination of an alpha texture used as an opacity mask creates this unwanted transparency
-    Skins(2)=shader'Weapons1st_tex.MG.mg34_s'
-    Skins(3)=shader'Weapons1st_tex.MG.MGBipod_S' // TODO: bipod specularity shader isn't used in the anim mesh & should be added there
+    Skins(2)=Shader'Weapons1st_tex.MG.mg34_s'
+    Skins(3)=Shader'Weapons1st_tex.MG.MGBipod_S' // TODO: bipod specularity shader isn't used in the anim mesh & should be added there
     HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
     PlayerIronsightFOV=90.0

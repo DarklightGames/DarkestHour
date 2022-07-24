@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SdKfz2519CannonShellSmoke extends DHCannonShellSmoke;
-
-defaultproperties
 
 defaultproperties
 {

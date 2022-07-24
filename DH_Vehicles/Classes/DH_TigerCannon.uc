@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_TigerCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll')
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 

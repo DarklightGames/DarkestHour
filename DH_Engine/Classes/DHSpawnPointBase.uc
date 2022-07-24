@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -288,6 +288,11 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     return true;
 }
 
+simulated function bool IsVisibleToPlayer(DHPlayer PC)
+{
+    return IsVisibleTo(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex);
+}
+
 // Returns true if the spawn point is "visible" to a player with the arguments provided
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
@@ -413,7 +418,7 @@ simulated function int GetSpawnTimePenalty()
     return BaseSpawnTimePenalty;
 }
 
-simulated final function int GetTeamIndex()
+final simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }
@@ -438,12 +443,25 @@ simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
     return false;
 }
 
+// Desirability of the spawn point. Higher value means more desireable.
+// Used for determining whether or not to invalidate the player's spawn
+// if a more desirable spawn point is available.
+simulated function int GetDesirability()
+{
+    if (bMainSpawn)
+    {
+        // Main spawns are the least desirable spawns.
+        return 0;
+    }
+
+    return 1;
+}
+
 function OnTeamIndexChanged();
 
 defaultproperties
 {
     SpawnPointStyle="DHSpawnButtonStyle"
-    BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
     SpawnKillProtectionTime=7.0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_P08LugerWeapon extends DHPistolWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_P08LugerPickup'
 
     Mesh=SkeletalMesh'DH_Luger_1st.P08Luger'
-    HighDetailOverlay=shader'Weapons1st_tex.Pistols.luger_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.luger_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

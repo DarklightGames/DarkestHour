@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_BA64ArmoredCar extends DHArmoredVehicle;
@@ -27,7 +27,10 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BA64.BA64_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Driver
     DriverAttachmentBone=driver_attachment
@@ -135,9 +138,9 @@ defaultproperties
     ExitPositions(1)=(X=-92.0,Y=4.0,Z=150.0)
 
     // Sounds
-    IdleSound=sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.BA64.ba64_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-20,Y=30,Z=-35),ExhaustRotation=(pitch=34000,yaw=-5000,roll=0))

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ObjectiveCaptureActor extends DH_LevelActors;
@@ -20,6 +20,4 @@ function Trigger(Actor Other, Pawn EventInstigator)
         DHTeamGame.DHObjectives[ObjectiveToModify].ObjectiveCompleted(none, TeamToCap); //Pass the team to capture
 }
 
-defaultproperties
-{
-}
+

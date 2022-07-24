@@ -3,9 +3,13 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SatchelChargeSmallFire extends DH_SatchelCharge10lb10sFire;
+class DH_CSAZBritcoatPawn extends DH_CSAZPawn;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.CSAZ_britcoat'
+    Skins(0)=Texture'Characters_tex.rus_heads.rus_face05'
+    Skins(1)=Texture'DHBritishCharactersTex.Winter.britcoat'
 
+    bReversedSkinsSlots=true
 }

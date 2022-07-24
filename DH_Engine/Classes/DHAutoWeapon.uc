@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHAutoWeapon extends DHProjectileWeapon
@@ -30,7 +30,7 @@ replication
 }
 
 // New function to toggle between semi-auto & full auto fire
-simulated exec function SwitchFireMode()
+exec simulated function SwitchFireMode()
 {
     if (bHasSelectFire && !IsBusy() && !FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
     {

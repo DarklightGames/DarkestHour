@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGUITeamSelection extends ROGUITeamSelection;
@@ -244,6 +244,7 @@ defaultproperties
     BackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
     BackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
     BackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectP'
+    BackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectCS'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"

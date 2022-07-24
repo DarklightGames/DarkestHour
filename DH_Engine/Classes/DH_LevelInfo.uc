@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -17,7 +17,8 @@ enum EAlliedNation
     NATION_Britain,
     NATION_Canada,
     NATION_USSR,
-    NATION_Poland
+    NATION_Poland,
+    NATION_Czechoslovakia
 };
 
 enum ESpawnMode
@@ -162,7 +163,7 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     return Limit;
 }
 
-static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
+simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;
     local DHPlayer PC;

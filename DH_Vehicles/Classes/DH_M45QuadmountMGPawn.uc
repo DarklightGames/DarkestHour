@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M45QuadmountMGPawn extends DHVehicleMGPawn;
@@ -74,7 +74,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 

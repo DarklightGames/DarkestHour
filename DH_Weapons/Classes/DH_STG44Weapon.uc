@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_STG44Weapon extends DHAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_STG44Pickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.STG44-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.STG44_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

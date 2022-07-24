@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_IS2Cannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-turret_ext'
     Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.IS2_ext'
     Skins(1)=Texture'allies_vehicles_tex.int_vehicles.IS2_int'
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2.IS2_turret_coll')

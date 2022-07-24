@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHBipodWeapon extends DHProjectileWeapon
@@ -77,7 +77,7 @@ simulated function NotifyOwnerJumped()
 }
 
 // Modified to deploy/undeploy bipod, instead of the usual bayonet stuff
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     local DHPlayer PC;
     local bool bNewDeployedStatus;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCameraWeapon extends DHBinocularsItem;
@@ -53,7 +53,7 @@ simulated function ROIronSights()
 
 simulated event WeaponTick(float DeltaTime)
 {
-    FovAngleTarget += (DeltaTime * FovZoomDirection * FovZoomSpeed);
+    FovAngleTarget += DeltaTime * FovZoomDirection * FovZoomSpeed;
     FovAngleTarget = FClamp(FovAngleTarget, 10.0, 120.0);
     FovAngle = class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
 

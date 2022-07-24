@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_Winchester1897Fire extends DHBoltFire;
@@ -13,7 +13,7 @@ defaultproperties
     bUsePreLaunchTrace=false // due to multiple buckshot projectiles fired with each shot
     BotRefireRate=0.95
 
-    Spread=667.0
+    Spread=300.0
     CrouchSpreadModifier=1.0 // spread modifiers all neutral as it's a very high spread, multi-projectile weapon
     ProneSpreadModifier=1.0
     BipodDeployedSpreadModifier=1.0

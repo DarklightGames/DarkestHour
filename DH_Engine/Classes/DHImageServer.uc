@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHImageServer extends UTImageServer;
@@ -29,8 +29,4 @@ event Query(WebRequest Request, WebResponse Response)
     }
 
     Response.IncludeBinaryFile( Path $ Image );
-}
-
-defaultproperties
-{
 }

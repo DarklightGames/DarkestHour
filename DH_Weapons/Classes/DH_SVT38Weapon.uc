@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_SVT38Weapon extends DHBoltActionWeapon;
@@ -21,9 +21,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_SVT38Pickup'
 
     Mesh=SkeletalMesh'DH_Svt40_1st.svt38_1st'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.SVT40_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.SVT40_S'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2    
+    HighDetailOverlayIndex=2
     Skins(4)=Shader'Weapons1st_tex.Bullets.mn_stripper_s'
 
     IronSightDisplayFOV=48.0
@@ -31,11 +31,11 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
-    
+
     //NumRoundsToLoad=10
 
     BayonetBoneName="bayonet"
-    
+
     bShouldSkipBolt=true  //is semi-auto
     bHasBayonet=true
     bPlusOneLoading=false

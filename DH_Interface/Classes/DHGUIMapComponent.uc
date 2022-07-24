@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGUIMapComponent extends GUIPanel;
@@ -151,12 +151,15 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
             if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true))
             {
+                // Spawn is acessible to spawn at, make the button clickable.
                 b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
             else
             {
                 if (SpawnPointIndex != -1 && SpawnPointIndex == b_SpawnPoints[i].Tag)
                 {
+                    // This is our currently selected spawn, but it is inaccessible.
+                    // Deselect the spawn point.
                     SelectSpawnPoint(-1);
                 }
 
@@ -557,12 +560,12 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         if (bSelectArtilleryTarget && ClickIndex == 0)
         {
             PC.ServerSaveArtillerySupportSquadIndex(TargetSquadIndex);
-            bSelectArtilleryTarget = False;
+            bSelectArtilleryTarget = false;
         }
         else if (bDeselectArtilleryTarget && ClickIndex == 0)
         {
             PC.ServerSaveArtillerySupportSquadIndex(255);
-            bDeselectArtilleryTarget = False;
+            bDeselectArtilleryTarget = false;
         }
         else
         {
@@ -592,8 +595,8 @@ function SetZoomLevel(int NewZoomLevel)
 // Given a viewport and a location within that viewport, get the frame coordinates.
 function vector ViewportToFrame(Box Viewport, vector Location)
 {
-    Location.X = (Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X)));
-    Location.Y = (Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y)));
+    Location.X = Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X));
+    Location.Y = Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y));
     return Location;
 }
 
@@ -633,7 +636,7 @@ function ZoomIn()
     // Save the old zoom scale.
     OldZoomScale = Viewport.Max.X - Viewport.Min.X;
 
-    // Increment the zoom leve.
+    // Increment the zoom level.
     SetZoomLevel(ZoomLevel + 1);
 
     // Calculate the new zoom scale.
@@ -873,8 +876,6 @@ defaultproperties
     b_SpawnPoints(61)=SpawnPointButton
     b_SpawnPoints(62)=SpawnPointButton
 
-    ZoomLevel=0
-    ZoomLevelMin=0
     ZoomLevelMax=3
     ZoomScaleRange=(Min=0.25,Max=1.0)
     ViewportInterpDuration=0.33
