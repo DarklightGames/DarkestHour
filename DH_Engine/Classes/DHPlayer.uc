@@ -5630,7 +5630,7 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;

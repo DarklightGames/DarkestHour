@@ -50,6 +50,8 @@ var     localized string        AssistantAbbreviation;
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
 
+var     int                     MinSubordinatesToAccessCommandChannel;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -86,9 +88,32 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+// TODO: GET RID OF THIS!
 simulated function bool IsSL()
 {
     return IsSquadLeader();
+}
+
+simulated function bool HasSubordinates(int Count)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsSquadLeader())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    return SRI != none &&
+           Team != none &&
+           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) > Count;
 }
 
 simulated function bool IsAssistantLeader()
@@ -217,6 +242,11 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
     return false;
 }
 
+simulated function bool CanAccessCommandChannel()
+{
+    return IsASL() || HasSubordinates(MinSubordinatesToAccessCommandChannel);
+}
+
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round
 function AddWeaponKill(class<DamageType> D);
 function AddVehicleKill(class<VehicleDamageType> D);
@@ -234,4 +264,5 @@ defaultproperties
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
     CountryIndex=-1
+    MinSubordinatesToAccessCommandChannel=1
 }
