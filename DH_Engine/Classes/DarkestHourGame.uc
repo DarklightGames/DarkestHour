@@ -2782,6 +2782,8 @@ state RoundInPlay
 
         UpdateArtilleryAvailability();
         UpdateAllPlayerScores();
+
+        SquadReplicationInfo.ResetSquadNextRallyPointTimes();
     }
 
     // Modified for DHObjectives

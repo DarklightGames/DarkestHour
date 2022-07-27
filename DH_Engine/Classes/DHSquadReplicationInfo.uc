@@ -416,6 +416,21 @@ protected function ResetPlayerSquadInfo(DHPlayerReplicationInfo PRI)
     }
 }
 
+function ResetSquadNextRallyPointTimes()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(AxisNextRallyPointTimes); ++i)
+    {
+        AxisNextRallyPointTimes[i] = 0.0;
+    }
+
+    for (i = 0; i < arraycount(AlliesNextRallyPointTimes); ++i)
+    {
+        AlliesNextRallyPointTimes[i] = 0.0;
+    }
+}
+
 function ResetSquadInfo()
 {
     local int i;
@@ -462,11 +477,6 @@ function ResetSquadInfo()
         AxisLocked[i] = 0;
     }
 
-    for (i = 0; i < arraycount(AxisNextRallyPointTimes); ++i)
-    {
-        AxisNextRallyPointTimes[i] = 0.0;
-    }
-
     for (i = 0; i < arraycount(AlliesAssistantSquadLeaderMemberIndices); ++i)
     {
         AlliesAssistantSquadLeaderMemberIndices[i] = -1;
@@ -480,11 +490,6 @@ function ResetSquadInfo()
     for (i = 0; i < arraycount(AlliesLocked); ++i)
     {
         AlliesLocked[i] = 0;
-    }
-
-    for (i = 0; i < arraycount(AlliesNextRallyPointTimes); ++i)
-    {
-        AlliesNextRallyPointTimes[i] = 0.0;
     }
 
     SquadBans.Length = 0;
