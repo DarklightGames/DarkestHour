@@ -5,7 +5,7 @@
 
 class DHSpawnManager extends SVehicleFactory;
 
-const   SPAWN_POINTS_MAX = 48;
+const   SPAWN_POINTS_MAX = 63;
 const   VEHICLE_POOLS_MAX = 32;
 const   SPAWN_VEHICLES_MAX = 8;
 const   SPAWN_PROTECTION_TIME = 2; // The full protection time given to players/vehicles (they cannot be damaged/killed within this time)
