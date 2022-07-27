@@ -5,7 +5,7 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
-const RADIOS_MAX = 10;
+const RADIOS_MAX = 32;
 const ROLES_MAX = 16;
 const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
