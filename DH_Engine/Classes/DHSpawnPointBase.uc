@@ -15,6 +15,7 @@ enum ESpawnPointBlockReason
     SPBR_Burning,
     SPBR_Constructing,
     SPBR_MissingRequirement,
+    SPBR_NotInSafeZone,
     SPBR_Waiting,
 };
 
@@ -297,6 +298,11 @@ simulated function bool IsVisibleToPlayer(DHPlayer PC)
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     if (self.TeamIndex != TeamIndex || !bIsActive)
+    {
+        return false;
+    }
+
+    if (BlockReason == SPBR_NotInSafeZone)
     {
         return false;
     }
