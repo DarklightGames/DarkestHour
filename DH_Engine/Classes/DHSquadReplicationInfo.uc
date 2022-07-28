@@ -2726,7 +2726,7 @@ function bool MaybeLeaveCommandVoiceChannel(DHPlayerReplicationInfo PRI)
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
     PC = DHPlayer(PRI.Owner);
 
-    if (VRI == none && PC == none)
+    if (VRI == none || PC == none)
     {
         return false;
     }
