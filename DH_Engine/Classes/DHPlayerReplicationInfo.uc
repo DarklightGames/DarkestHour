@@ -50,8 +50,6 @@ var     localized string        AssistantAbbreviation;
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
 
-var     int                     MinSubordinatesToAccessCommandChannel;
-
 replication
 {
     // Variables the server will replicate to all clients
@@ -94,28 +92,6 @@ simulated function bool IsSL()
     return IsSquadLeader();
 }
 
-simulated function bool HasSubordinates(int Count)
-{
-    local DHPlayer PC;
-    local DHSquadReplicationInfo SRI;
-
-    if (!IsSquadLeader())
-    {
-        return false;
-    }
-
-    PC = DHPlayer(Owner);
-
-    if (PC != none)
-    {
-        SRI = PC.SquadReplicationInfo;
-    }
-
-    return SRI != none &&
-           Team != none &&
-           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) > Count;
-}
-
 simulated function bool IsAssistantLeader()
 {
     return IsInSquad() && bIsSquadAssistant;
@@ -134,6 +110,28 @@ simulated function bool IsSLorASL()
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
+simulated function bool HasSquadMembers(int MinCount)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    return SRI != none &&
+           Team != none &&
+           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) >= MinCount;
 }
 
 simulated function bool IsPatron()
@@ -244,7 +242,8 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
 
 simulated function bool CanAccessCommandChannel()
 {
-    return IsASL() || HasSubordinates(MinSubordinatesToAccessCommandChannel);
+    return IsAssistantLeader() ||
+           (IsSquadLeader() && HasSquadMembers(2));
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round
@@ -264,5 +263,4 @@ defaultproperties
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
     CountryIndex=-1
-    MinSubordinatesToAccessCommandChannel=1
 }
