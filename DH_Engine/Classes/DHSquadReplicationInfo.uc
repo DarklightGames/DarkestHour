@@ -751,6 +751,8 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
+    MaybeLeaveCommandVoiceChannel(PRI);
+
     // "You are no longer the squad leader"
     PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
 
@@ -797,6 +799,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
+    local bool bHasActiveChannelChanged;
 
     G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -880,6 +883,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         }
     }
 
+    // Remove the squad leader from the command voice channel
+    bHasActiveChannelChanged = MaybeLeaveCommandVoiceChannel(GetSquadLeader(TeamIndex, SquadIndex));
+
     // Leave the squad voice channel
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
@@ -894,8 +900,11 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
                 PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
             }
 
-            // Set active channel to the local channel
-            PC.Speak(VRI.LocalChannelName);
+            if (!bHasActiveChannelChanged)
+            {
+                // Set active channel to the local channel
+                PC.Speak(VRI.LocalChannelName);
+            }
         }
     }
 
@@ -2641,6 +2650,7 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
             PC.ReceiveLocalizedMessage(class'DHSquadMessage', 71);
 
             MaybeInvalidateRole(PC);
+            MaybeLeaveCommandVoiceChannel(ASL);
         }
     }
 
@@ -2699,6 +2709,46 @@ function MaybeInvalidateRole(DHPlayer PC)
         // the deploy menu upon death.
         PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
         PC.bSpawnParametersInvalidated = true;
+    }
+}
+
+function bool MaybeLeaveCommandVoiceChannel(DHPlayerReplicationInfo PRI)
+{
+    local DHVoiceReplicationInfo VRI;
+    local DHPlayer PC;
+    local VoiceChatRoom VCR;
+
+    if (PRI == none || PRI.CanAccessCommandChannel() || PRI.Team == none)
+    {
+        return false;
+    }
+
+    VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
+    PC = DHPlayer(PRI.Owner);
+
+    if (VRI == none && PC == none)
+    {
+        return false;
+    }
+
+    VCR = VRI.GetChannel(VRI.CommandChannelName, PRI.Team.TeamIndex);
+
+    if (VCR == none)
+    {
+        return false;
+    }
+
+    PC.ServerLeaveVoiceChannel(VCR.ChannelIndex);
+
+    // Set the next channel in the hierarchy as active
+    if (PRI.IsInSquad())
+    {
+        VRI.JoinSquadChannel(PRI, PRI.Team.TeamIndex, PRI.SquadIndex);
+        PC.Speak("SQUAD");
+    }
+    else
+    {
+        PC.Speak(VRI.LocalChannelName);
     }
 }
 
