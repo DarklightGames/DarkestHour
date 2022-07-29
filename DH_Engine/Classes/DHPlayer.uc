@@ -5619,6 +5619,16 @@ exec function Speak(string ChannelTitle)
     // put in a sneaky little hack.
     if (ChannelTitle ~= VRI.SquadChannelName)
     {
+        if (!PRI.IsInSquad())
+        {
+            if (ChatRoomMessageClass != none)
+            {
+                ClientMessage(ChatRoomMessageClass.static.AssembleMessage(16, ChannelTitle));
+            }
+
+            return;
+        }
+
         VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
     }
     else if (ChannelTitle ~= VRI.LocalChannelName)
@@ -5632,6 +5642,11 @@ exec function Speak(string ChannelTitle)
     }
     else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
     {
+        if (ChatRoomMessageClass != none)
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+        }
+
         // If we are trying to speak in command but we aren't a SL, then return out
         return;
     }
@@ -5641,21 +5656,18 @@ exec function Speak(string ChannelTitle)
         VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, GetTeamNum());
     }
 
-    if (VCR == none && ChatRoomMessageClass != none)
+    if (VCR == none || VCR.ChannelIndex < 0)
     {
-        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        if (ChatRoomMessageClass != none)
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        }
+
         return;
     }
 
-    if (VCR.ChannelIndex >= 0)
-    {
-        ChanPwd = FindChannelPassword(ChannelTitle);
-        ServerSpeak(VCR.ChannelIndex, ChanPwd);
-    }
-    else if (ChatRoomMessageClass != none)
-    {
-        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
-    }
+    ChanPwd = FindChannelPassword(ChannelTitle);
+    ServerSpeak(VCR.ChannelIndex, ChanPwd);
 }
 
 simulated function int GetSquadIndex()
@@ -7600,6 +7612,7 @@ defaultproperties
     // Other values
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
+    ChatRoomMessageClass="DH_Engine.DHChatRoomMessage"
     GlobalDetailLevel=5
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
