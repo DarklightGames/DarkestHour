@@ -163,6 +163,14 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     return Limit;
 }
 
+function class<DHArtillery> GetArtilleryClass(int ArtilleryTypeIndex)
+{
+    if (ArtilleryTypeIndex >= 0 && ArtilleryTypeIndex < ArtilleryTypes.Length)
+    {
+        return ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+    }
+}
+
 simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;

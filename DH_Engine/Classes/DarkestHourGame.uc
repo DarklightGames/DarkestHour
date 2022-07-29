@@ -117,6 +117,7 @@ enum EArtilleryResponseType
     RESPONSE_BadLocation,
     RESPONSE_NoTarget,
     RESPONSE_NotQualified,
+    RESPONSE_NotEnoughSquadMembers,
     RESPONSE_TooSoon,
     RESPONSE_BadRequest
 };
@@ -5790,10 +5791,15 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // This type of artillery cannot be requested yet.
         Response.Type = RESPONSE_TooSoon;
     }
-    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(Request.Sender))
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasQualificationToRequest(Request.Sender))
     {
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
+    }
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasEnoughSquadMembersToRequest(Request.Sender))
+    {
+        // The requesting player doesn't have enough members in his squad.
+        Response.Type = RESPONSE_NotEnoughSquadMembers;
     }
     else if (Request.Location == vect(0,0,0))
     {
