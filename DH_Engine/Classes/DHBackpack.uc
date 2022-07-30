@@ -18,7 +18,8 @@ simulated function PostBeginPlay()
 
     if (P != none)
     {
-        SetBoneLocation(BaseBone, P.BackpackOffset);
+        SetBoneLocation(BaseBone, P.BackpackLocationOffset);
+        SetBoneRotation(BaseBone, P.BackpackRotationOffset);
     }
 }
 

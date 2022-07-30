@@ -50,7 +50,8 @@ struct SBackpack
 {
     var class<DHBackpack> BackpackClass;
     var float             Probability;
-    var vector            Offset;
+    var vector            LocationOffset;
+    var rotator           RotationOffset;
 };
 
 var array<SBackpack> Backpack;
@@ -188,7 +189,7 @@ static function string GetPawnClass()
 }
 
 // TODO: Refactor offset stuff!
-function class<DHBackpack> GetBackpack(out vector Offset)
+function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator RotationOffset)
 {
     local float R, ProbabilitySum;
     local int   i;
@@ -200,7 +201,8 @@ function class<DHBackpack> GetBackpack(out vector Offset)
 
     if (Backpack.Length == 1)
     {
-        Offset = Backpack[0].Offset;
+        LocationOffset = Backpack[0].LocationOffset;
+        RotationOffset = Backpack[0].RotationOffset;
         return Backpack[0].BackpackClass;
     }
 
@@ -212,7 +214,8 @@ function class<DHBackpack> GetBackpack(out vector Offset)
 
         if (R <= ProbabilitySum)
         {
-            Offset = Backpack[i].Offset;
+            LocationOffset = Backpack[0].LocationOffset;
+            RotationOffset = Backpack[0].RotationOffset;
 
             return Backpack[i].BackpackClass;
         }
