@@ -85,6 +85,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_Unqualified:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnqualifiedText;
+                break;
             case ERROR_NotEnoughSquadMembers:
                 ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
 
