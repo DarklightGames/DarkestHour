@@ -5,7 +5,7 @@
 
 class DHSpawnManager extends SVehicleFactory;
 
-const   SPAWN_POINTS_MAX = 48;
+const   SPAWN_POINTS_MAX = 63;
 const   VEHICLE_POOLS_MAX = 32;
 const   SPAWN_VEHICLES_MAX = 8;
 const   SPAWN_PROTECTION_TIME = 2; // The full protection time given to players/vehicles (they cannot be damaged/killed within this time)
@@ -293,20 +293,11 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         if (VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle || (LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles))
         {
             DHV.SpawnPointAttachment = DHSpawnPoint_Vehicle(DHV.SpawnAttachment(class'DHSpawnPoint_Vehicle'));
-
-            if (DHV.SpawnPointAttachment != none)
-            {
-                DHV.SpawnPointAttachment.Vehicle = DHV;
-                DHV.SpawnPointAttachment.SetTeamIndex(DHV.default.VehicleTeam);
-                DHV.SpawnPointAttachment.SetIsActive(true);
-
-                if (!VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle && LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles)
-                {
-                    // If this vehicle is not a tank crew-only vehicle, create the temporary spawn point attachment.
-                    DHV.SpawnPointAttachment.LifeSpan = LI.InfantrySpawnVehicleDuration;
-                    DHV.SpawnPointattachment.bIsTemporary = true;   // bIsTemporary is just used for replication
-                }
-            }
+            DHV.SpawnPointAttachment.Vehicle = DHV;
+            DHV.SpawnPointAttachment.SetTeamIndex(DHV.default.VehicleTeam);
+            DHV.SpawnPointAttachment.SetIsActive(true);
+            DHV.SpawnPointAttachment.bHasSpawnKillPenalty = DHV.default.bHasSpawnKillPenalty;
+            DHV.SpawnPointattachment.bIsTemporary = !VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle;
         }
 
         // Set spawn protection variables for the vehicle
@@ -355,7 +346,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     // Decrement reservation count
     GRI.UnreserveVehicle(PC);
 
-    PC.bSpawnPointInvalidated = true;
+    PC.bSpawnParametersInvalidated = true;
 
     return V;
 }

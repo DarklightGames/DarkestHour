@@ -15,6 +15,7 @@ enum ESpawnPointBlockReason
     SPBR_Burning,
     SPBR_Constructing,
     SPBR_MissingRequirement,
+    SPBR_NotInSafeZone,
     SPBR_Waiting,
 };
 
@@ -301,6 +302,11 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
         return false;
     }
 
+    if (BlockReason == SPBR_NotInSafeZone)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -354,7 +360,7 @@ function SetIsActive(bool bIsActive)
             if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
             {
                 PC.SpawnPointIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }

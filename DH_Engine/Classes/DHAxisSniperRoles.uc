@@ -15,4 +15,5 @@ defaultproperties
     Limit=2
     AddedRoleRespawnTime=15
     bExemptSquadRequirement=true
+    bCanBeSquadLeader=false
 }

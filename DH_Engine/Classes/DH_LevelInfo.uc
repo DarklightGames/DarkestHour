@@ -17,7 +17,8 @@ enum EAlliedNation
     NATION_Britain,
     NATION_Canada,
     NATION_USSR,
-    NATION_Poland
+    NATION_Poland,
+    NATION_Czechoslovakia
 };
 
 enum ESpawnMode
@@ -160,6 +161,14 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     }
 
     return Limit;
+}
+
+simulated function class<DHArtillery> GetArtilleryClass(int ArtilleryTypeIndex)
+{
+    if (ArtilleryTypeIndex >= 0 && ArtilleryTypeIndex < ArtilleryTypes.Length)
+    {
+        return ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+    }
 }
 
 simulated static function DH_LevelInfo GetInstance(LevelInfo Level)

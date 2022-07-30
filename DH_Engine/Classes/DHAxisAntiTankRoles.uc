@@ -16,4 +16,5 @@ defaultproperties
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=5
     bExemptSquadRequirement=true
+    bCanBeSquadLeader=false
 }

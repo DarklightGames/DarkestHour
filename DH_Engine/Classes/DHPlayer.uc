@@ -17,6 +17,16 @@ enum EMapMode
     MODE_Squads
 };
 
+enum ERoleEnabledResult
+{
+    RER_Fatal,
+    RER_Enabled,
+    RER_Limit,
+    RER_SquadOnly,
+    RER_SquadLeaderOnly,
+    RER_NonSquadLeaderOnly,
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 var     Hashtable_string_int                                    MapMarkerCooldowns;
@@ -90,7 +100,7 @@ var     int                     LastKilledTime;             // the time at which
 var     int                     NextVehicleSpawnTime;       // the time at which a player can spawn a vehicle next (this gets set when a player spawns a vehicle)
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
-var     bool                    bSpawnPointInvalidated;
+var     bool                    bSpawnParametersInvalidated;
 var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
                                                             // it resets whenever an objective is taken
 // Weapon locking (punishment for spawn killing)
@@ -174,7 +184,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
+        SpawnPointIndex, VehiclePoolIndex, bSpawnParametersInvalidated,
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
@@ -3095,7 +3105,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 SpawnPointIndex = NewSpawnPointIndex;
                 NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
 
-                bSpawnPointInvalidated = false;
+                bSpawnParametersInvalidated = false;
 
                 // Everything is good
                 ClientChangePlayerInfoResult(0);
@@ -3197,7 +3207,7 @@ state DeadSpectating
     {
         super.BeginState();
 
-        if (!PlayerReplicationInfo.bOnlySpectator && bSpawnPointInvalidated)
+        if (!PlayerReplicationInfo.bOnlySpectator && bSpawnParametersInvalidated)
         {
             DeployMenuStartMode = MODE_Map;
             ClientProposeMenu("DH_Interface.DHDeployMenu");
@@ -3231,7 +3241,7 @@ state Dead
         if (GRI.SpawnPoints[SpawnPointIndex].GetDesirability() < MaxDesirability)
         {
             SpawnPointIndex = -1;
-            bSpawnPointInvalidated = true;
+            bSpawnParametersInvalidated = true;
         }
     }
 
@@ -5609,6 +5619,16 @@ exec function Speak(string ChannelTitle)
     // put in a sneaky little hack.
     if (ChannelTitle ~= VRI.SquadChannelName)
     {
+        if (!PRI.IsInSquad())
+        {
+            if (ChatRoomMessageClass != none)
+            {
+                ClientMessage(ChatRoomMessageClass.static.AssembleMessage(16, ChannelTitle));
+            }
+
+            return;
+        }
+
         VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
     }
     else if (ChannelTitle ~= VRI.LocalChannelName)
@@ -5620,8 +5640,13 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.CanAccessCommandChannel())
     {
+        if (ChatRoomMessageClass != none)
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(17, ChannelTitle));
+        }
+
         // If we are trying to speak in command but we aren't a SL, then return out
         return;
     }
@@ -5631,21 +5656,18 @@ exec function Speak(string ChannelTitle)
         VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, GetTeamNum());
     }
 
-    if (VCR == none && ChatRoomMessageClass != none)
+    if (VCR == none || VCR.ChannelIndex < 0)
     {
-        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        if (ChatRoomMessageClass != none)
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        }
+
         return;
     }
 
-    if (VCR.ChannelIndex >= 0)
-    {
-        ChanPwd = FindChannelPassword(ChannelTitle);
-        ServerSpeak(VCR.ChannelIndex, ChanPwd);
-    }
-    else if (ChatRoomMessageClass != none)
-    {
-        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
-    }
+    ChanPwd = FindChannelPassword(ChannelTitle);
+    ServerSpeak(VCR.ChannelIndex, ChanPwd);
 }
 
 simulated function int GetSquadIndex()
@@ -7499,6 +7521,68 @@ exec function ToggleSelectedArtilleryTarget()
     }
 }
 
+// Gets whether or not this player is able to change to this role.
+function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
+{
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+    local int Count, BotCount, Limit;
+    local bool bIsRoleLimitless;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (RI == none || PRI == none || GRI == none) { return RER_Fatal; }
+
+    GRI.GetRoleCounts(RI, Count, BotCount, Limit);
+
+    if (GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0)
+    {
+        return RER_Limit;
+    }
+
+    bIsRoleLimitless = (Limit == 255);
+
+    if (GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
+    {
+        if (!IsInSquad() && !bIsRoleLimitless && !RI.bExemptSquadRequirement)
+        {
+            return RER_SquadOnly;
+        }
+
+        if (IsInSquad() && ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader())))
+        {
+            return RER_SquadLeaderOnly;
+        }
+
+        if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+        {
+            return RER_NonSquadLeaderOnly;
+        }
+    }
+
+    return RER_Enabled;
+}
+
+function DestroyShovelItem()
+{
+    local DHPawn P;
+    local Weapon Inv;
+    local Class<Weapon> ShovelClass;
+
+    P = DHPawn(Pawn);
+    ShovelClass = class<Weapon>(DynamicLoadObject("DH_Equipment.DHShovelItem", class'Class'));
+    Inv = Weapon(P.FindInventoryType(ShovelClass));
+
+    if (P != none && P.Weapon != none && ClassIsChildOf(P.Weapon.Class, ShovelClass))
+    {
+        // We are currently holding a shovel, let's put it away
+        Inv.ClientWeaponThrown();
+    }
+    
+     P.DeleteInventory(Inv);
+}
+
 defaultproperties
 {
     CorpseStayTime=15
@@ -7547,6 +7631,7 @@ defaultproperties
     // Other values
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
+    ChatRoomMessageClass="DH_Engine.DHChatRoomMessage"
     GlobalDetailLevel=5
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
