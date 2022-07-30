@@ -2715,6 +2715,12 @@ function MaybeInvalidateRole(DHPlayer PC)
         PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
         PC.bSpawnParametersInvalidated = true;
     }
+
+    // HACK: Not a nice place to put this.
+    if (PC.IsSquadLeader())
+    {
+        PC.DestroyShovelItem();
+    }
 }
 
 function bool MaybeLeaveCommandVoiceChannel(DHPlayerReplicationInfo PRI)
