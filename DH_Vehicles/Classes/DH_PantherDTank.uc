@@ -25,7 +25,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherD_body'
     Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
