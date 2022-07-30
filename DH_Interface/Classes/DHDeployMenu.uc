@@ -113,7 +113,7 @@ var             byte                        SpawnVehicleIndex;
 
 var             bool                        bButtonsEnabled;
 
-var             material                    VehicleNoneMaterial;
+var             Material                    VehicleNoneMaterial;
 
 var             EMapMode                    MapMode;
 
@@ -670,6 +670,12 @@ function UpdateRoles()
         li_Roles.SetItemAtIndex(i, S);
         li_Roles.SetDisabledAtIndex(i, RoleEnabledResult != RER_Enabled);
     }
+
+    // If we end up having a newly disabled element selected, deselect it.
+    if (li_Roles.IsIndexDisabled(li_Roles.Index))
+    {
+        li_Roles.SetIndex(-1);
+    }
 }
 
 function bool OnClick(GUIComponent Sender)
@@ -1055,7 +1061,7 @@ function PopulateRoles()
     AutoSelectRole();
 }
 
-// Colin: Automatically selects a role from the roles list. If the player is
+// Automatically selects a role from the roles list. If the player is
 // currently assigned to a role, that role will be selected. Otherwise, a role
 // that has no limit will be selected. In the rare case that no role is
 // limitless, no role will be selected.
