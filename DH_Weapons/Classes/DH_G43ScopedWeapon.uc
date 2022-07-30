@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
 
     Mesh=SkeletalMesh'DH_G43_1st.g43_scoped_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.g43_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

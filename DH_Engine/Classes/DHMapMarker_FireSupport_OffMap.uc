@@ -56,4 +56,3 @@ defaultproperties
     OnPlacedMessage=class'DHFireSupportMessage'
     OnPlacedMessageIndex=0
 }
-

@@ -65,7 +65,7 @@ simulated function RenewAmmoBelt()
 }
 
 // Modified to prevent deploying if player is moving
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     if (Instigator != none && VSizeSquared(Instigator.Velocity) == 0.0)
     {

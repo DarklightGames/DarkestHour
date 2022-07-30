@@ -1,3 +1,4 @@
+
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2022
@@ -17,27 +18,27 @@ var()      array<ComponentPosValues>    AlignOriginalValues;
 
 function bool ManageComponent(GUIComponent Component)
 {
-        local bool result;
-        result = super.ManageComponent(Component);
+        local bool bResult;
+        bResult = super.ManageComponent(Component);
         InternalPreDraw(none);                  // This is used to position the controls before drawing them
                                                     // (else you see the controls full screen for a split second,
                                                     // which looks kinda odd)
-        return result;
+        return bResult;
 }
 
 function bool InternalPreDraw(Canvas C)
 {
-        local int i;
+    local int i;
     local float AL, AT, AW, AH, LPad, RPad, TPad, BPad;
     local ComponentPosValues values;
 
-    if (AlignStack.Length == 0)
+    if (AlignStack.Length == 0) {
         return false;
+    }
 
-    if (bChangingPosValues)
-    {
-            AlignOriginalValues.Length = 0;
-                return false;
+    if (bChangingPosValues) {
+        AlignOriginalValues.Length = 0;
+        return false;
     }
 
     AL = ActualLeft();
@@ -65,16 +66,17 @@ function bool InternalPreDraw(Canvas C)
 
     for (i = 0; i < AlignStack.Length; ++i)
     {
-            values = getAlignOriginalValues(AlignStack[i]);
-            AlignStack[i].WinLeft = RelativeLeft(values.WinLeft * AW + AL);
-            AlignStack[i].WinTop = RelativeTop(values.WinTop * AH + AT);
-            AlignStack[i].WinWidth = RelativeWidth(values.WinWidth * AW);
-            AlignStack[i].WinHeight = RelativeHeight(values.WinHeight * AH);
+        values = GetAlignOriginalValues(AlignStack[i]);
+        AlignStack[i].WinLeft = RelativeLeft(values.WinLeft * AW + AL);
+        AlignStack[i].WinTop = RelativeTop(values.WinTop * AH + AT);
+        AlignStack[i].WinWidth = RelativeWidth(values.WinWidth * AW);
+        AlignStack[i].WinHeight = RelativeHeight(values.WinHeight * AH);
     }
+    
     return false;
 }
 
-function ComponentPosValues getAlignOriginalValues(GUIComponent component)
+function ComponentPosValues GetAlignOriginalValues(GUIComponent component)
 {
         local ComponentPosValues values;
         local int i;

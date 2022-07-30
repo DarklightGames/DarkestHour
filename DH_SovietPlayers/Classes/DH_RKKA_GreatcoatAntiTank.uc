@@ -5,7 +5,3 @@
 
 class DH_RKKA_GreatcoatAntiTank extends DH_RKKA_GreatcoatAntiTankEarly; //to be removed
 
-defaultproperties
-{
-
-}

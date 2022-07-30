@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_AdvLevelTeleporter extends DH_Teleporter;
-
-defaultproperties
-{
-}

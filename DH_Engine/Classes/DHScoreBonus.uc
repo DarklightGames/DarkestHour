@@ -7,8 +7,3 @@ class DHScoreBonus extends Object
     abstract;
 
 var class<DHScoreCategory>  CategoryClass;
-
-defaultproperties
-{
-}
-

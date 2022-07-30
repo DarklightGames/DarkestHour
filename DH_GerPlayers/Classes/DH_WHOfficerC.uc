@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WHOfficerC extends DHDeprecated;
-
-defaultproperties
-{
-}

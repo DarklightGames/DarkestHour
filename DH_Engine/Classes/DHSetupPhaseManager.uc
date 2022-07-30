@@ -196,7 +196,7 @@ auto state Timing
             // There are 50 players on the server
             // 8 * (50 / 2) = 200
             // 10 * (50 / 2) = 250
-            ScaleUpModifier = (Max(10, G.GetNumPlayers()) * 0.5);
+            ScaleUpModifier = Max(10, G.GetNumPlayers()) * 0.5;
         }
         else
         {
@@ -279,7 +279,7 @@ state Done
 
 defaultproperties
 {
-    PhaseBoundaryTag='SetupBoundaries'
+    PhaseBoundaryTag="SetupBoundaries"
     PhaseEndReinforcements=(AxisReinforcements=18,AlliesReinforcements=18)
     PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'

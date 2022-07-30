@@ -30,7 +30,7 @@ replication
 }
 
 // New function to toggle between semi-auto & full auto fire
-simulated exec function SwitchFireMode()
+exec simulated function SwitchFireMode()
 {
     if (bHasSelectFire && !IsBusy() && !FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
     {

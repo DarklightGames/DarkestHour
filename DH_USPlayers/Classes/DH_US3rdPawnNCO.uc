@@ -3,9 +3,12 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_SatchelChargeSmallProjectile extends DH_SatchelCharge10lb10sProjectile;
+class DH_US3rdPawnNCO extends DH_AmericanPawn;
 
 defaultproperties
 {
+    Skins(1)=Texture'DHUSCharactersTex.3rdID.US_3rdID_Sarg1'
 
+    BodySkins(0)=Texture'DHUSCharactersTex.3rdID.US_3rdID_Sarg1'
+    BodySkins(1)=Texture'DHUSCharactersTex.3rdID.US_3rdID_Sarg2'
 }

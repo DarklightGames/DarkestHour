@@ -67,16 +67,16 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if (bOnTheGun)
         {
-            CameraLocation += (FPCamPos >> CameraRotation);
+            CameraLocation += FPCamPos >> CameraRotation;
         }
         else
         {
-            CameraLocation += (FPCamPos >> Gun.Rotation);
+            CameraLocation += FPCamPos >> Gun.Rotation;
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
@@ -126,7 +126,7 @@ simulated function DrawHUD(Canvas C)
                     // This makes the first person gun appear lower if player raises his head above the gun
                     if (FirstPersonGunRefBone != '' && Gun != none)
                     {
-                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
+                        GunOffset.Z += (Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale;
                     }
 
                     HUDOverlay.SetLocation(PC.CalcViewLocation);
@@ -222,7 +222,7 @@ simulated function bool CanReload()
 }
 
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {

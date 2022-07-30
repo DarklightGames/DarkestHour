@@ -5,6 +5,4 @@
 
 class DH_RKKA_GreatcoatGreyAssaultLate extends DHDeprecated;
 
-defaultproperties
-{
-}
+

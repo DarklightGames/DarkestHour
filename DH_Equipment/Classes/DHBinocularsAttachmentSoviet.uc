@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DHBinocularsAttachmentSoviet extends DHBinocularsAttachmentAllied;
-
-defaultproperties
-{
-}

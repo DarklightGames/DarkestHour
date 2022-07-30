@@ -5,6 +5,4 @@
 
 class DH_RKKA_GreatcoatGreyAntiTankEarly extends DHDeprecated;
 
-defaultproperties
-{
-}
+

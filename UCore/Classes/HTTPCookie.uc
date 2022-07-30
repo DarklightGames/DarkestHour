@@ -13,6 +13,6 @@ var int MaxAge;
 var string NonZeroDigit;
 var string Domain;
 var string Path;
-var bool Secure;
-var bool HTTPOnly;
+var bool bSecure;
+var bool bHTTPOnly;
 var array<string> Extensions;

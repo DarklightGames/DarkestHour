@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_USRadioItem extends DHRadioItem;
-
-defaultproperties
-{
-}

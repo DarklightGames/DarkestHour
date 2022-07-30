@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishOfficerOx_Bucks extends DHDeprecated;
-
-defaultproperties
-{
-}

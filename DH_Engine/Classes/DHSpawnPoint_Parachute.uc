@@ -19,6 +19,11 @@ function OnPawnSpawned(Pawn P)
     super.OnPawnSpawned(P);
 }
 
+simulated function int GetDesirability()
+{
+    return 5;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHParatroopersButtonStyle"
@@ -26,4 +31,3 @@ defaultproperties
     SpawnLocationOffset=(Z=10000)
     SpawnRadius=1024.0
 }
-

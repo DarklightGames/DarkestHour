@@ -10,13 +10,14 @@ class DHArtillery extends Actor
 
 var DHGameReplicationInfo.EArtilleryType              ArtilleryType;
 
-var protected localized string  MenuName;
+var localized protected string  MenuName;
 var Material                    MenuIcon;
 
 var protected int               TeamIndex;
 var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
+var int                         RequiredSquadMemberCount;
 
 var class<DHMapMarker> ActiveArtilleryMarkerClass;
 
@@ -32,6 +33,14 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // Set the team index based on the team of the authoring player.
+        Requester = PlayerController(Owner);
+
+        if (Requester != none)
+        {
+            SetTeamIndex(Requester.GetTeamNum());
+        }
+
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none)
@@ -51,10 +60,21 @@ static function string GetMenuName()
     return default.MenuName;
 }
 
-// Returns true if the specified player is able to request this class of artillery.
-static function bool CanBeRequestedBy(DHPlayer PC)
+// Check if the specified player has an appropriate role to request this artillery
+static function bool HasQualificationToRequest(DHPlayer PC)
 {
     return PC != none && PC.IsArtillerySpotter();
+}
+
+// Check the player has enough members in his squad to request this artillery
+static function bool HasEnoughSquadMembersToRequest(DHPlayer PC)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (PC != none)
+    {
+        return PRI != none && PRI.HasSquadMembers(default.RequiredSquadMemberCount);
+    }
 }
 
 // These override function are meant to facilitate gathering the limit and
@@ -102,5 +122,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
 
     bCanBeCancelled=true
+    RequiredSquadMemberCount=3
 }
-

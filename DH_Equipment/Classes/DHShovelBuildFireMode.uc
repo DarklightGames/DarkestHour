@@ -5,7 +5,7 @@
 
 class DHShovelBuildFireMode extends DHWeaponFire;
 
-const SoundRadius = 32.0;
+const SOUND_RADIUS = 32.0;
 
 var     DHConstruction  Construction;          // reference to the Construction actor we're building
 var     float           TraceDistanceInMeters; // player has to be within this distance of a construction to build it
@@ -85,7 +85,7 @@ simulated state Building
             // for the owning client.
             if (!Instigator.IsLocallyControlled())
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,, SoundRadius,, false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,, SOUND_RADIUS,, false);
             }
         }
     }

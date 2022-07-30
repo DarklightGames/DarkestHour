@@ -24,6 +24,7 @@ var     bool                bCarriesRadio;          // role can carry radios
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 var     bool                bRequiresSL;
+var     bool                bCanBeSquadLeader;      // squad leaders can take this role (disabled for special weapon roles!)
 
 var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
 
@@ -310,6 +311,18 @@ simulated function bool IsValidCharacterName(string InCharacterName)
     return false;
 }
 
+simulated static function string GetDisplayName()
+{
+    if (class'DHPlayer'.default.bUseNativeRoleNames)
+    {
+        return default.AltName;
+    }
+    else
+    {
+        return default.MyName;
+    }
+}
+
 defaultproperties
 {
     Limit=255 // unlimited (0 is now deactivated)
@@ -321,4 +334,5 @@ defaultproperties
     HandType=Hand_Bare
     HealthMultiplier=1.0
     bCanPickupWeapons=true
+    bCanBeSquadLeader=true
 }

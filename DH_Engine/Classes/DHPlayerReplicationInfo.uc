@@ -86,6 +86,7 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+// TODO: GET RID OF THIS!
 simulated function bool IsSL()
 {
     return IsSquadLeader();
@@ -109,6 +110,28 @@ simulated function bool IsSLorASL()
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
+simulated function bool HasSquadMembers(int MinCount)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    return SRI != none &&
+           Team != none &&
+           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) >= MinCount;
 }
 
 simulated function bool IsPatron()
@@ -215,6 +238,12 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
     }
 
     return false;
+}
+
+simulated function bool CanAccessCommandChannel()
+{
+    return IsAssistantLeader() ||
+           (IsSquadLeader() && HasSquadMembers(2));
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round

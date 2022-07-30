@@ -8,16 +8,12 @@ class DH_T60Cannon extends DHVehicleAutoCannon;
 defaultproperties
 {
     Mesh=Mesh'DH_T60_anm.T60_turret_ext'
-    skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T60_ext'
-    skins(1)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T60_ext'
+    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T60_int'
     HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.T60_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
-    //CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll' TODO: need a collision mesh made for this turret
-
-    //FireEffectScale=1.3 // turret fire is larger & positioned in centre of open turret
-    //FireEffectOffset=(X=20.0,Y=-25.0,Z=10.0)
-
+    
     // Turret armor
     FrontArmorFactor=2.5
     RightArmorFactor=2.5
@@ -38,19 +34,16 @@ defaultproperties
     CustomPitchDownLimit=64262
 
     // Cannon ammo
+    bMultipleRoundTypes=false
     ProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
-    //SecondaryProjectileClass=class'DH_Vehicles.DH_T60CannonShellHE' -- the ShVAK aircraft cannon used HEI but unsure if adopted for the tank version
     ProjectileDescriptions(0)="AP-T"
 
     nProjectileDescriptions(0)="BZT" // armor piercing incendiary with tracer
     //nProjectileDescriptions(1)="OF" // fragmentary round with tracer (incendiary?)
 
     InitialPrimaryAmmo=58
-    //InitialSecondaryAmmo=25
     NumPrimaryMags=20
-    //MaxSecondaryAmmo=50
-    //SecondarySpread=0.002
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
@@ -67,9 +60,9 @@ defaultproperties
     AltFireOffset=(X=-30.0,Y=-20.0,Z=0.0)
 
     // Sounds
-    CannonFireSound(0)=sound'Vehicle_Weapons.T60.tnshk20_fire01'
-    CannonFireSound(1)=sound'Vehicle_Weapons.T60.tnshk20_fire02'
-    CannonFireSound(2)=sound'Vehicle_Weapons.T60.tnshk20_fire03'
+    CannonFireSound(0)=Sound'Vehicle_Weapons.T60.tnshk20_fire01'
+    CannonFireSound(1)=Sound'Vehicle_Weapons.T60.tnshk20_fire02'
+    CannonFireSound(2)=Sound'Vehicle_Weapons.T60.tnshk20_fire03'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_01')

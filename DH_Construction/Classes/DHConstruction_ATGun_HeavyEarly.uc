@@ -36,6 +36,20 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
     }
 }
 
+// Modified because the Flak 88 has huge legs that need to be level on the ground,
+// so we manually override the radius here.
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
+{
+    super.GetCollisionSize(Context, NewRadius, NewHeight);
+
+    switch (Context.TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            NewRadius = 200.0;
+            break;
+    }
+}
+
 defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'

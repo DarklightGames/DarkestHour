@@ -117,6 +117,7 @@ enum EArtilleryResponseType
     RESPONSE_BadLocation,
     RESPONSE_NoTarget,
     RESPONSE_NotQualified,
+    RESPONSE_NotEnoughSquadMembers,
     RESPONSE_TooSoon,
     RESPONSE_BadRequest
 };
@@ -784,7 +785,7 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
             }
             else if (NextDist < 3000.0 && FastTrace(N.Location, OtherPlayer.Pawn.Location))
             {
-                Score -= (10000.0 - NextDist);
+                Score -= 10000.0 - NextDist;
             }
             else if (NumPlayers + NumBots == 2)
             {
@@ -1005,9 +1006,9 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     }
     else
     {
-        TeamSizeFactor = ((float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5));
-        TeamRatios[0] = (TeamSizeFactor + 0.5);
-        TeamRatios[1] = (1.0 - (TeamSizeFactor + 0.5));
+        TeamSizeFactor = (float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5);
+        TeamRatios[0] = TeamSizeFactor + 0.5;
+        TeamRatios[1] = 1.0 - (TeamSizeFactor + 0.5);
     }
 
     TeamSizeRatings[0] = TeamRatios[0] * TeamSizes[0];
@@ -1353,7 +1354,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    bSpectator = (ParseOption(Options, "SpectatorOnly") ~= "1");
+    bSpectator = ParseOption(Options, "SpectatorOnly") ~= "1";
 
     if (AccessControl != none)
     {
@@ -2782,6 +2783,8 @@ state RoundInPlay
 
         UpdateArtilleryAvailability();
         UpdateAllPlayerScores();
+
+        SquadReplicationInfo.ResetSquadNextRallyPointTimes();
     }
 
     // Modified for DHObjectives
@@ -3610,7 +3613,7 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
                                             PC.GetRoleInfo() == GRI.DHAxisRoles[Index]))
             {
                 DHPlayerReplicationInfo(PC.PlayerReplicationInfo).RoleInfo = none;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
 
                 if (i >= RoleCount - NewLimit)
                 {
@@ -4332,7 +4335,7 @@ function PlayerLeftTeam(PlayerController P)
         PC.bWeaponsSelected = false;
         PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
         PC.SpawnPointIndex = -1;
-        PC.bSpawnPointInvalidated = true;
+        PC.bSpawnParametersInvalidated = true;
 
         ClearSavedRequestsAndRallyPoints(PC, false);
     }
@@ -5790,10 +5793,15 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // This type of artillery cannot be requested yet.
         Response.Type = RESPONSE_TooSoon;
     }
-    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(Request.Sender))
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasQualificationToRequest(Request.Sender))
     {
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
+    }
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasEnoughSquadMembersToRequest(Request.Sender))
+    {
+        // The requesting player doesn't have enough members in his squad.
+        Response.Type = RESPONSE_NotEnoughSquadMembers;
     }
     else if (Request.Location == vect(0,0,0))
     {
@@ -5955,7 +5963,7 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=10
-        Minor=4
+        Minor=6
         Patch=0
         Prerelease=""
     End Object
