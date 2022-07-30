@@ -5,10 +5,6 @@
 
 class DH_HeerHelmetSnow extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-}
-
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_HelmetCover'

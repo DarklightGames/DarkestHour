@@ -24,3 +24,8 @@ function int SelectByObject(Object O)
 {
     return SetIndex(GetIndexByObject(O));
 }
+
+function bool IsIndexDisabled(int Index)
+{
+    return Index >= 0 && Index < Elements.Length && Elements[Index].ExtraStrData == DisabledMarker;
+}

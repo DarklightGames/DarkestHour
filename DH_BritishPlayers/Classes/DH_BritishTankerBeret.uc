@@ -5,11 +5,6 @@
 
 class DH_BritishTankerBeret extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_tanker_Headgear');
-}
-
 defaultproperties
 {
     bIsHelmet=false

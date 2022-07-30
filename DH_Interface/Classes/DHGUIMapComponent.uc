@@ -6,8 +6,6 @@
 class DHGUIMapComponent extends GUIPanel;
 
 const   SPAWN_POINTS_MAX =                  63; // Max spawn points total (make sure this matches GRI)
-const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
-const   SQUAD_RALLY_POINTS_MAX =            16; // Max squad rally points (make sure this matches SRI)
 
 var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX];
 
