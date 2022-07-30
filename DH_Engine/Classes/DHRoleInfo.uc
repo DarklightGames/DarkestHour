@@ -46,8 +46,14 @@ var     Material            BareHandTexture;            // the hand texture this
 var     Material            GlovedHandTexture;
 var()   Material            CustomHandTexture;
 
-var		array<class<DHBackpack> > Backpack;
-var     array<float>              BackpackProbabilities;
+struct SBackpack
+{
+    var class<DHBackpack> BackpackClass;
+    var float             Probability;
+    var vector            Offset;
+};
+
+var array<SBackpack> Backpack;
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -103,7 +109,7 @@ simulated function HandlePrecache()
 
         for (i = 0; i < default.Backpack.Length; ++i)
         {
-            default.Backpack[i].static.StaticPrecache(Level);
+            default.Backpack[i].BackpackClass.static.StaticPrecache(Level);
         }
 
         if (default.DetachedArmClass != none)
@@ -181,7 +187,8 @@ static function string GetPawnClass()
     return default.RolePawnClass;
 }
 
-function class<DHBackpack> GetBackpack()
+// TODO: Refactor offset stuff!
+function class<DHBackpack> GetBackpack(out vector Offset)
 {
     local float R, ProbabilitySum;
     local int   i;
@@ -193,18 +200,21 @@ function class<DHBackpack> GetBackpack()
 
     if (Backpack.Length == 1)
     {
-        return Backpack[0];
+        Offset = Backpack[0].Offset;
+        return Backpack[0].BackpackClass;
     }
 
     R = FRand();
 
     for (i = 0; i < Backpack.Length; ++i)
     {
-        ProbabilitySum += BackpackProbabilities[i];
+        ProbabilitySum += Backpack[i].Probability;
 
         if (R <= ProbabilitySum)
         {
-            return Backpack[i];
+            Offset = Backpack[i].Offset;
+
+            return Backpack[i].BackpackClass;
         }
     }
 

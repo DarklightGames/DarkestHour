@@ -138,6 +138,7 @@ var     DHATGun             GunToRotate;
 
 var     DHBackpack          Backpack;
 var     class<DHBackpack>   BackpackClass;
+var     vector              BackpackOffset;
 
 replication
 {
@@ -485,7 +486,7 @@ function PossessedBy(Controller C)
             // Set classes for headgear & severed limbs, based on player's role
             // Any random headgear selection for role gets made here, when pawn first possessed
             HeadgearClass = RI.GetHeadgear();
-            BackpackClass = RI.GetBackpack();
+            BackpackClass = RI.GetBackpack(BackpackOffset);
             DetachedArmClass = RI.static.GetArmClass();
             DetachedLegClass = RI.static.GetLegClass();
 
@@ -3342,7 +3343,7 @@ function CheckGiveShovel()
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
-    
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (ShovelClassName != "" && Level.Game != none)

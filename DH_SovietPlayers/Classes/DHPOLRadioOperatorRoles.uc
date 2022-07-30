@@ -15,5 +15,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHRadioItem"
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
-    Backpack(0)=class'DH_SovietPlayers.DH_SovRadioBackpack'
+    Backpack(0)=(BackpackClass=class'DH_SovietPlayers.DH_SovRadioBackpack')
 }
