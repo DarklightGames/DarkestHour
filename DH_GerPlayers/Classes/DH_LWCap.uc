@@ -5,13 +5,6 @@
 
 class DH_LWCap extends DHHeadgear;
 
-#exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG');
-}
-
 defaultproperties
 {
     bIsHelmet=false

@@ -16,4 +16,5 @@ defaultproperties
     PluralName="Mortar Operators"
     Limit=1
     AddedRoleRespawnTime=10
+    bCanBeSquadLeader=false
 }

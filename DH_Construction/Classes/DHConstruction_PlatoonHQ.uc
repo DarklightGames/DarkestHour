@@ -247,6 +247,8 @@ simulated function Material GetFlagMaterial()
             return Texture'DH_Construction_tex.Base.SOVIET_flag_01';
         case NATION_Poland:
             return Texture'DH_Construction_tex.Base.POL_flag_01';
+        case NATION_Czechoslovakia:
+            return Texture'DH_Construction_tex.Base.CS_flag_01';
         }
         break;
     }

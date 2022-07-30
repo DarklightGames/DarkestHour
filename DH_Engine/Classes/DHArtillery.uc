@@ -17,6 +17,7 @@ var protected int               TeamIndex;
 var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
+var int                         RequiredSquadMemberCount;
 
 var class<DHMapMarker> ActiveArtilleryMarkerClass;
 
@@ -59,10 +60,21 @@ static function string GetMenuName()
     return default.MenuName;
 }
 
-// Returns true if the specified player is able to request this class of artillery.
-static function bool CanBeRequestedBy(DHPlayer PC)
+// Check if the specified player has an appropriate role to request this artillery
+static function bool HasQualificationToRequest(DHPlayer PC)
 {
     return PC != none && PC.IsArtillerySpotter();
+}
+
+// Check the player has enough members in his squad to request this artillery
+static function bool HasEnoughSquadMembersToRequest(DHPlayer PC)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (PC != none)
+    {
+        return PRI != none && PRI.HasSquadMembers(default.RequiredSquadMemberCount);
+    }
 }
 
 // These override function are meant to facilitate gathering the limit and
@@ -110,5 +122,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
 
     bCanBeCancelled=true
+    RequiredSquadMemberCount=3
 }
-
