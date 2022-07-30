@@ -207,6 +207,6 @@ defaultproperties
     VehicleTeamKilledMessage="{0} killed a friendly {1}."
 
     NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
-    RoleInvalidatedMessage="You are no longer qualified to be {article} {name}."
+    RoleInvalidatedMessage="You are no longer qualified to be {article}{name}."
 }
 
