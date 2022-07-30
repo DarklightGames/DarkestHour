@@ -346,7 +346,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     // Decrement reservation count
     GRI.UnreserveVehicle(PC);
 
-    PC.bSpawnPointInvalidated = true;
+    PC.bSpawnParametersInvalidated = true;
 
     return V;
 }

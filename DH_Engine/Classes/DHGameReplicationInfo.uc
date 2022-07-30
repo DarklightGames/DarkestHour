@@ -57,6 +57,7 @@ enum EArtilleryTypeError
     ERROR_Unavailable,
     ERROR_Exhausted,
     ERROR_Unqualified,
+    ERROR_NotEnoughSquadMembers,
     ERROR_Cooldown,
     ERROR_Ongoing,
     ERROR_SquadTooSmall,
@@ -1019,7 +1020,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
                 PC.VehiclePoolIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }
@@ -1992,6 +1993,7 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 {
     local ArtilleryTypeInfo ATI;
     local DH_LevelInfo LI;
+    local class<DHArtillery> ArtilleryClass;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
@@ -2004,9 +2006,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
         return ERROR_Fatal;
     }
 
-    if (!LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(PC))
+    ArtilleryClass = LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+
+    if (!ArtilleryClass.static.HasQualificationToRequest(PC))
     {
         return ERROR_Unqualified;
+    }
+
+    if (!ArtilleryClass.static.HasEnoughSquadMembersToRequest(PC))
+    {
+        return ERROR_NotEnoughSquadMembers;
     }
 
     ATI = ArtilleryTypeInfos[ArtilleryTypeIndex];
@@ -2421,4 +2430,3 @@ defaultproperties
     DangerZoneNeutral=128
     DangerZoneBalance=128
 }
-

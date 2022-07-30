@@ -3320,16 +3320,19 @@ function CreateInventory(string InventoryClassName)
     }
 }
 
-// New function used to give all players a shovel (the appropriate shovel for their nationality)
+// New function used to give all non-squad leaders a shovel (the appropriate shovel for their nationality)
 function CheckGiveShovel()
 {
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (ShovelClassName != "" && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none && GRI.bAreConstructionsEnabled)
+        if (GRI != none && GRI.bAreConstructionsEnabled && PRI != none && !PRI.IsSquadLeader())
         {
             CreateInventory(ShovelClassName);
         }

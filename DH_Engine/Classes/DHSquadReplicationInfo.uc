@@ -703,6 +703,9 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             // from trying to exploit the system.
             SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
 
+            // This new squad leader may need to have their role invalidated.
+            MaybeInvalidateRole(PC);
+
             return i;
         }
     }
@@ -753,10 +756,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
+    MaybeLeaveCommandVoiceChannel(PRI);
+
     // "You are no longer the squad leader"
     PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
-
-    MaybeChangeRoleToDefault(PC);
 
     OtherPC = DHPlayer(NewSquadLeader.Owner);
 
@@ -765,6 +768,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         // "You are now the squad leader"
         OtherPC.ReceiveLocalizedMessage(SquadMessageClass, 34);
     }
+
+    // Both the incoming and outgoing squad leader may need to have their current roles invalidated.
+    MaybeInvalidateRole(PC);
+    MaybeInvalidateRole(OtherPC);
 
     // "{0} has become the squad leader"
     BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, NewSquadLeader);
@@ -797,6 +804,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
+    local bool bHasActiveChannelChanged;
 
     G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -833,7 +841,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     // Remove squad member.
     SetMember(TeamIndex, SquadIndex, SquadMemberIndex, none);
     ResetPlayerSquadInfo(PRI);
-    MaybeChangeRoleToDefault(PC);
+    MaybeInvalidateRole(PC);
 
     // Clear squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
@@ -880,6 +888,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         }
     }
 
+    // Remove the squad leader from the command voice channel
+    bHasActiveChannelChanged = MaybeLeaveCommandVoiceChannel(GetSquadLeader(TeamIndex, SquadIndex));
+
     // Leave the squad voice channel
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
@@ -894,8 +905,11 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
                 PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
             }
 
-            // Set active channel to the local channel
-            PC.Speak(VRI.LocalChannelName);
+            if (!bHasActiveChannelChanged)
+            {
+                // Set active channel to the local channel
+                PC.Speak(VRI.LocalChannelName);
+            }
         }
     }
 
@@ -2640,7 +2654,8 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
             // "You are no longer the assistant squad leader."
             PC.ReceiveLocalizedMessage(class'DHSquadMessage', 71);
 
-            MaybeChangeRoleToDefault(PC);
+            MaybeInvalidateRole(PC);
+            MaybeLeaveCommandVoiceChannel(ASL);
         }
     }
 
@@ -2671,11 +2686,10 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
     }
 }
 
-function MaybeChangeRoleToDefault(DHPlayer PC)
+function MaybeInvalidateRole(DHPlayer PC)
 {
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
-    local bool bShouldChangeRoleToRifleman;
     local int DefaultRoleIndex;
 
     if (PC == none) { return; }
@@ -2688,19 +2702,58 @@ function MaybeChangeRoleToDefault(DHPlayer PC)
 
     if (GRI == none) { return; }
 
-    if (!GRI.GameType.default.bSquadSpecialRolesOnly)
+    if (PC.GetRoleEnabledResult(RI) != RER_Enabled)
     {
-        // This game type doesn't limit special roles to squad members only. Don't change role.
-        return;
-    }
+        // "You are no longer qualified to be {article} {name}."
+        PC.ReceiveLocalizedMessage(class'DHGameMessage', 24,,, RI);
 
-    bShouldChangeRoleToRifleman = (!PC.IsSquadLeader() && RI.bRequiresSL) || (!PC.IsSLorASL() && RI.bRequiresSLorASL);
-
-    if (bShouldChangeRoleToRifleman)
-    {
         DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());
 
+        // Set the player's role to a default so that they don't occupy the role.abs
+        // Also set the spawn paramters to be invalid so they are forced to go to
+        // the deploy menu upon death.
         PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
+        PC.bSpawnParametersInvalidated = true;
+    }
+}
+
+function bool MaybeLeaveCommandVoiceChannel(DHPlayerReplicationInfo PRI)
+{
+    local DHVoiceReplicationInfo VRI;
+    local DHPlayer PC;
+    local VoiceChatRoom VCR;
+
+    if (PRI == none || PRI.CanAccessCommandChannel() || PRI.Team == none)
+    {
+        return false;
+    }
+
+    VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
+    PC = DHPlayer(PRI.Owner);
+
+    if (VRI == none || PC == none)
+    {
+        return false;
+    }
+
+    VCR = VRI.GetChannel(VRI.CommandChannelName, PRI.Team.TeamIndex);
+
+    if (VCR == none)
+    {
+        return false;
+    }
+
+    PC.ServerLeaveVoiceChannel(VCR.ChannelIndex);
+
+    // Set the next channel in the hierarchy as active
+    if (PRI.IsInSquad())
+    {
+        VRI.JoinSquadChannel(PRI, PRI.Team.TeamIndex, PRI.SquadIndex);
+        PC.Speak("SQUAD");
+    }
+    else
+    {
+        PC.Speak(VRI.LocalChannelName);
     }
 }
 
