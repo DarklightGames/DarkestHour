@@ -71,10 +71,9 @@ static function bool HasEnoughSquadMembersToRequest(DHPlayer PC)
 {
     local DHPlayerReplicationInfo PRI;
 
-    if (PC != none)
-    {
-        return PRI != none && PRI.HasSquadMembers(default.RequiredSquadMemberCount);
-    }
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    
+    return PRI != none && PRI.HasSquadMembers(default.RequiredSquadMemberCount);
 }
 
 // These override function are meant to facilitate gathering the limit and
