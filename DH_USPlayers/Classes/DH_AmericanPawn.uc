@@ -12,6 +12,9 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI'
     Skins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=Texture'DHUSCharactersTex.GI.GI_1'
+	
+	BodySkins(0)=Texture'DHUSCharactersTex.GI.GI_1'
+    BodySkins(1)=Texture'DHUSCharactersTex.GI.GI_2'
 
     bReversedSkinsSlots=true
 

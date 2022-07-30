@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_USSergeant29thBeach extends DH_USSergeant29th;
+class DH_US29thPawnNCO extends DH_AmericanPawn;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawnNCO',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawnNCO',Weight=1.0)
+    Skins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_Sarg1'
+
+    BodySkins(0)=Texture'DHUSCharactersTex.1stID.US_29thID_Sarg1'
+    BodySkins(1)=Texture'DHUSCharactersTex.1stID.US_29thID_Sarg2'
 }
