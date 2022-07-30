@@ -163,7 +163,7 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     return Limit;
 }
 
-function class<DHArtillery> GetArtilleryClass(int ArtilleryTypeIndex)
+simulated function class<DHArtillery> GetArtilleryClass(int ArtilleryTypeIndex)
 {
     if (ArtilleryTypeIndex >= 0 && ArtilleryTypeIndex < ArtilleryTypes.Length)
     {
