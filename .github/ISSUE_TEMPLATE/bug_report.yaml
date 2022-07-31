@@ -1,6 +1,5 @@
 name: 🐛 Bug Report
 description: Create a report to help us improve the game 
-title: ""
 labels: [bug]
 body:
 - type: textarea

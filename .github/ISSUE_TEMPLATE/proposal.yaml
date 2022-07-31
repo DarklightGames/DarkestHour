@@ -1,6 +1,5 @@
 name: 💡 Proposal
 description: Suggest a new feature or an imporovement
-title: ""
 labels: [proposal]
 body:
 - type: textarea
