@@ -32,7 +32,7 @@ function bool AdminLogin(PlayerController P, string Username, string Password)
     if (User == none)
     {
         User = Users.FindByName(UserName);
-        bValidLogin = User != none && User.Password == Password;
+        bValidLogin = User != none && User.Password == class'MD5Hash'.static.GetStringHashString(Password);
     }
 
     if (bValidLogin)
@@ -78,7 +78,7 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
         }
 
         User = Users.FindByName(UserName);
-        bValidLogin = User != none && User.Password == Password;
+        bValidLogin = User != none && User.Password == class'MD5Hash'.static.GetStringHashString(Password);
     }
 
     // Successful silent admin login
