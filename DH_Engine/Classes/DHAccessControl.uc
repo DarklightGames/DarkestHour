@@ -148,7 +148,7 @@ defaultproperties
     SessionBanned="You cannot join this server until it changes level."
 
     AdminClass=class'DH_Engine.DHAdmin'
-    DeveloperIDs(0)="76561197961365238" // Theel
+    DeveloperIDs(0)="76561197989090226" // Napoleon Blownapart
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
     DeveloperIDs(3)="76561198050059841" // dolas
