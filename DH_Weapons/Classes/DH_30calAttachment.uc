@@ -8,7 +8,7 @@ class DH_30calAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.30Cal_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.30cal_icon'
+    MenuImage=Texture'DH_M1919_tex.interface.m1919a6_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
