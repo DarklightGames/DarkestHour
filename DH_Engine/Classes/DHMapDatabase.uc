@@ -282,7 +282,7 @@ defaultproperties
     MapInfos(56)=(Name="DH-Berezina_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(57)=(Name="DH-Black_Day_July_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(58)=(Name="DH-Butovo_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(59)=(Name="DH-Chambois_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    MapInfos(59)=(Name="DH-Chambois_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(60)=(Name="DH-Champs_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(61)=(Name="DH-Cholm_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(62)=(Name="DH-Danzig_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
