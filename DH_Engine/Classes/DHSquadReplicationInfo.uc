@@ -771,6 +771,9 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     // Both the incoming and outgoing squad leader may need to have their current roles invalidated.
     MaybeInvalidateRole(PC);
+    RemoveUnbuiltConstructionsByPlayer(PC);
+    // TODO: remove all undug 
+
     MaybeInvalidateRole(OtherPC);
 
     // "{0} has become the squad leader"
@@ -2714,12 +2717,6 @@ function MaybeInvalidateRole(DHPlayer PC)
         // the deploy menu upon death.
         PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
         PC.bSpawnParametersInvalidated = true;
-    }
-
-    // HACK: Not a nice place to put this.
-    if (PC.IsSquadLeader())
-    {
-        PC.DestroyShovelItem();
     }
 }
 
