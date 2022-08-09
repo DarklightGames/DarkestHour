@@ -3332,7 +3332,7 @@ function CheckGiveShovel()
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none && GRI.bAreConstructionsEnabled && PRI != none && !PRI.IsSquadLeader())
+        if (GRI != none && GRI.bAreConstructionsEnabled)
         {
             CreateInventory(ShovelClassName);
         }
@@ -7495,6 +7495,32 @@ exec simulated function Give(string WeaponName)
 exec function BigHead(float V)
 {
     SetHeadScale(V);
+}
+
+simulated function bool CanBuildWithShovel()
+{
+    return Level.NetMode == NM_Standalone || HasSquadmatesWithinDistance(25.0);
+}
+
+simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
+{
+    local DHPlayer PC;
+    local DHPawn OtherPawn;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    {
+        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties
