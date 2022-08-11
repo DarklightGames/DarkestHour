@@ -330,6 +330,8 @@ defaultproperties
     Captions_Comm(10)="Switch to Squad Voice Channel"
     Bindings_Comm(11)="StartTyping"
     Captions_Comm(11)="Start typing a chat message"
+    Bindings_Comm(12)="CommunicationMenu"
+    Captions_Comm(12)="Mute Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
