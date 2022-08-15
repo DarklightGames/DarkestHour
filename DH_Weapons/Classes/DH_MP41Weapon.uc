@@ -18,6 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    SwayModifyFactor=0.66 // -0.04, slightly better than mp40
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=55.0
     DisplayFOV=85.0
