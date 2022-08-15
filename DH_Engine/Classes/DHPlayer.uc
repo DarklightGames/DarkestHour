@@ -680,7 +680,7 @@ function bool AllowTextMessage(string Msg)
     // If same text, then lower the allowed frequency
     if (Level.TimeSeconds - LastBroadcastTime < 5)
     {
-        Msg = Left(Msg,Clamp(len(Msg) - 4, 8, 64));
+        Msg = Left(Msg, Clamp(Len(Msg) - 4, 8, 64));
 
         for (i = 0; i < 4; ++i)
         {
