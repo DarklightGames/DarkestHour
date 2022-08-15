@@ -391,6 +391,20 @@ function Timer()
                     // in the squad is going to randomly be assigned the leader.
                     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
                     GetMembers(TeamIndex, SquadIndex, Volunteers);
+
+                    if (Volunteers.Length > 1)
+                    {
+                        // Remove the assistant squad leader from the automatic
+                        // volunteer list.
+                        for (i = 0; i < Volunteers.Length; ++i)
+                        {
+                            if (Volunteers[i].bIsSquadAssistant)
+                            {
+                                Volunteers.Remove(i, 1);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -802,7 +816,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local VoiceChatRoom SquadVCR;
     local int i;
     local array<DHPlayerReplicationInfo> Volunteers;
-    local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
     local bool bHasActiveChannelChanged;
 
@@ -861,30 +874,19 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
         ClearSquadMergeRequests(TeamIndex, SquadIndex);
+        
+        GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
 
-        Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
-
-        if (Assistant != none)
+        if (Volunteers.Length > 0)
         {
-            // The squad has an assistant squad leader, so let's make them the
-            // new assistant squad leader.
-            CommandeerSquad(Assistant, TeamIndex, SquadIndex);
+            // There are volunteers, so let's make one of them the new
+            // squad leader without delay.
+            SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
         }
         else
         {
-            GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
-
-            if (Volunteers.Length > 0)
-            {
-                // There are volunteers, so let's make one of them the new
-                // squad leader without delay.
-                SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
-            }
-            else
-            {
-                // No volunteers, start a new squad leader draw.
-                StartSquadLeaderDraw(TeamIndex, SquadIndex);
-            }
+            // No volunteers, start a new squad leader draw.
+            StartSquadLeaderDraw(TeamIndex, SquadIndex);
         }
     }
 
