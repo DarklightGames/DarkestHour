@@ -7272,36 +7272,6 @@ function bool UseSupplies(int SupplyCost, optional out array<DHConstructionSuppl
     return true;
 }
 
-// Attempts to refund supplies to nearby supply attachments. Returns the total
-// amount of supplies that were actually refunded.
-function int RefundSupplies(int SupplyCount)
-{
-    local int i, SuppliesToRefund, SuppliesRefunded;
-    local array<DHConstructionSupplyAttachment> Attachments;
-    local UComparator AttachmentComparator;
-
-    // Sort the supply attachments by priority.
-    Attachments = TouchingSupplyAttachments;
-    AttachmentComparator = new class'UComparator';
-    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-    class'USort'.static.Sort(Attachments, AttachmentComparator);
-
-    for (i = 0; i < Attachments.Length; ++i)
-    {
-        if (SupplyCount == 0)
-        {
-            break;
-        }
-
-        SuppliesToRefund = Min(SupplyCount, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
-        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
-        SuppliesRefunded += SuppliesToRefund;
-        SupplyCount -= SuppliesToRefund;
-    }
-
-    return SuppliesRefunded;
-}
-
 simulated function class<DHVoicePack> GetVoicePack()
 {
     return class<DHVoicePack>(VoiceClass);

@@ -771,10 +771,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     // Both the incoming and outgoing squad leader may need to have their current roles invalidated.
     MaybeInvalidateRole(PC);
-    RemoveUnbuiltConstructionsByPlayer(PC);
-    // TODO: remove all undug 
-
     MaybeInvalidateRole(OtherPC);
+
+    // Refund and destroy any unbuilt constructions instigated by the outgoing squad leader.
+    RemoveUnbuiltConstructionsByPlayer(PC, TeamIndex);
 
     // "{0} has become the squad leader"
     BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, NewSquadLeader);
@@ -784,6 +784,24 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     SetSquadNextRallyPointTime(TeamIndex, SquadIndex, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointChangeLeaderDelaySeconds);
 
     return true;
+}
+
+function RemoveUnbuiltConstructionsByPlayer(DHPlayer PC, int TeamIndex)
+{
+    local DHConstruction C;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHConstruction', C)
+    {
+        if (C.InstigatorController == PC && !C.IsConstructed() && C.Progress == 0)
+        {
+            C.TearDown(TeamIndex);
+        }
+    }
 }
 
 function bool ScoreComparatorFunction(Object LHS, Object RHS)
@@ -864,6 +882,8 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
         ClearSquadMergeRequests(TeamIndex, SquadIndex);
+        
+        RemoveUnbuiltConstructionsByPlayer(PC, TeamIndex);
 
         Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
 

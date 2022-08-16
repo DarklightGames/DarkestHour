@@ -218,6 +218,11 @@ function Destroyed()
     super.Destroyed();
 }
 
+function bool IsTouchingActor(Actor A)
+{
+    return A != none && VSize(Location - A.Location) <= class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
+}
+
 function Timer()
 {
     local Pawn Pawn;
