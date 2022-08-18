@@ -3332,7 +3332,7 @@ function CheckGiveShovel()
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none && GRI.bAreConstructionsEnabled && PRI != none && !PRI.IsSquadLeader())
+        if (GRI != none && GRI.bAreConstructionsEnabled)
         {
             CreateInventory(ShovelClassName);
         }
@@ -7272,36 +7272,6 @@ function bool UseSupplies(int SupplyCost, optional out array<DHConstructionSuppl
     return true;
 }
 
-// Attempts to refund supplies to nearby supply attachments. Returns the total
-// amount of supplies that were actually refunded.
-function int RefundSupplies(int SupplyCount)
-{
-    local int i, SuppliesToRefund, SuppliesRefunded;
-    local array<DHConstructionSupplyAttachment> Attachments;
-    local UComparator AttachmentComparator;
-
-    // Sort the supply attachments by priority.
-    Attachments = TouchingSupplyAttachments;
-    AttachmentComparator = new class'UComparator';
-    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-    class'USort'.static.Sort(Attachments, AttachmentComparator);
-
-    for (i = 0; i < Attachments.Length; ++i)
-    {
-        if (SupplyCount == 0)
-        {
-            break;
-        }
-
-        SuppliesToRefund = Min(SupplyCount, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
-        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
-        SuppliesRefunded += SuppliesToRefund;
-        SupplyCount -= SuppliesToRefund;
-    }
-
-    return SuppliesRefunded;
-}
-
 simulated function class<DHVoicePack> GetVoicePack()
 {
     return class<DHVoicePack>(VoiceClass);
@@ -7495,6 +7465,32 @@ exec simulated function Give(string WeaponName)
 exec function BigHead(float V)
 {
     SetHeadScale(V);
+}
+
+simulated function bool CanBuildWithShovel()
+{
+    return Level.NetMode == NM_Standalone || HasSquadmatesWithinDistance(25.0);
+}
+
+simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
+{
+    local DHPlayer PC;
+    local DHPawn OtherPawn;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    {
+        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties

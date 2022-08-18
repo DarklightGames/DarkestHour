@@ -15,4 +15,5 @@ defaultproperties
     PluralName="Light Machine-Gunners"
     Limit=2
     AddedRoleRespawnTime=5
+    bCanBeSquadLeader=false
 }
