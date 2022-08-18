@@ -15,13 +15,12 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
 
     // Spread
-    HipSpreadModifier=5.0
     Spread=65.0
 
     // Recoil
     RecoilRate=0.06
     MaxVerticalRecoilAngle=620
-    MaxHorizontalRecoilAngle=240
+    MaxHorizontalRecoilAngle=220
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0

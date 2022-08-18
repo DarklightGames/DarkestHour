@@ -44,7 +44,7 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    SwayModifyFactor=0.9 // +0.1
+    SwayModifyFactor=0.83 // +0.13
     ItemName="PPSh-41"
 
     FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'

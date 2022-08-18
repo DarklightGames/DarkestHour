@@ -8,7 +8,7 @@ class DH_M1T17CarbineWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1/T17 Automatic Carbine"
-    SwayModifyFactor=0.55 // -0.35  because it was a very light carbine
+    SwayModifyFactor=0.45 // -0.25  because it was a very light carbine
     FireModeClass(0)=class'DH_Weapons.DH_M1T17CarbineFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1T17CarbineMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1T17CarbineAttachment'
