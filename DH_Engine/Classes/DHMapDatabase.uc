@@ -26,7 +26,8 @@ enum EMapGameType
     GAMETYPE_Clash,
     GAMETYPE_Push,
     GAMETYPE_Defence,
-    GAMETYPE_Stalemate
+    GAMETYPE_Stalemate,
+    GAMETYPE_Domination,
 };
 
 struct SMapInfo
@@ -73,6 +74,8 @@ static function string GetMapGameTypeString(EMapGameType GameType)
             return "Defence";
         case GAMETYPE_Stalemate:
             return "Stalemate";
+        case GAMETYPE_Domination:
+            return "Domination";
         default:
             return "Unknown";
     }
@@ -399,5 +402,4 @@ defaultproperties
 	MapInfos(173)=(Name="DH-Lazur_Chemical_Plant_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Small)
 	MapInfos(174)=(Name="DH-Donner_Bolts",AlliedNation=NATION_Britain,GameType=GAMETYPE_Stalemate,Size=SIZE_ExtraSmall)
 	MapInfos(175)=(Name="DH-Lutremange_Domination",AlliedNation=NATION_USA,GameType=GAMETYPE_Domination,Size=SIZE_Large)
-	
 }
