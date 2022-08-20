@@ -14,13 +14,21 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PanzerschreckAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerschreckPickup'
 
-    Mesh=SkeletalMesh'DH_Panzerschreck_1st.Panzerschreck'
+    Mesh=SkeletalMesh'DH_Panzerschreck_anm.Panzerschreck_1st'
 
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
 
+    DisplayFOV=90.0
+    IronSightDisplayFOV=60.0
+    IronSightDisplayFOVHigh=6.0
+
     RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot",AssistedReloadAnim="reloadA")
-    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idleMid",IronFireAnim="iron_shootMid",AssistedReloadAnim="reloadA")
-    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idleFar",IronFireAnim="iron_shootFar",AssistedReloadAnim="reloadA")
+    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idle_150",IronFireAnim="iron_shoot_150",AssistedReloadAnim="reloadA")
+    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idle_200",IronFireAnim="iron_shoot_200",AssistedReloadAnim="reloadA")
+
+    
+    MagEmptyReloadAnims(0)="Reload"
+    MagPartialReloadAnims(0)="Reload"
 }

@@ -551,7 +551,7 @@ defaultproperties
     WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
 
     IronSightDisplayFOV=25.0
-    FreeAimRotationSpeed=7.5
+    FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=2
     InitialNumPrimaryMags=2
