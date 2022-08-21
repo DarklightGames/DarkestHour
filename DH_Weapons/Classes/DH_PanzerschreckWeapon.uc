@@ -24,10 +24,9 @@ defaultproperties
     IronSightDisplayFOV=60.0
     IronSightDisplayFOVHigh=6.0
 
-    RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot",AssistedReloadAnim="reloadA")
-    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idle_150",IronFireAnim="iron_shoot_150",AssistedReloadAnim="reloadA")
-    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idle_200",IronFireAnim="iron_shoot_200",AssistedReloadAnim="reloadA")
-
+    RangeSettings(0)=(FirePitch=0,IronIdleAnim="Iron_idle",IronFireAnim="iron_shoot",AssistedReloadAnim="iron_reload")
+    RangeSettings(1)=(FirePitch=350,IronIdleAnim="iron_idle_150",IronFireAnim="iron_shoot_150",AssistedReloadAnim="iron_reload_150")
+    RangeSettings(2)=(FirePitch=675,IronIdleAnim="iron_idle_200",IronFireAnim="iron_shoot_200",AssistedReloadAnim="iron_reload_200")
     
     MagEmptyReloadAnims(0)="Reload"
     MagPartialReloadAnims(0)="Reload"

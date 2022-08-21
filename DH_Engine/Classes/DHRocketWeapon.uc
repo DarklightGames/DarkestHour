@@ -42,6 +42,14 @@ replication
         ClientDoAssistedReload;
 }
 
+simulated exec function DebugAssistReloading()
+{
+    if (Level.NetMode == NM_Standalone)
+    {
+        AssistedReload();
+    }
+}
+
 // Overridden to cycle the weapon aiming range
 simulated exec function SwitchFireMode()
 {
@@ -345,6 +353,12 @@ simulated state AssistedReloading extends Reloading
         }
 
         PlayAnimAndSetTimer(RangeSettings[RangeIndex].AssistedReloadAnim, 1.0, 0.1);
+    }
+    
+    // HACK: Just play the idle anims as normal.
+    simulated function PlayIdle()
+    {
+        global.PlayIdle();
     }
 
 // Emptied to avoid taking player out of ironsights when someone else is loading them
