@@ -100,6 +100,7 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_baz_m1"
     PA_IdleIronWeaponAnim="stand_idleiron_baz_m1"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_baz_m1"
+    PA_IdleProneAnim="prone_idle_baz_m1"
     PA_ReloadAnim="crouch_reload_baz_m9" // TODO: !
     PA_ReloadEmptyAnim="crouch_reload_baz_m9" // TODO: !
     PA_ProneReloadEmptyAnim="prone_reload_baz_m1"
