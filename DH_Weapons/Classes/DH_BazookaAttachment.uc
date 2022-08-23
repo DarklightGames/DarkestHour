@@ -94,7 +94,7 @@ defaultproperties
     PA_DiveToProneEndAnim="prone_diveend_baz_m1"
 
     PA_CrouchIdleRestAnim="crouch_idle_baz_m1"
-    PA_IdleCrouchAnim="crouch_idleiron_baz_m1"
+    PA_IdleCrouchAnim="crouch_idle_baz_m1"
     PA_IdleRestAnim="stand_idlerest_baz_m1"
     PA_IdleWeaponAnim="stand_idlerest_baz_m1"
     PA_IdleIronRestAnim="stand_idleiron_baz_m1"
