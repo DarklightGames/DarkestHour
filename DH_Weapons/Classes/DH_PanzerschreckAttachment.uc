@@ -7,16 +7,18 @@ class DH_PanzerschreckAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'
+    Mesh=SkeletalMesh'DH_Panzerschreck_3rd.Panzerschreck_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonPSchreckExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
-    MuzzleBoneName="Muzzle"
-    ExhaustBoneName="dummy_rocket"
+    ExhaustBoneName=exhaust
+    MuzzleBoneName=Muzzle
+    WarheadBoneName=Warhead
+    bHideWarheadWhenFired=true
 
-    WA_Idle="idle_panzerschreck"
-    WA_Fire="idle_panzerschreck"
-    WA_Reload="reloadS_panzerschreck"
+    WA_Idle="idle_rpzb"
+    WA_Fire="idle_rpzb"
+    WA_Reload="idle_rpzb"
 
     PA_AssistedReloadAnim="crouch_reloadA_bazooka"
     PA_MovementAnims(0)="stand_jogF_kar"
