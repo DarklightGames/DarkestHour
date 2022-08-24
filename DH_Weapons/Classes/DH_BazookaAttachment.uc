@@ -140,7 +140,7 @@ defaultproperties
     PA_MoveWalkFire(7)="stand_shootFLwalk_baz_m1"
 
     PA_MoveStandIronFire(0)="stand_shootiron_baz_m1"
-    PA_MoveStandIronFire(1)="stand_shootiron_faust"
+    PA_MoveStandIronFire(1)="stand_shootiron_baz_m1"
     PA_MoveStandIronFire(2)="stand_shootLRiron_baz_m1"
     PA_MoveStandIronFire(3)="stand_shootLRiron_baz_m1"
     PA_MoveStandIronFire(4)="stand_shootFLiron_baz_m1"
