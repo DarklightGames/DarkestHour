@@ -41,6 +41,15 @@ defaultproperties
     PA_CrouchAnims(6)="crouch_walkBL_baz_m1"
     PA_CrouchAnims(7)="crouch_walkBR_baz_m1"
 
+    PA_ProneAnims(0)="prone_crawlF_baz_m1"
+    PA_ProneAnims(1)="prone_crawlB_baz_m1"
+    PA_ProneAnims(2)="prone_crawlL_baz_m1"
+    PA_ProneAnims(3)="prone_crawlR_baz_m1"
+    PA_ProneAnims(4)="prone_crawlFL_baz_m1"
+    PA_ProneAnims(5)="prone_crawlFR_baz_m1"
+    PA_ProneAnims(6)="prone_crawlBL_baz_m1"
+    PA_ProneAnims(7)="prone_crawlBR_baz_m1"
+
     PA_WalkAnims(0)="stand_walkFhip_baz_m1"
     PA_WalkAnims(1)="stand_walkBhip_baz_m1"
     PA_WalkAnims(2)="stand_walkLhip_baz_m1"
@@ -140,7 +149,7 @@ defaultproperties
     PA_MoveWalkFire(7)="stand_shootFLwalk_baz_m1"
 
     PA_MoveStandIronFire(0)="stand_shootiron_baz_m1"
-    PA_MoveStandIronFire(1)="stand_shootiron_faust"
+    PA_MoveStandIronFire(1)="stand_shootiron_baz_m1"
     PA_MoveStandIronFire(2)="stand_shootLRiron_baz_m1"
     PA_MoveStandIronFire(3)="stand_shootLRiron_baz_m1"
     PA_MoveStandIronFire(4)="stand_shootFLiron_baz_m1"
