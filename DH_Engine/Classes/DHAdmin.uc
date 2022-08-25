@@ -13,8 +13,3 @@ function DoLoginSilent( string Username, string Password)
         Outer.ReceiveLocalizedMessage(Level.Game.GameMessageClass, 20);
     }
 }
-
-defaultproperties
-{
-
-}

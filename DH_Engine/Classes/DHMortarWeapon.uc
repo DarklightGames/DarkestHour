@@ -69,7 +69,7 @@ simulated function bool WeaponAllowMantle()
 }
 
 // Implemented so pressing the deploy key will attempt to deploy a carried mortar
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     local DHPawn  P;
     local rotator LockedViewRotation;
@@ -174,7 +174,7 @@ simulated function bool CanDeploy(DHPawn P)
 
                 // Now trace downwards from the end point of our previous trace, to make sure there's a level surface there
                 TraceStart = TraceEnd;
-                TraceEnd = TraceStart - (vect(0.0, 0.0, 128.0));
+                TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
                 HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
                 // Can't deploy if there isn't a static surface there
@@ -297,7 +297,7 @@ simulated function bool StartFire(int Mode) { return false; }
 simulated event StopFire(int Mode);
 simulated function ImmediateStopFire();
 simulated function ROIronSights();
-simulated exec function ROManualReload();
+exec simulated function ROManualReload();
 
 // Modified to allow same InventoryGroup items
 function bool HandlePickupQuery(Pickup Item)

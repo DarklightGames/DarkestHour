@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_Kar98NoCoverMeleeFire extends DH_Kar98MeleeFire;
-
-defaultproperties
-{
-
-}

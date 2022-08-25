@@ -14,8 +14,3 @@ simulated function class<DHArtillery> GetArtilleryClass()
 {
     return Sender.GetLevelInfo().ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
 }
-
-defaultproperties
-{
-}
-

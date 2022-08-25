@@ -45,7 +45,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPSH41_stickPickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-stick'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'

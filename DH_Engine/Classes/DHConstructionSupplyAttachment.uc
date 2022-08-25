@@ -15,7 +15,7 @@ var int                 SupplyCountMax;
 var private int         TeamIndex;
 var bool                bIsMainSupplyCache;
 
-var private localized string   HumanReadableName;
+var localized private string   HumanReadableName;
 
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
@@ -157,6 +157,7 @@ static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
                 case NATION_Canada:
                 case NATION_USSR:
                 case NATION_Poland:
+                case NATION_Czechoslovakia:
                     return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
             }
         }
@@ -215,6 +216,11 @@ function Destroyed()
     }
 
     super.Destroyed();
+}
+
+function bool IsTouchingActor(Actor A)
+{
+    return A != none && VSize(Location - A.Location) <= class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
 }
 
 function Timer()

@@ -5,7 +5,4 @@
 
 class DH_RKKA_GreatcoatGunner extends DH_RKKA_GreatcoatGunnerEarly;
 
-defaultproperties
-{
 
-}

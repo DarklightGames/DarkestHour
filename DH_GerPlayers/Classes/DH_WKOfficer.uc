@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WKOfficer extends DHDeprecated;
-
-defaultproperties
-{
-}

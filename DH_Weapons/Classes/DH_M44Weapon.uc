@@ -6,7 +6,7 @@
 class DH_M44Weapon extends DHBoltActionWeapon;
 
 // Modified as this rifle has a fixed bayonet
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
 }
 
@@ -19,7 +19,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M44Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_M44'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

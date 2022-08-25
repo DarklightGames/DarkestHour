@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_USMortarObserverAutumn extends DHDeprecated;
-
-defaultproperties
-{
-}

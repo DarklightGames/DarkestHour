@@ -34,7 +34,3 @@ function Timer()
     NextTimerCallTime += TimerFrequency;
     SetTimer(NextTimerCallTime - Level.TimeSeconds, false);
 }
-
-defaultproperties
-{
-}

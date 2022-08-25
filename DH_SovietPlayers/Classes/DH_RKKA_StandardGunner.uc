@@ -5,7 +5,4 @@
 
 class DH_RKKA_StandardGunner extends DH_RKKA_StandardGunnerEarly;  //to be removed
 
-defaultproperties
-{
 
-}

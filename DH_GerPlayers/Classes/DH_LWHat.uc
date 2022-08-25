@@ -5,11 +5,6 @@
 
 class DH_LWHat extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG');
-}
-
 defaultproperties
 {
     bIsHelmet=false

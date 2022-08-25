@@ -124,7 +124,6 @@ defaultproperties
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
     RemoteRole=ROLE_None
-    SpawnClearedChance=0.0
     TypeIndex=-1
     bDebug=false
     bNoDelete=false

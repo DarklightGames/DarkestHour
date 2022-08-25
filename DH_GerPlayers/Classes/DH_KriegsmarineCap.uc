@@ -5,13 +5,6 @@
 
 class DH_KriegsmarineCap extends DHHeadgear;
 
-#exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_1');
-}
-
 defaultproperties
 {
     bIsHelmet=false

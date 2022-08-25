@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.kar98k-scoped-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.k98_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

@@ -15,7 +15,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_G41Pickup'
 
     Mesh=SkeletalMesh'DH_G41_1st.G41_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex2.Rifles.G41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex2.Rifles.G41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

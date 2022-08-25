@@ -7,8 +7,7 @@ class DH_KV1ETank extends DHArmoredVehicle;
 
 defaultproperties
 {
-
-    //to do: proper hull MG exit hatch (implemented in the animations)
+    // TODO: proper hull MG exit hatch (implemented in the animations)
 
     // Vehicle properties
     VehicleNameString="KV-1E"
@@ -23,7 +22,6 @@ defaultproperties
     Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
 
     bUseHighDetailOverlayIndex=false
-
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1ECannonPawn',WeaponBone="Turret_Placement")

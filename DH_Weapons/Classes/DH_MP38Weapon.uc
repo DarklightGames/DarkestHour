@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP38Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp38-mesh'
-    //HighDetailOverlay=shader'Weapons1st_tex.SMG.MP40_s'
+    //HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
     bUseHighDetailOverlayIndex=false
 
     SwayModifyFactor=0.73 // +0.03, slightly heavier than mp40

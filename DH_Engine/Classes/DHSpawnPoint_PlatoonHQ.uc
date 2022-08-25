@@ -101,6 +101,11 @@ function Timer()
     }
 }
 
+simulated function int GetDesirability()
+{
+    return 3;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHPlatoonHQButtonStyle"

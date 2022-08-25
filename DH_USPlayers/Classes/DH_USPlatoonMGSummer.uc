@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_SatchelChargeSmallAttachment extends DH_SatchelCharge10lb10sAttachment;
+class DH_USPlatoonMGSummer extends DHUSMachineGunnerRoles;
 
 defaultproperties
 {
-
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_AmericanPawn',Weight=3.0)
+    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
+    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNet'
 }

@@ -13,7 +13,6 @@ enum FindType
     FT_Factory,
 };
 
-//var   int                     DelayTimeBeforeFind; // does this need to be variable?
 var()   FindType                HowToFind;
 var()   name                    TagToFind;
 var()   array<class<Pawn> >     PawnClassToFind;
@@ -111,9 +110,5 @@ state FindFactory
 }
 
 state Passed
-{
-}
-
-defaultproperties
 {
 }

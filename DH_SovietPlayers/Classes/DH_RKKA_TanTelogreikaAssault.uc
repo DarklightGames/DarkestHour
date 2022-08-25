@@ -5,7 +5,4 @@
 
 class DH_RKKA_TanTelogreikaAssault extends DH_RKKA_TanTelogreikaAssaultEarly; //should eventually be deleted to avoid confusion
 
-defaultproperties
-{
 
-}

@@ -196,7 +196,7 @@ auto state Timing
             // There are 50 players on the server
             // 8 * (50 / 2) = 200
             // 10 * (50 / 2) = 250
-            ScaleUpModifier = (Max(10, G.GetNumPlayers()) * 0.5);
+            ScaleUpModifier = Max(10, G.GetNumPlayers()) * 0.5;
         }
         else
         {

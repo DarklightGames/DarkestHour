@@ -26,7 +26,3 @@ auto state PlayerWaiting
         bCollideWorld = true;
     }
 }
-
-defaultproperties
-{
-}

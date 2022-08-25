@@ -5,7 +5,3 @@
 
 class DHCannonShell_MixedMag extends DHCannonShell
     abstract;
-
-defaultproperties
-{
-}

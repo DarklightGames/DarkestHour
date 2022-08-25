@@ -5,9 +5,6 @@
 
 class DH_Sdkfz251Transport extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
-
 defaultproperties
 {
     // Vehicle properties
@@ -30,7 +27,7 @@ defaultproperties
     Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.halftrack_int'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor

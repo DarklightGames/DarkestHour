@@ -51,8 +51,3 @@ function OnSelect(int OptionIndex, vector Location)
 {
     Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroup", Options[OptionIndex].OptionalObject);
 }
-
-defaultproperties
-{
-}
-

@@ -5,6 +5,4 @@
 
 class DHMinefield extends ROMinefield;
 
-defaultproperties
-{
-}
+

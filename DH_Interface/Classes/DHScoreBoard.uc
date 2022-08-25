@@ -126,7 +126,7 @@ function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out C
     switch (EScoreboardColumnType(ScoreboardColumnIndex))
     {
         case COLUMN_PlayerName:
-            CRI.TextColor = Class'UColor'.default.White;
+            CRI.TextColor = class'UColor'.default.White;
             CRI.Text = "No players";
             break;
         default:

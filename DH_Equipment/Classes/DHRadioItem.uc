@@ -19,7 +19,7 @@ simulated event StopFire(int Mode) {return;}
 simulated function bool IsFiring(){return false;}
 function bool FillAmmo(){return false;}
 function bool ResupplyAmmo(){return false;}
-simulated exec function ROManualReload() {return;}
+exec simulated function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;} // not busy in the idle state because we never fire
 simulated function bool ShouldUseFreeAim() {return false;}
 

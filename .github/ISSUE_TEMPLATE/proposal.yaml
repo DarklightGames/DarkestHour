@@ -1,0 +1,29 @@
+name: 💡 Proposal
+description: Suggest a new feature or an imporovement
+labels: [proposal]
+body:
+- type: textarea
+  id: problem
+  attributes:
+    label: Is your proposal related to a problem?
+    description: A clear and concise description of what the problem is.
+    placeholder: Ex. I'm always frustrated when...
+  validations:
+    required: true
+- type: textarea
+  id: solution
+  attributes:
+    label: Describe the solution you'd like
+    description: A clear and concise description of what you want to happen.
+  validations:
+    required: true
+- type: textarea
+  id: alt-solution
+  attributes:
+    label: Describe alternatives you've considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
+- type: textarea
+  id: context
+  attributes:
+    label: Additional context
+    description: Add any other context or screenshots that help describe your proposal here.
