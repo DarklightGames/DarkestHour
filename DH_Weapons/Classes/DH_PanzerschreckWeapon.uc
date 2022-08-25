@@ -19,6 +19,9 @@ defaultproperties
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
+	
+	SwayModifyFactor=1.0
+	BobModifyFactor=0.8
 
     DisplayFOV=90.0
     IronSightDisplayFOV=60.0
