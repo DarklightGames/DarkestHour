@@ -17,14 +17,14 @@ defaultproperties
     WeaponAttachOffset=(X=0,Y=0,Z=-15)
 
     // Turret movement
-    MaxPositiveYaw=4096 // 22.5 degrees traverse
+    MaxPositiveYaw=4096 // 22.5 degrees traverse (traverse seems a little too high, shield clips through the gun base slightly)
     MaxNegativeYaw=-4096
     YawStartConstraint=-4500
     YawEndConstraint=4500
     CustomPitchUpLimit=5460 // 30/-5 degrees elevation/depression
     CustomPitchDownLimit=64625
 
-    ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
+    ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell' // Check if Stuart shells are correct, Pak 40 for instance used longer shells than the tank equivalent of the gun)
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
@@ -43,7 +43,7 @@ defaultproperties
     MaxSecondaryAmmo=44
     MaxTertiaryAmmo=20
 
-    PrimarySpread=0.0016
+	Spread=0.0016
     SecondarySpread=0.0016
     TertiarySpread=0.04
 
@@ -53,10 +53,10 @@ defaultproperties
     AddedPitch=20
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01' // Change sounds
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3.9 seconds reload
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3.9 seconds reload (probably make reload faster)
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
