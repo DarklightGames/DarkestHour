@@ -7,5 +7,5 @@ class DH_PanzerschreckAttachment_Winter extends DH_PanzerschreckAttachment;
 
 defaultproperties
 {
-    //Skins(0)=Texture'DH_Panzerschreck_tex.Panzerschreck_winter_world'}
+    Skins(0)=Texture'DH_Panzerschreck_tex.Panzerschreck_winter_world'
 }

@@ -12,5 +12,6 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnow'
-    HandType=Hand_Gloved
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Winter"
+    HandType=HAND_Gloved
 }
