@@ -15,5 +15,5 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
 
-    GivenItems(0)="DH_Weapons.DH_PanzerfaustWeapon_Camo"
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Camo"
 }
