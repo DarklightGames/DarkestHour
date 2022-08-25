@@ -3434,7 +3434,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'BackAttachment', self);
+                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
@@ -3642,7 +3642,7 @@ state PutWeaponAway
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'BackAttachment', self);
+                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
