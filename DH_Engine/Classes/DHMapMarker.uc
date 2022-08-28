@@ -74,7 +74,6 @@ enum EMarkerType
     MT_ArtilleryHit,
     MT_ArtilleryBarrage,
     MT_Measurement,
-    MT_Admin,
     MT_Movement
 };
 
@@ -261,7 +260,5 @@ defaultproperties
     Scope=TEAM
     OverwritingRule=OFF
     bShouldShowOnCompass=false
-    RequiredSquadMembers=0
-    ActivationTimeout=0
     CalculatingString="Calculating..."
 }

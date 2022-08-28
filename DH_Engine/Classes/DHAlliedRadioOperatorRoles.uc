@@ -14,4 +14,5 @@ defaultproperties
     PluralName="Radio Operators"
     Limit=1
     bCarriesRadio=true
+    bCanBeSquadLeader=false
 }

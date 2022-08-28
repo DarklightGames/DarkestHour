@@ -13,7 +13,7 @@ class Base64Encoding extends Object
 var private string Codes;
 var private TreeMap_string_int CodeIndices;
 
-static final function CreateCodeIndices()
+final static function CreateCodeIndices()
 {
     local int i;
 
@@ -25,7 +25,7 @@ static final function CreateCodeIndices()
     }
 }
 
-static final function array<byte> Decode(string S)
+final static function array<byte> Decode(string S)
 {
     local int i, j, b[4];
     local int Length, FirstPadIndex;
@@ -75,7 +75,7 @@ static final function array<byte> Decode(string S)
     return Bytes;
 }
 
-static final function string Encode(array<byte> Bytes)
+final static function string Encode(array<byte> Bytes)
 {
     local int b, i;
     local string S;

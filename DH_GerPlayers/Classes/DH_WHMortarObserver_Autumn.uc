@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WHMortarObserver_Autumn extends DHDeprecated;
-
-defaultproperties
-{
-}

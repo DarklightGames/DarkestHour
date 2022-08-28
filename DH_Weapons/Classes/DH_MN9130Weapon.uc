@@ -16,7 +16,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MN9130Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin-Nagant-9130-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9130_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9130_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

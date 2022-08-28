@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DH_SatchelChargeSmallWeapon extends DH_SatchelCharge10lb10sWeapon;
+class DH_CSAZFurHatUnfolded extends DH_SovietHeadgear;
 
 defaultproperties
 {
-
+    Mesh=SkeletalMesh'dhgear_anm.Ushanka_unfoldedCS'
+    Skins(0)=Texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
 }

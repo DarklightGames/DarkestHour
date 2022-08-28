@@ -6,7 +6,6 @@
 class DH_M1GarandFire extends DHSemiAutoFire;
 
 var     array<sound>    FirePingSounds;   // an array of the last round firing sound with ping
-var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
 // Modified to play firing sound including a clip eject ping when firing last round
 function ServerPlayFiring()
@@ -99,7 +98,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
-    FireRate=0.25  //higher than SVT or G43 for... balance reasons
+    FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200

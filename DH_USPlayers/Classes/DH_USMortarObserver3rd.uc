@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_USMortarObserver3rd extends DHDeprecated;
-
-defaultproperties
-{
-}

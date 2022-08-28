@@ -85,7 +85,3 @@ function Tick(float DeltaTime)
 
 // TODO; we need to run an "update proxy" type thing here, but make the rest of
 // the "update proxy" calls generic enough to be used
-defaultproperties
-{
-}
-

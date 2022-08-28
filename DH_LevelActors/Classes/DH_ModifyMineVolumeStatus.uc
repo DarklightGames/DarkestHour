@@ -68,7 +68,3 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     //Level.Game.Broadcast(self, "Minefield bActive variable is" @ MineVolumeReference.bActive);
 }
-
-defaultproperties
-{
-}

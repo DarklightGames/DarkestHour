@@ -5,11 +5,6 @@
 
 class DH_WSSHatPanzerOne extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_1');
-}
-
 defaultproperties
 {
     bIsHelmet=false

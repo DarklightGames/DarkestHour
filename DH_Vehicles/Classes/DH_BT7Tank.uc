@@ -24,6 +24,9 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
+
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BT7CannonPawn',WeaponBone="Turret_Placement")
 

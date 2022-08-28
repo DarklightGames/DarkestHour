@@ -63,7 +63,3 @@ event Trigger(Actor Other, Pawn EventInstigator)
         ROTeamGame(Level.Game).CheckVehicleFactories();
     }
 }
-
-defaultproperties
-{
-}

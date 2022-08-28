@@ -57,7 +57,3 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
     // Set URIs
     ShowPage(Response, HeaderPage);
 }
-
-defaultproperties
-{
-}

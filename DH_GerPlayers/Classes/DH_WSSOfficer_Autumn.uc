@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WSSOfficer_Autumn extends DHDeprecated;
-
-defaultproperties
-{
-}

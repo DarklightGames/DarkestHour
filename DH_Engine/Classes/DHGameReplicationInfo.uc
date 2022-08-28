@@ -5,7 +5,7 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
-const RADIOS_MAX = 10;
+const RADIOS_MAX = 32;
 const ROLES_MAX = 16;
 const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
@@ -21,7 +21,7 @@ const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 64;
 const NO_ARTY_VOLUMES_MAX = 32;
 
-enum VehicleReservationError
+enum EVehicleReservationError
 {
     ERROR_None,
     ERROR_Fatal,
@@ -57,6 +57,7 @@ enum EArtilleryTypeError
     ERROR_Unavailable,
     ERROR_Exhausted,
     ERROR_Unqualified,
+    ERROR_NotEnoughSquadMembers,
     ERROR_Cooldown,
     ERROR_Ongoing,
     ERROR_SquadTooSmall,
@@ -890,6 +891,30 @@ simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
     return SpawnPoints[SpawnPointIndex];
 }
 
+simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, optional out int OutDesirability)
+{
+    local int i, Desirability;
+    local DHSpawnPointBase SP;
+
+    OutDesirability = -MaxInt;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] != none && SpawnPoints[i].IsVisibleToPlayer(PC)) // TODO: should probably check if we can even spawn here
+        {
+            Desirability = SpawnPoints[i].GetDesirability();
+
+            if (Desirability > OutDesirability)
+            {
+                SP = SpawnPoints[i];
+                OutDesirability = Desirability;
+            }
+        }
+    }
+
+    return SP;
+}
+
 simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
     local DHSpawnPoint_SquadRallyPoint RP;
@@ -995,7 +1020,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
                 PC.VehiclePoolIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }
@@ -1100,6 +1125,39 @@ simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
     }
 
     return none;
+}
+
+simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
+{
+    local int i;
+    local DHRoleInfo RI;
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAxisRoles); ++i)
+        {
+            RI = DHAxisRoles[i];
+
+            if (DHAxisRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+        {
+            RI = DHAlliesRoles[i];
+
+            if (DHAlliesRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }
 
 simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team)
@@ -1371,7 +1429,7 @@ simulated function int GetReservableTankCount(int TeamIndex)
     return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
 }
 
-simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<DHVehicle> VC;
 
@@ -1874,8 +1932,8 @@ simulated function vector GetWorldCoords(float X, float Y)
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
-    WorldLocation.X = ((0.5 - X) * MapScale);
-    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation.X = (0.5 - X) * MapScale;
+    WorldLocation.Y = (0.5 - Y) * MapScale;
     WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
@@ -1935,6 +1993,7 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 {
     local ArtilleryTypeInfo ATI;
     local DH_LevelInfo LI;
+    local class<DHArtillery> ArtilleryClass;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
@@ -1947,9 +2006,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
         return ERROR_Fatal;
     }
 
-    if (!LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(PC))
+    ArtilleryClass = LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+
+    if (!ArtilleryClass.static.HasQualificationToRequest(PC))
     {
         return ERROR_Unqualified;
+    }
+
+    if (!ArtilleryClass.static.HasEnoughSquadMembersToRequest(PC))
+    {
+        return ERROR_NotEnoughSquadMembers;
     }
 
     ATI = ArtilleryTypeInfos[ArtilleryTypeIndex];
@@ -2020,7 +2086,7 @@ function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 
 function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
 {
-    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+    DangerZoneBalance = 128 - Clamp(Factor, -127, 127);
 
     if (!bPostponeUpdate)
     {
@@ -2364,4 +2430,3 @@ defaultproperties
     DangerZoneNeutral=128
     DangerZoneBalance=128
 }
-

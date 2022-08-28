@@ -5,7 +5,4 @@
 
 class DH_RKKA_StandardAntiTank extends DH_RKKA_StandardAntiTankEarly; //to be removed
 
-defaultproperties
-{
 
-}

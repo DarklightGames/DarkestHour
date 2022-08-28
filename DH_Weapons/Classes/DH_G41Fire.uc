@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_G41Bullet'
     AmmoClass=class'DH_Weapons.DH_EnfieldNo4Ammo'
-    FireRate=0.25
+    FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=700
     MaxHorizontalRecoilAngle=310  //heavy, but very unbalanced with awkward gas automatic system
