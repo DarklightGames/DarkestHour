@@ -23,9 +23,8 @@ defaultproperties
     WA_Idle="idle_m9a1"
     WA_Fire="idle_m9a1"
     WA_Reload="reload_m9a1"
-    WA_ProneReload="reload_m9a1"
 
-    PA_AssistedReloadAnim="crouch_reload_baz_m9"
+    PA_AssistedReloadAnim="crouch_reload_assist_baz_m9"
 
     PA_MovementAnims(0)="stand_jogF_baz_m9"
     PA_MovementAnims(1)="stand_jogB_baz_m9"
@@ -92,8 +91,8 @@ defaultproperties
 
     PA_TurnRightAnim="stand_turnRrest_baz_m9"
     PA_TurnLeftAnim="stand_turnLrest_baz_m9"
-    PA_TurnIronRightAnim="stand_turnRrest_baz_m9" // ?
-    PA_TurnIronLeftAnim="stand_turnLrest_baz_m9" // ?
+    PA_TurnIronRightAnim="stand_turnRiron_baz_m9"
+    PA_TurnIronLeftAnim="stand_turnLiron_baz_m9"
 	PA_ProneTurnRightAnim="prone_turnR_baz_m9"
 	PA_ProneTurnLeftAnim="prone_turnL_baz_m9"
 
@@ -118,7 +117,6 @@ defaultproperties
     PA_IdleProneAnim="prone_idle_baz_m9"
     PA_ReloadAnim="crouch_reload_baz_m9"
     PA_ReloadEmptyAnim="crouch_reload_baz_m9"
-    PA_ProneReloadEmptyAnim="prone_reload_baz_m9"
     PA_ProneIdleRestAnim="prone_idle_baz_m9"
     PA_Fire="stand_shootiron_baz_m9"
     PA_IronFire="stand_shootiron_baz_m9"
@@ -169,4 +167,23 @@ defaultproperties
     PA_IronFireLastShot="crouch_shoot_baz_m9"
     PA_CrouchFireLastShot="crouch_shoot_baz_m9"
     PA_ProneFireLastShot="prone_shoot_baz_m9"
+
+    PA_AirStillAnim=jump_mid_baz_m9
+    PA_AirAnims(0)=jumpF_mid_baz_m9
+    PA_AirAnims(1)=jumpB_mid_baz_m9
+    PA_AirAnims(2)=jumpL_mid_baz_m9
+    PA_AirAnims(3)=jumpR_mid_baz_m9
+    PA_TakeoffStillAnim=jump_takeoff_baz_m9
+    PA_TakeoffAnims(0)=jumpF_takeoff_baz_m9
+    PA_TakeoffAnims(1)=jumpB_takeoff_baz_m9
+    PA_TakeoffAnims(2)=jumpL_takeoff_baz_m9
+    PA_TakeoffAnims(3)=jumpR_takeoff_baz_m9
+    PA_LandAnims(0)=jumpF_land_baz_m9
+    PA_LandAnims(1)=jumpB_land_baz_m9
+    PA_LandAnims(2)=jumpL_land_baz_m9
+    PA_LandAnims(3)=jumpR_land_baz_m9
+    PA_DodgeAnims(0)=jumpF_mid_baz_m9
+    PA_DodgeAnims(1)=jumpB_mid_baz_m9
+    PA_DodgeAnims(2)=jumpL_mid_baz_m9
+    PA_DodgeAnims(3)=jumpR_mid_baz_m9
 }

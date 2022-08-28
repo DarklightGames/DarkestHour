@@ -87,8 +87,8 @@ defaultproperties
 
     PA_TurnRightAnim="stand_turnRrest_rpzb"
     PA_TurnLeftAnim="stand_turnLrest_rpzb"
-    PA_TurnIronRightAnim="stand_turnRrest_rpzb" // ?
-    PA_TurnIronLeftAnim="stand_turnLrest_rpzb" // ?
+    PA_TurnIronRightAnim="stand_turnRiron_rpzb"
+    PA_TurnIronLeftAnim="stand_turnLiron_rpzb"
 	PA_ProneTurnRightAnim="prone_turnR_rpzb"
 	PA_ProneTurnLeftAnim="prone_turnL_rpzb"
 
@@ -164,4 +164,23 @@ defaultproperties
     PA_IronFireLastShot="crouch_shoot_rpzb"
     PA_CrouchFireLastShot="crouch_shoot_rpzb"
     PA_ProneFireLastShot="prone_shoot_rpzb"
+
+    PA_AirStillAnim=jump_mid_rpzb
+    PA_AirAnims(0)=jumpF_mid_rpzb
+    PA_AirAnims(1)=jumpB_mid_rpzb
+    PA_AirAnims(2)=jumpL_mid_rpzb
+    PA_AirAnims(3)=jumpR_mid_rpzb
+    PA_TakeoffStillAnim=jump_takeoff_rpzb
+    PA_TakeoffAnims(0)=jumpF_takeoff_rpzb
+    PA_TakeoffAnims(1)=jumpB_takeoff_rpzb
+    PA_TakeoffAnims(2)=jumpL_takeoff_rpzb
+    PA_TakeoffAnims(3)=jumpR_takeoff_rpzb
+    PA_LandAnims(0)=jumpF_land_rpzb
+    PA_LandAnims(1)=jumpB_land_rpzb
+    PA_LandAnims(2)=jumpL_land_rpzb
+    PA_LandAnims(3)=jumpR_land_rpzb
+    PA_DodgeAnims(0)=jumpF_mid_rpzb
+    PA_DodgeAnims(1)=jumpB_mid_rpzb
+    PA_DodgeAnims(2)=jumpL_mid_rpzb
+    PA_DodgeAnims(3)=jumpR_mid_rpzb
 }
