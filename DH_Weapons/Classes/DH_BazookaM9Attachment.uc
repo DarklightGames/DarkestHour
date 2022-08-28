@@ -15,9 +15,9 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.bazooka_m9a1_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
-    ExhaustBoneName=exhaust
-    MuzzleBoneName=Muzzle
-    WarheadBoneName=Warhead
+    ExhaustBoneName="exhaust"
+    MuzzleBoneName="Muzzle"
+    WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
 
     WA_Idle="idle_m9a1"
@@ -93,8 +93,8 @@ defaultproperties
     PA_TurnLeftAnim="stand_turnLrest_baz_m9"
     PA_TurnIronRightAnim="stand_turnRiron_baz_m9"
     PA_TurnIronLeftAnim="stand_turnLiron_baz_m9"
-	PA_ProneTurnRightAnim="prone_turnR_baz_m9"
-	PA_ProneTurnLeftAnim="prone_turnL_baz_m9"
+    PA_ProneTurnRightAnim="prone_turnR_baz_m9"
+    PA_ProneTurnLeftAnim="prone_turnL_baz_m9"
 
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_baz_m9"
     PA_CrouchTurnIronLeftAnim="crouch_turnRiron_baz_m9"

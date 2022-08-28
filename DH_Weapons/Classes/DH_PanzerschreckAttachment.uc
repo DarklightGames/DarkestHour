@@ -11,9 +11,9 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonPSchreckExhaustFX'
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
-    ExhaustBoneName=exhaust
-    MuzzleBoneName=Muzzle
-    WarheadBoneName=Warhead
+    ExhaustBoneName="exhaust"
+    MuzzleBoneName="Muzzle"
+    WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
 
     WA_Idle="idle_rpzb"
@@ -89,8 +89,8 @@ defaultproperties
     PA_TurnLeftAnim="stand_turnLrest_rpzb"
     PA_TurnIronRightAnim="stand_turnRiron_rpzb"
     PA_TurnIronLeftAnim="stand_turnLiron_rpzb"
-	PA_ProneTurnRightAnim="prone_turnR_rpzb"
-	PA_ProneTurnLeftAnim="prone_turnL_rpzb"
+    PA_ProneTurnRightAnim="prone_turnR_rpzb"
+    PA_ProneTurnLeftAnim="prone_turnL_rpzb"
 
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_rpzb"
     PA_CrouchTurnIronLeftAnim="crouch_turnRiron_rpzb"
