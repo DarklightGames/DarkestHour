@@ -38,8 +38,6 @@ defaultproperties
     BipodMagPartialReloadAnim="deploy_reload_half"
 
     bCanBipodDeploy=true
-    bCanBeResupplied=true
-    NumMagsToResupply=2
     ZoomOutTime=0.1
     PutDownAnim="putaway"
 }
