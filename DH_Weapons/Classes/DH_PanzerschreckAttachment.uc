@@ -18,9 +18,9 @@ defaultproperties
 
     WA_Idle="idle_rpzb"
     WA_Fire="idle_rpzb"
-    WA_Reload="idle_rpzb"
+    WA_Reload="reload_rpzb"
 
-    PA_AssistedReloadAnim="crouch_reloadA_bazooka"
+    PA_AssistedReloadAnim="crouch_reload_assist_rpzb"
 
     PA_MovementAnims(0)="stand_jogF_rpzb"
     PA_MovementAnims(1)="stand_jogB_rpzb"
@@ -89,6 +89,8 @@ defaultproperties
     PA_TurnLeftAnim="stand_turnLrest_rpzb"
     PA_TurnIronRightAnim="stand_turnRrest_rpzb" // ?
     PA_TurnIronLeftAnim="stand_turnLrest_rpzb" // ?
+	PA_ProneTurnRightAnim="prone_turnR_rpzb"
+	PA_ProneTurnLeftAnim="prone_turnL_rpzb"
 
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_rpzb"
     PA_CrouchTurnIronLeftAnim="crouch_turnRiron_rpzb"
@@ -109,8 +111,8 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_rpzb"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_rpzb"
     PA_IdleProneAnim="prone_idle_rpzb"
-    PA_ReloadAnim="crouch_reload_baz_m9" // TODO: !
-    PA_ReloadEmptyAnim="crouch_reload_baz_m9" // TODO: !
+    PA_ReloadAnim="crouch_reload_rpzb"
+    PA_ReloadEmptyAnim="crouch_reload_rpzb"
     PA_ProneReloadEmptyAnim="prone_reload_rpzb"
     PA_ProneIdleRestAnim="prone_idle_rpzb"
     PA_Fire="stand_shootiron_rpzb"

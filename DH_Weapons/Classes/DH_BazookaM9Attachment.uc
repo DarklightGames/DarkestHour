@@ -94,6 +94,8 @@ defaultproperties
     PA_TurnLeftAnim="stand_turnLrest_baz_m9"
     PA_TurnIronRightAnim="stand_turnRrest_baz_m9" // ?
     PA_TurnIronLeftAnim="stand_turnLrest_baz_m9" // ?
+	PA_ProneTurnRightAnim="prone_turnR_baz_m9"
+	PA_ProneTurnLeftAnim="prone_turnL_baz_m9"
 
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_baz_m9"
     PA_CrouchTurnIronLeftAnim="crouch_turnRiron_baz_m9"
