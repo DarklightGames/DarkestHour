@@ -27,7 +27,6 @@ defaultproperties
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
 
-    FirstSelectAnim="draw_first"
     SelectAnim="Draw"
     PutDownAnim="putaway"
     IronIdleAnim="iron_loop"
