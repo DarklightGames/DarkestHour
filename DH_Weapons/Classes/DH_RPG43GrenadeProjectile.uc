@@ -63,7 +63,7 @@ defaultproperties
     RockHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WoodHitSound=Sound'Inf_Weapons_Foley.grenadeland'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
     ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
 }
