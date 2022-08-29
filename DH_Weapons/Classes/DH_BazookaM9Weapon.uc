@@ -3,11 +3,8 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 // [ ] Calibrate range settings
-// [ ] Should not be able to reload while moving
-// [ ] New rocket mesh (m6a3)
-// [ ] New 3rd person weapon mesh
-// [ ] weapon selection art
-// [ ] animation sounds
+// [ ] Should not be able to reload while moving (questionable now)
+// [ ] Fix third person rocket mesh (m6a3)
 //==============================================================================
 
 class DH_BazookaM9Weapon extends DHRocketWeapon;

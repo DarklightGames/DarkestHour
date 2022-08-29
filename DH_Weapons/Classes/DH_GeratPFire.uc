@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_GeratPBullet'
     AmmoClass=class'DH_Weapons.DH_GeratPAmmo'
     FireRate=0.12 // ~553 rpm (value had to be found experimentally due to an engine bug)
-    Spread=148.0
+    Spread=160.0
 
     // Recoil
     RecoilRate=0.075
