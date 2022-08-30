@@ -26,7 +26,8 @@ enum EMapGameType
     GAMETYPE_Clash,
     GAMETYPE_Push,
     GAMETYPE_Defence,
-    GAMETYPE_Stalemate
+    GAMETYPE_Stalemate,
+    GAMETYPE_Domination,
 };
 
 struct SMapInfo
@@ -73,6 +74,8 @@ static function string GetMapGameTypeString(EMapGameType GameType)
             return "Defence";
         case GAMETYPE_Stalemate:
             return "Stalemate";
+        case GAMETYPE_Domination:
+            return "Domination";
         default:
             return "Unknown";
     }
@@ -282,7 +285,7 @@ defaultproperties
     MapInfos(56)=(Name="DH-Berezina_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(57)=(Name="DH-Black_Day_July_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(58)=(Name="DH-Butovo_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(59)=(Name="DH-Chambois_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    MapInfos(59)=(Name="DH-Chambois_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(60)=(Name="DH-Champs_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(61)=(Name="DH-Cholm_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(62)=(Name="DH-Danzig_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
@@ -357,7 +360,7 @@ defaultproperties
     MapInfos(131)=(Name="DH-Armored_Freyneux_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(132)=(Name="DH-Armored_Fruhlingserwachen_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(133)=(Name="DH-Armored_Gran_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
-    MapInfos(134)=(Name="DH-Armored_Hill112_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
+    MapInfos(134)=(Name="DH-Armored_Hill112_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(135)=(Name="DH-Armored_Hunters_Woods_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(136)=(Name="DH-Armored_Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(137)=(Name="DH-Armored_Kharkov_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Any)
@@ -391,9 +394,12 @@ defaultproperties
     MapInfos(165)=(Name="DH-Fury_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(166)=(Name="DH-La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(167)=(Name="DH-Armored_Vieux_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Any)
-    MapInfos(168)=(Name="DH-German_Village_Defence",AlliedNation=NATION_Britain,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
+    MapInfos(168)=(Name="DH-German_Village_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
     MapInfos(169)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(170)=(Name="DH-Winter_Stalemate_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(171)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(172)=(Name="DH-Fox_Green_Defence",AlliedNation=NATION_USA,GameType=GAMETYPE_Defence,Size=SIZE_Any)
+	MapInfos(173)=(Name="DH-Lazur_Chemical_Plant_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Small)
+	MapInfos(174)=(Name="DH-Donner_Bolts",AlliedNation=NATION_Britain,GameType=GAMETYPE_Stalemate,Size=SIZE_ExtraSmall)
+	MapInfos(175)=(Name="DH-Lutremange_Domination",AlliedNation=NATION_USA,GameType=GAMETYPE_Domination,Size=SIZE_Large)
 }

@@ -7,7 +7,7 @@ class DHVotingHandler extends xVotingHandler;
 
 var class<VotingReplicationInfo> VotingReplicationInfoClass;
 
-var config private float PatronVoteModifiers[5];
+var config private int   PatronVoteModifiers[5];
 var config         float MaxVotePower;
 
 var localized string    lmsgMapVotedTooRecently;
@@ -458,7 +458,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     MVRI[Index].GameVote = GameIndex;
 
     // Sets the vote count for the player based on the player's score (to a maximum)
-    VoteCount = int(GetPlayerVotePower(PlayerController(Voter)));
+    VoteCount = GetPlayerVotePower(PlayerController(Voter));
     TextMessage = lmsgMapVotedForWithCount;
 
     if (P != none)
@@ -632,7 +632,7 @@ function TallyVotes(bool bForceMapSwitch)
             PlayersThatVoted++;
 
             // Get the vote power of the player
-            Votes = int(GetPlayerVotePower(MVRI[x].PlayerOwner));
+            Votes = GetPlayerVotePower(MVRI[x].PlayerOwner);
 
             VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] = VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] + Votes;
         }
@@ -764,33 +764,19 @@ function TallyVotes(bool bForceMapSwitch)
     }
 }
 
-// DH function which will calculate a specifici player's power
-function float GetPlayerVotePower(PlayerController Player)
+// DH function which will calculate a specific player's voting power
+function int GetPlayerVotePower(PlayerController Player)
 {
-
-    local int VotePower, NumPlayers;
     local DHPlayerReplicationInfo PRI;
-    local DarkestHourGame G;
 
     PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
-    G = DarkestHourGame(Level.Game);
 
-    if (PRI == none || G == none)
+    if (PRI == none)
     {
         return 0;
     }
 
-    NumPlayers = G.GetNumPlayers();
-    VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
-    VotePower += Clamp(PRI.Score / 1000, 0, MaxVotePower); // Add the clamped vote power from Score
-
-    // Everyone gets at least one vote
-    if (VotePower < 1)
-    {
-        VotePower = 1;
-    }
-
-    return VotePower;
+    return 1 + PatronVoteModifiers[PRI.PatronTier];
 }
 
 function ExitVoteAndSwap()
@@ -975,9 +961,9 @@ defaultproperties
 
     MaxVotePower=10
 
-    PatronVoteModifiers(0)=0.0  //Not Patron
-    PatronVoteModifiers(1)=0.15 //Lead
-    PatronVoteModifiers(2)=0.25 //Bronze
-    PatronVoteModifiers(3)=0.35 //Silver
-    PatronVoteModifiers(4)=0.5  //Gold
+    PatronVoteModifiers(0)=0    // Not Patron
+    PatronVoteModifiers(1)=1    // Lead
+    PatronVoteModifiers(2)=2    // Bronze
+    PatronVoteModifiers(3)=3    // Silver
+    PatronVoteModifiers(4)=4    // Gold
 }

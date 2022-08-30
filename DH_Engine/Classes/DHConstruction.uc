@@ -412,20 +412,63 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-function RefundSupplies(Pawn InstigatedBy)
+function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
 {
-    local int i;
-    local DHPawn P;
-    local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LI;
+    local array<DHConstructionSupplyAttachment> Attachments;
+    local DHConstructionSupplyAttachment Attachment;
 
-    P = DHPawn(InstigatedBy);
-
-    if (P != none && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == P.GetTeamNum()))
+    foreach AllActors(class'DHConstructionSupplyAttachment', Attachment)
     {
-        P.RefundSupplies(GetSupplyCost(GetContext()));
+        if (Attachment.IsTouchingActor(self))
+        {
+            Attachments[Attachments.Length] = Attachment;
+        }
     }
 
+    return Attachments;
+}
+
+function RefundSupplies(int InstigatorTeamIndex)
+{
+    local int i;
+    local int SupplyCost;
+    local int SuppliesToRefund, SuppliesRefunded;
+    local array<DHConstructionSupplyAttachment> Attachments;
+    local UComparator AttachmentComparator;
+
+    SupplyCost = GetSupplyCost(GetContext());
+
+    if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
+    {
+        // Sort the supply attachments by priority.
+        Attachments = GetTouchingSupplyAttachments();
+        AttachmentComparator = new class'UComparator';
+        AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
+        class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+        // Refund supplies to the touching supply attachments.
+        for (i = 0; i < Attachments.Length && SupplyCost > 0; ++i)
+        {
+            SuppliesToRefund = Min(SupplyCost, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+            Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
+            SuppliesRefunded += SuppliesToRefund;
+            SupplyCost -= SuppliesToRefund;
+        }
+    }
+}
+
+function TearDown(int InstigatorTeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DH_LevelInfo LI;
+    local int i;
+
+    if (bShouldRefundSuppliesOnTearDown)
+    {
+        RefundSupplies(InstigatorTeamIndex);
+    }
+    
+    // Update the construction counts remaining in the GRI
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
@@ -447,6 +490,17 @@ function RefundSupplies(Pawn InstigatedBy)
             GRI.TeamConstructions[i].Remaining = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
             break;
         }
+    }
+
+    if (IsPlacedByPlayer())
+    {
+        Destroy();
+    }
+    else
+    {
+        // This construction was placed in the editor, so go to the
+        // dummy state.
+        GotoState('Dummy');
     }
 }
 
@@ -497,21 +551,7 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            if (bShouldRefundSuppliesOnTearDown)
-            {
-                RefundSupplies(InstigatedBy);
-            }
-
-            if (IsPlacedByPlayer())
-            {
-                Destroy();
-            }
-            else
-            {
-                // This construction was placed in the editor, so go to the
-                // dummy state.
-                GotoState('Dummy');
-            }
+            TearDown(InstigatedBy.GetTeamNum());
         }
         else if (Progress >= ProgressMax)
         {

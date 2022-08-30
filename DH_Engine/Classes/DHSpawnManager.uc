@@ -75,7 +75,8 @@ function PostBeginPlay()
     for (i = VehiclePools.Length - 1; i >= 0; --i)
     {
         // VP doesn't have a specified vehicle class, so is invalid
-        if (VehiclePools[i].VehicleClass == none)
+        if (VehiclePools[i].VehicleClass == none ||
+            !ClassIsChildOf(VehiclePools[i].VehicleClass, class'ROVehicle'))
         {
             // Remove VP if it is invalid (no specified class or it's a duplicate)
             Warn("VehiclePools[" $ i $ "] is invalid & has been removed! (VehicleClass =" @ VehiclePools[i].VehicleClass $ ")");
@@ -153,7 +154,7 @@ function bool SpawnPlayer(DHPlayer PC)
     {
         return false;
     }
-    
+
     SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
 
     if (SP == none)
@@ -729,4 +730,3 @@ defaultproperties
     bDirectional=false
     DrawScale=3.0
 }
-

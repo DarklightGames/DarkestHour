@@ -10,14 +10,16 @@ const SOUND_RADIUS = 32.0;
 var     DHConstruction  Construction;          // reference to the Construction actor we're building
 var     float           TraceDistanceInMeters; // player has to be within this distance of a construction to build it
 
-// Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
+// Modified to check (via a trace) that player is facing an obstacle that can be built & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
     local Actor  HitActor;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local DHPawn Pawn;
 
     if (Weapon == none ||
         Instigator == none ||
+        Instigator.Controller == none ||
         Instigator.bIsCrawling ||
         Instigator.IsProneTransitioning() ||
         Instigator.Velocity != vect(0.0, 0.0, 0.0))
@@ -42,9 +44,19 @@ simulated function bool AllowFire()
 
     Construction = DHConstruction(HitActor);
 
-    return Construction != none &&
-        (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) &&
-        Construction.CanBeBuilt();
+    if (Construction == none)
+    {
+        return false;
+    }
+    
+    Pawn = DHPawn(Instigator);
+
+    if (Pawn != none && !Pawn.CanBuildWithShovel())
+    {
+        return false;
+    }
+
+    return  (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
 }
 
 event ModeDoFire()
