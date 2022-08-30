@@ -7,7 +7,7 @@ class DH_BrenAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.ZB30'  //change
+    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'  //change
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon' //change
     //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
     
