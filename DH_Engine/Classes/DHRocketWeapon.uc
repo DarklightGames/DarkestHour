@@ -361,6 +361,13 @@ simulated state AssistedReloading extends Reloading
         global.PlayIdle();
     }
 
+    simulated function bool ShouldDrawPortal()
+    {
+        // The sight won't be moving that much, so just draw the portal.
+        // Looks weird otherwise!
+        return true;
+    }
+
 // Emptied to avoid taking player out of ironsights when someone else is loading them
 Begin:
 }
