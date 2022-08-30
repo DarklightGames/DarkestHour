@@ -13,7 +13,6 @@ defaultproperties
     mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
     ExhaustBoneName="exhaust"
     MuzzleBoneName="Muzzle"
-
     WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
 
@@ -31,7 +30,6 @@ defaultproperties
     PA_MovementAnims(5)="stand_jogFR_rpzb"
     PA_MovementAnims(6)="stand_jogBL_rpzb"
     PA_MovementAnims(7)="stand_jogBR_rpzb"
-    dsd
 
     PA_CrouchAnims(0)="crouch_walkF_rpzb"
     PA_CrouchAnims(1)="crouch_walkB_rpzb"
