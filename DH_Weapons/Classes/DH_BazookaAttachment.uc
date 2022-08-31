@@ -94,6 +94,8 @@ defaultproperties
 
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_baz_m1"
     PA_CrouchTurnIronLeftAnim="crouch_turnRiron_baz_m1"
+	PA_CrouchTurnRightAnim="crouch_turnR_baz_m1"
+	PA_CrouchTurnLeftAnim="crouch_turnL_baz_m1"
 
     PA_StandToProneAnim="StandtoProne_baz_m1"
     PA_CrouchToProneAnim="CrouchtoProne_baz_m1"
