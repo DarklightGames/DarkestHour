@@ -10,7 +10,6 @@ defaultproperties
     ItemName="Raketenpanzerbüchse 54"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_PanzerschreckFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PanzerschreckMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PanzerschreckAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerschreckPickup'
 

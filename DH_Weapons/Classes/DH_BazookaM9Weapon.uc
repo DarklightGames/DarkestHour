@@ -15,7 +15,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m9'
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BazookaM9Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_BazookaM9MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BazookaM9Attachment'
     PickupClass=class'DH_Weapons.DH_BazookaM9Pickup'
 

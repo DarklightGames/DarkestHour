@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] Texture for LOD version
-// [ ] Verify that we have a M6A3 rocket for the rocket
 // [ ] Calibrate firing ranges
 //==============================================================================
 

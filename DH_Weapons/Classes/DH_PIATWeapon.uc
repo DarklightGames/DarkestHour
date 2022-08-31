@@ -10,7 +10,6 @@ defaultproperties
     ItemName="PIAT"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
     PickupClass=class'DH_Weapons.DH_PIATPickup'
 
