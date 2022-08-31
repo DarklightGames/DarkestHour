@@ -49,6 +49,15 @@ defaultproperties
     PA_ProneAnims(6)="prone_crawlBL_rpzb"
     PA_ProneAnims(7)="prone_crawlBR_rpzb"
 
+    PA_ProneIronAnims(0)="prone_slowcrawlF_rpzb"
+	PA_ProneIronAnims(1)="prone_slowcrawlB_rpzb"
+	PA_ProneIronAnims(2)="prone_slowcrawlL_rpzb"
+	PA_ProneIronAnims(3)="prone_slowcrawlR_rpzb"
+	PA_ProneIronAnims(4)="prone_slowcrawlL_rpzb"
+	PA_ProneIronAnims(5)="prone_slowcrawlR_rpzb"
+	PA_ProneIronAnims(6)="prone_slowcrawlB_rpzb"
+	PA_ProneIronAnims(7)="prone_slowcrawlB_rpzb"
+
     PA_WalkAnims(0)="stand_walkFhip_rpzb"
     PA_WalkAnims(1)="stand_walkBhip_rpzb"
     PA_WalkAnims(2)="stand_walkLhip_rpzb"
