@@ -3391,6 +3391,18 @@ simulated exec function BipodCoefficientOfRestitution(float V)
     }
 }
 
+simulated exec function DebugAddedPitch(int AddedPitch)
+{
+    // Added to debug the distance zeroing.
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (DHProjectileFire(FireMode[0]) != none)
+        {
+            DHProjectileFire(FireMode[0]).AddedPitch = AddedPitch;
+        }
+    }
+}
+
 defaultproperties
 {
     Priority=9
