@@ -8,6 +8,7 @@ class DH_G43ScopedFire extends DH_G43Fire;
 defaultproperties
 {
     Spread=40.0
+    addedpitch=5
 
     ProjectileClass=class'DH_Weapons.DH_G43ScopedBullet'
     FireIronAnim="Scope_Shoot"
