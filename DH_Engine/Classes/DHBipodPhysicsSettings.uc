@@ -11,6 +11,7 @@ class DHBipodPhysicsSettings extends Object;
 var bool bLimitAngle;
 var float AngleMin;
 var float AngleMax;
+var float AngleFactor;
 var float ArmLength;
 var float AngularDamping;
 var float AngularVelocityThreshold;    // The angular velocity must be greater than or equal to this value in order for the bipod to move.
@@ -30,6 +31,7 @@ defaultproperties
     AngularVelocityThreshold=0.06
     AngleMin=-0.60
     AngleMax=0.60
+    AngleFactor=1.0
     ArmLength=155.0
     BarrelBoneName="Muzzle"
     BipodBoneName="Bipod"

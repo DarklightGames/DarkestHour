@@ -82,6 +82,7 @@ defaultproperties
         BarrelRollAxis=AXIS_X
         BarrelPitchAxis=AXIS_Y
         BarrelBoneRotationOffset=(Roll=-16384)
+        AngleFactor=-1.0    // the bone is inverted, so we flip the angle
     End Object
     BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }
