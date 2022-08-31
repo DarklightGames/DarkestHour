@@ -117,8 +117,8 @@ simulated event ThirdPersonEffects()
         }
         else
         {
-                mMuzFlash3rd = Spawn(mMuzFlashClass);
-                AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd = Spawn(mMuzFlashClass);
+            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
         }
 
         if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')
