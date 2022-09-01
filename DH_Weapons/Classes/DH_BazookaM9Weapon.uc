@@ -2,10 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] Calibrate range settings
-// [ ] Should not be able to reload while moving (questionable now)
-// [ ] Fix third person rocket mesh (m6a3)
-//==============================================================================
 
 class DH_BazookaM9Weapon extends DHRocketWeapon;
 
@@ -27,8 +23,6 @@ defaultproperties
     LensMaterialID=4
     ScopeScriptedTextureSize=512
 
-    FreeAimRotationSpeed=2.0
-
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true
     bCanHaveAsssistedReload=true
@@ -43,8 +37,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_empty"
 
-    RangeSettings(0)=(FirePitch=15,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
-    RangeSettings(1)=(FirePitch=850,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
-    RangeSettings(2)=(FirePitch=2450,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
+    RangeSettings(0)=(FirePitch=5,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
+    RangeSettings(1)=(FirePitch=200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
+    RangeSettings(2)=(FirePitch=635,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
 }
-

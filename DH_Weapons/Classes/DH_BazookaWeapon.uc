@@ -2,12 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2022
 //==============================================================================
-// [ ] Calibrate range settings
-// [ ] Should not be able to reload while moving
-// [ ] New rocket mesh
-// [ ] New 3rd person weapon mesh
-// [ ] Interface art
-//==============================================================================
 
 class DH_BazookaWeapon extends DHRocketWeapon;
 
@@ -19,8 +13,6 @@ defaultproperties
     FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
     AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'
     PickupClass=class'DH_Weapons.DH_BazookaPickup'
-
-    FreeAimRotationSpeed=2.0
 
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true
@@ -36,8 +28,8 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_empty"
 
-    RangeSettings(0)=(FirePitch=15,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
-    RangeSettings(1)=(FirePitch=850,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
-    RangeSettings(2)=(FirePitch=2450,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
+    RangeSettings(0)=(FirePitch=165,IronIdleAnim="iron_loop_50",IronFireAnim="iron_shoot_loop_50",AssistedReloadAnim="iron_reload_50")
+    RangeSettings(1)=(FirePitch=1200,IronIdleAnim="iron_loop_100",IronFireAnim="iron_shoot_loop_100",AssistedReloadAnim="iron_reload_100")
+    RangeSettings(2)=(FirePitch=3000,IronIdleAnim="iron_loop_150",IronFireAnim="iron_shoot_loop_150",AssistedReloadAnim="iron_reload_150")
 }
 
