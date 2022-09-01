@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_EnfieldNo4ScopedBullet'
     AmmoClass=class'DH_Weapons.DH_EnfieldNo4ScopedAmmo'
-    Spread=25.0
+    Spread=20.0
     AddedPitch=15
     PctRestDeployRecoil=0.25
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
