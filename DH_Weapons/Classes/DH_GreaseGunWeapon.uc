@@ -22,5 +22,4 @@ defaultproperties
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
     PutDownAnim="putaway"
-    FirstSelectAnim="draw_first"
 }
