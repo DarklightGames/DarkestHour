@@ -19,7 +19,6 @@ defaultproperties
     StraightFlightTime=0.5
 
     //Effects
-    DrawScale=1.33
     bHasSmokeTrail=false // bazooka has no smoke trail irl
     bHasTracer=true // represents glow of burnt out rocket motor
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
