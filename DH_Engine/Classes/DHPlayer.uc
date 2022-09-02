@@ -7536,9 +7536,9 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         return RER_Limit;
     }
 
-    bIsRoleLimitless = (Limit == 255);
+    bIsRoleLimitless = Limit == 255;
 
-    if (GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
+    if (Level.NetMode != NM_Standalone && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
     {
         if (!IsInSquad() && !bIsRoleLimitless && !RI.bExemptSquadRequirement)
         {
