@@ -14,11 +14,12 @@ defaultproperties
     TracerFrequency=7
     Spread=90.0
     RecoilRate=0.03125
+    PctHipMGPenalty=1.1
 
     // Recoil
     MaxVerticalRecoilAngle=460
-    MaxHorizontalRecoilAngle=215
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=10.0,OutVal=0.6),(InVal=25.0,OutVal=1.0),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxHorizontalRecoilAngle=285
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=12.0,OutVal=1.0),(InVal=25.0,OutVal=1.4),(InVal=42.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=32.0
 
@@ -31,6 +32,9 @@ defaultproperties
     BipodDeployFireAnim="Shoot_Loop"
     BipodDeployFireLoopAnim="Shoot_Loop"
     BipodDeployFireEndAnim="Shoot_End"
+    
+    FireEndAnim="Hip_Shoot_End"
+    FireLoopAnim="Hip_Shoot_loop"
 
     ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)

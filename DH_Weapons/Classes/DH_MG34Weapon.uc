@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MG34Weapon extends DHMGWeapon;
+class DH_MG34Weapon extends DHFastAutoWeapon;
 
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
@@ -17,6 +17,19 @@ simulated function PostNetBeginPlay()
     }
 }
 
+// Modified to make ironsights key try to deploy/undeploy the bipod (no iron sights for this weapon)
+simulated function ROIronSights()
+{
+    Deploy();
+}
+
+// Overridden because we have no melee attack
+// (this, apparently, is needed together with the mg34's single fire mode in order to avoid a bug where weapon breaks when emptied)
+simulated function bool IsBusy()
+{
+    return false;
+}
+
 defaultproperties
 {
     ItemName="Maschinengewehr 34"
@@ -26,7 +39,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
     PickupClass=class'DH_Weapons.DH_MG34Pickup'
 
-    Mesh=SkeletalMesh'DH_Mg34_1st.MG_34_Mesh' // TODO: check whether the DH version of MG34 anim file actually differs from the RO mesh & is worth keeping
+    Mesh=SkeletalMesh'DH_Mg34_1st.MG34_Mesh' // TODO: check whether the DH version of MG34 anim file actually differs from the RO mesh & is worth keeping
     // Note - can't specify specularity shader as HighDetailOverlay as it doesn't work with the HDO system
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
@@ -36,7 +49,7 @@ defaultproperties
     HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
     PlayerIronsightFOV=90.0
-    IronSightDisplayFOV=45.0
+    IronSightDisplayFOV=55.0
     bCanFireFromHip=true
     FreeAimRotationSpeed=2.0
 
@@ -47,12 +60,28 @@ defaultproperties
     BarrelClass=class'DH_Weapons.DH_MG34Barrel'
     BarrelSteamBone="Barrel"
     BarrelChangeAnim="Bipod_Barrel_Change"
+    
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    ZoomOutTime=0.1
 
-    IronBringUp="Rest_2_Hip"
-    IronPutDown="Hip_2_Rest"
-    BipodHipIdle="Hip_Idle"
-    BipodHipToDeploy="Hip_2_Bipod"
+    bMustReloadWithBipodDeployed=true
+    
+    IdleToBipodDeploy="hip_2_bipod"
+    BipodDeployToIdle="bipod_2_hip"
+    BipodIdleAnim="bipod_idle"
+    BipodMagEmptyReloadAnim="bipod_reload_empty"
+    BipodMagPartialReloadAnim="bipod_reload_empty"
+    
+    IdleToBipodDeployEmpty="hip_2_bipod"
 
-    BipodMagEmptyReloadAnim="Bipod_Reload"
-    BipodMagPartialReloadAnim="Bipod_Reload"
+//    IronBringUp="Rest_2_Hip"
+//    IronPutDown="Hip_2_Rest"
+//    BipodHipIdle="Hip_Idle"
+//    BipodHipToDeploy="Hip_2_Bipod"
+
+    SprintStartAnim="Sprint_Start"
+    SprintLoopAnim="sprint_middle"
+    SprintEndAnim="Sprint_End"
+    IdleAnim="hip_Idle"
 }

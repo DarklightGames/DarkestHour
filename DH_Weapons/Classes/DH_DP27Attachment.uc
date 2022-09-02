@@ -11,7 +11,7 @@ defaultproperties
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    bSpawnShellsOutBottom=false
+    bSpawnShellsOutBottom=true
     bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_DP27Bullet'
