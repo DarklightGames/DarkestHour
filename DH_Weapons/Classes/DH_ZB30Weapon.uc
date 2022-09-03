@@ -20,7 +20,7 @@ defaultproperties
     //HighDetailOverlay=Shader'DH_Weapon_CC_tex.Spec_Maps.ZB30_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=0
-    Skins(0)=Shader'DH_Weapon_CC_tex.Spec_Maps.ZB30_s'
+    Skins(0)=Texture'DH_Weapon_CC_tex.SmallArms.ZB30_diffuse'
     Skins(1)=Shader'Weapons1st_tex.Bullets.kar98k_stripper_s'
     HandNum=2
     SleeveNum=3

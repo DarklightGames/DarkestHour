@@ -50,7 +50,7 @@ defaultproperties
 
     PlayerIronsightFOV=90.0
     IronSightDisplayFOV=55.0
-    bCanFireFromHip=true
+    //bCanFireFromHip=true
     FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=7

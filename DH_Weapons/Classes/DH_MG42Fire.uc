@@ -33,7 +33,7 @@ defaultproperties
     BipodDeployFireLoopAnim="Shoot_Loop"
     BipodDeployFireEndAnim="Shoot_End"
     
-    FireEndAnim="Hip_Shoot_End"
+    FireEndAnim="hip_Shoot_End"
     FireLoopAnim="Hip_Shoot_loop"
 
     ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
