@@ -39,6 +39,7 @@ defaultproperties
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+    NumMagsToResupply=2
 
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
@@ -71,7 +72,6 @@ defaultproperties
 
     bCanBipodDeploy=true
     bCanBeResupplied=true
-    NumMagsToResupply=2
     ZoomOutTime=0.1
 
     // Bipod Physics (same as the ZB-30, bones are identical)

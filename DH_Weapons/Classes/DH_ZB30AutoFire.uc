@@ -42,6 +42,11 @@ defaultproperties
     ShellHipOffset=(Y=-7.0)
     ShellRotOffsetIron=(Pitch=-13000)
     ShellRotOffsetHip=(Pitch=-13000)
-
-
+    
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

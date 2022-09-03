@@ -55,6 +55,7 @@ defaultproperties
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
+    NumMagsToResupply=1
 
     InitialBarrels=2
     BarrelClass=class'DH_Weapons.DH_MG34Barrel'

@@ -40,10 +40,10 @@ defaultproperties
     FireLastAnim="hip_shoot_end"
     BipodDeployFireLastAnim="bipd_shoot_end"
 
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=2.0
-    ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=2.0
+    ShakeRotTime=1.2
 }

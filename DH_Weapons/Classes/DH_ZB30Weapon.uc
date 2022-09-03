@@ -34,8 +34,8 @@ defaultproperties
     SelectFireIronAnim="iron_fireswitch"
     SelectFireBipodIronAnim="deploy_fireswitch"
 
-    MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=11
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
     NumMagsToResupply=3
 
     InitialBarrels=2
