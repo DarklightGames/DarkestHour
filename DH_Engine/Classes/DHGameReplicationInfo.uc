@@ -125,8 +125,6 @@ var byte                    DHNoArtyVolumeIsActives[NO_ARTY_VOLUMES_MAX];
 
 var int                 MaxTeamVehicles[2];
 
-var float               TeamMunitionPercentages[2];
-
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective             DHObjectives[OBJECTIVES_MAX];
@@ -263,7 +261,6 @@ replication
         ServerNetHealth,
         ArtilleryTypeInfos,
         DHArtillery,
-        TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,

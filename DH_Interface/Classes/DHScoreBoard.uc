@@ -682,9 +682,6 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             TeamInfoString = ReinforcementsText $ ":" @ DHGRI.ReinforcementsInfiniteText;
         }
 
-        // Add the munition percentage
-        TeamInfoString $= LargeTabSpaces $ MunitionPercentageText $ ":" @ int(DHGRI.TeamMunitionPercentages[TeamIndex]) $ "%";
-
         // Add the team scale if needed
         if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
         {

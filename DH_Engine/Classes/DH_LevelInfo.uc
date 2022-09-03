@@ -67,9 +67,6 @@ var(DH_Nation) EAlliedNation        AlliedNation;
 var(DH_Nation) sound                AxisWinsMusic;                  // Optional override for Axis victory music
 var(DH_Nation) sound                AlliesWinsMusic;                // Optional override for Allies victory music
 
-var(DH_Munitions) float             BaseMunitionPercentages[2];     // The starting munition percentage for each team
-var(DH_Munitions) float             FinalMunitionPercentages[2];    // The minimum munition percentage each team can drop to
-
 var(DH_GameSettings) float                          AlliesToAxisRatio;              // Player ratio based on team, allows for unbalanced teams
 var(DH_GameSettings) bool                           bHardTeamRatio;                 // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
 var(DH_GameSettings) class<DHGameType>              GameTypeClass;
@@ -223,12 +220,6 @@ defaultproperties
     // TODO: delay, limit and request interval need to be gotten from elsewhere?
     ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
     ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
-
-    BaseMunitionPercentages(0)=60.0
-    BaseMunitionPercentages(1)=60.0
-
-    FinalMunitionPercentages(0)=40.0
-    FinalMunitionPercentages(1)=40.0
 
     bIsDangerZoneInitiallyEnabled=true
     DangerZoneNeutral=128
