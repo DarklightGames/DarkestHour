@@ -86,6 +86,7 @@ defaultproperties
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
+    NumMagsToResupply=3
 
     bHasSelectFire=true
     bSlowFireRate=true
@@ -108,7 +109,6 @@ defaultproperties
 
     bCanBipodDeploy=true
     bCanBeResupplied=true
-    NumMagsToResupply=2
     ZoomOutTime=0.1
 
     // Bipod Physics
