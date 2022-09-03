@@ -7,9 +7,8 @@ class DH_BrenAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'  //change
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon' //change
-    //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
+    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'
+    MenuImage=Texture'DH_Bren_tex.interface.bren_icon'
     
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
