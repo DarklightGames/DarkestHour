@@ -7,7 +7,7 @@ class DH_RKKA_SnowRadioOperator extends DHSOVRadioOperatorRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowNoBagPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowStrapsPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
     DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
