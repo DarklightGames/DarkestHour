@@ -57,7 +57,7 @@ defaultproperties
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
-    ShellHipOffset=(X=-5.0,Y=0.0,Z=0.0)
+    ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
     ShellRotOffsetIron=(Pitch=-16384)  
     ShellRotOffsetHip=(Pitch=-16384)
 
