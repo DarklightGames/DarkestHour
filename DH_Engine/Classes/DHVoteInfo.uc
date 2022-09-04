@@ -207,6 +207,7 @@ function SendMetricsEvent(string VoteType, int Result)
     GRI.GetTeamSizes(TeamSizes);
 
     if (arraycount(TeamSizes) > arraycount(GRI.SpawnsRemaining) ||
+        arraycount(TeamSizes) > arraycount(GRI.TeamMunitionPercentages) ||
         arraycount(TeamSizes) > arraycount(ObjectiveCount))
     {
         Warn("Trying to access an invalid array index");
@@ -268,6 +269,7 @@ function SendMetricsEvent(string VoteType, int Result)
                   .PutInteger("team_index", i)
                   .PutInteger("size", TeamSizes[i])
                   .PutInteger("reinforcements", GRI.SpawnsRemaining[i])
+                  .PutFloat("munitions", GRI.TeamMunitionPercentages[i])
                   .PutInteger("objectives_owned", ObjectiveCount[i]));
     }
 

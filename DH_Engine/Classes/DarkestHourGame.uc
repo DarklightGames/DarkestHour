@@ -316,6 +316,9 @@ function PostBeginPlay()
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
     GRI.bAllChatEnabled = bAllowAllChat;
 
+    GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+    GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+
     if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         GRI.SetDangerZoneEnabled(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
@@ -2604,6 +2607,8 @@ state RoundInPlay
         GRI.DHRoundDuration = RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
+        GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+        GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
         GRI.bAllChatEnabled = bAllowAllChat;
 
         // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
@@ -3108,6 +3113,9 @@ state RoundInPlay
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
             }
         }
+
+        // Update munition percentages (this will update both team's munitions and set them in GRI)
+        UpdateMunitionPercentages();
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -4452,6 +4460,37 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     {
         PC.DHPrimaryWeapon = PC.PrimaryWeapon;
         PC.DHSecondaryWeapon = PC.SecondaryWeapon;
+    }
+}
+
+function UpdateMunitionPercentages()
+{
+    local int i;
+    local float MunitionDifference, ElapsedRatio;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Calculate and set the Munition Percentages for each team
+    for (i = 0; i < 2; ++i)
+    {
+        ElapsedRatio = FClamp(((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0) / 60.0, 0.0, 1.0);
+
+        // If Base > Final (aka ammo goes down)
+        if (DHLevelInfo.BaseMunitionPercentages[i] > DHLevelInfo.FinalMunitionPercentages[i])
+        {
+            MunitionDifference = DHLevelInfo.BaseMunitionPercentages[i] - DHLevelInfo.FinalMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] - (MunitionDifference * ElapsedRatio);
+        }
+        else // Ammo is going up over time
+        {
+            MunitionDifference = DHLevelInfo.FinalMunitionPercentages[i] - DHLevelInfo.BaseMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] + (MunitionDifference * ElapsedRatio);
+        }
     }
 }
 

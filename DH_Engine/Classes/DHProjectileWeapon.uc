@@ -2653,7 +2653,7 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
             InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
             CurrentMagIndex = 0;
 
-            PrimaryAmmoArray.Length = InitialNumPrimaryMags;
+            PrimaryAmmoArray.Length = Ceil(InitialNumPrimaryMags * GetInitialNumMagsPercentage());
 
             for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
@@ -2696,6 +2696,32 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     return true;
+}
+
+function float GetInitialNumMagsPercentage()
+{
+    local float InitialAmmoPercent;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        Warn("Could not find GRI in GetInitialNumMagsPercentage() in:" @ self);
+        return 1.0;
+    }
+
+    // If we are a DHPawn and the weapon can have changed initial num mags, then get munition percentage
+    if (DHPawn(Instigator) != none && bCanHaveInitialNumMagsChanged)
+    {
+        InitialAmmoPercent = GRI.TeamMunitionPercentages[Instigator.GetTeamNum()] / 100.0; // we are using a 0.0 to 1.0 percentage, not 100.0% so divide by 100.0
+    }
+    else
+    {
+        InitialAmmoPercent = 1.0; // Set max otherwise
+    }
+
+    return InitialAmmoPercent;
 }
 
 // Modified to handle picking up spare ammo magazines from a WeaponPickup, which is a new system in DH
