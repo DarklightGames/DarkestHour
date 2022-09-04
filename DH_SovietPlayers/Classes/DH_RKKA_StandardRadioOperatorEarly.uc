@@ -7,8 +7,9 @@ class DH_RKKA_StandardRadioOperatorEarly extends DHSOVRadioOperatorRoles;
 
 defaultproperties
 {
-    // Sergeant tunic is for testing (no over-shoulder tent)
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicSergeantEarlyPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicStrapsEarlyPawn',Weight=6.0)
+    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicStrapsEarlyDarkPawn',Weight=1.0)
+
     SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
 }

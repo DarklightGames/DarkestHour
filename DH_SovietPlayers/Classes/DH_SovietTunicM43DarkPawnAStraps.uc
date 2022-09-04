@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_RKKA_TanTelogreikaRadioOperator extends DHSOVRadioOperatorRoles;
+class DH_SovietTunicM43DarkPawnAStraps extends DH_SovietTunicM43DarkPawnA;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloLatePawn',Weight=1.0)
+    Mesh=SkeletalMesh'DHCharactersSOV_anm.sov_m43tunic_A_Straps'
 }
