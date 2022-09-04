@@ -70,6 +70,8 @@ simulated function SetMagRotation(float Theta)
 {
     local Rotator R;
 
+    // We only want the magazine to spin around most of the way, not a full 360.
+    Theta = class'UInterp'.static.Lerp(Theta, 1.0 / MaxAmmo(0), 1.0);
     R.Yaw = Class'UUnits'.static.RadiansToUnreal(Theta * Pi * 2);
 
     if (MagRotationBone != '')
@@ -128,19 +130,11 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="reload_empty"
     BipodMagPartialReloadAnim="reload_half"
-     
-//    MagEmptyReloadAnims(0)="reload"
-//    MagPartialReloadAnims(0)="reload"
-
+    
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="Sprint_End"
-    //CrawlForwardAnim="crawl_F"
-    //CrawlBackwardAnim="crawl_B"
-    //CrawlStartAnim="crawl_in"
-    //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
-    //SelectAnim="Draw"
     PutDownAnim="Putaway"
     
     IdleEmptyAnim="idle_empty"
