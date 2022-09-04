@@ -1488,24 +1488,12 @@ Begin:
 //=============================================================================
 
 // Triggered by ironsights keybind & toggles ironsights/bipod undeployment
-// Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
 {
-    local DHPlayer PC;
-
-    if (bCanBipodDeploy && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
     {
-        if (Instigator.IsLocallyControlled())
-        {
-            PC = DHPlayer(Instigator.Controller);
-
-            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
-            {
-                return;
-            }
-        }
-
-        Deploy();
+        // Bipod is deployed, let's undeploy it.
+        ForceUndeploy();
     }
     else if (bCanUseIronsights || bCanFireFromHip)
     {
