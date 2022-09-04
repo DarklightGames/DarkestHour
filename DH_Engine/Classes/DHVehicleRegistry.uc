@@ -87,8 +87,10 @@ static function DumpToLog(PlayerController PC)
 
 defaultproperties
 {
-    Records(0)=(VehicleNames=("achilles"),Variants=((ClassName="DH_Vehicles.DH_AchillesTank")))
-    Records(1)=(VehicleNames=("ba64"),Variants=((ClassName="DH_Vehicles.DH_BA64ArmoredCar"),(ClassName="DH_Vehicles.DH_BA64ArmoredCar_Snow",VariantName="snow")))
+
+    //wheeled vehicles
+    Records(0)=(VehicleNames=("ba64", "clowncar"),Variants=((ClassName="DH_Vehicles.DH_BA64ArmoredCar"),(ClassName="DH_Vehicles.DH_BA64ArmoredCar_Snow",VariantName="snow")))
+    Records(1)=(VehicleNames=("gaz67", "gaz"),Variants=((ClassName="DH_Vehicles.DH_GAZ67Vehicle")))
     Records(2)=(VehicleNames=("unicarrier"),Variants=((ClassName="DH_Vehicles.DH_BrenCarrierTransport"),(ClassName="DH_Vehicles.DH_BrenCarrierTransport_Africa",VariantName="africa"),(ClassName="DH_Vehicles.DH_BrenCarrierTransport_Italy",VariantName="italy"),(ClassName="DH_Vehicles.DH_GermanCarrierTransport",VariantName="german"),(ClassName="DH_Vehicles.DH_GermanCarrierTransport_Africa",VariantName="germanafrica")))
     Records(3)=(VehicleNames=("bt7"),Variants=((ClassName="DH_Vehicles.DH_BT7Tank"),(ClassName="DH_Vehicles.DH_BT7Tank_Snow",VariantName="snow")))
     Records(4)=(VehicleNames=("churchill"),Variants=((ClassName="DH_Vehicles.DH_ChurchillMKVIITank")))
