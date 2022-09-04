@@ -129,7 +129,7 @@ static function GetMapSizePlayerCountRange(EMapSize Size, out int PlayersMin, ou
             break;
         case Size_Medium:
             PlayersMin = 24;
-            PlayersMax = 64;
+            PlayersMax = 100;
             break;
         case SIZE_Large:
             PlayersMin = 48;
