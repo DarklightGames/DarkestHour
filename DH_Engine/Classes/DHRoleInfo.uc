@@ -46,6 +46,16 @@ var     Material            BareHandTexture;            // the hand texture this
 var     Material            GlovedHandTexture;
 var()   Material            CustomHandTexture;
 
+struct SBackpack
+{
+    var class<DHBackpack> BackpackClass;
+    var float             Probability;
+    var vector            LocationOffset;
+    var rotator           RotationOffset;
+};
+
+var array<SBackpack> Backpack;
+
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
 simulated function HandlePrecache()
@@ -96,6 +106,11 @@ simulated function HandlePrecache()
         for (i = 0; i < default.Headgear.Length; ++i)
         {
             default.Headgear[i].static.StaticPrecache(Level);
+        }
+
+        for (i = 0; i < default.Backpack.Length; ++i)
+        {
+            default.Backpack[i].BackpackClass.static.StaticPrecache(Level);
         }
 
         if (default.DetachedArmClass != none)
@@ -171,6 +186,43 @@ static function string GetPawnClass()
     }
 
     return default.RolePawnClass;
+}
+
+// TODO: Refactor offset stuff!
+function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator RotationOffset)
+{
+    local float R, ProbabilitySum;
+    local int   i;
+
+    if (Backpack.Length == 0)
+    {
+        return none;
+    }
+
+    if (Backpack.Length == 1)
+    {
+        LocationOffset = Backpack[0].LocationOffset;
+        RotationOffset = Backpack[0].RotationOffset;
+        return Backpack[0].BackpackClass;
+    }
+
+    R = FRand();
+
+    for (i = 0; i < Backpack.Length; ++i)
+    {
+        ProbabilitySum += Backpack[i].Probability;
+
+        if (R <= ProbabilitySum)
+        {
+            LocationOffset = Backpack[0].LocationOffset;
+            RotationOffset = Backpack[0].RotationOffset;
+
+            return Backpack[i].BackpackClass;
+        }
+    }
+
+    return none;
+
 }
 
 function class<ROHeadgear> GetHeadgear()

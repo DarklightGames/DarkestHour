@@ -297,6 +297,7 @@ function HideAnnouncement()
 event Opened(GUIComponent Sender)
 {
     local UVersion SavedVersionObject;
+    local string TextureDetail, CharacterDetail;
 
     sb_ShowVersion.SetVisibility(true);
 
@@ -406,6 +407,11 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatLANCodec CODEC_96WB");
         PlayerOwner().SaveConfig();
     }
+
+    TextureDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailWorld");
+    CharacterDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailPlayerSkin");
+
+    Log(TextureDetail @ CharacterDetail);
 
     // Due to a bug introduced in 9.0, the VoiceVolume was being
     // set to 0.0 upon saving settings. Originally we thought the setting
