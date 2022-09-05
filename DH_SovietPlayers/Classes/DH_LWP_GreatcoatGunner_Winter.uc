@@ -12,4 +12,6 @@ defaultproperties
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_LWPCoatSleeves'
     Headgear(0)=class'DH_SovietPlayers.DH_LWPHelmet'
     HandType=Hand_Gloved
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
 }
