@@ -12,4 +12,6 @@ defaultproperties
     RolePawns(2)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicM43SergeantGreenPawnB',Weight=1.0)
     RolePawns(3)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicM43SergeantDarkPawnB',Weight=1.0)
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
 }
