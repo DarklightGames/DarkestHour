@@ -17,4 +17,6 @@ defaultproperties
     HeadgearProbabilities(0)=0.8
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.1
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
 }
