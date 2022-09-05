@@ -232,7 +232,7 @@ defaultproperties
     MapInfos(3)=(Name="DH-Brecourt_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(4)=(Name="DH-Bridgehead_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(5)=(Name="DH-Caen_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(6)=(Name="DH-Cambes-En-Plaine_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Medium)
+    //MapInfos(6)=
     MapInfos(7)=(Name="DH-Carentan_Causeway_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(8)=(Name="DH-Carentan_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(9)=(Name="DH-Carpiquet_Airfield_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
@@ -247,7 +247,7 @@ defaultproperties
     MapInfos(18)=(Name="DH-Ginkel_Heath_Push",AlliedNation=NATION_Britain,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(19)=(Name="DH-Gorlitz_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(20)=(Name="DH-Hattert_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
-    MapInfos(21)=(Name="DH-Hedgerow_Hell_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    //MapInfos(21)=
     MapInfos(22)=(Name="DH-Hill_108_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(23)=(Name="DH-Hill_400_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(24)=(Name="DH-Hurtgenwald_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
@@ -261,16 +261,16 @@ defaultproperties
     MapInfos(32)=(Name="DH-Lutremange_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
     MapInfos(33)=(Name="DH-Lutremange_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Large)
     MapInfos(34)=(Name="DH-Noville_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
-    MapInfos(35)=(Name="DH-Noville_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    //MapInfos(35)=
     MapInfos(36)=(Name="DH-Nuenen_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
     MapInfos(37)=(Name="DH-Oosterbeek_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(38)=(Name="DH-Pariserplatz_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    //MapInfos(38)=
     MapInfos(39)=(Name="DH-Poteau_Ambush_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(40)=(Name="DH-Putot-en-Bessin_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(41)=(Name="DH-Radar_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(42)=(Name="DH-Raids_Push",AlliedNation=NATION_Britain,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(43)=(Name="DH-Rakowice_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Medium)
-    MapInfos(44)=(Name="DH-Reichswald_Push",AlliedNation=NATION_Britain,GameType=GAMETYPE_Push,Size=SIZE_Medium)
+    //MapInfos(44)=
     MapInfos(45)=(Name="DH-Simonskall_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(46)=(Name="DH-St-Clement_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(47)=(Name="DH-Stavelot_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
@@ -324,7 +324,7 @@ defaultproperties
     MapInfos(95)=(Name="DH-Olkhovatka_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(96)=(Name="DH-Nyiregyhaza_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(97)=(Name="DH-Kryukovo_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
-    MapInfos(98)=(Name="DH-Godolloi_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
+    //MapInfos(98)=
     MapInfos(99)=(Name="DH-FallenHeroes_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Medium)
     MapInfos(100)=(Name="DH-Pariserplatz_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
     MapInfos(101)=(Name="DH-Merderet_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
@@ -333,7 +333,7 @@ defaultproperties
     MapInfos(104)=(Name="DH-Kommerscheidt_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(105)=(Name="DH-Hurtgenwald_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(106)=(Name="DH-Wanne_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(107)=(Name="DH-Fury_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    //MapInfos(107)=
     MapInfos(108)=(Name="DH-OmahaBeach_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(109)=(Name="DH-Road_To_Isigny_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(110)=(Name="DH-GunAssault_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Small)
@@ -385,18 +385,18 @@ defaultproperties
     MapInfos(156)=(Name="DH-Armored_Voronezh_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(157)=(Name="DH-Armored_Cagny_Recon_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(158)=(Name="DH-Jurques_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(159)=(Name="DH-Jurques_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    //MapInfos(159)=
     MapInfos(160)=(Name="DH-Les_Champs_de_Losque_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(161)=(Name="DH-HedgeHog_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(162)=(Name="DH-Godolloi_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(163)=(Name="DH-Winter_Manor_1941_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Medium)
-    MapInfos(164)=(Name="DH-Jurques_DayTwo_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    //MapInfos(164)=
     MapInfos(165)=(Name="DH-Fury_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(166)=(Name="DH-La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(167)=(Name="DH-Armored_Vieux_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(168)=(Name="DH-German_Village_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
     MapInfos(169)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
-    MapInfos(170)=(Name="DH-Winter_Stalemate_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    //MapInfos(170)=
     MapInfos(171)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(172)=(Name="DH-Fox_Green_Defence",AlliedNation=NATION_USA,GameType=GAMETYPE_Defence,Size=SIZE_Any)
 	MapInfos(173)=(Name="DH-Lazur_Chemical_Plant_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Small)
