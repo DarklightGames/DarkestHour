@@ -61,11 +61,11 @@ defaultproperties
     ProjectileDescriptions(2)="APCR"
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
-    AltFireInterval=0.1
-    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
+    AltFireInterval=0.105
+    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

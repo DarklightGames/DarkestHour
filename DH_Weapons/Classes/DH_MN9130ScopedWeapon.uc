@@ -7,8 +7,8 @@ class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin-Nagant M91/30 PU Sniper"
-    SwayModifyFactor=0.68 // +0.08
+    ItemName="Mosin M91/30 (PU)"
+    SwayModifyFactor=0.66 // +0.06
     FireModeClass(0)=class'DH_Weapons.DH_MN9130ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_MN9130ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'

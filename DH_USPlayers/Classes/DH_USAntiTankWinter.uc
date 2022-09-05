@@ -13,5 +13,6 @@ defaultproperties
     RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
+    GivenItems(0)="DH_Weapons.DH_BazookaM9Weapon"
     HandType=Hand_Gloved
 }

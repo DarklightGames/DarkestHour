@@ -120,12 +120,13 @@ defaultproperties
 
     RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
     MuzzleBone="Warhead"
+    RocketBone="Warhead"
     MaxNumPrimaryMags=1
     InitialNumPrimaryMags=1
     bCanBeResupplied=false
 
-    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",FireIronAnim="shoot30")
-    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",FireIronAnim="shoot")
-    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",FireIronAnim="shoot90")
+    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
+    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
+    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")
     IdleAnim="idle2"
 }

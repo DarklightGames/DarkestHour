@@ -1130,7 +1130,7 @@ simulated function HandleShellDebug(vector RealHitLocation)
     {
         ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
         Log("Shell drop =" @ class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
-            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
+            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z @ "Distance=" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - RealHitLocation)) $ "m");
     }
 }
 

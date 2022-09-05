@@ -7,7 +7,7 @@ class DH_BHPWeapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="Browning High-Power"
+    ItemName="Browning Hi-Power"
     FireModeClass(0)=class'DH_Weapons.DH_BHPFire'
     FireModeClass(1)=class'DH_Weapons.DH_BHPMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BHPAttachment'

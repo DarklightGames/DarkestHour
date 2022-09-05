@@ -7,9 +7,9 @@ class DH_MN9130Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin-Nagant M91/30"
-    SwayModifyFactor=0.68 // +0.08
-    SwayBayonetModifier=1.33
+    ItemName="Mosin M91/30"
+    SwayModifyFactor=0.63 // +0.03
+    SwayBayonetModifier=1.28
     FireModeClass(0)=class'DH_Weapons.DH_MN9130Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MN9130MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MN9130Attachment'

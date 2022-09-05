@@ -24,14 +24,23 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MG42Attachment'
     PickupClass=class'DH_Weapons.DH_MG42Pickup'
 
-    Mesh=SkeletalMesh'Axis_Mg42_1st.MG42_Mesh'
+    Mesh=SkeletalMesh'DH_Mg42_1st.MG42_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.MG.MG42_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
-    DisplayFOV=80.0
-    IronSightDisplayFOV=40.0
+    DisplayFOV=85.0
+    IronSightDisplayFOV=60.0
+    PlayerIronsightFOV=90.0
+    
+    bCanFireFromHip=true
+    FreeAimRotationSpeed=2.0
+    
+    IronBringUp="Rest_2_Hip"
+    IronPutDown="Hip_2_Rest"
+    BipodHipIdle="Hip_Idle"
+    BipodHipToDeploy="Hip_2_Bipod"
 
     MaxNumPrimaryMags=2
     InitialNumPrimaryMags=2
@@ -42,7 +51,6 @@ defaultproperties
     BarrelChangeAnim="Bipod_Barrel_Change"
 
     PutDownAnim="putaway"
-    MagPartialReloadAnims(0)="Reload"
 
     BeltBulletClass=class'ROInventory.MG42BeltRound'
     MGBeltBones(0)="Case09"

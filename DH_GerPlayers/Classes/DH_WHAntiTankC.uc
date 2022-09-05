@@ -13,4 +13,5 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Camo"
 }

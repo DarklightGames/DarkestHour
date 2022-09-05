@@ -36,8 +36,8 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    ItemName="M1928 Thompson /20rnd"
-    SwayModifyFactor=0.85 // +0.05
+    ItemName="M1928 Thompson (20rd)"
+    SwayModifyFactor=0.75 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_M1928_20rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1928_20rndAttachment'
@@ -50,8 +50,9 @@ defaultproperties
 
     DisplayFOV=86.0
 
-    MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=11
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
+    bCanHaveInitialNumMagsChanged=false  //adding this to provide some benefit over the 30 rounder
 
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_ThompsonBarrel'

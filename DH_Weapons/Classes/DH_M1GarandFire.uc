@@ -102,6 +102,12 @@ defaultproperties
     Spread=50.0
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200
+    
+    PctRestDeployRecoil=0.7   //0.5 default
+    RecoilRate=0.075
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1),(InVal=1.0,OutVal=1),(InVal=2.0,OutVal=3),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffFactor=10.0
+    
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire03'

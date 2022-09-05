@@ -37,14 +37,6 @@ simulated function AnimEnd(int Channel)
     }
 }
 
-// Tells bot whether to charge or back off while using this weapon
-function float SuggestAttackStyle()
+defaultproperties
 {
-    return 0.7;
-}
-
-// Tells bot whether to charge or back off while defending against this weapon
-function float SuggestDefenseStyle()
-{
-    return -0.5;
 }

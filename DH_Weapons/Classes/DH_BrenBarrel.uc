@@ -7,8 +7,8 @@ class DH_BrenBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    BarrelCoolingRate=3.0
-    FiringHeatIncrement=3.0
-    CriticalTemperature=250.0
-    FailureTemperature=350.0
+    BarrelCoolingRate=2.4
+    FiringHeatIncrement=2.3
+    CriticalTemperature=230.0
+    FailureTemperature=315.0
 }

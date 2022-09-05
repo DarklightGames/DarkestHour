@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_FG42Weapon extends DHBipodAutoWeapon;
+class DH_FG42Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
@@ -31,9 +31,13 @@ defaultproperties
     SelectFireAnim="switch_fire"
     SelectFireIronAnim="Iron_switch_fire"
     SelectFireBipodIronAnim="deploy_switch_fire"
-    SightUpIronBringUp="Deploy"
-    SightUpIronPutDown="undeploy"
-    SightUpIronIdleAnim="deploy_idle"
-    SightUpMagEmptyReloadAnim="deploy_reload_empty"
-    SightUpMagPartialReloadAnim="deploy_reload_half"
+    IdleToBipodDeploy="Deploy"
+    BipodDeployToIdle="undeploy"
+    BipodIdleAnim="deploy_idle"
+    BipodMagEmptyReloadAnim="deploy_reload_empty"
+    BipodMagPartialReloadAnim="deploy_reload_half"
+
+    bCanBipodDeploy=true
+    ZoomOutTime=0.1
+    PutDownAnim="putaway"
 }

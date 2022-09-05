@@ -14,4 +14,5 @@ defaultproperties
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    GivenItems(0)="DH_Equipment.DHShovelItem_Russian"
 }

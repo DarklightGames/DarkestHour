@@ -9,7 +9,7 @@ class DHCSMachineGunnerRoles extends DHAlliedMachineGunnerRoles
 defaultproperties
 {
     AltName="Kulometcik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHCzechVoice"
     AltVoiceType="DH_SovietPlayers.DHCzechVoice"

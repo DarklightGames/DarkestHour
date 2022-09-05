@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_G43Weapon extends DHSemiAutoWeapon;
+class DH_G43Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -43,4 +43,7 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }

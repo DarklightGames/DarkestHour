@@ -1049,7 +1049,7 @@ simulated function HandleSleeveSwapping()
 defaultproperties
 {
     // Sway modifiers
-    SwayModifyFactor=0.8
+    SwayModifyFactor=0.7
     SwayNotMovingModifier=0.5
     SwayRestingModifier=0.25
     SwayCrouchedModifier=0.9

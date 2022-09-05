@@ -15,6 +15,7 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
+    GivenItems(2)="DH_Equipment.DHShovelItem_US"
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
     SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'

@@ -17,9 +17,11 @@ defaultproperties
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+    
+    SwayModifyFactor=0.8 //+0.1
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=55.0
     DisplayFOV=90.0
     ZoomOutTime=0.1
     FreeAimRotationSpeed=7.0

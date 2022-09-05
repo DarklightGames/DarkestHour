@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_PIATPickup extends DHRocketWeaponPickup;
+class DH_PIATPickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_PIATWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
-    DrawScale=1.23
+    EmptyStaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT_empty'
 }

@@ -8,15 +8,15 @@ class DH_MP38Fire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP38Bullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.127 // 470rpm
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
+    FireRate=0.135 // ~490rpm (value had to be found experimentally due to an engine bug)
     Spread=122.0
 
     // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=225
-    MaxHorizontalRecoilAngle=70
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.6),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=220
+    MaxHorizontalRecoilAngle=66
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.45),(InVal=5.0,OutVal=0.6),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=14.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'

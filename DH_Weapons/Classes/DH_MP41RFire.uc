@@ -8,8 +8,8 @@ class DH_MP41RFire extends DHFastAutoFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP41RBullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.07 // ~850rpm, assuming it fires a little bit slower than PPSh in 7.62 + gives me an excuse to use slightly different slowed down fire sound
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
+    FireRate=0.08 // ~861 rpm (value had to be found experimentally due to an engine bug), assuming it fires a little bit slower than PPSh in 7.62 + gives me an excuse to use slightly different slowed down fire sound
     Spread=135.0
 
     // Recoil

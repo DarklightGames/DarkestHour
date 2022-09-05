@@ -38,11 +38,11 @@ defaultproperties
     WeaponAttachOffset=(X=0.0,Y=0.0,Z=-1.0) //need to lower the turret a bit due to gap
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
-    FireInterval=0.1
-    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
+    FireInterval=0.105
+    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

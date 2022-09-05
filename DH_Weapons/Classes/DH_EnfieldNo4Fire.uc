@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_EnfieldNo4Bullet'
     AmmoClass=class'DH_Weapons.DH_EnfieldNo4Ammo'
     FireRate=2.6
-    Spread=35.0
+    Spread=30.0
     FAProjSpawnOffset=(X=-30.0)
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'

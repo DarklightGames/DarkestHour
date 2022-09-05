@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_M1A1CarbineWeapon extends DHSemiAutoWeapon;
+class DH_M1A1CarbineWeapon extends DHProjectileWeapon;
 
 defaultproperties
 {
     ItemName="M1A1 Carbine"
-    SwayModifyFactor=0.59 // +0.04 from m1 because the stock is less convenient
+    SwayModifyFactor=0.49 // +0.04 from m1 because the stock is less convenient
     FireModeClass(0)=class'DH_Weapons.DH_M1A1CarbineFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1A1CarbineMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1A1CarbineAttachment'
@@ -35,4 +35,6 @@ defaultproperties
 
     SleeveNum=1
     HandNum=2
+
+    bPlusOneLoading=true
 }

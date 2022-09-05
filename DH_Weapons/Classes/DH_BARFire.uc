@@ -5,16 +5,6 @@
 
 class DH_BARFire extends DHAutomaticFire;
 
-function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
-{
-    super.ModeTick(DeltaTime);
-
-    if (bIsFiring && !AllowFire())
-    {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
-
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_BARBullet'
@@ -52,7 +42,10 @@ defaultproperties
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     bReverseShellSpawnDirection=true
-
-    ShakeRotMag=(X=45.0,Y=30.0,Z=120.0)
-    ShakeRotTime=0.75
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

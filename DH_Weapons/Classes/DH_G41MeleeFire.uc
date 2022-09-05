@@ -7,6 +7,7 @@ class DH_G41MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
+    FireRate=0.37 // +0.12
     DamageType=class'DH_Weapons.DH_G41BashDamType'
 
     BashBackEmptyAnim="bash_pullback_empty"

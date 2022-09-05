@@ -16,8 +16,8 @@ enum EMapSize
     SIZE_Any,           // 0-64 players
     SIZE_ExtraSmall,    // 0-24 players
     SIZE_Small,         // 0-48 players
-    SIZE_Medium,        // 24-64 players
-    SIZE_Large,         // 48-64 players
+    SIZE_Medium,        // 24-100 players
+    SIZE_Large,         // 48-100 players
 };
 
 enum EMapGameType
@@ -129,16 +129,16 @@ static function GetMapSizePlayerCountRange(EMapSize Size, out int PlayersMin, ou
             break;
         case Size_Medium:
             PlayersMin = 24;
-            PlayersMax = 64;
+            PlayersMax = 100;
             break;
         case SIZE_Large:
             PlayersMin = 48;
-            PlayersMax = 64;
+            PlayersMax = 100;
             break;
         case SIZE_Any:
         default:
             PlayersMin = 0;
-            PlayersMax = 64;
+            PlayersMax = 100;
             break;
     }
 }

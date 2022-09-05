@@ -1417,14 +1417,9 @@ state PlayerWalking
             // Take the bipod weapon out of deployed if the player tries to move
             if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0) && Pawn.Weapon != none)
             {
-//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // replaced by if/else below so it actually works with DH weapons
-                if (DHBipodWeapon(Pawn.Weapon) != none)
+                if (DHProjectileWeapon(Pawn.Weapon) != none)
                 {
-                    DHBipodWeapon(Pawn.Weapon).ForceUndeploy();
-                }
-                else if (DHBipodAutoWeapon(Pawn.Weapon) != none)
-                {
-                    DHBipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
+                    DHProjectileWeapon(Pawn.Weapon).ForceUndeploy();
                 }
             }
 
@@ -7541,9 +7536,9 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         return RER_Limit;
     }
 
-    bIsRoleLimitless = (Limit == 255);
+    bIsRoleLimitless = Limit == 255;
 
-    if (GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
+    if (Level.NetMode != NM_Standalone && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
     {
         if (!IsInSquad() && !bIsRoleLimitless && !RI.bExemptSquadRequirement)
         {

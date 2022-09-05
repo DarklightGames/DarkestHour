@@ -195,6 +195,11 @@ simulated function bool IsPlayerHipFiring()
     return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
 }
 
+simulated function bool IsInstigatorBipodDeployed()
+{
+    return Instigator != none && Instigator.bBipodDeployed;   
+}
+
 function CalcSpreadModifiers()
 {
     local DHPawn P;

@@ -20,8 +20,7 @@ defaultproperties
     //Effects
     bHasTracer=false
     bHasSmokeTrail=false
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb_1st'
-    DrawScale=0.6 // reduced size, the mesh is huge!
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb'
 
     //Penetration
     DHPenetrationTable(0)=9.1

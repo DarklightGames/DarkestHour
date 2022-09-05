@@ -19,7 +19,6 @@ defaultproperties
     StraightFlightTime=0.5
 
     //Effects
-    DrawScale=1.33
     bHasSmokeTrail=false // bazooka has no smoke trail irl
     bHasTracer=true // represents glow of burnt out rocket motor
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
@@ -33,8 +32,8 @@ defaultproperties
     DHPenetrationTable(5)=9.8
     DHPenetrationTable(6)=9.8
 
-	//Sounds
-	VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    //Sounds
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     DirtHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     RockHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
     WoodHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
@@ -42,6 +41,6 @@ defaultproperties
     VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
 
     ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
 }

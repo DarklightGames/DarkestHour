@@ -12,7 +12,7 @@ exec simulated function Deploy()
 
 defaultproperties
 {
-    ItemName="Mosin-Nagant M44 Carbine"
+    ItemName="Mosin M44 Carbine"
     FireModeClass(0)=class'DH_Weapons.DH_M44Fire'
     FireModeClass(1)=class'DH_Weapons.DH_M44MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M44Attachment'

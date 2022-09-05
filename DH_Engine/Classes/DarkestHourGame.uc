@@ -3114,9 +3114,6 @@ state RoundInPlay
             }
         }
 
-        // Update munition percentages (this will update both team's munitions and set them in GRI)
-        UpdateMunitionPercentages();
-
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
         {
@@ -4460,37 +4457,6 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     {
         PC.DHPrimaryWeapon = PC.PrimaryWeapon;
         PC.DHSecondaryWeapon = PC.SecondaryWeapon;
-    }
-}
-
-function UpdateMunitionPercentages()
-{
-    local int i;
-    local float MunitionDifference, ElapsedRatio;
-
-    if (GRI == none)
-    {
-        return;
-    }
-
-    // Calculate and set the Munition Percentages for each team
-    for (i = 0; i < 2; ++i)
-    {
-        ElapsedRatio = FClamp(((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0) / 60.0, 0.0, 1.0);
-
-        // If Base > Final (aka ammo goes down)
-        if (DHLevelInfo.BaseMunitionPercentages[i] > DHLevelInfo.FinalMunitionPercentages[i])
-        {
-            MunitionDifference = DHLevelInfo.BaseMunitionPercentages[i] - DHLevelInfo.FinalMunitionPercentages[i];
-
-            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] - (MunitionDifference * ElapsedRatio);
-        }
-        else // Ammo is going up over time
-        {
-            MunitionDifference = DHLevelInfo.FinalMunitionPercentages[i] - DHLevelInfo.BaseMunitionPercentages[i];
-
-            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] + (MunitionDifference * ElapsedRatio);
-        }
     }
 }
 
@@ -5962,10 +5928,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=10
-        Minor=7
-        Patch=1
-        Prerelease=""
+        Major=11
+        Minor=0
+        Patch=0
+        Prerelease="beta"
     End Object
     Version=VersionObject
 

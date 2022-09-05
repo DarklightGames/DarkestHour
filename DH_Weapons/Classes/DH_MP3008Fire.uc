@@ -8,8 +8,8 @@ class DH_MP3008Fire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP3008Bullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.105 // 570rpm
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
+    FireRate=0.115 // ~575 rpm (value had to be found experimentally due to an engine bug)
     Spread=148.0
 
     // Recoil
