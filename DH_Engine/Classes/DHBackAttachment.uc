@@ -33,4 +33,7 @@ function InitFor(Inventory I)
 	}
 }
 
-
+defaultproperties
+{
+    bReplicateAnimations=true
+}
