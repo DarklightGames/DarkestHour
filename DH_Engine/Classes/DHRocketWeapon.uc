@@ -543,7 +543,7 @@ simulated function QueueFiringRangeHint()
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state IronSightZoomIn
+simulated state IronSightZoomIn
 {
     simulated function BeginState()
     {
