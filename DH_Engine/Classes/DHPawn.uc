@@ -3987,7 +3987,7 @@ simulated function PlayStandardReload()
     if (WA.bStaticReload)
     {
         ChannelRootBone = '';
-        bGlobalPose = True;
+        bGlobalPose = true;
     }
     else
     {

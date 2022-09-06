@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_STG44ScopedPickup'
 
     Mesh=SkeletalMesh'DH_Stg44_1st.STG44-Scoped'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.STG44_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

@@ -9,5 +9,5 @@ class DH_ZB30DamType extends DHMediumCaliberDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_ZB30Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
 }

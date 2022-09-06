@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishPlatoonMGOx_Bucks extends DHDeprecated;
-
-defaultproperties
-{
-}
