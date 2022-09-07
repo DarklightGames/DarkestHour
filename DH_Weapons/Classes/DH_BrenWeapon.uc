@@ -12,7 +12,6 @@ defaultproperties
     ItemName="Bren Mk.II"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
-    //FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'  /no melee!
     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
     PickupClass=class'DH_Weapons.DH_BrenPickup'
 
@@ -55,14 +54,9 @@ defaultproperties
     IronIdleAnim="iron_Idle"
     IronBringUp="iron_in"
     IronPutDown="iron_out"
-    IronIdleAnim_"iron_idle"
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="Sprint_End"
-    //CrawlForwardAnim="crawl_F"
-    //CrawlBackwardAnim="crawl_B"
-    //CrawlStartAnim="crawl_in"
-    //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
     SelectAnim="Draw"
     PutDownAnim="Putaway"

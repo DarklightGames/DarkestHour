@@ -12,12 +12,10 @@ defaultproperties
     ItemName="ZB vz.30 Machine Gun"
 
     FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
-    //FireModeClass(1)=class'DH_Weapons.DH_ZB30MeleeFire'  no melee!
     AttachmentClass=class'DH_Weapons.DH_ZB30Attachment'
     PickupClass=class'DH_Weapons.DH_ZB30Pickup'
 
     Mesh=SkeletalMesh'DH_ZB_1st.ZB30_1st'
-    //HighDetailOverlay=Shader'DH_Weapon_CC_tex.Spec_Maps.ZB30_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=0
     Skins(0)=Texture'DH_Weapon_CC_tex.SmallArms.ZB30_diffuse'
@@ -56,14 +54,9 @@ defaultproperties
     IronIdleAnim="iron_Idle"
     IronBringUp="iron_in"
     IronPutDown="iron_out"
-    IronIdleAnim_"iron_idle"
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="Sprint_End"
-    //CrawlForwardAnim="crawl_F"
-    //CrawlBackwardAnim="crawl_B"
-    //CrawlStartAnim="crawl_in"
-    //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
     SelectAnim="Draw"
     PutDownAnim="Putaway"

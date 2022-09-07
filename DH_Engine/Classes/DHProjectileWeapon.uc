@@ -3305,7 +3305,7 @@ simulated function EAxis AxisFromString(string S)
     else return AXIS_X;
 }
 
-simulated exec function BarrelRollAxis(string AxisString)
+exec simulated function BarrelRollAxis(string AxisString)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3313,7 +3313,7 @@ simulated exec function BarrelRollAxis(string AxisString)
     }
 }
 
-simulated exec function BarrelPitchAxis(string AxisString)
+exec simulated function BarrelPitchAxis(string AxisString)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3321,7 +3321,7 @@ simulated exec function BarrelPitchAxis(string AxisString)
     }
 }
 
-simulated exec function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
+exec simulated function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3331,7 +3331,7 @@ simulated exec function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function BipodArmLength(float V)
+exec simulated function BipodArmLength(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3339,7 +3339,7 @@ simulated exec function BipodArmLength(float V)
     }
 }
 
-simulated exec function BipodAngularDamping(float V)
+exec simulated function BipodAngularDamping(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3347,7 +3347,7 @@ simulated exec function BipodAngularDamping(float V)
     }
 }
 
-simulated exec function BipodGravityScale(float V)
+exec simulated function BipodGravityScale(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3355,7 +3355,7 @@ simulated exec function BipodGravityScale(float V)
     }
 }
 
-simulated exec function BipodYawDeltaFactor(float V)
+exec simulated function BipodYawDeltaFactor(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3363,7 +3363,7 @@ simulated exec function BipodYawDeltaFactor(float V)
     }
 }
 
-simulated exec function BipodAngularVelocityThreshold(float V)
+exec simulated function BipodAngularVelocityThreshold(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3371,7 +3371,7 @@ simulated exec function BipodAngularVelocityThreshold(float V)
     }
 }
 
-simulated exec function BipodCoefficientOfRestitution(float V)
+exec simulated function BipodCoefficientOfRestitution(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3379,7 +3379,7 @@ simulated exec function BipodCoefficientOfRestitution(float V)
     }
 }
 
-simulated exec function DebugAddedPitch(int AddedPitch)
+exec simulated function DebugAddedPitch(int AddedPitch)
 {
     // Added to debug the distance zeroing.
     if (Level.NetMode == NM_Standalone)

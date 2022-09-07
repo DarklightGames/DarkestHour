@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishPlatoonMGRMCommando extends DHDeprecated;
-
-defaultproperties
-{
-}

@@ -14,13 +14,15 @@ function InitFor(Inventory I)
 
     super.InitFor(I);
 
-	if (I != none && I.AttachmentClass != none)
+	if (I != none)
 	{
         WA = class<ROWeaponAttachment>(I.AttachmentClass);
 
         if (WA != none)
         {
             PlayAnim(WA.default.WA_Idle);
+
+            Skins.Length = 0;
 
             for (j = 0; j < WA.default.Skins.Length; ++j)
             {
@@ -30,7 +32,10 @@ function InitFor(Inventory I)
                 }
             }
         }
-	}
+    }
 }
 
-
+defaultproperties
+{
+    bReplicateAnimations=true
+}

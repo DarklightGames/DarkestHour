@@ -42,7 +42,7 @@ replication
         ClientDoAssistedReload;
 }
 
-simulated exec function DebugAssistReloading()
+exec simulated function DebugAssistReloading()
 {
     if (Level.NetMode == NM_Standalone)
     {
@@ -51,7 +51,7 @@ simulated exec function DebugAssistReloading()
 }
 
 // Overridden to cycle the weapon aiming range
-simulated exec function SwitchFireMode()
+exec simulated function SwitchFireMode()
 {
     if (bUsingSights || IsInstigatorBipodDeployed() && !IsBusy())
     {
@@ -543,7 +543,7 @@ simulated function QueueFiringRangeHint()
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state IronSightZoomIn
+simulated state IronSightZoomIn
 {
     simulated function BeginState()
     {

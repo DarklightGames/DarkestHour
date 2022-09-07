@@ -157,7 +157,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight, Radio;
+        bOnFire, bCrouchMantle, MantleHeight, Radio, BackpackClass;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -3987,7 +3987,7 @@ simulated function PlayStandardReload()
     if (WA.bStaticReload)
     {
         ChannelRootBone = '';
-        bGlobalPose = True;
+        bGlobalPose = true;
     }
     else
     {

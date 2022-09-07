@@ -101,7 +101,7 @@ defaultproperties
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
     // When overlaid on top of the standard texture, it appears the combination of an alpha texture used as an opacity mask creates this unwanted transparency
-    Skins(2)=shader'Weapons1st_tex.MG.dp28_s'
+    Skins(2)=Shader'Weapons1st_tex.MG.dp28_s'
     Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.DP_extra'
 
     DisplayFOV=80.0
