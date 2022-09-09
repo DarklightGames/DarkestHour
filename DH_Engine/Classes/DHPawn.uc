@@ -7475,14 +7475,14 @@ simulated function bool CanBuildWithShovel()
 simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
     local DHPlayer PC;
-    local DHPawn OtherPawn;
+    local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
     {
-        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
         if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {
