@@ -29,6 +29,10 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
 
+// Mesh offsets for when the weapon is on the back.
+var     vector  BackAttachmentLocationOffset;
+var     rotator BackAttachmentRotationOffset;
+
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
 {
