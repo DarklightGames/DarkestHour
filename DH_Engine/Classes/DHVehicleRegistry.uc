@@ -23,9 +23,7 @@ var array<SVehicleRecord> Records;
 static function string GetClassNameFromVehicleName(string VehicleName, optional string VariantName)
 {
     local int i, j, k;
-
-    VehicleName = Caps(VehicleName);
-
+    
     for (i = 0; i < default.Records.Length; ++i)
     {
         for (j = 0; j < default.Records[i].VehicleNames.Length; ++j)
@@ -87,20 +85,11 @@ static function DumpToLog(PlayerController PC)
 
 defaultproperties
 {
-
-    //Vehicle registry for abbrivaiated names, this is to enable a person to spawn a vehicle without looking up the class name
-    //Much like the weapon registry
-    //TEMPLATE
-    //Records()=(VehicleNames=(""),Variants=((ClassName="DH_Vehicles."),(ClassName="DH_Vehicles.",VariantName="")))
-
-    //Watch for spaces between commas when defining variant type as this will throw an error
-    //vehicles to be added go at the bottom of the stack under "to be filed"
-
     //wheeled vehicles (soft skin/lightly armored)
     //Soviet
     Records(0)=(VehicleNames=("ba64","clowncar"),Variants=((ClassName="DH_Vehicles.DH_BA64ArmoredCar"),(ClassName="DH_Vehicles.DH_BA64ArmoredCar_Snow",VariantName="snow")))
     Records(1)=(VehicleNames=("gaz67","gaz"),Variants=((ClassName="DH_Vehicles.DH_GAZ67Vehicle")))
-    Records(2)=(VehicleNames=("zis5","ZiS5transport","zistransport"),Variants=((ClassName="DH_Vehicles.DH_ZiS5vTruckTransport")))
+    Records(2)=(VehicleNames=("zis5","zis5transport","zistransport"),Variants=((ClassName="DH_Vehicles.DH_ZiS5vTruckTransport")))
     Records(3)=(VehicleNames=("zislogi","zis5logi","ZiS5logi"),Variants=((ClassName="DH_Vehicles.DH_ZiS5vTruckSupport")))
     //American/British
     Records(4)=(VehicleNames=("gmc"),Variants=((ClassName="DH_Vehicles.DH_GMCTruckTransport"),(ClassName="DH_Vehicles.DH_GMCTruckTransport_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_GMCTruckTransport_LL",VariantName="LL"),(ClassName="DH_Vehicles.DH_GMCTruckTransport_LL_Snow",VariantName="LLsnow"),(ClassName="DH_Vehicles.DH_GMCTruckTransport_Halloween",VariantName="haloween"),(ClassName="DH_Vehicles.DH_GMCTruckTransport_Halloween",VariantName="spooky")))
@@ -115,10 +104,10 @@ defaultproperties
 
     //Armored cars, halftracks and tankettes (heavily Armored)
     //Soviet (there are none currently apart from the soviet universal carrier)
-    Records(10)=(VehicleNames=("sovietcarrier","DTcarrier"),Variants=((ClassName="DH_Vehicles.DH_UniversalCarrierMG"),(ClassName="DH_Vehicles.DH_UniversalCarrierTransport_Snow",VariantName="snow")))
+    Records(10)=(VehicleNames=("sovietcarrier","dtcarrier", "unicarrier"),Variants=((ClassName="DH_Vehicles.DH_UniversalCarrierMG"),(ClassName="DH_Vehicles.DH_UniversalCarrierTransport_Snow",VariantName="snow")))
     //American
     Records(11)=(VehicleNames=("greyhound","m8"),Variants=((ClassName="DH_Vehicles.DH_GreyhoundArmoredCar"),(ClassName="DH_Vehicles.DH_GreyhoundArmoredCar_British",VariantName="british"),(ClassName="DH_Vehicles.DH_GreyhoundArmoredCar_Snow",VariantName="snow")))
-    Records(12)=(VehicleNames=("m3halftrack","americanhalftrack","americanHT","m3"),Variants=((ClassName="DH_Vehicles.DH_M3A1HalftrackTransport"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Soviet",VariantName="soviet"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Soviet_Snow",VariantName="sovietsnow"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Snow",VariantName="snow")))
+    Records(12)=(VehicleNames=("m3halftrack","americanhalftrack","americanht","m3"),Variants=((ClassName="DH_Vehicles.DH_M3A1HalftrackTransport"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Soviet",VariantName="soviet"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Soviet_Snow",VariantName="sovietsnow"),(ClassName="DH_Vehicles.DH_M3A1HalftrackTransport_Snow",VariantName="snow")))
     Records(13)=(VehicleNames=("m16halftrack","m16","quad50ht"),Variants=((ClassName="DH_Vehicles.DH_M16Halftrack"),(ClassName="DH_Vehicles.DH_M16Halftrack_Snow",VariantName="snow")))
     //British
     Records(14)=(VehicleNames=("brencarrier","universalcarrier"),Variants=((ClassName="DH_Vehicles.DH_BrenCarrierTransport"),(ClassName="DH_Vehicles.DH_BrenCarrierTransport_Italy",VariantName="italy"),(ClassName="DH_Vehicles.DH_BrenCarrierTransport_Africa",VariantName="africa")))
@@ -138,7 +127,7 @@ defaultproperties
     Records(22)=(VehicleNames=("t60"),Variants=((ClassName="DH_Vehicles.DH_T60Tank"),(ClassName="DH_Vehicles.DH_T60Tank_Snow",VariantName="snow")))
     Records(23)=(VehicleNames=("bt7"),Variants=((ClassName="DH_Vehicles.DH_BT7Tank"),(ClassName="DH_Vehicles.DH_BT7Tank_Snow",VariantName="snow")))
     //American/British
-    Records(24)=(VehicleNames=("stuart","m5stuart"),Variants=((ClassName="DH_Vehicles.DH_StuartTank"),(ClassName="DH_Vehicles.DH_StuartTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_StuartTank_British",VariantName="british"),(ClassName="DH_Vehicles.DH_StuartTank_British",VariantName="mk6stuart")))
+    Records(24)=(VehicleNames=("stuart","m5stuart"),Variants=((ClassName="DH_Vehicles.DH_StuartTank"),(ClassName="DH_Vehicles.DH_StuartTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_StuartTank_British",VariantName="british")))
     //German(None currently)
 
     //--+--
@@ -182,7 +171,7 @@ defaultproperties
 
     //heavy tanks
     //Soviet
-    Records(54)=(VehicleNames=("is2early","js2early"),Variants=((ClassName="DH_Vehicles.DH_IS2Tank"),(ClassName="DH_Vehicles.DH_IS2Tank_Snow",VariantName="snow")))
+    Records(54)=(VehicleNames=("is2early"),Variants=((ClassName="DH_Vehicles.DH_IS2Tank"),(ClassName="DH_Vehicles.DH_IS2Tank_Snow",VariantName="snow")))
     Records(55)=(VehicleNames=("is2","is2late","js2late"),Variants=((ClassName="DH_Vehicles.DH_IS2Tank_Late"),(ClassName="DH_Vehicles.DH_IS2Tank_Late_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_IS2Tank_Late_Green",VariantName="green"),(ClassName="DH_Vehicles.DH_IS2Tank_Berlin",VariantName="berlin")))
     Records(56)=(VehicleNames=("kv1e","kv1early"),Variants=((ClassName="DH_Vehicles.DH_KV1ETank"),(ClassName="DH_Vehicles.DH_KV1ETank_Snow",VariantName="snow")))
     Records(57)=(VehicleNames=("kv1searly"),Variants=((ClassName="DH_Vehicles.DH_KV1sTank"),(ClassName="DH_Vehicles.DH_KV1sTank_Snow",VariantName="snow")))
@@ -196,8 +185,8 @@ defaultproperties
     Records(62)=(VehicleNames=("pantherg","pantherausfg","pantherausf/g"),Variants=((ClassName="DH_Vehicles.DH_PantherGTank"),(ClassName="DH_Vehicles.DH_PantherGTank_SnowOne",VariantName="snowone"),(ClassName="DH_Vehicles.DH_PantherGTank_SnowTwo",VariantName="snowtwo"),(ClassName="DH_Vehicles.DH_PantherGTank_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_PantherGTank_CamoTwo",VariantName="camotwo"),(ClassName="DH_Vehicles.DH_PantherGTank_CamoThree",VariantName="camothree"),(ClassName="DH_VehiclesDH_PantherGTank_ArdennesOne.",VariantName="ardennesone"),(ClassName="DH_Vehicles.DH_PantherGTank_ArdennesTwo",VariantName="ardennestwo")))
     Records(63)=(VehicleNames=("pantherd","pantherausfd","pantherausf/d"),Variants=((ClassName="DH_Vehicles.DH_PantherDTank")))
     Records(64)=(VehicleNames=("tiger1early","tigerearly"),Variants=((ClassName="DH_Vehicles.DH_TigerTank"),(ClassName="DH_Vehicles.DH_TigerTank_Snow",VariantName="snow")))
-    Records(65)=(VehicleNames=("tiger1","tigerlate","tiger1late"),Variants=((ClassName="DH_Vehicles.DH_TigerTank_Late"),(ClassName="DH_Vehicles.DH_TigerTank_SnowOne",VariantName="snow"),(ClassName="DH_Vehicles.DH_TigerTank_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_TigerTank_CamoTwo",VariantName="camotwo"),(ClassName="DH_Vehicles.DH_TigerTank_Ardennes",VariantName="ardennes"),(ClassName="DH_Vehicles.DH_TigerTank_Butcher",VariantName="haloween")))
-    Records(66)=(VehicleNames=("kingtiger","tiger2","Konigstiger"),Variants=((ClassName="DH_Vehicles.DH_Tiger2BTank"),(ClassName="DH_Vehicles.DH_Tiger2BTank_Snow502",VariantName="snowone"),(ClassName="DH_Vehicles.DH_Tiger2BTank_ArdennesSnow332",VariantName="snowtwo"),(ClassName="DH_Vehicles.DH_Tiger2BTank_Ardennes",VariantName="ardennes"),(ClassName="DH_Vehicles.DH_Tiger2BTank_AmbushCamo212",VariantName="ambush")))
+    Records(65)=(VehicleNames=("tiger","tiger1","tigerlate","tiger1late"),Variants=((ClassName="DH_Vehicles.DH_TigerTank_Late"),(ClassName="DH_Vehicles.DH_TigerTank_SnowOne",VariantName="snow"),(ClassName="DH_Vehicles.DH_TigerTank_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_TigerTank_CamoTwo",VariantName="camotwo"),(ClassName="DH_Vehicles.DH_TigerTank_Ardennes",VariantName="ardennes"),(ClassName="DH_Vehicles.DH_TigerTank_Butcher",VariantName="haloween")))
+    Records(66)=(VehicleNames=("kingtiger","tiger2"),Variants=((ClassName="DH_Vehicles.DH_Tiger2BTank"),(ClassName="DH_Vehicles.DH_Tiger2BTank_Snow502",VariantName="snowone"),(ClassName="DH_Vehicles.DH_Tiger2BTank_ArdennesSnow332",VariantName="snowtwo"),(ClassName="DH_Vehicles.DH_Tiger2BTank_Ardennes",VariantName="ardennes"),(ClassName="DH_Vehicles.DH_Tiger2BTank_AmbushCamo212",VariantName="ambush")))
     
     //--+--
 
@@ -209,17 +198,17 @@ defaultproperties
     //American
     Records(70)=(VehicleNames=("hellcat","m18hellcat","m18gmc",),Variants=((ClassName="DH_Vehicles.DH_HellcatTank"),(ClassName="DH_Vehicles.DH_HellcatTank_Snow",VariantName="snow")))
     Records(71)=(VehicleNames=("m10early","wolverineearly"),Variants=((ClassName="DH_Vehicles.DH_WolverineTank_Early")))
-    Records(72)=(VehicleNames=("m10gmc","m10wolverine","wolverine"),Variants=((ClassName="DH_Vehicles.DH_WolverineTank"),(ClassName="DH_Vehicles.DH_WolverineTank_Snow",VariantName="snow")))
+    Records(72)=(VehicleNames=("m10","wolverine"),Variants=((ClassName="DH_Vehicles.DH_WolverineTank"),(ClassName="DH_Vehicles.DH_WolverineTank_Snow",VariantName="snow")))
     Records(73)=(VehicleNames=("jacksonearly","m36early"),Variants=((ClassName="DH_Vehicles.DH_JacksonTank_Early")))
-    Records(74)=(VehicleNames=("jackson","m36gmc","m36jackson"),Variants=((ClassName="DH_Vehicles.DH_JacksonTank"),(ClassName="DH_Vehicles.DH_JacksonTank_Snow",VariantName="snow")))
+    Records(74)=(VehicleNames=("jackson","m36"),Variants=((ClassName="DH_Vehicles.DH_JacksonTank"),(ClassName="DH_Vehicles.DH_JacksonTank_Snow",VariantName="snow")))
     //British
     Records(75)=(VehicleNames=("wolverinesp","britishwolverine","britishm10"),Variants=((ClassName="DH_Vehicles.DH_WolverineTank_British")))
-    Records(76)=(VehicleNames=("achilles","17pdrwolverine"),Variants=((ClassName="DH_Vehicles.DH_AchillesTank")))
+    Records(76)=(VehicleNames=("achilles"),Variants=((ClassName="DH_Vehicles.DH_AchillesTank")))
     //German
     Records(77)=(VehicleNames=("hetzer","jpz38t"),Variants=((ClassName="DH_Vehicles.DH_HetzerDestroyer"),(ClassName="DH_VehiclesDH_HetzerDestroyer_Snow.",VariantName="snow"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_SnowOne",VariantName="snowone"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_SnowTwo",VariantName="snowtwo"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoTwo",VariantName="camotwo"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoThree",VariantName="camothree"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_Bushes",VariantName="bushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_Snow_Bushes",VariantName="snowbushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_SnowOne_Bushes",VariantName="snowonebushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_SnowTwo_Bushes",VariantName="snowtwobushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoOne_Bushes",VariantName="camoonebushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoTwo_Bushes",VariantName="camotwobushes"),(ClassName="DH_Vehicles.DH_HetzerDestroyer_CamoThree_Bushes",VariantName="camothreebushes")))
     Records(78)=(VehicleNames=("jagdpanzer448","jagdpanzer4/48","jpz4/48","jpz448"),Variants=((ClassName="DH_Vehicles.DH_JagdpanzerIVL48Destroyer"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL48Destroyer_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL48Destroyer_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL48Destroyer_CamoTwo",VariantName="camotwo")))
     Records(79)=(VehicleNames=("jagdpanzer470","jagdpanzer4/70","jpz470","jpz4/70"),Variants=((ClassName="DH_Vehicles.DH_JagdpanzerIVL70Destroyer"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL70Destroyer_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL70Destroyer_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_JagdpanzerIVL70Destroyer_CamoTwo",VariantName="camotwo")))
-    Records(80)=(VehicleNames=("stuh42","stuh42g","stuh42ausf/g"),Variants=((ClassName="DH_Vehicles.DH_StuH42Destroyer"),(ClassName="DH_Vehicles.DH_StuH42Destroyer_Snow",VariantName="snow")))
+    Records(80)=(VehicleNames=("stuh42"),Variants=((ClassName="DH_Vehicles.DH_StuH42Destroyer"),(ClassName="DH_Vehicles.DH_StuH42Destroyer_Snow",VariantName="snow")))
     Records(81)=(VehicleNames=("stug3early","stug3gearly"),Variants=((ClassName="DH_Vehicles.DH_Stug3GDestroyer"),(ClassName="DH_Vehicles.DH_Stug3GDestroyer_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_Stug3GDestroyer_SnowOne",VariantName="snowone"),(ClassName="DH_Vehicles.DH_Stug3GDestroyer_CamoOne",VariantName="camoone")))
     Records(82)=(VehicleNames=("stug3","stug3g","stug3glate","stug3ausfg","stug3late","stug3ausf/g"),Variants=((ClassName="DH_Vehicles.DH_Stug3GDestroyer_Late"),(ClassName="DH_Vehicles.DH_Stug3GDestroyer_Late_Snow",VariantName="snow")))
     Records(83)=(VehicleNames=("marder3","marder3m","marder3ausfm","marder3ausf/m"),Variants=((ClassName="DH_Vehicles.DH_Marder3MDestroyer"),(ClassName="DH_Vehicles.DH_Marder3MDestroyer_SnowSolidWhite",VariantName="snowone"),(ClassName="DH_Vehicles.DH_Marder3MDestroyer_SnowPaintedCamo",VariantName="snowtwo"),(ClassName="DH_Vehicles.DH_Marder3MDestroyer_CamoOne",VariantName="camoone"),(ClassName="DH_Vehicles.DH_Marder3MDestroyer_CamoTwo",VariantName="camotwo")))
@@ -232,7 +221,7 @@ defaultproperties
     //soviet (none)
 
     //American
-    Records(86)=(VehicleNames=("priest","m7priest"),Variants=((ClassName="DH_Vehicles.DH_M7Priest"),(ClassName="DH_Vehicles.DH_M7Priest_Snow",VariantName="snow")))
+    Records(86)=(VehicleNames=("priest","m7"),Variants=((ClassName="DH_Vehicles.DH_M7Priest"),(ClassName="DH_Vehicles.DH_M7Priest_Snow",VariantName="snow")))
     //british (none)
     
     //German
