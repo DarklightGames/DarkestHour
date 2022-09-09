@@ -16,6 +16,9 @@ defaultproperties
     WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
 
+    BackAttachmentLocationOffset=(X=8.0,Y=2.0,Z=0.0)
+    BackAttachmentRotationOffset=(Pitch=-2000,Roll=32000,Yaw=2000)
+
     WA_Idle="idle_rpzb"
     WA_Fire="idle_rpzb"
     WA_Reload="reload_rpzb"
