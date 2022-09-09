@@ -7469,7 +7469,7 @@ simulated function bool CanBuildWithShovel()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(25.0);
+    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(50.0);
 }
 
 simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
