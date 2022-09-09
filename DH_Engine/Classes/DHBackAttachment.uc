@@ -20,7 +20,10 @@ function InitFor(Inventory I)
 
         if (WA != none)
         {
-            PlayAnim(WA.default.WA_Idle);
+            if (HasAnim(WA.default.WA_Idle))
+            {
+                PlayAnim(WA.default.WA_Idle);
+            }
 
             Skins.Length = 0;
 
