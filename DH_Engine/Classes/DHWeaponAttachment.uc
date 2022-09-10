@@ -573,4 +573,39 @@ defaultproperties
     PA_LimpIronAnims(5)=""
     PA_LimpIronAnims(6)=""
     PA_LimpIronAnims(7)=""
+
+    // Override player movement anims inherited from ROWeaponAttachment that don't exist
+    PA_MovementAnims(0)="stand_jogF_kar"
+    PA_MovementAnims(1)="stand_jogB_kar"
+    PA_MovementAnims(2)="stand_jogL_kar"
+    PA_MovementAnims(3)="stand_jogR_kar"
+    PA_MovementAnims(4)="stand_jogFL_kar"
+    PA_MovementAnims(5)="stand_jogFR_kar"
+    PA_MovementAnims(6)="stand_jogBL_kar"
+    PA_MovementAnims(7)="stand_jogBR_kar"
+
+    PA_SprintAnims(0)="stand_sprintF_kar"
+    PA_SprintAnims(1)="stand_sprintB_kar"
+    PA_SprintAnims(2)="stand_sprintL_kar"
+    PA_SprintAnims(3)="stand_sprintR_kar"
+    PA_SprintAnims(4)="stand_sprintFL_kar"
+    PA_SprintAnims(5)="stand_sprintFR_kar"
+    PA_SprintAnims(6)="stand_sprintBL_kar"
+    PA_SprintAnims(7)="stand_sprintBR_kar"
+
+    PA_WalkIronAnims(0)="stand_walkFiron_kar"
+    PA_WalkIronAnims(1)="stand_walkBiron_kar"
+    PA_WalkIronAnims(2)="stand_walkLiron_kar"
+    PA_WalkIronAnims(3)="stand_walkRiron_kar"
+    PA_WalkIronAnims(4)="stand_walkFLiron_kar"
+    PA_WalkIronAnims(5)="stand_walkFRiron_kar"
+    PA_WalkIronAnims(6)="stand_walkBLiron_kar"
+    PA_WalkIronAnims(7)="stand_walkBRiron_kar"
+
+    PA_IdleRestAnim="stand_idlehip_kar"
+    PA_IdleWeaponAnim="stand_idlehip_kar"
+    PA_IdleIronRestAnim="stand_idleiron_kar"
+    PA_IdleIronWeaponAnim="stand_idleiron_kar"
+
+    PA_StandToProneAnim="StandtoProne_kar"
 }
