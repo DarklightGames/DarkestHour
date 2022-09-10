@@ -15,6 +15,7 @@ defaultproperties
     bHideWarheadWhenFired=true
     bHeavy=true
     bStaticReload=true
+    bInitiallyLoaded=true
 
     WA_Idle="idle_piat"
     WA_Fire="idle_piat"

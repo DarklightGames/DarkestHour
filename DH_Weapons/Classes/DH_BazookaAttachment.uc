@@ -15,6 +15,7 @@ defaultproperties
     MuzzleBoneName="Muzzle"
     WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
+    bInitiallyLoaded=false
 
     BackAttachmentLocationOffset=(X=20.0,Y=3.0,Z=-4.0)
     BackAttachmentRotationOffset=(Pitch=-2800,Roll=34000,Yaw=2000)
