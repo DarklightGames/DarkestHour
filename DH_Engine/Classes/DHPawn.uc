@@ -7428,7 +7428,7 @@ exec simulated function Give(string WeaponName)
     local string ClassName;
     local int i;
 
-    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
+    if (Role != ROLE_Authority || (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed()))
     {
         return;
     }
