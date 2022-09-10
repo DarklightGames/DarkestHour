@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2021
 //==============================================================================
-// [ ] Calibrate firing ranges
-//==============================================================================
 
 class DH_BazookaM9Attachment extends DHRocketWeaponAttachment;
 
