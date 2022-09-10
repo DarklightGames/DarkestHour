@@ -3931,7 +3931,14 @@ function HandleAssistedReload()
     // Set the anim blend time so the server will make this player relevant for third person reload sounds to be heard
     if (Level.NetMode != NM_StandAlone && DHWeaponAttachment(WeaponAttachment) != none)
     {
-        PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
     }
@@ -3946,7 +3953,14 @@ simulated function PlayAssistedReload()
 
     if (DHWeaponAttachment(WeaponAttachment) != none)
     {
-        Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         if (HasAnim(Anim))
         {

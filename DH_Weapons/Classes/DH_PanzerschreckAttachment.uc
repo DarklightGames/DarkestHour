@@ -24,6 +24,7 @@ defaultproperties
     WA_Reload="reload_rpzb"
 
     PA_AssistedReloadAnim="crouch_reload_assist_rpzb"
+    PA_ProneAssistedReloadAnim="prone_reload_assist_rpzb"
 
     PA_MovementAnims(0)="stand_jogF_rpzb"
     PA_MovementAnims(1)="stand_jogB_rpzb"

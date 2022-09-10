@@ -10,6 +10,7 @@ var     name        PA_MortarDeployAnim;
 var     name        WA_MortarDeployAnim;
 
 var     name        PA_AssistedReloadAnim;
+var     name        PA_ProneAssistedReloadAnim;
 var     name        PA_CrouchReloadAnim;
 var     name        PA_CrouchReloadEmptyAnim;
 var     name        WA_CrouchReload;

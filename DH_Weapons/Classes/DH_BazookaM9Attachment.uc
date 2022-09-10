@@ -26,6 +26,7 @@ defaultproperties
     WA_Reload="reload_m9a1"
 
     PA_AssistedReloadAnim="crouch_reload_assist_baz_m9"
+    PA_ProneAssistedReloadAnim="prone_reload_assist_baz_m9"
 
     PA_MovementAnims(0)="stand_jogF_baz_m9"
     PA_MovementAnims(1)="stand_jogB_baz_m9"
