@@ -153,4 +153,5 @@ defaultproperties
     Records(93)=(ClassName="DH_Weapons.DH_MP3008Weapon",WeaponNames=("mp3008"))
     Records(94)=(ClassName="DH_Weapons.DH_GeratPWeapon",WeaponNames=("geratp"))
     Records(95)=(ClassName="DH_Weapons.DH_Stg44ScopedWeapon",WeaponNames=("stg44scoped", "mp44scoped"))
+    records(96)=(ClassName="DH_MN9130ScopedPEWeapon",WeaponNames=("mosinscopedpe","scopedmosinpe","scopedmosinearly"))
 }

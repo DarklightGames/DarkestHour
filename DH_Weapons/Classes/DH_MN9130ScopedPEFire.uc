@@ -11,6 +11,7 @@ defaultproperties
     Spread=22.0
     PctRestDeployRecoil=0.25
     FireIronAnim="Scope_shoot"
+    AddedPitch=4
     ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
     ShakeRotTime=5.0
     AimError=500.0
