@@ -23,6 +23,7 @@ var     class<Emitter>  HitSnowEmitterClass;
 var     class<Emitter>  HitWoodEmitterClass;
 var     class<Emitter>  HitRockEmitterClass;
 var     class<Emitter>  HitWaterEmitterClass;
+var     class<Emitter>  FlashEffect; //flash a light on impact
 
 var     sound   HitDirtSound;
 var     sound   HitRockSound;
@@ -271,6 +272,7 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
 
         PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
         Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
+        Spawn(FlashEffect,,, HitLocation, rotator(HitNormal));
     }
 }
 
@@ -730,6 +732,7 @@ defaultproperties
     FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
     DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
 
+    FlashEffect=class'DH_Effects.DHFlashEffectMedium'
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'

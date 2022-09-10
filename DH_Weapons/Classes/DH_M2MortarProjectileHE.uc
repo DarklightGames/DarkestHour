@@ -16,7 +16,7 @@ defaultproperties
     BlurEffectScalar=2.0
 
     GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mm'
-    SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mm'
+    SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mmSnow'
     GroundExplosionSounds(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     GroundExplosionSounds(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     GroundExplosionSounds(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'

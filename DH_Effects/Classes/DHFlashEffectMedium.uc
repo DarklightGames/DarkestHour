@@ -16,9 +16,10 @@ defaultproperties
     bDynamicLight=true
     bMovable=true
 
+    LightEffect=LE_NonIncidence
     LightType=LT_Steady
-    LightBrightness = 64.0
-    LightRadius = 16.0
+    LightBrightness = 128.0 //64
+    LightRadius = 24.0 //16
     LightHue = 20
     LightSaturation = 128
     AmbientGlow = 254
