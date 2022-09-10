@@ -3,17 +3,17 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_Kar98ScopedWeapon extends DHBoltActionWeapon;
+class DH_Kar98ScopedZF41Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Karabiner 98k (ZF39)"
-    FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
-    FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
-    PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
+    ItemName="Karabiner 98k (ZF41)"
+    FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedZF41Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedZF41MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_Kar98ScopedZF41Attachment'
+    PickupClass=class'DH_Weapons.DH_Kar98ScopedZF41Pickup'
 
-    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k-scoped-mesh'
+    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_zf41_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -22,31 +22,37 @@ defaultproperties
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
 	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
-    DisplayFOV=88.0
-    IronSightDisplayFOV=45.0
-    IronSightDisplayFOVHigh=45.0
-    PlayerFOVZoom=15.0
-    ScopePortalFOV=7.1     //very hard to find information on ZF39's field of view, + it wasnt a single scope but rather a variety of similar scopes
-    ScopePortalFOVHigh=7.1 //i managed to find that it was approximately ~6.5 degrees (varied between manufacturers)
-    LensMaterialID=5
 
+    IronSightDisplayFOV=40.0
+    IronSightDisplayFOVHigh=40.0 //
+    PlayerFOVZoom=37.0
+    ScopePortalFOV=2.0     //ZF41: approximately 1.6 degrees FOV and 1.6x zoom
+    ScopePortalFOVHigh=2.0
+    LensMaterialID=7
+    DisplayFOV=84.0
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
-
-    ScopeOverlaySize=0.43
+    ScopeOverlaySize=0.043
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
+
+    bHasBayonet=true
+    BayonetBoneName="bayonet"
+    BayoAttachAnim="Bayonet_on"
+    BayoDetachAnim="Bayonet_off"
 
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"
     IronIdleAnim="Scope_Idle"
     BoltIronAnim="scope_bolt"
-    BoltHipAnim="bolt_scope"
+    //BoltHipAnim="bolt_scope"
     PostFireIronIdleAnim=none
     SingleReloadAnim="single_insert"
     SingleReloadHalfAnim="single_insert_half"
     PreReloadAnim="single_open"
     PreReloadHalfAnim="single_open_half"
     PostReloadAnim="single_close"
+    
+    FullReloadAnim="reload"
 }
