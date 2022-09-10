@@ -26,13 +26,14 @@ defaultproperties
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
     //Penetration
-    DHPenetrationTable(0)=14.6
-    DHPenetrationTable(1)=14.6
-    DHPenetrationTable(2)=14.6
-    DHPenetrationTable(3)=14.6
-    DHPenetrationTable(4)=14.6
-    DHPenetrationTable(5)=14.6
-    DHPenetrationTable(6)=14.6
+    // https://forum.axishistory.com/viewtopic.php?p=1609910&sid=1f9a38054c5e7bf8b3bf9e088c494877#p1609910
+    DHPenetrationTable(0)=10.2
+    DHPenetrationTable(1)=10.2
+    DHPenetrationTable(2)=10.2
+    DHPenetrationTable(3)=10.2
+    DHPenetrationTable(4)=10.2
+    DHPenetrationTable(5)=10.2
+    DHPenetrationTable(6)=10.2
 
     //Sounds
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
