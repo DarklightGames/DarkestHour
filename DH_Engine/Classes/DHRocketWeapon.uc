@@ -555,7 +555,7 @@ simulated state IronSightZoomIn
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state DeployingBipod
+simulated state DeployingBipod
 {
     simulated function BeginState()
     {
