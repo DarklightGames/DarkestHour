@@ -19,6 +19,7 @@ var         byte        CurrentMagCount;            // current number of magazin
 var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
 var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
 var         int         CurrentMagIndex;            // the index of the magazine currently in use
+var         int         NextMagAmmoCount;           // the amount of ammo being loaded into the next magazine
 var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
 var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
 var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
@@ -153,7 +154,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed, BarrelTemperature;
+        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed, BarrelTemperature, NextMagAmmoCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -2106,6 +2107,19 @@ simulated state Reloading extends WeaponBusy
             ROPawn(Instigator).HandleStandardReload();
         }
 
+        if (Role == ROLE_Authority)
+        {
+            // Update the ammo count for the next magazine so that the client knows.
+            // This is needed for magazines that appear differently depending on
+            // how much ammo is in the magazine (e.g., DP-27).
+            NextMagAmmoCount = PrimaryAmmoArray[GetNextMagIndex()];
+
+            if (AmmoAmount(0) > 0 && bPlusOneLoading)
+            {
+                NextMagAmmoCount += 1;
+            }
+        }
+
         PlayReload();
 
         super.BeginState();
@@ -2313,7 +2327,7 @@ simulated function PlayReload()
 // Gets the index of the fullest magazine that is not our current magazine.
 // This magazine index will be the next one loaded into the weapon if a
 // a reload were to happen.
-simulated function int GetNextMagIndex()
+function int GetNextMagIndex()
 {
     local int i, MaxCount, MagIndex;
 
@@ -2333,7 +2347,7 @@ simulated function int GetNextMagIndex()
 }
 
 // Gets the index of the fullest "magazine", including the current magazine
-simulated function int GetFullestMagIndex()
+function int GetFullestMagIndex()
 {
     local int i, MaxCount, MagIndex;
 

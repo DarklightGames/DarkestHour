@@ -13,7 +13,7 @@ simulated function PostBeginPlay()
 
     // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
     // rotation bone. Until this is fixed, we just hide the bullet for now.
-    if (InstigatorIsLocallyControlled())
+    if (Level.NetMode != NM_DedicatedServer)
     {
         SetBoneScale(0, 0.0, 'Round');
     }
@@ -52,11 +52,7 @@ simulated function ROIronSights()
 // Called from animation notifys to reset the mag rotation during a reload.
 simulated event UpdateMagRotationMidReload()
 {
-    local int MagIndex;
-
-    MagIndex = GetNextMagIndex();
-
-    SetMagRotation(float(PrimaryAmmoArray[MagIndex]) / MaxAmmo(0));
+    SetMagRotation(float(NextMagAmmoCount) / MaxAmmo(0));
 }
 
 // Updated the magazine rotation based on the number of rounds remaining in the magazine.
@@ -85,7 +81,10 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);
 
-    UpdateMagRotation();
+    if (InstigatorIsLocallyControlled())
+    {
+        UpdateMagRotation();
+    }
 }
 
 defaultproperties
