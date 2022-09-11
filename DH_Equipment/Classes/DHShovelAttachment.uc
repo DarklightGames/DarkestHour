@@ -142,7 +142,7 @@ defaultproperties
     // Bash anims
     PA_IdleBashHold="stand_hold_shovel"
     PA_IdleCrouchBashHold="crouch_hold_shovel"
-    PA_IdleProneBashHold="prone_hold_shovel"
+    PA_IdleProneBashHold="prone_hold_nade"
     PA_MoveHoldBash(0)="stand_jogFhold_shovel"
     PA_MoveHoldBash(1)="stand_jogBhold_shovel"
     PA_MoveHoldBash(2)="stand_jogLhold_shovel"
