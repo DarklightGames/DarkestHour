@@ -75,6 +75,10 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=97.00,Y=-19.50,Z=8.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=23.0,PointBone="turret",PointOffset=(X=0.00,Y=-0.00,Z=-30.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=16.0,PointBone="turret",PointOffset=(X=80.00,Y=-0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=8.0
     DamagedEffectOffset=(X=-135.0,Y=0.0,Z=35.0) // repositioned to engine deck grille
     FireAttachBone="Body"

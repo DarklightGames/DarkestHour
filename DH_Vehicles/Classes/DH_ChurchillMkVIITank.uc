@@ -106,7 +106,10 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
-    NewVehHitpoints(0)=(PointRadius=15.0,PointBone="Turret",PointOffset=(X=48.0,Y=0.0,Z=19.0),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=61.00,Y=-17.00,Z=18.80),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=15.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-10.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=10.0,PointBone="turret",PointOffset=(X=50.00,Y=-3.00,Z=18.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=37.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_Churchill_stc.Churchill_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_Churchill_stc.Churchill_DamagedTrack_right'
