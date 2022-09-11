@@ -26,13 +26,13 @@ defaultproperties
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
     //Penetration
-    DHPenetrationTable(0)=14.6
-    DHPenetrationTable(1)=14.6
-    DHPenetrationTable(2)=14.6
-    DHPenetrationTable(3)=14.6
-    DHPenetrationTable(4)=14.6
-    DHPenetrationTable(5)=14.6
-    DHPenetrationTable(6)=14.6
+    DHPenetrationTable(0)=12.6
+    DHPenetrationTable(1)=12.6
+    DHPenetrationTable(2)=12.6
+    DHPenetrationTable(3)=12.6
+    DHPenetrationTable(4)=12.6
+    DHPenetrationTable(5)=12.6
+    DHPenetrationTable(6)=12.6
 
     //Sounds
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
