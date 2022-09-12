@@ -19,6 +19,11 @@ defaultproperties
     DestroyedMeshSkins(0)=none // remove skins inherited from ausf G, as the inherited DestroyedVehicleMesh is correct for this vehicle & we don't want it changed
     DestroyedMeshSkins(2)=none
 
+    NewVehHitpoints(0)=(PointRadius=1.30,PointBone="turret",PointOffset=(X=59.00,Y=-27.00,Z=7.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=15.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-20.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=14.0,PointBone="turret",PointOffset=(X=55.00,Y=0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    
+
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_body_int')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_body_int')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_body_int')

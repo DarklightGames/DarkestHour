@@ -41,7 +41,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
     PeriscopeOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
-    PeriscopeSize=0.765 //65° FOV 1x magnification KFF2 driver's scope
+    PeriscopeSize=0.765 //65ï¿½ FOV 1x magnification KFF2 driver's scope
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-20.0,MaxRelativeHeight=5.7,LocationName="lower nose")
@@ -75,6 +75,10 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-30.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=1.50,PointBone="turret",PointOffset=(X=58.00,Y=-22.00,Z=1.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=15.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-20.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=10.0,PointBone="turret",PointOffset=(X=53.00,Y=-2.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=20.0
     TreadDamageThreshold=0.5
     DamagedEffectScale=0.85
