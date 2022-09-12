@@ -7,8 +7,8 @@ class DH_MG42Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=250
-    InitialAmount=250
+    MaxAmmo=100
+    InitialAmount=100
     IconMaterial=Texture'InterfaceArt_tex.HUD.mg42_ammo'
 }
 
