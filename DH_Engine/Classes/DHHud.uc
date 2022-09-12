@@ -3307,7 +3307,7 @@ function DrawVehiclePointSphere()
                 }
                 else
                 {
-                    c = WhiteColor;
+                    C = WhiteColor;
                 }
 
                 AV.DrawDebugSphere(HitPointLocation, AV.NewVehHitpoints[i].PointRadius, 10, C.R, C.G, C.B);
