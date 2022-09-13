@@ -17,11 +17,11 @@ defaultproperties
     //PctHipMGPenalty=1.0
 
     // Recoil
-    PctBipodDeployRecoil=0.075 // 0.1 by default
+    PctBipodDeployRecoil=0.1 
     
-    MaxVerticalRecoilAngle=620  // these values are high because of custom recoil modifier for bipod being 0.075
-    MaxHorizontalRecoilAngle=370
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=6.0,OutVal=1.1),(InVal=12.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=465 
+    MaxHorizontalRecoilAngle=280
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=6.0,OutVal=1.2),(InVal=12.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=34.0
 
