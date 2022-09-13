@@ -42,7 +42,7 @@ simulated function ROIronSights()
 // 
 // The DP-27 magazine rotates as rounds are expended from it.
 //
-// The DH_DP27Fire class explicitly calls UpdateMagRotation when a shot is
+// The DH_DP27Fire (DP27LateFire) class explicitly calls UpdateMagRotation when a shot is
 // fired to accomplish this.
 //
 // The magazine rotation also needs to be updated in other places, such as
