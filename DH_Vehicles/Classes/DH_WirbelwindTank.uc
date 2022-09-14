@@ -16,7 +16,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.wirbelwind.Wirbelwind_destro'
     NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=60.00),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=35.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-15.00),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=35.0,PointBone="turret",PointOffset=(X=70.00,Y=0.00,Z=20.00),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(2)=(PointRadius=35.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=20.00),NewHitPointType=NHP_GunPitch)
     GunOpticsHitPointIndex=0
 	// Damage
 	// compared to pz4: 20mm ammo was unlikely to explode
