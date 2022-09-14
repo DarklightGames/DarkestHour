@@ -11,7 +11,6 @@ defaultproperties
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg42'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_MG42Bullet'
     bUsesTracers=true

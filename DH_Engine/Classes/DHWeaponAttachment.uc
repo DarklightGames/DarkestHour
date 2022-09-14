@@ -21,7 +21,6 @@ var     name        WA_BayonetCrouchReloadEmpty;
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
 
-var     bool        bBarrelCanOverheat;
 var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;

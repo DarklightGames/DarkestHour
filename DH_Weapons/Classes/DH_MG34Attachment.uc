@@ -12,7 +12,6 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAltFireFlash=true
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     bUsesTracers=true
