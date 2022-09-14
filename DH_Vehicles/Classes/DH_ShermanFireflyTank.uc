@@ -67,6 +67,10 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=52.00,Y=23.30,Z=8.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-25.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=13.0,PointBone="turret",PointOffset=(X=40.00,Y=0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=70.15
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_right'
