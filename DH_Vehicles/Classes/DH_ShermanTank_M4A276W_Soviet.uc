@@ -49,6 +49,10 @@ defaultproperties
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1400.0 //diesel and wet stowage
 
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=65.00,Y=22.00,Z=30.50),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=10.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=35.00,Y=0.00,Z=20.00),NewHitPointType=NHP_GunPitch)
+
 	//to do: destroyed textures
 }
 
