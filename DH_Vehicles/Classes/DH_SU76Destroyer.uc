@@ -87,6 +87,10 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=driver_player,PointOffset=(X=-13.0,Y=-3.0,Z=-8.0),bPenetrationPoint=true,HitPointType=HP_Driver)
     VehHitpoints(1)=(PointRadius=35.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=25.0,Y=45.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=-80.0,Y=-40.0,Z=5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret_placement",PointOffset=(X=20.00,Y=-10.00,Z=0.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=10.0,PointBone="turret_placement",PointOffset=(X=0.00,Y=0.00,Z=0.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=10.0,PointBone="turret_placement",PointOffset=(X=0.00,Y=0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     //below is from isu152
     //TreadHitMaxHeight=-5.0
     //DamagedEffectOffset=(X=-210.0,Y=0.0,Z=40.0)
