@@ -36,13 +36,13 @@ defaultproperties
     nProjectileDescriptions(1)="PzGr.40"
     nProjectileDescriptions(2)="Sprgr.Patr.38"
 
-    InitialPrimaryAmmo=40
-    InitialSecondaryAmmo=6
-    InitialTertiaryAmmo=15
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=10
 
-    MaxPrimaryAmmo=55
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=30
+    MaxPrimaryAmmo=40
+    MaxSecondaryAmmo=8
+    MaxTertiaryAmmo=20
 
     SecondarySpread=0.00165
     TertiarySpread=0.0013
@@ -58,7 +58,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ReloadStages(0)=(Sound=none) //~2.8 seconds reload for a lower caliber AT gun
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')

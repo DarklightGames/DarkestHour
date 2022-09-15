@@ -35,8 +35,8 @@ defaultproperties
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=15
     SecondarySpread=0.00125
 
     // Weapon fire
@@ -51,4 +51,6 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+
+    ResupplyInterval=3.0
 }

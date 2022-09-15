@@ -36,10 +36,10 @@ defaultproperties
     //nProjectileDescriptions(2)="BR-350P"
 
     InitialPrimaryAmmo=10
-    InitialSecondaryAmmo=20
+    InitialSecondaryAmmo=15
     //InitialTertiaryAmmo=0
-    MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=60
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=25
     //MaxTertiaryAmmo=0  //no APCR for zis3 because the gun is available since 1942, but APCR was only adopted in 1943.
     //Ideally it should be available on `43-`45 maps but i dont know a proper way to do this, so zis2 kinda "replaces" 76mm APCR shells in terms of gameplay for now
     SecondarySpread=0.002
@@ -48,8 +48,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01') // 3.75 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
@@ -74,4 +74,6 @@ defaultproperties
     RangeSettings(18)=3600
     RangeSettings(19)=3800
     RangeSettings(20)=4000
+
+    ResupplyInterval=7.5
 }
