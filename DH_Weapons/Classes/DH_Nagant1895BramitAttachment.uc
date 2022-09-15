@@ -8,7 +8,7 @@ class DH_Nagant1895BramitAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895Bramit_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895_icon'  //change
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895Bramit_icon'  
     mMuzFlashClass=none
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
