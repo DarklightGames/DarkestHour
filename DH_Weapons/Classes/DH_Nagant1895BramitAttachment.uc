@@ -5,6 +5,10 @@
 
 class DH_Nagant1895BramitAttachment extends DHWeaponAttachment;
 
+simulated function WeaponLight() //emptying this out to remove muzzle flash light
+{
+}
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895Bramit_3rd'
@@ -12,7 +16,7 @@ defaultproperties
     mMuzFlashClass=none
     ROShellCaseClass=none //its a revolver
     bRapidFire=false
-
+    
     WA_Idle="Idle"
     WA_IdleEmpty="Idle"
     WA_Fire="Idle"
