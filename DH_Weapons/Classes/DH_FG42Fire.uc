@@ -5,6 +5,30 @@
 
 class DH_FG42Fire extends DHAutomaticFire; // TODO: could maybe use DHFastAutoFire/DHHighROFWeaponAttachment as fires at 750 rpm (higher than PPs-43 SMG's 700 rpm, which does use fast auto)
 
+// Modifies to set the bolt mode based on the firing mode.
+function PlayFiring()
+{
+    local DH_FG42Weapon W;
+
+    super.PlayFiring();
+
+    W = DH_FG42Weapon(Weapon);
+
+    if (W != none)
+    {
+        if (W.GetFireMode(0).bWaitForRelease)
+        {
+            // Semi-automatic mode, closed bolt.
+            W.SetBoltMode(BM_Closed);
+        }
+        else
+        {
+            // Fully-automatic, open bolt.
+            W.SetBoltMode(BM_Open);
+        }
+    }
+}
+
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_FG42Bullet'
@@ -28,9 +52,14 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
 
-    BipodDeployFireAnim="deploy_shoot_loop"
-    BipodDeployFireLoopAnim="deploy_shoot_loop"
-    BipodDeployFireEndAnim="deploy_shoot_end"
+    // TODO: this "loop" nonsense is a headache! only fast-fire weapons should have looping fire animations
+    FireLoopAnim="shoot"
+    FireAnim="shoot"
+    FireIronLoopAnim="iron_shoot"
+    FireIronAnim="iron_shoot"
+
+    BipodDeployFireAnim="deploy_shoot"
+    BipodDeployFireLoopAnim="deploy_shoot"
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
