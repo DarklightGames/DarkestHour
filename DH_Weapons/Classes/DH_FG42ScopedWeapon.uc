@@ -50,7 +50,7 @@ defaultproperties
     ScopeOverlaySize=0.32
     IronSightDisplayFOV=50.0
     IronSightDisplayFOVHigh=50.0
-    ScopePortalFOV=14.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
-    ScopePortalFOVHigh=14.4
+    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.4
     LensMaterialID=6
 }
