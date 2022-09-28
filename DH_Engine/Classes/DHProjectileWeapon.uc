@@ -403,7 +403,10 @@ exec simulated function LogAmmo()
 // Called by animations to force the scope rendering.
 simulated event DHForceRenderScope()
 {
-    bForceRenderScope = true;
+    if (bHasScope)
+    {
+        bForceRenderScope = true;
+    }
 }
 
 simulated event RenderOverlays(Canvas Canvas)
