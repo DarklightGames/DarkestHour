@@ -35,6 +35,7 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_FG42Ammo'
     FireRate=0.075 // 888 rpm (value had to be found experimentally due to an engine bug)
     bHasSemiAutoFireRate=true
+    bWaitForRelease=true    // semi-automatic by default
     SemiAutoFireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
