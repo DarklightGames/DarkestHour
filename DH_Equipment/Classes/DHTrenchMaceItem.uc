@@ -66,8 +66,8 @@ defaultproperties
     CurrentRating=0.0
 
     AttachmentClass=class'DHShovelAttachment_US'
-    Mesh=SkeletalMesh'DH_Shovel_1st.grenademace'
-    //Skins(2)=Texture'DH_Equipment_tex.Shovels.US_shovel'
+    Mesh=SkeletalMesh'DH_Halloween_anm.grenademace'
+    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchMaceTexture''
     //HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.US_shovel_s'
     //bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=2
