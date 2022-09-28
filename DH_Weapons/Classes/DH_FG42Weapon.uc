@@ -105,7 +105,7 @@ defaultproperties
     MagPartialReloadAnims(0)="reload"
 
     // Bolt operation
-    BoltMode=BM_Open
+    BoltMode=BM_Closed
     BoltOpenSlot=0
     BoltClosedSlot=1
     BoltOpenBoneName="bolt_open"
