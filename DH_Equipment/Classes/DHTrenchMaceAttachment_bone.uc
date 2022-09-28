@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHTrenchMaceItem_Bone extends DHTrenchMaceItem;
+class DHTrenchMaceAttachment_bone extends DHShovelAttachment;
 
 defaultproperties
 {
-    AttachmentClass=class'DHTrenchMaceAttachment_bone'
-    Mesh=SkeletalMesh'DH_Halloween_anm.bonemace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.BoneClubTexture''
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.bonemace_3rd'
+    Skins(0)=Texture'DH_Halloween_tex.Maces.BoneClubTexture'
 }
