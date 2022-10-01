@@ -194,6 +194,19 @@ function DoTrace(vector Start, rotator Dir)
     }
 }
 
+function OnPawnDamaged() 
+{
+    local float PawnDamaged;
+
+
+    PawnDamaged = DoTrace.Hitpawn;
+
+    if (PawnDamaged)
+    {
+        log ("does this do anything?");
+    }
+}
+
 function Sound GetGroundStabSound(Actor HitActor, Material HitMaterial)
 {
     return default.GroundStabSound;
