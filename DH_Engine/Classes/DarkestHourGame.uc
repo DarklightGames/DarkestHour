@@ -52,16 +52,11 @@ var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
-
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
-const MAXINFLATED_INTERVALTIME =        100.0;  // The max value to add to reinforcement time for inflation for poor performance
-const ADDED_RESPAWN_TIME_PUNISHMENT =   20.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
 const PERFORMANCE_INFRACTION_MARGIN =   8;      // How many infractions allowed before the server receives a strike
 const PERFORMANCE_STRIKE_MARGIN =       2;      // How many strikes allowed before a MidGameVote is forced
 const PERFORMANCE_MERIT_MARGIN =        20;     // How many merits before it begins removing infractions
 const SPAWN_KILL_RESPAWN_TIME =         2;
-
-var     int                         ConsolidatedRespawnTimeAdded;           // Consolidated value which increases if the server behaves poorly which will add respawn time for the remainder of the level
 
 var     int                         PoorPerformanceInfractionCount;         // Number of infractions until respawn time is increased for the duration of the level, will reset after PERFORMANCE_STRIKE_MARGIN increments
 var     int                         PoorPerformanceStrikeCount;             // Number of times ConsolidatedRespawnTimeAdded has increased
@@ -528,10 +523,6 @@ event Tick(float DeltaTime)
             {
                 --PoorPerformanceInfractionCount;
             }
-
-            // Set normal + consolidated spawn intervals
-            GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
-            GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
         }
 
         if (bLogAverageTickRate)
@@ -597,8 +588,6 @@ function HandlePerformanceInfraction()
         }
         else // Otherwise its a strike and we increase respawn time until end of level & deal with server view distance
         {
-            ConsolidatedRespawnTimeAdded += ADDED_RESPAWN_TIME_PUNISHMENT;
-
             if (HandleServerViewDistance())
             {
                 Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times & lowering view distance until end of level!!!", 'Say');
@@ -611,10 +600,6 @@ function HandlePerformanceInfraction()
             PoorPerformanceInfractionCount = 0; // Reset infractions
         }
     }
-
-    // Handle Reinforcement Intervals
-    GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
-    GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
 }
 
 function bool HandleServerViewDistance()
