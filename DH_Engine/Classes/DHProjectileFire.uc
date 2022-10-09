@@ -799,7 +799,7 @@ defaultproperties
     PctProneRecoil=0.7
     PctProneIronRecoil=0.4
     PctRestDeployRecoil=0.5
-    PctBipodDeployRecoil=0.1
+    PctBipodDeployRecoil=0.07
     PctLeanPenalty=1.25
     RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))) // Default curve has no impact on recoil
     RecoilGainIncrementAmount=1.0
