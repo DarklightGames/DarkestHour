@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_ext'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.BrenGun'
+    Skins(0)=Texture'DH_Bren_tex.one.BrenWorld_D'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
