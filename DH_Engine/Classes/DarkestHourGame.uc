@@ -53,17 +53,9 @@ var     int                         SpawnsAtRoundStart[2];                  // N
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
-const PERFORMANCE_INFRACTION_MARGIN =   8;      // How many infractions allowed before the server receives a strike
-const PERFORMANCE_STRIKE_MARGIN =       2;      // How many strikes allowed before a MidGameVote is forced
-const PERFORMANCE_MERIT_MARGIN =        20;     // How many merits before it begins removing infractions
 const SPAWN_KILL_RESPAWN_TIME =         2;
 
-var     int                         PoorPerformanceInfractionCount;         // Number of infractions until respawn time is increased for the duration of the level, will reset after PERFORMANCE_STRIKE_MARGIN increments
-var     int                         PoorPerformanceStrikeCount;             // Number of times ConsolidatedRespawnTimeAdded has increased
-var     int                         GoodPerformanceMeritCount;              // Number of merits the server gets for having good performance, will reset if it receives an infraction
-
 var     bool                        bLogAverageTickRate;
-var     float                       ServerTickForInfraction;                // Value that determines when a server receives an infraction for having low ServerTickRateAverage
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 var     float                       ServerTickNextAverageTime;              // The next time at which to calculate the average tick rate
@@ -508,23 +500,6 @@ event Tick(float DeltaTime)
         // Update the server net health
         UpdateServerNetHealth();
 
-        // Is there a performance infraction?
-        if (ServerTickRateAverage < ServerTickForInfraction)
-        {
-            HandlePerformanceInfraction();
-        }
-        else
-        {
-            // No infraction, server is running at acceptable tick
-            ++GoodPerformanceMeritCount;
-
-            // If enough merits are received & there is an infraction floating around, remove it
-            if (GoodPerformanceMeritCount > PERFORMANCE_MERIT_MARGIN && PoorPerformanceInfractionCount > 0)
-            {
-                --PoorPerformanceInfractionCount;
-            }
-        }
-
         if (bLogAverageTickRate)
         {
             Log("Average Server Tick Rate:" @ ServerTickRateAverage);
@@ -554,70 +529,6 @@ function UpdateServerNetHealth()
     }
 
     GRI.ServerNetHealth = Combined;
-}
-
-// Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
-function HandlePerformanceInfraction()
-{
-    local float TickRatio;
-
-    // If not a dedicated server OR isn't running at normal gamespeed OR round is not in play OR we've already reached strike margin, then ignore
-    if (Level.NetMode != NM_DedicatedServer || GameSpeed != 1.0 || !IsInState('RoundInPlay') || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
-    {
-        return;
-    }
-
-    ++PoorPerformanceInfractionCount; // Count infractions
-    GoodPerformanceMeritCount = 0; // Remove merits because we got an infraction
-
-    // Calculate the ratio of how bad the average tick is compared to ServerTickForInfraction
-    TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInfraction;
-
-    // Do we have enough infractions for a strike?
-    if (PoorPerformanceInfractionCount > PERFORMANCE_INFRACTION_MARGIN)
-    {
-        ++PoorPerformanceStrikeCount;
-
-        Log("Server received a performance strike, please consider lowering max player slots or removing" @ class'DHLib'.static.GetMapName(Level) @ "from rotation!");
-
-        // If too many strikes, then lets just start a MidGameVote as no one is having fun
-        if (PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
-        {
-            Level.Game.Broadcast(self, "This server and/or level is under performing, starting a mid-game-vote", 'Say');
-            MidGameVote();
-        }
-        else // Otherwise its a strike and we increase respawn time until end of level & deal with server view distance
-        {
-            if (HandleServerViewDistance())
-            {
-                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times & lowering view distance until end of level!!!", 'Say');
-            }
-            else
-            {
-                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
-            }
-
-            PoorPerformanceInfractionCount = 0; // Reset infractions
-        }
-    }
-}
-
-function bool HandleServerViewDistance()
-{
-    local DHZoneInfo Z;
-    local bool bChangedFogDistance;
-
-    foreach DynamicActors(class'DHZoneInfo', Z)
-    {
-        if (Z.bUseDynamicFogDistance)
-        {
-            // Set the fog distance to 33% less for each strike (1 strikes = 66% distance, 2 strikes = 33% distance)
-            Z.SetFogDistanceWithRatio(1.0 - (PoorPerformanceStrikeCount * 0.33));
-            bChangedFogDistance = true;
-        }
-    }
-
-    return bChangedFogDistance;
 }
 
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
@@ -5816,8 +5727,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
 defaultproperties
 {
-    ServerTickForInfraction=17.0
-
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
