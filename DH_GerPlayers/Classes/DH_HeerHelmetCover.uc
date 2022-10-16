@@ -5,11 +5,6 @@
 
 class DH_HeerHelmetCover extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaCam1');
-}
-
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_HelmetCover'

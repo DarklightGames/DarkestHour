@@ -152,6 +152,6 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     InstantaneousAngularAcceleration = 0;
 
     // Set the bone's rotation
-    BipodBoneRotation.Pitch = class'UUnits'.static.RadiansToUnreal(Angle);
+    BipodBoneRotation.Pitch = class'UUnits'.static.RadiansToUnreal(Angle * Settings.AngleFactor);
     Weapon.SetBoneRotation(Settings.BipodBoneName, BipodBoneRotation);
 }

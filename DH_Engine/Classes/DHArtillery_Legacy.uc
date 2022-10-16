@@ -43,14 +43,6 @@ function PostBeginPlay()
         return;
     }
 
-    // Set the team index based on the team of the authoring player.
-    Requester = PlayerController(Owner);
-
-    if (Requester != none)
-    {
-        SetTeamIndex(Requester.GetTeamNum());
-    }
-
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 

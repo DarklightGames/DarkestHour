@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_WSSGreatcoatOfficer extends DHDeprecated;
-
-defaultproperties
-{
-}

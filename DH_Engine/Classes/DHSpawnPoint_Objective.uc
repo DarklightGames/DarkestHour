@@ -37,6 +37,11 @@ simulated function bool CanSpawnVehicles()
     return bHasVehicleLocationHints;
 }
 
+simulated function int GetDesirability()
+{
+    return 2;
+}
+
 defaultproperties
 {
     SpawnPointStyle="DHObjectiveSpawnButtonStyle"

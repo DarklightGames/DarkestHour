@@ -36,7 +36,3 @@ simulated function AnimEnd(int Channel)
         super.AnimEnd(channel);
     }
 }
-
-defaultproperties
-{
-}

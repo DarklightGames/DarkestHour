@@ -21,6 +21,10 @@ defaultproperties
     Skins(0)=Texture'DHUSCharactersTex.us_heads.WinterFace2'
     Skins(1)=Texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
 
+// Same texture declared twice as this role has only one texture variant, necessary due to AmericanPawn inheritance
+	BodySkins(0)=Texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
+    BodySkins(1)=Texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
+
     bReversedSkinsSlots=true
 
     FaceSkins(0)=Texture'DHUSCharactersTex.us_heads.WinterFace1'

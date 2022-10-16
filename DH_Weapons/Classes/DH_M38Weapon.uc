@@ -8,14 +8,14 @@ class DH_M38Weapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Mosin M38 Carbine"
-    SwayModifyFactor=0.55  // -0.05
+    SwayModifyFactor=0.52  // -0.08
     FireModeClass(0)=class'DH_Weapons.DH_M38Fire'
     FireModeClass(1)=class'DH_Weapons.DH_M38MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M38Attachment'
     PickupClass=class'DH_Weapons.DH_M38Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_Carbine_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

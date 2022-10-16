@@ -35,10 +35,10 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.05
-    PctBipodDeployRecoil=0.075 // 0.1 by default
-    MaxVerticalRecoilAngle=840  // these values are high because of custom recoil modifier for bipod being 0.075
-    MaxHorizontalRecoilAngle=340
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=10.0,OutVal=1.3),(InVal=16.0,OutVal=0.8),(InVal=10000000000.0,OutVal=1.0)))
+    PctBipodDeployRecoil=0.1
+    MaxVerticalRecoilAngle=540 
+    MaxHorizontalRecoilAngle=265
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=8.0,OutVal=1.1),(InVal=14.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0
 
@@ -56,15 +56,15 @@ defaultproperties
     BipodDeployFireLastAnim="deploy_shoot_last"
 
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
-    //ShellIronSightOffset=(X=15.0,Y=0.0,Z=-5.0)   ejector bone was repositioned, so outcommented those
-    //ShellHipOffset=(X=-20.0,Y=0.0,Z=0.0)
+    ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
+    ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
     ShellRotOffsetIron=(Pitch=-16384)  
     ShellRotOffsetHip=(Pitch=-16384)
 
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=1.0
-    ShakeRotMag=(X=75.0,Y=50.0,Z=150.0)
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=0.5
+    ShakeRotTime=1.2
 }

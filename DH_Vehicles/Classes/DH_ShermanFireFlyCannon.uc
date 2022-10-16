@@ -52,7 +52,7 @@ defaultproperties
     MaxPrimaryAmmo=48
     MaxSecondaryAmmo=5
     MaxTertiaryAmmo=24
-    SecondarySpread=0.006
+    SecondarySpread=0.002 // was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00156
 
     // Coaxial MG ammo

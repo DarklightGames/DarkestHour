@@ -17,7 +17,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 defaultproperties
 {
     ItemName="M1 Carbine"
-    SwayModifyFactor=0.55 // -0.35  because it was a very light carbine
+    SwayModifyFactor=0.45 // -0.25  because it was a very light carbine
     FireModeClass(0)=class'DH_Weapons.DH_M1CarbineFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1CarbineMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1CarbineAttachment'

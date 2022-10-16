@@ -288,6 +288,9 @@ defaultproperties
     bSavedEngineOff=false
     MaxDesireability=1.9
 
+    // Spawning
+    bHasSpawnKillPenalty=false
+
     // Hull mesh
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'

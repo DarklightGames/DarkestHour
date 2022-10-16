@@ -13,7 +13,6 @@ defaultproperties
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_30calBullet'
     bUsesTracers=true

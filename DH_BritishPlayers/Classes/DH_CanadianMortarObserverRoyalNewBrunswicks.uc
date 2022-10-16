@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_CanadianMortarObserverRoyalNewBrunswicks extends DHDeprecated;
-
-defaultproperties
-{
-}

@@ -48,8 +48,3 @@ function OnOptionSelected(int Index)
 
     super.OnOptionSelected(Index);
 }
-
-defaultproperties
-{
-}
-

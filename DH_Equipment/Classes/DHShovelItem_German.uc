@@ -10,7 +10,7 @@ defaultproperties
     AttachmentClass=class'DHShovelAttachment_German'
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_German'
     Skins(2)=Texture'DH_Equipment_tex.Shovels.German_shovel'
-    HighDetailOverlay=shader'DH_Equipment_tex.Shovels.German_shovel_s'
+    HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.German_shovel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }

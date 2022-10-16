@@ -12,7 +12,7 @@ defaultproperties
     ExhaustDamageType=class'DH_Weapons.DH_PanzerschreckExhaustDamType'
     ExhaustDamage=210.0
     ExhaustLength=280.0
-    Spread=510.0
+    Spread=300.0
 
     MuzzleBone="muzzle" //"warhead1"
 

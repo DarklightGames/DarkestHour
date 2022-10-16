@@ -5,12 +5,37 @@
 
 class DH_PIATWeapon extends DHRocketWeapon;
 
+// Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to iron sights without deploying if weapon allows it
+simulated function ROIronSights()
+{
+    local DHPlayer PC;
+
+    if (bCanBipodDeploy && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
+    {
+        if (Instigator.IsLocallyControlled())
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
+            {
+                return;
+            }
+        }
+
+        Deploy();
+    }
+    else if (bCanUseIronsights || bCanFireFromHip)
+    {
+        PerformZoom(!bUsingSights);
+    }
+}
+
+
 defaultproperties
 {
     ItemName="PIAT"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
     PickupClass=class'DH_Weapons.DH_PIATPickup'
 

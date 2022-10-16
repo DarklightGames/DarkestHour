@@ -3,9 +3,4 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHCWMachineGunnerRoles extends DHDeprecated
-    abstract;
-
-defaultproperties
-{
-}
+class DHCWMachineGunnerRoles extends DHDeprecated;

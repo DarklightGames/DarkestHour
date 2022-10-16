@@ -17,7 +17,8 @@ enum EAlliedNation
     NATION_Britain,
     NATION_Canada,
     NATION_USSR,
-    NATION_Poland
+    NATION_Poland,
+    NATION_Czechoslovakia
 };
 
 enum ESpawnMode
@@ -67,7 +68,6 @@ var(DH_Nation) sound                AxisWinsMusic;                  // Optional 
 var(DH_Nation) sound                AlliesWinsMusic;                // Optional override for Allies victory music
 
 var(DH_Munitions) float             BaseMunitionPercentages[2];     // The starting munition percentage for each team
-var(DH_Munitions) float             FinalMunitionPercentages[2];    // The minimum munition percentage each team can drop to
 
 var(DH_GameSettings) float                          AlliesToAxisRatio;              // Player ratio based on team, allows for unbalanced teams
 var(DH_GameSettings) bool                           bHardTeamRatio;                 // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
@@ -162,7 +162,15 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
     return Limit;
 }
 
-static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
+simulated function class<DHArtillery> GetArtilleryClass(int ArtilleryTypeIndex)
+{
+    if (ArtilleryTypeIndex >= 0 && ArtilleryTypeIndex < ArtilleryTypes.Length)
+    {
+        return ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+    }
+}
+
+simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;
     local DHPlayer PC;
@@ -217,9 +225,6 @@ defaultproperties
 
     BaseMunitionPercentages(0)=60.0
     BaseMunitionPercentages(1)=60.0
-
-    FinalMunitionPercentages(0)=40.0
-    FinalMunitionPercentages(1)=40.0
 
     bIsDangerZoneInitiallyEnabled=true
     DangerZoneNeutral=128

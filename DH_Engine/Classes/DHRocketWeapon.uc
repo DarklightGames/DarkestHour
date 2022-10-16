@@ -42,10 +42,18 @@ replication
         ClientDoAssistedReload;
 }
 
-// Overridden to cycle the weapon aiming range
-simulated exec function SwitchFireMode()
+exec simulated function DebugAssistReloading()
 {
-    if (bUsingSights || IsInstigatorBipodDeployed() && !IsBusy())
+    if (Level.NetMode == NM_Standalone)
+    {
+        AssistedReload();
+    }
+}
+
+// Overridden to cycle the weapon aiming range
+exec simulated function SwitchFireMode()
+{
+    if (!IsBusy() && (bUsingSights || IsInstigatorBipodDeployed()))
     {
         RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeding last range setting
 
@@ -346,6 +354,19 @@ simulated state AssistedReloading extends Reloading
 
         PlayAnimAndSetTimer(RangeSettings[RangeIndex].AssistedReloadAnim, 1.0, 0.1);
     }
+    
+    // HACK: Just play the idle anims as normal.
+    simulated function PlayIdle()
+    {
+        global.PlayIdle();
+    }
+
+    simulated function bool ShouldDrawPortal()
+    {
+        // The sight won't be moving that much, so just draw the portal.
+        // Looks weird otherwise!
+        return true;
+    }
 
 // Emptied to avoid taking player out of ironsights when someone else is loading them
 Begin:
@@ -522,7 +543,7 @@ simulated function QueueFiringRangeHint()
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state IronSightZoomIn
+simulated state IronSightZoomIn
 {
     simulated function BeginState()
     {
@@ -534,7 +555,7 @@ state IronSightZoomIn
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state DeployingBipod
+simulated state DeployingBipod
 {
     simulated function BeginState()
     {
@@ -551,7 +572,7 @@ defaultproperties
     WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
 
     IronSightDisplayFOV=25.0
-    FreeAimRotationSpeed=7.5
+    FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=2
     InitialNumPrimaryMags=2

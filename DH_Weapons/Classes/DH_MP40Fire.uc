@@ -9,12 +9,12 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
     AmmoClass=class'DH_Weapons.DH_MP40Ammo'
-    FireRate=0.135 // ~490rpm (value had to be found experimentally due to an engine bug)
+    FireRate=0.13 // ~512rpm (value had to be found experimentally due to an engine bug)
     Spread=125.0
 
     // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=220
+    MaxVerticalRecoilAngle=225
     MaxHorizontalRecoilAngle=70
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.6),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=14.0

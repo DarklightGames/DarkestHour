@@ -19,6 +19,7 @@ var         byte        CurrentMagCount;            // current number of magazin
 var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
 var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
 var         int         CurrentMagIndex;            // the index of the magazine currently in use
+var         int         NextMagAmmoCount;           // the amount of ammo being loaded into the next magazine
 var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
 var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
 var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
@@ -153,7 +154,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed, BarrelTemperature;
+        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed, BarrelTemperature, NextMagAmmoCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -339,7 +340,7 @@ function ServerWorkBolt()
 }
 
 // Debug logging to show how much ammo we have in our mags
-simulated exec function LogAmmo()
+exec simulated function LogAmmo()
 {
     local int i, TotalAmmoCount;
 
@@ -867,7 +868,7 @@ simulated state LoweringWeapon
     }
 
     // Don't allow the bayo to be attached while lowering the weapon
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
     }
 
@@ -1146,7 +1147,7 @@ simulated function ShowBayonet()
 }
 
 // Triggered by deploy keybind & attempts to deploy the bipod or attach/detach any bayonet
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
     local DHPlayer PC;
     local bool bNewDeployedStatus;
@@ -1488,24 +1489,12 @@ Begin:
 //=============================================================================
 
 // Triggered by ironsights keybind & toggles ironsights/bipod undeployment
-// Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
 {
-    local DHPlayer PC;
-
-    if (bCanBipodDeploy && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
+    if (bCanBipodDeploy && Instigator != none && Instigator.bBipodDeployed)
     {
-        if (Instigator.IsLocallyControlled())
-        {
-            PC = DHPlayer(Instigator.Controller);
-
-            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
-            {
-                return;
-            }
-        }
-
-        Deploy();
+        // Bipod is deployed, let's undeploy it.
+        ForceUndeploy();
     }
     else if (bCanUseIronsights || bCanFireFromHip)
     {
@@ -2028,7 +2017,7 @@ simulated function bool AllowReload()
 }
 
 // Triggered by reload keybind & attempts to reload the weapon
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (AllowReload())
     {
@@ -2116,6 +2105,19 @@ simulated state Reloading extends WeaponBusy
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleStandardReload();
+        }
+
+        if (Role == ROLE_Authority)
+        {
+            // Update the ammo count for the next magazine so that the client knows.
+            // This is needed for magazines that appear differently depending on
+            // how much ammo is in the magazine (e.g., DP-27).
+            NextMagAmmoCount = PrimaryAmmoArray[GetNextMagIndex()];
+
+            if (AmmoAmount(0) > 0 && bPlusOneLoading)
+            {
+                NextMagAmmoCount += 1;
+            }
         }
 
         PlayReload();
@@ -2325,7 +2327,7 @@ simulated function PlayReload()
 // Gets the index of the fullest magazine that is not our current magazine.
 // This magazine index will be the next one loaded into the weapon if a
 // a reload were to happen.
-simulated function int GetNextMagIndex()
+function int GetNextMagIndex()
 {
     local int i, MaxCount, MagIndex;
 
@@ -2345,7 +2347,7 @@ simulated function int GetNextMagIndex()
 }
 
 // Gets the index of the fullest "magazine", including the current magazine
-simulated function int GetFullestMagIndex()
+function int GetFullestMagIndex()
 {
     local int i, MaxCount, MagIndex;
 
@@ -2841,7 +2843,7 @@ simulated function Fire(float F)
 //=============================================================================
 
 // Triggered by change barrel keybind & attempts to swap over the barrels
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     if (AllowBarrelChange())
     {
@@ -3317,7 +3319,7 @@ simulated function EAxis AxisFromString(string S)
     else return AXIS_X;
 }
 
-simulated exec function BarrelRollAxis(string AxisString)
+exec simulated function BarrelRollAxis(string AxisString)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3325,7 +3327,7 @@ simulated exec function BarrelRollAxis(string AxisString)
     }
 }
 
-simulated exec function BarrelPitchAxis(string AxisString)
+exec simulated function BarrelPitchAxis(string AxisString)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3333,7 +3335,7 @@ simulated exec function BarrelPitchAxis(string AxisString)
     }
 }
 
-simulated exec function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
+exec simulated function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSettings != none)
     {
@@ -3343,7 +3345,7 @@ simulated exec function BarrelRotationOffset(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function BipodArmLength(float V)
+exec simulated function BipodArmLength(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3351,7 +3353,7 @@ simulated exec function BipodArmLength(float V)
     }
 }
 
-simulated exec function BipodAngularDamping(float V)
+exec simulated function BipodAngularDamping(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3359,7 +3361,7 @@ simulated exec function BipodAngularDamping(float V)
     }
 }
 
-simulated exec function BipodGravityScale(float V)
+exec simulated function BipodGravityScale(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3367,7 +3369,7 @@ simulated exec function BipodGravityScale(float V)
     }
 }
 
-simulated exec function BipodYawDeltaFactor(float V)
+exec simulated function BipodYawDeltaFactor(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3375,7 +3377,7 @@ simulated exec function BipodYawDeltaFactor(float V)
     }
 }
 
-simulated exec function BipodAngularVelocityThreshold(float V)
+exec simulated function BipodAngularVelocityThreshold(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
@@ -3383,11 +3385,23 @@ simulated exec function BipodAngularVelocityThreshold(float V)
     }
 }
 
-simulated exec function BipodCoefficientOfRestitution(float V)
+exec simulated function BipodCoefficientOfRestitution(float V)
 {
     if (Level.NetMode == NM_Standalone && BipodPhysicsSimulation != none)
     {
         BipodPhysicsSimulation.Settings.CoefficientOfRestitution = V;
+    }
+}
+
+exec simulated function DebugAddedPitch(int AddedPitch)
+{
+    // Added to debug the distance zeroing.
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (DHProjectileFire(FireMode[0]) != none)
+        {
+            DHProjectileFire(FireMode[0]).AddedPitch = AddedPitch;
+        }
     }
 }
 

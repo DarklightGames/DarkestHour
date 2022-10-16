@@ -27,7 +27,7 @@ defaultproperties
     MaxPrimaryAmmo=66
     MaxSecondaryAmmo=10
     MaxTertiaryAmmo=20
-    SecondarySpread=0.0048 // become APDS instead of HE
+    SecondarySpread=0.002 //become APDS instead of HE, was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00125
     WeaponFireOffset=19.0 // different from US 57mm AT gun due to 6 pdr's muzzle brake
     AddedPitch=50

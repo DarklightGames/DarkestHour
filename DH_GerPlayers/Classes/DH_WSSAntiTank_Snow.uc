@@ -13,5 +13,6 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    HandType=Hand_Gloved
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Winter"
+    HandType=HAND_Gloved
 }

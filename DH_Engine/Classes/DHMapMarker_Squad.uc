@@ -20,7 +20,6 @@ static function OnMapMarkerPlaced(DHPlayer PC, DHGameReplicationInfo.MapMarker M
 
 defaultproperties
 {
-    BroadcastedMessageIndex=0
     GroupIndex=0
     bShouldShowOnCompass=true
     Type=MT_Movement

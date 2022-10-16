@@ -10,6 +10,7 @@ var     name        PA_MortarDeployAnim;
 var     name        WA_MortarDeployAnim;
 
 var     name        PA_AssistedReloadAnim;
+var     name        PA_ProneAssistedReloadAnim;
 var     name        PA_CrouchReloadAnim;
 var     name        PA_CrouchReloadEmptyAnim;
 var     name        WA_CrouchReload;
@@ -20,7 +21,6 @@ var     name        WA_BayonetCrouchReloadEmpty;
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
 
-var     bool        bBarrelCanOverheat;
 var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;
@@ -28,6 +28,10 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // Unfortunately, we don't have access to these models any more so we can't fix them.
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
+
+// Mesh offsets for when the weapon is on the back.
+var     vector  BackAttachmentLocationOffset;
+var     rotator BackAttachmentRotationOffset;
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
@@ -569,4 +573,39 @@ defaultproperties
     PA_LimpIronAnims(5)=""
     PA_LimpIronAnims(6)=""
     PA_LimpIronAnims(7)=""
+
+    // Override player movement anims inherited from ROWeaponAttachment that don't exist
+    PA_MovementAnims(0)="stand_jogF_kar"
+    PA_MovementAnims(1)="stand_jogB_kar"
+    PA_MovementAnims(2)="stand_jogL_kar"
+    PA_MovementAnims(3)="stand_jogR_kar"
+    PA_MovementAnims(4)="stand_jogFL_kar"
+    PA_MovementAnims(5)="stand_jogFR_kar"
+    PA_MovementAnims(6)="stand_jogBL_kar"
+    PA_MovementAnims(7)="stand_jogBR_kar"
+
+    PA_SprintAnims(0)="stand_sprintF_kar"
+    PA_SprintAnims(1)="stand_sprintB_kar"
+    PA_SprintAnims(2)="stand_sprintL_kar"
+    PA_SprintAnims(3)="stand_sprintR_kar"
+    PA_SprintAnims(4)="stand_sprintFL_kar"
+    PA_SprintAnims(5)="stand_sprintFR_kar"
+    PA_SprintAnims(6)="stand_sprintBL_kar"
+    PA_SprintAnims(7)="stand_sprintBR_kar"
+
+    PA_WalkIronAnims(0)="stand_walkFiron_kar"
+    PA_WalkIronAnims(1)="stand_walkBiron_kar"
+    PA_WalkIronAnims(2)="stand_walkLiron_kar"
+    PA_WalkIronAnims(3)="stand_walkRiron_kar"
+    PA_WalkIronAnims(4)="stand_walkFLiron_kar"
+    PA_WalkIronAnims(5)="stand_walkFRiron_kar"
+    PA_WalkIronAnims(6)="stand_walkBLiron_kar"
+    PA_WalkIronAnims(7)="stand_walkBRiron_kar"
+
+    PA_IdleRestAnim="stand_idlehip_kar"
+    PA_IdleWeaponAnim="stand_idlehip_kar"
+    PA_IdleIronRestAnim="stand_idleiron_kar"
+    PA_IdleIronWeaponAnim="stand_idleiron_kar"
+
+    PA_StandToProneAnim="StandtoProne_kar"
 }

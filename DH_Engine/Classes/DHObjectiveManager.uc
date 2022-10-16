@@ -81,7 +81,3 @@ function ObjectiveStateChanged()
         }
     }
 }
-
-defaultproperties
-{
-}

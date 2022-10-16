@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_CanadianPlatoonMGRoyalNewBrunswicks extends DHDeprecated;
-
-defaultproperties
-{
-}

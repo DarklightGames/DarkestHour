@@ -32,7 +32,7 @@ defaultproperties
     RecoilRate=0.1
     MaxVerticalRecoilAngle=688
     MaxHorizontalRecoilAngle=140
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.1),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.1),(InVal=16.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
@@ -53,6 +53,10 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     bReverseShellSpawnDirection=true
 
-    ShakeRotMag=(X=45.0,Y=30.0,Z=120.0)
-    ShakeRotTime=0.75
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

@@ -52,16 +52,11 @@ var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
-
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
-const MAXINFLATED_INTERVALTIME =        100.0;  // The max value to add to reinforcement time for inflation for poor performance
-const ADDED_RESPAWN_TIME_PUNISHMENT =   20.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
 const PERFORMANCE_INFRACTION_MARGIN =   8;      // How many infractions allowed before the server receives a strike
 const PERFORMANCE_STRIKE_MARGIN =       2;      // How many strikes allowed before a MidGameVote is forced
 const PERFORMANCE_MERIT_MARGIN =        20;     // How many merits before it begins removing infractions
 const SPAWN_KILL_RESPAWN_TIME =         2;
-
-var     int                         ConsolidatedRespawnTimeAdded;           // Consolidated value which increases if the server behaves poorly which will add respawn time for the remainder of the level
 
 var     int                         PoorPerformanceInfractionCount;         // Number of infractions until respawn time is increased for the duration of the level, will reset after PERFORMANCE_STRIKE_MARGIN increments
 var     int                         PoorPerformanceStrikeCount;             // Number of times ConsolidatedRespawnTimeAdded has increased
@@ -117,6 +112,7 @@ enum EArtilleryResponseType
     RESPONSE_BadLocation,
     RESPONSE_NoTarget,
     RESPONSE_NotQualified,
+    RESPONSE_NotEnoughSquadMembers,
     RESPONSE_TooSoon,
     RESPONSE_BadRequest
 };
@@ -527,10 +523,6 @@ event Tick(float DeltaTime)
             {
                 --PoorPerformanceInfractionCount;
             }
-
-            // Set normal + consolidated spawn intervals
-            GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
-            GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
         }
 
         if (bLogAverageTickRate)
@@ -596,8 +588,6 @@ function HandlePerformanceInfraction()
         }
         else // Otherwise its a strike and we increase respawn time until end of level & deal with server view distance
         {
-            ConsolidatedRespawnTimeAdded += ADDED_RESPAWN_TIME_PUNISHMENT;
-
             if (HandleServerViewDistance())
             {
                 Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times & lowering view distance until end of level!!!", 'Say');
@@ -610,10 +600,6 @@ function HandlePerformanceInfraction()
             PoorPerformanceInfractionCount = 0; // Reset infractions
         }
     }
-
-    // Handle Reinforcement Intervals
-    GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
-    GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
 }
 
 function bool HandleServerViewDistance()
@@ -784,7 +770,7 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
             }
             else if (NextDist < 3000.0 && FastTrace(N.Location, OtherPlayer.Pawn.Location))
             {
-                Score -= (10000.0 - NextDist);
+                Score -= 10000.0 - NextDist;
             }
             else if (NumPlayers + NumBots == 2)
             {
@@ -1005,9 +991,9 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     }
     else
     {
-        TeamSizeFactor = ((float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5));
-        TeamRatios[0] = (TeamSizeFactor + 0.5);
-        TeamRatios[1] = (1.0 - (TeamSizeFactor + 0.5));
+        TeamSizeFactor = (float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5);
+        TeamRatios[0] = TeamSizeFactor + 0.5;
+        TeamRatios[1] = 1.0 - (TeamSizeFactor + 0.5);
     }
 
     TeamSizeRatings[0] = TeamRatios[0] * TeamSizes[0];
@@ -1353,7 +1339,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    bSpectator = (ParseOption(Options, "SpectatorOnly") ~= "1");
+    bSpectator = ParseOption(Options, "SpectatorOnly") ~= "1";
 
     if (AccessControl != none)
     {
@@ -2782,6 +2768,8 @@ state RoundInPlay
 
         UpdateArtilleryAvailability();
         UpdateAllPlayerScores();
+
+        SquadReplicationInfo.ResetSquadNextRallyPointTimes();
     }
 
     // Modified for DHObjectives
@@ -3110,9 +3098,6 @@ state RoundInPlay
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
             }
         }
-
-        // Update munition percentages (this will update both team's munitions and set them in GRI)
-        UpdateMunitionPercentages();
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -3610,7 +3595,7 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
                                             PC.GetRoleInfo() == GRI.DHAxisRoles[Index]))
             {
                 DHPlayerReplicationInfo(PC.PlayerReplicationInfo).RoleInfo = none;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
 
                 if (i >= RoleCount - NewLimit)
                 {
@@ -4332,7 +4317,7 @@ function PlayerLeftTeam(PlayerController P)
         PC.bWeaponsSelected = false;
         PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
         PC.SpawnPointIndex = -1;
-        PC.bSpawnPointInvalidated = true;
+        PC.bSpawnParametersInvalidated = true;
 
         ClearSavedRequestsAndRallyPoints(PC, false);
     }
@@ -4457,37 +4442,6 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     {
         PC.DHPrimaryWeapon = PC.PrimaryWeapon;
         PC.DHSecondaryWeapon = PC.SecondaryWeapon;
-    }
-}
-
-function UpdateMunitionPercentages()
-{
-    local int i;
-    local float MunitionDifference, ElapsedRatio;
-
-    if (GRI == none)
-    {
-        return;
-    }
-
-    // Calculate and set the Munition Percentages for each team
-    for (i = 0; i < 2; ++i)
-    {
-        ElapsedRatio = FClamp(((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0) / 60.0, 0.0, 1.0);
-
-        // If Base > Final (aka ammo goes down)
-        if (DHLevelInfo.BaseMunitionPercentages[i] > DHLevelInfo.FinalMunitionPercentages[i])
-        {
-            MunitionDifference = DHLevelInfo.BaseMunitionPercentages[i] - DHLevelInfo.FinalMunitionPercentages[i];
-
-            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] - (MunitionDifference * ElapsedRatio);
-        }
-        else // Ammo is going up over time
-        {
-            MunitionDifference = DHLevelInfo.FinalMunitionPercentages[i] - DHLevelInfo.BaseMunitionPercentages[i];
-
-            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] + (MunitionDifference * ElapsedRatio);
-        }
     }
 }
 
@@ -5790,10 +5744,15 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         // This type of artillery cannot be requested yet.
         Response.Type = RESPONSE_TooSoon;
     }
-    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(Request.Sender))
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasQualificationToRequest(Request.Sender))
     {
         // The requesting player is unqualified to request this artillery.
         Response.Type = RESPONSE_NotQualified;
+    }
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.HasEnoughSquadMembersToRequest(Request.Sender))
+    {
+        // The requesting player doesn't have enough members in his squad.
+        Response.Type = RESPONSE_NotEnoughSquadMembers;
     }
     else if (Request.Location == vect(0,0,0))
     {
@@ -5954,9 +5913,9 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=10
-        Minor=4
-        Patch=0
+        Major=11
+        Minor=0
+        Patch=2
         Prerelease=""
     End Object
     Version=VersionObject

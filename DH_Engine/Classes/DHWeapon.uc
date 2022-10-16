@@ -465,7 +465,7 @@ simulated state RaisingWeapon
 {
     simulated function bool IsBusy()
     {
-        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+        return Mesh != none && HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
     }
 
     simulated function EndState()
@@ -978,7 +978,7 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
-simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+exec simulated function SetPlayerViewOffset(int X, int Y, int Z)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -1049,7 +1049,7 @@ simulated function HandleSleeveSwapping()
 defaultproperties
 {
     // Sway modifiers
-    SwayModifyFactor=0.8
+    SwayModifyFactor=0.7
     SwayNotMovingModifier=0.5
     SwayRestingModifier=0.25
     SwayCrouchedModifier=0.9

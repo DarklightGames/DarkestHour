@@ -30,7 +30,8 @@ defaultproperties
     PctRestDeployRecoil=0.6  //0.5
     
     FireIronLoopAnim="scope_Shoot_Loop"
-    FireIronEndAnim="scope_Shoot_End"
+    FireIronEndAnim="scope_Shoot_end"
+    FireIronAnim="scope_Shoot_Loop"
     
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'

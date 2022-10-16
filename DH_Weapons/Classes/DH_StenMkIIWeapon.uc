@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.StenMk2_mesh'
-    //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
+    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
@@ -22,7 +22,7 @@ defaultproperties
     HandNum=0
     SleeveNum=1
 
-    SwayModifyFactor=0.69 // -0.11
+    SwayModifyFactor=0.59 // -0.11
 
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0

@@ -44,7 +44,7 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    SwayModifyFactor=0.9 // +0.1
+    SwayModifyFactor=0.83 // +0.13
     ItemName="PPSh-41"
 
     FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'
@@ -53,7 +53,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-1st'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

@@ -26,13 +26,13 @@ defaultproperties
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
     //Penetration
-    DHPenetrationTable(0)=9.8
-    DHPenetrationTable(1)=9.8
-    DHPenetrationTable(2)=9.8
-    DHPenetrationTable(3)=9.8
-    DHPenetrationTable(4)=9.8
-    DHPenetrationTable(5)=9.8
-    DHPenetrationTable(6)=9.8
+    DHPenetrationTable(0)=12.6
+    DHPenetrationTable(1)=12.6
+    DHPenetrationTable(2)=12.6
+    DHPenetrationTable(3)=12.6
+    DHPenetrationTable(4)=12.6
+    DHPenetrationTable(5)=12.6
+    DHPenetrationTable(6)=12.6
 
     //Sounds
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
@@ -43,6 +43,6 @@ defaultproperties
     VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
 
     ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
 }

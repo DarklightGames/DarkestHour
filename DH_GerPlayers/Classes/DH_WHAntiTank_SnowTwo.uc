@@ -18,5 +18,6 @@ defaultproperties
     HeadgearProbabilities(1)=0.25
     HeadgearProbabilities(2)=0.3
     HeadgearProbabilities(3)=0.05
-    HandType=Hand_Gloved
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Winter"
+    HandType=HAND_Gloved
 }

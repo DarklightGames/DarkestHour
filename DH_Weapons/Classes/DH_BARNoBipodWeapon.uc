@@ -69,6 +69,7 @@ defaultproperties
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
+    NumMagsToResupply=3
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"

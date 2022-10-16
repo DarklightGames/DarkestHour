@@ -5,7 +5,4 @@
 
 class DH_RKKA_TanTelogreikaSquadLeader extends DH_RKKA_TanTelogreikaSquadLeaderEarly;  //eventually should be deleted to avoid confusion
 
-defaultproperties
-{
 
-}

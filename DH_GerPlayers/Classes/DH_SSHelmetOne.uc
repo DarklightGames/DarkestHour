@@ -5,11 +5,6 @@
 
 class DH_SSHelmetOne extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
-}
-
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ger_helmet_alt'

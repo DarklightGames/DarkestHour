@@ -4,7 +4,3 @@
 //==============================================================================
 
 class DH_BritishPlatoonMGWorcesters extends DHDeprecated;
-
-defaultproperties
-{
-}

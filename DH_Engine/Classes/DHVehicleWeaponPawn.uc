@@ -2021,7 +2021,7 @@ function int LocalLimitPitch(int pitch)
 
 // New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
 // CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
-simulated exec function ToggleVehicleLock()
+exec simulated function ToggleVehicleLock()
 {
     local DHArmoredVehicle AV;
 
@@ -2428,19 +2428,19 @@ exec function SetSoundRadius(float NewValue)
 }
 
 // New debug exec to adjust all the view shake settings
-exec function SetShake(float RotMag, float RotRate, float RotTime, float OffMag, float OffRate, float OffTime)
+exec function SetShake(string RotMag, string RotRate, string RotTime, string OffMag, string OffRate, string OffTime)
 {
     if (IsDebugModeAllowed() && Gun != none)
     {
         log(Gun.Tag @ "ShakeRotMag =" @ RotMag @ "ShakeRotRate =" @ RotRate @ "ShakeRotTime =" @ RotTime @ "ShakeOffsetMag =" @ OffMag @ "ShakeOffsetRate =" @ OffRate @ "ShakeOffsetTime =" @ OffTime
             @ "  Rot was" @ Gun.ShakeRotMag.Z @ Gun.ShakeRotRate.Z @ Gun.ShakeRotTime @ "  Offset was" @ Gun.ShakeOffsetMag.Z @ Gun.ShakeOffsetRate.Z @ Gun.ShakeOffsetTime);
 
-        Gun.ShakeRotMag.Z = RotMag;
-        Gun.ShakeRotRate.Z = RotRate;
-        Gun.ShakeRotTime = RotTime;
-        Gun.ShakeOffsetMag.Z = OffMag;
-        Gun.ShakeOffsetRate.Z = OffRate;
-        Gun.ShakeOffsetTime = OffTime;
+        Gun.ShakeRotMag.Z = float(RotMag);
+        Gun.ShakeRotRate.Z = float(RotRate);
+        Gun.ShakeRotTime = float(RotTime);
+        Gun.ShakeOffsetMag.Z = float(OffMag);
+        Gun.ShakeOffsetRate.Z = float(OffRate);
+        Gun.ShakeOffsetTime = float(OffTime);
     }
 }
 

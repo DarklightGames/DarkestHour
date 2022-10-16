@@ -3,17 +3,18 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MG34SemiAutoFire extends DHMGSingleFire;
+class DH_MG34SemiAutoFire extends DHLMGSingleFire;
 
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
+    FireRate=0.08
     TracerFrequency=7
     Spread=75.0
     RecoilRate=0.04
-    PctHipMGPenalty=0.6
+    //PctHipMGPenalty=0.6
 
     // Recoil
     MaxVerticalRecoilAngle=250
@@ -27,9 +28,12 @@ defaultproperties
     FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="Hip_Shoot_End"
-    FireIronAnim="Bipod_shoot_single"
-    FireIronLoopAnim="Bipod_Shoot_Loop"
-    FireIronEndAnim="Bipod_Shoot_End"
+    BipodDeployFireAnim="Bipod_shoot_single"
+    BipodDeployFireLoopAnim="Bipod_Shoot_Loop"
+    BipodDeployFireEndAnim="Bipod_Shoot_End"
+    
+    FireLastAnim="hip_shoot_end"
+    BipodDeployFireLastAnim="bipd_shoot_end"
 
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)

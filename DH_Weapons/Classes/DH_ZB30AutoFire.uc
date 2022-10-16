@@ -30,15 +30,6 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
 
-    // TODO: need new fire sounds (both single and auto?) <---leftover comments from WIP CC port (it does need new sound though)
-    //FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    //FireEndSound=SoundGroup'CC_Inf_Weapons.ZB30.zb30_fire_end'
-    //AmbientFireSoundRadius=750.000000
-    //AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    //AmbientFireSound=SoundGroup'CC_Inf_Weapons.ZB30.zb30_fire_loop'
-    //AmbientFireVolume=255
-    //PackingThresholdTime=0.120000
-
     BipodDeployFireAnim="deploy_shoot"
     FireIronAnim="iron_shoot"
     FireAnim="shoot"
@@ -51,6 +42,11 @@ defaultproperties
     ShellHipOffset=(Y=-7.0)
     ShellRotOffsetIron=(Pitch=-13000)
     ShellRotOffsetHip=(Pitch=-13000)
-
-
+    
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

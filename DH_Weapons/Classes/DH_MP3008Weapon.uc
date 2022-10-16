@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP3008Pickup'
 
     Mesh=SkeletalMesh'DH_Sten_1st.MP3008_mesh'
-    //HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
+    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.SMG.Sten_s'
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
 
@@ -22,7 +22,7 @@ defaultproperties
     HandNum=1
     SleeveNum=0
 
-    SwayModifyFactor=0.72 // -0.08
+    SwayModifyFactor=0.62 // -0.08
 
     DisplayFOV=80.0
     PlayerIronsightFOV=65.0

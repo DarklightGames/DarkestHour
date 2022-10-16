@@ -5,10 +5,6 @@
 
 class DH_HeerHelmetSnowThree extends DHHeadgear;
 
-static function StaticPrecache(LevelInfo L)
-{
-}
-
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.ger_helmet_alt'

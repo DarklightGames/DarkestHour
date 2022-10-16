@@ -31,7 +31,3 @@ function RegisterBroadcastHandler(BroadcastHandler NewBH)
         NextBroadcastHandler.RegisterBroadcastHandler(NewBH);
     }
 }
-
-defaultproperties
-{
-}

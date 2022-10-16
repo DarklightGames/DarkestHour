@@ -19,7 +19,7 @@ defaultproperties
     HipSpreadModifier=6.0
 
     // Recoil
-    RecoilRate=0.075
+    RecoilRate=0.05
     MaxVerticalRecoilAngle=580
     MaxHorizontalRecoilAngle=230
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=2.0,OutVal=0.8),(InVal=3.0,OutVal=1.0),(InVal=6.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
@@ -38,6 +38,11 @@ defaultproperties
     BipodDeployFireAnim="deploy_shoot"
     FireIronAnim="iron_shoot"
     FireAnim="shoot"
-    ShakeRotMag=(X=50.0,Y=50.0,Z=175.0)
-    ShakeRotTime=0.75
+
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

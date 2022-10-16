@@ -5,13 +5,6 @@
 
 class DH_HeerCrushercap extends DHHeadgear;
 
-#exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_Heer_crashcap');
-}
-
 defaultproperties
 {
     bIsHelmet=false

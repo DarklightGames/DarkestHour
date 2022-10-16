@@ -7,7 +7,7 @@ class DHRocketWeaponAttachment extends DHWeaponAttachment
     abstract;
 
 var           bool bHideWarheadWhenFired;
-var protected bool bWarheadVisible;
+var           bool bWarheadVisible;
 var           name WarheadBoneName;
 var           int  WarheadScaleSlot; // Slot holding the scalar values for the warhead bone
 var           Mesh EmptyMesh;        // TODO: EmptyMesh is kept for backwards compatibility. Deprecate this when possible!
@@ -16,6 +16,9 @@ var bool           bPanzerfaustAttachment; // Panzerfaust 3rd person muzzle flas
 var name           ExhaustBoneName;
 var class<Emitter> mExhFlashClass;
 var Emitter        mExhFlash3rd;
+
+// HACK: Fixes the issue where warhead is incorrectly shown when the weapon is pulled out.
+var     bool    bInitiallyLoaded;
 
 replication
 {
@@ -34,7 +37,8 @@ simulated function PostBeginPlay()
 
     if (bHideWarheadWhenFired)
     {
-        ShowWarhead(!bOutOfAmmo);
+        bWarheadVisible = bInitiallyLoaded;
+        ShowWarhead(bInitiallyLoaded);
     }
 }
 
@@ -44,20 +48,13 @@ simulated function PostNetReceive()
 
     if (bHideWarheadWhenFired && bWarheadVisible == bOutOfAmmo)
     {
-        ShowWarhead(!bOutOfAmmo);
+        ShowWarhead(bWarheadVisible);
     }
 }
 
 simulated function ShowWarhead(bool bShow)
 {
     local Mesh NewMesh;
-
-    if (bWarheadVisible == bShow)
-    {
-        return;
-    }
-
-    bWarheadVisible = bShow;
 
     if (EmptyMesh != none)
     {
@@ -117,8 +114,8 @@ simulated event ThirdPersonEffects()
         }
         else
         {
-                mMuzFlash3rd = Spawn(mMuzFlashClass);
-                AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd = Spawn(mMuzFlashClass);
+            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
         }
 
         if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')

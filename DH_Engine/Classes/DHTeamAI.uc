@@ -31,7 +31,3 @@ function bool DefendHere(Bot B, GameObjective O)
 
     return true;
 }
-
-defaultproperties
-{
-}

@@ -11,5 +11,4 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.pzlehr_sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCap'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    b
 }

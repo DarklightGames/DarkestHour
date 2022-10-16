@@ -10,6 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_Kar98ScopedBullet'
     AmmoClass=class'DH_Weapons.DH_Kar98Ammo'
     Spread=20.0
+    AddedPitch=15
     PctRestDeployRecoil=0.25
     FireIronAnim="Scope_Shoot"
     ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)

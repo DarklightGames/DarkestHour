@@ -13,7 +13,7 @@ simulated function PostBeginPlay()
 
     // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
     // rotation bone. Until this is fixed, we just hide the bullet for now.
-    if (InstigatorIsLocallyControlled())
+    if (Level.NetMode != NM_DedicatedServer)
     {
         SetBoneScale(0, 0.0, 'Round');
     }
@@ -52,11 +52,7 @@ simulated function ROIronSights()
 // Called from animation notifys to reset the mag rotation during a reload.
 simulated event UpdateMagRotationMidReload()
 {
-    local int MagIndex;
-
-    MagIndex = GetNextMagIndex();
-
-    SetMagRotation(float(PrimaryAmmoArray[MagIndex]) / MaxAmmo(0));
+    SetMagRotation(float(NextMagAmmoCount) / MaxAmmo(0));
 }
 
 // Updated the magazine rotation based on the number of rounds remaining in the magazine.
@@ -70,6 +66,8 @@ simulated function SetMagRotation(float Theta)
 {
     local Rotator R;
 
+    // We only want the magazine to spin around most of the way, not a full 360.
+    Theta = class'UInterp'.static.Lerp(Theta, 1.0 / MaxAmmo(0), 1.0);
     R.Yaw = Class'UUnits'.static.RadiansToUnreal(Theta * Pi * 2);
 
     if (MagRotationBone != '')
@@ -83,7 +81,10 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);
 
-    UpdateMagRotation();
+    if (InstigatorIsLocallyControlled())
+    {
+        UpdateMagRotation();
+    }
 }
 
 defaultproperties
@@ -99,7 +100,7 @@ defaultproperties
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
     // When overlaid on top of the standard texture, it appears the combination of an alpha texture used as an opacity mask creates this unwanted transparency
-    Skins(2)=shader'Weapons1st_tex.MG.dp28_s'
+    Skins(2)=Shader'Weapons1st_tex.MG.dp28_s'
     Skins(3)=Texture'DH_Weapon_tex.AlliedSmallArms.DP_extra'
 
     DisplayFOV=80.0
@@ -128,19 +129,11 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="reload_empty"
     BipodMagPartialReloadAnim="reload_half"
-     
-//    MagEmptyReloadAnims(0)="reload"
-//    MagPartialReloadAnims(0)="reload"
-
+    
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="Sprint_End"
-    //CrawlForwardAnim="crawl_F"
-    //CrawlBackwardAnim="crawl_B"
-    //CrawlStartAnim="crawl_in"
-    //CrawlEndAnim="crawl_out"
     IdleAnim="Idle"
-    //SelectAnim="Draw"
     PutDownAnim="Putaway"
     
     IdleEmptyAnim="idle_empty"
