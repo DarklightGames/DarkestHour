@@ -32,7 +32,7 @@ simulated function SetEmitterStatus(bool bEnabled)
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'WeaponPickupSM.shells.S762_Rifle_MG'
+        StaticMesh=StaticMesh'DH_M1919_stc.1st.m1919_link_1st'
         UseCollision=true
         RespawnDeadParticles=false
         SpawnOnlyInDirectionOfNormal=true
@@ -48,6 +48,7 @@ defaultproperties
         LifetimeRange=(Min=1.5,Max=1.5)
         StartVelocityRange=(X=(Min=-1.0,Max=1.0),Y=(Min=25.0,Max=100.0),Z=(Min=1.0,Max=1.0))
         StartVelocityRadialRange=(Min=-250.0,Max=250.0)
+        MeshScaleRange=(X=(Min=2,Max=2),Y=(Min=2,Max=2),Z=(Min=2,Max=2))
     End Object
     Emitters(0)=MeshEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.MeshEmitter0'
 

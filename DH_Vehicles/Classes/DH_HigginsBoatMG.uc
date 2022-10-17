@@ -44,7 +44,7 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
 
     // Reload
-    HUDOverlayReloadAnim="Reloads"
+    HUDOverlayReloadAnim="reload_empty_a4"
     ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them
     ReloadStages(1)=(Sound=none,Duration=1.52)
     ReloadStages(2)=(Sound=none,Duration=1.99)
