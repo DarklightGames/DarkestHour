@@ -215,13 +215,16 @@ function Fire(optional float F)
     {
         super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
 
-        if (VehWep != none && VehWep.ReloadState != RL_ReadyToFire && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
+        if (VehWep != none)
         {
-            VehWep.DryFireEffects();
-        }
-        else
-        {
-            PlayHudOverlayFiring();
+            if (VehWep.ReloadState != RL_ReadyToFire && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
+            {
+                VehWep.DryFireEffects();
+            }
+            else if (VehWep.ReloadState == RL_ReadyToFire)
+            {
+                PlayHudOverlayFiring();
+            }
         }
     }
 }
