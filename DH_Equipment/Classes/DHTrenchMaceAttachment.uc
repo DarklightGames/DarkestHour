@@ -8,5 +8,6 @@ class DHTrenchMaceAttachment extends DHShovelAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.trenchmace_3rd'
-    Skins(0)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture''
+    Skins(0)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'//placeholder
 }
