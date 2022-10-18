@@ -9,5 +9,5 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.bonemace_3rd'
     Skins(0)=Texture'DH_Halloween_tex.Maces.BoneClubTexture'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon' //placeholder
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon' //placeholder
 }
