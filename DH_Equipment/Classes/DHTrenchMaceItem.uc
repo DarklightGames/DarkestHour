@@ -45,7 +45,7 @@ defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire'
     
-    ItemName="Trench Mace"
+    ItemName="Trench Club"
     InventoryGroup=7
     GroupOffset=0
     Priority=4 // this should be higher than any other weapon on InventoryGroup=4, raising this higher than 8 will require to raise priority on other weapons
