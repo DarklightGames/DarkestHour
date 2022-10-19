@@ -41,6 +41,8 @@ function bool HandlePickupQuery(Pickup Item)
     return Inventory != none && Inventory.HandlePickupQuery(Item);
 }
 
+
+
 defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire'
