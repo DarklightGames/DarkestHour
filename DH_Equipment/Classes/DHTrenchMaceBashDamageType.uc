@@ -1,4 +1,4 @@
-class DHTrenchMaceBashDamageType extends DHWeaponBashDamageType
+class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
     abstract;
 
 defaultproperties
