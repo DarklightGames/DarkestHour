@@ -164,6 +164,14 @@ var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
 
+// Team capture variable
+var() enum ETeamCapture
+{
+	TEAM_Axis,
+	TEAM_Allies,
+	TEAM_Both,
+} TeamCanCapture;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -792,7 +800,7 @@ function GetPlayersInObjective(out int PlayerNums[2], optional out int TeamTotal
     {
         if (C.bIsPlayer && C.PlayerReplicationInfo.Team != none && ((ROPlayer(C) != none && ROPlayer(C).GetRoleInfo() != none) || ROBot(C) != none))
         {
-            if (C.Pawn != none && C.Pawn.Health > 0 && WithinArea(C.Pawn))
+            if (C.Pawn != none && C.Pawn.Health > 0 && WithinArea(C.Pawn) && (TeamCanCapture == TEAM_Both || TeamCanCapture == C.GetTeamNum()))
             {
                 ROVeh = ROVehicle(C.Pawn);
                 VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
@@ -1495,4 +1503,6 @@ defaultproperties
     AxisInfluenceModifier=1
     AlliesInfluenceModifier=1
     NeutralInfluenceModifier=1
+
+    TeamCanCapture=TEAM_Both
 }
