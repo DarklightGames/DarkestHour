@@ -12,7 +12,6 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     bUsesTracers=true
