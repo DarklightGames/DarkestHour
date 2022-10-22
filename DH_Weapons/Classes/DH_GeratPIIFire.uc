@@ -9,12 +9,12 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_GeratPIIBullet'
     AmmoClass=class'DH_Weapons.DH_GeratPAmmo'
-    FireRate=0.15 //
-    Spread=220.0
+    FireRate=0.14 //
+    Spread=190.0
 
     // Recoil
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=460
+    MaxVerticalRecoilAngle=360
     MaxHorizontalRecoilAngle=100
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=9.0
