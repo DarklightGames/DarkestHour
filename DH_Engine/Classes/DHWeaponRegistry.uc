@@ -156,5 +156,6 @@ defaultproperties
     records(96)=(ClassName="DH_Equipment.DHTrenchMaceItem",WeaponNames=("trenchmace"))
     records(97)=(ClassName="DH_Equipment.DHTrenchMaceItem_Bone",WeaponNames=("bonemace"))
     records(98)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
+    records(99)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
 
 }
