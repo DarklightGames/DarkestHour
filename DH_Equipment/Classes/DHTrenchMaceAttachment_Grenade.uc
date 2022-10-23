@@ -7,7 +7,7 @@ class DHTrenchMaceAttachment_Grenade extends DHShovelAttachment;
 
 defaultproperties
 {
-    // Mesh=SkeletalMesh'DH_Weapons3rd_anm.grenademace_3rd'
-    // Skins(0)=Texture'DH_Halloween_tex.Maces.TrenchMaceTexture'
+    Mesh=SkeletalMesh'DH_Halloween3rd_anm.grenademace_3rd'
+    Skins(0)=Texture'DH_Halloween_tex.Maces.maces_world'
     MenuImage=Texture'DH_Halloween_tex.HUD.mace_icon'
 }

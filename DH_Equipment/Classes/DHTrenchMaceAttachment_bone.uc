@@ -7,7 +7,7 @@ class DHTrenchMaceAttachment_bone extends DHShovelAttachment;
 
 defaultproperties
 {
-    // Mesh=SkeletalMesh'DH_Weapons3rd_anm.bonemace_3rd'
-    // Skins(0)=Texture'DH_Halloween_tex.Maces.BoneClubTexture'
+    Mesh=SkeletalMesh'DH_Halloween3rd_anm.bonemace_3rd'
+    Skins(0)=Texture'DH_Halloween_tex.Maces.maces_world'
     MenuImage=Texture'DH_Halloween_tex.HUD.bone_icon'
 }
