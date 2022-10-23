@@ -18,7 +18,7 @@ defaultproperties
     HullFireChance=0.12  
     EngineFireChance=0.2
 
-    MyDamageType=class'DH_Weapons.DH_GeratPDamType'
+    MyDamageType=class'DH_Weapons.DH_GeratPIIDamType'
     
     bHasTracer=true
     TracerEffectClass=class'DH_Effects.DHBulletTracer_YellowOrange'

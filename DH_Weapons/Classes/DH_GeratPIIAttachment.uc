@@ -7,7 +7,7 @@ class DH_GeratPIIAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.GeratP_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.GeratPII_3rd'
     MenuImage=Texture'DH_Sten_tex.interface.stenmk2'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
