@@ -3610,6 +3610,12 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
         for (j = 0; j < ObjA.AlliesRequiredObjForCapture.Length; ++j)
         {
+            // Bounds check the connections indices.
+            if (ObjA.AlliesRequiredObjForCapture[j] < 0 || ObjA.AlliesRequiredObjForCapture[j] >= arraycount(DHGRI.DHObjectives))
+            {
+                continue;
+            }
+
             ObjB = DHGRI.DHObjectives[ObjA.AlliesRequiredObjForCapture[j]];
 
             if (ObjB == none)

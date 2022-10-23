@@ -7559,25 +7559,6 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     return RER_Enabled;
 }
 
-function DestroyShovelItem()
-{
-    local DHPawn P;
-    local Weapon Inv;
-    local Class<Weapon> ShovelClass;
-
-    P = DHPawn(Pawn);
-    ShovelClass = class<Weapon>(DynamicLoadObject("DH_Equipment.DHShovelItem", class'Class'));
-    Inv = Weapon(P.FindInventoryType(ShovelClass));
-
-    if (P != none && P.Weapon != none && ClassIsChildOf(P.Weapon.Class, ShovelClass))
-    {
-        // We are currently holding a shovel, let's put it away
-        Inv.ClientWeaponThrown();
-    }
-    
-     P.DeleteInventory(Inv);
-}
-
 defaultproperties
 {
     CorpseStayTime=15

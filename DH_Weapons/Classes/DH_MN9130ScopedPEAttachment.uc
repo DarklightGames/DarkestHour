@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MN9130ScopedAttachment extends DHWeaponAttachment;
+class DH_MN9130ScopedPEAttachment extends DHWeaponAttachment;
 
 // Modified so we skip the Super if we've just played the reload or pre-reload animation
 simulated function AnimEnd(int Channel)
@@ -21,8 +21,8 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.Nagant9130_scoped_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.MosinScopedPE_3rd' 
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.MosinScopedPE_icon'  
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true

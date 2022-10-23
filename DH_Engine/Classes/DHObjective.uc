@@ -184,6 +184,7 @@ simulated function PostBeginPlay()
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
     local DHObjectiveGroup      ObjectiveGroupFound;
+    local DarkestHourGame       G;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -216,10 +217,28 @@ simulated function PostBeginPlay()
         bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
         bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
 
+        G = DarkestHourGame(Level.Game);
+
         // Add self to game objectives
-        if (DarkestHourGame(Level.Game) != none)
+        if (G != none)
         {
-            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+            // Aggressively enforce correct ObjNums! We delete the objective if these numbers are bad because
+            // a missing objective is a hell of a lot more noticeable than a slightly misbehaving objective.
+            if (ObjNum >= arraycount(G.DHObjectives))
+            {
+                Warn("BAD OBJECTIVE!!! The objective \"" $ GetHumanReadableName() $ "\" has an invalid ObjNum of" @ ObjNum $ "! ObjNum must be between 0 and" @ (arraycount(G.DHObjectives) - 1) @ "(inclusive)");
+                Destroy();
+                return;
+            }
+
+            if (G.DHObjectives[ObjNum] != none)
+            {
+                Warn("BAD OBJECTIVE!!! The objective \"" $ GetHumanReadableName() $ "\" has an identical ObjNum value as objective" @ G.DHObjectives[ObjNum].ObjectiveName);
+                Destroy();
+                return;
+            }
+
+            G.DHObjectives[ObjNum] = self;
 
             foreach AllActors(class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
             {
