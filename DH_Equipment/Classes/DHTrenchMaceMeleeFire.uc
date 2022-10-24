@@ -35,7 +35,7 @@ defaultproperties
     DamageType=class'DH_Equipment.DHTrenchMaceBashDamageType'
     DamageMin=70
     DamageMax=150
-    TraceRange=95.0
+    TraceRange=120.0
     FireRate=0.21
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"
