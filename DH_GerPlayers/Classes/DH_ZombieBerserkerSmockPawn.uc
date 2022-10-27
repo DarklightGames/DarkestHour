@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2022
 //==============================================================================
+// Halloween Special 2020
 
-class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
-    abstract;
+class DH_ZombieBerserkerSmockPawn extends DH_ZombieBerserkerPawn;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Equipment.DHTrenchMaceItem'
-    bAlwaysSevers=true
+    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Smock'
+    Skins(1)=Texture'DHEventCharactersTex.GetTunics.heersmock2_zombie01'
 }

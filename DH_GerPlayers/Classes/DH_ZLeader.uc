@@ -8,7 +8,6 @@ class DH_ZLeader extends DHAxisRoles;
 
 defaultproperties
 {
-    HealthMultiplier=5.0
     bCanPickupWeapons=false
 
     VoiceType="DH_GerPlayers.DHZVoice"

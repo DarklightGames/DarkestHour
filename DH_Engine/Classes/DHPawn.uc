@@ -126,6 +126,8 @@ var     Pawn                FireStarter;                   // who set a player o
 
 // Gore
 var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
+var     bool                bAlwaysSeverBodyparts; // implemented for zombies
+var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
 // Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
@@ -445,9 +447,8 @@ function PossessedBy(Controller C)
 
         if (RI != none)
         {
-            // Apply role modifiers (implemented for Halloween 2021 event)
+            // Apply role modifiers (implemented for Halloween events)
             bCanPickupWeapons = RI.bCanPickupWeapons;
-            Health *= RI.HealthMultiplier;
 
             // Set classes for any ammo pouches based on player's role & weapon selections
             PC = ROPlayer(Controller);
@@ -1114,7 +1115,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
             // Check whether a body part should be severed
             if (!class'GameInfo'.static.UseLowGore())
             {
-                if (DamageType.default.bAlwaysSevers || Damage == 1000)
+                if (DamageType.default.bAlwaysSevers || Damage == 1000 || bAlwaysSeverBodyparts)
                 {
                     bSever = true;
                 }
@@ -1400,6 +1401,11 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         if (CumulativeDamage >= Health)
         {
             break;
+        }
+
+        if (bNeverStaggers)
+        {
+            continue;
         }
 
         HitPointType = Hitpoints[PointsHit[i]].HitPointType;

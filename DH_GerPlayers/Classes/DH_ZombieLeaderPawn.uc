@@ -19,4 +19,11 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"
     BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+
+    Health=500
+    Stamina=500
+    bNeverStaggers=true
+    bAlwaysSeverBodyparts=true
+
+    Hitpoints(1)=(DamageMultiplier=4.0) // head
 }
