@@ -45,7 +45,7 @@ var bool                bIsAttachedToVehicle;
 //==============================================================================
 // Supply Generation
 //==============================================================================
-var bool                bIsInFriendlyZone;                  // Whether or not this supply attachment is within it's team's friendly zone
+var bool                bIsInDangerZone;                    // Whether or not this supply attachment is in the danger zone.
 var bool                bCanGenerateSupplies;               // Whether or not this supply attachment is able to generate supplies.
 var int                 SupplyDepositInterval;              // The amount of seconds before generated supplies are deposited into the supply count.
 var int                 SupplyDepositCounter;               // The next time that generated supplies will be deposited.
@@ -69,7 +69,7 @@ delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
 
 function bool IsGeneratingSupplies()
 {
-    return bCanGenerateSupplies && !IsFull() && (bIsMainSupplyCache || bIsInFriendlyZone);
+    return bCanGenerateSupplies && !IsFull() && (bIsMainSupplyCache || !bIsInDangerZone);
 }
 
 // Overridden to bypass bizarre logic that necessitated the Owner be a Pawn.
@@ -242,7 +242,7 @@ function Timer()
 
     if (GRI != none)
     {
-        bIsInFriendlyZone = GRI.IsInFriendlyZone(Location.X, Location.Y, GetTeamIndex());
+        bIsInDangerZone = GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
     }
 
     if (GRI != none && SupplyPointIndex != -1)
