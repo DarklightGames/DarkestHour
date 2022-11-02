@@ -3063,13 +3063,21 @@ function UpdateTeamConstructions()
 
             // Check if we need to set the NextIncrementTimeSeconds variable
             // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
-            if (Count < DHLevelInfo.TeamConstructions[i].Limit && GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+            if (Count == DHLevelInfo.TeamConstructions[i].Limit)
             {
-                // Our next increment time has not been set.
-                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+                // We have the maximum amount of this type of construction.
+                // Make sure the next increment time is -1 so that we don't
+                // display any countdown on the UI.
+                GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
             }
-            else
+            else if (Count < DHLevelInfo.TeamConstructions[i].Limit)
             {
+                if (GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+                {
+                    // Our next increment time has not been set.
+                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+                }
+
                 if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
                 {
                     GRI.TeamConstructions[i].Remaining += 1;
