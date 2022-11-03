@@ -33,10 +33,10 @@ defaultproperties
     nProjectileDescriptions(1)="O-240"
 
     InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=20
+    InitialSecondaryAmmo=15
 
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=30
+    MaxPrimaryAmmo=40
+    MaxSecondaryAmmo=20
     //MaxTertiaryAmmo=6
     SecondarySpread=0.002
 

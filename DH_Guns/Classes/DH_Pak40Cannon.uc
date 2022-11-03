@@ -37,10 +37,10 @@ defaultproperties
 
     InitialTertiaryAmmo=2
     MaxTertiaryAmmo=2
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    MaxPrimaryAmmo=50
-    MaxSecondaryAmmo=42
+    InitialPrimaryAmmo=15
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00127
 
     // Weapon fire
@@ -50,8 +50,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //3.5 seconds reload
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01') // 3.75 seconds reload
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
@@ -76,4 +76,6 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
+
+    ResupplyInterval=7.5
 }

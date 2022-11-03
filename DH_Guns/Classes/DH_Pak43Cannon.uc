@@ -30,10 +30,10 @@ defaultproperties
     nProjectileDescriptions(0)="PzGr.39/43"
     nProjectileDescriptions(1)="Sprgr.Patr."
 
-    InitialPrimaryAmmo=8
-    InitialSecondaryAmmo=4
-    MaxPrimaryAmmo=50
-    MaxSecondaryAmmo=42
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=15
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00135
 
     // Weapon fire
@@ -74,4 +74,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
+
+    ResupplyInterval=12.0
 }
