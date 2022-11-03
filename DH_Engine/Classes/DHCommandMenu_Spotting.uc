@@ -57,6 +57,8 @@ function OnSelect(int OptionIndex, vector Location)
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
     PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
+    
+    PC.ServerSquadSignal(class'DHSquadSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
 }

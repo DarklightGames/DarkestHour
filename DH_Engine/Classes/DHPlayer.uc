@@ -138,6 +138,7 @@ struct SquadSignal
     var class<DHSquadSignal> SignalClass;
     var vector Location;
     var float TimeSeconds;
+    var Object OptionalObject;
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
@@ -5818,7 +5819,7 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     }
 }
 
-function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
+function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location, optional Object OptionalObject)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -5826,7 +5827,7 @@ function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location);
+        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location, OptionalObject);
     }
 }
 
@@ -5983,7 +5984,7 @@ function RemovePersonalMarker(int Index)
     PersonalMapMarkers.Remove(Index, 1);
 }
 
-simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
+simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L, optional Object OptionalObject)
 {
     local int i;
     local int Index;
@@ -6026,6 +6027,7 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
         SquadSignals[Index].SignalClass = SignalClass;
         SquadSignals[Index].Location = L;
         SquadSignals[Index].TimeSeconds = Level.TimeSeconds;
+        SquadSignals[Index].OptionalObject = OptionalObject;
     }
 }
 

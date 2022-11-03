@@ -11,5 +11,6 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.infantry'
     MarkerName="Enemy Infantry"
     LifetimeSeconds=120
+    SpottingConsoleCommand="SPEECH ENEMY 0"
 }
 

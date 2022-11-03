@@ -2022,8 +2022,8 @@ function DrawSignals(Canvas C)
             continue;
         }
 
-        SignalColor = PC.SquadSignals[i].SignalClass.default.Color;
-        SignalMaterial = PC.SquadSignals[i].SignalClass.default.WorldIconMaterial;
+        SignalColor = PC.SquadSignals[i].SignalClass.static.GetColor(PC.SquadSignals[i].OptionalObject);
+        SignalMaterial = PC.SquadSignals[i].SignalClass.static.GetWorldIconMaterial(PC.SquadSignals[i].OptionalObject);
         LabelText = PC.SquadSignals[i].SignalClass.default.SignalName;
 
         bIsNew = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalNewTimeSeconds;
@@ -2056,6 +2056,8 @@ function DrawSignals(Canvas C)
         {
             SignalIconSize = SignalIconSizeEnd;
         }
+
+        SignalIconSize *= PC.SquadSignals[i].SignalClass.default.WorldIconScale;
 
         C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
         C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);

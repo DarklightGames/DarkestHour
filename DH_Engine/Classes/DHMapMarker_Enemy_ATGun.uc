@@ -11,5 +11,6 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     MarkerName="Enemy AT Gun"
     LifetimeSeconds=300
+    SpottingConsoleCommand="SPEECH ENEMY 8"
 }
 

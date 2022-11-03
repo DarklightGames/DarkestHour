@@ -79,6 +79,9 @@ enum EMarkerType
 
 var EMarkerType Type;
 
+// The console command to run when this marker is placed as a result of using the spotting menu. Used for playing voice call-outs.
+var string SpottingConsoleCommand;
+
 // Override this function to determine if this map marker can be used. This
 // function is evaluated once at the beginning of the map.
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
