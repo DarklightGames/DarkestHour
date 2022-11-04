@@ -1998,7 +1998,7 @@ function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 // IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    local DHPlayer   DHKilled, DHKiller;
+    local DHPlayer   DHKilled, DHKiller, SpotterPC;
     local Controller P;
     local float      FFPenalty;
     local int        i;
@@ -2031,7 +2031,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
+        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType) && Killer.GetTeamNum() != Killed.GetTeamNum())
         {
             // Check if this kill is in range of any active fire support markers.
             FireSupportMapMarkers = GRI.GetFireSupportMapMarkersAtLocation(DHKiller, KilledPawn.Location);
@@ -2041,14 +2041,23 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 // This kill took place within range of a fire support marker.
                 DamageType = class'DHArtilleryKillDamageType';
 
-                // Award points to the person who made the fire support marker.
-                if (Killer.GetTeamNum() != Killed.GetTeamNum())
+                for (i = 0; i < FireSupportMapMarkers.Length; ++i)
                 {
-                    for (i = 0; i < FireSupportMapMarkers.Length; ++i)
+                    if (FireSupportMapMarkers[i].Author != none)
                     {
-                        if (FireSupportMapMarkers[i].Author != none)
+                        SpotterPC = DHPlayer(FireSupportMapMarkers[i].Author.Owner);
+
+                        if (SpotterPC != none)
                         {
-                            ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
+                            // Award points to the person(s) who made the fire support marker.
+                            ScoreFireSupportSpottingAssist(SpotterPC);
+
+                            // Display the kill message to the author (for that juicy feedback)
+                            SpotterPC.ClientAddHudDeathMessage(
+                                Killer.PlayerReplicationInfo,
+                                Killed.PlayerReplicationInfo,
+                                DamageType
+                                );
                         }
                     }
                 }
@@ -2093,7 +2102,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     DHPawn(KilledPawn).SpawnPoint.OnSpawnKill(KilledPawn, Killer);
                 }
             }
-
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
@@ -2403,7 +2411,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
     KilledPRI = Killed.PlayerReplicationInfo;
 
-    // Special case handling for artillery kills. Send message only to the killer & victim.
+    // Special case handling for artillery kills. Send message to the killer, victim and player that spotted the marker.
     if (class<DHArtilleryKillDamageType>(DamageType) != none)
     {
         if (DHPlayer(Killed) != none)
