@@ -402,4 +402,5 @@ defaultproperties
 	MapInfos(173)=(Name="DH-Lazur_Chemical_Plant_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Small)
 	MapInfos(174)=(Name="DH-Donner_Bolts",AlliedNation=NATION_Britain,GameType=GAMETYPE_Stalemate,Size=SIZE_ExtraSmall)
 	MapInfos(175)=(Name="DH-Lutremange_Domination",AlliedNation=NATION_USA,GameType=GAMETYPE_Domination,Size=SIZE_Large)
+	MapInfos(176)=(Name="DH-Dzerzhinsky_Tractor_Factory_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
 }
