@@ -3,14 +3,15 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHSquadSignal_Fire extends DHSquadSignal
+class DHSignal_Move extends DHSignal
     abstract;
 
 defaultproperties
 {
-    SignalName="Fire"
-    MenuIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.fire'
-    WorldIconMaterial=TexOscillator'DH_InterfaceArt2_tex.Icons.fire_pulse'
-    MyColor=(R=178,G=34,B=34,A=255)
+    SignalName="Move"
+    MenuIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.move'
+    WorldIconMaterial=TexOscillator'DH_InterfaceArt2_tex.Icons.move_pulse'
+    MyColor=(R=186,G=85,B=211,A=255)
     bIsUnique=true
+    bSquadMembersOnly=true
 }

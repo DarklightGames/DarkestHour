@@ -1738,39 +1738,39 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 // SQUAD SIGNALS
 //==============================================================================
 
-function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSquadSignal> SignalClass, vector Location, optional Object OptionalObject)
+function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
 {
     local int i;
+    local float Radius;
     local array<DHPlayerReplicationInfo> Members;
-    local DHPlayer MyPC, OtherPC;
+    local DHPlayer Sender, Recipient;
+    local Pawn OtherPawn;
 
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) && !IsSquadAssistant(PRI, TeamIndex, SquadIndex))
     {
         return;
     }
 
-    MyPC = DHPlayer(PRI.Owner);
+    Sender = DHPlayer(PRI.Owner);
 
-    if (MyPC == none || MyPC.Pawn == none)
+    if (Sender == none || Sender.Pawn == none)
     {
         return;
     }
 
-    SignalClass.static.OnSent(MyPC, Location, OptionalObject);
+    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);  // TODO: have this determined by the signal class
 
-    GetMembers(TeamIndex, SquadIndex, Members);
-
-    for (i = 0; i < Members.Length; ++i)
+    foreach Sender.Pawn.RadiusActors(class'Pawn', OtherPawn, Radius)
     {
-        OtherPC = DHPlayer(Members[i].Owner);
+        Recipient = DHPlayer(OtherPawn.Controller);
 
-        if (OtherPC != none &&
-            OtherPC.Pawn != none &&
-            VSize(OtherPC.Pawn.Location - MyPC.Pawn.Location) < class'DHUnits'.static.MetersToUnreal(50))
+        if (SignalClass.static.CanPlayerRecieve(Sender, Recipient))
         {
-            OtherPC.ClientSquadSignal(SignalClass, Location, OptionalObject);
+            Recipient.ClientSignal(SignalClass, Location, OptionalObject);
         }
     }
+
+    SignalClass.static.OnSent(Sender, Location, OptionalObject);
 }
 
 function DHSpawnPoint_SquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
