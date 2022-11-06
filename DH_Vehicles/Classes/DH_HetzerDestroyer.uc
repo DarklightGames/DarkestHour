@@ -78,9 +78,9 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.hetzer_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.hetzer_turret_look'
     VehicleHudTreadsPosX(0)=0.375000
-    VehicleHudTreadsPosX(1)=0.605000
-    VehicleHudTreadsPosY=0.465000
-    VehicleHudTreadsScale=0.520000
+    VehicleHudTreadsPosX(1)=0.625000
+    VehicleHudTreadsPosY=0.54
+    VehicleHudTreadsScale=0.575
     GearRatios(4)=0.720000
     TransRatio=0.100000
     LeftLeverBoneName="lever_L"
