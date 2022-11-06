@@ -9,7 +9,7 @@ class DHPlayer extends ROPlayer
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
-const SQUAD_SIGNALS_MAX = 4;
+const SIGNALS_MAX = 4;
 
 enum EMapMode
 {
@@ -132,7 +132,6 @@ var     bool                    bHasReceivedSquadJoinRecommendationMessage; // T
 
 var     DHMapDatabase           MapDatabase;
 
-// Squad Things
 struct Signal
 {
     var class<DHSignal> SignalClass;
@@ -141,7 +140,7 @@ struct Signal
     var Object OptionalObject;
 };
 
-var     Signal             Signals[SQUAD_SIGNALS_MAX];
+var     Signal             Signals[SIGNALS_MAX];
 
 // Squad Leader HUD Info
 var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
