@@ -15,12 +15,17 @@ defaultproperties
     MuzzleBoneName="Muzzle"
     WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
+    bInitiallyLoaded=false
+
+    BackAttachmentLocationOffset=(X=20.0,Y=3.0,Z=-4.0)
+    BackAttachmentRotationOffset=(Pitch=-2800,Roll=34000,Yaw=2000)
 
     WA_Idle="idle_m1a1"
     WA_Fire="idle_m1a1"
     WA_Reload="reload_m1a1"
 
     PA_AssistedReloadAnim="crouch_reload_assist_baz_m1"
+    PA_ProneAssistedReloadAnim="prone_reload_assist_baz_m1"
 
     PA_MovementAnims(0)="stand_jogF_baz_m1"
     PA_MovementAnims(1)="stand_jogB_baz_m1"

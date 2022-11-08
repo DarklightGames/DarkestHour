@@ -25,14 +25,19 @@ defaultproperties
     bHasTracer=true // represents glow of burnt out rocket motor
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
-    //Penetration
-    DHPenetrationTable(0)=14.6
-    DHPenetrationTable(1)=14.6
-    DHPenetrationTable(2)=14.6
-    DHPenetrationTable(3)=14.6
-    DHPenetrationTable(4)=14.6
-    DHPenetrationTable(5)=14.6
-    DHPenetrationTable(6)=14.6
+    // Penetration
+    // Many sources say this could penetrate 101.6mm (4") of armor at 30 degrees AOI.
+    // Most of the US sources assume a 30 degree AOI in testing.
+    // Therefore the effective penetration value against at a straight target is 117mm.
+    // http://www.inert-ord.net/atrkts/bazoo/
+    // https://en.wikipedia.org/wiki/Bazooka#Field_experience_induced_changes
+    DHPenetrationTable(0)=11.7
+    DHPenetrationTable(1)=11.7
+    DHPenetrationTable(2)=11.7
+    DHPenetrationTable(3)=11.7
+    DHPenetrationTable(4)=11.7
+    DHPenetrationTable(5)=11.7
+    DHPenetrationTable(6)=11.7
 
     //Sounds
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'

@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_Spitfire_Airplane extends DHAirplane;
+class DH_MN9130ScopedPEMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    AirplaneName="Supermarine Spitfire"
-    Mesh=Mesh'DH_Airplanes_anm.Spitfire'
+    DamageType=class'DH_Weapons.DH_MN9130ScopedPEBashDamType'
 }

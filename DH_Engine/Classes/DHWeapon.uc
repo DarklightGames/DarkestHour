@@ -465,7 +465,7 @@ simulated state RaisingWeapon
 {
     simulated function bool IsBusy()
     {
-        return HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+        return Mesh != none && HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
     }
 
     simulated function EndState()

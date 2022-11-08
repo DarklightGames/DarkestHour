@@ -17,7 +17,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.25
     HeadgearProbabilities(1)=0.5
     HeadgearProbabilities(2)=0.25
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedWeapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedPEWeapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_SVT40ScopedWeapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     HandType=Hand_Gloved
 }

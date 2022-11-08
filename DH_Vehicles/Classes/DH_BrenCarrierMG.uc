@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_ext'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.BrenGun'
+    Skins(0)=Texture'DH_Bren_tex.one.BrenWorld_D'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
@@ -35,8 +35,8 @@ defaultproperties
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
-    FireSoundClass=Sound'DH_WeaponSounds.Bren.Bren_Loop011'
-    FireEndSound=Sound'DH_WeaponSounds.Bren.Bren_LoopEnd'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoopEnd'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=5.0,Y=5.0,Z=5.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

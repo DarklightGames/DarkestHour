@@ -126,6 +126,8 @@ var     Pawn                FireStarter;                   // who set a player o
 
 // Gore
 var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
+var     bool                bAlwaysSeverBodyparts; // implemented for zombies
+var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
 // Smoke grenades for squad leaders
 var DH_LevelInfo.SNationString SmokeGrenadeClassName;
@@ -445,9 +447,8 @@ function PossessedBy(Controller C)
 
         if (RI != none)
         {
-            // Apply role modifiers (implemented for Halloween 2021 event)
+            // Apply role modifiers (implemented for Halloween events)
             bCanPickupWeapons = RI.bCanPickupWeapons;
-            Health *= RI.HealthMultiplier;
 
             // Set classes for any ammo pouches based on player's role & weapon selections
             PC = ROPlayer(Controller);
@@ -1114,7 +1115,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
             // Check whether a body part should be severed
             if (!class'GameInfo'.static.UseLowGore())
             {
-                if (DamageType.default.bAlwaysSevers || Damage == 1000)
+                if (DamageType.default.bAlwaysSevers || Damage == 1000 || bAlwaysSeverBodyparts)
                 {
                     bSever = true;
                 }
@@ -1400,6 +1401,11 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         if (CumulativeDamage >= Health)
         {
             break;
+        }
+
+        if (bNeverStaggers)
+        {
+            continue;
         }
 
         HitPointType = Hitpoints[PointsHit[i]].HitPointType;
@@ -3931,7 +3937,14 @@ function HandleAssistedReload()
     // Set the anim blend time so the server will make this player relevant for third person reload sounds to be heard
     if (Level.NetMode != NM_StandAlone && DHWeaponAttachment(WeaponAttachment) != none)
     {
-        PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
     }
@@ -3946,7 +3959,14 @@ simulated function PlayAssistedReload()
 
     if (DHWeaponAttachment(WeaponAttachment) != none)
     {
-        Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         if (HasAnim(Anim))
         {
@@ -7428,7 +7448,7 @@ exec simulated function Give(string WeaponName)
     local string ClassName;
     local int i;
 
-    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
+    if (Role != ROLE_Authority || (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed()))
     {
         return;
     }
@@ -7469,20 +7489,20 @@ simulated function bool CanBuildWithShovel()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(25.0);
+    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(50.0);
 }
 
 simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
     local DHPlayer PC;
-    local DHPawn OtherPawn;
+    local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
     {
-        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
         if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {

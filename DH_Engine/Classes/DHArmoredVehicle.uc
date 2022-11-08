@@ -1288,6 +1288,16 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
+        // Check if round is to be deflected because the AOI is too high.
+        if (P.bDeflectAOI && AngleOfIncidence > P.DeflectAOI)
+        {
+            P.bRoundDeflected = true;
+
+            ResetTakeDamageVariables();
+
+            return false;
+        }
+
         //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45°
         if (bSideHit && bHasAddedSideArmor && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
         {

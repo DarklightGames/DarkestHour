@@ -11,7 +11,6 @@ defaultproperties
     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg42'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_MG42Bullet'
     bUsesTracers=true
@@ -34,14 +33,14 @@ defaultproperties
     PA_MovementAnims(5)="stand_jogFR_mg34"
     PA_MovementAnims(6)="stand_jogBL_mg34"
     PA_MovementAnims(7)="stand_jogBR_mg34"
-    PA_CrouchAnims(0)="crouch_walkF_mg42"
-    PA_CrouchAnims(1)="crouch_walkB_mg42"
-    PA_CrouchAnims(2)="crouch_walkL_mg42"
-    PA_CrouchAnims(3)="crouch_walkR_mg42"
-    PA_CrouchAnims(4)="crouch_walkFL_mg42"
-    PA_CrouchAnims(5)="crouch_walkFR_mg42"
-    PA_CrouchAnims(6)="crouch_walkBL_mg42"
-    PA_CrouchAnims(7)="crouch_walkBR_mg42"
+    PA_CrouchAnims(0)="crouch_walkF_mg34"
+    PA_CrouchAnims(1)="crouch_walkB_mg34"
+    PA_CrouchAnims(2)="crouch_walkL_mg34"
+    PA_CrouchAnims(3)="crouch_walkR_mg34"
+    PA_CrouchAnims(4)="crouch_walkFL_mg34"
+    PA_CrouchAnims(5)="crouch_walkFR_mg34"
+    PA_CrouchAnims(6)="crouch_walkBL_mg34"
+    PA_CrouchAnims(7)="crouch_walkBR_mg34"
     PA_ProneIronAnims(0)="prone_slowcrawlF_mg42"
     PA_ProneIronAnims(1)="prone_slowcrawlB_mg42"
     PA_ProneIronAnims(2)="prone_slowcrawlL_mg42"
@@ -50,14 +49,14 @@ defaultproperties
     PA_ProneIronAnims(5)="prone_slowcrawlR_mg42"
     PA_ProneIronAnims(6)="prone_slowcrawlB_mg42"
     PA_ProneIronAnims(7)="prone_slowcrawlB_mg42"
-    PA_WalkAnims(0)="stand_walkFhip_mg42"
-    PA_WalkAnims(1)="stand_walkBhip_mg42"
-    PA_WalkAnims(2)="stand_walkLhip_mg42"
-    PA_WalkAnims(3)="stand_walkRhip_mg42"
-    PA_WalkAnims(4)="stand_walkFLhip_mg42"
-    PA_WalkAnims(5)="stand_walkFRhip_mg42"
-    PA_WalkAnims(6)="stand_walkBLhip_mg42"
-    PA_WalkAnims(7)="stand_walkBRhip_mg42"
+    PA_WalkAnims(0)="stand_walkFhip_mg34"
+    PA_WalkAnims(1)="stand_walkBhip_mg34"
+    PA_WalkAnims(2)="stand_walkLhip_mg34"
+    PA_WalkAnims(3)="stand_walkRhip_mg34"
+    PA_WalkAnims(4)="stand_walkFLhip_mg34"
+    PA_WalkAnims(5)="stand_walkFRhip_mg34"
+    PA_WalkAnims(6)="stand_walkBLhip_mg34"
+    PA_WalkAnims(7)="stand_walkBRhip_mg34"
 
     PA_SprintAnims(0)="stand_sprintF_mg42"
     PA_SprintAnims(1)="stand_sprintB_mg42"
@@ -104,9 +103,9 @@ defaultproperties
     PA_ProneIdleRestAnim="prone_idle_mg42"
     PA_StandWeaponDeployAnim="stand_idleiron_mg42"
     PA_ProneWeaponDeployAnim="prone_idle_mg42"
-    PA_StandWeaponUnDeployAnim="stand_idlehip_mg42"
+    PA_StandWeaponUnDeployAnim="stand_idlehip_mg34"
     PA_ProneWeaponUnDeployAnim="prone_idle_mg42"
-    PA_Fire="stand_shoothip_mg42"
+    PA_Fire="stand_shoothip_mg34"
 
     PA_CrouchFire="crouch_shootiron_mg42"
     PA_ProneFire="prone_shoot_mg42"
@@ -114,10 +113,10 @@ defaultproperties
     PA_CrouchDeployedFire="crouch_shootiron_mg42"
     PA_ProneDeployedFire="prone_shoot_mg42"
     
-    PA_AltFire="single_iron_mg42"
-    PA_CrouchAltFire="crouch_single_mg42"
-    PA_ProneAltFire="prone_single_mg42"
-    PA_FireLastShot="stand_shoothip_mg42"
+    //PA_AltFire="single_iron_mg42"
+    //PA_CrouchAltFire="crouch_single_mg42"
+    //PA_ProneAltFire="prone_single_mg42"
+    PA_FireLastShot="stand_shoothip_mg34"
 
     PA_CrouchFireLastShot="crouch_shoot_mg42"
     PA_ProneFireLastShot="prone_shoot_mg42"
@@ -143,7 +142,7 @@ defaultproperties
 
     PA_IronFire="stand_shoothip_mg34"
 
-    PA_CrouchIronFire="crouch_shootiron_mg34"
+    PA_CrouchIronFire="crouch_shoot_mg34"
 
     PA_MoveStandFire(0)="stand_shootFwalk_mg34"
     PA_MoveStandFire(1)="stand_shootFwalk_mg34"

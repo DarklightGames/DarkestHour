@@ -11,4 +11,5 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.tank'
     MarkerName="Enemy Tank"
     LifetimeSeconds=120
+    SpottingConsoleCommand="SPEECH ENEMY 6"
 }

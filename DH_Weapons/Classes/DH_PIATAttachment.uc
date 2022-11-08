@@ -15,6 +15,7 @@ defaultproperties
     bHideWarheadWhenFired=true
     bHeavy=true
     bStaticReload=true
+    bInitiallyLoaded=true
 
     WA_Idle="idle_piat"
     WA_Fire="idle_piat"
@@ -204,4 +205,23 @@ defaultproperties
     PA_MoveStandFire(5)="stand_shootFRiron_piat"
     PA_MoveStandFire(6)="stand_shootFRiron_piat"
     PA_MoveStandFire(7)="stand_shootFLiron_piat"
+
+    PA_AirStillAnim=jump_mid_piat
+    PA_AirAnims(0)=jumpF_mid_piat
+    PA_AirAnims(1)=jumpB_mid_piat
+    PA_AirAnims(2)=jumpL_mid_piat
+    PA_AirAnims(3)=jumpR_mid_piat
+    PA_TakeoffStillAnim=jump_takeoff_piat
+    PA_TakeoffAnims(0)=jumpF_takeoff_piat
+    PA_TakeoffAnims(1)=jumpB_takeoff_piat
+    PA_TakeoffAnims(2)=jumpL_takeoff_piat
+    PA_TakeoffAnims(3)=jumpR_takeoff_piat
+    PA_LandAnims(0)=jumpF_land_piat
+    PA_LandAnims(1)=jumpB_land_piat
+    PA_LandAnims(2)=jumpL_land_piat
+    PA_LandAnims(3)=jumpR_land_piat
+    PA_DodgeAnims(0)=jumpF_mid_piat
+    PA_DodgeAnims(1)=jumpB_mid_piat
+    PA_DodgeAnims(2)=jumpL_mid_piat
+    PA_DodgeAnims(3)=jumpR_mid_piat
 }

@@ -2006,14 +2006,14 @@ function DrawSignals(Canvas C)
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
 
-    for (i = 0; i < arraycount(PC.SquadSignals); ++i)
+    for (i = 0; i < arraycount(PC.Signals); ++i)
     {
-        if (!PC.IsSquadSignalActive(i))
+        if (!PC.IsSignalActive(i))
         {
             continue;
         }
 
-        TraceEnd = PC.SquadSignals[i].Location;
+        TraceEnd = PC.Signals[i].Location;
         Direction = Normal(TraceEnd - TraceStart);
         Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
 
@@ -2022,11 +2022,11 @@ function DrawSignals(Canvas C)
             continue;
         }
 
-        SignalColor = PC.SquadSignals[i].SignalClass.default.Color;
-        SignalMaterial = PC.SquadSignals[i].SignalClass.default.WorldIconMaterial;
-        LabelText = PC.SquadSignals[i].SignalClass.default.SignalName;
+        SignalColor = PC.Signals[i].SignalClass.static.GetColor(PC.Signals[i].OptionalObject);
+        SignalMaterial = PC.Signals[i].SignalClass.static.GetWorldIconMaterial(PC.Signals[i].OptionalObject);
+        LabelText = PC.Signals[i].SignalClass.default.SignalName;
 
-        bIsNew = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalNewTimeSeconds;
+        bIsNew = Level.TimeSeconds - PC.Signals[i].TimeSeconds < SignalNewTimeSeconds;
         bHasLOS = FastTrace(TraceEnd, TraceStart);
 
         if (!bIsNew && Angle >= 0.99)
@@ -2047,9 +2047,9 @@ function DrawSignals(Canvas C)
         ScreenLocation = C.WorldToScreen(TraceEnd);
 
         // Determine icon size
-        if (Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalShrinkTimeSeconds)
+        if (Level.TimeSeconds - PC.Signals[i].TimeSeconds < SignalShrinkTimeSeconds)
         {
-            T = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds / SignalShrinkTimeSeconds;
+            T = Level.TimeSeconds - PC.Signals[i].TimeSeconds / SignalShrinkTimeSeconds;
             SignalIconSize = class'UInterp'.static.SmoothStep(T, SignalIconSizeStart, SignalIconSizeEnd);
         }
         else
@@ -2057,12 +2057,14 @@ function DrawSignals(Canvas C)
             SignalIconSize = SignalIconSizeEnd;
         }
 
+        SignalIconSize *= PC.Signals[i].SignalClass.default.WorldIconScale;
+
         C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
         C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);
 
         C.Font = C.TinyFont;
 
-        if (PC.SquadSignals[i].SignalClass.default.bShouldShowLabel && bIsNew)
+        if (PC.Signals[i].SignalClass.default.bShouldShowLabel && bIsNew)
         {
             // Draw label text
             C.TextSize(LabelText, XL, YL);
@@ -2077,7 +2079,7 @@ function DrawSignals(Canvas C)
             C.DrawText(LabelText);
         }
 
-        if (PC.SquadSignals[i].SignalClass.default.bShouldShowDistance)
+        if (PC.Signals[i].SignalClass.default.bShouldShowDistance)
         {
             // Draw distance text (with drop shadow)
             Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
@@ -3614,6 +3616,12 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
         for (j = 0; j < ObjA.AlliesRequiredObjForCapture.Length; ++j)
         {
+            // Bounds check the connections indices.
+            if (ObjA.AlliesRequiredObjForCapture[j] < 0 || ObjA.AlliesRequiredObjForCapture[j] >= arraycount(DHGRI.DHObjectives))
+            {
+                continue;
+            }
+
             ObjB = DHGRI.DHObjectives[ObjA.AlliesRequiredObjForCapture[j]];
 
             if (ObjB == none)

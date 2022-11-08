@@ -11,4 +11,5 @@ defaultproperties
     MarkerName="Enemy Vehicle"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.truck_topdown'
     LifetimeSeconds=120
+    SpottingConsoleCommand="SPEECH ENEMY 5"
 }

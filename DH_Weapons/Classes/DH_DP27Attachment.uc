@@ -8,11 +8,10 @@ class DH_DP27Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.DP27_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.dp27_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     bUsesTracers=true
@@ -43,14 +42,6 @@ defaultproperties
     PA_CrouchAnims(5)="crouch_walkFR_dp27"
     PA_CrouchAnims(6)="crouch_walkBL_dp27"
     PA_CrouchAnims(7)="crouch_walkBR_dp27"
-    PA_ProneIronAnims(0)="prone_slowcrawlF_dp27"
-    PA_ProneIronAnims(1)="prone_slowcrawlB_dp27"
-    PA_ProneIronAnims(2)="prone_slowcrawlL_dp27"
-    PA_ProneIronAnims(3)="prone_slowcrawlR_dp27"
-    PA_ProneIronAnims(4)="prone_slowcrawlL_dp27"
-    PA_ProneIronAnims(5)="prone_slowcrawlR_dp27"
-    PA_ProneIronAnims(6)="prone_slowcrawlB_dp27"
-    PA_ProneIronAnims(7)="prone_slowcrawlB_dp27"
     PA_WalkAnims(0)="stand_walkFhip_dp27"
     PA_WalkAnims(1)="stand_walkBhip_dp27"
     PA_WalkAnims(2)="stand_walkLhip_dp27"

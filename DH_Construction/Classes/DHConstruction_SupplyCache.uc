@@ -161,6 +161,7 @@ defaultproperties
     bCanPlaceIndoors=true
     bCanBeTornDownByFriendlies=false
     bCanBeTornDownWhenConstructed=true
+    bCanBePlacedInDangerZone=false
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"

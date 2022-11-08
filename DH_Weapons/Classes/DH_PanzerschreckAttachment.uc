@@ -16,11 +16,15 @@ defaultproperties
     WarheadBoneName="Warhead"
     bHideWarheadWhenFired=true
 
+    BackAttachmentLocationOffset=(X=8.0,Y=2.0,Z=0.0)
+    BackAttachmentRotationOffset=(Pitch=-2000,Roll=32000,Yaw=2000)
+
     WA_Idle="idle_rpzb"
     WA_Fire="idle_rpzb"
     WA_Reload="reload_rpzb"
 
     PA_AssistedReloadAnim="crouch_reload_assist_rpzb"
+    PA_ProneAssistedReloadAnim="prone_reload_assist_rpzb"
 
     PA_MovementAnims(0)="stand_jogF_rpzb"
     PA_MovementAnims(1)="stand_jogB_rpzb"

@@ -431,12 +431,12 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
 function RefundSupplies(int InstigatorTeamIndex)
 {
     local int i;
-    local int SupplyCost;
+    local int MySupplyCost;
     local int SuppliesToRefund, SuppliesRefunded;
     local array<DHConstructionSupplyAttachment> Attachments;
     local UComparator AttachmentComparator;
 
-    SupplyCost = GetSupplyCost(GetContext());
+    MySupplyCost = GetSupplyCost(GetContext());
 
     if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
     {
@@ -447,12 +447,12 @@ function RefundSupplies(int InstigatorTeamIndex)
         class'USort'.static.Sort(Attachments, AttachmentComparator);
 
         // Refund supplies to the touching supply attachments.
-        for (i = 0; i < Attachments.Length && SupplyCost > 0; ++i)
+        for (i = 0; i < Attachments.Length && MySupplyCost > 0; ++i)
         {
-            SuppliesToRefund = Min(SupplyCost, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+            SuppliesToRefund = Min(MySupplyCost, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
             Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
             SuppliesRefunded += SuppliesToRefund;
-            SupplyCost -= SuppliesToRefund;
+            MySupplyCost -= SuppliesToRefund;
         }
     }
 }
@@ -487,7 +487,7 @@ function TearDown(int InstigatorTeamIndex)
         if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
             GRI.TeamConstructions[i].ConstructionClass == Class)
         {
-            GRI.TeamConstructions[i].Remaining = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
+            GRI.TeamConstructions[i].Remaining = Min(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
             break;
         }
     }
@@ -1113,7 +1113,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 
     TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 
-    if (DamageType != none && DamageType == TearDownDamageType && CanTakeTearDownDamageFromPawn(InstigatedBy, true))
+    if (DamageType != none && DamageType.static.ClassIsChildOf(DamageType, TearDownDamageType) && CanTakeTearDownDamageFromPawn(InstigatedBy, true))
     {
         TakeTearDownDamage(InstigatedBy);
         return;

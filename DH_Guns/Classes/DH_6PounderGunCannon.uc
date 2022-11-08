@@ -21,12 +21,12 @@ defaultproperties
     nProjectileDescriptions(1)="Mk.I APDS"
     nProjectileDescriptions(2)="Mk.X HE-T"
 
-    InitialPrimaryAmmo=22
+    InitialPrimaryAmmo=20
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
-    MaxPrimaryAmmo=66
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=20
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=15
     SecondarySpread=0.002 //become APDS instead of HE, was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00125
     WeaponFireOffset=19.0 // different from US 57mm AT gun due to 6 pdr's muzzle brake

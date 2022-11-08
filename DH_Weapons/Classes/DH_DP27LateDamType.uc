@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHArtillery_Spitfire_Airstrike extends DHArtillery_Airstrike;
+class DH_DP27LateDamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    AirplaneClass=class'DH_Spitfire_Airplane'
+    WeaponClass=class'DH_Weapons.DH_DP27LateWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 }
-

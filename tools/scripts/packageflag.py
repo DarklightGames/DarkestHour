@@ -80,7 +80,7 @@ class Package():
             print(pretty_output)
 
     def apply_flags(self, flag_line: str, replace: bool = True) -> None:
-        if self.flags | add_mask & ~remove_mask == self.flags:
+        if self.flags & (add_mask & ~remove_mask) == self.flags:
             print(f'{self.path_relative_to_mod}: No changes')
             return
 
@@ -147,4 +147,3 @@ print('')
 # APPLY FLAGS
 for package in packages:
     package.apply_flags(flag_line)
-

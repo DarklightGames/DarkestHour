@@ -33,4 +33,6 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"
     BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+
+    bAlwaysSeverBodyparts=true
 }

@@ -394,7 +394,7 @@ defaultproperties
     MapInfos(165)=(Name="DH-Fury_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(166)=(Name="DH-La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(167)=(Name="DH-Armored_Vieux_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Any)
-    MapInfos(168)=(Name="DH-German_Village_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
+    MapInfos(168)=(Name="DH-German_Village_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(169)=(Name="DH-Kasserine_Pass_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     //MapInfos(170)=
     MapInfos(171)=(Name="DH-Cambes-En-Plaine_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
@@ -402,4 +402,5 @@ defaultproperties
 	MapInfos(173)=(Name="DH-Lazur_Chemical_Plant_Defence",AlliedNation=NATION_USSR,GameType=GAMETYPE_Defence,Size=SIZE_Small)
 	MapInfos(174)=(Name="DH-Donner_Bolts",AlliedNation=NATION_Britain,GameType=GAMETYPE_Stalemate,Size=SIZE_ExtraSmall)
 	MapInfos(175)=(Name="DH-Lutremange_Domination",AlliedNation=NATION_USA,GameType=GAMETYPE_Domination,Size=SIZE_Large)
+	MapInfos(176)=(Name="DH-Dzerzhinsky_Tractor_Factory_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
 }

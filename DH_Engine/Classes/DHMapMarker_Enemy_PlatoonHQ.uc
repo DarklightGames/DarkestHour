@@ -16,5 +16,6 @@ defaultproperties
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     MarkerName="Enemy HQ"
     LifetimeSeconds=600
+    SpottingConsoleCommand="SPEECH SUPPORT 6"
 }
 

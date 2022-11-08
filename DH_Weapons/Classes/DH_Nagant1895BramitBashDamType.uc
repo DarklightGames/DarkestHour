@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHArtillery_BF109_Airstrike extends DHArtillery_Airstrike;
+class DH_Nagant1895BramitBashDamType extends DHWeaponBashDamageType
+    abstract;
 
 defaultproperties
 {
-    MenuName="Airstrike (Bf109G)"
-    AirplaneClass=class'DH_Bf109_Airplane'
+    WeaponClass=class'DH_Weapons.DH_Nagant1895BramitWeapon'
 }
 

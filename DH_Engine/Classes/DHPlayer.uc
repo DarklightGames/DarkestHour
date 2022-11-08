@@ -9,7 +9,7 @@ class DHPlayer extends ROPlayer
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
-const SQUAD_SIGNALS_MAX = 4;
+const SIGNALS_MAX = 4;
 
 enum EMapMode
 {
@@ -132,15 +132,15 @@ var     bool                    bHasReceivedSquadJoinRecommendationMessage; // T
 
 var     DHMapDatabase           MapDatabase;
 
-// Squad Things
-struct SquadSignal
+struct Signal
 {
-    var class<DHSquadSignal> SignalClass;
+    var class<DHSignal> SignalClass;
     var vector Location;
     var float TimeSeconds;
+    var Object OptionalObject;
 };
 
-var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+var     Signal             Signals[SIGNALS_MAX];
 
 // Squad Leader HUD Info
 var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
@@ -205,7 +205,7 @@ replication
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
-        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
@@ -220,7 +220,7 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
+        ClientSquadInvite, ClientSignal, ClientSquadLeaderVolunteerPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
@@ -5818,7 +5818,7 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     }
 }
 
-function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
+function ServerSignal(class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -5826,7 +5826,7 @@ function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location);
+        SquadReplicationInfo.SendSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location, OptionalObject);
     }
 }
 
@@ -5983,7 +5983,7 @@ function RemovePersonalMarker(int Index)
     PersonalMapMarkers.Remove(Index, 1);
 }
 
-simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
+simulated function ClientSignal(class<DHSignal> SignalClass, vector L, optional Object OptionalObject)
 {
     local int i;
     local int Index;
@@ -5998,9 +5998,9 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
     if (SignalClass.default.bIsUnique)
     {
         // Go through all of the existing signals and see if one already exist.
-        for (i = 0; i < arraycount(SquadSignals); ++i)
+        for (i = 0; i < arraycount(Signals); ++i)
         {
-            if (SquadSignals[i].SignalClass == SignalClass)
+            if (Signals[i].SignalClass == SignalClass)
             {
                 Index = i;
                 break;
@@ -6011,9 +6011,9 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
     if (Index == -1)
     {
         // Go through the rest of the existing signal slots and see if any are empty or expired.
-        for (i = 0; i < arraycount(SquadSignals); ++i)
+        for (i = 0; i < arraycount(Signals); ++i)
         {
-            if (!IsSquadSignalActive(i))
+            if (!IsSignalActive(i))
             {
                 Index = i;
                 break;
@@ -6023,19 +6023,20 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 
     if (Index != -1)
     {
-        SquadSignals[Index].SignalClass = SignalClass;
-        SquadSignals[Index].Location = L;
-        SquadSignals[Index].TimeSeconds = Level.TimeSeconds;
+        Signals[Index].SignalClass = SignalClass;
+        Signals[Index].Location = L;
+        Signals[Index].TimeSeconds = Level.TimeSeconds;
+        Signals[Index].OptionalObject = OptionalObject;
     }
 }
 
-simulated function bool IsSquadSignalActive(int i)
+simulated function bool IsSignalActive(int i)
 {
     return i >= 0 &&
-           i < arraycount(SquadSignals) &&
-           SquadSignals[i].SignalClass != none &&
-           SquadSignals[i].Location != vect(0, 0, 0) &&
-           Level.TimeSeconds - SquadSignals[i].TimeSeconds < SquadSignals[i].SignalClass.default.DurationSeconds;
+           i < arraycount(Signals) &&
+           Signals[i].SignalClass != none &&
+           Signals[i].Location != vect(0, 0, 0) &&
+           Level.TimeSeconds - Signals[i].TimeSeconds < Signals[i].SignalClass.default.DurationSeconds;
 }
 
 function ServerSquadSpawnRallyPoint()
@@ -7557,25 +7558,6 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     }
 
     return RER_Enabled;
-}
-
-function DestroyShovelItem()
-{
-    local DHPawn P;
-    local Weapon Inv;
-    local Class<Weapon> ShovelClass;
-
-    P = DHPawn(Pawn);
-    ShovelClass = class<Weapon>(DynamicLoadObject("DH_Equipment.DHShovelItem", class'Class'));
-    Inv = Weapon(P.FindInventoryType(ShovelClass));
-
-    if (P != none && P.Weapon != none && ClassIsChildOf(P.Weapon.Class, ShovelClass))
-    {
-        // We are currently holding a shovel, let's put it away
-        Inv.ClientWeaponThrown();
-    }
-    
-     P.DeleteInventory(Inv);
 }
 
 defaultproperties

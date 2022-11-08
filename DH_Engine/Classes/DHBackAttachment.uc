@@ -10,17 +10,25 @@ function InitFor(Inventory I)
 {
     local int j;
 
-    local class<ROWeaponAttachment> WA;
+    local class<DHWeaponAttachment> WA;
 
     super.InitFor(I);
 
-	if (I != none && I.AttachmentClass != none)
+	if (I != none)
 	{
-        WA = class<ROWeaponAttachment>(I.AttachmentClass);
+        WA = class<DHWeaponAttachment>(I.AttachmentClass);
 
         if (WA != none)
         {
-            PlayAnim(WA.default.WA_Idle);
+            SetRelativeLocation(WA.default.BackAttachmentLocationOffset);
+            SetRelativeRotation(WA.default.BackAttachmentRotationOffset);
+
+            if (HasAnim(WA.default.WA_Idle))
+            {
+                PlayAnim(WA.default.WA_Idle);
+            }
+
+            Skins.Length = 0;
 
             for (j = 0; j < WA.default.Skins.Length; ++j)
             {
@@ -30,7 +38,7 @@ function InitFor(Inventory I)
                 }
             }
         }
-	}
+    }
 }
 
 defaultproperties

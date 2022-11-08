@@ -8,7 +8,6 @@ class DH_ZLeader extends DHAxisRoles;
 
 defaultproperties
 {
-    HealthMultiplier=5.0
     bCanPickupWeapons=false
 
     VoiceType="DH_GerPlayers.DHZVoice"
@@ -29,5 +28,6 @@ defaultproperties
     SleeveTexture=Texture'DHEventCharactersTex.Arms.h_sleeves_zombie'
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    GivenItems(0)="DH_Equipment.DHShovelItem_German"
+
+    PrimaryWeapons(0)=(Item=class'DH_Equipment.DHTrenchMaceItem_Grenade',AssociatedAttachment=none)
 }

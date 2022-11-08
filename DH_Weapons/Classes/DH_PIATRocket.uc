@@ -41,4 +41,8 @@ defaultproperties
     ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
     ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
     ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'
+
+    bDeflectAOI=true
+    DeflectAOI=30.0
+    bExplodesOnArmor=false
 }

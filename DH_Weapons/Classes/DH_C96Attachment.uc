@@ -16,13 +16,13 @@ defaultproperties
 
     ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
 
-    WA_Idle="Idle_Colt"
-    WA_IdleEmpty="idle_empty_Colt"
-    WA_Fire="shoot_Colt"
-    WA_Reload="reload_half_Colt"
-    WA_ReloadEmpty="reload_empty_Colt"
-    WA_ProneReload="prone_reload_half_Colt"
-    WA_ProneReloadEmpty="prone_reload_empty_Colt"
+    WA_Idle="idle_c96"
+    WA_IdleEmpty="idle_c96"
+    WA_Fire="idle_c96"
+    WA_Reload="idle_c96"
+    WA_ReloadEmpty="idle_c96"
+    WA_ProneReload="idle_c96"
+    WA_ProneReloadEmpty="idle_c96"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"

@@ -53,7 +53,7 @@ exec simulated function DebugAssistReloading()
 // Overridden to cycle the weapon aiming range
 exec simulated function SwitchFireMode()
 {
-    if (bUsingSights || IsInstigatorBipodDeployed() && !IsBusy())
+    if (!IsBusy() && (bUsingSights || IsInstigatorBipodDeployed()))
     {
         RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeding last range setting
 
@@ -555,7 +555,7 @@ simulated state IronSightZoomIn
 
 // Modified to hint about the changing firing range.
 // Remove this once that functionality is moved to the superclass.
-state DeployingBipod
+simulated state DeployingBipod
 {
     simulated function BeginState()
     {

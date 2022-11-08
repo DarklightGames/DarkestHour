@@ -12,7 +12,6 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAltFireFlash=true
-    bBarrelCanOverheat=true
 
     ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     bUsesTracers=true
@@ -43,14 +42,6 @@ defaultproperties
     PA_CrouchAnims(5)="crouch_walkFR_mg34"
     PA_CrouchAnims(6)="crouch_walkBL_mg34"
     PA_CrouchAnims(7)="crouch_walkBR_mg34"
-    PA_ProneIronAnims(0)="prone_slowcrawlF_mg34"
-    PA_ProneIronAnims(1)="prone_slowcrawlB_mg34"
-    PA_ProneIronAnims(2)="prone_slowcrawlL_mg34"
-    PA_ProneIronAnims(3)="prone_slowcrawlR_mg34"
-    PA_ProneIronAnims(4)="prone_slowcrawlL_mg34"
-    PA_ProneIronAnims(5)="prone_slowcrawlR_mg34"
-    PA_ProneIronAnims(6)="prone_slowcrawlB_mg34"
-    PA_ProneIronAnims(7)="prone_slowcrawlB_mg34"
     PA_WalkAnims(0)="stand_walkFhip_mg34"
     PA_WalkAnims(1)="stand_walkBhip_mg34"
     PA_WalkAnims(2)="stand_walkLhip_mg34"
