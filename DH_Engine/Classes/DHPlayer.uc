@@ -7248,20 +7248,29 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
 {
     local vector TraceStart, TraceEnd;
     local Actor A, HitActor;
+    local Actor PawnVehicleBase;
 
     if (Pawn == none)
     {
         HitLocation = vect(0, 0, 0);
     }
 
+
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+    PawnVehicleBase = Pawn.GetVehicleBase();
 
     foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (A == Pawn ||
+            A == PawnVehicleBase ||
             A.IsA('ROBulletWhipAttachment') ||
             A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        if (A.IsA('DHCollisionMeshActor') && A.Owner.Base == PawnVehicleBase)
         {
             continue;
         }
