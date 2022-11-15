@@ -63,4 +63,12 @@ defaultproperties
     MuzzleBone="MUZZLE_A6"
 
     BipodHipToDeploy="Hip_2_Bipod"
+
+    bDoBipodPhysicsSimulation=true
+    Begin Object Class=DHBipodPhysicsSettings Name=DH30CalBipodPhysicsSettings
+        BarrelBoneName="MUZZLE_A6"
+        BipodRollAxis=AXIS_X
+        ArmLength=200
+    End Object
+    BipodPhysicsSettings=DH30CalBipodPhysicsSettings
 }
