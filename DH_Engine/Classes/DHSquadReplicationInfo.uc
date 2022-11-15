@@ -49,9 +49,6 @@ var private string                  AlliesNames[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 var private int                     AlliesNextRallyPointTimes[TEAM_SQUADS_MAX]; // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
 
-var private array<string>           AlliesDefaultSquadNames;
-var private array<string>           AxisDefaultSquadNames;
-
 var globalconfig private int        AxisSquadSize;
 var globalconfig private int        AlliesSquadSize;
 
@@ -633,18 +630,16 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
 // Returns the default squad name for the specified team and squad index.
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
-    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex))
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
     {
         return "";
     }
 
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return default.AxisDefaultSquadNames[SquadIndex];
-        default:
-            return default.AlliesDefaultSquadNames[SquadIndex];
-    }
+    return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
@@ -3071,22 +3066,6 @@ defaultproperties
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
     RallyPointRadiusInMeters=100.0
-    AlliesDefaultSquadNames(0)="Able"
-    AlliesDefaultSquadNames(1)="Baker"
-    AlliesDefaultSquadNames(2)="Charlie"
-    AlliesDefaultSquadNames(3)="Dog"
-    AlliesDefaultSquadNames(4)="Easy"
-    AlliesDefaultSquadNames(5)="Fox"
-    AlliesDefaultSquadNames(6)="George"
-    AlliesDefaultSquadNames(7)="How"
-    AxisDefaultSquadNames(0)="Anton"
-    AxisDefaultSquadNames(1)="Berta"
-    AxisDefaultSquadNames(2)="Caesar"
-    AxisDefaultSquadNames(3)="Dora"
-    AxisDefaultSquadNames(4)="Emil"
-    AxisDefaultSquadNames(5)="Fritz"
-    AxisDefaultSquadNames(6)="Gustav"
-    AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=45
     SquadLockMemberCountMin=3

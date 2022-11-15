@@ -24,4 +24,12 @@ defaultproperties
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_germany'
     GrenadeCrateClass=class'DH_Weapons.DH_StielGranateSpawner'
     MapFlagIconSpriteWidget=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    DefaultSquadNames(0)="Anton"
+    DefaultSquadNames(1)="Berta"
+    DefaultSquadNames(2)="Caesar"
+    DefaultSquadNames(3)="Dora"
+    DefaultSquadNames(4)="Emil"
+    DefaultSquadNames(5)="Fritz"
+    DefaultSquadNames(6)="Gustav"
+    DefaultSquadNames(7)="Heinrich"
 }

@@ -42,8 +42,11 @@ var HudBase.SpriteWidget        MapFlagIconSpriteWidget;
 
 var class<DHInventorySpawner>   GrenadeCrateClass;
 
+// Squads
+var string                      DefaultSquadNames[8];
+
 defaultproperties
 {
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.flags_01_blank'
-    MapFlagIconSpriteWidget
+
 }
