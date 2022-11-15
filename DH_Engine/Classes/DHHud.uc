@@ -282,14 +282,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[1]);
 
     // Player figure/health & other player HUD icons
-    Level.AddPrecacheMaterial(NationHealthFigures[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresBackground[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStamina[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStaminaCritical[0]);
-    Level.AddPrecacheMaterial(NationHealthFigures[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresBackground[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStamina[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStaminaCritical[1]);
     Level.AddPrecacheMaterial(StanceStanding);
     Level.AddPrecacheMaterial(StanceCrouch);
     Level.AddPrecacheMaterial(StanceProne);
@@ -4210,14 +4202,19 @@ function DrawLocationHits(Canvas C, ROPawn P)
     local int          Team, i;
     local bool         bNewDrawHits;
     local SpriteWidget Widget;
+    local DH_LevelInfo LI;
+    local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
     {
         Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
     }
-    else
+
+    LI = class'DH_LevelInfo'.static.GetInstance(PawnOwner.Level);
+
+    if (LI != none)
     {
-        Team = 0;
+        HealthFigureClass = LI.GetTeamNationClass(Team).default.HealthFigureClass;
     }
 
     for (i = 0; i < arraycount(P.DamageList); ++i)
@@ -4226,29 +4223,7 @@ function DrawLocationHits(Canvas C, ROPawn P)
         {
             // Draw hit
             Widget = HealthFigure;
-
-            if (Team == AXIS_TEAM_INDEX)
-            {
-                Widget.WidgetTexture = locationHitAxisImages[i];
-            }
-            else if (Team == ALLIES_TEAM_INDEX)
-            {
-                switch (DHGRI.AlliedNationID)
-                {
-                    case 3: // USSR
-                    case 4: // Poland
-                    case 5: // Czechoslovakia
-                        Widget.WidgetTexture = class'ROHud'.default.LocationHitAlliesImages[i];
-                        break;
-                    default:
-                        Widget.WidgetTexture = LocationHitAlliesImages[i];
-                        break;
-                }
-            }
-            else
-            {
-                continue;
-            }
+            Widget.WidgetTexture = HealthFigureClass.default.LocationHitImages[i];
 
             DrawSpriteWidget(C, Widget);
 
@@ -4266,13 +4241,11 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
-    local byte   Nation;
-    local bool bIsRussian;
+    local DH_LevelInfo LI;
+    local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
     {
-        bIsRussian = PawnOwnerPRI.Team != none && PawnOwnerPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && DHGRI != none && (DHGRI.AlliedNationID == 3 || DHGRI.AlliedNationID == 4 || DHGRI.AlliedNationID == 5);
-
         P = ROPawn(PawnOwner);
 
         if (P != none)
@@ -4301,50 +4274,22 @@ function UpdateHud()
 
         if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
         {
-            Nation = PlayerOwner.GameReplicationInfo.NationIndex[PawnOwnerPRI.Team.TeamIndex];
-
-            if (bIsRussian)
-            {
-                HealthFigure.WidgetTexture = class'ROHud'.default.NationHealthFigures[Nation];
-            }
-            else
-            {
-                HealthFigure.WidgetTexture = NationHealthFigures[Nation];
-            }
-
-            if (bIsRussian)
-            {
-                HealthFigureBackground.WidgetTexture = class'ROHud'.default.NationHealthFiguresBackground[Nation];
-            }
-            else
-            {
-                HealthFigureBackground.WidgetTexture = NationHealthFiguresBackground[Nation];
-            }
+            LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+            HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
+            
+            HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
+            HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 
             if (HealthFigureStamina.Scale > 0.9)
             {
-                if (bIsRussian)
-                {
-                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStaminaCritical[Nation];
-                }
-                else
-                {
-                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStaminaCritical[Nation];
-                }
+                HealthFigureStamina.WidgetTexture = HealthFigureClass.default.HealthFigureStaminaCritical;
 
                 HealthFigureStamina.Tints[0].G = 255; HealthFigureStamina.Tints[1].G = 255;
                 HealthFigureStamina.Tints[0].B = 255; HealthFigureStamina.Tints[1].B = 255;
             }
             else
             {
-                if (bIsRussian)
-                {
-                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStamina[Nation];
-                }
-                else
-                {
-                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStamina[Nation];
-                }
+                HealthFigureStamina.WidgetTexture = HealthFigureClass.default.HealthFigureStamina;
             }
         }
     }
@@ -6075,27 +6020,6 @@ defaultproperties
     CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
     NeedsClearedText=" (Not Secured)"
     EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-
-    // Player figure/health icon
-    NationHealthFigures(1)=Texture'DH_GUI_Tex.GUI.US_player'
-    NationHealthFiguresBackground(1)=Texture'DH_GUI_Tex.GUI.US_player_background'
-    NationHealthFiguresStamina(1)=Texture'DH_GUI_Tex.GUI.US_player_Stamina'
-    NationHealthFiguresStaminaCritical(1)=FinalBlend'DH_GUI_Tex.GUI.US_player_Stamina_critical'
-    LocationHitAlliesImages(0)=Texture'DH_GUI_Tex.Player_hits.US_hit_Head'
-    LocationHitAlliesImages(1)=Texture'DH_GUI_Tex.Player_hits.US_hit_torso'
-    LocationHitAlliesImages(2)=Texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
-    LocationHitAlliesImages(3)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
-    LocationHitAlliesImages(4)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
-    LocationHitAlliesImages(5)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
-    LocationHitAlliesImages(6)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
-    LocationHitAlliesImages(7)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
-    LocationHitAlliesImages(8)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
-    LocationHitAlliesImages(9)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
-    LocationHitAlliesImages(10)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
-    LocationHitAlliesImages(11)=Texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
-    LocationHitAlliesImages(12)=Texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
-    LocationHitAlliesImages(13)=Texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
-    LocationHitAlliesImages(14)=Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
 
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))

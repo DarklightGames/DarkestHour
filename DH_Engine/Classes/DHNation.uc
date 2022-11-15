@@ -45,8 +45,9 @@ var class<DHInventorySpawner>   GrenadeCrateClass;
 // Squads
 var string                      DefaultSquadNames[8];
 
+var class<DHHealthFigure>       HealthFigureClass;
+
 defaultproperties
 {
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.flags_01_blank'
-
 }

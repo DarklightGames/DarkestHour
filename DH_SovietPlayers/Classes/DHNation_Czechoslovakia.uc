@@ -31,4 +31,5 @@ defaultproperties
     DefaultSquadNames(5)="Yenisey"
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
+    HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
 }

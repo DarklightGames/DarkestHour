@@ -15,6 +15,7 @@ defaultproperties
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack'
     SmokeGrenadeClass=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
+    ColoredSmokeGrenadeClass=none
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed'
@@ -31,4 +32,5 @@ defaultproperties
     DefaultSquadNames(5)="Yenisey"
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
+    HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
 }
