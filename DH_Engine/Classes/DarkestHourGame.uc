@@ -359,6 +359,7 @@ function PostBeginPlay()
         GRI.OverheadOffset = 0;
     }
 
+    GRI.AxisNationID = int(DHLevelInfo.AxisNation);
     GRI.AlliedNationID = int(DHLevelInfo.AlliedNation);
 
     // Find the location of the map bounds

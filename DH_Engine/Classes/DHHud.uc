@@ -30,15 +30,11 @@ const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking pl
 
 var DHGameReplicationInfo   DHGRI;
 
-var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2, Soviet Union = 3
-
 // Map icons/legends
 var     SpriteWidget        MapLevelOverlay;
 var     TextWidget          MapScaleText;
 var     TextWidget          PlayerNumberText;
 var     SpriteWidget        MapIconCarriedRadio;
-var     SpriteWidget        MapAxisFlagIcon;
-var     SpriteWidget        MapAlliesFlagIcons[6];
 var     SpriteWidget        MapIconMortarHETarget;
 var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
@@ -475,7 +471,7 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 
     TextMessages[i].Text = M;
     TextMessages[i].MessageLife = Level.TimeSeconds + MessageClass.default.LifeTime;
-    TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, AlliedNationID, bSimpleColours);
+    TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, bSimpleColours);
     TextMessages[i].PRI = PRI;
 }
 
@@ -3391,6 +3387,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
+    local DH_LevelInfo              LevelInfo;
+    local class<DHNation>           AxisNationClass, AlliedNationClass;
 
     if (DHGRI == none)
     {
@@ -3406,6 +3404,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     {
         OwnerTeam = 255;
     }
+    
+    // Draw objectives
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Player.Level);
+    AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+    AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
@@ -3650,7 +3653,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
-    // Draw objectives
     for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
         if (DHGRI.DHObjectives[i] == none)
@@ -3667,11 +3669,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         // Set up icon info
         if (DHGRI.DHObjectives[i].IsAxis())
         {
-            Widget = MapAxisFlagIcon;
+            Widget = AxisNationClass.default.MapFlagIconSpriteWidget;
         }
         else if (DHGRI.DHObjectives[i].IsAllies())
         {
-            Widget = MapAlliesFlagIcons[DHGRI.AlliedNationID];
+            Widget = AlliedNationClass.default.MapFlagIconSpriteWidget;
         }
         else
         {
@@ -4535,6 +4537,8 @@ function DrawCaptureBar(Canvas Canvas)
     local float                 CaptureProgress[2], XL, YL, XPos, YPos;
     local string                S, StatusText;
     local Material              StatusIcon;
+    local DH_LevelInfo          LevelInfo;
+    local class<DHNation>       AxisNationClass, AlliedNationClass;
 
     if (DHGRI == none || PlayerOwner == none || PawnOwnerPRI == none || PawnOwnerPRI.Team == none)
     {
@@ -4650,22 +4654,26 @@ function DrawCaptureBar(Canvas Canvas)
         }
     }
 
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+    AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+    AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
+
     // Assign attacker/defender properties based on player's team
     if (OwnTeam == AXIS_TEAM_INDEX)
     {
         EnemyTeam = ALLIES_TEAM_INDEX;
-        CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
-        CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords; // left side flag
-        CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords; // right side flag
+        CaptureBarIcons[0].WidgetTexture = AxisNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = AxisNationClass.default.MapFlagIconSpriteWidget.TextureCoords; // left side flag
+        CaptureBarIcons[1].WidgetTexture = AlliedNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = AlliedNationClass.default.MapFlagIconSpriteWidget.TextureCoords; // right side flag
     }
     else
     {
         EnemyTeam = AXIS_TEAM_INDEX;
-        CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
-        CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
-        CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = MapAxisFlagIcon.TextureCoords;
+        CaptureBarIcons[0].WidgetTexture = AlliedNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = AlliedNationClass.default.MapFlagIconSpriteWidget.TextureCoords;
+        CaptureBarIcons[1].WidgetTexture = AxisNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = AxisNationClass.default.MapFlagIconSpriteWidget.TextureCoords;
     }
 
     CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[OwnTeam];
@@ -5958,7 +5966,7 @@ function DHDrawTypingPrompt(Canvas C)
     }
     else
     {
-        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, AlliedNationID, bSimpleColours);
+        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, bSimpleColours);
         SayTypeText = SayTypeMessageClass.default.MessagePrefix;
     }
 
@@ -6113,13 +6121,6 @@ defaultproperties
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAxisFlagIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=0,X2=127,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(2)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(3)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=32,X2=63,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(4)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=32,X2=95,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(5)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=32,X2=127,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
     MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'

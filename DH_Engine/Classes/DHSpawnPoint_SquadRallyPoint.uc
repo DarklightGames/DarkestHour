@@ -6,9 +6,6 @@
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
     notplaceable;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
-
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
 var int RallyPointIndex;                        // The index into SRI.RallyPoints.
@@ -372,81 +369,30 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 function UpdateAppearance()
 {
     local DarkestHourGame G;
-    local DH_LevelInfo.EAlliedNation AlliedNation;
     local StaticMesh NewStaticMesh;
+    local class<DHNation> NationClass;
 
     G = DarkestHourGame(Level.Game);
 
-    if (G != none && G.DHLevelInfo != none)
+    if (G == none || G.DHLevelInfo == none)
     {
-        AlliedNation = G.DHLevelInfo.AlliedNation;
+        return;
+    }
+
+    NationClass = G.DHLevelInfo.GetTeamNationClass(GetTeamIndex());
+
+    if (NationClass == none)
+    {
+        return;
     }
 
     if (IsActive())
     {
-        switch (GetTeamIndex())
-        {
-        case AXIS_TEAM_INDEX:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established';
-            break;
-        case ALLIES_TEAM_INDEX:
-            switch (AlliedNation)
-            {
-            case NATION_Britain:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack_established';
-                break;
-            case NATION_Canada:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established';
-                break;
-            case NATION_USSR:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established';
-                break;
-            case NATION_Poland:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established';
-                break;
-            case NATION_Czechoslovakia:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CS_backpack_established';
-                break;
-            default:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
-                break;
-            }
-        default:
-            break;
-        }
+        NewStaticMesh = NationClass.default.RallyPointStaticMeshActive;
     }
     else
     {
-        switch (GetTeamIndex())
-        {
-        case AXIS_TEAM_INDEX:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack';
-            break;
-        case ALLIES_TEAM_INDEX:
-            switch (AlliedNation)
-            {
-            case NATION_Britain:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack';
-                break;
-            case NATION_Canada:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
-                break;
-            case NATION_USSR:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
-                break;
-            case NATION_Poland:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.POL_backpack';
-                break;
-            case NATION_Czechoslovakia:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CS_backpack';
-                break;
-            default:
-                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
-                break;
-            }
-        default:
-            break;
-        }
+        NewStaticMesh = NationClass.default.RallyPointStaticMesh;
     }
 
     SetStaticMesh(NewStaticMesh);

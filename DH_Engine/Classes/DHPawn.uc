@@ -130,8 +130,6 @@ var     bool                bAlwaysSeverBodyparts; // implemented for zombies
 var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
 // Smoke grenades for squad leaders
-var DH_LevelInfo.SNationString SmokeGrenadeClassName;
-var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
@@ -3321,112 +3319,52 @@ function CheckGiveSmoke()
     local DarkestHourGame DHG;
     local byte TeamIndex;
     local int SquadMemberCount;
-    local string ColoredSmokeGrenadeToGive;
-    local string SmokeGrenadeToGive;
+    local class<DHNation> NationClass;
+    local class<Inventory> ColoredSmokeGrenadeToGive;
+    local class<Inventory> SmokeGrenadeToGive;
 
-    if (Level.Game != none)
+    RI = GetRoleInfo();
+    TeamIndex = GetTeamNum();
+
+    DHG = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    PC = DHPlayer(Controller);
+    
+    NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
+
+    // Exclude tank crewmen and mortar operators
+    if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
     {
-        RI = GetRoleInfo();
+        return;
+    }
 
-        // Exclude tank crewmen and mortar operators
-        if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
-        {
-            return;
-        }
+    // Only squad leaders can recieve smoke.
+    if (!PC.IsSquadLeader())
+    {
+        return;
+    }
 
-        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-        PC = DHPlayer(Controller);
+    SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
 
-        if (GRI == none ||
-            PC == none ||
-            PC.SquadReplicationInfo == none ||
-            PRI == none ||
-            !PRI.IsSquadLeader())
-        {
-            return;
-        }
+    // Not enough people in the squad to receive any smoke
+    if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
+    {
+        return;
+    }
 
-        TeamIndex = GetTeamNum();
-        SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
+    // Get the smoke grenade classes from the nation.
+    SmokeGrenadeToGive = NationClass.default.SmokeGrenadeClass;
+    ColoredSmokeGrenadeToGive = NationClass.default.ColoredSmokeGrenadeClass;
 
-        // Not enough people in the squad to receive any smoke
-        if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
-        {
-            return;
-        }
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != none)
+    {
+        CreateInventory(string(SmokeGrenadeToGive));
+    }
 
-        switch (TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                SmokeGrenadeToGive = SmokeGrenadeClassName.Germany;
-                ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Germany;
-
-                break;
-
-            case ALLIES_TEAM_INDEX:
-                DHG = DarkestHourGame(Level.Game);
-
-                if (DHG == none || DHG.LevelInfo == none)
-                {
-                    return;
-                }
-
-                switch (DHG.DHLevelInfo.AlliedNation)
-                {
-                    case NATION_Canada:
-                        // Falls back to Britain
-                        if (SmokeGrenadeClassName.Canada != "")
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        }
-
-                        if (ColoredSmokeGrenadeClassName.Canada != "")
-                        {
-                            ColoredSmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        }
-
-                        break;
-
-                    case NATION_Britain:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        break;
-
-                    case NATION_USSR:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
-                        break;
-
-                    case NATION_Poland:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
-                        break;
-
-                    default:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USA;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USA;
-                        break;
-                }
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != "")
-        {
-            CreateInventory(SmokeGrenadeToGive);
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != "")
-        {
-            CreateInventory(ColoredSmokeGrenadeToGive);
-        }
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != none)
+    {
+        CreateInventory(string(ColoredSmokeGrenadeToGive));
     }
 }
 
@@ -7596,8 +7534,6 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
-    ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6
 
