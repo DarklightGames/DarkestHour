@@ -14,9 +14,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_30calPickup'
 
     Mesh=SkeletalMesh'DH_M1919_anm.M1919A6_1st'
-    //HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.30calMain_s'
-    //bUseHighDetailOverlayIndex=true
-    //HighDetailOverlayIndex=2
 
     DisplayFOV=90.0
     IronSightDisplayFOV=60.0
