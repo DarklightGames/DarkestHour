@@ -13,8 +13,6 @@ defaultproperties
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.USA_flag_01'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
-    SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
-    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed'

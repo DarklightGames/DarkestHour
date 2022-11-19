@@ -15,10 +15,6 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
-// Smoke Grenades
-var class<Inventory>            SmokeGrenadeClass;
-var class<Inventory>            ColoredSmokeGrenadeClass;
-
 // Platoon HQ
 var StaticMesh                  PlatoonHQConstructedStaticMesh;
 var StaticMesh                  PlatoonHQBrokenStaticMesh;

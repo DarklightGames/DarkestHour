@@ -33,4 +33,6 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"
     BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+    SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
+    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
 }

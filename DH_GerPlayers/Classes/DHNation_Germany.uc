@@ -14,8 +14,6 @@ defaultproperties
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.GER_flag_01'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack'
-    SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
-    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed'

@@ -27,4 +27,6 @@ defaultproperties
     ShovelClassName="DH_Equipment.DHShovelItem_US"
     bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack
     BinocsClassName="DH_Equipment.DHBinocularsItemAllied"
+    SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
+    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
 }

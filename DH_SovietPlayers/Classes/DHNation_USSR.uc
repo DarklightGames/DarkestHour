@@ -13,8 +13,6 @@ defaultproperties
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.SOVIET_flag_01'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack'
-    SmokeGrenadeClass=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
-    ColoredSmokeGrenadeClass=none
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'
     PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
     PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed'

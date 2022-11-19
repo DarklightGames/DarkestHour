@@ -31,4 +31,5 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_Russian"
     BinocsClassName="DH_Equipment.DHBinocularsItemSoviet"
+    SmokeGrenadeClass=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
 }

@@ -37,6 +37,9 @@ var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, 
 
 var     string  BinocsClassName;
 
+var     class<Inventory>    SmokeGrenadeClass;
+var     class<Inventory>    ColoredSmokeGrenadeClass;
+
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
 var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
@@ -3320,8 +3323,6 @@ function CheckGiveSmoke()
     local byte TeamIndex;
     local int SquadMemberCount;
     local class<DHNation> NationClass;
-    local class<Inventory> ColoredSmokeGrenadeToGive;
-    local class<Inventory> SmokeGrenadeToGive;
 
     RI = GetRoleInfo();
     TeamIndex = GetTeamNum();
@@ -3354,17 +3355,14 @@ function CheckGiveSmoke()
     }
 
     // Get the smoke grenade classes from the nation.
-    SmokeGrenadeToGive = NationClass.default.SmokeGrenadeClass;
-    ColoredSmokeGrenadeToGive = NationClass.default.ColoredSmokeGrenadeClass;
-
-    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != none)
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeClass != none)
     {
-        CreateInventory(string(SmokeGrenadeToGive));
+        CreateInventory(string(SmokeGrenadeClass));
     }
 
-    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != none)
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeClass != none)
     {
-        CreateInventory(string(ColoredSmokeGrenadeToGive));
+        CreateInventory(string(ColoredSmokeGrenadeClass));
     }
 }
 
@@ -7432,7 +7430,6 @@ simulated function bool CanBuildWithShovel()
 
 simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
-    local DHPlayer PC;
     local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     

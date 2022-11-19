@@ -19,4 +19,6 @@ defaultproperties
 
     ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make British shovel
     BinocsClassName="DH_Equipment.DHBinocularsItemAllied"
+    SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
+    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
 }
