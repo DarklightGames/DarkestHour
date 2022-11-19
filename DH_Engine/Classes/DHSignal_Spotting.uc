@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHSquadSignal_Spotting extends DHSquadSignal
+class DHSignal_Spotting extends DHSignal
     abstract;
 
 static function Material GetWorldIconMaterial(optional Object OptionalObject)

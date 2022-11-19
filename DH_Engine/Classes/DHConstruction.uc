@@ -487,7 +487,7 @@ function TearDown(int InstigatorTeamIndex)
         if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
             GRI.TeamConstructions[i].ConstructionClass == Class)
         {
-            GRI.TeamConstructions[i].Remaining = Max(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
+            GRI.TeamConstructions[i].Remaining = Min(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
             break;
         }
     }

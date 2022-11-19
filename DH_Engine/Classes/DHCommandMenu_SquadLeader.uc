@@ -54,7 +54,7 @@ function OnSelect(int Index, vector Location)
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
 
-            PC.ServerSquadSignal(class'DHSquadSignal_Fire', Location);  // TODO: project off of the location a bit
+            PC.ServerSignal(class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2:
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");
@@ -83,7 +83,7 @@ function OnSelect(int Index, vector Location)
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSquadSignal(class'DHSquadSignal_Move', Location);
+            PC.ServerSignal(class'DHSignal_Move', Location);
             break;
         default:
             break;

@@ -9,7 +9,7 @@ class DHPlayer extends ROPlayer
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
-const SQUAD_SIGNALS_MAX = 4;
+const SIGNALS_MAX = 4;
 
 enum EMapMode
 {
@@ -132,16 +132,15 @@ var     bool                    bHasReceivedSquadJoinRecommendationMessage; // T
 
 var     DHMapDatabase           MapDatabase;
 
-// Squad Things
-struct SquadSignal
+struct Signal
 {
-    var class<DHSquadSignal> SignalClass;
+    var class<DHSignal> SignalClass;
     var vector Location;
     var float TimeSeconds;
     var Object OptionalObject;
 };
 
-var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+var     Signal             Signals[SIGNALS_MAX];
 
 // Squad Leader HUD Info
 var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
@@ -206,7 +205,7 @@ replication
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
-        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
@@ -221,7 +220,7 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
+        ClientSquadInvite, ClientSignal, ClientSquadLeaderVolunteerPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
@@ -5819,7 +5818,7 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     }
 }
 
-function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location, optional Object OptionalObject)
+function ServerSignal(class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -5827,7 +5826,7 @@ function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location, op
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location, OptionalObject);
+        SquadReplicationInfo.SendSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location, OptionalObject);
     }
 }
 
@@ -5984,7 +5983,7 @@ function RemovePersonalMarker(int Index)
     PersonalMapMarkers.Remove(Index, 1);
 }
 
-simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L, optional Object OptionalObject)
+simulated function ClientSignal(class<DHSignal> SignalClass, vector L, optional Object OptionalObject)
 {
     local int i;
     local int Index;
@@ -5999,9 +5998,9 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L,
     if (SignalClass.default.bIsUnique)
     {
         // Go through all of the existing signals and see if one already exist.
-        for (i = 0; i < arraycount(SquadSignals); ++i)
+        for (i = 0; i < arraycount(Signals); ++i)
         {
-            if (SquadSignals[i].SignalClass == SignalClass)
+            if (Signals[i].SignalClass == SignalClass)
             {
                 Index = i;
                 break;
@@ -6012,9 +6011,9 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L,
     if (Index == -1)
     {
         // Go through the rest of the existing signal slots and see if any are empty or expired.
-        for (i = 0; i < arraycount(SquadSignals); ++i)
+        for (i = 0; i < arraycount(Signals); ++i)
         {
-            if (!IsSquadSignalActive(i))
+            if (!IsSignalActive(i))
             {
                 Index = i;
                 break;
@@ -6024,20 +6023,20 @@ simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L,
 
     if (Index != -1)
     {
-        SquadSignals[Index].SignalClass = SignalClass;
-        SquadSignals[Index].Location = L;
-        SquadSignals[Index].TimeSeconds = Level.TimeSeconds;
-        SquadSignals[Index].OptionalObject = OptionalObject;
+        Signals[Index].SignalClass = SignalClass;
+        Signals[Index].Location = L;
+        Signals[Index].TimeSeconds = Level.TimeSeconds;
+        Signals[Index].OptionalObject = OptionalObject;
     }
 }
 
-simulated function bool IsSquadSignalActive(int i)
+simulated function bool IsSignalActive(int i)
 {
     return i >= 0 &&
-           i < arraycount(SquadSignals) &&
-           SquadSignals[i].SignalClass != none &&
-           SquadSignals[i].Location != vect(0, 0, 0) &&
-           Level.TimeSeconds - SquadSignals[i].TimeSeconds < SquadSignals[i].SignalClass.default.DurationSeconds;
+           i < arraycount(Signals) &&
+           Signals[i].SignalClass != none &&
+           Signals[i].Location != vect(0, 0, 0) &&
+           Level.TimeSeconds - Signals[i].TimeSeconds < Signals[i].SignalClass.default.DurationSeconds;
 }
 
 function ServerSquadSpawnRallyPoint()
@@ -7249,20 +7248,29 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
 {
     local vector TraceStart, TraceEnd;
     local Actor A, HitActor;
+    local Actor PawnVehicleBase;
 
     if (Pawn == none)
     {
         HitLocation = vect(0, 0, 0);
     }
 
+
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+    PawnVehicleBase = Pawn.GetVehicleBase();
 
     foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (A == Pawn ||
+            A == PawnVehicleBase ||
             A.IsA('ROBulletWhipAttachment') ||
             A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        if (A.IsA('DHCollisionMeshActor') && A.Owner.Base == PawnVehicleBase)
         {
             continue;
         }
@@ -7338,18 +7346,20 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
     }
 }
 
-exec function DebugAddMapMarker(string MapMarkerClassName, int x, int y)
+exec function DebugAddMapMarker(string MapMarkerClassName, int X, int Y)
 {
     local class<DHMapMarker> MapMarkerClass;
-    local float xx, yy;
+    local float XX, YY;
 
     if (IsDebugModeAllowed())
     {
-        xx = float(x)/10;
-        yy = float(y)/10;
+        XX = float(x) / 10;
+        YY = float(y) / 10;
         MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, class'Class'));
-        Log("adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ xx @ "," @ yy);
-        AddMarker(MapMarkerClass, xx, yy);
+
+        Log("Adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ XX @ "," @ YY);
+
+        AddMarker(MapMarkerClass, XX, YY);
     }
 }
 
@@ -7383,6 +7393,7 @@ exec function DebugStartRound()
     if (IsDebugModeAllowed())
     {
         GRI = DHGameReplicationInfo(GameReplicationInfo);
+
         if (GRI == none || !GRI.bIsInSetupPhase)
         {
             return;
@@ -7404,7 +7415,7 @@ function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(MapMarkerClass.default.Cooldown > 0)
+    if (MapMarkerClass.default.Cooldown > 0)
     {
         switch(MapMarkerClass.default.OverwritingRule)
         {
@@ -7440,7 +7451,7 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
 
     ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
 
-    if(MapMarkerClass.default.Scope != PERSONAL)
+    if (MapMarkerClass.default.Scope != PERSONAL)
     {
         // We are on the server at this point, as this function is called from OnMapMarkerPlaced
         // which for non-personal markers is executed on the server.

@@ -58,7 +58,7 @@ function OnSelect(int OptionIndex, vector Location)
 
     PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
     
-    PC.ServerSquadSignal(class'DHSquadSignal_Spotting', Location, MapMarkerClass);
+    PC.ServerSignal(class'DHSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
 }
