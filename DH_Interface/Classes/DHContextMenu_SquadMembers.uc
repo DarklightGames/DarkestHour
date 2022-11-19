@@ -188,11 +188,6 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             PC.ServerSquadInvite(SelectedPRI);
             return;
 
-        case 15:
-            if (!PRI.IsLoggedInAsAdmin())
-            {
-                return;
-            }
         case 2:
             PC.ServerSquadKick(SelectedPRI);
             return;
@@ -201,11 +196,6 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             PC.ServerSquadBan(SelectedPRI);
             return;
 
-        case 14:
-            if (!PRI.IsLoggedInAsAdmin())
-            {
-                return;
-            }
         case 4:
             PC.ServerSquadPromote(SelectedPRI);
             return;
@@ -270,6 +260,14 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
                     PC.ServerParadropSquad(SelectedPRI.Team.TeamIndex, SelectedPRI.SquadIndex, ParadropLocation, PC.ParadropSpreadModifier, false);
                 }
 
+                return;
+
+            case 14:
+                PC.ServerSquadPromote(SelectedPRI);
+                return;
+
+            case 15:
+                PC.ServerSquadKick(SelectedPRI);
                 return;
         }
     }
