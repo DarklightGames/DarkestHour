@@ -54,8 +54,6 @@ protected function AssembleMenu(GUIComponent Component)
     {
         if (PRI.IsSquadLeader())
         {
-            // WE ARE A SQUAD LEADER:
-
             if (PRI.SquadIndex == SquadIndex)
             {
                 AddEntry(2);     // Kick player
@@ -82,23 +80,16 @@ protected function AssembleMenu(GUIComponent Component)
                 AddEntry(1);     // Invite the unassigned player
             }
         }
-        else if (SquadComponent.li_Members != none)
+        else if (SelectedPRI.IsSquadLeader() &&
+                 PRI.SquadIndex == SquadIndex &&
+                 !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex))
         {
-            // WE ARE A NORMIE:
-
-            SquadMemberIndex = SquadComponent.li_Members.GetIndexByObject(SquadComponent.li_Members.GetObject());
-
-            if (SquadMemberIndex == 0 && !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex))
-            {
-                AddEntry(7);      // Volunteer to assist
-            }
+            AddEntry(7);         // Volunteer to assist
         }
     }
 
     if (PRI.IsLoggedInAsAdmin())
     {
-        // WE ARE AN ADMIN:
-
         bParadropMarkerPlaced = PC.IsPersonalMarkerPlaced(PC.ParadropMarkerClass);
         bSquadLeaderIsAlive = SquadIndex >= 0 &&
                               SquadIndex < arraycount(PC.SquadLeaderLocations) &&
