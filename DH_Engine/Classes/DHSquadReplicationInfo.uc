@@ -716,17 +716,34 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 // Changes the squad leader. Returns true if the squad leader was successfully changed.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
-    local DHPlayer PC;
-    local DHPlayer OtherPC;
+    local DHBot Bot;
+    local DHPlayer PC, OtherPC;
+    local DHPlayerReplicationInfo Admin, CurrentSquadLeader;
+    local bool bRequestedByAdmin;
 
     if (PRI == none)
     {
         return false;
     }
 
-    PC = DHPlayer(PRI.Owner);
+    // Change has been requested by an admin: swap PRI with the actual SL.
+    if (PRI.IsLoggedInAsAdmin() && NewSquadLeader != none)
+    {
+        Admin = PRI;
+        CurrentSquadLeader = GetSquadLeader(TeamIndex, NewSquadLeader.SquadIndex);
 
-    if (PC == none)
+        if (CurrentSquadLeader != none && CurrentSquadLeader != Admin)
+        {
+            PRI = CurrentSquadLeader;
+            SquadIndex = NewSquadLeader.SquadIndex;
+            bRequestedByAdmin = true;
+        }
+    }
+
+    PC = DHPlayer(PRI.Owner);
+    Bot = DHBot(PRI.Owner);
+
+    if (PC == none && Bot == none)
     {
         return false;
     }
@@ -758,8 +775,22 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     MaybeLeaveCommandVoiceChannel(PRI);
 
-    // "You are no longer the squad leader"
-    PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
+    if (bRequestedByAdmin)
+    {
+        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+                                                                    TeamIndex,
+                                                                    class'DHAdminMessage',
+                                                                    class'UInteger'.static.FromShorts(1, SquadIndex),
+                                                                    Admin,
+                                                                    NewSquadLeader,
+                                                                    self);
+    }
+
+    if (PC != none)
+    {
+        // "You are no longer the squad leader"
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
+    }
 
     OtherPC = DHPlayer(NewSquadLeader.Owner);
 
@@ -1167,7 +1198,20 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
 
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || !IsInSquad(MemberToKick, TeamIndex, SquadIndex))
     {
-        return false;
+        if (PRI.IsLoggedInAsAdmin())
+        {
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+                                                                        TeamIndex,
+                                                                        class'DHAdminMessage',
+                                                                        class'UInteger'.static.FromShorts(0, SquadIndex),
+                                                                        PRI,
+                                                                        MemberToKick,
+                                                                        self);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     LeaveSquad(MemberToKick);

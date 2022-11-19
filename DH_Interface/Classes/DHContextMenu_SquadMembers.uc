@@ -102,6 +102,8 @@ protected function AssembleMenu(GUIComponent Component)
 
         InsertSeparatorIndex = GetMenuLength();
 
+        // PARADROP COMMANDS
+
         if (bParadropMarkerPlaced)
         {
             AddEntry(10);         // ADMIN: Paradrop PLAYER to MARKER
@@ -138,6 +140,28 @@ protected function AssembleMenu(GUIComponent Component)
         {
             InsertEntry(0, InsertSeparatorIndex);
         }
+
+        InsertSeparatorIndex = GetMenuLength();
+
+        // ADMIN COMMANDS
+
+        if (SelectedPRI.SquadIndex >= 0 && (PRI.SquadIndex != SquadIndex || !PRI.IsSquadLeader()))
+        {
+            if (!SelectedPRI.IsSquadLeader())
+            {
+                AddEntry(14); // ADMIN: Promote PLAYER to squad leader
+            }
+
+            if (PRI != SelectedPRI)
+            {
+                AddEntry(15); // ADMIN: Kick PLAYER from squad
+            }
+        }
+
+        if (InsertSeparatorIndex > 0 && InsertSeparatorIndex < GetMenuLength())
+        {
+            InsertEntry(0, InsertSeparatorIndex);
+        }
     }
 }
 
@@ -164,6 +188,11 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             PC.ServerSquadInvite(SelectedPRI);
             return;
 
+        case 15:
+            if (!PRI.IsLoggedInAsAdmin())
+            {
+                return;
+            }
         case 2:
             PC.ServerSquadKick(SelectedPRI);
             return;
@@ -172,6 +201,11 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             PC.ServerSquadBan(SelectedPRI);
             return;
 
+        case 14:
+            if (!PRI.IsLoggedInAsAdmin())
+            {
+                return;
+            }
         case 4:
             PC.ServerSquadPromote(SelectedPRI);
             return;
@@ -286,4 +320,6 @@ defaultproperties
     EntryTexts(11)="{1} Paradrop SQUAD to squad leader"
     EntryTexts(12)="{1} Paradrop SQUAD to marker"
     EntryTexts(13)="{1} Paradrop unassigned players to marker"
+    EntryTexts(14)="{1} Promote {0} to squad leader"
+    EntryTexts(15)="{1} Kick {0} from squad"
 }
