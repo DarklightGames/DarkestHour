@@ -32,10 +32,10 @@ var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
-var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+var     class<Inventory>    ShovelClass;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
-var     string  BinocsClassName;
+var     class<Inventory>    BinocsClass;
 
 var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
@@ -3283,13 +3283,13 @@ function CheckGiveShovel()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (ShovelClassName != "" && Level.Game != none)
+    if (ShovelClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none && GRI.bAreConstructionsEnabled)
         {
-            CreateInventory(ShovelClassName);
+            CreateInventory(string(ShovelClass));
         }
     }
 }
@@ -3300,14 +3300,14 @@ function CheckGiveBinocs()
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
-    if (BinocsClassName != "" && Level.Game != none)
+    if (BinocsClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
         if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
         {
-            CreateInventory(BinocsClassName);
+            CreateInventory(string(BinocsClass));
         }
     }
 }

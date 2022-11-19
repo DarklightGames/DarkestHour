@@ -12,6 +12,6 @@ defaultproperties
     Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_LWP_wz43_tunic'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face04'
 
-    ShovelClassName="DH_Equipment.DHShovelItem_Russian"
-    BinocsClassName="DH_Equipment.DHBinocularsItemSoviet"
+    ShovelClass=class'DH_Equipment.DHShovelItem_Russian'
+    BinocsClass=class'DH_Equipment.DHBinocularsItemSoviet'
 }
