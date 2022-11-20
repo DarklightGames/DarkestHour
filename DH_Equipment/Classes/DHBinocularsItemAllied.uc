@@ -5,8 +5,6 @@
 
 class DHBinocularsItemAllied extends DHBinocularsItem;
 
-#exec OBJ LOAD FILE=DH_VehicleOptics_tex.utx
-
 defaultproperties
 {
     ItemName="M13 Binoculars 6x30"
@@ -17,6 +15,6 @@ defaultproperties
     HighDetailOverlay=Shader'DH_Equipment_tex.Binocs.AlliedBinoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Allied'
+    
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Allied'
 }
