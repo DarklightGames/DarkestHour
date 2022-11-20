@@ -431,7 +431,7 @@ function ResetSquadNextRallyPointTimes()
     }
 }
 
-function ResetSquadInfo()
+function ResetSquadRallyPoints()
 {
     local int i;
 
@@ -443,6 +443,13 @@ function ResetSquadInfo()
             RallyPoints[i] = none;
         }
     }
+    
+    ResetSquadNextRallyPointTimes();
+}
+
+function ResetSquadInfo()
+{
+    local int i;
 
     for (i = 0; i < arraycount(AxisMembers); ++i)
     {

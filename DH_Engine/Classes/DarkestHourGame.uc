@@ -3103,11 +3103,6 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
-        if (SquadReplicationInfo != none)
-        {
-            SquadReplicationInfo.ResetSquadInfo();
-        }
-
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
@@ -3145,6 +3140,11 @@ state ResetGameCountdown
             {
                 GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
                 GRI.DangerZoneUpdated();
+            }
+
+            if (SquadReplicationInfo != none)
+            {
+                SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
