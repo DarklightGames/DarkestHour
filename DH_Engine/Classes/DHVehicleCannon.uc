@@ -2082,7 +2082,7 @@ defaultproperties
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
 
     // Reload
-    ReloadState=RL_Waiting
+    ReloadState=RL_ReadyToFire
     ReloadStages(0)=(HUDProportion=1.0)
     ReloadStages(1)=(HUDProportion=0.75)
     ReloadStages(2)=(HUDProportion=0.5)
