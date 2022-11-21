@@ -6,8 +6,6 @@
 class DHConstruction_PlatoonHQ extends DHConstruction
     notplaceable;
 
-#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
-
 var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
@@ -315,6 +313,21 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     }
 
     return E;
+}
+
+// Modified to put the correct nation flag on the flag skin.
+function static UpdateProxy(DHActorProxy CP)
+{
+    local class<DHNation> NationClass;
+
+    super.UpdateProxy(CP);
+
+    NationClass = CP.GetContext().LevelInfo.GetTeamNationClass(CP.GetContext().TeamIndex);
+
+    if (NationClass != none)
+    {
+        CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(NationClass.default.PlatoonHQFlagTexture);
+    }
 }
 
 defaultproperties
