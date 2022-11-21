@@ -26,4 +26,8 @@ defaultproperties
     Health=525
     HealthMax=525.0
 	EngineHealth=300
+
+    VehHitpoints(0)=(PointRadius=25.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=-30.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=25.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=5.0,Y=30.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+                    //these are 105mm shells, point radius enlarged to fit the size of the shell
 }

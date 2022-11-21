@@ -75,6 +75,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=35.0,PointScale=1.0,PointBone="turret",PointOffset=(X=-45.0,Y=0,Z=0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//IS2 had an ammo rack in the bustle of the turret, added to enable the functionality 
     NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=97.00,Y=-19.50,Z=8.00),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=23.0,PointBone="turret",PointOffset=(X=0.00,Y=-0.00,Z=-30.00),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=16.0,PointBone="turret",PointOffset=(X=80.00,Y=-0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
