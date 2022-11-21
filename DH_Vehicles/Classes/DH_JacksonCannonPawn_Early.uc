@@ -8,4 +8,6 @@ class DH_JacksonCannonPawn_Early extends DH_JacksonCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_JacksonCannon_Early'
+    OverlayCorrectionX=-4
+    OverlayCorrectionY=10
 }

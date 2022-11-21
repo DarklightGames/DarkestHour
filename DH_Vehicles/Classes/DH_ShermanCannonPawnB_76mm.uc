@@ -9,4 +9,6 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ShermanCannonB_76mm'
     FireImpulse=(X=-80000.0)
+    OverlayCorrectionX=-6
+    OverlayCorrectionY=10
 }
