@@ -3,16 +3,16 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MAB38Fire extends DHAutomaticFire;
+class DH_MAB42Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MAB38Bullet'
-    AmmoClass=class'DH_MAB38Ammo'
+    ProjectileClass=class'DH_Weapons.DH_MAB42Bullet'
+    AmmoClass=class'DH_MAB42Ammo'
     FAProjSpawnOffset=(X=-28.0)
-    FireRate=0.115 // ~575 rpm (value had to be found experimentally due to an engine bug)
+    FireRate=0.1 //600 per minute
 
-    Spread=120.0
+    Spread=180.0    // shorter barrel than the MAB38
 
     // Recoil
     RecoilRate=0.04285
@@ -29,7 +29,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
 
     ShellRotOffsetIron=(Pitch=25000)
-    ShellRotOffsetHip=(Pitch=10000,Yaw=-16384)
+    ShellRotOffsetHip=(Pitch=0)
 
     FireIronLastAnim="iron_shoot_end_empty"
     FireLastAnim="shoot_end_empty"
