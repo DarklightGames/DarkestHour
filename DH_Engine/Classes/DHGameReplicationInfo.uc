@@ -79,6 +79,7 @@ var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
 var DHRadio             Radios[RADIOS_MAX];
 
+var int                 AxisNationID;
 var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
@@ -280,7 +281,7 @@ replication
         TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AlliedNationID, ConstructionClasses, MapMarkerClasses;
+        AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
 }
 
 simulated event PreBeginPlay()

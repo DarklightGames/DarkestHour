@@ -17,7 +17,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    ConsoleColor = GetDHConsoleColor(RelatedPRI_1, 0, false);
+    ConsoleColor = GetDHConsoleColor(RelatedPRI_1, false);
 
     if (myHUD != none && myHUD.PlayerOwner != none)
     {

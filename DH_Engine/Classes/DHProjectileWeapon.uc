@@ -123,15 +123,16 @@ var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
 var     bool            bHasScope;
 var     bool            bHasModelScope;
 var     bool            bForceModelScope;        // force the use of the 3D scope
+var     bool            bForceTextureScope;      // force the use of the textured scope
 var     float           ScopePortalFOV;          // the FOV to zoom the scope portal by
 var     float           ScopePortalFOVHigh;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
 var     bool            bDebugSights;            // shows centering cross in scope overlay for testing purposes
-var     texture         ScopeOverlay;            // texture overlay for scope
+var     Texture         ScopeOverlay;            // texture overlay for scope
 var     float           ScopeOverlaySize;        // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
 var     float           OverlayCorrectionX;      // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float           OverlayCorrectionY;
-var()       int         LensMaterialID;        // used since material id's seem to change alot
+var     int             LensMaterialID;          // used since material id's seem to change alot
 
 // Not sure if these pitch vars are still needed now that we use Scripted Textures. We'll keep for now in case they are. - Ramm 08/14/04
 var()       int         ScopePitch;             // Tweaks the pitch of the scope firing angle
@@ -209,6 +210,12 @@ simulated function PostBeginPlay()
     if (bHasScope)
     {
         ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
+
+        if (bForceTextureScope)
+        {
+            ScopeDetail = RO_TextureScope;
+        }
+
         UpdateScopeMode();
     }
 }
@@ -550,7 +557,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
+    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing

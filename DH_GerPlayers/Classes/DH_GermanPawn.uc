@@ -31,6 +31,8 @@ defaultproperties
     FaceSkins(13)=Texture'Characters_tex.ger_heads.ger_face14'
     FaceSkins(14)=Texture'Characters_tex.ger_heads.ger_face15'
 
-    ShovelClassName="DH_Equipment.DHShovelItem_German"
-    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+    ShovelClass=class'DH_Equipment.DHShovelItem_German'
+    BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
+    SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
+    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
 }
