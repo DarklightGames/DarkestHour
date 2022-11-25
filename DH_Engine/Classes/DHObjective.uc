@@ -157,6 +157,7 @@ var         DHObjectiveGroup ObjectiveGroup;
 
 // Replication
 var                         EObjectiveState             OldObjState;
+var                         bool                        bOldActive;
 
 // Danger zone
 var(DHDangerZone) float BaseInfluenceModifier;
@@ -1483,28 +1484,40 @@ simulated function PostNetReceive()
 {
     local DHPlayer PC;
     local DHHud Hud;
+    local bool bHasStateChanged;
 
     super.PostNetReceive();
 
-    // Listen for state changes so we can notify the HUD!
+    // Listen for state & active changes so we can notify the HUD!
     if (ObjState != OldObjState)
     {
         if (ObjState != OBJ_Neutral)
         {
-            PC = DHPlayer(Level.GetLocalPlayerController());
-
-            if (PC != none)
-            {
-                Hud = DHHud(PC.myHUD);
-
-                if (Hud != none)
-                {
-                    Hud.OnObjectiveCompleted();
-                }
-            }
+            bHasStateChanged = true;
         }
 
         OldObjState = ObjState;
+    }
+
+    if (bOldActive != bActive)
+    {
+        bHasStateChanged = true;
+        bOldActive = bActive;
+    }
+
+    if (bHasStateChanged)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveStateChanged();
+            }
+        }
     }
 }
 

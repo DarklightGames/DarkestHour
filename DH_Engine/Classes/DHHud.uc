@@ -2086,7 +2086,7 @@ function DrawSignals(Canvas C)
     }
 }
 
-function OnObjectiveCompleted()
+function OnObjectiveStateChanged()
 {
     DangerZoneOverlayUpdateRequest();
 }
