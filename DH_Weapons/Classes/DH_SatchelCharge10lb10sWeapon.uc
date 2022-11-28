@@ -16,10 +16,8 @@ defaultproperties
     GroupOffset=2
     Priority=2
 
-    Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
-    Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'
+    Mesh=SkeletalMesh'DH_Satchels_anm.No73Animation'
 
-    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
 
     FuzeLength=15.0
     PreFireHoldAnim="Weapon_Down"
