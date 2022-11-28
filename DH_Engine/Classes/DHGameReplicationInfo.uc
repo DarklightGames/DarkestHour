@@ -2412,6 +2412,7 @@ defaultproperties
     ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
     ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
     ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(22)="DH_Construction.DHConstruction_MolotovCrate"
 
     // Artillery
     ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"

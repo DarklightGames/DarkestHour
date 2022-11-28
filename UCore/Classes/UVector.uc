@@ -63,3 +63,14 @@ static function float InverseSquareLaw(vector PointA, vector PointB)
 {
     return 1.0 / FMax(VSizeSquared(PointA - PointB), class'UFloat'.static.Epsilon());
 }
+
+static function bool IsInsideCylinder(vector Point, vector BaseA, vector BaseB, float Radius)
+{
+    local float D; // Distance to the cylinder axis
+    local float T; // Position along the axis
+
+    D = VSize((BaseB - BaseA) cross (BaseA - Point)) / VSize(BaseB - BaseA);
+    T = ((Point - BaseA) dot (BaseB - BaseA)) / VSizeSquared(BaseB - BaseA);
+
+    return T >= 0.0 && T <= 1.0 && D <= Radius;
+}

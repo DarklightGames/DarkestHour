@@ -271,7 +271,7 @@ simulated static function DH_LevelInfo GetInstance(LevelInfo Level)
 
 defaultproperties
 {
-    bDHDebugMode=false // TEMPDEBUG - revert to false before any release
+    bDHDebugMode=true // TEMPDEBUG - revert to false before any release
 
     AlliesToAxisRatio=0.5
     Texture=Texture'DHEngine_Tex.LevelInfo'
