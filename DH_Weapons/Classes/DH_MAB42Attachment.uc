@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MAB38Attachment extends DHWeaponAttachment;
+class DH_MAB42Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_MAB_anm.MAB38_world'
-    MenuImage=Texture'DH_MAB38_tex.mab38.mab38_icon'
+    Mesh=SkeletalMesh'DH_MAB_anm.MAB42_world'
+    MenuImage=Texture'DH_MAB38_tex.mab42.mab42_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 

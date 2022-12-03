@@ -3,21 +3,21 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MAB38Weapon extends DHAutoWeapon;
+class DH_MAB42Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Moschetto Automatico Beretta M1938"
-    FireModeClass(0)=class'DH_Weapons.DH_MAB38Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_MAB38MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_MAB38Attachment'
-    PickupClass=class'DH_Weapons.DH_MAB38Pickup'
+    ItemName="Moschetto Automatico Beretta M1938/42"
+    FireModeClass(0)=class'DH_Weapons.DH_MAB42Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_MAB42MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_MAB42Attachment'
+    PickupClass=class'DH_Weapons.DH_MAB42Pickup'
 
-    Mesh=SkeletalMesh'DH_MAB_anm.MAB38-Mesh'
+    Mesh=SkeletalMesh'DH_MAB_anm.MAB42-Mesh'
 
     bUseHighDetailOverlayIndex=false
     HighDetailOverlayIndex=2
-    Skins(0)=Texture'DH_MAB38_tex.MAB38.MAB38'
+    Skins(0)=Texture'DH_MAB38_tex.MAB42.MAB42'
 
     handnum=0
     sleevenum=1

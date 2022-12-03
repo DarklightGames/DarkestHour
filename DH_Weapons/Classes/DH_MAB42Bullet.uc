@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MAB38Ammo extends DHAmmunition;
+class DH_MAB42Bullet extends DHBullet;
 
 defaultproperties
 {
-    MaxAmmo=40
-    InitialAmount=40
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_ammo'
+    Speed=25347.0   // 420m/s
+    BallisticCoefficient=0.16
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_MAB42DamType'
 }

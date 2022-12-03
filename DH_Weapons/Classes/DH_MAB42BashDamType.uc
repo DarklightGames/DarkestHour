@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_MAB38Ammo extends DHAmmunition;
+class DH_MAB42BashDamType extends DHWeaponBashDamageType
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=40
-    InitialAmount=40
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_ammo'
+    WeaponClass=class'DH_Weapons.DH_MAB42Weapon'
 }
