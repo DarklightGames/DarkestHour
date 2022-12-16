@@ -223,9 +223,9 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
     switch (Switch)
     {
         case 0:
-            return Repl(default.PickupMessage, "{0}", default.InventoryType.default.ItemName);
+            return Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
         case 1:
-            return Repl(default.TouchMessage, "{0}", default.InventoryType.default.ItemName);
+            return Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
     }
 }
 
