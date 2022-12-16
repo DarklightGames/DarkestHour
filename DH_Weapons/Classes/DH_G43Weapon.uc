@@ -7,7 +7,8 @@ class DH_G43Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
-    ItemName="Gewehr 43"
+    ItemName="G 43"
+    NativeItemName="Gewehr 43"
     FireModeClass(0)=class'DH_Weapons.DH_G43Fire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     PickupClass=class'DH_Weapons.DH_G43Pickup'

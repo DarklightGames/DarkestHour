@@ -7,7 +7,8 @@ class DH_VG15Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
-    ItemName="Volkssturmgewehr 1-5"
+    ItemName="VG 1-5"
+    NativeItemName="Volkssturmgewehr 1-5"
     FireModeClass(0)=class'DH_Weapons.DH_VG15Fire'
     FireModeClass(1)=class'DH_Weapons.DH_VG15MeleeFire'
     PickupClass=class'DH_Weapons.DH_VG15Pickup'
