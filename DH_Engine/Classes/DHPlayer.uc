@@ -56,6 +56,7 @@ var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
+var 	config    	bool  		bUseNativeItemNames; // client option to display native item names instead of translated ones
 
 var     byte                    ArtillerySupportSquadIndex;
 
@@ -7690,6 +7691,20 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     }
 
     return RER_Enabled;
+}
+
+// Function for getting the correct inventory item name to display depending on settings.
+simulated static function string GetInventoryName(class<Inventory> InventoryClass)
+{
+    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, class'DHWeapon'))
+    {
+        if (class<DHWeapon>(InventoryClass).default.NativeItemName != "")
+        {
+            return class<DHWeapon>(InventoryClass).default.NativeItemName;
+        }
+    }
+
+    return InventoryClass.default.ItemName;
 }
 
 simulated exec function ListVehicles()
