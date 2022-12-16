@@ -107,7 +107,8 @@ Begin:
 
 defaultproperties
 {
-    ItemName="Panzerfaust 60"
+    ItemName="PzF 60 Rocket Launcher"
+    NativeItemName="Panzerfaust 60"
     FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
     FireModeClass(1)=class'DH_Weapons.DH_PanzerFaustMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'

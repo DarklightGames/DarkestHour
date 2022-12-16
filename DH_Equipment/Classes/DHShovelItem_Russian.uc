@@ -15,4 +15,6 @@ defaultproperties
     HighDetailOverlayIndex=0
     HandNum=1
     SleeveNum=2
+    
+    NativeItemName="MPL-50"
 }

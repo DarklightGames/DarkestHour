@@ -23,7 +23,8 @@ function bool CanDeadThrow()
 
 defaultproperties
 {
-    ItemName="RauchSichtzeichen Orange 160"
+    ItemName="RauchSichtzeichen Orange 160 Signal Grenade"
+    NativeItemName="RauchSichtzeichen Orange 160"
     FireModeClass(0)=class'DH_Equipment.DH_OrangeSmokeFire'
     FireModeClass(1)=class'DH_Equipment.DH_OrangeSmokeTossFire'
     AttachmentClass=class'DH_Equipment.DH_OrangeSmokeAttachment'

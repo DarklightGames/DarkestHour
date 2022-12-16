@@ -7,7 +7,8 @@ class DH_G41Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Gewehr 41(W)"
+    ItemName="G 41(W)"
+    NativeItemName="Gewehr 41(W)"
     SwayModifyFactor=0.83 // +0.13 because it was a heavy, disbalanced and awkward rifle
     FireModeClass(0)=class'DH_Weapons.DH_G41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_G41MeleeFire'

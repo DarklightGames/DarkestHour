@@ -7,7 +7,8 @@ class DH_FG42Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Fallschirmjägergewehr 42"
+    ItemName="FG 42"
+    NativeItemName="Fallschirmjägergewehr 42"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
