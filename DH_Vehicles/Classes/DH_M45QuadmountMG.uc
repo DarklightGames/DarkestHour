@@ -190,4 +190,10 @@ defaultproperties
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.05,Y=0.0,Z=0.05)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+
+    // Reload
+    ReloadStages(0)=(Sound=Sound'MG34_ReloadHidden',Duration=8) 
+    ReloadStages(1)=(Sound=Sound'MG34_ReloadHidden',Duration=8)
+    ReloadStages(2)=(Sound=Sound'MG34_ReloadHidden',Duration=8)
+    ReloadStages(3)=(Sound=Sound'MG34_ReloadHidden',Duration=8)
 }
