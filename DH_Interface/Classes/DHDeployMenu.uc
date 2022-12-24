@@ -1291,17 +1291,17 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(RI.PrimaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
                     {
-                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
+                        cb_PrimaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(RI.SecondaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
                     {
-                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
+                        cb_SecondaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }

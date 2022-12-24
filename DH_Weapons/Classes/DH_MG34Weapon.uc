@@ -32,7 +32,8 @@ simulated function bool IsBusy()
 
 defaultproperties
 {
-    ItemName="Maschinengewehr 34"
+    ItemName="MG 34"
+    NativeItemName="Maschinengewehr 34"
     TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
     FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire' // this secondary fire mode is not a switch, it is done with another button

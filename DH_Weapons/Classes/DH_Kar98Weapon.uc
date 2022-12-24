@@ -7,7 +7,8 @@ class DH_Kar98Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Karabiner 98k"
+    ItemName="Kar 98k"
+    NativeItemName="Karabiner 98k"
     FireModeClass(0)=class'DH_Weapons.DH_Kar98Fire'
     FireModeClass(1)=class'DH_Weapons.DH_Kar98MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'

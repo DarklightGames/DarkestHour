@@ -77,7 +77,7 @@ static function string GetMenuName(DHActorProxy.Context Context)
 
     if (SpawnerClass != none)
     {
-        return SpawnerClass.static.GetMenuName();
+        return SpawnerClass.static.GetMenuName(Context.PlayerController);
     }
 
     return "";

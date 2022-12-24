@@ -7,7 +7,7 @@ class DH_Winchester1897Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Winchester Model 1897"
+    ItemName="Winchester M1897"
     FireModeClass(0)=class'DH_Weapons.DH_Winchester1897Fire'
     FireModeClass(1)=class'DH_Weapons.DH_Winchester1897MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Winchester1897Attachment'

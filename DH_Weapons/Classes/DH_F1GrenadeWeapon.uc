@@ -8,6 +8,7 @@ class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="F1 Grenade"
+    NativeItemName="F1 Granata"
     FireModeClass(0)=class'DH_Weapons.DH_F1GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'

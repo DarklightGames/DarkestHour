@@ -7,7 +7,8 @@ class DH_StielGranateWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="Stielhandgranate 24"
+    ItemName="StG 24 Grenade"
+    NativeItemName="Stielhandgranate 24"
     FireModeClass(0)=class'DH_Weapons.DH_StielGranateFire'
     FireModeClass(1)=class'DH_Weapons.DH_StielGranateTossFire'
     AttachmentClass=class'DH_Weapons.DH_StielGranateAttachment'

@@ -9,7 +9,8 @@ defaultproperties
 {
     SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
 
-    ItemName="ZB vz.30 Machine Gun"
+    ItemName="ZB-30 Machine Gun"
+    NativeItemName="ZB vz.30 Kulomet"
 
     FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
     AttachmentClass=class'DH_Weapons.DH_ZB30Attachment'

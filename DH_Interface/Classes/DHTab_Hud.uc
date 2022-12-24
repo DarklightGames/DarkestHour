@@ -12,6 +12,7 @@ var automated moCheckBox    ch_ShowIndicators;
 var automated moCheckBox    ch_ShowVehicleVisionCone;
 var automated moCheckBox    ch_ShowRallyPoint;
 var automated moCheckBox    ch_UseTechnicalAmmoNames;
+var automated moCheckBox    ch_UseNativeItemNames;
 
 var bool bSimpleColours;
 var bool bShowChatMessages;
@@ -20,6 +21,7 @@ var bool bShowIndicators;
 var bool bShowVehicleVisionCone;
 var bool bShowRallyPoint;
 var bool bUseTechnicalAmmoNames, bUseTechnicalAmmoNamesD;
+var bool bUseNativeItemNames, bUseNativeItemNamesD;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -35,6 +37,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG1.ManageComponent(ch_ShowIndicators);
     i_BG1.ManageComponent(ch_ShowVehicleVisionCone);
     i_BG1.ManageComponent(ch_UseTechnicalAmmoNames);
+    i_BG1.ManageComponent(ch_UseNativeItemNames);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -111,6 +114,18 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bUseTechnicalAmmoNames = class'DHHud'.default.bUseTechnicalAmmoNames;
             }
             ch_UseTechnicalAmmoNames.SetComponentValue(bUseTechnicalAmmoNames,true);
+            break;
+            
+        case ch_UseNativeItemNames:
+            if (H != none)
+            {
+                bUseNativeItemNames = DHP.bUseNativeItemNames;
+            }
+            else
+            {
+                bUseNativeItemNames = class'DHPlayer'.default.bUseNativeItemNames;
+            }
+            ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
             break;
         case ch_ShowMapFirstSpawn:
             if (DHP != none)
@@ -380,6 +395,9 @@ function InternalOnChange(GUIComponent Sender)
         case ch_UseTechnicalAmmoNames:
             bUseTechnicalAmmoNames = ch_UseTechnicalAmmoNames.IsChecked();
             break;
+        case ch_UseNativeItemNames:
+            bUseNativeItemNames = ch_UseNativeItemNames.IsChecked();
+            break;
         default:
             super.InternalOnChange(Sender);
     }
@@ -543,6 +561,22 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_UseTechnicalAmmoNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseTechnicalAmmoNames'
+
+    Begin Object Class=DHmoCheckBox Name=UseNativeItemNames
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Use Native Item Names"
+        OnCreateComponent=UseNativeItemNames.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.822959
+        WinLeft=0.555313
+        WinWidth=0.373749
+        WinHeight=0.034156
+        TabOrder=26
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+    End Object
+    ch_UseNativeItemNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeItemNames'
 
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left
