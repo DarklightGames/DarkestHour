@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'
     PickupClass=class'DH_Weapons.DH_Kar98Pickup'
 
-    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_mesh'
+    Mesh=SkeletalMesh'DH_Kar98_1st.DH_kar98k_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
