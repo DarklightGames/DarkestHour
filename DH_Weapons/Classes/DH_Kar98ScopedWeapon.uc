@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k-scoped-mesh'
+    Mesh=SkeletalMesh'DH_Kar98_1st.DH_kar98k_scoped_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
