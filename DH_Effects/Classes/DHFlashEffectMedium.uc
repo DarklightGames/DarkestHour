@@ -21,7 +21,7 @@ defaultproperties
     LightBrightness = 128.0 //64
     LightRadius = 24.0 //16
     LightHue = 20
-    LightSaturation = 128
+    LightSaturation = 28
     AmbientGlow = 254
     LightCone = 8
 }

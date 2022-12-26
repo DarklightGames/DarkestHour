@@ -8,6 +8,7 @@ class DHMortarProjectileHE extends DHMortarProjectile
 
 // Explosion effect emitters & sounds
 var     class<Emitter>  GroundExplosionEmitterClass;
+var     class<Emitter>  SandExplosionEmitterClass;
 var     class<Emitter>  SnowExplosionEmitterClass;
 var     class<Emitter>  WaterExplosionEmitterClass;
 
@@ -147,6 +148,10 @@ simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterC
 {
     switch (SurfaceType)
     {
+        case EST_Water:
+        ExplosionEmitterClass = SandExplosionEmitterClass;
+        return;    
+    
         case EST_Snow:
         case EST_Ice:
             ExplosionEmitterClass = SnowExplosionEmitterClass;

@@ -15,6 +15,7 @@ var     float   DudChance;
 
 // Effects for firing mortar & for shell descending just before it lands
 var     class<Emitter>  FireEmitterClass;
+var     class<Emitter>  MuzzleFlashEmitterClass;
 var     sound   DescendingSound;
 
 // Impact effects & sounds
@@ -23,7 +24,7 @@ var     class<Emitter>  HitSnowEmitterClass;
 var     class<Emitter>  HitWoodEmitterClass;
 var     class<Emitter>  HitRockEmitterClass;
 var     class<Emitter>  HitWaterEmitterClass;
-var     class<Emitter>  FlashEffect; //flash a light on impact
+var     class<Emitter>  HitFlashEffectClass; //flash a light on impact
 
 var     sound   HitDirtSound;
 var     sound   HitRockSound;
@@ -85,7 +86,7 @@ simulated function PostNetBeginPlay()
     {
         InstigatorController = Instigator.Controller;
 
-        if (Level.NetMode != NM_DedicatedServer && FireEmitterClass != none && Location != vect(0.0, 0.0, 0.0))
+        if (Level.NetMode != NM_DedicatedServer && (FireEmitterClass != none && MuzzleFlashEmitterClass != none) && Location != vect(0.0, 0.0, 0.0))
         {
             SpawnFiringEffect(); // note - can't do an EffectIsRelevant check here, as shell won't yet have been drawn, so will always fail
         }
@@ -272,7 +273,7 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
 
         PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
         Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
-        Spawn(FlashEffect,,, HitLocation, rotator(HitNormal));
+        Spawn(HitFlashEffectClass,,, HitLocation, rotator(HitNormal));
     }
 }
 
@@ -297,7 +298,8 @@ simulated function SpawnFiringEffect()
             WP.Gun.CalcWeaponFire(false); // net client calculates & records WeaponFireLocation, as will only have been done on the server (no FlashMuzzleFlash() for mortars)
         }
 
-        Spawn(FireEmitterClass,,, WP.Gun.WeaponFireLocation, Rotation);
+        Spawn(FireEmitterClass,,, WP.Gun.WeaponFireLocation, WP.Gun.WeaponFireRotation); //Rotation
+        Spawn(MuzzleFlashEmitterClass,,, WP.Gun.WeaponFireLocation, Rotation); //Rotation
     }
 }
 
@@ -730,9 +732,10 @@ defaultproperties
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
     FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    MuzzleFlashEmitterClass=class'DH_Effects.DHFlashEffectSmall'
     DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
 
-    FlashEffect=class'DH_Effects.DHFlashEffectMedium'
+    HitFlashEffectClass=class'DH_Effects.DHFlashEffectMedium'
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
