@@ -42,7 +42,6 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter21
         UseColorScale=True
         RespawnDeadParticles=False
-        Disabled=True
         Backup_Disabled=True
         SpinParticles=True
         UseSizeScale=True
@@ -50,9 +49,10 @@ defaultproperties
         UniformSize=True
         AutomaticInitialSpawning=False
         ColorScale(0)=(Color=(B=255,G=255,R=255))
-        ColorScale(1)=(RelativeTime=1.000000)
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255))
+        Opacity=0.250000
         MaxParticles=1
-      
+        name="barrel_flare"
         DetailMode=DM_SuperHigh
         StartLocationShape=PTLS_Sphere
         StartSpinRange=(X=(Max=1.000000))
@@ -60,8 +60,8 @@ defaultproperties
         SizeScale(1)=(RelativeTime=0.750000,RelativeSize=0.500000)
         StartSizeRange=(X=(Max=60.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
-        LifetimeRange=(Min=0.250000,Max=0.350000)
+        Texture=Texture'SpecialEffects.Coronas.Corona2'
+        LifetimeRange=(Min=0.150000,Max=0.200000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter21'
 
@@ -127,7 +127,7 @@ defaultproperties
     Emitters(2)=SpriteEmitter'SpriteEmitter32'
 
     Begin Object Class=BeamEmitter Name=BeamEmitter6
-        BeamDistanceRange=(Min=80.000000,Max=120.000000)
+        BeamDistanceRange=(Min=30.000000,Max=100.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=2
         FadeOut=True
@@ -142,13 +142,14 @@ defaultproperties
         FadeOutStartTime=0.050000
         MaxParticles=1
         name="flash"
+        StartLocationOffset=(X=-6.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=2.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=0.500000)
-        StartSizeRange=(X=(Min=5.000000,Max=10.000000),Y=(Min=5.000000,Max=10.000000),Z=(Min=5.000000,Max=150.000000))
+        StartSizeRange=(X=(Min=10.000000,Max=20.000000),Y=(Min=10.000000,Max=20.000000),Z=(Min=30.000000,Max=90.000000))
         InitialParticlesPerSecond=100.000000
-        Texture=Texture'DH_FX_Tex.Weapons.mosinflash'
+        Texture=Texture'Effects_Tex.explosions.fire_quad' //'DH_FX_Tex.Weapons.50calmuzzleflash'
         LifetimeRange=(Min=0.150000,Max=0.200000)
         StartVelocityRange=(X=(Min=50.000000,Max=100.000000))
     End Object
@@ -166,10 +167,11 @@ defaultproperties
         AutomaticInitialSpawning=False
         ColorScale(0)=(Color=(B=200,G=200,R=200,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=200,G=200,R=200,A=255))
-        Opacity=0.800000
+        Opacity=0.4
         FadeOutStartTime=0.050000
         MaxParticles=1
         name="smoke_spike"
+        StartLocationOffset=(X=-8.000000)
         UseRotationFrom=PTRS_Actor
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=1.000000)

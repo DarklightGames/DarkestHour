@@ -20,6 +20,9 @@ struct DHHitEffectData
     var sound               HitSound;
 };
 
+var   float               MinSoundRadius;
+var   float               MaxSoundRadius;
+
 //overwritten from ROHitEffect to expand array to 50 from 20
 var()   DHHitEffectData       HitEffects[50];
 
@@ -53,7 +56,7 @@ simulated function PostNetBeginPlay()
 
     if (HitEffects[ST].HitSound != none)
     {
-        PlaySound(HitEffects[ST].HitSound, SLOT_None, 1.0, false, RandRange(200.0, 300.0),, true);
+        PlaySound(HitEffects[ST].HitSound,, 1.0, false, RandRange(MinSoundRadius, MaxSoundRadius),, true);
     }
 
     if (Owner == none || Owner.EffectIsRelevant(HitLoc, false)) // added effect relevance check, using owning bullet actor to call the function
@@ -84,4 +87,6 @@ defaultproperties
     bNetTemporary=true
     LifeSpan=0.5
     DrawType=DT_None
+    MinSoundRadius=200.0
+    MaxSoundRadius=300.0
 }
