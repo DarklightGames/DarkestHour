@@ -19,7 +19,7 @@ defaultproperties
     LightEffect=LE_NonIncidence
     LightType=LT_Steady
     LightBrightness = 64.0
-    LightRadius = 6.0
+    LightRadius = 4.0
     LightHue = 20
     LightSaturation = 28
     AmbientGlow = 254

@@ -15,10 +15,12 @@ class DHHitEffect extends Effects
 struct DHHitEffectData
 {
     var class<ProjectedDecal>       HitDecal;
-    var class<Emitter>      HitEffect;
-    var class<Emitter>      FlashEffect; //new for DH
-    var sound               HitSound;
+    var class<Emitter>              HitEffect;
+    var bool                        bUseFlash;
+    var sound                       HitSound;
 };
+
+var class<Emitter>          FlashEffect; //new for DH
 
 var   float               MinSoundRadius;
 var   float               MaxSoundRadius;
@@ -71,9 +73,9 @@ simulated function PostNetBeginPlay()
             Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
         }
 
-        if (HitEffects[ST].FlashEffect != none)
+        if (FlashEffect != none && HitEffects[ST].bUseFlash)
         {
-            Spawn(HitEffects[ST].FlashEffect,,, HitLoc, rotator(HitNormal));
+            Spawn(FlashEffect,,, HitLoc, rotator(HitNormal));
         }
     }
 }

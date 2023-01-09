@@ -146,22 +146,24 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter14
         UseCollision=True
         RespawnDeadParticles=False
+        SpinParticles=true
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        MaxParticles=4
+        MaxParticles=2
         name="bullet_hole"
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=3.000000,Max=4.000000))
+        StartSpinRange=(X=(Min=0.500000,Max=1.000000))
+        StartSizeRange=(X=(Min=2.000000,Max=4.000000))
         InitialParticlesPerSecond=10000.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.woodchunksfinal'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=1.000000,Max=3.000000)
+        LifetimeRange=(Min=3.000000,Max=3.000000)
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter14'
 
