@@ -103,9 +103,10 @@ defaultproperties
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200
     
+    //Recoil
     PctRestDeployRecoil=0.7   //0.5 default
     RecoilRate=0.075
-    RecoilCurve=(Points=((InVal=0.0,OutVal=1),(InVal=1.0,OutVal=1),(InVal=2.0,OutVal=3),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1),(InVal=1.0,OutVal=1),(InVal=1.5,OutVal=2),(InVal=2.2,OutVal=2.2),(InVal=2.5,OutVal=2.5),(InVal=2.8,OutVal=2.8)))
     RecoilFallOffFactor=10.0
     
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
