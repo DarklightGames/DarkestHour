@@ -77,6 +77,25 @@ final static function bool AddUnique(out array<Object> A, Object Other)
     return true;
 }
 
+// Add an element if it doesn't already exist in the array. Returns true if the
+// element was added.
+final static function bool IAddUnique(out array<int> A, int Other)
+{
+    local int i;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (A[i] == Other)
+        {
+            return false;
+        }
+    }
+
+    A[A.Length] = Other;
+
+    return true;
+}
+
 // Slice tries to immitate Python's slice syntax.
 final static function array<Object> Slice(array<Object> A, int Start, int End, int Step)
 {
