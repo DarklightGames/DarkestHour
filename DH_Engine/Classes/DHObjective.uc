@@ -142,6 +142,7 @@ var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents
 
 // Grouped capture operations (these will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
 var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; // array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)      array<name>                 GroupedObjectiveReliancesTags;  // TODO: populate above array based on tag lookups
 var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
 var(DH_GroupedActions)      array<SpawnPointAction>     AlliesGroupSpawnPointActions;
