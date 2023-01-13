@@ -30,15 +30,11 @@ const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking pl
 
 var DHGameReplicationInfo   DHGRI;
 
-var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2, Soviet Union = 3
-
 // Map icons/legends
 var     SpriteWidget        MapLevelOverlay;
 var     TextWidget          MapScaleText;
 var     TextWidget          PlayerNumberText;
 var     SpriteWidget        MapIconCarriedRadio;
-var     SpriteWidget        MapAxisFlagIcon;
-var     SpriteWidget        MapAlliesFlagIcons[6];
 var     SpriteWidget        MapIconMortarHETarget;
 var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
@@ -286,14 +282,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[1]);
 
     // Player figure/health & other player HUD icons
-    Level.AddPrecacheMaterial(NationHealthFigures[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresBackground[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStamina[0]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStaminaCritical[0]);
-    Level.AddPrecacheMaterial(NationHealthFigures[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresBackground[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStamina[1]);
-    Level.AddPrecacheMaterial(NationHealthFiguresStaminaCritical[1]);
     Level.AddPrecacheMaterial(StanceStanding);
     Level.AddPrecacheMaterial(StanceCrouch);
     Level.AddPrecacheMaterial(StanceProne);
@@ -475,7 +463,7 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 
     TextMessages[i].Text = M;
     TextMessages[i].MessageLife = Level.TimeSeconds + MessageClass.default.LifeTime;
-    TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, AlliedNationID, bSimpleColours);
+    TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, bSimpleColours);
     TextMessages[i].PRI = PRI;
 }
 
@@ -2098,7 +2086,7 @@ function DrawSignals(Canvas C)
     }
 }
 
-function OnObjectiveCompleted()
+function OnObjectiveStateChanged()
 {
     DangerZoneOverlayUpdateRequest();
 }
@@ -3395,6 +3383,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
+    local DH_LevelInfo              LevelInfo;
+    local class<DHNation>           AxisNationClass, AlliedNationClass;
 
     if (DHGRI == none)
     {
@@ -3410,6 +3400,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     {
         OwnerTeam = 255;
     }
+    
+    // Draw objectives
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Player.Level);
+    AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+    AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
@@ -3654,7 +3649,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
-    // Draw objectives
     for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
         if (DHGRI.DHObjectives[i] == none)
@@ -3671,11 +3665,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         // Set up icon info
         if (DHGRI.DHObjectives[i].IsAxis())
         {
-            Widget = MapAxisFlagIcon;
+            Widget = AxisNationClass.default.MapFlagIconSpriteWidget;
         }
         else if (DHGRI.DHObjectives[i].IsAllies())
         {
-            Widget = MapAlliesFlagIcons[DHGRI.AlliedNationID];
+            Widget = AlliedNationClass.default.MapFlagIconSpriteWidget;
         }
         else
         {
@@ -4212,14 +4206,19 @@ function DrawLocationHits(Canvas C, ROPawn P)
     local int          Team, i;
     local bool         bNewDrawHits;
     local SpriteWidget Widget;
+    local DH_LevelInfo LI;
+    local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
     {
         Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
     }
-    else
+
+    LI = class'DH_LevelInfo'.static.GetInstance(PawnOwner.Level);
+
+    if (LI != none)
     {
-        Team = 0;
+        HealthFigureClass = LI.GetTeamNationClass(Team).default.HealthFigureClass;
     }
 
     for (i = 0; i < arraycount(P.DamageList); ++i)
@@ -4228,29 +4227,7 @@ function DrawLocationHits(Canvas C, ROPawn P)
         {
             // Draw hit
             Widget = HealthFigure;
-
-            if (Team == AXIS_TEAM_INDEX)
-            {
-                Widget.WidgetTexture = locationHitAxisImages[i];
-            }
-            else if (Team == ALLIES_TEAM_INDEX)
-            {
-                switch (DHGRI.AlliedNationID)
-                {
-                    case 3: // USSR
-                    case 4: // Poland
-                    case 5: // Czechoslovakia
-                        Widget.WidgetTexture = class'ROHud'.default.LocationHitAlliesImages[i];
-                        break;
-                    default:
-                        Widget.WidgetTexture = LocationHitAlliesImages[i];
-                        break;
-                }
-            }
-            else
-            {
-                continue;
-            }
+            Widget.WidgetTexture = HealthFigureClass.default.LocationHitImages[i];
 
             DrawSpriteWidget(C, Widget);
 
@@ -4268,13 +4245,11 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
-    local byte   Nation;
-    local bool bIsRussian;
+    local DH_LevelInfo LI;
+    local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
     {
-        bIsRussian = PawnOwnerPRI.Team != none && PawnOwnerPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && DHGRI != none && (DHGRI.AlliedNationID == 3 || DHGRI.AlliedNationID == 4 || DHGRI.AlliedNationID == 5);
-
         P = ROPawn(PawnOwner);
 
         if (P != none)
@@ -4303,50 +4278,22 @@ function UpdateHud()
 
         if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
         {
-            Nation = PlayerOwner.GameReplicationInfo.NationIndex[PawnOwnerPRI.Team.TeamIndex];
-
-            if (bIsRussian)
-            {
-                HealthFigure.WidgetTexture = class'ROHud'.default.NationHealthFigures[Nation];
-            }
-            else
-            {
-                HealthFigure.WidgetTexture = NationHealthFigures[Nation];
-            }
-
-            if (bIsRussian)
-            {
-                HealthFigureBackground.WidgetTexture = class'ROHud'.default.NationHealthFiguresBackground[Nation];
-            }
-            else
-            {
-                HealthFigureBackground.WidgetTexture = NationHealthFiguresBackground[Nation];
-            }
+            LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+            HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
+            
+            HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
+            HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 
             if (HealthFigureStamina.Scale > 0.9)
             {
-                if (bIsRussian)
-                {
-                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStaminaCritical[Nation];
-                }
-                else
-                {
-                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStaminaCritical[Nation];
-                }
+                HealthFigureStamina.WidgetTexture = HealthFigureClass.default.HealthFigureStaminaCritical;
 
                 HealthFigureStamina.Tints[0].G = 255; HealthFigureStamina.Tints[1].G = 255;
                 HealthFigureStamina.Tints[0].B = 255; HealthFigureStamina.Tints[1].B = 255;
             }
             else
             {
-                if (bIsRussian)
-                {
-                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStamina[Nation];
-                }
-                else
-                {
-                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStamina[Nation];
-                }
+                HealthFigureStamina.WidgetTexture = HealthFigureClass.default.HealthFigureStamina;
             }
         }
     }
@@ -4539,6 +4486,8 @@ function DrawCaptureBar(Canvas Canvas)
     local float                 CaptureProgress[2], XL, YL, XPos, YPos;
     local string                S, StatusText;
     local Material              StatusIcon;
+    local DH_LevelInfo          LevelInfo;
+    local class<DHNation>       AxisNationClass, AlliedNationClass;
 
     if (DHGRI == none || PlayerOwner == none || PawnOwnerPRI == none || PawnOwnerPRI.Team == none)
     {
@@ -4654,22 +4603,26 @@ function DrawCaptureBar(Canvas Canvas)
         }
     }
 
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+    AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+    AlliedNationClass = LevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
+
     // Assign attacker/defender properties based on player's team
     if (OwnTeam == AXIS_TEAM_INDEX)
     {
         EnemyTeam = ALLIES_TEAM_INDEX;
-        CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
-        CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords; // left side flag
-        CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords; // right side flag
+        CaptureBarIcons[0].WidgetTexture = AxisNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = AxisNationClass.default.MapFlagIconSpriteWidget.TextureCoords; // left side flag
+        CaptureBarIcons[1].WidgetTexture = AlliedNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = AlliedNationClass.default.MapFlagIconSpriteWidget.TextureCoords; // right side flag
     }
     else
     {
         EnemyTeam = AXIS_TEAM_INDEX;
-        CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
-        CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
-        CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = MapAxisFlagIcon.TextureCoords;
+        CaptureBarIcons[0].WidgetTexture = AlliedNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = AlliedNationClass.default.MapFlagIconSpriteWidget.TextureCoords;
+        CaptureBarIcons[1].WidgetTexture = AxisNationClass.default.MapFlagIconSpriteWidget.WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = AxisNationClass.default.MapFlagIconSpriteWidget.TextureCoords;
     }
 
     CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[OwnTeam];
@@ -5962,7 +5915,7 @@ function DHDrawTypingPrompt(Canvas C)
     }
     else
     {
-        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, AlliedNationID, bSimpleColours);
+        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, bSimpleColours);
         SayTypeText = SayTypeMessageClass.default.MessagePrefix;
     }
 
@@ -6072,27 +6025,6 @@ defaultproperties
     NeedsClearedText=" (Not Secured)"
     EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
-    // Player figure/health icon
-    NationHealthFigures(1)=Texture'DH_GUI_Tex.GUI.US_player'
-    NationHealthFiguresBackground(1)=Texture'DH_GUI_Tex.GUI.US_player_background'
-    NationHealthFiguresStamina(1)=Texture'DH_GUI_Tex.GUI.US_player_Stamina'
-    NationHealthFiguresStaminaCritical(1)=FinalBlend'DH_GUI_Tex.GUI.US_player_Stamina_critical'
-    LocationHitAlliesImages(0)=Texture'DH_GUI_Tex.Player_hits.US_hit_Head'
-    LocationHitAlliesImages(1)=Texture'DH_GUI_Tex.Player_hits.US_hit_torso'
-    LocationHitAlliesImages(2)=Texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
-    LocationHitAlliesImages(3)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
-    LocationHitAlliesImages(4)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
-    LocationHitAlliesImages(5)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
-    LocationHitAlliesImages(6)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
-    LocationHitAlliesImages(7)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
-    LocationHitAlliesImages(8)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
-    LocationHitAlliesImages(9)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
-    LocationHitAlliesImages(10)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
-    LocationHitAlliesImages(11)=Texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
-    LocationHitAlliesImages(12)=Texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
-    LocationHitAlliesImages(13)=Texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
-    LocationHitAlliesImages(14)=Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
-
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_UpperRight,PosX=1.0,PosY=0.001,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
@@ -6117,13 +6049,6 @@ defaultproperties
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAxisFlagIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=0,X2=127,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(2)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(3)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=32,X2=63,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(4)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=32,X2=95,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(5)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=32,X2=127,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
     MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'

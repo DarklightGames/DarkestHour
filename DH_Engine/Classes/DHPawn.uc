@@ -32,10 +32,13 @@ var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
-var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+var     class<Inventory>    ShovelClass;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
-var     string  BinocsClassName;
+var     class<Inventory>    BinocsClass;
+
+var     class<Inventory>    SmokeGrenadeClass;
+var     class<Inventory>    ColoredSmokeGrenadeClass;
 
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
@@ -130,8 +133,6 @@ var     bool                bAlwaysSeverBodyparts; // implemented for zombies
 var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
 // Smoke grenades for squad leaders
-var DH_LevelInfo.SNationString SmokeGrenadeClassName;
-var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
@@ -3282,13 +3283,13 @@ function CheckGiveShovel()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (ShovelClassName != "" && Level.Game != none)
+    if (ShovelClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none && GRI.bAreConstructionsEnabled)
         {
-            CreateInventory(ShovelClassName);
+            CreateInventory(string(ShovelClass));
         }
     }
 }
@@ -3299,14 +3300,14 @@ function CheckGiveBinocs()
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
-    if (BinocsClassName != "" && Level.Game != none)
+    if (BinocsClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
         if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
         {
-            CreateInventory(BinocsClassName);
+            CreateInventory(string(BinocsClass));
         }
     }
 }
@@ -3321,112 +3322,47 @@ function CheckGiveSmoke()
     local DarkestHourGame DHG;
     local byte TeamIndex;
     local int SquadMemberCount;
-    local string ColoredSmokeGrenadeToGive;
-    local string SmokeGrenadeToGive;
+    local class<DHNation> NationClass;
 
-    if (Level.Game != none)
+    RI = GetRoleInfo();
+    TeamIndex = GetTeamNum();
+
+    DHG = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    PC = DHPlayer(Controller);
+    
+    NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
+
+    // Exclude tank crewmen and mortar operators
+    if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
     {
-        RI = GetRoleInfo();
+        return;
+    }
 
-        // Exclude tank crewmen and mortar operators
-        if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
-        {
-            return;
-        }
+    // Only squad leaders can recieve smoke.
+    if (!PC.IsSquadLeader())
+    {
+        return;
+    }
 
-        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-        PC = DHPlayer(Controller);
+    SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
 
-        if (GRI == none ||
-            PC == none ||
-            PC.SquadReplicationInfo == none ||
-            PRI == none ||
-            !PRI.IsSquadLeader())
-        {
-            return;
-        }
+    // Not enough people in the squad to receive any smoke
+    if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
+    {
+        return;
+    }
 
-        TeamIndex = GetTeamNum();
-        SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
+    // Get the smoke grenade classes from the nation.
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeClass != none)
+    {
+        CreateInventory(string(SmokeGrenadeClass));
+    }
 
-        // Not enough people in the squad to receive any smoke
-        if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
-        {
-            return;
-        }
-
-        switch (TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                SmokeGrenadeToGive = SmokeGrenadeClassName.Germany;
-                ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Germany;
-
-                break;
-
-            case ALLIES_TEAM_INDEX:
-                DHG = DarkestHourGame(Level.Game);
-
-                if (DHG == none || DHG.LevelInfo == none)
-                {
-                    return;
-                }
-
-                switch (DHG.DHLevelInfo.AlliedNation)
-                {
-                    case NATION_Canada:
-                        // Falls back to Britain
-                        if (SmokeGrenadeClassName.Canada != "")
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        }
-
-                        if (ColoredSmokeGrenadeClassName.Canada != "")
-                        {
-                            ColoredSmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        }
-
-                        break;
-
-                    case NATION_Britain:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        break;
-
-                    case NATION_USSR:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
-                        break;
-
-                    case NATION_Poland:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
-                        break;
-
-                    default:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USA;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USA;
-                        break;
-                }
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != "")
-        {
-            CreateInventory(SmokeGrenadeToGive);
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != "")
-        {
-            CreateInventory(ColoredSmokeGrenadeToGive);
-        }
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeClass != none)
+    {
+        CreateInventory(string(ColoredSmokeGrenadeClass));
     }
 }
 
@@ -7494,7 +7430,6 @@ simulated function bool CanBuildWithShovel()
 
 simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
-    local DHPlayer PC;
     local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     
@@ -7596,8 +7531,6 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
-    ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6
 

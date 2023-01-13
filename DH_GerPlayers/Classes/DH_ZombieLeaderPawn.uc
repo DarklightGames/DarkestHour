@@ -17,8 +17,8 @@ defaultproperties
 
     bReversedSkinsSlots=false
 
-    ShovelClassName="DH_Equipment.DHShovelItem_German"
-    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+    ShovelClass=class'DH_Equipment.DHShovelItem_German'
+    BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
 
     Health=500
     Stamina=500

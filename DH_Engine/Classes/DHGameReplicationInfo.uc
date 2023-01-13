@@ -79,6 +79,7 @@ var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
 var DHRadio             Radios[RADIOS_MAX];
 
+var int                 AxisNationID;
 var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
@@ -280,7 +281,7 @@ replication
         TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AlliedNationID, ConstructionClasses, MapMarkerClasses;
+        AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
 }
 
 simulated event PreBeginPlay()
@@ -434,24 +435,35 @@ simulated function PostNetBeginPlay()
     // Loop all objectives to set index variables up based on tag ones (uses hash table)
     foreach AllActors(class'DHObjective', Obj)
     {
-        if (Obj != none)
+        if (Obj == none)
         {
-            // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
-            {
-                if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AxisRequiredObjForCapture[Obj.AxisRequiredObjForCapture.Length] = ObjIndex;
-                }
-            }
+            continue;
+        }
 
-            // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
             {
-                if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AlliesRequiredObjForCapture[Obj.AlliesRequiredObjForCapture.Length] = ObjIndex;
-                }
+                class'UArray'.static.IAddUnique(Obj.AxisRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.AlliesRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Link up objective reliances from tags (add to the existing list, for backwards compatibility).
+        for (i = 0; i < Obj.GroupedObjectiveReliancesTags.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.GroupedObjectiveReliancesTags[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.GroupedObjectiveReliances, ObjIndex);
             }
         }
     }
@@ -530,6 +542,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
+    // TODO: eliminate this
     // Eliminate all objective indices that do not match the lowest depth
     if (Indices.Length > 0)
     {
@@ -544,6 +557,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
+    // Clear the depth bits from the indices.
     for (i = 0; i < Indices.Length; ++i)
     {
         Indices[i] = Indices[i] & 0xFFFF;
@@ -575,6 +589,8 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
     bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
     bIsActive = Node.Objective.IsActive();
+
+    // TODO: 
 
     if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
     {

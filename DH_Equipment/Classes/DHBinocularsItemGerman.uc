@@ -11,5 +11,5 @@ defaultproperties
 {
     ItemName="Zeiss Dienstglas 6x30"
     PickupClass=class'DH_Equipment.DHBinocularsPickupGerman'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

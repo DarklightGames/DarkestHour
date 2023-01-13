@@ -49,9 +49,6 @@ var private string                  AlliesNames[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 var private int                     AlliesNextRallyPointTimes[TEAM_SQUADS_MAX]; // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
 
-var private array<string>           AlliesDefaultSquadNames;
-var private array<string>           AxisDefaultSquadNames;
-
 var globalconfig private int        AxisSquadSize;
 var globalconfig private int        AlliesSquadSize;
 
@@ -431,7 +428,7 @@ function ResetSquadNextRallyPointTimes()
     }
 }
 
-function ResetSquadInfo()
+function ResetSquadRallyPoints()
 {
     local int i;
 
@@ -443,6 +440,13 @@ function ResetSquadInfo()
             RallyPoints[i] = none;
         }
     }
+    
+    ResetSquadNextRallyPointTimes();
+}
+
+function ResetSquadInfo()
+{
+    local int i;
 
     for (i = 0; i < arraycount(AxisMembers); ++i)
     {
@@ -633,18 +637,16 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
 // Returns the default squad name for the specified team and squad index.
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
-    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex))
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
     {
         return "";
     }
 
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return default.AxisDefaultSquadNames[SquadIndex];
-        default:
-            return default.AlliesDefaultSquadNames[SquadIndex];
-    }
+    return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
@@ -716,17 +718,34 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 // Changes the squad leader. Returns true if the squad leader was successfully changed.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
-    local DHPlayer PC;
-    local DHPlayer OtherPC;
+    local DHBot Bot;
+    local DHPlayer PC, OtherPC;
+    local DHPlayerReplicationInfo Admin, CurrentSquadLeader;
+    local bool bRequestedByAdmin;
 
     if (PRI == none)
     {
         return false;
     }
 
-    PC = DHPlayer(PRI.Owner);
+    // Change has been requested by an admin: swap PRI with the actual SL.
+    if (PRI.IsLoggedInAsAdmin() && NewSquadLeader != none)
+    {
+        Admin = PRI;
+        CurrentSquadLeader = GetSquadLeader(TeamIndex, NewSquadLeader.SquadIndex);
 
-    if (PC == none)
+        if (CurrentSquadLeader != none && CurrentSquadLeader != Admin)
+        {
+            PRI = CurrentSquadLeader;
+            SquadIndex = NewSquadLeader.SquadIndex;
+            bRequestedByAdmin = true;
+        }
+    }
+
+    PC = DHPlayer(PRI.Owner);
+    Bot = DHBot(PRI.Owner);
+
+    if (PC == none && Bot == none)
     {
         return false;
     }
@@ -758,8 +777,22 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     MaybeLeaveCommandVoiceChannel(PRI);
 
-    // "You are no longer the squad leader"
-    PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
+    if (bRequestedByAdmin)
+    {
+        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+                                                                    TeamIndex,
+                                                                    class'DHAdminMessage',
+                                                                    class'UInteger'.static.FromShorts(1, SquadIndex),
+                                                                    Admin,
+                                                                    NewSquadLeader,
+                                                                    self);
+    }
+
+    if (PC != none)
+    {
+        // "You are no longer the squad leader"
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
+    }
 
     OtherPC = DHPlayer(NewSquadLeader.Owner);
 
@@ -1167,7 +1200,20 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
 
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || !IsInSquad(MemberToKick, TeamIndex, SquadIndex))
     {
-        return false;
+        if (PRI.IsLoggedInAsAdmin())
+        {
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level,
+                                                                        TeamIndex,
+                                                                        class'DHAdminMessage',
+                                                                        class'UInteger'.static.FromShorts(0, SquadIndex),
+                                                                        PRI,
+                                                                        MemberToKick,
+                                                                        self);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     LeaveSquad(MemberToKick);
@@ -3027,22 +3073,6 @@ defaultproperties
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
     RallyPointRadiusInMeters=100.0
-    AlliesDefaultSquadNames(0)="Able"
-    AlliesDefaultSquadNames(1)="Baker"
-    AlliesDefaultSquadNames(2)="Charlie"
-    AlliesDefaultSquadNames(3)="Dog"
-    AlliesDefaultSquadNames(4)="Easy"
-    AlliesDefaultSquadNames(5)="Fox"
-    AlliesDefaultSquadNames(6)="George"
-    AlliesDefaultSquadNames(7)="How"
-    AxisDefaultSquadNames(0)="Anton"
-    AxisDefaultSquadNames(1)="Berta"
-    AxisDefaultSquadNames(2)="Caesar"
-    AxisDefaultSquadNames(3)="Dora"
-    AxisDefaultSquadNames(4)="Emil"
-    AxisDefaultSquadNames(5)="Fritz"
-    AxisDefaultSquadNames(6)="Gustav"
-    AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=45
     SquadLockMemberCountMin=3

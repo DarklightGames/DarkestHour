@@ -202,5 +202,5 @@ defaultproperties
     bCanBeDamaged=false
     DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
+    bCanOnlyPlaceOnTerrain=true
 }
-

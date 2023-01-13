@@ -359,6 +359,7 @@ function PostBeginPlay()
         GRI.OverheadOffset = 0;
     }
 
+    GRI.AxisNationID = int(DHLevelInfo.AxisNation);
     GRI.AlliedNationID = int(DHLevelInfo.AlliedNation);
 
     // Find the location of the map bounds
@@ -3103,11 +3104,6 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
-        if (SquadReplicationInfo != none)
-        {
-            SquadReplicationInfo.ResetSquadInfo();
-        }
-
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
@@ -3145,6 +3141,11 @@ state ResetGameCountdown
             {
                 GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
                 GRI.DangerZoneUpdated();
+            }
+
+            if (SquadReplicationInfo != none)
+            {
+                SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
@@ -5840,7 +5841,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=11
         Minor=2
-        Patch=0
+        Patch=6
         Prerelease=""
     End Object
     Version=VersionObject

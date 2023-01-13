@@ -139,34 +139,13 @@ simulated function float GetSupplyCount()
 
 static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 {
-    //local float SupplyPercent;
-    //local int StaticMeshIndex;
     local DH_LevelInfo LI;
 
-    //SupplyPercent = (float(SupplyCount) / SupplyCountMax);
-    //StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        return StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full';
-    }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-        if (LI != none)
-        {
-            switch (LI.AlliedNation)
-            {
-                case NATION_USA:
-                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
-                case NATION_Britain:
-                case NATION_Canada:
-                case NATION_USSR:
-                case NATION_Poland:
-                case NATION_Czechoslovakia:
-                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
-            }
-        }
+    if (LI != none)
+    {
+        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheStaticMesh;
     }
 
     return none;

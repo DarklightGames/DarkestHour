@@ -7248,20 +7248,29 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
 {
     local vector TraceStart, TraceEnd;
     local Actor A, HitActor;
+    local Actor PawnVehicleBase;
 
     if (Pawn == none)
     {
         HitLocation = vect(0, 0, 0);
     }
 
+
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
+    PawnVehicleBase = Pawn.GetVehicleBase();
 
     foreach TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (A == Pawn ||
+            A == PawnVehicleBase ||
             A.IsA('ROBulletWhipAttachment') ||
             A.IsA('Volume'))
+        {
+            continue;
+        }
+
+        if (A.IsA('DHCollisionMeshActor') && A.Owner.Base == PawnVehicleBase)
         {
             continue;
         }
@@ -7337,18 +7346,20 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
     }
 }
 
-exec function DebugAddMapMarker(string MapMarkerClassName, int x, int y)
+exec function DebugAddMapMarker(string MapMarkerClassName, int X, int Y)
 {
     local class<DHMapMarker> MapMarkerClass;
-    local float xx, yy;
+    local float XX, YY;
 
     if (IsDebugModeAllowed())
     {
-        xx = float(x)/10;
-        yy = float(y)/10;
+        XX = float(x) / 10;
+        YY = float(y) / 10;
         MapMarkerClass = class<DHMapMarker>(DynamicLoadObject("DH_Engine." $ MapMarkerClassName, class'Class'));
-        Log("adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ xx @ "," @ yy);
-        AddMarker(MapMarkerClass, xx, yy);
+
+        Log("Adding map marker: MapMarkerClass" @ MapMarkerClass @ "," @ XX @ "," @ YY);
+
+        AddMarker(MapMarkerClass, XX, YY);
     }
 }
 
@@ -7382,6 +7393,7 @@ exec function DebugStartRound()
     if (IsDebugModeAllowed())
     {
         GRI = DHGameReplicationInfo(GameReplicationInfo);
+
         if (GRI == none || !GRI.bIsInSetupPhase)
         {
             return;
@@ -7403,7 +7415,7 @@ function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if(MapMarkerClass.default.Cooldown > 0)
+    if (MapMarkerClass.default.Cooldown > 0)
     {
         switch(MapMarkerClass.default.OverwritingRule)
         {
@@ -7439,7 +7451,7 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
 
     ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
 
-    if(MapMarkerClass.default.Scope != PERSONAL)
+    if (MapMarkerClass.default.Scope != PERSONAL)
     {
         // We are on the server at this point, as this function is called from OnMapMarkerPlaced
         // which for non-personal markers is executed on the server.
