@@ -13,10 +13,10 @@ defaultproperties
     Spread=50.0
 
     //Recoil
-    PctRestDeployRecoil=1   //0.5 default
-    RecoilRate=0.075
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=0.5,OutVal=0.5),(InVal=1.0,OutVal=1.0),(InVal=1.5,OutVal=1.5),(InVal=2.0,OutVal=2.0),(InVal=2.2,OutVal=2.2),(InVal=2.2,OutVal=2.4),(InVal=2.8,OutVal=2.8),(InVal=3.2,OutVal=2.8)))
-    RecoilFallOffFactor=15.0
+    RecoilRate=0.06
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=4.0,OutVal=1.37),(InVal=12.0,OutVal=1.9),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
 
     MaxVerticalRecoilAngle=700
     MaxHorizontalRecoilAngle=310  //heavy, but very unbalanced with awkward gas automatic system
