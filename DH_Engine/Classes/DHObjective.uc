@@ -180,7 +180,8 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime, InfluenceReplicationCounter;
+        UnfreezeTime, InfluenceReplicationCounter, BaseInfluenceModifier,
+        AxisInfluenceModifier, AlliesInfluenceModifier, NeutralInfluenceModifier;
 }
 
 simulated function PostBeginPlay()
