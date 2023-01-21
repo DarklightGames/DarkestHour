@@ -467,7 +467,7 @@ function TearDown(int InstigatorTeamIndex)
     {
         RefundSupplies(InstigatorTeamIndex);
     }
-    
+
     // Update the construction counts remaining in the GRI
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -1317,7 +1317,6 @@ defaultproperties
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
     bShouldSwitchToLastWeaponOnPlacement=true
-    bCanBePlacedInDangerZone=true
 
     // Stagnation
     bCanDieOfStagnation=true
