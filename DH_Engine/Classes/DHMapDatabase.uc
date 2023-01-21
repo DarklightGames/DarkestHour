@@ -345,7 +345,7 @@ defaultproperties
     MapInfos(116)=(Name="DH-Valko_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(117)=(Name="DH-Cheneux_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(118)=(Name="DH-Zhitomir1941_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
-    MapInfos(119)=(Name="DH-Ten_Aard_Clash",AlliedNation=NATION_Britain,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    MapInfos(119)=(Name="DH-Ten_Aard_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(120)=(Name="DH-StalingradKessel_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(121)=(Name="DH-Armored_AlteZiegelei_Stalemate",AlliedNation=NATION_USA,GameType=GAMETYPE_Stalemate,Size=SIZE_Any)
     MapInfos(122)=(Name="DH-Armored_Arad_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
