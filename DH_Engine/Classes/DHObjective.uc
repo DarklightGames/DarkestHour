@@ -165,6 +165,8 @@ var(DHDangerZone) float BaseInfluenceModifier;
 var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
+var private int         OldInfluenceReplicationCounter;
+var private int         InfluenceReplicationCounter;
 
 // Team capture variable
 var() enum ETeamCapture
@@ -178,7 +180,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime;
+        UnfreezeTime, InfluenceReplicationCounter;
 }
 
 simulated function PostBeginPlay()
@@ -1506,6 +1508,12 @@ simulated function PostNetReceive()
         bOldActive = bActive;
     }
 
+    if (OldInfluenceReplicationCounter != InfluenceReplicationCounter)
+    {
+        bHasStateChanged = true;
+        OldInfluenceReplicationCounter = InfluenceReplicationCounter;
+    }
+
     if (bHasStateChanged)
     {
         PC = DHPlayer(Level.GetLocalPlayerController());
@@ -1519,6 +1527,16 @@ simulated function PostNetReceive()
                 Hud.OnObjectiveStateChanged();
             }
         }
+    }
+}
+
+// Call this when the danger zone influences are changed
+// so that the client knows to re-calculate the danger zone.
+function OnInfluenceChanged()
+{
+    if (Role == ROLE_Authority)
+    {
+        InfluenceReplicationCounter++;
     }
 }
 
