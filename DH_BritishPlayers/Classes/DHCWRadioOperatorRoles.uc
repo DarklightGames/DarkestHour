@@ -9,6 +9,7 @@ class DHCWRadioOperatorRoles extends DHAlliedRadioOperatorRoles
 defaultproperties
 {
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
