@@ -130,14 +130,14 @@ function Reset()
 
         GRI.VehiclePoolMaxActives[i] = VehiclePools[i].MaxActive;
         GRI.VehiclePoolMaxSpawns[i] = VehiclePools[i].MaxSpawns;
-        GRI.VehiclePoolNextAvailableTimes[i] = 0.0;
+        GRI.VehiclePoolNextAvailableTimes[i] = VehiclePools[i].InitialSpawnTimer;
         GRI.VehiclePoolSpawnCounts[i] = 0;
         GRI.VehiclePoolReservationCount[i] = 0;
 
         for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
         {
             VehiclePools[i].Slots[j].Vehicle = none;
-            VehiclePools[i].Slots[j].RespawnTime = VehiclePools[i].InitialSpawnTimer;
+            VehiclePools[i].Slots[j].RespawnTime = 0;
         }
     }
 
