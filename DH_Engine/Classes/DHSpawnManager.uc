@@ -22,6 +22,7 @@ struct VehiclePool
     var() class<ROVehicle>  VehicleClass;
     var() bool              bIsInitiallyActive;
     var() bool              bIsSpawnVehicle;
+    var() int               InitialSpawnTimer;       // the amount of delay (in seconds )until this vehicle can be spawned initially
     var() float             RespawnTime;             // respawn interval in seconds
     var() byte              MaxSpawns;               // how many vehicles can be spawned from this pool
     var() byte              MaxActive;               // how many vehicles from this pool can be active at once
@@ -136,7 +137,7 @@ function Reset()
         for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
         {
             VehiclePools[i].Slots[j].Vehicle = none;
-            VehiclePools[i].Slots[j].RespawnTime = 0;
+            VehiclePools[i].Slots[j].RespawnTime = VehiclePools[i].InitialSpawnTimer;
         }
     }
 
