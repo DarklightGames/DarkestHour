@@ -7,12 +7,19 @@ class DHThrowableExplosiveProjectile extends DHProjectile
     abstract;
 
 var     float           ExplosionSoundRadius;
-var     class<Emitter>  ExplodeDirtEffectClass;
-var     class<Emitter>  ExplodeSnowEffectClass;
-var     class<Emitter>  ExplodeMidAirEffectClass;
 
-var     class<Actor>    SplashEffect;  // water splash effect class
-var     sound           WaterHitSound; // sound of this bullet hitting water
+var     Class<Emitter>  ExplodeDefaultEffectClass;
+var     Class<Emitter>  ExplodeStoneEffectClass;
+var     Class<Emitter>  ExplodeDirtEffectClass;
+var     Class<Emitter>  ExplodeSandEffectClass;
+var     Class<Emitter>  ExplodeSnowEffectClass;
+var     Class<Emitter>  ExplodeGrassEffectClass;
+var     Class<Emitter>  ExplodeWoodEffectClass;
+var     Class<Emitter>  ExplodeMetalEffectClass;
+var     Class<Emitter>  ExplodeMidAirEffectClass;
+
+var     Class<Actor>    SplashEffect;  // water splash effect class
+var     Sound           WaterHitSound; // sound of this bullet hitting water
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
 var     PlayerReplicationInfo   SavedPRI;
@@ -26,7 +33,7 @@ var     float           FuzeLengthTimer;
 var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
-var     sound           ExplosionSound[3];
+var     Sound           ExplosionSound[3];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
 var     float           DampenFactor;
@@ -36,11 +43,11 @@ var     float           DampenFactorParallel;
 var     float           BlurTime;         // how long blur effect should last for this projectile
 var     float           BlurEffectScalar;
 var     float           ShakeScale;       // how much larger than the explosion radius should the view shake
-var     vector          ShakeRotMag;      // how far to rot view
-var     vector          ShakeRotRate;     // how fast to rot view
+var     Vector          ShakeRotMag;      // how far to rot view
+var     Vector          ShakeRotRate;     // how fast to rot view
 var     float           ShakeRotTime;     // how much time to rot the instigator's view
-var     vector          ShakeOffsetMag;   // max view offset vertically
-var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     Vector          ShakeOffsetMag;   // max view offset vertically
+var     Vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
 replication
@@ -57,7 +64,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Velocity = Speed * vector(Rotation);
+        Velocity = Speed * Vector(Rotation);
 
         if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
@@ -78,14 +85,75 @@ simulated function PostBeginPlay()
     }
 }
 
+static function class<Emitter> GetExplosionEmitterClassForSurfaceType(ESurfaceTypes SurfaceType)
+{
+    local class<Emitter> EmitterClass;
+
+    switch (SurfaceType)
+    {
+        case EST_Rock:
+        case EST_Gravel:
+        case EST_Concrete:
+        case EST_Custom03:  // Brick
+            EmitterClass = default.ExplodeStoneEffectClass;
+            break;
+        case EST_Dirt:
+        case EST_Mud:
+            EmitterClass =  default.ExplodeDirtEffectClass;
+            break;
+        case EST_Custom01:  // Sand
+        case EST_Custom02:  // Sand Bags
+            EmitterClass = default.ExplodeSandEffectClass;
+            break;
+        case EST_Plant:
+        case EST_Custom04:  // Hedgerow
+            EmitterClass = default.ExplodeGrassEffectClass;
+            break;
+        case EST_Snow:
+        case EST_Ice:
+            EmitterClass = default.ExplodeSnowEffectClass;
+            break;
+        case EST_Wood:
+        case EST_HollowWood:
+            EmitterClass = default.ExplodeWoodEffectClass;
+            break;
+        case EST_Metal:
+        case EST_MetalArmor:
+            EmitterClass = default.ExplodeMetalEffectClass;
+            break;
+    }
+
+    if (EmitterClass == none)
+    {
+        // The default dirt effect is used as a fall-back.
+        EmitterClass = default.ExplodeDefaultEffectClass;
+    }
+
+    return EmitterClass;
+}
+
+static function class<Projector> GetExplosionProjectorClassForSurfaceType(ESurfaceTypes SurfaceType)
+{
+    switch (SurfaceType)
+    {
+        case EST_Snow:
+        case EST_Ice:
+            return default.ExplosionDecalSnow;
+        default:
+            return default.ExplosionDecal;
+    }
+}
+
 // From ROThrowableExplosiveProjectile, ROGrenadeProjectile & ROSatchelChargeProjectile, combined
 // Incorporates ExplosionSoundRadius to make more generic
 simulated function Destroyed()
 {
-    local ESurfaceTypes ST;
-    local ROPawn        Victims;
-    local vector        Start, Direction;
-    local float         DamageScale, Distance;
+    local ESurfaceTypes     ST;
+    local class<Emitter>    ExplodeEffectClass;
+    local class<Projector>  ExplodeDecalClass;
+    local ROPawn            Victims;
+    local vector            Start, Direction;
+    local float             DamageScale, Distance;
 
     if (bDud)
     {
@@ -112,14 +180,16 @@ simulated function Destroyed()
         {
             GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
 
-            if (ST == EST_Snow || ST == EST_Ice)
+            ExplodeEffectClass = GetExplosionEmitterClassForSurfaceType(ST);
+            ExplodeDecalClass = GetExplosionProjectorClassForSurfaceType(ST);
+
+            if (ExplodeEffectClass != none)
             {
-                Spawn(ExplodeSnowEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
+                Spawn(ExplodeEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
             }
-            else
+
+            if (ExplosionDecal != none)
             {
-                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
                 Spawn(ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
         }

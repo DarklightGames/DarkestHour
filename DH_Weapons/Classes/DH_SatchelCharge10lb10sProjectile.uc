@@ -231,7 +231,7 @@ defaultproperties
     ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
     ExplosionSound(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
-    ExplodeDirtEffectClass=class'ROEffects.ROSatchelExplosion'
+    ExplodeDefaultEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
 
