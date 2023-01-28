@@ -2114,7 +2114,7 @@ simulated state Reloading extends WeaponBusy
             ROPawn(Instigator).HandleStandardReload();
         }
 
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && GetNextMagIndex() >= 0)
         {
             // Update the ammo count for the next magazine so that the client knows.
             // This is needed for magazines that appear differently depending on
