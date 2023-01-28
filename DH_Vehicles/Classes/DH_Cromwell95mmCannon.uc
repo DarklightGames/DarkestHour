@@ -16,7 +16,6 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_ext'
-    ProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHEAT'

@@ -37,7 +37,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShellHE'

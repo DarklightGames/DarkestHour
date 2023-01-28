@@ -42,9 +42,8 @@ defaultproperties
     nProjectileDescriptions(0)="OF-350"
     nProjectileDescriptions(1)="BP-350M"
 
-    ProjectileClass=class'DH_Guns.DH_M1927CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_M1927CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'    // TODO: replace
+    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
 
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=4

@@ -20,7 +20,6 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
 
