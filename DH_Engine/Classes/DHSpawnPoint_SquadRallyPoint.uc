@@ -238,6 +238,7 @@ state Active
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.UpdateTime = ResupplyTime;
+            ResupplyAttachment.ResupplyStrategy.bGivesExtraAmmo = false;
         }
         else
         {
