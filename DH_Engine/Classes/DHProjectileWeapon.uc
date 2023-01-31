@@ -2255,12 +2255,16 @@ Begin:
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodMagEmptyReloadAnim))
-        {
+        {    
             Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+        }
+        else if (HasAnim(BipodMagPartialReloadAnim))
+        {
+            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
         else
         {
-            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+            Warn("Missing animation for either BipodMagEmptyReloadAnim or BipodMagPartialReloadAnim");
         }
 
         SetPlayerFOV(PlayerDeployFOV);

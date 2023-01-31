@@ -5,6 +5,12 @@
 
 class DH_Breda30Weapon extends DHAutoWeapon;
 
+// TODO: make this a generic part of projectileweapon class
+simulated function ROIronSights()
+{
+    Deploy();
+}
+
 defaultproperties
 {
     ItemName="Breda modello 30"
@@ -13,22 +19,21 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_Breda30Attachment'
     PickupClass=class'DH_Weapons.DH_Breda30Pickup'
 
-    Mesh=SkeletalMesh'DH_ZB_1st.BrenMk2_1st'    // TDOO: replace
+    Mesh=SkeletalMesh'DH_Breda30_anm.Breda30_1st'
     bUseHighDetailOverlayIndex=false
 
     DisplayFOV=90.0
     IronSightDisplayFOV=65.0
-    PlayerDeployFOV=65
+    PlayerIronsightFOV=65.0
+    PlayerDeployFOV=65.0
 
     bHasSelectFire=false
 
     bHasSpareBarrel=true
     InitialBarrels=3    // The backpack has slots on the side for two spare barrels.
     BarrelClass=class'DH_Weapons.DH_Breda30Barrel'
-    BarrelSteamBone="barrel"
+    BarrelSteamBone="muzzle"
     BarrelChangeAnim="barrel_change"
-
-    PlayerIronsightFOV=65.0
 
     MaxNumPrimaryMags=15        // The backpack that the machine-gunner carries holds 15 slots for stripper clips.
     InitialNumPrimaryMags=10
@@ -37,17 +42,14 @@ defaultproperties
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
     BipodIdleAnim="deploy_idle"
-    BipodMagEmptyReloadAnim="bipod_reload"
-    BipodMagPartialReloadAnim="bipod_reload"
+    BipodMagEmptyReloadAnim="reload"
+    BipodMagPartialReloadAnim="reload"
 
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
 
     IronToBipodDeploy="iron_deploy"
 
-    IronIdleAnim="iron_idle"
-    IronBringUp="iron_in"
-    IronPutDown="iron_out"
     SprintStartAnim="sprint_start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="sprint_end"
@@ -55,9 +57,8 @@ defaultproperties
     SelectAnim="draw"
     PutDownAnim="putaway"
 
-    FirstSelectAnim="draw"
-
     bCanBipodDeploy=true
     bCanBeResupplied=true
+    bMustReloadWithBipodDeployed=true
     ZoomOutTime=0.1
 }

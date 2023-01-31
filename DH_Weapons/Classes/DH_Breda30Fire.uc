@@ -12,7 +12,7 @@ defaultproperties
     bUsesTracers=true
     TracerFrequency=5
     AmmoClass=class'DH_Weapons.DH_Breda30Ammo'
-    FireRate=0.13 // ~512 rpm (value had to be found experimentally due to an engine bug)
+    FireRate=0.14 // ~500 rpm
     FAProjSpawnOffset=(X=-28.0)
 
     Spread=70.0
@@ -28,7 +28,7 @@ defaultproperties
 
     FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'  // TODO: give me custom sounds or give me death
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm' // TODO: replace with wacky italian 6.5×52mm Carcano
@@ -36,7 +36,6 @@ defaultproperties
     ShellRotOffsetIron=(Pitch=-16200)
     bReverseShellSpawnDirection=true
     BipodDeployFireAnim="deploy_shoot"
-    FireIronAnim="iron_shoot"
     FireAnim="shoot"
 
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
