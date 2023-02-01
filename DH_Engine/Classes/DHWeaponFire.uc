@@ -39,6 +39,22 @@ simulated function InitEffects()
     }
 }
 
+event ModeDoFire()
+{
+    local float Theta;
+    local DHProjectileWeapon ProjectileWeapon;
+
+    super.ModeDoFire();
+
+    ProjectileWeapon = DHProjectileWeapon(Weapon);
+
+    if (ProjectileWeapon != none)
+    {
+        ProjectileWeapon.UpdateMagazineAnimations(ProjectileWeapon.GetMagazinePercent());
+        ProjectileWeapon.UpdateAmmoBelt();
+    }
+}
+
 defaultproperties
 {
     SpreadStyle=SS_Random // this is actually assumed & hard-coded into spread functionality

@@ -151,6 +151,25 @@ var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each
 
 var     bool            bCanUseIronsights;      // allows firing from a shouldered/hipfire position (while not deployed)
 
+// Magazine animations
+// These are used to animate a part of the mesh based
+// on the number of rounds remaining in the magazine.
+struct MagazineAnimation
+{
+    var int Channel;    // Channel index
+    var name BoneName;  // Used as the root of the new channel
+    var name Animation; // The animation to use.
+                        // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
+                        // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
+                        // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+};
+var array<MagazineAnimation> MagazineAnimations;
+
+// Bullets for MG belts and magazines
+var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
+var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
+var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -205,6 +224,8 @@ simulated function PostBeginPlay()
     if (InstigatorIsLocallyControlled())
     {
         CreateBipodPhysicsSimulation();
+        SetupMagazineAnimationChannels();
+        SpawnAmmoBelt();
     }
 
     if (bHasScope)
@@ -743,6 +764,8 @@ simulated function BringUp(optional Weapon PrevWeapon)
         }
 
         UpdateBayonet();
+        UpdateMagazineAnimations(GetMagazinePercent());
+        UpdateAmmoBelt();
     }
 }
 
@@ -796,9 +819,9 @@ simulated state RaisingWeapon
             ZoomOut();
         }
 
-        // Reset any zoom values
         if (InstigatorIsLocalHuman())
         {
+            // Reset any zoom values
             if (DisplayFOV != default.DisplayFOV)
             {
                 DisplayFOV = default.DisplayFOV;
@@ -808,6 +831,8 @@ simulated state RaisingWeapon
             {
                 PlayerViewZoom(false);
             }
+
+            UpdateMagazineAnimations(GetMagazinePercent());
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(SelectEmptyAnim))
@@ -3314,6 +3339,83 @@ simulated function UpdateScopeMode()
             bPlayerFOVZooms = true;
 
             bInitializedScope = true;
+        }
+    }
+}
+
+function SetupMagazineAnimationChannels()
+{
+    local int i;
+
+    Log("SetupMagazineAnimationChannels");
+
+    for (i = 0; i < MagazineAnimations.Length; ++i)
+    {
+        AnimBlendParams(MagazineAnimations[i].Channel, 1.0,,, MagazineAnimations[i].BoneName);
+        PlayAnim(MagazineAnimations[i].Animation, 1.0,, MagazineAnimations[i].Channel);
+    }
+}
+
+simulated function float GetMagazinePercent()
+{
+    return FClamp(float(AmmoAmount(0)) / MaxAmmo(0), 0.0, 1.0);
+}
+
+simulated function UpdateMagazineAnimations(float Theta)
+{
+    local int i;
+    local int Frame;
+
+    Log("UpdateMagazineAnimations" @ Theta);
+
+    for (i = 0; i < MagazineAnimations.Length; ++i)
+    {
+        PlayAnim(MagazineAnimations[i].Animation, 1.0,, MagazineAnimations[i].Channel);
+
+        Frame = Theta * MaxAmmo(0);
+
+        Log(Theta @ Frame);
+
+        FreezeAnimAt(Theta * MaxAmmo(0), MagazineAnimations[i].Channel);
+    }
+}
+
+// Handles making ammo belt bullets disappear
+simulated function UpdateAmmoBelt()
+{
+    local int i;
+
+    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
+    {
+        if (MGBeltArray[i] != none)
+        {
+            MGBeltArray[i].SetDrawType(DT_None);
+        }
+    }
+}
+
+// Spawn the first person linked ammo belt
+simulated function SpawnAmmoBelt()
+{
+    local int i;
+
+    for (i = 0; i < MGBeltBones.Length; ++i)
+    {
+        MGBeltArray[i] = Spawn(BeltBulletClass, self);
+        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
+    }
+}
+
+// Make the full ammo belt visible again (called by anim notifies)
+simulated function RenewAmmoBelt()
+{
+    local int i;
+
+    for (i = 0; i < MGBeltArray.Length; ++i)
+    {
+        if (MGBeltArray[i] != none)
+        {
+            MGBeltArray[i].SetDrawType(DT_StaticMesh);
         }
     }
 }
