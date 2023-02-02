@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_RKKF_SniperNorth extends DHSOVSniperRoles;  //this role wears a naval cap, which has a different writing on it depending on the fleet, so this role is separated on fleets
