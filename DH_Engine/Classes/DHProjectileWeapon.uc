@@ -1932,9 +1932,8 @@ simulated state StartSprinting
         if (InstigatorIsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
-            LoopSpeed = 1.5;
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
+            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * SprintLoopAnimRate;
 
             if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
             {
@@ -1968,11 +1967,11 @@ simulated function PlayStartSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintStartEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintStartEmptyAnim, 1.5);
+        PlayAnimAndSetTimer(SprintStartEmptyAnim, SprintStartAnimRate);
     }
     else if (HasAnim(SprintStartAnim))
     {
-        PlayAnimAndSetTimer(SprintStartAnim, 1.5);
+        PlayAnimAndSetTimer(SprintStartAnim, SprintStartAnimRate);
     }
 }
 
@@ -2016,11 +2015,11 @@ simulated function PlayEndSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintEndEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintEndEmptyAnim, 1.5);
+        PlayAnimAndSetTimer(SprintEndEmptyAnim, SprintEndAnimRate);
     }
     else
     {
-        PlayAnimAndSetTimer(SprintEndAnim, 1.5);
+        PlayAnimAndSetTimer(SprintEndAnim, SprintEndAnimRate);
     }
 }
 
@@ -3347,8 +3346,6 @@ function SetupMagazineAnimationChannels()
 {
     local int i;
 
-    Log("SetupMagazineAnimationChannels");
-
     for (i = 0; i < MagazineAnimations.Length; ++i)
     {
         AnimBlendParams(MagazineAnimations[i].Channel, 1.0,,, MagazineAnimations[i].BoneName);
@@ -3366,16 +3363,9 @@ simulated function UpdateMagazineAnimations(float Theta)
     local int i;
     local int Frame;
 
-    Log("UpdateMagazineAnimations" @ Theta);
-
     for (i = 0; i < MagazineAnimations.Length; ++i)
     {
         PlayAnim(MagazineAnimations[i].Animation, 1.0,, MagazineAnimations[i].Channel);
-
-        Frame = Theta * MaxAmmo(0);
-
-        Log(Theta @ Frame);
-
         FreezeAnimAt(Theta * MaxAmmo(0), MagazineAnimations[i].Channel);
     }
 }

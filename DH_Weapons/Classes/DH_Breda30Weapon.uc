@@ -49,9 +49,9 @@ defaultproperties
     bUseHighDetailOverlayIndex=false
 
     DisplayFOV=90.0
-    IronSightDisplayFOV=65.0
-    PlayerIronsightFOV=65.0
-    PlayerDeployFOV=65.0
+    IronSightDisplayFOV=60.0
+    PlayerIronsightFOV=60.0
+    PlayerDeployFOV=60.0
 
     bHasSelectFire=false
 
@@ -87,4 +87,7 @@ defaultproperties
     bCanBeResupplied=true
     bMustReloadWithBipodDeployed=true
     ZoomOutTime=0.1
+
+    SprintStartAnimRate=1.0
+    SprintEndAnimRate=1.0
 }

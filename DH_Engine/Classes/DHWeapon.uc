@@ -33,6 +33,12 @@ var     bool            bHasBeenDrawn;
 var     float           ResupplyInterval;
 var     int             LastResupplyTimestamp;
 
+// For some absolutely fucked reason, RO sets their sprint animation rates at 1.5x by default.
+// We allow ourselves the ability to override this nonsense.
+var     float           SprintEndAnimRate;
+var     float           SprintStartAnimRate;
+var     float           SprintLoopAnimRate;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -1077,4 +1083,8 @@ defaultproperties
     bUsesIronsightFOV=true
 
     ResupplyInterval=2.5
+
+    SprintStartAnimRate=1.5
+    SprintEndAnimRate=1.5
+    SprintLoopAnimRate=1.5
 }
