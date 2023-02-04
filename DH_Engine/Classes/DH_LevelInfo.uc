@@ -127,7 +127,7 @@ simulated function string GetTeamNationClassName(int TeamIndex)
                 case NATION_Germany:
                     return "DH_GerPlayers.DHNation_Germany";
                 case NATION_Italy:
-                    return "DH_GerPlayers.DHNation_Italy";
+                    return "DH_ItalyPlayers.DHNation_Italy";
                 default:
                     break;
             }
