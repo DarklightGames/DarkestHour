@@ -10,7 +10,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_ext'
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'

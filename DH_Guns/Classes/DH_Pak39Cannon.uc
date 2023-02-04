@@ -19,7 +19,6 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'

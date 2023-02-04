@@ -30,7 +30,6 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEAT'
     TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'

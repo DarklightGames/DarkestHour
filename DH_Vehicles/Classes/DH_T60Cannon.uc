@@ -35,7 +35,6 @@ defaultproperties
 
     // Cannon ammo
     bMultipleRoundTypes=false
-    ProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
     ProjectileDescriptions(0)="AP-T"
 

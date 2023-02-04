@@ -41,6 +41,8 @@ var class<DHInventorySpawner>   GrenadeCrateClass;
 // Squads
 var string                      DefaultSquadNames[8];
 
+var Sound                       RoundStartSound;
+
 var class<DHHealthFigure>       HealthFigureClass;
 
 defaultproperties

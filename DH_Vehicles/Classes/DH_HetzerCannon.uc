@@ -66,7 +66,6 @@ defaultproperties
     YawEndConstraint=3000.000000
     PitchBone="gun_pitch"
     WeaponFireOffset=34.200001
-    ProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
     CustomPitchUpLimit=1820
     CustomPitchDownLimit=64444
     MaxPositiveYaw=2000

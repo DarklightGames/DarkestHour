@@ -49,7 +49,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'

@@ -30,4 +30,5 @@ defaultproperties
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
     HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
+    RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
 }
