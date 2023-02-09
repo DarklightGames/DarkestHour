@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GermanRadioCamoSSPawn extends DH_GermanPawn; // not extending the obvious DH_GermanRadioSSPawn as would inherit 3 extra unwanted BodySkins

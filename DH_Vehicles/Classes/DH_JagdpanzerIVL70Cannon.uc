@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_JagdpanzerIVL70Cannon extends DH_JagdpanzerIVL48Cannon;
@@ -14,7 +14,6 @@ defaultproperties
     ManualRotationsPerSecond=0.025
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'

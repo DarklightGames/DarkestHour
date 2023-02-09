@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroups extends DHCommandMenu
@@ -23,6 +23,7 @@ function Setup()
     Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
     Context.PlayerController = PC;
 
+    // Compile a list of unique groups from the constructions that can be displayed.
     for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
         if (GRI.ConstructionClasses[i] != none && GRI.ConstructionClasses[i].static.ShouldShowOnMenu(Context))
@@ -31,6 +32,7 @@ function Setup()
         }
     }
 
+    // Sort the groups.
     GroupsComparator = new class'UComparator';
     GroupsComparator.CompareFunction = class'DHConstructionGroup'.static.SortFunction;
     class'USort'.static.Sort(Groups, GroupsComparator);

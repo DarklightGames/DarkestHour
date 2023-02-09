@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBinocularsItemSoviet extends DHBinocularsItem;
@@ -18,5 +18,5 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Sov'
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Sov'
 }

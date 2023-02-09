@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MG42Fire extends DHMGAutomaticFire;
@@ -14,7 +14,7 @@ defaultproperties
     TracerFrequency=7
     Spread=90.0
     RecoilRate=0.03125
-    PctHipMGPenalty=1.0
+    PctHipMGPenalty=1.25
 
     // Recoil
     MaxVerticalRecoilAngle=475

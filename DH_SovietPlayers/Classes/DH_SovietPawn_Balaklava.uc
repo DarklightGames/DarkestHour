@@ -1,18 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SovietPawn_Balaklava extends DHPawn;
+class DH_SovietPawn_Balaklava extends DH_SovietPawn;
 
 defaultproperties
 {
-    Species=class'DH_SovietPlayers.DH_Soviet'
-
-    Mesh=SkeletalMesh'DHCharactersSOV_anm.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
-    Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
-
     FaceSkins(0)=Combiner'DHSovietCharactersTex.sov_faces.sov_face01winter'
     FaceSkins(1)=Combiner'DHSovietCharactersTex.sov_faces.sov_face01winter' // compensation for absence of 01 in the gloved pawn
     FaceSkins(2)=Combiner'DHSovietCharactersTex.sov_faces.sov_face03winter'
@@ -28,7 +22,4 @@ defaultproperties
     FaceSkins(12)=Combiner'DHSovietCharactersTex.sov_faces.sov_face13winter'
     FaceSkins(13)=Combiner'DHSovietCharactersTex.sov_faces.sov_face14winter'
     FaceSkins(14)=Combiner'DHSovietCharactersTex.sov_faces.sov_face15winter'
-
-    ShovelClassName="DH_Equipment.DHShovelItem_Russian"
-    BinocsClassName="DH_Equipment.DHBinocularsItemSoviet"
 }

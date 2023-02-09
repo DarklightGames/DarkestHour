@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMortarWeapon extends DHWeapon
@@ -19,6 +19,18 @@ var     int     HighExplosiveMaximum;
 var     int     HighExplosiveResupplyCount;
 var     int     SmokeMaximum;
 var     int     SmokeResupplyCount;
+
+enum EDeployError
+{
+    DE_None,            // 0
+    DE_BadStance,       // 1
+    DE_Fatal,           // 2
+    DE_Moving,          // 3
+    DE_BadSurface,      // 4
+    DE_NotEnoughRoom,   // 5
+    DE_Leaning,         // 6
+    DE_BadVolume,       // 7
+};
 
 replication
 {
@@ -91,113 +103,113 @@ exec simulated function Deploy()
     }
 }
 
-// New function to check whether the player can deploy the mortar where they are, with explanatory screen messages if they can't
-simulated function bool CanDeploy(DHPawn P)
+simulated function EDeployError GetDeployError(DHPawn P)
 {
     local Actor        HitActor;
     local DHVolumeTest VolumeTest;
     local bool         bIsInNoArtyVolume;
     local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
     local rotator      TraceRotation;
-    local int          CannotDeployError;
 
     // Can't deploy if we're busy, raising the weapon, on fire or somehow crawling
     // If we don't check state RaisingWeapon, it allows the player to almost instantaneously redeploy a mortar after undeploying
     if (P == none || P.Controller == none || IsBusy() || IsInState('RaisingWeapon') || P.bOnFire || P.bIsCrawling)
     {
-        return false;
+        return DE_Fatal;
     }
-
-    CannotDeployError = -1;
-
-    // Can't deploy if we're in a no arty volume
-    VolumeTest = Spawn(class'DHVolumeTest',,, P.Location);
-    bIsInNoArtyVolume = VolumeTest != none && VolumeTest.DHIsInNoArtyVolume(DHGameReplicationInfo(PlayerController(P.Controller).GameReplicationInfo));
-    VolumeTest.Destroy();
-
-    if (bIsInNoArtyVolume)
-    {
-        CannotDeployError = 11;
-    }
+    
     // Can't deploy if we're in water
-    else if (P.PhysicsVolume.bWaterVolume || P.PhysicsVolume.bPainCausing)
+    if (P.PhysicsVolume.bWaterVolume || P.PhysicsVolume.bPainCausing)
     {
-        CannotDeployError = 7;
+        return DE_BadVolume;
     }
+
     // Can't deploy if we're not crouching
-    else if (!P.bIsCrouched)
+    if (!P.bIsCrouched)
     {
-        CannotDeployError = 1;
+        return DE_BadStance;
     }
+
     // Can't deploy if we're moving
-    else if (P.Velocity != vect(0.0, 0.0, 0.0))
+    if (P.Velocity != vect(0.0, 0.0, 0.0))
     {
-        CannotDeployError = 3;
+        return DE_Moving;
     }
+
     // Can't deploy if we're leaning
-    else if (P.bLeaningLeft || P.bLeaningRight)
+    if (P.bLeaningLeft || P.bLeaningRight)
     {
-        CannotDeployError = 6;
+        return DE_Leaning;
+    }
+    
+    // Check we're standing on a level, static surface, by tracing straight downwards to see what we're standing on
+    TraceStart = P.Location;
+    TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+    // Can't deploy if we're not standing on a static surface
+    if (HitActor == none || !HitActor.bStatic)
+    {
+        // "You cannot deploy your mortar on this surface"
+        return DE_BadSurface;
+    }
+    // Can't deploy if the surface angle is too steep
+    else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
+    {
+        // "You cannot deploy your mortar on this surface"
+        return DE_BadSurface;
     }
     else
     {
-        // Check we're standing on a level, static surface, by tracing straight downwards to see what we're standing on
-        TraceStart = P.Location;
-        TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
-        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+        // Ok, we're standing on a level, static surface, but now check we also have a clear, level surface all around us
+        // Trace in 8 directions around us in the X/Y plane, within our DeployRadius
+        for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
+        {
+            TraceEnd = P.Location + (DeployRadius * vector(TraceRotation));
+            HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
-        // Can't deploy if we're not standing on a static surface
-        if (HitActor == none || !HitActor.bStatic)
-        {
-            CannotDeployError = 4; // "You cannot deploy your mortar on this surface"
-        }
-        // Can't deploy if the surface angle is too steep
-        else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-        {
-            CannotDeployError = 4;
-        }
-        else
-        {
-            // Ok, we're standing on a level, static surface, but now check we also have a clear, level surface all around us
-            // Trace in 8 directions around us in the X/Y plane, within our DeployRadius
-            for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
+            // Can't deploy if there's anything static around us
+            if (HitActor != none && HitActor.bStatic)
             {
-                TraceEnd = P.Location + (DeployRadius * vector(TraceRotation));
-                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+                // "You do not have enough room to deploy your mortar here"
+                return DE_NotEnoughRoom;
+            }
 
-                // Can't deploy if there's anything static around us
-                if (HitActor != none && HitActor.bStatic)
-                {
-                    CannotDeployError = 5; // "You do not have enough room to deploy your mortar here"
-                    break;
-                }
+            // Now trace downwards from the end point of our previous trace, to make sure there's a level surface there
+            TraceStart = TraceEnd;
+            TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
+            HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
-                // Now trace downwards from the end point of our previous trace, to make sure there's a level surface there
-                TraceStart = TraceEnd;
-                TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
-                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-                // Can't deploy if there isn't a static surface there
-                if (HitActor == none || !HitActor.bStatic)
-                {
-                    CannotDeployError = 4;
-                    break;
-                }
-                // Can't deploy if the surface angle is too steep
-                else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-                {
-                    CannotDeployError = 4;
-                    break;
-                }
+            // Can't deploy if there isn't a static surface there
+            if (HitActor == none || !HitActor.bStatic)
+            {
+                // "You cannot deploy your mortar on this surface"
+                return DE_BadSurface;
+            }
+            // Can't deploy if the surface angle is too steep
+            else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
+            {
+                // "You cannot deploy your mortar on this surface"
+                return DE_BadSurface;
             }
         }
     }
+    
+    return DE_None;
+}
+
+// New function to check whether the player can deploy the mortar where they are, with explanatory screen messages if they can't
+simulated function bool CanDeploy(DHPawn P)
+{
+    local EDeployError Error;
+
+    Error = GetDeployError(P);
 
     // We can't deploy the mortar if we registered an error in any of the checks above
     // Display a screen message to the player saying why he can't deploy
-    if (CannotDeployError >= 0)
+    if (Error != DE_None)
     {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', CannotDeployError);
+        P.ReceiveLocalizedMessage(class'DHMortarMessage', int(Error));
 
         return false;
     }

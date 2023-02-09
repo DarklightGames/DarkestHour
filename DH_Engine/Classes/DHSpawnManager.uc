@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnManager extends SVehicleFactory;
@@ -22,6 +22,7 @@ struct VehiclePool
     var() class<ROVehicle>  VehicleClass;
     var() bool              bIsInitiallyActive;
     var() bool              bIsSpawnVehicle;
+    var() int               InitialSpawnTimer;       // the amount of delay (in seconds )until this vehicle can be spawned initially
     var() float             RespawnTime;             // respawn interval in seconds
     var() byte              MaxSpawns;               // how many vehicles can be spawned from this pool
     var() byte              MaxActive;               // how many vehicles from this pool can be active at once
@@ -129,7 +130,7 @@ function Reset()
 
         GRI.VehiclePoolMaxActives[i] = VehiclePools[i].MaxActive;
         GRI.VehiclePoolMaxSpawns[i] = VehiclePools[i].MaxSpawns;
-        GRI.VehiclePoolNextAvailableTimes[i] = 0.0;
+        GRI.VehiclePoolNextAvailableTimes[i] = VehiclePools[i].InitialSpawnTimer;
         GRI.VehiclePoolSpawnCounts[i] = 0;
         GRI.VehiclePoolReservationCount[i] = 0;
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BT7Cannon extends DHVehicleCannon;
@@ -35,8 +35,7 @@ defaultproperties
     CustomPitchUpLimit=4551 // +25/-8 degrees
     CustomPitchDownLimit=64079
 
-    // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
+    // Cannon ammo=
     PrimaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShellHE'
 

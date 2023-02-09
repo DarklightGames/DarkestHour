@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHContextMenu_SquadMembers extends DHContextMenu;
@@ -54,8 +54,6 @@ protected function AssembleMenu(GUIComponent Component)
     {
         if (PRI.IsSquadLeader())
         {
-            // WE ARE A SQUAD LEADER:
-
             if (PRI.SquadIndex == SquadIndex)
             {
                 AddEntry(2);     // Kick player
@@ -82,23 +80,16 @@ protected function AssembleMenu(GUIComponent Component)
                 AddEntry(1);     // Invite the unassigned player
             }
         }
-        else if (SquadComponent.li_Members != none)
+        else if (SelectedPRI.IsSquadLeader() &&
+                 PRI.SquadIndex == SquadIndex &&
+                 !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex))
         {
-            // WE ARE A NORMIE:
-
-            SquadMemberIndex = SquadComponent.li_Members.GetIndexByObject(SquadComponent.li_Members.GetObject());
-
-            if (SquadMemberIndex == 0 && !SRI.HasAssistant(PC.GetTeamNum(), PRI.SquadIndex))
-            {
-                AddEntry(7);      // Volunteer to assist
-            }
+            AddEntry(7);         // Volunteer to assist
         }
     }
 
     if (PRI.IsLoggedInAsAdmin())
     {
-        // WE ARE AN ADMIN:
-
         bParadropMarkerPlaced = PC.IsPersonalMarkerPlaced(PC.ParadropMarkerClass);
         bSquadLeaderIsAlive = SquadIndex >= 0 &&
                               SquadIndex < arraycount(PC.SquadLeaderLocations) &&
@@ -110,6 +101,8 @@ protected function AssembleMenu(GUIComponent Component)
         }
 
         InsertSeparatorIndex = GetMenuLength();
+
+        // PARADROP COMMANDS
 
         if (bParadropMarkerPlaced)
         {
@@ -141,6 +134,28 @@ protected function AssembleMenu(GUIComponent Component)
         else if (SRI.GetUnassignedPlayerCount(TeamIndex) > 1 && bParadropMarkerPlaced)
         {
             AddEntry(13);         // ADMIN: Paradrop ALL UNASSIGNED to MARKER
+        }
+
+        if (InsertSeparatorIndex > 0 && InsertSeparatorIndex < GetMenuLength())
+        {
+            InsertEntry(0, InsertSeparatorIndex);
+        }
+
+        InsertSeparatorIndex = GetMenuLength();
+
+        // ADMIN COMMANDS
+
+        if (SelectedPRI.SquadIndex >= 0 && (PRI.SquadIndex != SquadIndex || !PRI.IsSquadLeader()))
+        {
+            if (!SelectedPRI.IsSquadLeader())
+            {
+                AddEntry(14); // ADMIN: Promote PLAYER to squad leader
+            }
+
+            if (PRI != SelectedPRI)
+            {
+                AddEntry(15); // ADMIN: Kick PLAYER from squad
+            }
         }
 
         if (InsertSeparatorIndex > 0 && InsertSeparatorIndex < GetMenuLength())
@@ -246,6 +261,14 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
                 }
 
                 return;
+
+            case 14:
+                PC.ServerSquadPromote(SelectedPRI);
+                return;
+
+            case 15:
+                PC.ServerSquadKick(SelectedPRI);
+                return;
         }
     }
 }
@@ -295,4 +318,6 @@ defaultproperties
     EntryTexts(11)="{1} Paradrop SQUAD to squad leader"
     EntryTexts(12)="{1} Paradrop SQUAD to marker"
     EntryTexts(13)="{1} Paradrop unassigned players to marker"
+    EntryTexts(14)="{1} Promote {0} to squad leader"
+    EntryTexts(15)="{1} Kick {0} from squad"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
@@ -53,17 +53,9 @@ var     int                         SpawnsAtRoundStart[2];                  // N
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
-const PERFORMANCE_INFRACTION_MARGIN =   8;      // How many infractions allowed before the server receives a strike
-const PERFORMANCE_STRIKE_MARGIN =       2;      // How many strikes allowed before a MidGameVote is forced
-const PERFORMANCE_MERIT_MARGIN =        20;     // How many merits before it begins removing infractions
 const SPAWN_KILL_RESPAWN_TIME =         2;
 
-var     int                         PoorPerformanceInfractionCount;         // Number of infractions until respawn time is increased for the duration of the level, will reset after PERFORMANCE_STRIKE_MARGIN increments
-var     int                         PoorPerformanceStrikeCount;             // Number of times ConsolidatedRespawnTimeAdded has increased
-var     int                         GoodPerformanceMeritCount;              // Number of merits the server gets for having good performance, will reset if it receives an infraction
-
 var     bool                        bLogAverageTickRate;
-var     float                       ServerTickForInfraction;                // Value that determines when a server receives an infraction for having low ServerTickRateAverage
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 var     float                       ServerTickNextAverageTime;              // The next time at which to calculate the average tick rate
@@ -367,6 +359,7 @@ function PostBeginPlay()
         GRI.OverheadOffset = 0;
     }
 
+    GRI.AxisNationID = int(DHLevelInfo.AxisNation);
     GRI.AlliedNationID = int(DHLevelInfo.AlliedNation);
 
     // Find the location of the map bounds
@@ -508,23 +501,6 @@ event Tick(float DeltaTime)
         // Update the server net health
         UpdateServerNetHealth();
 
-        // Is there a performance infraction?
-        if (ServerTickRateAverage < ServerTickForInfraction)
-        {
-            HandlePerformanceInfraction();
-        }
-        else
-        {
-            // No infraction, server is running at acceptable tick
-            ++GoodPerformanceMeritCount;
-
-            // If enough merits are received & there is an infraction floating around, remove it
-            if (GoodPerformanceMeritCount > PERFORMANCE_MERIT_MARGIN && PoorPerformanceInfractionCount > 0)
-            {
-                --PoorPerformanceInfractionCount;
-            }
-        }
-
         if (bLogAverageTickRate)
         {
             Log("Average Server Tick Rate:" @ ServerTickRateAverage);
@@ -554,70 +530,6 @@ function UpdateServerNetHealth()
     }
 
     GRI.ServerNetHealth = Combined;
-}
-
-// Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
-function HandlePerformanceInfraction()
-{
-    local float TickRatio;
-
-    // If not a dedicated server OR isn't running at normal gamespeed OR round is not in play OR we've already reached strike margin, then ignore
-    if (Level.NetMode != NM_DedicatedServer || GameSpeed != 1.0 || !IsInState('RoundInPlay') || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
-    {
-        return;
-    }
-
-    ++PoorPerformanceInfractionCount; // Count infractions
-    GoodPerformanceMeritCount = 0; // Remove merits because we got an infraction
-
-    // Calculate the ratio of how bad the average tick is compared to ServerTickForInfraction
-    TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInfraction;
-
-    // Do we have enough infractions for a strike?
-    if (PoorPerformanceInfractionCount > PERFORMANCE_INFRACTION_MARGIN)
-    {
-        ++PoorPerformanceStrikeCount;
-
-        Log("Server received a performance strike, please consider lowering max player slots or removing" @ class'DHLib'.static.GetMapName(Level) @ "from rotation!");
-
-        // If too many strikes, then lets just start a MidGameVote as no one is having fun
-        if (PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
-        {
-            Level.Game.Broadcast(self, "This server and/or level is under performing, starting a mid-game-vote", 'Say');
-            MidGameVote();
-        }
-        else // Otherwise its a strike and we increase respawn time until end of level & deal with server view distance
-        {
-            if (HandleServerViewDistance())
-            {
-                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times & lowering view distance until end of level!!!", 'Say');
-            }
-            else
-            {
-                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
-            }
-
-            PoorPerformanceInfractionCount = 0; // Reset infractions
-        }
-    }
-}
-
-function bool HandleServerViewDistance()
-{
-    local DHZoneInfo Z;
-    local bool bChangedFogDistance;
-
-    foreach DynamicActors(class'DHZoneInfo', Z)
-    {
-        if (Z.bUseDynamicFogDistance)
-        {
-            // Set the fog distance to 33% less for each strike (1 strikes = 66% distance, 2 strikes = 33% distance)
-            Z.SetFogDistanceWithRatio(1.0 - (PoorPerformanceStrikeCount * 0.33));
-            bChangedFogDistance = true;
-        }
-    }
-
-    return bChangedFogDistance;
 }
 
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
@@ -2087,7 +1999,7 @@ function bool IsArtilleryKill(DHPlayer DHKiller, class<DamageType> DamageType)
 // IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    local DHPlayer   DHKilled, DHKiller;
+    local DHPlayer   DHKilled, DHKiller, SpotterPC;
     local Controller P;
     local float      FFPenalty;
     local int        i;
@@ -2120,7 +2032,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         DHKilled = DHPlayer(Killed);
         DHKiller = DHPlayer(Killer);
 
-        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType))
+        if (DHKiller != none && IsArtilleryKill(DHKiller, DamageType) && Killer.GetTeamNum() != Killed.GetTeamNum())
         {
             // Check if this kill is in range of any active fire support markers.
             FireSupportMapMarkers = GRI.GetFireSupportMapMarkersAtLocation(DHKiller, KilledPawn.Location);
@@ -2130,14 +2042,23 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 // This kill took place within range of a fire support marker.
                 DamageType = class'DHArtilleryKillDamageType';
 
-                // Award points to the person who made the fire support marker.
-                if (Killer.GetTeamNum() != Killed.GetTeamNum())
+                for (i = 0; i < FireSupportMapMarkers.Length; ++i)
                 {
-                    for (i = 0; i < FireSupportMapMarkers.Length; ++i)
+                    if (FireSupportMapMarkers[i].Author != none)
                     {
-                        if (FireSupportMapMarkers[i].Author != none)
+                        SpotterPC = DHPlayer(FireSupportMapMarkers[i].Author.Owner);
+
+                        if (SpotterPC != none)
                         {
-                            ScoreFireSupportSpottingAssist(Controller(FireSupportMapMarkers[i].Author.Owner));
+                            // Award points to the person(s) who made the fire support marker.
+                            ScoreFireSupportSpottingAssist(SpotterPC);
+
+                            // Display the kill message to the author (for that juicy feedback)
+                            SpotterPC.ClientAddHudDeathMessage(
+                                Killer.PlayerReplicationInfo,
+                                Killed.PlayerReplicationInfo,
+                                DamageType
+                                );
                         }
                     }
                 }
@@ -2182,7 +2103,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     DHPawn(KilledPawn).SpawnPoint.OnSpawnKill(KilledPawn, Killer);
                 }
             }
-
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
@@ -2236,20 +2156,27 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
 
-                    // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
-                    DHKiller.WeaponLockViolations++;
-
-                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    if (DHKiller.PlayerReplicationInfo != none)
                     {
-                        // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
-                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
-
-                        // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
-                        if (!bInformedKillerOfWeaponLock)
+                        // Don't lock weapons on players that haven't gotten a team kill in the last 30 seconds.
+                        if (Level.TimeSeconds < DHKiller.LastTeamKillTimeSeconds + 30.0)
                         {
-                            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
+                            DHKiller.WeaponLockViolations++;
+
+                            // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
+                            DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
+
+                            // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
+                            if (!bInformedKillerOfWeaponLock)
+                            {
+                                DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            }
                         }
                     }
+
+                    // Record the last time the player had a team-kill.
+                    DHKiller.LastTeamKillTimeSeconds = Level.TimeSeconds;
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
                     if (bForgiveFFKillsEnabled && DHKilled != none)
@@ -2492,7 +2419,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
     KilledPRI = Killed.PlayerReplicationInfo;
 
-    // Special case handling for artillery kills. Send message only to the killer & victim.
+    // Special case handling for artillery kills. Send message to the killer, victim and player that spotted the marker.
     if (class<DHArtilleryKillDamageType>(DamageType) != none)
     {
         if (DHPlayer(Killed) != none)
@@ -3152,13 +3079,21 @@ function UpdateTeamConstructions()
 
             // Check if we need to set the NextIncrementTimeSeconds variable
             // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
-            if (Count < DHLevelInfo.TeamConstructions[i].Limit && GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+            if (Count == DHLevelInfo.TeamConstructions[i].Limit)
             {
-                // Our next increment time has not been set.
-                GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+                // We have the maximum amount of this type of construction.
+                // Make sure the next increment time is -1 so that we don't
+                // display any countdown on the UI.
+                GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
             }
-            else
+            else if (Count < DHLevelInfo.TeamConstructions[i].Limit)
             {
+                if (GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
+                {
+                    // Our next increment time has not been set.
+                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
+                }
+
                 if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
                 {
                     GRI.TeamConstructions[i].Remaining += 1;
@@ -3175,11 +3110,6 @@ state ResetGameCountdown
     function BeginState()
     {
         local DHArtillerySpawner AS;
-
-        if (SquadReplicationInfo != none)
-        {
-            SquadReplicationInfo.ResetSquadInfo();
-        }
 
         if (bSwapTeams)
         {
@@ -3218,6 +3148,11 @@ state ResetGameCountdown
             {
                 GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
                 GRI.DangerZoneUpdated();
+            }
+
+            if (SquadReplicationInfo != none)
+            {
+                SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
@@ -5816,8 +5751,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
 
 defaultproperties
 {
-    ServerTickForInfraction=17.0
-
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
@@ -5914,8 +5847,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=0
-        Patch=2
+        Minor=3
+        Patch=1
         Prerelease=""
     End Object
     Version=VersionObject

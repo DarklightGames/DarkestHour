@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M1GarandFire extends DHSemiAutoFire;
@@ -103,10 +103,11 @@ defaultproperties
     MaxVerticalRecoilAngle=760
     MaxHorizontalRecoilAngle=200
     
-    PctRestDeployRecoil=0.7   //0.5 default
-    RecoilRate=0.075
-    RecoilCurve=(Points=((InVal=0.0,OutVal=1),(InVal=1.0,OutVal=1),(InVal=2.0,OutVal=3),(InVal=10000000000.0,OutVal=1.0)))
-    RecoilFallOffFactor=10.0
+    //Recoil
+    RecoilRate=0.06
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=1.4),(InVal=12.0,OutVal=1.4),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
     
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire02'

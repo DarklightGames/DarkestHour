@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This interaction displays configuable radial menus (DHCommandMenu) with up to
 // 8 different options.
@@ -17,7 +17,7 @@ const TAU = 6.28318530718;
 var Stack_Object        Menus;
 
 var float               MenuAlpha;
-var vector              Cursor;
+var Vector              Cursor;
 var int                 SelectedIndex;
 
 const MAX_OPTIONS = 8;
@@ -29,15 +29,23 @@ var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
 var Texture             RingTexture;
 
-var color               SelectedColor;
-var color               DisabledColor;
-var color               SubmenuColor;
+var Color               SelectedColor;
+var Color               DisabledColor;
+var Color               SubmenuColor;
 
 var DHGameReplicationInfo GRI;
 
 var bool                bShouldHideOnLeftMouseRelease;
 
 var Pawn                InstigatorPawn;
+
+var Sound               SelectSound;
+var Sound               HoverSound;
+var Sound               CancelSound;
+
+var Material            CrosshairMaterial;
+
+var bool                bDebugCursor;
 
 delegate                OnHidden();
 
@@ -96,7 +104,7 @@ function CreateOptionTexRotators(DHCommandMenu Menu)
 
 // Pushes a new menu onto the top of the stack to be displayed immediately.
 // Allows the specification of an optional object to attach to the menu.
-function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject)
+function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject, optional int OptionalInteger)
 {
     local DHCommandMenu Menu, OldMenu;
     local class<DHCommandMenu> MenuClass;
@@ -283,11 +291,22 @@ function Tick(float DeltaTime)
 
         if (SelectedIndex != -1 && !Menu.IsOptionDisabled(SelectedIndex))
         {
-            PlaySound(Sound'ROMenuSounds.msfxDown');
+            PlaySound(HoverSound);
 
             Menu.OnHoverIn(SelectedIndex);
         }
     }
+}
+
+function DrawCenteredTile(Canvas C, Material TileMaterial, float CenterX, float CenterY)
+{
+    local float USize, VSize;
+
+    USize = TileMaterial.MaterialUSize();
+    VSize = TileMaterial.MaterialVSize();
+
+    C.SetPos(CenterX - (USize / 2), CenterY - (VSize / 2));
+    C.DrawTile(TileMaterial, USize, VSize, 0, 0, USize, VSize);
 }
 
 function PostRender(Canvas C)
@@ -307,17 +326,14 @@ function PostRender(Canvas C)
     CenterX = C.ClipX / 2;
     CenterY = C.ClipY / 2;
 
-    // TODO: get rid of magic numbers
-    C.SetPos(CenterX - 8, CenterY - 8);
-
-    // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
     C.DrawColor.A = byte(255 * MenuAlpha);
-    C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
+
+    // Draw menu crosshair
+    DrawCenteredTile(C, CrosshairMaterial, CenterX, CenterY);
 
     // Draw outer "beauty" ring
-    C.SetPos(CenterX - 256, CenterY - 256);
-    C.DrawTile(RingTexture, 512, 512, 0, 0, 512, 512);
+    DrawCenteredTile(C, RingTexture, CenterX, CenterY);
 
     C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
@@ -371,18 +387,12 @@ function PostRender(Canvas C)
             }
         }
 
-        C.SetPos(CenterX - 256, CenterY - 256);
-        C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
+        // Draw the option background texture.
+        DrawCenteredTile(C, OptionTexRotators[i], CenterX, CenterY);
 
         // Draw option icon
         if (Menu.Options[OptionIndex].Material != none)
         {
-            U = Menu.Options[OptionIndex].Material.MaterialUSize();
-            V = Menu.Options[OptionIndex].Material.MaterialVSize();
-
-            X = CenterX + (Cos(Theta) * 144) - (U / 2);
-            Y = CenterY + (Sin(Theta) * 144) - (V / 2);
-
             if (bIsOptionDisabled)
             {
                 C.DrawColor = class'UColor'.default.DarkGray;
@@ -401,8 +411,11 @@ function PostRender(Canvas C)
 
             C.DrawColor.A = byte(255 * MenuAlpha);
 
-            C.SetPos(X, Y);
-            C.DrawTileClipped(Menu.Options[OptionIndex].Material, U, V, 0, 0, U, V);
+            // Calculate the center of where the option icon should be.
+            X = CenterX + (Cos(Theta) * 144);
+            Y = CenterY + (Sin(Theta) * 144);
+
+            DrawCenteredTile(C, Menu.Options[OptionIndex].Material, X, Y);
         }
 
         Theta += ArcLength;
@@ -466,11 +479,14 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2), CenterY - 192 - YL);
         C.DrawText(ORI.DescriptionText);
     }
-//
-//    // debug rendering for cursor
-//    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
-//    C.DrawColor = class'UColor'.default.Red;
-//    C.DrawBox(C, 4, 4);
+    
+    if (bDebugCursor)
+    {
+        // Draw the cursor position for debugging purposes.
+        C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
+        C.DrawColor = class'UColor'.default.Red;
+        C.DrawBox(C, 4, 4);
+    }
 }
 
 function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
@@ -540,7 +556,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 
                     return true;
                 case IK_RightMouse:
-                    PlaySound(Sound'ROMenuSounds.CharFade');
+                    PlaySound(CancelSound);
                     PopMenu();
                     return true;
                 default:
@@ -567,7 +583,7 @@ function OnSelect(int OptionIndex, optional vector Location)
 
     Menu.OnSelect(OptionIndex, Location);
 
-    PlaySound(Sound'ROMenuSounds.msfxMouseClick');
+    PlaySound(SelectSound);
 }
 
 function PlaySound(Sound Sound)
@@ -606,4 +622,10 @@ defaultproperties
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)
     SubmenuColor=(R=255,G=64,B=255,A=255)
+
+    SelectSound=Sound'ROMenuSounds.msfxMouseClick'
+    HoverSound=Sound'ROMenuSounds.msfxDown'
+    CancelSound=Sound'ROMenuSounds.CharFade'
+
+    CrosshairMaterial=Material'DH_InterfaceArt_tex.Communication.menu_crosshair'
 }

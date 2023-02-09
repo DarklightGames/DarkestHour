@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_GermanPawn_Gloves extends DHPawn;
+class DH_GermanPawn_Gloves extends DH_GermanPawn;
 
 // some faces here are substituted with others because they looked too distinct for a generic bloody texture,
 // which is now used to fix the weird invisible head bug due to buggy combiners in this game engine
@@ -11,14 +11,6 @@ class DH_GermanPawn_Gloves extends DHPawn;
 
 defaultproperties
 {
-    Species=class'DH_Engine.DHSPECIES_Human'
-
-    Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat'
-    Skins(0)=Texture'Characters_tex.ger_heads.ger_face01'
-    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_1'
-
-    bReversedSkinsSlots=true
-
     FaceSkins(0)=Combiner'DHGermanCharactersTex.Heads.ger_face02Gloves' // 01 is removed
     FaceSkins(1)=Combiner'DHGermanCharactersTex.Heads.ger_face02Gloves'
     FaceSkins(2)=Combiner'DHGermanCharactersTex.Heads.ger_face03Gloves'
@@ -34,7 +26,4 @@ defaultproperties
     FaceSkins(12)=Combiner'DHGermanCharactersTex.Heads.ger_face12Gloves' // 13 is removed
     FaceSkins(13)=Combiner'DHGermanCharactersTex.Heads.ger_face15Gloves' // 14 is removed
     FaceSkins(14)=Combiner'DHGermanCharactersTex.Heads.ger_face15Gloves'
-
-    ShovelClassName="DH_Equipment.DHShovelItem_German"
-    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
 }

@@ -1,12 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
     notplaceable;
-
-#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
@@ -169,46 +167,38 @@ simulated state Broken
 
 static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
-    switch (Context.TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent';
-    }
+    local class<DHNation> NationClass;
+
+    NationClass = Context.LevelInfo.GetTeamNationClass(Context.TeamIndex);
+
+    return NationClass.default.PlatoonHQConstructedStaticMesh;
 }
 
 function StaticMesh GetBrokenStaticMesh()
 {
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed';
-    }
+    local class<DHNation> NationClass;
+
+    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
+
+    return NationClass.default.PlatoonHQBrokenStaticMesh;
 }
 
 function StaticMesh GetStageStaticMesh(int StageIndex)
 {
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked';
-    }
+    local class<DHNation> NationClass;
+
+    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
+
+    return NationClass.default.PlatoonHQUnpackedStaticMesh;
 }
 
 function StaticMesh GetTatteredStaticMesh()
 {
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_light_destro';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_light_destro';
-    }
+    local class<DHNation> NationClass;
+
+    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
+
+    return NationClass.default.PlatoonHQTatteredStaticMesh;
 }
 
 simulated function OnTeamIndexChanged()
@@ -230,30 +220,7 @@ simulated function OnTeamIndexChanged()
 
 simulated function Material GetFlagMaterial()
 {
-    switch (GetTeamIndex())
-    {
-    case AXIS_TEAM_INDEX:
-        return Texture'DH_Construction_tex.Base.GER_flag_01';
-    case ALLIES_TEAM_INDEX:
-        switch (LevelInfo.AlliedNation)
-        {
-        case NATION_USA:
-            return Texture'DH_Construction_tex.Base.USA_flag_01';
-        case NATION_Canada:
-            return Texture'DH_Construction_tex.Base.CAN_flag_01';
-        case NATION_Britain:
-            return Texture'DH_Construction_tex.Base.BRIT_flag_01';
-        case NATION_USSR:
-            return Texture'DH_Construction_tex.Base.SOVIET_flag_01';
-        case NATION_Poland:
-            return Texture'DH_Construction_tex.Base.POL_flag_01';
-        case NATION_Czechoslovakia:
-            return Texture'DH_Construction_tex.Base.CS_flag_01';
-        }
-        break;
-    }
-
-    return Texture'DH_Construction_tex.Base.flags_01_blank';
+    return LevelInfo.GetTeamNationClass(GetTeamIndex()).default.PlatoonHQFlagTexture;
 }
 
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
@@ -346,6 +313,21 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     }
 
     return E;
+}
+
+// Modified to put the correct nation flag on the flag skin.
+function static UpdateProxy(DHActorProxy CP)
+{
+    local class<DHNation> NationClass;
+
+    super.UpdateProxy(CP);
+
+    NationClass = CP.GetContext().LevelInfo.GetTeamNationClass(CP.GetContext().TeamIndex);
+
+    if (NationClass != none)
+    {
+        CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(NationClass.default.PlatoonHQFlagTexture);
+    }
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Bofors40mmCannon extends DHVehicleAutoCannon;
@@ -47,7 +47,6 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
 
