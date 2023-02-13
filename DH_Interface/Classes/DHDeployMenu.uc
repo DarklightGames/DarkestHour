@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -131,6 +131,7 @@ var int                     SurrenderButtonCooldownSeconds;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
+    local class<DHNation> AxisNationClass, AlliedNationClass;
 
     super.InitComponent(MyController, MyOwner);
 
@@ -159,6 +160,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Teams.ManageComponent(l_Axis);
     c_Teams.ManageComponent(b_Spectate);
     c_Teams.ManageComponent(i_Spectate);
+
+    // Team flags
+    if (PC != none && PC.ClientLevelInfo != none)
+    {
+        AxisNationClass = PC.ClientLevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+        AlliedNationClass = PC.ClientLevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
+
+        i_Axis.Image = AxisNationClass.default.DeployMenuFlagTexture;
+        i_Allies.Image = AlliedNationClass.default.DeployMenuFlagTexture;
+    }
 
     c_Loadout.ManageComponent(c_Equipment);
     c_Loadout.ManageComponent(c_Vehicle);
@@ -274,30 +285,6 @@ function Timer()
 
         if (GRI != none)
         {
-            // Now that we have the GRI, we can set the Allied flag on
-            // the team button.
-            switch (GRI.AlliedNationID)
-            {
-                case 0: // USA
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_usa';
-                    break;
-                case 1: // UK
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_uk';
-                    break;
-                case 2: // Canada
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_canada';
-                    break;
-                case 3: // USSR
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
-                    break;
-                case 4: // Poland
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
-                    break;
-                case 5: // Czechoslovakia
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_czechoslovakia';
-                    break;
-            }
-
             // This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
             // SHOCKING: we actually can, but they never used it!

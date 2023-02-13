@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Spitfire_Airplane extends DHAirplane;
+class DHTrenchMaceBashDamageType extends DHShovelBashDamageType
+    abstract;
 
 defaultproperties
 {
-    AirplaneName="Supermarine Spitfire"
-    Mesh=Mesh'DH_Airplanes_anm.Spitfire'
+    WeaponClass=class'DH_Equipment.DHTrenchMaceItem'
+    bAlwaysSevers=true
 }

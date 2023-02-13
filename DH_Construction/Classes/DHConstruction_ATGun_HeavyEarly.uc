@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This class exists so Germans can access 88 guns on 1941 maps without breaking
 // historical limits of other heavy guns.

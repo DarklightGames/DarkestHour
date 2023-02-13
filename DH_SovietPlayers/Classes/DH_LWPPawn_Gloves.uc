@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LWPPawn_Gloves extends DH_PolishPawn;
@@ -29,7 +29,4 @@ defaultproperties
     FaceSkins(12)=Combiner'DHSovietCharactersTex.sov_faces.sov_face14gloves' //
     FaceSkins(13)=Combiner'DHSovietCharactersTex.sov_faces.sov_face14gloves'
     FaceSkins(14)=Combiner'DHSovietCharactersTex.sov_faces.sov_face15gloves'
-
-    ShovelClassName="DH_Equipment.DHShovelItem_Russian"
-    BinocsClassName="DH_Equipment.DHBinocularsItemSoviet"
 }

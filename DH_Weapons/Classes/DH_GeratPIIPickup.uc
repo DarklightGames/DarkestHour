@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHArtillery_BF109_Airstrike extends DHArtillery_Airstrike;
+class DH_GeratPIIPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    MenuName="Airstrike (Bf109G)"
-    AirplaneClass=class'DH_Bf109_Airplane'
+    InventoryType=class'DH_Weapons.DH_GeratPIIWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GeratPII'
 }
-

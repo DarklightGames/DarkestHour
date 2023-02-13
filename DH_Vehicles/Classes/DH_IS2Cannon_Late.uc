@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_IS2Cannon_Late extends DH_IS2Cannon;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Vehicles.DH_IS2CannonShell_Late'
     PrimaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShell_Late'
 
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_01') //Historical Practical RoF - 4-5 rpm; Improved breech

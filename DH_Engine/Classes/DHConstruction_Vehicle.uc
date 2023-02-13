@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_Vehicle extends DHConstruction
@@ -202,5 +202,5 @@ defaultproperties
     bCanBeDamaged=false
     DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
+    bCanOnlyPlaceOnTerrain=true
 }
-

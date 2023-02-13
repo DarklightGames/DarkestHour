@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -8,7 +8,7 @@ class DH_LevelInfo extends ROLevelInfo
 
 enum EAxisNation
 {
-    NATION_Germany,
+    NATION_Germany
 };
 
 enum EAlliedNation
@@ -18,7 +18,7 @@ enum EAlliedNation
     NATION_Canada,
     NATION_USSR,
     NATION_Poland,
-    NATION_Czechoslovakia
+    NATION_Czechoslovakia,
 };
 
 enum ESpawnMode
@@ -42,11 +42,6 @@ enum EWeather
     WEATHER_Snowy
 };
 
-struct SNationString
-{
-    var string Germany, USA, Britain, Canada, USSR, Poland;
-};
-
 struct ArtilleryType
 {
     var() int                   TeamIndex;
@@ -63,7 +58,9 @@ var(DH_Atmosphere) ESeason          Season;
 var(DH_Atmosphere) EWeather         Weather;
 
 var(DH_Nation) EAxisNation          AxisNation;
+var private class<DHNation>         AxisNationClass;
 var(DH_Nation) EAlliedNation        AlliedNation;
+var private class<DHNation>         AlliedNationClass;
 var(DH_Nation) sound                AxisWinsMusic;                  // Optional override for Axis victory music
 var(DH_Nation) sound                AlliesWinsMusic;                // Optional override for Allies victory music
 
@@ -112,6 +109,72 @@ var(DH_Constructions) array<STeamConstruction> TeamConstructions;
 singular static function bool DHDebugMode()
 {
     return default.bDHDebugMode;
+}
+
+// This is a backwards compatibility method.
+// Ideally, we would go through all of our maps and explicitly
+// set a nation class variable in the properties of the level info, but
+// this is a huge amount of work and would also break back compatiblity
+// with old maps.
+simulated function string GetTeamNationClassName(int TeamIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            switch (AxisNation)
+            {
+                case NATION_Germany:
+                    return "DH_GerPlayers.DHNation_Germany";
+                default:
+                    break;
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            switch (AlliedNation)
+            {
+                case NATION_Britain:
+                    return "DH_BritishPlayers.DHNation_Britain";
+                case NATION_Canada:
+                    return "DH_BritishPlayers.DHNation_Canada";
+                case NATION_Czechoslovakia:
+                    return "DH_SovietPlayers.DHNation_Czechoslovakia";
+                case NATION_Poland:
+                    return "DH_SovietPlayers.DHNation_Poland";
+                case NATION_USA:
+                    return "DH_USPlayers.DHNation_USA";
+                case NATION_USSR:
+                    return "DH_SovietPlayers.DHNation_USSR";
+                default:
+                    break;
+            }
+            break;
+    }
+
+    return "";
+}
+
+simulated function class<DHNation> GetTeamNationClass(int TeamIndex)
+{
+    // We want to be calling this pretty frequently, and I don't trust DynamicLoadObject to be fast enough.
+    // Therefore, we store the result in private variables and just serve those up if they have already
+    // been calculated.
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            if (AxisNationClass == none)
+            {
+                AxisNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(AXIS_TEAM_INDEX), class'Class'));
+            }
+            return AxisNationClass;
+        case ALLIES_TEAM_INDEX:
+            if (AlliedNationClass == none)
+            {
+                AlliedNationClass = class<DHNation>(DynamicLoadObject(GetTeamNationClassName(ALLIES_TEAM_INDEX), class'Class'));
+            }
+            return AlliedNationClass;
+    }
+
+    return none;
 }
 
 simulated function bool IsConstructionRestricted(class<DHConstruction> ConstructionClass)

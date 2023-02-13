@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_SquadAssistant extends DHCommandMenu;
@@ -52,8 +52,6 @@ function bool IsOptionDisabled(int OptionIndex)
     {
     case 0: // Construction
         return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
-    case 1: // Spotting
-        return DHPawn(PC.Pawn) == none || GRI == none;
     default:
         return false;
     }
@@ -65,4 +63,3 @@ defaultproperties
     Options(0)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
     Options(1)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
 }
-

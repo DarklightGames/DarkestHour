@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHLMGSingleFire extends DHProjectileFire  //This fire class is made for the new mg34 w/ box, since the older DHMGSingleFire doesnt work on a weapon that isn't a "machinegun" (new mg34 is like bren)

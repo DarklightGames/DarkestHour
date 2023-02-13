@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Spawn this class at a location to test if a DHPawn is able to be teleported
 // to a location. Used to test if spawn locations are going to be valid and are

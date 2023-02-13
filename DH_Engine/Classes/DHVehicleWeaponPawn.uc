@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleWeaponPawn extends ROVehicleWeaponPawn
@@ -9,26 +9,19 @@ class DHVehicleWeaponPawn extends ROVehicleWeaponPawn
 var     DHVehicleWeapon     VehWep;              // just a convenient reference to the VehicleWeapon actor
 
 // View positions
-var     int         InitialPositionIndex;        // initial player position on entering
-var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
-var     float       ViewTransitionDuration;      // calculated to control the time we stay in state ViewTransition
+var     int         InitialPositionIndex;       // initial player position on entering
+var     int         UnbuttonedPositionIndex;    // lowest position number where player is unbuttoned
+var     float       ViewTransitionDuration;     // calculated to control the time we stay in state ViewTransition
 
 // Binoculars
-var     int         BinocPositionIndex;          // index position when player is using binoculars
-var     bool        bPlayerHasBinocs;            // on entering, records whether player has binoculars (necessary to move to binocs position)
-var     bool        bHasGermanBinocs;
-var     bool        bHasSovietBinocs;
-var     bool        bHasAlliedBinocs;
-var     texture     GermanBinocsOverlay;         // new - 1st person texture overlay to draw when in binocs position (if player possesses German binocs)
-var     texture     SovietBinocsOverlay;         // new - 1st person texture overlay to draw when in binocs position (if player possesses Soviet binocs)
-var     texture     AlliedBinocsOverlay;         // new - 1st person texture overlay to draw when in binocs position (if player possesses Western Allies binocs)
-var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned locally when player is using binoculars
-var     float       BinocsOverlaySize;           // so we can adjust the real / actual FOV of the binoculars overlay, just like Gunsights, if needed
+var     int                         BinocPositionIndex; // index position when player is using binoculars
+var     class<DHProjectileWeapon>   BinocularsClass;    // on entering, records which class of the binoculars the player has (necessary to move to binocs position)
+var     DHDecoAttachment            BinocsAttachment;   // decorative actor spawned locally when player is using binoculars
 
 // Gunsight overlay
-var     Material    GunsightOverlay;             // texture overlay for gunsight
-var     float       GunsightSize;                // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
+var     Material    GunsightOverlay;            // texture overlay for gunsight
+var     float       GunsightSize;               // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+var     float       OverlayCorrectionX;         // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
 
 // Spotting scope overlay
@@ -45,8 +38,8 @@ var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation wh
 replication
 {
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bPlayerHasBinocs, bHasGermanBinocs, bHasSovietBinocs, bHasAlliedBinocs;
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)  // TODO: why is this necessary???
+        BinocularsClass;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -179,31 +172,15 @@ simulated function SetInitialViewRotation()
 simulated function DrawBinocsOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
-    local Texture  BinocsOverlay;
 
-    if (bHasGermanBinocs)
-    {
-        BinocsOverlay = GermanBinocsOverlay;
-    }
-
-    if (bHasSovietBinocs)
-    {
-        BinocsOverlay = SovietBinocsOverlay;
-    }
-
-    if (bHasAlliedBinocs)
-    {
-        BinocsOverlay = AlliedBinocsOverlay;
-    }
-
-    if (BinocsOverlay != none)
+    if (BinocularsClass != none)
     {
         // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
         // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
         // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
         // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(BinocsOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / BinocsOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TextureSize = float(BinocularsClass.default.ScopeOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / BinocularsClass.default.ScopeOverlaySize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
         TileStartPosU = (TextureSize - TilePixelWidth) * 0.5;
         TileStartPosV = (TextureSize - TilePixelHeight) * 0.5;
@@ -211,7 +188,7 @@ simulated function DrawBinocsOverlay(Canvas C)
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
 
-        C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        C.DrawTile(BinocularsClass.default.ScopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
 }
 
@@ -633,7 +610,8 @@ function bool TryToDrive(Pawn P)
 function KDriverEnter(Pawn P)
 {
     local Controller C;
-    local DHPawn     DHP;
+    local DHPawn DHP;
+    local DHProjectileWeapon BinocularsItem;
 
     // Get a controller reference
     // If the entering player has a controller we need to save it because the pawn will lose it when unpossessed
@@ -728,22 +706,11 @@ function KDriverEnter(Pawn P)
 
     if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length) // record whether player has binoculars
     {
-        bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
-    }
+        BinocularsItem = DHProjectileWeapon(P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))));
 
-    if (bPlayerHasBinocs)
-    {
-        if (P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItemGerman", class'class'))) != none)
+        if (BinocularsItem != none)
         {
-            bHasGermanBinocs = true;
-        }
-        else if (P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItemSoviet", class'class'))) != none)
-        {
-            bHasSovietBinocs = true;
-        }
-        else if (P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItemAllied", class'class'))) != none)
-        {
-            bHasAlliedBinocs = true;
+            BinocularsClass = BinocularsItem.Class;
         }
     }
 }
@@ -861,7 +828,7 @@ simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
     {
-        if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+        if ((DriverPositionIndex + 1) == BinocPositionIndex && BinocularsClass == none) // can't go to binocs if don't have them
         {
             return;
         }
@@ -890,7 +857,7 @@ function ServerChangeViewPoint(bool bForward)
     {
         if (DriverPositionIndex < (DriverPositions.Length - 1))
         {
-            if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+            if ((DriverPositionIndex + 1) == BinocPositionIndex && BinocularsClass == none) // can't go to binocs if don't have them
             {
                 return;
             }
@@ -1743,21 +1710,6 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.GunsightOverlay);
     }
 
-    if (default.GermanBinocsOverlay != none)
-    {
-        L.AddPrecacheMaterial(default.GermanBinocsOverlay);
-    }
-
-    if (default.SovietBinocsOverlay != none)
-    {
-        L.AddPrecacheMaterial(default.SovietBinocsOverlay);
-    }
-
-    if (default.AlliedBinocsOverlay != none)
-    {
-        L.AddPrecacheMaterial(default.AlliedBinocsOverlay);
-    }
-
     if (default.GunClass != none)
     {
         default.GunClass.static.StaticPrecache(L);
@@ -1773,9 +1725,6 @@ static function StaticPrecache(LevelInfo L)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(GunsightOverlay);
-    Level.AddPrecacheMaterial(GermanBinocsOverlay);
-    Level.AddPrecacheMaterial(SovietBinocsOverlay);
-    Level.AddPrecacheMaterial(AlliedBinocsOverlay);
 
     if (default.ArtillerySpottingScope != none)
     {
@@ -2489,11 +2438,6 @@ defaultproperties
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
-
-    BinocsOverlaySize=0.667 //FOV for 6x30 binocs
-    GermanBinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
-    SovietBinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Sov'
-    AlliedBinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Allied'
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true

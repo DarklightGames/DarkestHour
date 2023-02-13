@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
@@ -61,6 +61,25 @@ function array<Object> Union(array<Object> LHS, array<Object> RHS)
 // Add an element if it doesn't already exist in the array. Returns true if the
 // element was added.
 final static function bool AddUnique(out array<Object> A, Object Other)
+{
+    local int i;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (A[i] == Other)
+        {
+            return false;
+        }
+    }
+
+    A[A.Length] = Other;
+
+    return true;
+}
+
+// Add an element if it doesn't already exist in the array. Returns true if the
+// element was added.
+final static function bool IAddUnique(out array<int> A, int Other)
 {
     local int i;
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_T60Cannon extends DHVehicleAutoCannon;
@@ -35,7 +35,6 @@ defaultproperties
 
     // Cannon ammo
     bMultipleRoundTypes=false
-    ProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_T60CannonShell'
     ProjectileDescriptions(0)="AP-T"
 

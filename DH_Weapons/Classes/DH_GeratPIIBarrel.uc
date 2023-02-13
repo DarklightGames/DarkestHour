@@ -1,12 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHArtillery_Spitfire_Airstrike extends DHArtillery_Airstrike;
+class DH_GeratPIIBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    AirplaneClass=class'DH_Spitfire_Airplane'
+    BarrelCoolingRate=1.9
+    FiringHeatIncrement=3.5
+    CriticalTemperature=230.0
+    FailureTemperature=355.0
 }
-
