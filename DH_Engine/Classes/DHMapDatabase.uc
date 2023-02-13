@@ -405,4 +405,6 @@ defaultproperties
 	MapInfos(176)=(Name="DH-Dzerzhinsky_Tractor_Factory_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
 	MapInfos(177)=(Name="DH-Stavelot_Defence",AlliedNation=NATION_USA,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
 	MapInfos(178)=(Name="DH-Targnon_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(179)=(Name="DH-Kharkov_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+
 }
