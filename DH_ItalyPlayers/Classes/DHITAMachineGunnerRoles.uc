@@ -3,18 +3,15 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHITARiflemanRoles extends DHAxisRiflemanRoles
+class DHITAMachineGunnerRoles extends DHAxisMachineGunnerRoles
     abstract;
 
 defaultproperties
 {
-    AltName="Fuciliere"
+    AltName="Mitragliere"
 
     // TODO: replace this once we get the carcanos
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB42Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon') // TODO: replcae with standard italian grenade
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Breda30Weapon',AssociatedAttachment=class'DH_Weapons.DH_Breda30AmmoPouch')
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"

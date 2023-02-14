@@ -10,7 +10,7 @@ defaultproperties
     Species=class'DH_ItalyPlayers.DH_Italian'
 
     Mesh=SkeletalMesh'DHCharactersITA_anm.ita_livorno_rifleman'
-    Skins(0)=Texture'DHItalianCharactersTex.Italian-Uniform-FinalPass'
+    Skins(0)=Texture'DHItalianCharactersTex.Uniforms.ita_livorno_rifleman'
     Skins(1)=Texture'DHItalianCharactersTex.Faces.ita_face01'
 
     FaceSkins(0)=Texture'DHItalianCharactersTex.Faces.ita_face01'
