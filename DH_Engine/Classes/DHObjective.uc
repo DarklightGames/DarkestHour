@@ -142,6 +142,7 @@ var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents
 
 // Grouped capture operations (these will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
 var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; // array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)      array<name>                 GroupedObjectiveReliancesTags;  // TODO: populate above array based on tag lookups
 var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
 var(DH_GroupedActions)      array<SpawnPointAction>     AlliesGroupSpawnPointActions;
@@ -157,12 +158,15 @@ var         DHObjectiveGroup ObjectiveGroup;
 
 // Replication
 var                         EObjectiveState             OldObjState;
+var                         bool                        bOldActive;
 
 // Danger zone
 var(DHDangerZone) float BaseInfluenceModifier;
 var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
+var private int         OldInfluenceReplicationCounter;
+var private int         InfluenceReplicationCounter;
 
 // Team capture variable
 var() enum ETeamCapture
@@ -176,7 +180,8 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime;
+        UnfreezeTime, InfluenceReplicationCounter, BaseInfluenceModifier,
+        AxisInfluenceModifier, AlliesInfluenceModifier, NeutralInfluenceModifier;
 }
 
 simulated function PostBeginPlay()
@@ -1483,28 +1488,56 @@ simulated function PostNetReceive()
 {
     local DHPlayer PC;
     local DHHud Hud;
+    local bool bHasStateChanged;
 
     super.PostNetReceive();
 
-    // Listen for state changes so we can notify the HUD!
+    // Listen for state & active changes so we can notify the HUD!
     if (ObjState != OldObjState)
     {
         if (ObjState != OBJ_Neutral)
         {
-            PC = DHPlayer(Level.GetLocalPlayerController());
-
-            if (PC != none)
-            {
-                Hud = DHHud(PC.myHUD);
-
-                if (Hud != none)
-                {
-                    Hud.OnObjectiveCompleted();
-                }
-            }
+            bHasStateChanged = true;
         }
 
         OldObjState = ObjState;
+    }
+
+    if (bOldActive != bActive)
+    {
+        bHasStateChanged = true;
+        bOldActive = bActive;
+    }
+
+    if (OldInfluenceReplicationCounter != InfluenceReplicationCounter)
+    {
+        bHasStateChanged = true;
+        OldInfluenceReplicationCounter = InfluenceReplicationCounter;
+    }
+
+    if (bHasStateChanged)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveStateChanged();
+            }
+        }
+    }
+}
+
+// Call this when the danger zone influences are changed
+// so that the client knows to re-calculate the danger zone.
+function OnInfluenceChanged()
+{
+    if (Role == ROLE_Authority)
+    {
+        InfluenceReplicationCounter++;
     }
 }
 

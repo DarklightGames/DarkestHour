@@ -117,7 +117,7 @@ singular static function bool DHDebugMode()
 // set a nation class variable in the properties of the level info, but
 // this is a huge amount of work and would also break back compatiblity
 // with old maps.
-function string GetTeamNationClassName(int TeamIndex)
+simulated function string GetTeamNationClassName(int TeamIndex)
 {
     switch (TeamIndex)
     {
@@ -127,7 +127,7 @@ function string GetTeamNationClassName(int TeamIndex)
                 case NATION_Germany:
                     return "DH_GerPlayers.DHNation_Germany";
                 case NATION_Italy:
-                    return "DH_GerPlayers.DHNation_Italy";
+                    return "DH_ItalyPlayers.DHNation_Italy";
                 default:
                     break;
             }
@@ -156,7 +156,7 @@ function string GetTeamNationClassName(int TeamIndex)
     return "";
 }
 
-function class<DHNation> GetTeamNationClass(int TeamIndex)
+simulated function class<DHNation> GetTeamNationClass(int TeamIndex)
 {
     // We want to be calling this pretty frequently, and I don't trust DynamicLoadObject to be fast enough.
     // Therefore, we store the result in private variables and just serve those up if they have already

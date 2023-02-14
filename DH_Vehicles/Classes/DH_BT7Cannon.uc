@@ -35,8 +35,7 @@ defaultproperties
     CustomPitchUpLimit=4551 // +25/-8 degrees
     CustomPitchDownLimit=64079
 
-    // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
+    // Cannon ammo=
     PrimaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShellHE'
 

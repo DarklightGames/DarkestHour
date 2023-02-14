@@ -34,8 +34,7 @@ defaultproperties
     CustomPitchDownLimit=63716 // 10 degrees depression
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
-    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
 

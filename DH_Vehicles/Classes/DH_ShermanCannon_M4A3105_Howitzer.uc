@@ -31,7 +31,6 @@ defaultproperties
     CustomPitchDownLimit=64625 // 5 degrees - probably should be 10, but any more & barrel clips hull (a howitzer, so depression isn't really an issue anyway)
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'

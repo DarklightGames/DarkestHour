@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_M5CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_M5CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_M5CannonShellHE'
 

@@ -20,7 +20,6 @@ defaultproperties
     AltFireSpawnOffsetX=0.0
 
     // Projectiles
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'

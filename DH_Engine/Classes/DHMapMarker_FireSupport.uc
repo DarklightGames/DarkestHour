@@ -68,7 +68,7 @@ defaultproperties
     OverwritingRule=UNIQUE_PER_GROUP
     Scope=SQUAD
     RequiredSquadMembers=2
-    Cooldown=10
+    Cooldown=3
     Permissions_CanSee(0)=(LevelSelector=TEAM,RoleSelector=ERS_ARTILLERY_OPERATOR)
     Permissions_CanSee(1)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)
     Permissions_CanRemove(0)=(LevelSelector=SQUAD,RoleSelector=ERS_ARTILLERY_SPOTTER)

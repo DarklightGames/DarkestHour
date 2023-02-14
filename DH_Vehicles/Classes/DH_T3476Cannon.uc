@@ -37,7 +37,6 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
