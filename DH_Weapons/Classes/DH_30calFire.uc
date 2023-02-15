@@ -15,7 +15,9 @@ defaultproperties
     Spread=75.0
     AddedPitch=25
     MuzzleBone="MUZZLE_A6"
-    ShellEmitBone="ejector_link"
+    ShellEmitBone="EJECTOR_LINK"
+    
+    ShellEjectors(0)=(EjectClass=class'ROAmmo.ShellEject1st762x54mm',EjectBone="EJECTOR",IronSightOffset=(X=60,Z=-10),RotOffsetIron=(Yaw=16384))
 
     // Recoil
     RecoilRate=0.0675
@@ -27,7 +29,7 @@ defaultproperties
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ShellEjectClass=class'DH_Weapons.DH_30cal1stShellEject'
+    ShellEjectClass=class'DH_Weapons.DH_30cal1stLinkEject'
     ShellIronSightOffset=(X=30,Z=-3)
     ShellRotOffsetIron=(Pitch=-1500)
 

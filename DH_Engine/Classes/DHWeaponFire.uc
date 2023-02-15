@@ -25,6 +25,26 @@ var bool bIgnoresWeaponLock;
 
 var vector MuzzleOffset;
 
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Add the RO shell ejector to our array.
+        if (ShellEjectClass != none)
+        {
+            ShellEjectors.Insert(0, 1);
+            ShellEjectors[0].EjectClass = ShellEjectClass;
+            ShellEjectors[0].EjectBone = ShellEmitBone;
+            ShellEjectors[0].IronSightOffset = ShellIronSightOffset;
+            ShellEjectors[0].HipOffset = ShellHipOffset;
+            ShellEjectors[0].RotOffsetIron = ShellRotOffsetIron;
+            ShellEjectors[0].RotOffsetHip = ShellRotOffsetHip;
+        }
+    }
+}
+
 simulated function InitEffects()
 {
     if (Level.NetMode == NM_DedicatedServer || AIController(Instigator.Controller) != none)
@@ -55,7 +75,15 @@ simulated function InitEffects()
     }
 }
 
+// New helper function to check whether player is hip firing
+// Allows easy subclassing, which avoids re-stating long functions just to change bUsingSights and/or bBipodDeployed
+simulated function bool IsPlayerHipFiring()
+{
+    return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
+}
+
 // Modified to also eject shells from our new array of ejectors.
+// Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
 simulated function EjectShell()
 {
     local int i;
@@ -64,8 +92,6 @@ simulated function EjectShell()
 	local Rotator EjectRot;
 	local ROShellEject Shell;
 
-    super.EjectShell();
-
     for (i = 0; i < ShellEjectors.Length; ++i)
     {
 	    if (ShellEjectors[i].EjectClass == none)
@@ -73,19 +99,7 @@ simulated function EjectShell()
             continue;
         }
 
-        if (Weapon.bUsingSights)
-        {
-			Weapon.GetViewAxes(X, Y, Z);
-			EjectOffset = Instigator.Location + Instigator.EyePosition();
-			EjectOffset += (X * ShellEjectors[i].IronSightOffset.X)
-                         + (Y * ShellEjectors[i].IronSightOffset.Y)
-                         + (Z * ShellEjectors[i].IronSightOffset.Z);
-    		EjectRot = Rotator(Y);
-			EjectRot.Yaw += 16384;
-			Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
-			EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
-        }
-        else
+        if (IsPlayerHipFiring())
         {
 			// Find the shell eject location then scale it down 5x (since the weapons are scaled up 5x)
         	EjectCoords = Weapon.GetBoneCoords(ShellEjectors[i].EjectBone);
@@ -106,6 +120,18 @@ simulated function EjectShell()
 
 	    	Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
 	    	EjectRot = Rotator(EjectCoords.XAxis) + ShellEjectors[i].RotOffsetHip;
+        }
+        else
+        {
+			Weapon.GetViewAxes(X, Y, Z);
+			EjectOffset = Instigator.Location + Instigator.EyePosition();
+			EjectOffset += (X * ShellEjectors[i].IronSightOffset.X)
+                         + (Y * ShellEjectors[i].IronSightOffset.Y)
+                         + (Z * ShellEjectors[i].IronSightOffset.Z);
+    		EjectRot = Rotator(Y);
+			EjectRot.Yaw += 16384;
+			Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
+			EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
         EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);

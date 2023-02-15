@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_30cal1stShellEject extends RO1stShellEject;
+class DH_30cal1stLinkEject extends RO1stShellEject;
 
 defaultproperties
 {
