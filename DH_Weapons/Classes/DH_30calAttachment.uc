@@ -4,11 +4,8 @@
 //==============================================================================
 // TODO:
 // - Export WA_ reloads
-// - Add more bob to crouch walk anims
 // - Fix "invalid bone index" log spam
 // - Fix PA_ fire animations not playing
-// - Fix elbows on left/right crouch walks
-// - Fix missing reference for crouch fire animation
 
 class DH_30calAttachment extends DHHighROFWeaponAttachment;
 
@@ -54,10 +51,10 @@ defaultproperties
 
     // PA_AltFire="single_iron_m1919"
 
-    PA_TurnRightAnim="stand_turnR_m1919"
-    PA_TurnLeftAnim="stand_turnL_m1919"
-    PA_TurnIronRightAnim="stand_turnRiron_m1919"
-    PA_TurnIronLeftAnim="stand_turnLiron_m1919"
+    PA_TurnRightAnim="stand_turnRrest_m1919"
+    PA_TurnLeftAnim="stand_turnLrest_m1919"
+    PA_TurnIronRightAnim="stand_turnRhip_m1919"
+    PA_TurnIronLeftAnim="stand_turnLhip_m1919"
 
     PA_ReloadAnim="stand_reload_m1919"
     PA_ReloadEmptyAnim="stand_reload_m1919"
@@ -101,14 +98,14 @@ defaultproperties
     PA_WalkAnims(6)="stand_walkBLhip_m1919"
     PA_WalkAnims(7)="stand_walkBRhip_m1919"
 
-    PA_MoveStandFire(0)="stand_shootFhip_m1919"
-    PA_MoveStandFire(1)="stand_shootFhip_m1919"
-    PA_MoveStandFire(2)="stand_shootLRhip_m1919"
-    PA_MoveStandFire(3)="stand_shootLRhip_m1919"
-    PA_MoveStandFire(4)="stand_shootFLhip_m1919"
-    PA_MoveStandFire(5)="stand_shootFRhip_m1919"
-    PA_MoveStandFire(6)="stand_shootFRhip_m1919"
-    PA_MoveStandFire(7)="stand_shootFLhip_m1919"
+    PA_MoveStandFire(0)="stand_shootFwalk_m1919"
+    PA_MoveStandFire(1)="stand_shootFwalk_m1919"
+    PA_MoveStandFire(2)="stand_shootLRwalk_m1919"
+    PA_MoveStandFire(3)="stand_shootLRwalk_m1919"
+    PA_MoveStandFire(4)="stand_shootFLwalk_m1919"
+    PA_MoveStandFire(5)="stand_shootFRwalk_m1919"
+    PA_MoveStandFire(6)="stand_shootFRwalk_m1919"
+    PA_MoveStandFire(7)="stand_shootFLwalk_m1919"
 
     PA_MoveWalkFire(0)="stand_shootFwalk_m1919"
     PA_MoveWalkFire(1)="stand_shootFwalk_m1919"
@@ -141,11 +138,15 @@ defaultproperties
     PA_IdleCrouchIronWeaponAnim="crouch_idle_m1919"
 
     PA_CrouchFire="crouch_shoot_m1919"
+    PA_CrouchIronFire="crouch_shoot_m1919"
     PA_CrouchAltFire="crouch_shoot_m1919"
     PA_CrouchFireLastShot="crouch_shoot_m1919"
 
     PA_CrouchDeployedFire="crouch_shootiron_m1919"
     PA_IdleDeployedCrouchAnim="crouch_idleiron_m1919"
+
+    PA_CrouchReloadAnim="crouch_reload_m1919"
+    PA_CrouchReloadEmptyAnim="crouch_reload_m1919"
 
     PA_CrouchAnims(0)="crouch_walkF_m1919"
     PA_CrouchAnims(1)="crouch_walkB_m1919"
