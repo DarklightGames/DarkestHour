@@ -3,8 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // TODO:
-// - Export WA_ reloads
-// - Fix "invalid bone index" log spam
 // - Fix PA_ fire animations not playing
 
 class DH_30calAttachment extends DHHighROFWeaponAttachment;
@@ -16,7 +14,7 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
-    ShellEjectionBoneName="ejector"
+    ShellEjectionBoneName="ejector2"
     bStaticReload=true
 
     ClientProjectileClass=class'DH_Weapons.DH_30calBullet'
@@ -27,10 +25,12 @@ defaultproperties
     WA_Idle="idle_m1919"
     WA_IdleEmpty="idle_m1919"
     WA_Fire="idle_m1919"
-    WA_Reload="idle_m1919"
-    WA_ReloadEmpty="idle_m1919"
-    WA_ProneReload="idle_m1919"
-    WA_ProneReloadEmpty="idle_m1919"
+    WA_Reload="stand_reload_m1919"
+    WA_ReloadEmpty="stand_reload_m1919"
+    WA_CrouchReload="crouch_reload_m1919"
+    WA_CrouchReloadEmpty="crouch_reload_m1919"
+    WA_ProneReload="prone_reload_m1919"
+    WA_ProneReloadEmpty="prone_reload_m1919"
 
 
     // STAND
