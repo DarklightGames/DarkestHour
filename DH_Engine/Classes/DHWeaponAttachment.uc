@@ -18,6 +18,10 @@ var     name        WA_CrouchReloadEmpty;
 var     name        WA_BayonetCrouchReload;
 var     name        WA_BayonetCrouchReloadEmpty;
 
+var     name        WA_ProneIdle;
+var     name        WA_DeployedIdle;
+var     name        WA_DeployedFire;
+
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
 
@@ -397,14 +401,26 @@ simulated function PlayIdle()
     }
     else
     {
-        if (bOutOfAmmo && WA_IdleEmpty != '')
-        {
-            LoopAnim(WA_IdleEmpty);
-        }
-        else if (WA_Idle != '')
-        {
-            LoopAnim(WA_Idle);
-        }
+	// TODO: Add "empty" support for crawl and deployed anims
+	if (WA_ProneIdle != '' && Instigator.bIsCrawling)
+	{
+	    LoopAnim(WA_ProneIdle);
+	}
+	else if (WA_DeployedIdle != '' && Instigator.bBipodDeployed)
+	{
+	    LoopAnim(WA_DeployedIdle);
+	}
+	else
+	{
+	    if (bOutOfAmmo && WA_IdleEmpty != '')
+	    {
+		LoopAnim(WA_IdleEmpty);
+	    }
+	    else if (WA_Idle != '')
+	    {
+		LoopAnim(WA_Idle);
+	    }
+	}
     }
 }
 

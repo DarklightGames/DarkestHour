@@ -6996,8 +6996,11 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 {
     local name FireAnim;
     local bool bIsMoving;
+    local DHWeaponAttachment WA;
 
-    if (Physics == PHYS_Swimming || WeaponAttachment == none)
+    WA = DHWeaponAttachment(WeaponAttachment);
+
+    if (Physics == PHYS_Swimming || WA == none)
     {
         return;
     }
@@ -7006,38 +7009,38 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
     if (bAltFire)
     {
-        if (WeaponAttachment.bBayonetAttached)
+        if (WA.bBayonetAttached)
         {
             if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneBayonetAltFire;
+                FireAnim = WA.PA_ProneBayonetAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchBayonetAltFire;
+                FireAnim = WA.PA_CrouchBayonetAltFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_BayonetAltFire;
+                FireAnim = WA.PA_BayonetAltFire;
             }
         }
         else
         {
             if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneAltFire;
+                FireAnim = WA.PA_ProneAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchAltFire;
+                FireAnim = WA.PA_CrouchAltFire;
             }
             else if (bBipodDeployed)
             {
-                FireAnim = WeaponAttachment.PA_DeployedAltFire;
+                FireAnim = WA.PA_DeployedAltFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_AltFire;
+                FireAnim = WA.PA_AltFire;
             }
         }
     }
@@ -7048,36 +7051,36 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchDeployedFire;
+                FireAnim = WA.PA_CrouchDeployedFire;
             }
             else if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneDeployedFire;
+                FireAnim = WA.PA_ProneDeployedFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_DeployedFire;
+                FireAnim = WA.PA_DeployedFire;
             }
         }
         else if (bIsCrawling)
         {
-            FireAnim = WeaponAttachment.PA_ProneFire;
+            FireAnim = WA.PA_ProneFire;
         }
         else if (bIsCrouched)
         {
             if (bIsMoving)
             {
-                FireAnim = WeaponAttachment.PA_MoveCrouchFire[Get8WayDirection()];
+                FireAnim = WA.PA_MoveCrouchFire[Get8WayDirection()];
             }
             else
             {
                 if (bIronSights)
                 {
-                    FireAnim = WeaponAttachment.PA_CrouchIronFire;
+                    FireAnim = WA.PA_CrouchIronFire;
                 }
                 else
                 {
-                    FireAnim = WeaponAttachment.PA_CrouchFire;
+                    FireAnim = WA.PA_CrouchFire;
                 }
             }
         }
@@ -7085,11 +7088,11 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsMoving)
             {
-                FireAnim = WeaponAttachment.PA_MoveStandIronFire[Get8WayDirection()];
+                FireAnim = WA.PA_MoveStandIronFire[Get8WayDirection()];
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_IronFire;
+                FireAnim = WA.PA_IronFire;
             }
         }
         else
@@ -7098,17 +7101,17 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
             {
                 if (bIsWalking)
                 {
-                    FireAnim = WeaponAttachment.PA_MoveWalkFire[Get8WayDirection()];
+                    FireAnim = WA.PA_MoveWalkFire[Get8WayDirection()];
                 }
                 else
                 {
-                    FireAnim = WeaponAttachment.PA_MoveStandFire[Get8WayDirection()];
+                    FireAnim = WA.PA_MoveStandFire[Get8WayDirection()];
 
                 }
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_Fire;
+                FireAnim = WA.PA_Fire;
             }
         }
     }
@@ -7125,14 +7128,21 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
             if (!bAltFire)
             {
-                if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetFire != '')
-                {
-                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetFire);
-                }
-                else if (WeaponAttachment.WA_Fire != '')
-                {
-                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_Fire);
-                }
+		if (bBipodDeployed && WA.WA_DeployedFire != '')
+		{
+		    WA.LoopAnim(WA.WA_DeployedFire);
+		}
+		else
+		{
+		    if (WA.bBayonetAttached && WA.WA_BayonetFire != '')
+		    {
+			WA.LoopAnim(WA.WA_BayonetFire);
+		    }
+		    else if (WA.WA_Fire != '')
+		    {
+			WA.LoopAnim(WA.WA_Fire);
+		    }
+		}
             }
         }
     }
@@ -7143,20 +7153,24 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
         if (!bAltFire)
         {
-            if (WeaponAttachment.bBayonetAttached)
-            {
-                if (WeaponAttachment.WA_BayonetFire != '')
-                {
-                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
-                }
-            }
-            else
-            {
-                if (WeaponAttachment.WA_Fire != '')
-                {
-                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
-                }
-            }
+	    if (bBipodDeployed && WA.WA_DeployedFire != '')
+	    {
+		WA.PlayAnim(WA.WA_DeployedFire);
+	    }
+	    else
+	    {
+		if (WA.bBayonetAttached)
+		{
+		    if (WA.WA_BayonetFire != '')
+		    {
+			WA.PlayAnim(WA.WA_BayonetFire);
+		    }
+		}
+		else if (WA.WA_Fire != '')
+		{
+		    WA.PlayAnim(WA.WA_Fire);
+		}
+	    }
         }
     }
 
