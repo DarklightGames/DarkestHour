@@ -24,7 +24,10 @@ defaultproperties
 
     WA_Idle="idle_m1919"
     WA_IdleEmpty="idle_m1919"
+    WA_ProneIdle="idle_deployed_m1919"
+    WA_DeployedIdle="idle_deployed_m1919"
     WA_Fire="idle_m1919"
+    WA_DeployedFire="idle_deployed_m1919"
     WA_Reload="stand_reload_m1919"
     WA_ReloadEmpty="stand_reload_m1919"
     WA_CrouchReload="crouch_reload_m1919"
