@@ -13,15 +13,15 @@ defaultproperties
     FireRate=0.135 // ~500 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
     Spread=75.0
-    RecoilRate=0.06
     AddedPitch=25
     MuzzleBone="MUZZLE_A6"
     ShellEmitBone="ejector_link"
 
     // Recoil
+    RecoilRate=0.0675
     MaxVerticalRecoilAngle=500
-    MaxHorizontalRecoilAngle=225
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=6.0,OutVal=0.4),(InVal=12.0,OutVal=0.8),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxHorizontalRecoilAngle=300
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=6.0,OutVal=1.2),(InVal=12.0,OutVal=0.9),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=30.0
 
