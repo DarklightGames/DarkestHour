@@ -7128,21 +7128,21 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
             if (!bAltFire)
             {
-		if (bBipodDeployed && WA.WA_DeployedFire != '')
-		{
-		    WA.LoopAnim(WA.WA_DeployedFire);
-		}
-		else
-		{
-		    if (WA.bBayonetAttached && WA.WA_BayonetFire != '')
-		    {
-			WA.LoopAnim(WA.WA_BayonetFire);
-		    }
-		    else if (WA.WA_Fire != '')
-		    {
-			WA.LoopAnim(WA.WA_Fire);
-		    }
-		}
+                if (bBipodDeployed && WA.WA_DeployedFire != '')
+                {
+                    WA.LoopAnim(WA.WA_DeployedFire);
+                }
+                else
+                {
+                    if (WA.bBayonetAttached && WA.WA_BayonetFire != '')
+                    {
+                        WA.LoopAnim(WA.WA_BayonetFire);
+                    }
+                    else if (WA.WA_Fire != '')
+                    {
+                        WA.LoopAnim(WA.WA_Fire);
+                    }
+                }
             }
         }
     }
@@ -7153,24 +7153,24 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
         if (!bAltFire)
         {
-	    if (bBipodDeployed && WA.WA_DeployedFire != '')
-	    {
-		WA.PlayAnim(WA.WA_DeployedFire);
-	    }
-	    else
-	    {
-		if (WA.bBayonetAttached)
-		{
-		    if (WA.WA_BayonetFire != '')
-		    {
-			WA.PlayAnim(WA.WA_BayonetFire);
-		    }
-		}
-		else if (WA.WA_Fire != '')
-		{
-		    WA.PlayAnim(WA.WA_Fire);
-		}
-	    }
+            if (bBipodDeployed && WA.WA_DeployedFire != '')
+            {
+                WA.PlayAnim(WA.WA_DeployedFire);
+            }
+            else
+            {
+                if (WA.bBayonetAttached)
+                {
+                    if (WA.WA_BayonetFire != '')
+                    {
+                        WA.PlayAnim(WA.WA_BayonetFire);
+                    }
+                }
+                else if (WA.WA_Fire != '')
+                {
+                    WA.PlayAnim(WA.WA_Fire);
+                }
+            }
         }
     }
 

@@ -401,26 +401,26 @@ simulated function PlayIdle()
     }
     else
     {
-	// TODO: Add "empty" support for crawl and deployed anims
-	if (WA_ProneIdle != '' && Instigator.bIsCrawling)
-	{
-	    LoopAnim(WA_ProneIdle);
-	}
-	else if (WA_DeployedIdle != '' && Instigator.bBipodDeployed)
-	{
-	    LoopAnim(WA_DeployedIdle);
-	}
-	else
-	{
-	    if (bOutOfAmmo && WA_IdleEmpty != '')
-	    {
-		LoopAnim(WA_IdleEmpty);
-	    }
-	    else if (WA_Idle != '')
-	    {
-		LoopAnim(WA_Idle);
-	    }
-	}
+        // TODO: Add "empty" support for crawl and deployed anims
+        if (WA_ProneIdle != '' && Instigator.bIsCrawling)
+        {
+            LoopAnim(WA_ProneIdle);
+        }
+        else if (WA_DeployedIdle != '' && Instigator.bBipodDeployed)
+        {
+            LoopAnim(WA_DeployedIdle);
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_IdleEmpty != '')
+            {
+            LoopAnim(WA_IdleEmpty);
+            }
+            else if (WA_Idle != '')
+            {
+            LoopAnim(WA_Idle);
+            }
+        }
     }
 }
 
