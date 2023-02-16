@@ -14,6 +14,6 @@ defaultproperties
     Headgear(1)=class'ROInventory.ROGermanHat'
 
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_VK98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=none,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_VK98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
 }
