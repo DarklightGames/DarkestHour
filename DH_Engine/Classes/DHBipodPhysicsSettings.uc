@@ -24,6 +24,7 @@ var float YawDeltaFactor;
 var Rotator BarrelBoneRotationOffset;
 var EAxis BarrelRollAxis;
 var EAxis BarrelPitchAxis;
+var EAxis BipodRollAxis;
 
 defaultproperties
 {
@@ -40,5 +41,6 @@ defaultproperties
     YawDeltaFactor=2.0
     BarrelRollAxis=AXIS_X
     BarrelPitchAxis=AXIS_Y
+    BipodRollAxis=AXIS_Y
     bLimitAngle=true
 }
