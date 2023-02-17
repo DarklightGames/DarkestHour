@@ -3,18 +3,15 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHITARiflemanRoles extends DHAxisRiflemanRoles
+class DHITARadioOperatorRoles extends DHAxisRadioOperatorRoles
     abstract;
 
 defaultproperties
 {
-    AltName="Fuciliere"
+    AltName="Telefonisti"
 
-    // TODO: replace this once we get the carcanos
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB42Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon') // TODO: replcae with standard italian grenade
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')  // TODO: replace with carcano
+    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')  // TODO: replace with italian grenade
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
@@ -25,4 +22,8 @@ defaultproperties
 
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
+
+    GivenItems(0)="DH_Equipment.DHRadioItem"    // TODO: custom radio icons for all factions
+    
+    Backpack(0)=(BackpackClass=class'DH_ItalyPlayers.DH_StazioneRF1Backpack')
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_LivornoMachineGunner extends DHITAMachineGunnerRoles;
+class DH_LivornoRadioOperator extends DHITARadioOperatorRoles;
 
 defaultproperties
 {
