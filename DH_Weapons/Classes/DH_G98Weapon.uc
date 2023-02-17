@@ -15,7 +15,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_G98MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_G98Attachment'
     PickupClass=class'DH_Weapons.DH_G98Pickup'
-
+    MuzzleBone="MuzzleG98"
     Mesh=SkeletalMesh'DH_Kar98_1st.G98_mesh'
     bUseHighDetailOverlayIndex=false
 

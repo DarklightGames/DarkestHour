@@ -14,6 +14,8 @@ defaultproperties
     Spread=45.0   //worn-out barrel
     FireSounds(0)=SoundGroup'DH_CC_Inf_Weapons.vz24.G98_shootA'  
     FireSounds(1)=SoundGroup'DH_CC_Inf_Weapons.vz24.G98_shootB'
+    
+    MuzzleBone="MuzzleG98"
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
