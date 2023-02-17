@@ -68,4 +68,8 @@ defaultproperties
         ArmLength=200
     End Object
     BipodPhysicsSettings=DH30CalBipodPhysicsSettings
+
+    SprintEndAnimRate=1.0
+    SprintStartAnimRate=1.0
+    SprintLoopAnimRate=1.0
 }
