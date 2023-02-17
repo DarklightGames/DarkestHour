@@ -8,7 +8,7 @@ class DHITARadioOperatorRoles extends DHAxisRadioOperatorRoles
 
 defaultproperties
 {
-    AltName="Telefonisti"
+    AltName="Radiotelegrafista"
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')  // TODO: replace with carcano
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')  // TODO: replace with italian grenade
