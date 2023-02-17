@@ -196,14 +196,14 @@ defaultproperties
     PA_ProneDeployedFire="prone_shoot_m1919"
     // PA_ProneAltFire="prone_single_m1919"
 
-    PA_ProneAnims(0)="prone_crawlF_piat"
-    PA_ProneAnims(1)="prone_crawlB_piat"
-    PA_ProneAnims(2)="prone_crawlL_piat"
-    PA_ProneAnims(3)="prone_crawlR_piat"
-    PA_ProneAnims(4)="prone_crawlFL_piat"
-    PA_ProneAnims(5)="prone_crawlFR_piat"
-    PA_ProneAnims(6)="prone_crawlBL_piat"
-    PA_ProneAnims(7)="prone_crawlBR_piat"
+    PA_ProneAnims(0)="prone_crawlF_m1919"
+    PA_ProneAnims(1)="prone_crawlB_m1919"
+    PA_ProneAnims(2)="prone_crawlL_m1919"
+    PA_ProneAnims(3)="prone_crawlR_m1919"
+    PA_ProneAnims(4)="prone_crawlFL_m1919"
+    PA_ProneAnims(5)="prone_crawlFR_m1919"
+    PA_ProneAnims(6)="prone_crawlBL_m1919"
+    PA_ProneAnims(7)="prone_crawlBR_m1919"
 
 
     // TRANSITIONS
