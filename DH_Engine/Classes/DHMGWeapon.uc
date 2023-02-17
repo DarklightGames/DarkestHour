@@ -21,6 +21,18 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
+// TODO: REMOVE THIS WHEN WE MERGE ITALY BRANCH
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        UpdateAmmoBelt();
+    }
+}
+
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
 {
