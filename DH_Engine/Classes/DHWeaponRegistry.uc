@@ -160,4 +160,5 @@ defaultproperties
     Records(100)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
     Records(101)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
     Records(102)=(ClassName="DH_Weapons.DH_Breda30Weapon",WeaponNames=("breda", "breda30"))
+    Records(103)=(ClasSName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
 }
