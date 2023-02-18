@@ -1125,6 +1125,14 @@ simulated function bool IsASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
 }
 
+simulated function bool HasLimitedRole()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+    
+    return RI != none && RI.IsLimited();
+}
 
 // Modified to use any distance fog setting for the zone we're in
 simulated function float GetMaxViewDistance()

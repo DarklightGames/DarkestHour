@@ -5749,6 +5749,21 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
+// Modified so that we don't autobalance squad leaders or assistant squad leaders.
+function bool HandleDeath(ROPlayer Player)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Player);
+
+    if (PC != none && (PC.IsSLorASL() || PC.HasLimitedRole()))
+    {
+        return false;
+    }
+
+    return super.HandleDeath(Player);
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH

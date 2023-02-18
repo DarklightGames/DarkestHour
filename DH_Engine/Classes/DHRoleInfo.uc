@@ -333,6 +333,11 @@ simulated static function string GetDisplayName()
     }
 }
 
+simulated function bool IsLimited()
+{
+    return Limit != 255;
+}
+
 defaultproperties
 {
     Limit=255 // unlimited (0 is now deactivated)
