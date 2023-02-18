@@ -1786,9 +1786,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 
 function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSignal> SignalClass, vector Location, optional Object OptionalObject)
 {
-    local int i;
     local float Radius;
-    local array<DHPlayerReplicationInfo> Members;
     local DHPlayer Sender, Recipient;
     local Pawn OtherPawn;
 

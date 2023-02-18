@@ -106,8 +106,6 @@ exec simulated function Deploy()
 simulated function EDeployError GetDeployError(DHPawn P)
 {
     local Actor        HitActor;
-    local DHVolumeTest VolumeTest;
-    local bool         bIsInNoArtyVolume;
     local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
     local rotator      TraceRotation;
 
