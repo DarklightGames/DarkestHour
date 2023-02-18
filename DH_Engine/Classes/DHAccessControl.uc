@@ -151,15 +151,13 @@ defaultproperties
     DeveloperIDs(0)="76561197989090226" // Napoleon Blownapart
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
-    DeveloperIDs(3)="76561198066643021" // Patison
-    DeveloperIDs(4)="76561198046844470" // Matty
-    DeveloperIDs(5)="76561197991612787" // Razorneck
-    DeveloperIDs(6)="76561198025788618" // WOLFkraut
-    DeveloperIDs(7)="76561197992062636" // eksha
-    DeveloperIDs(8)="76561197989139694" // mimi
-    DeveloperIDs(9)="76561198020507621" // jwjw
-    DeveloperIDs(10)="76561198176185585" // Backis
-    DeveloperIDs(11)="76561198162915303" // Caverne
+    DeveloperIDs(3)="76561198046844470" // Matty
+    DeveloperIDs(4)="76561197991612787" // Razorneck
+    DeveloperIDs(5)="76561198025788618" // WOLFkraut
+    DeveloperIDs(6)="76561197992062636" // eksha
+    DeveloperIDs(7)="76561198020507621" // jwjw
+    DeveloperIDs(8)="76561198176185585" // Backis
+    DeveloperIDs(9)="76561198144056227" // Mechanic
 
     // Mac clients are unable to determine their patron status
     // normally, so we hard-code these
