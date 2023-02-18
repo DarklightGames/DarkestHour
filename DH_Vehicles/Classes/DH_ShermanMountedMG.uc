@@ -32,8 +32,8 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=5.0
-    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.1919.1919_ShootLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.1919.1919_ShootEnd'
     ShakeRotMag=(X=20.0,Y=20.0,Z=20.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 
