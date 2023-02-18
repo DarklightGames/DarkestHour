@@ -3,10 +3,50 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_30calFire extends DHMGAutomaticFire;
+class DH_30calFire extends DHAutomaticFire; //not using the MG or fast-auto here because we dont need "packing" for such a slow firing gun
+
+// Modified to make rounds disappear from the visible ammo belt when nearly out of ammo
+event ModeDoFire()
+{
+    super.ModeDoFire();
+
+    if (Level.NetMode != NM_DedicatedServer && DHMGWeapon(Weapon) != none)
+    {
+        DHMGWeapon(Weapon).UpdateAmmoBelt();
+    }
+}
+
+// Modified to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
+simulated function float CustomHandleRecoil()
+{
+    // Added to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
+    if (Weapon != none && Weapon.bUsingSights)
+    {
+        return PctHipMGPenalty;
+    }
+    
+    return 1.0;
+}
+
+// Modified to support ironsight mode (bUsingSights) being hipped-fire mode for MGs
+function CalcSpreadModifiers()
+{
+    super.CalcSpreadModifiers();
+
+    if (Instigator != none && !Instigator.bBipodDeployed)
+    {
+        Spread *= HipSpreadModifier;
+    }
+}
+
+// Modified because for MGs ironsight mode (bUsingSights) signifies the MG is being hip fired
+simulated function bool IsPlayerHipFiring()
+{
+    return Weapon != none && Weapon.bUsingSights;
+}
 
 defaultproperties
-{
+{  
     ProjectileClass=class'DH_Weapons.DH_30calBullet'
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AmmoClass=class'DH_Weapons.DH_30CalAmmo'
@@ -27,8 +67,10 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=30.0
 
-    AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.1919.1919_ShotA'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.1919.1919_ShotB'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.1919.1919_ShotC'
+
     ShellEjectClass=class'DH_Weapons.DH_30cal1stLinkEject'
     ShellIronSightOffset=(X=30,Z=-3)
     ShellRotOffsetIron=(Pitch=-1500)
@@ -45,4 +87,16 @@ defaultproperties
     ShakeRotTime=1.2
 
     PctHipMGPenalty=1.5
+    CrouchSpreadModifier=1.0
+    ProneSpreadModifier=1.0
+    BipodDeployedSpreadModifier=1.0
+    RestDeploySpreadModifier=1.0
+    AimError=1800.0
+    
+    PctStandIronRecoil=1.0
+    bUsesTracers=true
+    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    BlurTime=0.04
+    BlurTimeIronsight=0.04
 }
