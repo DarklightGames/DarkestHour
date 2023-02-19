@@ -438,6 +438,11 @@ function RefundSupplies(int InstigatorTeamIndex)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
+    if (!WasCreatedByPlayer())
+    {
+        return;
+    }
+
     if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
     {
         // Sort the supply attachments by priority.
@@ -1184,6 +1189,11 @@ function BreakMe()
 }
 
 simulated function bool ShouldDestroyOnReset()
+{
+    return WasCreatedByPlayer();
+}
+
+simulated function bool WasCreatedByPlayer()
 {
     // Dynamically placed actors are owned by the LevelInfo. If it was placed
     // in-editor, it will not have an owner. This is a nice implicit way of
