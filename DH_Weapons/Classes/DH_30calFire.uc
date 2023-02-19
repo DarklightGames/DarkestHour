@@ -17,7 +17,7 @@ defaultproperties
     MuzzleBone="MUZZLE_A6"
     ShellEmitBone="EJECTOR_LINK"
     
-    ShellEjectors(0)=(EjectClass=class'ROAmmo.ShellEject1st762x54mm',EjectBone="EJECTOR",IronSightOffset=(X=60,Z=-10),RotOffsetIron=(Yaw=16384))
+    ShellEjectors(0)=(EjectClass=class'ROAmmo.ShellEject1st762x54mm',EjectBone="EJECTOR",IronSightOffset=(X=40,Z=-10),RotOffsetIron=(Yaw=16384))
 
     // Recoil
     RecoilRate=0.0675
