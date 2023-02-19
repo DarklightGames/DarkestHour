@@ -59,13 +59,11 @@ simulated function SpawnAmmoBelt()
 // Make the ammo belt represent the ammo amount in the belt we are loading
 simulated function RenewAmmoBelt()
 {
-    local int i, Count;
-
-    Count = PrimaryAmmoArray[GetNextMagIndex()];
+    local int i;
 
     for (i = 0; i < MGBeltArray.Length; ++i)
     {
-        if (i < Count)
+        if (i < NextMagAmmoCount)
         {
             MGBeltArray[i].SetDrawType(DT_StaticMesh);
         }
