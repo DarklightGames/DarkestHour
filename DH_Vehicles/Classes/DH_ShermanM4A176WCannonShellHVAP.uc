@@ -19,15 +19,15 @@ defaultproperties
     EngineFireChance=0.61
 
     //Penetration
-    DHPenetrationTable(0)=19.2
-    DHPenetrationTable(1)=17.7
-    DHPenetrationTable(2)=16.5
-    DHPenetrationTable(3)=14.6
-    DHPenetrationTable(4)=13.7
-    DHPenetrationTable(5)=12.5
-    DHPenetrationTable(6)=11.3
-    DHPenetrationTable(7)=10.6
-    DHPenetrationTable(8)=9.4
-    DHPenetrationTable(9)=8.0
-    DHPenetrationTable(10)=6.7
+    DHPenetrationTable(0)=24.6
+    DHPenetrationTable(1)=24.0
+    DHPenetrationTable(2)=23.3
+    DHPenetrationTable(3)=22.6 
+    DHPenetrationTable(4)=21.9 
+    DHPenetrationTable(5)=21.3
+    DHPenetrationTable(6)=20.7
+    DHPenetrationTable(7)=20.0
+    DHPenetrationTable(8)=19.3
+    DHPenetrationTable(9)=18.5 
+    DHPenetrationTable(10)=17.9 
 }
