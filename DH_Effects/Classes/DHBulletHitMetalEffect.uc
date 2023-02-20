@@ -10,7 +10,19 @@ var texture SparkGroup[4];
 simulated function PostBeginPlay()
 {
     Emitters[4].Texture = SparkGroup[Rand(4)];
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        bDynamicLight = true;
+        SetTimer(0.10, false);
+    }
+
     Super.PostBeginPlay();
+}
+
+simulated function Timer()
+{
+    bDynamicLight = false;
 }
 
 defaultproperties
@@ -160,6 +172,16 @@ defaultproperties
     End Object
     Emitters(4)=BeamEmitter'BeamEmitter4'
 
+    LightEffect=LE_NonIncidence
+    LightType=LT_Steady
+    LightBrightness = 64.0
+    LightRadius = 2.0
+    LightHue = 30
+    LightSaturation = 128
+    AmbientGlow = 254
+    LightCone = 8
+
     Autodestroy=true
     bnodelete=false
+    bDynamicLight=false
 }

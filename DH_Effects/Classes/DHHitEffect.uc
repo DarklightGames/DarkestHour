@@ -16,11 +16,8 @@ struct DHHitEffectData
 {
     var class<ProjectedDecal>       HitDecal;
     var class<Emitter>              HitEffect;
-    var bool                        bUseFlash;
     var sound                       HitSound;
 };
-
-var class<Emitter>          FlashEffect; //new for DH
 
 var   float               MinSoundRadius;
 var   float               MaxSoundRadius;
@@ -71,11 +68,6 @@ simulated function PostNetBeginPlay()
         if (HitEffects[ST].HitEffect != none)
         {
             Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
-        }
-
-        if (FlashEffect != none && HitEffects[ST].bUseFlash)
-        {
-            Spawn(FlashEffect,,, HitLoc, rotator(HitNormal));
         }
     }
 }
