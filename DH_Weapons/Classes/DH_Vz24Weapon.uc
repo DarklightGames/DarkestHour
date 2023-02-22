@@ -17,7 +17,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Kar98_1st.Vz24_mesh'
     bUseHighDetailOverlayIndex=false
 
-    IronSightDisplayFOV=47.0
+    IronSightDisplayFOV=53.0
     DisplayFOV=85.0
 
     MaxNumPrimaryMags=13
