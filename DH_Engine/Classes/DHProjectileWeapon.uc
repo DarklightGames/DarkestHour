@@ -13,6 +13,12 @@ enum EUnloadedMunitionsPolicy
     UMP_Consolidate,    // unloaded munitions will be consolidated into full magazines
 };
 
+enum EFriendlyResupplyPolicy
+{
+    FRP_Magazines,   // magazines will be given
+    FRP_Rounds      // rounds will be added into unloaded magazines (must have enough space)
+};
+
 // Ammo/magazines
 var         array<int>  PrimaryAmmoArray;           // the array of magazines and their ammo amounts this weapon has
 var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client (changed from int to byte for more efficient replication)
@@ -28,7 +34,9 @@ var         int         SavedRoundCount;            // number of rounds that hav
 var         bool        bDoesNotRetainLoadedMag;    // this weapon does not retain its loaded 'mag' when put away or dropped & it doesn't start loaded (e.g. bazooka or panzerschreck)
 var         int         FillAmmoMagCount;           // the number of mags that a resupply point will try to add each time
 var         bool        bCanBeResupplied;           // the weapon can be resupplied by another player
-var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
+var         EFriendlyResupplyPolicy FriendlyResupplyPolicy;
+var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied by a friendly player (when FriendlyResupplyPolicy is FRP_Mags)
+var         int         NumRoundsToResupply;        // number of rounds to add to unloaded magazines when this weapon has been resupplied by a friendly player (when FriendlyResupplyPolicy is FRP_Rounds)
 
 // Animations
 var         array<name> MagEmptyReloadAnims;        // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
@@ -218,6 +226,9 @@ simulated function PostBeginPlay()
 
         UpdateScopeMode();
     }
+
+    // Ensure that the number of resupply rounds doesn't exceed the magazine capacity.
+    NumRoundsToResupply = Min(NumRoundsToResupply, FireMode[0].AmmoClass.default.InitialAmount);
 }
 
 simulated function CreateBipodPhysicsSimulation()
@@ -2511,11 +2522,21 @@ simulated function int GetHudAmmoCount()
 function bool ResupplyAmmo()
 {
     local int i;
+    local bool bDidResupplyAmmo;
 
-    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
+    if (!bCanBeResupplied || Level.TimeSeconds <= LastResupplyTimestamp + ResupplyInterval)
     {
-        if (bCanBeResupplied && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-        {
+        return false;
+    }
+
+    if (FriendlyResupplyPolicy == FRP_Magazines && PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+    {
+        return false;
+    }
+
+    switch (FriendlyResupplyPolicy)
+    {
+        case FRP_Magazines:
             for (i = 0; i < NumMagsToResupply; ++i)
             {
                 PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
@@ -2526,13 +2547,46 @@ function bool ResupplyAmmo()
                 }
             }
 
-            UpdateResupplyStatus(true);
-            LastResupplyTimestamp = Level.TimeSeconds;
-            return true;
-        }
+            bDidResupplyAmmo = true;
+            break;
+            
+        case FRP_Rounds:
+            // Cycle through all currently unloaded magazines and find one which has room enough
+            // for the rounds that we want to resupply.
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+            {
+                if (CurrentMagIndex == i)
+                {
+                    // Do not reload the current magazine!
+                    continue;
+                }
+
+                if (PrimaryAmmoArray[i] - NumRoundsToResupply >= 0)
+                {
+                    PrimaryAmmoArray[i] += NumRoundsToResupply;
+                    bDidResupplyAmmo = true;
+                }
+            }
+
+            if (!bDidResupplyAmmo && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+            {
+                // If no currently unloaded magazine has enough room, a new magazine will be added.
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = NumRoundsToResupply;
+                bDidResupplyAmmo = true;
+            }
+            
+            break;
+        default:
+            break;
     }
 
-    return false;
+    if (bDidResupplyAmmo)
+    {
+        UpdateResupplyStatus(true);
+        LastResupplyTimestamp = Level.TimeSeconds;
+    }
+
+    return bDidResupplyAmmo;
 }
 
 // Modified so resupply point gradually replenishes ammo (no full resupply in one go)
@@ -2601,28 +2655,56 @@ function DropFrom(vector StartLocation)
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
     local DHPawn P;
-
-    P = DHPawn(Instigator);
+    local int i;
 
     if (bCurrentWeapon)
     {
-        CurrentMagCount = Max(0, PrimaryAmmoArray.Length - 1); // update number of spare mags (replicated)
+        CurrentMagCount = Max(0, PrimaryAmmoArray.Length); // update number of spare mags (replicated) //TODO: WHY IS THIS NEGATIVE ONE?!
+        // TODO: THIS IS SO STUPID, LET THE CLIENT DO THIS SHIT
     }
 
-    if (P != none)
+    P = DHPawn(Instigator);
+
+    if (P == none)
     {
-        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1) && (TeamIndex == 2 || TeamIndex == P.GetTeamNum());
-        P.bWeaponNeedsReload = false;
+        return;
     }
-}
 
-function SetNumMags(int M)
-{
-    PrimaryAmmoArray.Length = M;
+    P.bWeaponNeedsResupply = false;
+    P.bWeaponNeedsReload = false;
 
-    if (IsCurrentWeapon())
+    if (!bCanBeResupplied || !bCurrentWeapon || (TeamIndex != 2 && TeamIndex != P.GetTeamNum()))
     {
-        UpdateResupplyStatus(true);
+        return;
+    }
+    
+    switch (FriendlyResupplyPolicy)
+    {
+        case FRP_Magazines:
+            P.bWeaponNeedsResupply = CurrentMagCount < MaxNumPrimaryMags - 1;
+            break;
+        case FRP_Rounds:
+            if (CurrentMagCount < MaxNumPrimaryMags - 1)
+            {
+                // If we have less mags than the maximum, we can be resupplied.
+                P.bWeaponNeedsResupply = true;
+            }
+            else
+            {
+                // Check if any currently unloaded mags have enough space to hold the number of rounds
+                // we would be resupplied.
+                for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+                {
+                    if (CurrentMagIndex != i && PrimaryAmmoArray[i] - NumRoundsToResupply >= 0)
+                    {
+                        P.bWeaponNeedsResupply = true;
+                        break;
+                    }
+                }
+            }
+            break;
+        default:
+            break;
     }
 }
 
