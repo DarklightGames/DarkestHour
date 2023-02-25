@@ -610,9 +610,14 @@ simulated event AnimEnd(int Channel)
                 }
                 else
                 {
+		    // TODO: Add deployed idle empty
                     if (WA.bOutOfAmmo && WA.WA_IdleEmpty != '' && Anim != WA.WA_ReloadEmpty)
                     {
                         WA.LoopAnim(WA.WA_IdleEmpty);
+                    }
+                    else if (bBipodDeployed && WA.WA_DeployedIdle != '')
+                    {
+                        WA.LoopAnim(WA.WA_DeployedIdle);
                     }
                     else if (WA.WA_Idle != '')
                     {
