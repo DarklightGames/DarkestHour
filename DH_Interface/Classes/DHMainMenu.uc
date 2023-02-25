@@ -834,7 +834,7 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
-    PatreonURL="http://www.patreon.com/theel"
+    PatreonURL="http://www.patreon.com/darkesthourgame"
     DiscordURL="http://discord.gg/EEwFhtk"
     ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
