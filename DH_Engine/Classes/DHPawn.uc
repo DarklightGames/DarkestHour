@@ -6821,31 +6821,36 @@ exec function GimmeSupplies()
     switch (GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            DebugSpawnVehicle("DH_OpelBlitzSupport", 5.0);
+            SpawnVehicle("DH_OpelBlitzSupport");
             break;
         case ALLIES_TEAM_INDEX:
-            DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
+            SpawnVehicle("DH_GMCTruckSupport");
             break;
     }
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int Degrees)
+exec function SpawnVehicle(string VehicleName, optional string VariantName)
 {
-    local class<Vehicle> VehicleClass;
-    local Vehicle        V;
-    local vector         SpawnLocation;
-    local rotator        SpawnDirection;
+    local class<Vehicle>    VehicleClass;
+    local Vehicle           V;
+    local vector            SpawnLocation;
+    local rotator           SpawnDirection;
+    local int               Distance;
+    local float             Degrees;
+    local string            VehicleClassName;
+
+    VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
+
+    if (VehicleClassName == "")
+    {
+        VehicleClassName = VehicleName;
+    }
 
     // TODO: there really is no reason why a game admin should be able to spawn vehicles in the live game & the admin 'pass through' should be removed here - Matt
-    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
+    if (VehicleClassName != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
     {
-        if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
-        {
-            VehicleString = "DH_Vehicles." $ VehicleString;
-        }
-
-        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
+        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleClassName, class'class'));
 
         if (VehicleClass != none)
         {
