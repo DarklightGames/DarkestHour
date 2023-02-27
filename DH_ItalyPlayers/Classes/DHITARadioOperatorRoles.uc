@@ -15,6 +15,7 @@ defaultproperties
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
     GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'    // ?
 
     Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'

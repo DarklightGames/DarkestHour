@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // M4A3E8/M4A3(76)W HVSS (Easy Eight) - Upgraded with widetrack Horizontal
 // Volute Spring Suspension (HVSS), fitted with the 76mm M1 cannon.

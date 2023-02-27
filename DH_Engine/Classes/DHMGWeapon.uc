@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMGWeapon extends DHProjectileWeapon
@@ -200,6 +200,7 @@ defaultproperties
     IdleAnim="Rest_Idle"
     BipodIdleAnim="Bipod_Idle"
     IdleToBipodDeploy="Rest_2_Bipod"
+    IronToBipodDeploy="Hip_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     MagEmptyReloadAnims(0)="Reload"
 

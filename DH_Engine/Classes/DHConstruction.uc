@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -437,6 +437,11 @@ function RefundSupplies(int InstigatorTeamIndex)
     local UComparator AttachmentComparator;
 
     MySupplyCost = GetSupplyCost(GetContext());
+
+    if (!WasCreatedByPlayer())
+    {
+        return;
+    }
 
     if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
     {
@@ -1184,6 +1189,11 @@ function BreakMe()
 }
 
 simulated function bool ShouldDestroyOnReset()
+{
+    return WasCreatedByPlayer();
+}
+
+simulated function bool WasCreatedByPlayer()
 {
     // Dynamically placed actors are owned by the LevelInfo. If it was placed
     // in-editor, it will not have an owner. This is a nice implicit way of

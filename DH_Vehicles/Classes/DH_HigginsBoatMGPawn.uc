@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HigginsBoatMGPawn extends DHVehicleMGPawn;
@@ -45,10 +45,13 @@ defaultproperties
     DriveAnim="VHalftrack_com_idle"
     CameraBone="Camera_com"
     HUDOverlayClass=class'DH_Vehicles.DH_30Cal_VehHUDOverlay'
-    HUDOverlayOffset=(X=-2.0)
-    HUDOverlayFOV=35.0
+    HUDOverlayFOV=60.0
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=0.75
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
+    
+    HudOverlayIdleAnim="bipod_idle"
+    HudOverlayFireLoopAnim="deploy_shoot_loop"
+    HudOverlayFireEndAnim="deploy_shoot_end"
 }
