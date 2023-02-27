@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This interaction displays configuable radial menus (DHCommandMenu) with up to
 // 8 different options.
@@ -313,7 +313,7 @@ function PostRender(Canvas C)
 {
     local int i, OptionIndex;
     local float Theta, ArcLength;
-    local float CenterX, CenterY, X, Y, XL, YL, U, V, AspectRatio, XL2, YL2;
+    local float CenterX, CenterY, X, Y, XL, YL, AspectRatio, XL2, YL2;
     local DHCommandMenu Menu;
     local bool bIsOptionDisabled;
     local DHCommandMenu.OptionRenderInfo ORI;

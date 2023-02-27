@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
@@ -331,6 +331,11 @@ simulated static function string GetDisplayName()
     {
         return default.MyName;
     }
+}
+
+simulated function bool IsLimited()
+{
+    return Limit != 255;
 }
 
 defaultproperties

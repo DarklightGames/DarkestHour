@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Implementation based on crc32c function:
 // http://www.hackersdelight.org/hdcodetxt/crc.c.txt

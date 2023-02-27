@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
@@ -5749,6 +5749,21 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
+// Modified so that we don't autobalance squad leaders or assistant squad leaders.
+function bool HandleDeath(ROPlayer Player)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Player);
+
+    if (PC != none && (PC.IsSLorASL() || PC.HasLimitedRole()))
+    {
+        return false;
+    }
+
+    return super.HandleDeath(Player);
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH
@@ -5847,8 +5862,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=3
-        Patch=1
+        Minor=4
+        Patch=0
         Prerelease=""
     End Object
     Version=VersionObject

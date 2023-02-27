@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMortarWeapon extends DHWeapon
@@ -106,8 +106,6 @@ exec simulated function Deploy()
 simulated function EDeployError GetDeployError(DHPawn P)
 {
     local Actor        HitActor;
-    local DHVolumeTest VolumeTest;
-    local bool         bIsInNoArtyVolume;
     local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
     local rotator      TraceRotation;
 
