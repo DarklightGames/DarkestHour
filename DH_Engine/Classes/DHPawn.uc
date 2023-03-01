@@ -132,6 +132,10 @@ var     bool                bHeadSevered; //we want heads to be able to be blown
 var     bool                bAlwaysSeverBodyparts; // implemented for zombies
 var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
+// Stance
+const PRONE_FROM_CROUCH_DELAY_SECONDS = 0.2;
+var float                   LastStartCrouchTime; // Stores the last time that StartCrouch was called (used for avoiding prone eye-height bug)
+
 // Smoke grenades for squad leaders
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
@@ -5369,9 +5373,22 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
-// Returns true if the player can switch the prone state - only valid on the client
+// Returns true if the player can switch the prone state - only valid on the client.
+// Modified to fix prone eye-height bug.
 simulated function bool CanProneTransition()
 {
+    // There is a bug that only occurrs in multiplayer environments where if the player is
+    // moving and hits crouch and prone in rapid succession, the eye height will appear incorrectly.
+    // To fix this, we just ensure that we leave enough time for the stance change to propagate to the
+    // client.
+    // NOTE: Investigation seems to point to there being some native RO code that is causing this buggy
+    // behavior, as the BaseEyeHeight gets set to a specific value (CrouchHeight * CrouchMoveEyeHeightMod)
+    // without that code path ever being accessed via script.
+    if (Level.TimeSeconds - LastStartCrouchTime < PRONE_FROM_CROUCH_DELAY_SECONDS)
+    {
+        return false;
+    }
+
     //TODO: Remove PHYS_Falling.
     return (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
 }
@@ -6061,6 +6078,13 @@ event StartCrouch(float HeightAdjust)
 
     // Take stamina away with each stance change
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
+
+    if (IsLocallyControlled())
+    {
+        // Log the last time this function was called, as we will use this to delay
+        // a transition to prone to avoid the eye-height bug that is in native RO.
+        LastStartCrouchTime = Level.TimeSeconds;
+    }
 }
 
 // Modified to increase volume & radius of sound if sprinting, & to reduce sound radius if moving slowly
