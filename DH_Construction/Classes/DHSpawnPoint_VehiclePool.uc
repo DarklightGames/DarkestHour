@@ -78,5 +78,6 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=1
 
     SpawnTimeInterval=10
+    SpawnKillProtectionTime=15
 }
 

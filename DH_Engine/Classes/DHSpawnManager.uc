@@ -304,7 +304,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
         // Set spawn protection variables for the vehicle
         DHV.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
-        DHV.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        DHV.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
         DHV.SpawnPoint = SP;
     }
 
@@ -314,7 +314,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     if (Driver != none)
     {
         Driver.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
-        Driver.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        Driver.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
         Driver.SpawnPoint = SP;
     }
 
