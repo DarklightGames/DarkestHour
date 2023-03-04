@@ -306,7 +306,7 @@ defaultproperties
     MapInfos(77)=(Name="DH-Prussia_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_Small)
     MapInfos(78)=(Name="DH-Ramelle_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(79)=(Name="DH-Riga_Docks_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
-    MapInfos(80)=(Name="DH-Rhine_River_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    MapInfos(80)=(Name="DH-Rhine_River_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(81)=(Name="DH-Salaca_River_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Medium)
     MapInfos(82)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(83)=(Name="DH-Schijndel_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
