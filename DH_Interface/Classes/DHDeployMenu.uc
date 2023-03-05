@@ -587,6 +587,18 @@ function UpdateVehicles(optional bool bShowAlert)
             li_Vehicles.SetIndex(0);
         }
     }
+    
+    // Update the max vehicles number as well.
+    l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
+
+    if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+    }
+    else
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.White;
+    }
 }
 
 function OnOKButtonClick(byte Button)
@@ -1469,16 +1481,6 @@ function UpdateVehicleImage()
         {
             i_MaxVehicles.Show();
             l_MaxVehicles.Show();
-            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
-
-            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.Red;
-            }
-            else
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.White;
-            }
         }
     }
     else

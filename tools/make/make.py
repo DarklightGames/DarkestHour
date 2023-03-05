@@ -10,7 +10,6 @@ from binascii import crc32
 import zipfile
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Dict, Optional
 
 '''
 https://stackoverflow.com/questions/13921323/handling-duplicate-keys-with-configparser
@@ -19,15 +18,15 @@ https://stackoverflow.com/questions/13921323/handling-duplicate-keys-with-config
 
 class Manifest:
     def __init__(self):
-        self.package_crcs: Dict[str, int] = dict()
-        self.default_ini_crc: Optional[int] = 0
+        self.package_crcs = dict()
+        self.default_ini_crc = None
 
     @staticmethod
     def load(path: str) -> 'Manifest':
         with open(path, 'r') as fp:
             manifest = Manifest()
             try:
-                data: dict = json.load(fp)
+                data = json.load(fp)
                 if isinstance(data, dict):
                     manifest.package_crcs = data.get('package_crcs', dict())
                     manifest.default_ini_crc = data.get('default_ini_crc', None)
@@ -35,7 +34,7 @@ class Manifest:
                 pass
             return manifest
 
-    def write(self, path: str):
+    def write(self, path):
         try:
             with open(path, 'w') as f:
                 json.dump({

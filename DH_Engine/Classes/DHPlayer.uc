@@ -6605,6 +6605,11 @@ state Spectating
 
 exec function GiveCamera()
 {
+    if (Level.NetMode != NM_Standalone && !PlayerReplicationInfo.bSilentAdmin && !PlayerReplicationInfo.bAdmin)
+    {
+        return;
+    }
+    
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
 }
 
@@ -7579,6 +7584,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     }
 
     return RER_Enabled;
+}
+
+simulated exec function ListVehicles()
+{
+    class'DHVehicleRegistry'.static.DumpToLog(self);
 }
 
 defaultproperties
