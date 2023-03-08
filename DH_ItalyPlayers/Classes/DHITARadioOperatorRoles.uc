@@ -10,7 +10,7 @@ defaultproperties
 {
     AltName="Radiotelegrafista"
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')  // TODO: replace with carcano
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_CarcanoM91Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')  // TODO: replace with italian grenade
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"

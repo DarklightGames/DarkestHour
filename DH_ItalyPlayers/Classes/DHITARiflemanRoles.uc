@@ -10,11 +10,9 @@ defaultproperties
 {
     AltName="Fuciliere"
 
-    // TODO: replace this once we get the carcanos
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_CarcanoM91Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-    // TODO: move these to the sergeant role
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_MAB42Weapon',AssociatedAttachment=class'DH_Weapons.DH_CarcanoM91AmmoPouch')
+    PrimaryWeapons(1)=(Item=none,AssociatedAttachment=none)
+    PrimaryWeapons(2)=(Item=none,AssociatedAttachment=none)
 
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon') // TODO: replcae with standard italian grenade
 
