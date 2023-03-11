@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=20
     InitialAmount=20
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'    // TODO: replace
+    IconMaterial=Texture'DH_Breda30_tex.weapon_icons.breda30_ammo'
 }

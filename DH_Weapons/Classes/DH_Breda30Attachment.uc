@@ -8,7 +8,7 @@ class DH_Breda30Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'
-    MenuImage=Texture'DH_Bren_tex.interface.bren_icon'
+    MenuImage=Texture'DH_Breda30_tex.weapon_icons.breda30_icon'
     
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
