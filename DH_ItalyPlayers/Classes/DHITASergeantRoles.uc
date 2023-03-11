@@ -30,4 +30,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.4
     HeadgearProbabilities(1)=0.4
     HeadgearProbabilities(2)=0.2
+
+    DetachedArmClass=class'DH_ItalyPlayers.DHSeveredArm_ItalianLivorno'
+    DetachedLegClass=class'DH_ItalyPlayers.DHSeveredLeg_ItalianLivorno'
 }
