@@ -30,6 +30,5 @@ defaultproperties
     DefaultSquadNames(5)="Fritz"
     DefaultSquadNames(6)="Gustav"
     DefaultSquadNames(7)="Heinrich"
-    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
 }

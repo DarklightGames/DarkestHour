@@ -102,9 +102,10 @@ var     vector  NewAcceleration;     // acceleration which is checked by PlayerM
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
 var     sound   MantleSound;
 
-// Diggin
+// Digging
 var     bool    bCanDig;
 
+// Mantling
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
@@ -140,13 +141,17 @@ var float                   LastStartCrouchTime; // Stores the last time that St
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
-// (not) DUMB SHIT
+// Gun Rotation
 var     DHATGun             GunToRotate;
 
+// Backpacks
 var     DHBackpack          Backpack;
 var     class<DHBackpack>   BackpackClass;
 var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
+
+// Health Figure
+var     class<DHHealthFigure>   HealthFigureClass;
 
 replication
 {
