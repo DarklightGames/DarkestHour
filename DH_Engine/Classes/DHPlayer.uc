@@ -6727,16 +6727,23 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 function ServerCancelArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 {
     local DHGameReplicationInfo GRI;
+    local DHArtillery ArtilleryActor;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor != none &&
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.bCanBeCancelled &&
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Requester == self)
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryMessage', 8,,, GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Class);
+    ArtilleryActor = GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor;
 
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Destroy();
+    if (ArtilleryActor != none && ArtilleryActor.bCanBeCancelled && ArtilleryActor.Requester == self)
+    {
+        ReceiveLocalizedMessage(class'DHArtilleryMessage', 8,,, ArtilleryActor.Class);
+
+        if (!ArtilleryActor.HasStarted())
+        {
+            // Refund the strike back to the pool since the artillery hasn't started yet.
+            GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].UsedCount--;
+        }
+
+        ArtilleryActor.Destroy();
     }
 }
 
