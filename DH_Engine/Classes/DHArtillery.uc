@@ -50,6 +50,11 @@ function PostBeginPlay()
     }
 }
 
+// Returns whether or not this artillery has actually started.
+// An artilley strike that hasn't been started yet can be cancelled without
+// decrementing the total number of strikes available.
+function bool HasStarted() { return true; }
+
 function Reset()
 {
     Destroy();
