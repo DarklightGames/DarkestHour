@@ -8,4 +8,5 @@ class DHSeveredArm_ItalianLivorno extends SeveredArm;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_EffectsSM.Italian_Livorno_Arm'
+    Skins(0)=none
 }
