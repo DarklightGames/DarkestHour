@@ -25,7 +25,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
 
-    GivenItems(0)="DH_Equipment.DHRadioItem"    // TODO: custom radio icons for all factions
+    GivenItems(0)="DH_Equipment.DH_ItalianRadioItem"
     
     Backpack(0)=(BackpackClass=class'DH_ItalyPlayers.DH_StazioneRF1Backpack')
 
