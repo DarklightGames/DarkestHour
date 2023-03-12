@@ -18,7 +18,9 @@ defaultproperties
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'    // ?
+    BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
+    SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace
 
     Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'
     Headgear(1)=class'DH_ItalyPlayers.DH_ItalianHelmet_Livorno'
