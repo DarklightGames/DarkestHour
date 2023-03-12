@@ -18,9 +18,9 @@ defaultproperties
     PlatoonHQUnpackedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked'
     PlatoonHQTatteredStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_light_destro'
 
-    // TODO: replace !
-    DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_germany'
-    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
+    MapFlagIconSpriteWidget=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=64,X2=31,Y2=95),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_italy'
     
     // https://web.archive.org/web/20200620154809im_/http://www.milistory.net/Public/data/ciofatax/2007724164255_DSCN0158.JPG
     DefaultSquadNames(0)="Ancona"

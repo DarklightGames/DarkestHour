@@ -20,8 +20,9 @@ defaultproperties
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
-    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
-    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'    // ?
+    BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
+    SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace
 
     Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'
     Headgear(1)=class'DH_ItalyPlayers.DH_ItalianHelmet_Livorno'
@@ -30,4 +31,7 @@ defaultproperties
     HeadgearProbabilities(0)=0.4
     HeadgearProbabilities(1)=0.4
     HeadgearProbabilities(2)=0.2
+
+    DetachedArmClass=class'DH_ItalyPlayers.DHSeveredArm_ItalianLivorno'
+    DetachedLegClass=class'DH_ItalyPlayers.DHSeveredLeg_ItalianLivorno'
 }

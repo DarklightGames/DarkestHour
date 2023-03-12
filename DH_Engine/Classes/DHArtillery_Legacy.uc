@@ -62,6 +62,12 @@ function PostBeginPlay()
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
 }
 
+// Overridden so that we don't count the strike as started until the first shot has been fired.
+function bool HasStarted()
+{
+    return ShellCounter != 0 && SalvoCounter != 0;
+}
+
 // From deprecated ROArtillerySpawner
 function Destroyed()
 {

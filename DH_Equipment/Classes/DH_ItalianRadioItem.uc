@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LivornoRifleman extends DHITARiflemanRoles;
+class DH_ItalianRadioItem extends DHRadioItem;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianPawn',Weight=1.0)
+    AttachmentClass=class'DH_Equipment.DHItalianRadioAttachment'
 }
