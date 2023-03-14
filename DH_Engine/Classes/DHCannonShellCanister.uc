@@ -9,7 +9,7 @@ var int NumberOfProjectilesPerShot; // the number of separate small projectiles 
 
 defaultproperties
 {
-    NumberOfProjectilesPerShot=20
+    NumberOfProjectilesPerShot=50
     WhizType=2
     BallisticCoefficient=4.0
     Speed=45988.0
