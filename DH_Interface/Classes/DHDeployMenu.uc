@@ -1730,7 +1730,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
