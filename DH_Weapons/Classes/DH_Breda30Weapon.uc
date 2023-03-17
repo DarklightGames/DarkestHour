@@ -2,8 +2,111 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2022
 //==============================================================================
+// This weapon has a number of unique systems attached to it.
+//==============================================================================
 
 class DH_Breda30Weapon extends DHAutoWeapon;
+
+// Bullets spill out of the friggin' magazine when it's opened.
+var array<ROFPAmmoRound>    SpillBullets;
+var array<name>             SpillBulletBones;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SpawnSpillBullets();
+    }
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    BredaHideSpillBulletBones();
+}
+
+// This hides the two rounds that will spill out of the gun when the 
+simulated function HideProxySpillBullets()
+{
+    local int i, j, k;
+
+    i = MaxAmmo(0) - AmmoAmount(0);
+
+    for (j = 0; j < 2; ++j)
+    {
+        k = (MGBeltArray.Length - 1) - i - j;
+
+        if (k >= 0 && k < MGBeltArray.Length)
+        {
+            MGBeltArray[k].SetDrawType(DT_None);
+        }
+    }
+}
+
+simulated function SpawnSpillBullets()
+{
+    local int i;
+
+    for (i = 0; i < SpillBulletBones.Length; ++i)
+    {
+        SpillBullets[i] = Spawn(BeltBulletClass, self);
+        AttachToBone(SpillBullets[i], SpillBulletBones[i]);
+    }
+}
+
+simulated event BredaMagazineOpened()
+{
+    // Hide the 2 bullets that end up on the other side of the feed lip.
+    BredaShowSpillBulletBones();
+
+    // Reduce the ammo count so that we end up with an even amount of rounds in the mag.
+    // This will ensure that there is a round pressed up against the feed lip.
+    if (AmmoCharge[0] % 2 != 0)
+    {
+        AmmoCharge[0] -= 1;
+    }
+
+    UpdateMagazineAnimations(GetMagazinePercent());
+    UpdateAmmoBelt();
+    HideProxySpillBullets();
+}
+
+simulated event BredaClipInserted()
+{
+    local float F;
+
+    F = Min(1.0, float(NextMagAmmoCount) / MaxAmmo(0));
+
+    Log("BredaClipInserted" @ NextMagAmmoCount @ F);
+
+    RenewAmmoBelt();
+    UpdateMagazineAnimations(F);
+}
+
+simulated event BredaShowSpillBulletBones()
+{
+    local int i, Count;
+
+    Count = Min(SpillBullets.Length, AmmoAmount(0));
+
+    for (i = 0; i < Count; ++i)
+    {
+        SpillBullets[i].SetDrawType(DT_StaticMesh);
+    }
+}
+
+simulated event BredaHideSpillBulletBones()
+{
+    local int i;
+
+    for (i = 0; i < SpillBullets.Length; ++i)
+    {
+        SpillBullets[i].SetDrawType(DT_None);
+    }
+}
 
 // TODO: make this a generic part of projectileweapon class
 simulated function ROIronSights()
@@ -14,6 +117,9 @@ simulated function ROIronSights()
 defaultproperties
 {
     MagazineAnimations(0)=(Channel=1,BoneName="magazine_internals",Animation="magazine_animation")
+
+    SpillBulletBones(0)="MAGAZINE_BULLET_SPILL_01"
+    SpillBulletBones(1)="MAGAZINE_BULLET_SPILL_02"
 
     BeltBulletClass=class'DH_Weapons.DH_Breda30FPAmmoRound'
     MGBeltBones(0)="MAGAZINE_BULLET_01"
@@ -36,8 +142,6 @@ defaultproperties
     MGBeltBones(17)="MAGAZINE_BULLET_18"
     MGBeltBones(18)="MAGAZINE_BULLET_19"
     MGBeltBones(19)="MAGAZINE_BULLET_20"
-
-    // TODO: the bullet code from the MGs needs to be moved to DHProjectileWeapon as well.
 
     ItemName="Breda modello 30"
     TeamIndex=0 // TODO: weapons "belonging" to teams is a flawed concept with the introduction of the Italians.
@@ -70,6 +174,8 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="reload"
     BipodMagPartialReloadAnim="reload"
+
+    UnloadedMunitionsPolicy=UMP_Consolidate
 
     MagEmptyReloadAnims(0)="reload"
     MagPartialReloadAnims(0)="reload"
