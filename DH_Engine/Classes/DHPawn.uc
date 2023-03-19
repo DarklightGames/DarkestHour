@@ -6845,10 +6845,10 @@ exec function GimmeSupplies()
     switch (GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            SpawnVehicle("DH_OpelBlitzSupport");
+            SpawnVehicle("opellogi");
             break;
         case ALLIES_TEAM_INDEX:
-            SpawnVehicle("DH_GMCTruckSupport");
+            SpawnVehicle("gmclogi");
             break;
     }
 }
