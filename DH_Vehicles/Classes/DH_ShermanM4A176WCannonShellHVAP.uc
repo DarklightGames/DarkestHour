@@ -18,21 +18,8 @@ defaultproperties
     HullFireChance=0.31
     EngineFireChance=0.61
 
-<<<<<<< Updated upstream
-    //Penetration
-    DHPenetrationTable(0)=24.6
-    DHPenetrationTable(1)=24.0
-    DHPenetrationTable(2)=23.3
-    DHPenetrationTable(3)=22.6 
-    DHPenetrationTable(4)=21.9 
-    DHPenetrationTable(5)=21.3
-    DHPenetrationTable(6)=20.7
-    DHPenetrationTable(7)=20.0
-    DHPenetrationTable(8)=19.3
-    DHPenetrationTable(9)=18.5 
-    DHPenetrationTable(10)=17.9 
-=======
-     //Penetration
+
+  //Penetration
     DHPenetrationTable(0)=24.0
     DHPenetrationTable(1)=22.9
     DHPenetrationTable(2)=21.3
@@ -44,5 +31,4 @@ defaultproperties
     DHPenetrationTable(8)=12.4
     DHPenetrationTable(9)=10.1
     DHPenetrationTable(10)=7.6
->>>>>>> Stashed changes
 }
