@@ -15,6 +15,7 @@ defaultproperties
     FireRate=0.14 // ~500 rpm
     FAProjSpawnOffset=(X=-28.0)
 
+    AddedPitch=15.0
     Spread=70.0
     HipSpreadModifier=6.0
 
