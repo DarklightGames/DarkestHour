@@ -59,7 +59,7 @@ simulated function SpawnSpillBullets()
 
 simulated event BredaMagazineOpened()
 {
-    // Hide the 2 bullets that end up on the other side of the feed lip.
+    // Show the spill bullets.
     BredaShowSpillBulletBones();
 
     // Reduce the ammo count so that we end up with an even amount of rounds in the mag.
@@ -70,8 +70,11 @@ simulated event BredaMagazineOpened()
     }
 
     UpdateMagazineAnimations(GetMagazinePercent());
+
+    // Hide the 2 bullets that end up on the other side of the feed lip.
+    AmmoCharge[0] -= 2;
+
     UpdateAmmoBelt();
-    HideProxySpillBullets();
 }
 
 simulated event BredaClipInserted()
@@ -140,8 +143,8 @@ defaultproperties
     MGBeltBones(15)="MAGAZINE_BULLET_16"
     MGBeltBones(16)="MAGAZINE_BULLET_17"
     MGBeltBones(17)="MAGAZINE_BULLET_18"
-    MGBeltBones(18)="MAGAZINE_BULLET_19"
-    MGBeltBones(19)="MAGAZINE_BULLET_20"
+    //MGBeltBones(18)="MAGAZINE_BULLET_19"
+    //MGBeltBones(19)="MAGAZINE_BULLET_20"
 
     ItemName="Breda modello 30"
     TeamIndex=0 // TODO: weapons "belonging" to teams is a flawed concept with the introduction of the Italians.
