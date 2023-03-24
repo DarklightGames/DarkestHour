@@ -1068,8 +1068,6 @@ function bool IsArtilleryTargetValid(vector ArtilleryLocation, vector HitNormal)
     local DHVolumeTest VT;
     local bool         bValidTarget;
 
-    Log("HitNormal" @ HitNormal);
-
     if (HitNormal == vect(0, 0, 0) || HitNormal.Z == -1)
     {
         // Do not allow marking beyond the fog distance or the roof of the level.
@@ -7273,10 +7271,10 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal)
+simulated function bool GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
 {
     local vector TraceStart, TraceEnd;
-    local Actor A, HitActor;
+    local Actor A;
     local Actor PawnVehicleBase;
 
     if (Pawn == none)

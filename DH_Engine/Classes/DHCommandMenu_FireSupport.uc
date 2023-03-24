@@ -117,9 +117,10 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
 
 function Tick()
 {
-    local DHPlayer                PC;
-    local vector                  HitLocation, HitNormal;
-    local DHGameReplicationInfo   GRI;
+    local DHPlayer              PC;
+    local vector                HitLocation, HitNormal;
+    local DHGameReplicationInfo GRI;
+    local Actor                 HitActor;
 
     PC = GetPlayerController();
 
@@ -145,10 +146,24 @@ function Tick()
 
     if (PC.SpottingMarker != none)
     {
-        PC.GetEyeTraceLocation(HitLocation, HitNormal);
+        PC.GetEyeTraceLocation(HitLocation, HitNormal, HitActor);
+
         PC.SpottingMarker.SetLocation(HitLocation);
         PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
-        bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation, HitNormal);
+
+        if (HitActor != none)
+        {
+            bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation, HitNormal);
+
+            if (bIsArtilleryTargetValid)
+            {
+                if (VSize(PC.Pawn.Location - HitLocation) > PC.Pawn.Region.Zone.DistanceFogEnd)
+                {
+                    // Don't allow marking beyond the fog distance.
+                    bIsArtilleryTargetValid = false;
+                }
+            }
+        }
 
         if (bIsArtilleryTargetValid)
         {
