@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHShellImpactDamageType_Artillery extends DHShellImpactDamageType
+class DHShellHEImpactDamageType_Artillery extends DHShellHEImpactDamageType
     abstract;
 
 defaultproperties
