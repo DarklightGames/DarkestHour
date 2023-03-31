@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
@@ -23,7 +23,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -31,14 +31,14 @@ function OnSelect(int Index, vector Location)
 
     PC = GetPlayerController();
 
-    if (PC == none || Index < 0 || Index >= Options.Length)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    switch (Index)
+    switch (OptionIndex)
     {
         case 0: // Rally Point
             PC.ServerSquadSpawnRallyPoint();
@@ -54,7 +54,7 @@ function OnSelect(int Index, vector Location)
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
 
-            PC.ServerSquadSignal(class'DHSquadSignal_Fire', Location);  // TODO: project off of the location a bit
+            PC.ServerSignal(class'DHSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2:
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");
@@ -83,7 +83,7 @@ function OnSelect(int Index, vector Location)
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSquadSignal(class'DHSquadSignal_Move', Location);
+            PC.ServerSignal(class'DHSignal_Move', Location);
             break;
         default:
             break;

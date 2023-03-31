@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MG34Attachment extends DHHighROFWeaponAttachment;
@@ -101,10 +101,10 @@ defaultproperties
     PA_IdleDeployedAnim="stand_idleiron_mg34"
     PA_IdleDeployedProneAnim="prone_idle_mg34"
     PA_IdleDeployedCrouchAnim="crouch_idleiron_mg34"
-    PA_ReloadAnim="stand_reloadhalf_mg34"
-    PA_ProneReloadAnim="prone_reloadhalf_mg34"
-    PA_ReloadEmptyAnim="stand_reloadempty_mg34"
-    PA_ProneReloadEmptyAnim="prone_reloadempty_mg34"
+    PA_ReloadAnim="stand_reload_mg34"
+    PA_ProneReloadAnim="prone_reload_mg34"
+    PA_ReloadEmptyAnim="stand_reload_mg34"
+    PA_ProneReloadEmptyAnim="prone_reload_mg34"
     PA_ProneIdleRestAnim="prone_idle_mg34"
     PA_StandWeaponDeployAnim="stand_idleiron_mg34"
     PA_ProneWeaponDeployAnim="prone_idle_mg34"

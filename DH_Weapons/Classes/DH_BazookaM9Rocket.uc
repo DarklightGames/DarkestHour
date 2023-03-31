@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // M6A3 Rocket
 //==============================================================================
@@ -25,15 +25,19 @@ defaultproperties
     bHasTracer=true // represents glow of burnt out rocket motor
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.m6a3_world'
 
-    //Penetration
-    // https://forum.axishistory.com/viewtopic.php?p=1609910&sid=1f9a38054c5e7bf8b3bf9e088c494877#p1609910
-    DHPenetrationTable(0)=10.2
-    DHPenetrationTable(1)=10.2
-    DHPenetrationTable(2)=10.2
-    DHPenetrationTable(3)=10.2
-    DHPenetrationTable(4)=10.2
-    DHPenetrationTable(5)=10.2
-    DHPenetrationTable(6)=10.2
+    // Penetration
+    // Many sources say this could penetrate 101.6mm (4") of armor at 30 degrees AOI.
+    // Most of the US sources assume a 30 degree AOI in testing.
+    // Therefore the effective penetration value against at a straight target is 117mm.
+    // http://www.inert-ord.net/atrkts/bazoo/
+    // https://en.wikipedia.org/wiki/Bazooka#Field_experience_induced_changes
+    DHPenetrationTable(0)=11.7
+    DHPenetrationTable(1)=11.7
+    DHPenetrationTable(2)=11.7
+    DHPenetrationTable(3)=11.7
+    DHPenetrationTable(4)=11.7
+    DHPenetrationTable(5)=11.7
+    DHPenetrationTable(6)=11.7
 
     //Sounds
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'

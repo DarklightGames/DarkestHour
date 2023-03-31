@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Kar98ScopedWeapon extends DHBoltActionWeapon;
@@ -22,18 +22,18 @@ defaultproperties
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
 	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
-    DisplayFOV=83.0
-    IronSightDisplayFOV=41.0
-    IronSightDisplayFOVHigh=41.0
+    DisplayFOV=88.0
+    IronSightDisplayFOV=45.0
+    IronSightDisplayFOVHigh=45.0
     PlayerFOVZoom=15.0
-    ScopePortalFOV=8      //very hard to find information on ZF39's field of view, but some places mention 160mm which is roughly 9 degrees
-    ScopePortalFOVHigh=8  //however, it is made lower to make scope appear a bit further from the camera, for better visual appearance
+    ScopePortalFOV=7.1     //very hard to find information on ZF39's field of view, + it wasnt a single scope but rather a variety of similar scopes
+    ScopePortalFOVHigh=7.1 //i managed to find that it was approximately ~6.5 degrees (varied between manufacturers)
     LensMaterialID=5
 
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
 
-    ScopeOverlaySize=0.62
+    ScopeOverlaySize=0.43
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

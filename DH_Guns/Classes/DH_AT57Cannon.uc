@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_AT57Cannon extends DHATGunCannon;
@@ -26,7 +26,6 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
 
@@ -35,8 +34,8 @@ defaultproperties
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=15
     SecondarySpread=0.00125
 
     // Weapon fire
@@ -51,4 +50,6 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+
+    ResupplyInterval=3.0
 }

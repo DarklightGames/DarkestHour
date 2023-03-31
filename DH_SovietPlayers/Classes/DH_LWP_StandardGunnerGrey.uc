@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LWP_StandardGunnerGrey extends DHPOLMachineGunnerRoles;
@@ -14,4 +14,6 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_LWPHelmet'
 
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.LWP_grey_sleeves'
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
 }

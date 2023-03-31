@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MN9130ScopedAttachment extends DHWeaponAttachment;
@@ -27,6 +27,8 @@ defaultproperties
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
+    
+    MuzzleBoneName="tipnew"
 
     WA_Idle="idle_nagant9130scoped"
     WA_Fire="idle_nagant9130scoped"

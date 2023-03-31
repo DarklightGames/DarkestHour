@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_RKKF_TeloAntiTank extends DHSOVAntiTankRoles; //wears helmet and no naval cap, so doesnt need to be separated on fleets for an appropriate cap

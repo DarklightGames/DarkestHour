@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ZB30Attachment extends DHWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_ZB30Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.ZB30'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon' //change
+    MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.ZB30'
     //MenuImage=Texture'CCInterfaceArt_tex.Menu_weapons.ZB30'
     
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BrenFire extends DHAutomaticFire;
@@ -19,7 +19,7 @@ defaultproperties
     HipSpreadModifier=6.0
 
     // Recoil
-    RecoilRate=0.075
+    RecoilRate=0.05
     MaxVerticalRecoilAngle=580
     MaxHorizontalRecoilAngle=230
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=2.0,OutVal=0.8),(InVal=3.0,OutVal=1.0),(InVal=6.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))

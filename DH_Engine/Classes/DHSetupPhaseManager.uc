@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSetupPhaseManager extends Actor
@@ -23,8 +23,6 @@ var() bool              bScaleUpPhaseEndReinforcements;     // Scales the reinfo
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
 
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
-
-var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
 
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var bool                bPlayersOpenedMenus;
@@ -139,6 +137,8 @@ auto state Timing
         local DarkestHourGame G;
         local DHGameReplicationInfo GRI;
         local float ScaleUpModifier;
+        local Sound TeamRoundStartSounds[2];
+        local DH_LevelInfo LI;
 
         TimerCount = 0;
 
@@ -242,6 +242,11 @@ auto state Timing
         }
 
         // Announce the end of the phase
+        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+        TeamRoundStartSounds[AXIS_TEAM_INDEX] = LI.GetTeamNationClass(AXIS_TEAM_INDEX).default.RoundStartSound;
+        TeamRoundStartSounds[ALLIES_TEAM_INDEX] = LI.GetTeamNationClass(ALLIES_TEAM_INDEX).default.RoundStartSound;
+
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             PC = PlayerController(C);
@@ -249,7 +254,7 @@ auto state Timing
             if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
                 PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', 1);
-                PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
+                PC.PlayAnnouncement(TeamRoundStartSounds[PC.GetTeamNum()], 1, true);
             }
         }
 
@@ -281,8 +286,6 @@ defaultproperties
 {
     PhaseBoundaryTag="SetupBoundaries"
     PhaseEndReinforcements=(AxisReinforcements=18,AlliesReinforcements=18)
-    PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
-    PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     bSkipPreStart=true
     bScaleUpPhaseEndReinforcements=true
     SetupPhaseDuration=60

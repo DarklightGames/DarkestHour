@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // WARNING: THIS WHOLE CLASS IS A HACK, REMOVE IT WHEN WE MOVE SINGLEs RELOADS
 // TO THE MAIN PROJECTILE WEAPON CLASS!

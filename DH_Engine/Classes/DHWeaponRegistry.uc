@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -153,5 +153,11 @@ defaultproperties
     Records(93)=(ClassName="DH_Weapons.DH_MP3008Weapon",WeaponNames=("mp3008"))
     Records(94)=(ClassName="DH_Weapons.DH_GeratPWeapon",WeaponNames=("geratp"))
     Records(95)=(ClassName="DH_Weapons.DH_Stg44ScopedWeapon",WeaponNames=("stg44scoped", "mp44scoped"))
-    Records(96)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
+    Records(96)=(ClassName="DH_Weapons.DH_MN9130ScopedPEWeapon",WeaponNames=("mosinscopedpe","scopedmosinpe","scopedmosinearly"))
+    Records(97)=(ClassName="DH_Weapons.DH_Nagant1895BramitWeapon",WeaponNames=("bramit"))
+    Records(98)=(ClassName="DH_Equipment.DHTrenchMaceItem",WeaponNames=("trenchmace"))
+    Records(99)=(ClassName="DH_Equipment.DHTrenchMaceItem_Bone",WeaponNames=("bonemace"))
+    Records(100)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
+    Records(101)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
+    Records(102)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SdKfz2519DCannon extends DHVehicleCannon;
@@ -30,7 +30,6 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_SdKfz2519CannonShellHEAT'
     TertiaryProjectileClass=class'DH_SdKfz2519CannonShellSmoke'

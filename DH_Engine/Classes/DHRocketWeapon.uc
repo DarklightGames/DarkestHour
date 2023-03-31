@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRocketWeapon extends DHProjectileWeapon
@@ -53,7 +53,7 @@ exec simulated function DebugAssistReloading()
 // Overridden to cycle the weapon aiming range
 exec simulated function SwitchFireMode()
 {
-    if (bUsingSights || IsInstigatorBipodDeployed() && !IsBusy())
+    if (!IsBusy() && (bUsingSights || IsInstigatorBipodDeployed()))
     {
         RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeding last range setting
 

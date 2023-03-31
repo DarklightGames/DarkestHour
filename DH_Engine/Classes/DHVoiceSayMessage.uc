@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVoiceSayMessage extends DHLocalMessage
@@ -17,7 +17,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    ConsoleColor = GetDHConsoleColor(RelatedPRI_1, 0, false);
+    ConsoleColor = GetDHConsoleColor(RelatedPRI_1, false);
 
     if (myHUD != none && myHUD.PlayerOwner != none)
     {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_Spotting extends DHCommandMenu;
@@ -30,7 +30,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
@@ -57,6 +57,8 @@ function OnSelect(int OptionIndex, vector Location)
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
     PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
+    
+    PC.ServerSignal(class'DHSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
 }

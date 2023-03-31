@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_CSAZ_BritcoatGunner extends DHCSMachineGunnerRoles;
@@ -17,4 +17,6 @@ defaultproperties
     HeadgearProbabilities(0)=0.8
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.1
+    
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27LateWeapon')
 }

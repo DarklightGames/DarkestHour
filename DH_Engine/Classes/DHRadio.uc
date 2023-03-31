@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -362,38 +362,7 @@ simulated function NotifySelected(Pawn User)
 // and results in nonsense like this needing to be coded up.
 function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
 {
-    local string VoicePackClassName;
-
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            VoicePackClassName = "DH_GerPlayers.DHGerVoice";
-            break;
-        case ALLIES_TEAM_INDEX:
-            switch (LI.AlliedNation)
-            {
-                case NATION_USA:
-                    VoicePackClassName = "DH_USPlayers.DHUSVoice";
-                    break;
-                case NATION_Canada:
-                    VoicePackClassName = "DH_BritishPlayers.DHCanadianVoice";
-                    break;
-                case NATION_Britain:
-                    VoicePackClassName = "DH_BritishPlayers.DHBritishVoice";
-                    break;
-                case NATION_USSR:
-                    VoicePackClassName = "DH_SovietPlayers.DHSovietVoice";
-                    break;
-                case NATION_Poland:
-                    VoicePackClassName = "DH_SovietPlayers.DHPolishVoice";
-                    break;
-                case NATION_Czechoslovakia:
-                    VoicePackClassName = "DH_SovietPlayers.DHCzechVoice";
-                    break;
-            }
-    }
-
-    return class<DHVoicePack>(DynamicLoadObject(VoicePackClassName, class'Class'));
+    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass;
 }
 
 function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)

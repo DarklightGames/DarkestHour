@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HetzerCannon extends DHVehicleCannon;
@@ -66,7 +66,6 @@ defaultproperties
     YawEndConstraint=3000.000000
     PitchBone="gun_pitch"
     WeaponFireOffset=34.200001
-    ProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
     CustomPitchUpLimit=1820
     CustomPitchDownLimit=64444
     MaxPositiveYaw=2000
