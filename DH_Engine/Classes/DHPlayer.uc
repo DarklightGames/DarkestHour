@@ -7405,6 +7405,8 @@ simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNor
     {
         HitLocation = TraceEnd;
     }
+
+    return HitActor != none;
 }
 
 simulated function bool CanUseFireSupportMenu()
