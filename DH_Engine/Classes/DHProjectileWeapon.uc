@@ -560,7 +560,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || (((bUsingSights || IsInstigatorBipodDeployed()) && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
+    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || ((bUsingSights || IsInstigatorBipodDeployed()) && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
