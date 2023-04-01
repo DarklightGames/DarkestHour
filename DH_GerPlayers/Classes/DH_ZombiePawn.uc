@@ -35,4 +35,6 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
 
     bAlwaysSeverBodyparts=true
+
+    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
 }

@@ -41,7 +41,6 @@ function int GetTeamIndex()
 
 function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
-    // @Basnett what is this doing? you'll have to explain to Theel how you "delegate" functions
     if (CSA != none)
     {
         NetUpdateTime = Level.TimeSeconds - 1.0;
@@ -50,6 +49,8 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 
 function CreateSupplyAttachment()
 {
+    DestroySupplyAttachment();
+
     // Spawn the supply attachment and set up the delegates.
     // We hide the supply attachment since we are going to handle the visualization through the the construction.
     SupplyAttachment = Spawn(SupplyAttachmentClass, self);

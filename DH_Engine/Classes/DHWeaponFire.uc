@@ -75,6 +75,22 @@ simulated function InitEffects()
     }
 }
 
+event ModeDoFire()
+{
+    local float Theta;
+    local DHProjectileWeapon ProjectileWeapon;
+
+    super.ModeDoFire();
+
+    ProjectileWeapon = DHProjectileWeapon(Weapon);
+
+    if (ProjectileWeapon != none)
+    {
+        ProjectileWeapon.UpdateMagazineAnimations(ProjectileWeapon.GetMagazinePercent());
+        ProjectileWeapon.UpdateAmmoBelt();
+    }
+}
+
 // New helper function to check whether player is hip firing
 // Allows easy subclassing, which avoids re-stating long functions just to change bUsingSights and/or bBipodDeployed
 simulated function bool IsPlayerHipFiring()

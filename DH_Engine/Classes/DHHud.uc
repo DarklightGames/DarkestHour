@@ -4197,24 +4197,34 @@ function DrawObjectives(Canvas C)
 {
 }
 
-function DrawLocationHits(Canvas C, ROPawn P)
+// Returns the health figure class.
+function class<DHHealthFigure> GetHealthFigureClass()
 {
-    local int          Team, i;
-    local bool         bNewDrawHits;
-    local SpriteWidget Widget;
-    local DH_LevelInfo LI;
-    local class<DHHealthFigure> HealthFigureClass;
+    local DHPawn P;
 
-    if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
+    P = DHPawn(PawnOwner);
+
+    if (P == none)
     {
-        Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
+        return none;
     }
 
-    LI = class'DH_LevelInfo'.static.GetInstance(PawnOwner.Level);
+    return P.HealthFigureClass;
+}
 
-    if (LI != none)
+function DrawLocationHits(Canvas C, ROPawn P)
+{
+    local int          i;
+    local bool         bNewDrawHits;
+    local SpriteWidget Widget;
+    local class<DHHealthFigure> HealthFigureClass;
+    local DHPawn        DHP;
+
+    HealthFigureClass = GetHealthFigureClass();
+
+    if (HealthFigureClass == none)
     {
-        HealthFigureClass = LI.GetTeamNationClass(Team).default.HealthFigureClass;
+        return;
     }
 
     for (i = 0; i < arraycount(P.DamageList); ++i)
@@ -4241,7 +4251,6 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
-    local DH_LevelInfo LI;
     local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
@@ -4271,12 +4280,11 @@ function UpdateHud()
                 StanceIcon.WidgetTexture = StanceStanding;
             }
         }
+        
+        HealthFigureClass = GetHealthFigureClass();
 
-        if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
+        if (HealthFigureClass != none)
         {
-            LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
-            HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
-            
             HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
             HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 
