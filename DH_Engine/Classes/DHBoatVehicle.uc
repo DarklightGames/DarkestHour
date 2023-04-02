@@ -6,7 +6,7 @@
 class DHBoatVehicle extends DHVehicle
     abstract;
 
-var     sound   WashSound;
+var     Sound   WashSound;
 
 var     name    DestroyedAnimName;
 
