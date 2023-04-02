@@ -420,9 +420,19 @@ private function UpdateSquadLeaderDraws()
                 else
                 {
                     // The squad is big enough to not be disbanded, so someone
-                    // in the squad is going to randomly be assigned the leader.
+                    // in the squad (who isn't the squad assistant) is going to
+                    // randomly be assigned the leader.
                     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
                     GetMembers(TeamIndex, SquadIndex, Volunteers);
+
+                    for (i = 0; i < Volunteers.Length; ++i)
+                    {
+                        if (IsSquadAssistant(Volunteers[i], TeamIndex, SquadIndex))
+                        {
+                            Volunteers.Remove(i, 1);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -434,6 +444,12 @@ private function UpdateSquadLeaderDraws()
 
             // New squad leader has been selected, remove draw from the list.
             SquadLeaderDraws.Remove(i, 1);
+
+            // If somehow there are no volunteers (e.g., ASL is the only one left in the squad and didn't volunteer), just disband the squad.
+            if (Volunteers.Length == 0)
+            {
+                DisbandSquad(TeamIndex, SquadIndex);
+            }
         }
     }
 }
@@ -867,29 +883,18 @@ private function OnSquadLeaderLeftSquad(int TeamIndex, int SquadIndex)
 
     ClearSquadMergeRequests(TeamIndex, SquadIndex);
 
-    Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
+    GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
 
-    if (Assistant != none)
+    if (Volunteers.Length > 0)
     {
-        // The squad has an assistant squad leader, so let's make them the
-        // new assistant squad leader.
-        CommandeerSquad(Assistant, TeamIndex, SquadIndex);
+        // There are volunteers, so let's make one of them the new
+        // squad leader without delay.
+        SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
     }
     else
     {
-        GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
-
-        if (Volunteers.Length > 0)
-        {
-            // There are volunteers, so let's make one of them the new
-            // squad leader without delay.
-            SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
-        }
-        else
-        {
-            // No volunteers, start a new squad leader draw.
-            StartSquadLeaderDraw(TeamIndex, SquadIndex);
-        }
+        // No volunteers, start a new squad leader draw.
+        StartSquadLeaderDraw(TeamIndex, SquadIndex);
     }
 }
 
