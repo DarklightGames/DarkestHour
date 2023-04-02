@@ -1848,6 +1848,12 @@ function UpdateSquads()
     {
         SetVisible(p_Squads.SquadComponents[j], false);
     }
+
+    // Update the background colors.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
+    }
 }
 
 static function SetEnabled(GUIComponent C, bool bEnabled)

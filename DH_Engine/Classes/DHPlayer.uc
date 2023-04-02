@@ -5348,6 +5348,12 @@ function ServerSquadVolunteerToAssist()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
 
+    if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
+    {
+        // Squad assistant already exists.
+        return;
+    }
+
     if (PRI == none || SLPRI == none)
     {
         return;
@@ -5355,17 +5361,6 @@ function ServerSquadVolunteerToAssist()
 
     SLPC = DHPlayer(SLPRI.Owner);
     SLBot = DHBot(SLPRI.Owner);
-
-    if (SLPC == none && SLBot == none)
-    {
-        return;
-    }
-
-    if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
-    {
-        // Squad assistant already exists.
-        return;
-    }
 
     if (SLPC != none)
     {
