@@ -39,22 +39,22 @@ defaultproperties
     CustomPitchDownLimit=64443
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellAPCR'
 
-    ProjectileDescriptions(0)="Mixed"
-    ProjectileDescriptions(1)="AP"
-    ProjectileDescriptions(2)="HE-T"
+    ProjectileDescriptions(0)="AP-T"
+    ProjectileDescriptions(1)="HE-T"
+    ProjectileDescriptions(2)="APCR-T"
 
-    nProjectileDescriptions(0)="PzGr.+Sprgr.39"
-    nProjectileDescriptions(1)="PzGr."
-    nProjectileDescriptions(2)="Sprgr.39"
+    nProjectileDescriptions(0)="Pzgr. L'spur"
+    nProjectileDescriptions(1)="Sprgr. L'spur"
+    nProjectileDescriptions(2)="Pzgr. 40 L'spur"
 
 
-    NumPrimaryMags=15
-    NumSecondaryMags=15
-    NumTertiaryMags=15
+    NumPrimaryMags=11
+    NumSecondaryMags=11
+    NumTertiaryMags=2
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=10
     InitialTertiaryAmmo=10
