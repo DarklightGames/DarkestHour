@@ -147,13 +147,26 @@ replication
         AxisNextRallyPointTimes, AlliesNextRallyPointTimes;
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local DH_LevelInfo LI;
+    local PlayerController PC;
 
     super.PostBeginPlay();
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    if (Role == ROLE_Authority)
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
+    else
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
 
     if (Role == ROLE_Authority)
     {
