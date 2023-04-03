@@ -117,6 +117,7 @@ var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
 var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
+var     bool                    bIgnoreSquadPromotionRequestPrompts;
 
 // Squad assistant volunteers
 var         bool                           bIgnoreSquadLeaderAssistantVolunteerPrompts;
@@ -225,6 +226,7 @@ replication
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
+        ClientReceiveSquadPromotionRequest,
         ClientTeamSurrenderResponse,
         ClientReceiveVotePrompt, ClientSetMapMarkerClassLock,
         ClientAddPersonalMapMarker;
@@ -5833,6 +5835,8 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
+    // TODO: prompt another player and see if they want to be SL.
+
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
@@ -6963,6 +6967,14 @@ function ServerDenySquadMergeRequest(int SquadMergeRequestID)
     }
 }
 
+function ServerDenySquadPromotionRequest(int SquadPromotionRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DenySquadPromotionRequest(self, SquadPromotionRequestID);
+    }
+}
+
 function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
 {
     if (bIgnoreSquadMergeRequestPrompts)
@@ -6976,6 +6988,20 @@ function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPl
     class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
+}
+
+function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string SenderPlayerName)
+{
+    if (bIgnoreSquadPromotionRequestPrompts)
+    {
+        ServerDenySquadPromotionRequest(SquadPromotionRequestID);
+        return;
+    }
+
+    class'DHSquadPromotionRequestInteraction'.default.SquadPromotionRequestID = SquadPromotionRequestID;
+    class'DHSquadPromotionRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadPromotionRequestInteraction", Player);
 }
 
 function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeRequestResult Result)

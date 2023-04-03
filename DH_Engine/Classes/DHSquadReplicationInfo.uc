@@ -75,6 +75,7 @@ struct SquadLeaderDraw
 };
 var array<SquadLeaderDraw>          SquadLeaderDraws;
 
+// Squads Bans
 struct SquadBan
 {
     var int TeamIndex;
@@ -83,6 +84,7 @@ struct SquadBan
 };
 var array<SquadBan>                 SquadBans;
 
+// Squad Merge Requests
 enum ESquadMergeRequestResult
 {
     RESULT_Throttled,
@@ -3031,6 +3033,16 @@ function int GetSquadMergeRequestIndexByID(int ID)
     }
 
     return -1;
+}
+
+function bool DenySquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    //
+}
+
+function bool AcceptSquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    // 
 }
 
 function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
