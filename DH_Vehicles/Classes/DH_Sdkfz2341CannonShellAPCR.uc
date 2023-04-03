@@ -65,7 +65,7 @@ defaultproperties
 
     //Gunsight adjustments
     MechanicalRanges(0)=(Range=0,RangeValue=-5.0)
-    MechanicalRanges(1)=(Range=100,RangeValue=10.0) //TODO: Update these for the new shell stats
+    MechanicalRanges(1)=(Range=100,RangeValue=10.0)
     MechanicalRanges(2)=(Range=200,RangeValue=14.0)
     MechanicalRanges(3)=(Range=300,RangeValue=19.0)
     MechanicalRanges(4)=(Range=400,RangeValue=26.0)

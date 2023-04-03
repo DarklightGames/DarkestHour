@@ -17,8 +17,8 @@ defaultproperties
     //Damage
     ImpactDamage=200
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=80.0 // 6.2g PETN
-    DamageRadius=482.0
+    Damage=110.0 // 6.2g PETN
+    DamageRadius=375.0
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.25
     EngineFireChance=0.35
