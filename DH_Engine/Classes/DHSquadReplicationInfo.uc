@@ -383,6 +383,62 @@ private function UpdateSquadRallyPoints()
     }
 }
 
+// Called when a squad leader draw has ended.
+private function OnSquadLeaderDrawEnded(SquadLeaderDraw SquadLeaderDraw)
+{
+    // Draw ended! Let's see who the new squad leader is.
+    local int i, TeamIndex, SquadIndex;
+    local array<DHPlayerReplicationInfo> Volunteers;
+
+    TeamIndex = SquadLeaderDraw.TeamIndex;
+    SquadIndex = SquadLeaderDraw.SquadIndex;
+
+    GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
+
+    if (Volunteers.Length == 0)
+    {
+        // There were no volunteers!
+        if (GetMemberCount(TeamIndex, SquadIndex) <= SQUAD_DISBAND_THRESHOLD)
+        {
+            // "Your squad has been disbanded because the squad is too
+            // small and no members volunteered to be squad leader."
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 67);
+            DisbandSquad(TeamIndex, SquadIndex);
+        }
+        else
+        {
+            // The squad is big enough to not be disbanded, so someone
+            // in the squad (who isn't the squad assistant) is going to
+            // randomly be assigned the leader.
+
+            // "No members volunteered to be squad leader."
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
+            GetMembers(TeamIndex, SquadIndex, Volunteers);
+
+            for (i = 0; i < Volunteers.Length; ++i)
+            {
+                if (IsSquadAssistant(Volunteers[i], TeamIndex, SquadIndex))
+                {
+                    Volunteers.Remove(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    // If the squad hasn't been disbanded, select the new squad leader.
+    if (IsSquadActive(TeamIndex, SquadIndex))
+    {
+        SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
+    }
+
+    // If somehow there are no volunteers (e.g., ASL is the only one left in the squad and didn't volunteer), just disband the squad.
+    if (Volunteers.Length == 0)
+    {
+        DisbandSquad(TeamIndex, SquadIndex);
+    }
+}
+
 // Handles logic for resolving squad leader draws.
 private function UpdateSquadLeaderDraws()
 {
@@ -404,52 +460,10 @@ private function UpdateSquadLeaderDraws()
 
         if (Level.Game.GameReplicationInfo.ElapsedTime >= SquadLeaderDraws[i].ExpirationTime)
         {
-            // Draw ended! Let's see who the new squad leader is.
-            GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
-
-            if (Volunteers.Length == 0)
-            {
-                // There were no volunteers!
-                if (GetMemberCount(TeamIndex, SquadIndex) <= SQUAD_DISBAND_THRESHOLD)
-                {
-                    // "Your squad has been disbanded because the squad is too
-                    // small and no members volunteered to be squad leader."
-                    BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 67);
-                    DisbandSquad(TeamIndex, SquadIndex);
-                }
-                else
-                {
-                    // The squad is big enough to not be disbanded, so someone
-                    // in the squad (who isn't the squad assistant) is going to
-                    // randomly be assigned the leader.
-                    BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
-                    GetMembers(TeamIndex, SquadIndex, Volunteers);
-
-                    for (i = 0; i < Volunteers.Length; ++i)
-                    {
-                        if (IsSquadAssistant(Volunteers[i], TeamIndex, SquadIndex))
-                        {
-                            Volunteers.Remove(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // If the squad hasn't been disbanded, select the new squad leader.
-            if (IsSquadActive(TeamIndex, SquadIndex))
-            {
-                SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
-            }
+            OnSquadLeaderDrawEnded(SquadLeaderDraws[i]);
 
             // New squad leader has been selected, remove draw from the list.
             SquadLeaderDraws.Remove(i, 1);
-
-            // If somehow there are no volunteers (e.g., ASL is the only one left in the squad and didn't volunteer), just disband the squad.
-            if (Volunteers.Length == 0)
-            {
-                DisbandSquad(TeamIndex, SquadIndex);
-            }
         }
     }
 }
