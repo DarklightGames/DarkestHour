@@ -17,7 +17,7 @@ defaultproperties
     //Damage
     ImpactDamage=200
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=110.0 // 6.2g PETN
+    Damage=80.0 // 6.2g PETN
     DamageRadius=375.0
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.25
@@ -39,7 +39,7 @@ defaultproperties
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 
-    BlurTime=3.0
+    BlurTime=1.9
     BlurEffectScalar=1.3
     PenetrationMag=110.0
 
@@ -62,7 +62,7 @@ defaultproperties
     MechanicalRanges(0)=(Range=0,RangeValue=-2.0)
     MechanicalRanges(1)=(Range=100,RangeValue=11.0)
     MechanicalRanges(2)=(Range=200,RangeValue=18.0)
-    MechanicalRanges(3)=(Range=300,RangeValue=25.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=26.0)
     MechanicalRanges(4)=(Range=400,RangeValue=35.0)
     MechanicalRanges(5)=(Range=500,RangeValue=42.0)
     MechanicalRanges(6)=(Range=600,RangeValue=52.0)
