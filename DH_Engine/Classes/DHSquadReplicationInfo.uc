@@ -2008,6 +2008,7 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints
 simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlayer PC)
 {
     local DHPawn P;
+    local DHGameReplicationInfo MyGRI;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local float ClosestBlockingRallyPointDistance, D;
     local int i;
@@ -2022,6 +2023,8 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     local array<DHConstruction> Constructions;
     local vector L;
 
+    MyGRI = GetGameReplicationInfo();
+
     // Rally points must be enabled.
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -2032,7 +2035,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     // Must be a squad leader
-    if (GRI == none || PRI == none || !PRI.IsSquadLeader())
+    if (MyGRI == none || PRI == none || !PRI.IsSquadLeader())
     {
         Result.Error.Type = ERROR_Fatal;
         return Result;
@@ -2048,7 +2051,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Determine whether or not we are in the danger zone.
-    bIsInFriendlyZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, class'UMath'.static.SwapFirstPair(PC.GetTeamNum()));
+    bIsInFriendlyZone = class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, class'UMath'.static.SwapFirstPair(PC.GetTeamNum()));
 
     if (bIsInFriendlyZone)
     {
@@ -2056,7 +2059,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
     else
     {
-        Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+        Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(MyGRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
 
         if (!bAllowRallyPointsBehindEnemyLines &&
             Result.bIsInDangerZone)
@@ -2104,11 +2107,11 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Cannot be inside of an uncontrolled objective.
-    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    for (i = 0; i < arraycount(MyGRI.DHObjectives); ++i)
     {
-        if (GRI.DHObjectives[i] != none &&
-            GRI.DHObjectives[i].ObjState != P.GetTeamNum() &&
-            GRI.DHObjectives[i].WithinArea(P))
+        if (MyGRI.DHObjectives[i] != none &&
+            MyGRI.DHObjectives[i].ObjState != P.GetTeamNum() &&
+            MyGRI.DHObjectives[i].WithinArea(P))
         {
             // "You cannot create a squad rally point inside an uncontrolled objective."
             Result.Error.Type = ERROR_InUncontrolledObjective;
@@ -2117,10 +2120,10 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Cannot place a rally point too soon after placing one recently.
-    if (GRI.ElapsedTime < GetSquadNextRallyPointTime(PC.GetTeamNum(), PC.GetSquadIndex()))
+    if (MyGRI.ElapsedTime < GetSquadNextRallyPointTime(PC.GetTeamNum(), PC.GetSquadIndex()))
     {
         Result.Error.Type = ERROR_TooSoon;
-        Result.Error.OptionalInt = Max(1, GetSquadNextRallyPointTime(PC.GetTeamNum(), PC.GetSquadIndex()) - GRI.ElapsedTime);
+        Result.Error.OptionalInt = Max(1, GetSquadNextRallyPointTime(PC.GetTeamNum(), PC.GetSquadIndex()) - MyGRI.ElapsedTime);
         return Result;
     }
 
