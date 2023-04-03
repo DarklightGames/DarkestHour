@@ -67,7 +67,7 @@ defaultproperties
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
     ChassisTorqueScale=0.4
-    bSpecialTankTurning=false
+    bSpecialTankTurning=true // Sd. Kfz. 251 had tank steering with the tracks braking if the steering wheel was fully turned
     TurnDamping=35.0
 
     // Physics wheels properties
@@ -84,18 +84,26 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=50.0,PointOffset=(X=120.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+	VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.000000,Y=0.0,Z=-35.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // fuel tank
     EngineDamageFromGrenadeModifier=0.05
     DamagedWheelSpeedFactor=0.4
-    DirectHEImpactDamageMult=8.0
-    ImpactWorldDamageMult=2.0
+    DirectHEImpactDamageMult=4.0
+    ImpactWorldDamageMult=2.0 // 2 before
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    bEnableHatchFires=false
-
+	bEnableHatchFires=true
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireAttachBone="body"
+    FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
+    EngineToHullFireChance=0.05 //Unlikely for a fire to spread
+    AmmoIgnitionProbability=35.00
+    HullFireDamagePer2Secs=2
+    FireDetonationChance=0.02
+	
     // Vehicle destruction
     ExplosionDamage=85.0
     ExplosionRadius=150.0

@@ -56,4 +56,7 @@ defaultproperties
     ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
     ReloadStages(3)=(Sound=none,Duration=1.63)
+	
+	FireEffectOffset=(X=-20.0,Y=0.0,Z=-30.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+	FireEffectScale=0.70
 }
