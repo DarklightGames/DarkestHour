@@ -157,10 +157,7 @@ simulated function PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    }
 
-    if (Role == ROLE_Authority)
-    {
         SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
         SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
 
