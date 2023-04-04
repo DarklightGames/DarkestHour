@@ -22,6 +22,9 @@ var automated   GUIImage            i_Locked;       // Show this when the squad 
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
+var Color DarkBackgroundColor;
+var Color LightBackgroundColor;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
@@ -146,6 +149,18 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
     }
 }
 
+function UpdateBackgroundColor(DHPlayerReplicationInfo PRI)
+{
+    if (SquadIndex == PRI.SquadIndex)
+    {
+        i_Background.ImageColor = default.LightBackgroundColor;
+    }
+    else
+    {
+        i_Background.ImageColor = default.DarkBackgroundColor;
+    }
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUIButton Name=LockSquadButton
@@ -180,7 +195,7 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
         Image=Texture'DH_GUI_tex.DeployMenu.squad_panel'
-        ImageColor=(R=255,G=255,B=255,A=255);
+        ImageColor=(R=192,G=192,B=192,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Stretched
         bBoundToParent=true
@@ -276,4 +291,7 @@ defaultproperties
     b_JoinSquad=JoinSquadButton
 
     OnShow=InternalOnShow
+    
+    DarkBackgroundColor=(R=128,G=128,B=128,A=255)
+    LightBackgroundColor=(R=255,G=255,B=255,A=255)
 }

@@ -5340,6 +5340,7 @@ function ServerSquadVolunteerToAssist()
     local int TeamIndex, SquadIndex;
     local DHPlayerReplicationInfo PRI, SLPRI;
     local DHPlayer SLPC;
+    local DHBot SLBot;
 
     TeamIndex = GetTeamNum();
     SquadIndex = GetSquadIndex();
@@ -5347,25 +5348,30 @@ function ServerSquadVolunteerToAssist()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
 
-    if (PRI == none || SLPRI == none)
-    {
-        return;
-    }
-
-    SLPC = DHPlayer(SLPRI.Owner);
-
-    if (SLPC == none)
-    {
-        return;
-    }
-
     if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
     {
         // Squad assistant already exists.
         return;
     }
 
-    SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    if (PRI == none || SLPRI == none)
+    {
+        return;
+    }
+
+    SLPC = DHPlayer(SLPRI.Owner);
+    SLBot = DHBot(SLPRI.Owner);
+
+    if (SLPC != none)
+    {
+        // Prompt the squad leader with the player's request to become the assistant.
+        SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    }
+    else if (SLBot != none)
+    {
+        // Bot auto-approves the new assistant.
+        SquadReplicationInfo.SetAssistantSquadLeader(TeamIndex, SquadIndex, PRI);
+    }
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
