@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SdKfz251_22Transport extends DH_Sdkfz251Transport;
@@ -27,6 +27,7 @@ defaultproperties
     HealthMax=525.0
     EngineHealth=300
     bIsApc=false
+    bMustBeTankCommander=true
 
     //EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     //^ "unknown property"

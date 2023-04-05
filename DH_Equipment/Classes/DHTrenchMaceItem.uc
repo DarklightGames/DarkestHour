@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTrenchMaceItem extends DHWeapon;
@@ -69,7 +69,7 @@ defaultproperties
 
     AttachmentClass=class'DHTrenchMaceAttachment'
     Mesh=SkeletalMesh'DH_Halloween_anm.trenchmace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture''
+    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture'
     //HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.US_shovel_s'
     //bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=2

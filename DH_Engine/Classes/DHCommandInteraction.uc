@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This interaction displays configuable radial menus (DHCommandMenu) with up to
 // 8 different options.
@@ -313,7 +313,7 @@ function PostRender(Canvas C)
 {
     local int i, OptionIndex;
     local float Theta, ArcLength;
-    local float CenterX, CenterY, X, Y, XL, YL, U, V, AspectRatio, XL2, YL2;
+    local float CenterX, CenterY, X, Y, XL, YL, AspectRatio, XL2, YL2;
     local DHCommandMenu Menu;
     local bool bIsOptionDisabled;
     local DHCommandMenu.OptionRenderInfo ORI;
@@ -533,7 +533,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                         if (SelectedIndex >= 0)
                         {
                             PC.GetEyeTraceLocation(HitLocation, HitNormal);
-                            OnSelect(SelectedIndex, HitLocation);
+                            OnSelect(SelectedIndex, HitLocation, HitNormal);
                         }
 
                         Hide();
@@ -552,7 +552,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // key, so this will do for now.
                 case IK_LeftMouse:
                     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-                    OnSelect(SelectedIndex, HitLocation);
+                    OnSelect(SelectedIndex, HitLocation, HitNormal);
 
                     return true;
                 case IK_RightMouse:
@@ -570,7 +570,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function OnSelect(int OptionIndex, optional vector Location)
+function OnSelect(int OptionIndex, optional vector Location, optional vector HitNormal)
 {
     local DHCommandMenu Menu;
 
@@ -581,7 +581,7 @@ function OnSelect(int OptionIndex, optional vector Location)
         return;
     }
 
-    Menu.OnSelect(OptionIndex, Location);
+    Menu.OnSelect(OptionIndex, Location, HitNormal);
 
     PlaySound(SelectSound);
 }

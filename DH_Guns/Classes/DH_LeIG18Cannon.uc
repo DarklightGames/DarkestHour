@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LeIG18Cannon extends DHATGunCannon;
@@ -32,7 +32,6 @@ defaultproperties
     nProjectileDescriptions(0)="Igr.38 Sprgr"
     nProjectileDescriptions(1)="Igr.38 HL/A"
 
-    ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
     InitialPrimaryAmmo=30

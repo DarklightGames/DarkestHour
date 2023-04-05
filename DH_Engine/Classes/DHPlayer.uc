@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -104,6 +104,7 @@ var     bool                    bSpawnParametersInvalidated;
 var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
                                                             // it resets whenever an objective is taken
 // Weapon locking (punishment for spawn killing)
+var     float                   LastTeamKillTimeSeconds;    // the last time this player got a team-kill
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
 var     int                     PendingWeaponLockSeconds;   // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
 var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
@@ -1062,10 +1063,16 @@ function ServerSaveArtillerySupportSquadIndex(int Index)
 }
 
 // This function checks if the player can call artillery on the selected target.
-function bool IsArtilleryTargetValid(vector ArtilleryLocation)
+function bool IsArtilleryTargetValid(vector ArtilleryLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
+
+    if (HitNormal == vect(0, 0, 0) || HitNormal.Z == -1)
+    {
+        // Do not allow marking beyond the fog distance or the roof of the level.
+        return false;
+    }
 
     VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
 
@@ -1124,6 +1131,14 @@ simulated function bool IsASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
 }
 
+simulated function bool HasLimitedRole()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+    
+    return RI != none && RI.IsLimited();
+}
 
 // Modified to use any distance fog setting for the zone we're in
 simulated function float GetMaxViewDistance()
@@ -5325,6 +5340,7 @@ function ServerSquadVolunteerToAssist()
     local int TeamIndex, SquadIndex;
     local DHPlayerReplicationInfo PRI, SLPRI;
     local DHPlayer SLPC;
+    local DHBot SLBot;
 
     TeamIndex = GetTeamNum();
     SquadIndex = GetSquadIndex();
@@ -5332,25 +5348,30 @@ function ServerSquadVolunteerToAssist()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
 
-    if (PRI == none || SLPRI == none)
-    {
-        return;
-    }
-
-    SLPC = DHPlayer(SLPRI.Owner);
-
-    if (SLPC == none)
-    {
-        return;
-    }
-
     if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
     {
         // Squad assistant already exists.
         return;
     }
 
-    SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    if (PRI == none || SLPRI == none)
+    {
+        return;
+    }
+
+    SLPC = DHPlayer(SLPRI.Owner);
+    SLBot = DHBot(SLPRI.Owner);
+
+    if (SLPC != none)
+    {
+        // Prompt the squad leader with the player's request to become the assistant.
+        SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    }
+    else if (SLBot != none)
+    {
+        // Bot auto-approves the new assistant.
+        SquadReplicationInfo.SetAssistantSquadLeader(TeamIndex, SquadIndex, PRI);
+    }
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -6596,6 +6617,11 @@ state Spectating
 
 exec function GiveCamera()
 {
+    if (Level.NetMode != NM_Standalone && !PlayerReplicationInfo.bSilentAdmin && !PlayerReplicationInfo.bAdmin)
+    {
+        return;
+    }
+    
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
 }
 
@@ -6713,16 +6739,23 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 function ServerCancelArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 {
     local DHGameReplicationInfo GRI;
+    local DHArtillery ArtilleryActor;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor != none &&
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.bCanBeCancelled &&
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Requester == self)
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryMessage', 8,,, GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Class);
+    ArtilleryActor = GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor;
 
-        GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].ArtilleryActor.Destroy();
+    if (ArtilleryActor != none && ArtilleryActor.bCanBeCancelled && ArtilleryActor.Requester == self)
+    {
+        ReceiveLocalizedMessage(class'DHArtilleryMessage', 8,,, ArtilleryActor.Class);
+
+        if (!ArtilleryActor.HasStarted())
+        {
+            // Refund the strike back to the pool since the artillery hasn't started yet.
+            GRI.ArtilleryTypeInfos[ArtilleryTypeIndex].UsedCount--;
+        }
+
+        ArtilleryActor.Destroy();
     }
 }
 
@@ -7244,10 +7277,10 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal)
+simulated function bool GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
 {
     local vector TraceStart, TraceEnd;
-    local Actor A, HitActor;
+    local Actor A;
     local Actor PawnVehicleBase;
 
     if (Pawn == none)
@@ -7572,6 +7605,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     return RER_Enabled;
 }
 
+simulated exec function ListVehicles()
+{
+    class'DHVehicleRegistry'.static.DumpToLog(self);
+}
+
 defaultproperties
 {
     CorpseStayTime=15
@@ -7644,4 +7682,6 @@ defaultproperties
 
     MinIQToGrowHead=100
     ArtillerySupportSquadIndex=255
+
+    LastTeamKillTimeSeconds=-100000
 }

@@ -1,21 +1,24 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleMGPawn extends DHVehicleWeaponPawn
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-
 var     bool        bMustUnbuttonToReload;       // player must be unbuttoned to load MG
-var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
-var     vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
+var     Texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
+var     Vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
 var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
 var     float       FirstPersonGunShakeScale;    // scales up view shake on 1st person HUDOverlay view
 var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
+
+// HUD overlay animations
+var     name        HudOverlayIdleAnim;
+var     name        HudOverlayFireLoopAnim;
+var     name        HudOverlayFireEndAnim;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  VIEW/DISPLAY  ********************************  //
@@ -175,6 +178,16 @@ simulated function SetInitialViewRotation()
     }
 }
 
+function ActivateOverlay(bool bActive)
+{
+    super.ActivateOverlay(bActive);
+
+    if (HudOverlay != none && HudOverlay.HasAnim(HudOverlayIdleAnim))
+    {
+        HudOverlay.LoopAnim(HudOverlayIdleAnim);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ****************************** FIRING & RELOAD  *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -202,11 +215,67 @@ function Fire(optional float F)
     {
         super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
 
-        if (VehWep != none && VehWep.ReloadState != RL_ReadyToFire && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
+        if (VehWep != none)
         {
-            VehWep.DryFireEffects();
+            if (VehWep.ReloadState != RL_ReadyToFire && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
+            {
+                VehWep.DryFireEffects();
+            }
+            else if (VehWep.ReloadState == RL_ReadyToFire)
+            {
+                PlayHudOverlayFiring();
+            }
         }
     }
+}
+
+// Plays the fire-loop animation on the hud overlay.
+simulated function PlayHudOverlayFiring()
+{
+    if (HudOverlay != none && HudOverlay.HasAnim(HudOverlayFireLoopAnim))
+    {
+        HudOverlay.LoopAnim(HudOverlayFireLoopAnim);
+    }
+}
+
+// Plays the fire-end animation on the hud overlay.
+simulated function PlayHudOverlayStopFiring()
+{
+    if (HudOverlay != none)
+    {
+        if (HudOverlay.HasAnim(HudOverlayFireEndAnim))
+        {
+            HudOverlay.PlayAnim(HudOverlayFireEndAnim);
+        }
+        else if (HudOverlay.HasAnim(HudOverlayIdleAnim))
+        {
+            HudOverlay.LoopAnim(HudOverlayIdleAnim);
+        }
+    }
+}
+
+// Modified to play the stop-fire animation.
+function VehicleCeaseFire(bool bWasAltFire)
+{
+    super.VehicleCeaseFire(bWasAltFire);
+
+    PlayHudOverlayStopFiring();
+}
+
+// Modified to play the stop-fire animation.
+function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
+{
+    super.ClientOnlyVehicleCeaseFire(bWasAltFire);
+
+    PlayHudOverlayStopFiring();
+}
+
+// Modified to play the stop-fire animation.
+function ClientVehicleCeaseFire(bool bWasAltFire)
+{
+    super.ClientVehicleCeaseFire(bWasAltFire);
+
+    PlayHudOverlayStopFiring();
 }
 
 // Implemented to handle externally-mounted MGs where player must be unbuttoned to reload, & to prevent reloading if player using binoculars

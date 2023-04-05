@@ -1,23 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_DP27Weapon extends DHFastAutoWeapon;
 
 var name MagRotationBone;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
-    // rotation bone. Until this is fixed, we just hide the bullet for now.
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SetBoneScale(0, 0.0, 'Round');
-    }
-}
 
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
@@ -83,6 +71,13 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocallyControlled())
     {
+        // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
+        // rotation bone. Until this is fixed, we just hide the bullet for now.
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            SetBoneScale(0, 0.0, 'Round');
+        }
+
         UpdateMagRotation();
     }
 }

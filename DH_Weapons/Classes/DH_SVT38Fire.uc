@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SVT38Fire extends DHSemiAutoFire;
@@ -13,6 +13,12 @@ defaultproperties
     MaxVerticalRecoilAngle=510
     MaxHorizontalRecoilAngle=190
     FireRate=0.215
+
+    //Recoil
+    RecoilRate=0.06
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=4.0,OutVal=1.37),(InVal=12.0,OutVal=1.9),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
 
     FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
     FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'

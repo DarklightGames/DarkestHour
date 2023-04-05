@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
@@ -78,5 +78,6 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=1
 
     SpawnTimeInterval=10
+    SpawnKillProtectionTime=15
 }
 

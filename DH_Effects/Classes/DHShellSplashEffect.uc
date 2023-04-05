@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHShellSplashEffect extends Emitter; // substantially different was RO equivalent class 'TankAPHitWaterEffect'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Settings for use in a DHBipodPhysicsSimulation.
 // All angle in radians.
@@ -24,6 +24,7 @@ var float YawDeltaFactor;
 var Rotator BarrelBoneRotationOffset;
 var EAxis BarrelRollAxis;
 var EAxis BarrelPitchAxis;
+var EAxis BipodRollAxis;
 
 defaultproperties
 {
@@ -40,5 +41,6 @@ defaultproperties
     YawDeltaFactor=2.0
     BarrelRollAxis=AXIS_X
     BarrelPitchAxis=AXIS_Y
+    BipodRollAxis=AXIS_Y
     bLimitAngle=true
 }

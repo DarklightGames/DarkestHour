@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Pak40Cannon extends DHATGunCannon;
@@ -24,7 +24,6 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
     TertiaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellAPCR'

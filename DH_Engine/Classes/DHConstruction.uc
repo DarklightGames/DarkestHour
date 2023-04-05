@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -438,6 +438,11 @@ function RefundSupplies(int InstigatorTeamIndex)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
+    if (!WasCreatedByPlayer())
+    {
+        return;
+    }
+
     if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
     {
         // Sort the supply attachments by priority.
@@ -467,7 +472,7 @@ function TearDown(int InstigatorTeamIndex)
     {
         RefundSupplies(InstigatorTeamIndex);
     }
-    
+
     // Update the construction counts remaining in the GRI
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -1185,6 +1190,11 @@ function BreakMe()
 
 simulated function bool ShouldDestroyOnReset()
 {
+    return WasCreatedByPlayer();
+}
+
+simulated function bool WasCreatedByPlayer()
+{
     // Dynamically placed actors are owned by the LevelInfo. If it was placed
     // in-editor, it will not have an owner. This is a nice implicit way of
     // knowing if something was created in-editor or not.
@@ -1317,7 +1327,6 @@ defaultproperties
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
     bShouldSwitchToLastWeaponOnPlacement=true
-    bCanBePlacedInDangerZone=true
 
     // Stagnation
     bCanDieOfStagnation=true

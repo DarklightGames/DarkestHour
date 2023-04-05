@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_LoneWolf extends DHCommandMenu;
 
 var localized string AutoJoinSquadDisabledText;
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
 

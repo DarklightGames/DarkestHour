@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_6PounderGunCannon extends DH_AT57Cannon;
@@ -8,7 +8,6 @@ class DH_6PounderGunCannon extends DH_AT57Cannon;
 defaultproperties
 {
     Skins(1)=Texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
-    ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'

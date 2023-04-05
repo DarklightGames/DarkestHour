@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -125,6 +125,10 @@ simulated function PostBeginPlay()
     {
         AltFireAttachmentBone = WeaponFireAttachmentBone;
     }
+
+    // Enforce that the starting projectile class is the primary one
+    // to eliminate the possibility that these are set differently.
+    ProjectileClass = PrimaryProjectileClass;
 }
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client

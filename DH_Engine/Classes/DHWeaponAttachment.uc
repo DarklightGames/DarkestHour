@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponAttachment extends ROWeaponAttachment
@@ -17,6 +17,10 @@ var     name        WA_CrouchReload;
 var     name        WA_CrouchReloadEmpty;
 var     name        WA_BayonetCrouchReload;
 var     name        WA_BayonetCrouchReloadEmpty;
+
+var     name        WA_ProneIdle;
+var     name        WA_DeployedIdle;
+var     name        WA_DeployedFire;
 
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
@@ -397,13 +401,25 @@ simulated function PlayIdle()
     }
     else
     {
-        if (bOutOfAmmo && WA_IdleEmpty != '')
+        // TODO: Add "empty" support for crawl and deployed anims
+        if (WA_ProneIdle != '' && Instigator.bIsCrawling)
         {
-            LoopAnim(WA_IdleEmpty);
+            LoopAnim(WA_ProneIdle);
         }
-        else if (WA_Idle != '')
+        else if (WA_DeployedIdle != '' && Instigator.bBipodDeployed)
         {
+            LoopAnim(WA_DeployedIdle);
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_IdleEmpty != '')
+            {
+            LoopAnim(WA_IdleEmpty);
+            }
+            else if (WA_Idle != '')
+            {
             LoopAnim(WA_Idle);
+            }
         }
     }
 }

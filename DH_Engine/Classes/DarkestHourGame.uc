@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
@@ -2156,20 +2156,27 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
 
-                    // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
-                    DHKiller.WeaponLockViolations++;
-
-                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    if (DHKiller.PlayerReplicationInfo != none)
                     {
-                        // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
-                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
-
-                        // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
-                        if (!bInformedKillerOfWeaponLock)
+                        // Don't lock weapons on players that haven't gotten a team kill in the last 30 seconds.
+                        if (Level.TimeSeconds < DHKiller.LastTeamKillTimeSeconds + 30.0)
                         {
-                            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
+                            DHKiller.WeaponLockViolations++;
+
+                            // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
+                            DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
+
+                            // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
+                            if (!bInformedKillerOfWeaponLock)
+                            {
+                                DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                            }
                         }
                     }
+
+                    // Record the last time the player had a team-kill.
+                    DHKiller.LastTeamKillTimeSeconds = Level.TimeSeconds;
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
                     if (bForgiveFFKillsEnabled && DHKilled != none)
@@ -5742,6 +5749,21 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
+// Modified so that we don't autobalance squad leaders or assistant squad leaders.
+function bool HandleDeath(ROPlayer Player)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Player);
+
+    if (PC != none && (PC.IsSLorASL() || PC.HasLimitedRole()))
+    {
+        return false;
+    }
+
+    return super.HandleDeath(Player);
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH
@@ -5840,8 +5862,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=2
-        Patch=5
+        Minor=4
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHArtillery extends Actor
@@ -49,6 +49,11 @@ function PostBeginPlay()
         }
     }
 }
+
+// Returns whether or not this artillery has actually started.
+// An artilley strike that hasn't been started yet can be cancelled without
+// decrementing the total number of strikes available.
+function bool HasStarted() { return true; }
 
 function Reset()
 {

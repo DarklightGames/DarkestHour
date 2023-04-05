@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -586,6 +586,18 @@ function UpdateVehicles(optional bool bShowAlert)
 
             li_Vehicles.SetIndex(0);
         }
+    }
+    
+    // Update the max vehicles number as well.
+    l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
+
+    if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+    }
+    else
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.White;
     }
 }
 
@@ -1469,16 +1481,6 @@ function UpdateVehicleImage()
         {
             i_MaxVehicles.Show();
             l_MaxVehicles.Show();
-            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
-
-            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.Red;
-            }
-            else
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.White;
-            }
         }
     }
     else
@@ -1728,7 +1730,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
@@ -1845,6 +1847,12 @@ function UpdateSquads()
     else
     {
         SetVisible(p_Squads.SquadComponents[j], false);
+    }
+
+    // Update the background colors.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
     }
 }
 

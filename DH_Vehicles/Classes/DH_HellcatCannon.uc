@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HellcatCannon extends DHVehicleCannon;
@@ -36,7 +36,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'

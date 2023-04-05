@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
@@ -1907,9 +1907,8 @@ simulated state StartSprinting
         if (InstigatorIsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
-            LoopSpeed = 1.5;
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
+            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * SprintLoopAnimRate;
 
             if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
             {
@@ -1943,11 +1942,11 @@ simulated function PlayStartSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintStartEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintStartEmptyAnim, 1.5);
+        PlayAnimAndSetTimer(SprintStartEmptyAnim, SprintStartAnimRate);
     }
     else if (HasAnim(SprintStartAnim))
     {
-        PlayAnimAndSetTimer(SprintStartAnim, 1.5);
+        PlayAnimAndSetTimer(SprintStartAnim, SprintStartAnimRate);
     }
 }
 
@@ -1991,11 +1990,11 @@ simulated function PlayEndSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintEndEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintEndEmptyAnim, 1.5);
+        PlayAnimAndSetTimer(SprintEndEmptyAnim, SprintEndAnimRate);
     }
     else
     {
-        PlayAnimAndSetTimer(SprintEndAnim, 1.5);
+        PlayAnimAndSetTimer(SprintEndAnim, SprintEndAnimRate);
     }
 }
 
@@ -2114,7 +2113,7 @@ simulated state Reloading extends WeaponBusy
             ROPawn(Instigator).HandleStandardReload();
         }
 
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && GetNextMagIndex() >= 0)
         {
             // Update the ammo count for the next magazine so that the client knows.
             // This is needed for magazines that appear differently depending on

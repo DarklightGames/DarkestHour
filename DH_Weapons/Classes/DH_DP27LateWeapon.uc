@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_DP27LateWeapon extends DHFastAutoWeapon;
@@ -90,7 +90,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 defaultproperties
 {
-    ItemName="DP-27 Machine Gun test"
+    ItemName="DP-27 Machine Gun"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_DP27LateFire'
     AttachmentClass=class'DH_Weapons.DH_DP27LateAttachment'
