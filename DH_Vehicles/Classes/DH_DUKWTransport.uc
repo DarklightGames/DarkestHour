@@ -2,8 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] wheels should appear to be stationary while in water
+// [ ] driver camera animations
+// [ ] have different driving characteristics when in water/on land
+// [ ] splash guard functionality
+// [ ] exit positions
+// [~] passengers
+//==============================================================================
 
 class DH_DUKWTransport extends DHBoatVehicle;
+
+var name WaterIdleAnim;
+var name GroundIdleAnim;
 
 var DH_DUKWSplashGuard SplashGuard;
 
@@ -11,6 +21,18 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerToggleSplashGuard;
+}
+
+simulated function name GetIdleAnim()
+{
+    if (PhysicsVolume.bWaterVolume)
+    {
+        return WaterIdleAnim;
+    }
+    else
+    {
+        return GroundIdleAnim;
+    }
 }
 
 simulated function PostBeginPlay()
@@ -35,23 +57,79 @@ simulated exec function ROMGOperation()
     ServerToggleSplashGuard();
 }
 
+simulated function OnWaterEntered()
+{
+    Level.Game.Broadcast(self, "" $ self @ "now in water");
+
+    LoopAnim(WaterIdleAnim);
+    
+    SplashGuard.Raise();
+
+    WheelRotationScale = 0;
+}
+
+simulated function OnWaterLeft()
+{
+    Level.Game.Broadcast(self, "" $ self @ "now on land");
+
+    WheelRotationScale = default.WheelRotationScale;
+
+    SplashGuard.Lower();
+
+    LoopAnim(GroundIdleAnim);
+}
+
+simulated event PhysicsVolumeChange(PhysicsVolume NewPhysicsVolume)
+{
+    super.PhysicsVolumeChange(NewPhysicsVolume);
+
+    if (NewPhysicsVolume.bWaterVolume)
+    {
+        OnWaterEntered();
+    }
+    else
+    {
+        OnWaterLeft();
+    }
+}
+
 defaultproperties
 {
+    WaterIdleAnim="idle_water"
+    GroundIdleAnim="idle_ground"
+
     VehicleNameString="DUKW"
     VehicleTeam=1
 
     Mesh=SkeletalMesh'DH_DUKW_anm.dukw_ext'
 
-    // Driver   // TODO: add multiple positions with transition anims
-    bMultiPosition=false
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
+    BeginningIdleAnim="idle_water"
+
+    // Use a secondary animation channel to decouple the driver transition animations from the boat idle animations.
+    DriverAnimationChannel=1
+    DriverAnimationChannelBone="CAMERA_DRIVER"
+
+    bMultiPosition=true
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_down,TransitionUpAnim=com_raise,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_up,TransitionDownAnim=com_lower,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
+    // TODO: add binocs position
     InitialPositionIndex=0
     DriverAttachmentBone="com_player"
-    DrivePos=(X=0,Y=0,Z=0)
-    DriveAnim="DUKW_driver_idle_closed"     // TODO: add this
+    DrivePos=(X=0,Y=0,Z=57)
+    DriveAnim="DUKW_driver_idle_closed"
+
+    // Passengers
+    PassengerPawns(0)=(AttachBone="passenger_01",DriveAnim="dukw_passenger_01",DrivePos=(Z=57))
+    PassengerPawns(1)=(AttachBone="passenger_02",DriveAnim="dukw_passenger_02",DrivePos=(Z=57))
+    PassengerPawns(2)=(AttachBone="passenger_03",DriveAnim="dukw_passenger_03",DrivePos=(Z=57))
+    PassengerPawns(3)=(AttachBone="passenger_04",DriveAnim="dukw_passenger_04",DrivePos=(Z=57))
+    PassengerPawns(4)=(AttachBone="passenger_05",DriveAnim="dukw_passenger_05",DrivePos=(Z=57))
+    PassengerPawns(5)=(AttachBone="passenger_06",DriveAnim="dukw_passenger_06",DrivePos=(Z=57))
+    PassengerPawns(6)=(AttachBone="passenger_07",DriveAnim="dukw_passenger_07",DrivePos=(Z=57))
+    PassengerPawns(7)=(AttachBone="passenger_08",DriveAnim="dukw_passenger_08",DrivePos=(Z=57))
+    PassengerPawns(8)=(AttachBone="passenger_09",DriveAnim="dukw_passenger_09",DrivePos=(Z=57))
 
     //================copypaste from gmc
-
 
     // Engine/Transmission
     TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=3.0),(InVal=2000.0,OutVal=0.5)))
@@ -160,7 +238,7 @@ defaultproperties
     //================copypaste from gmc
 
     // Shadow
-    ShadowZOffset=6.0
+    ShadowZOffset=60.0
 
     // Wheels
     Begin Object Class=SVehicleWheel Name=FRWheel
