@@ -7,7 +7,7 @@
 // [ ] have different driving characteristics when in water/on land
 // [ ] splash guard functionality
 // [ ] exit positions
-// [ ] 
+// [~] passengers
 //==============================================================================
 
 class DH_DUKWTransport extends DHBoatVehicle;
@@ -110,13 +110,24 @@ defaultproperties
     DriverAnimationChannelBone="CAMERA_DRIVER"
 
     bMultiPosition=true
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_down,TransitionUpAnim=dukw_driver_transition_up,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_up,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_down,TransitionUpAnim=com_raise,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_DUKW_anm.dukw_ext',DriverTransitionAnim=dukw_driver_transition_up,TransitionDownAnim=com_lower,ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=30000,ViewNegativeYawLimit=-30000,bExposed=true)
     // TODO: add binocs position
     InitialPositionIndex=0
     DriverAttachmentBone="com_player"
-    DrivePos=(X=0,Y=0,Z=59)
+    DrivePos=(X=0,Y=0,Z=57)
     DriveAnim="DUKW_driver_idle_closed"
+
+    // Passengers
+    PassengerPawns(0)=(AttachBone="passenger_01",DriveAnim="dukw_passenger_01",DrivePos=(Z=57))
+    PassengerPawns(1)=(AttachBone="passenger_02",DriveAnim="dukw_passenger_02",DrivePos=(Z=57))
+    PassengerPawns(2)=(AttachBone="passenger_03",DriveAnim="dukw_passenger_03",DrivePos=(Z=57))
+    PassengerPawns(3)=(AttachBone="passenger_04",DriveAnim="dukw_passenger_04",DrivePos=(Z=57))
+    PassengerPawns(4)=(AttachBone="passenger_05",DriveAnim="dukw_passenger_05",DrivePos=(Z=57))
+    PassengerPawns(5)=(AttachBone="passenger_06",DriveAnim="dukw_passenger_06",DrivePos=(Z=57))
+    PassengerPawns(6)=(AttachBone="passenger_07",DriveAnim="dukw_passenger_07",DrivePos=(Z=57))
+    PassengerPawns(7)=(AttachBone="passenger_08",DriveAnim="dukw_passenger_08",DrivePos=(Z=57))
+    PassengerPawns(8)=(AttachBone="passenger_09",DriveAnim="dukw_passenger_09",DrivePos=(Z=57))
 
     //================copypaste from gmc
 
