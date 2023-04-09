@@ -108,6 +108,27 @@ var private DHGameReplicationInfo   GRI;    // only valid on the server, clients
 
 var localized array<string>         SquadMergeRequestResultStrings;
 
+// Squad Promotion Requests
+enum ESquadPromotionRequestResult
+{
+    RESULT_Fatal,
+    RESULT_Throttled,
+    RESULT_Duplicate,
+    RESULT_Sent
+};
+
+struct SquadPromotionRequest
+{
+    var int ID;
+    var int TeamIndex;
+    var int SquadIndex;
+    var DHPlayerReplicationInfo Sender;
+    var DHPlayerReplicationInfo Recipient;
+};
+
+var array<SquadPromotionRequest>    SquadPromotionRequests;
+var int                             NextSquadPromotionRequestID;
+
 enum ERallyPointPlacementErrorType
 {
     ERROR_None,
@@ -572,6 +593,8 @@ function ResetSquadInfo()
     SquadLeaderVolunteers.Length = 0;
     SquadMergeRequests.Length = 0;
     NextSquadMergeRequestID = default.NextSquadMergeRequestID;
+    SquadPromotionRequests.Length = 0;
+    NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
 // Gets the maximum size of a squad for a given team.
@@ -1062,6 +1085,7 @@ function ResetSquad(int TeamIndex, int SquadIndex)
     ClearSquadBans(TeamIndex, SquadIndex);
     ClearSquadLeaderVolunteers(TeamIndex, SquadIndex);
     ClearSquadMergeRequests(TeamIndex, SquadIndex);
+    ClearSquadPromotionRequests(TeamIndex, SquadIndex);
 }
 
 // Attempts to make the specified player the leader of the specified squad.
@@ -2658,6 +2682,9 @@ function StartSquadLeaderDraw(int TeamIndex, int SquadIndex)
             PC.ClientSquadLeaderVolunteerPrompt(TeamIndex, SquadIndex, SquadLeaderDraws[0].ExpirationTime);
         }
     }
+
+    // Promotion requests are no longer valid, the vote has started.
+    ClearSquadPromotionRequests(TeamIndex, SquadIndex);
 }
 
 function ClearSquadLeaderVolunteers(int TeamIndex, int SquadIndex)
@@ -3035,16 +3062,6 @@ function int GetSquadMergeRequestIndexByID(int ID)
     return -1;
 }
 
-function bool DenySquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
-{
-    //
-}
-
-function bool AcceptSquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
-{
-    // 
-}
-
 function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
 {
     local int SquadMergeRequestIndex;
@@ -3128,6 +3145,133 @@ function ClearSquadMergeRequests(int TeamIndex, int SquadIndex)
 static function string GetSquadMergeRequestResultString(int Result)
 {
     return default.SquadMergeRequestResultStrings[Result];
+}
+
+// Squad Promotion Requests
+function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicationInfo SenderPRI, DHPlayerReplicationInfo RecipientPRI, int TeamIndex, int SquadIndex)
+{
+    local SquadPromotionRequest PR;
+    local DHPlayer SenderPC, RecipientPC;
+    
+    if (!IsSquadLeader(SenderPRI, TeamIndex, SquadIndex) || !IsInSquad(RecipientPRI, TeamIndex, SquadIndex))
+    {
+        return RESULT_Fatal;
+    }
+
+    SenderPC = DHPlayer(SenderPRI.Owner);
+    RecipientPC = DHPlayer(RecipientPRI.Owner);
+
+    if (SenderPC == none || RecipientPC == none)
+    {
+        return RESULT_Fatal;
+    }
+
+    PR.ID = NextSquadPromotionRequestID++;
+    PR.TeamIndex = TeamIndex;
+    PR.SquadIndex = SquadIndex;
+    PR.Recipient = RecipientPRI;
+    PR.Sender = SenderPRI;
+    SquadPromotionRequests[SquadPromotionRequests.Length] = PR;
+
+    RecipientPC.ClientReceiveSquadPromotionRequest(PR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SquadIndex));
+
+    // 
+    SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 84, RecipientPRI);
+
+    return RESULT_Sent;
+}
+
+function ClearSquadPromotionRequests(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    for (i = SquadPromotionRequests.Length - 1; i >= 0; --i)
+    {
+        if (SquadPromotionRequests[i].TeamIndex == TeamIndex && SquadPromotionRequests[i].SquadIndex == SquadIndex)
+        {
+            SquadPromotionRequests.Remove(i, 1);
+        }
+    }
+}
+
+function int GetSquadPromotionRequestIndexByID(int SquadPromotionRequestID)
+{
+    local int i;
+
+    for (i = 0; i < SquadPromotionRequests.Length; ++i)
+    {
+        if (SquadPromotionRequests[i].ID == SquadPromotionRequestID)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function bool IsSquadPromotionRequestValid(SquadPromotionRequest SPR)
+{
+    return IsSquadActive(SPR.TeamIndex, SPR.SquadIndex) &&
+        IsInSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex) &&
+        !IsSquadLeader(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
+}
+
+function bool DenySquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    local int SquadPromotionRequestIndex;
+    local SquadPromotionRequest SPR;
+    local PlayerController PC;
+    
+    SquadPromotionRequestIndex = GetSquadPromotionRequestIndexByID(SquadPromotionRequestID);
+
+    if (SquadPromotionRequestIndex == -1)
+    {
+        return false;
+    }
+
+    SPR = SquadPromotionRequests[SquadPromotionRequestIndex];
+
+    // Send a message to the sender that the request has been denied (only if they are still the squad leader of this squad).
+    if (IsSquadPromotionRequestValid(SPR) &&
+        IsSquadLeader(SPR.Sender, SPR.TeamIndex, SPR.SquadIndex))
+    {
+        PC = PlayerController(SPR.Sender.Owner);
+
+        if (PC != none)
+        {
+            // "Your squad promotion request has been denied by {0}."
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 82, SPR.Recipient);
+        }
+    }
+
+    // Remove the request.
+    SquadPromotionRequests.Remove(SquadPromotionRequestIndex, 1);
+}
+
+function bool AcceptSquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    local int SquadPromotionRequestIndex;
+    local SquadPromotionRequest SPR;
+
+    SquadPromotionRequestIndex = GetSquadPromotionRequestIndexByID(SquadPromotionRequestID);
+
+    if (SquadPromotionRequestIndex == -1)
+    {
+        // Squad promotion request doesn't exist or has expired.
+        return false;
+    }
+
+    SPR = SquadPromotionRequests[SquadPromotionRequestIndex];
+    
+    if (!IsSquadPromotionRequestValid(SPR))
+    {
+        return false;
+    }
+
+    CommandeerSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
+    ClearSquadPromotionRequests(SPR.TeamIndex, SPR.SquadIndex);
+
+    return true;
 }
 
 simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)

@@ -205,7 +205,7 @@ replication
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
-        ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
+        ServerSquadInvite, ServerSendSquadPromotionRequest, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
@@ -5829,17 +5829,15 @@ function ServerSquadLock(bool bIsLocked)
     }
 }
 
-function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
+function ServerSendSquadPromotionRequest(DHPlayerReplicationInfo Recipient)
 {
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    // TODO: prompt another player and see if they want to be SL.
-
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
+        SquadReplicationInfo.SendSquadPromotionRequest(PRI, Recipient, GetTeamNum(), PRI.SquadIndex);
     }
 }
 
@@ -6990,7 +6988,7 @@ function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPl
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
 }
 
-function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string SenderPlayerName)
+function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string SenderPlayerName, string SenderSquadName)
 {
     if (bIgnoreSquadPromotionRequestPrompts)
     {
@@ -7000,6 +6998,7 @@ function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string 
 
     class'DHSquadPromotionRequestInteraction'.default.SquadPromotionRequestID = SquadPromotionRequestID;
     class'DHSquadPromotionRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    class'DHSquadPromotionRequestInteraction'.default.SenderSquadName = SenderSquadName;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadPromotionRequestInteraction", Player);
 }
@@ -7313,8 +7312,7 @@ simulated function bool GetEyeTraceLocation(out vector HitLocation, out vector H
     {
         HitLocation = vect(0, 0, 0);
     }
-
-
+    
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
     PawnVehicleBase = Pawn.GetVehicleBase();

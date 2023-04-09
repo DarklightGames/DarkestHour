@@ -45,7 +45,7 @@ function OnOptionSelected(int Index)
 
 defaultproperties
 {
-    PromptText="{0} has offered to promote you to squad leader of {1} squad."
+    PromptText="{0} wants to promote you to leader of {1} squad."
     Options(0)=(Key=IK_F5,Text="Accept")
     Options(1)=(Key=IK_F2,Text="Decline")
     Options(2)=(Key=IK_F3,Text="Ignore All")
