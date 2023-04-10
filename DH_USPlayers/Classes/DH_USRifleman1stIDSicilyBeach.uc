@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_AmericanHelmet1stEMb extends DHHeadgear;
+class DH_USRifleman1stIDSicilyBeach extends DHUSRiflemanRoles;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'dhgear_anm.US_GI_Helmet'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.US_1stID_EM_headgear_2'
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US1stIDSicilyPawn')
+    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
+    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
 }
