@@ -63,6 +63,7 @@ var localized string SquadTargetSelectionRefused;
 var localized string SquadPromotionRequestDeniedMessage;
 var localized string SquadPromotionRequestAcceptedMessage;
 var localized string SquadPromotionRequestSentMessage;
+var localized string SquadPromotionRequestDuplicateMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -208,6 +209,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return Repl(default.SquadPromotionRequestAcceptedMessage, "{0}", RelatedPRI_1.PlayerName);
         case 84:
             return Repl(default.SquadPromotionRequestSentMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 85:
+            return Repl(default.SquadPromotionRequestDuplicateMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -275,6 +278,7 @@ defaultproperties
     SquadPromotionRequestDeniedMessage="Your squad leader promotion request was denied by {0}."
     SquadPromotionRequestAcceptedMessage="Your squad leader promotion request was accepted by {0}."
     SquadPromotionRequestSentMessage="A squad leader promotion request has been sent to {0}."
+    SquadPromotionRequestDuplicateMessage="You have already sent {0} a squad promotion request."
 
     bIsSpecial=false
     bIsConsoleMessage=true

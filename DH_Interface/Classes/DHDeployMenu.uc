@@ -1217,6 +1217,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
+    else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
+    {
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
+    }
 
     SetButtonsEnabled(true);
 }

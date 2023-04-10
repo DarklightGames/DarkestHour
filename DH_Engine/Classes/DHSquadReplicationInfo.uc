@@ -107,13 +107,14 @@ var int                             NextSquadMergeRequestID;
 var private DHGameReplicationInfo   GRI;    // only valid on the server, clients should use GetGameReplicationInfo()
 
 var localized array<string>         SquadMergeRequestResultStrings;
+var localized array<string>         SquadPromotionRequestResultStrings;
 
 // Squad Promotion Requests
 enum ESquadPromotionRequestResult
 {
-    RESULT_Fatal,
-    RESULT_Duplicate,
-    RESULT_Sent
+    SPPR_Fatal,
+    SPPR_Duplicate,
+    SPPR_Sent
 };
 
 struct SquadPromotionRequest
@@ -3146,6 +3147,11 @@ static function string GetSquadMergeRequestResultString(int Result)
     return default.SquadMergeRequestResultStrings[Result];
 }
 
+static function string GetSquadPromotionRequestResultString(int Result)
+{
+    return default.SquadPromotionRequestResultStrings[Result];
+}
+
 // Squad Promotion Requests
 function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicationInfo SenderPRI, DHPlayerReplicationInfo RecipientPRI, int TeamIndex, int SquadIndex)
 {
@@ -3155,18 +3161,7 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
     
     if (!IsSquadLeader(SenderPRI, TeamIndex, SquadIndex) || !IsInSquad(RecipientPRI, TeamIndex, SquadIndex))
     {
-        return RESULT_Fatal;
-    }
-
-    for (i = 0; i < SquadPromotionRequests.Length; ++i)
-    {
-        if (SquadPromotionRequests[i].TeamIndex == TeamIndex &&
-            SquadPromotionRequests[i].SquadIndex == SquadIndex &&
-            SquadPromotionRequests[i].Recipient == RecipientPRI)
-        {
-            // There is already an identical active promotion request.
-            return RESULT_Duplicate;
-        }
+        return SPPR_Fatal;
     }
 
     SenderPC = DHPlayer(SenderPRI.Owner);
@@ -3174,7 +3169,21 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
 
     if (SenderPC == none || RecipientPC == none)
     {
-        return RESULT_Fatal;
+        return SPPR_Fatal;
+    }
+    
+    for (i = 0; i < SquadPromotionRequests.Length; ++i)
+    {
+        if (SquadPromotionRequests[i].TeamIndex == TeamIndex &&
+            SquadPromotionRequests[i].SquadIndex == SquadIndex &&
+            SquadPromotionRequests[i].Recipient == RecipientPRI)
+        {
+            // "You have already sent {0} a squad promotion request."
+            SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 85, RecipientPRI);
+
+            // There is already an identical active promotion request.
+            return SPPR_Duplicate;
+        }
     }
 
     // Add the promotion request.
@@ -3191,7 +3200,7 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
     // Notify the sender that the request has been sent.
     SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 84, RecipientPRI);
 
-    return RESULT_Sent;
+    return SPPR_Sent;
 }
 
 function ClearSquadPromotionRequests(int TeamIndex, int SquadIndex)
@@ -3326,4 +3335,8 @@ defaultproperties
     SquadMergeRequestResultStrings(2)="A merge request cannot be sent to this squad."
     SquadMergeRequestResultStrings(3)="There is already an existing merge request for this squad."
     SquadMergeRequestResultStrings(4)="Squad merge request has been sent."
+
+    SquadPromotionRequestResultStrings(0)="An error occurred while sending the squad merge request."
+    SquadPromotionRequestResultStrings(1)="There is already an existing squad leader promotion request for this player."
+    SquadPromotionRequestResultStrings(2)="Squad leader promotion request has been sent."
 }
