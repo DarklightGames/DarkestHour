@@ -205,12 +205,13 @@ replication
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
-        ServerSquadInvite, ServerSendSquadPromotionRequest, ServerSquadKick, ServerSquadBan,
+        ServerSquadInvite, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
+        ServerSendSquadPromotionRequest, ServerAcceptSquadPromotionRequest, ServerDenySquadPromotionRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
@@ -6965,6 +6966,14 @@ function ServerDenySquadMergeRequest(int SquadMergeRequestID)
     }
 }
 
+function ServerAcceptSquadPromotionRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.AcceptSquadPromotionRequest(self, SquadMergeRequestID);
+    }
+}
+
 function ServerDenySquadPromotionRequest(int SquadPromotionRequestID)
 {
     if (SquadReplicationInfo != none)
@@ -7302,7 +7311,7 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-simulated function bool GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
+simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
 {
     local vector TraceStart, TraceEnd;
     local Actor A;

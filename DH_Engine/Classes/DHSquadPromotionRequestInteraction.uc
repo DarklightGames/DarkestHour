@@ -28,13 +28,13 @@ function OnOptionSelected(int Index)
         switch (Index)
         {
             case 0: // Accept
-                PC.ServerAcceptSquadMergeRequest(default.SquadPromotionRequestID);
+                PC.ServerAcceptSquadPromotionRequest(default.SquadPromotionRequestID);
                 break;
             case 1: // Decline
-                PC.ServerDenySquadMergeRequest(default.SquadPromotionRequestID);
+                PC.ServerDenySquadPromotionRequest(default.SquadPromotionRequestID);
                 break;
             case 2: // Ignore All
-                PC.ServerDenySquadMergeRequest(default.SquadPromotionRequestID);
+                PC.ServerDenySquadPromotionRequest(default.SquadPromotionRequestID);
                 PC.bIgnoreSquadPromotionRequestPrompts = true;
                 break;
         }

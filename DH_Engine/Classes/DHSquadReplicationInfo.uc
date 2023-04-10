@@ -112,7 +112,6 @@ var localized array<string>         SquadMergeRequestResultStrings;
 enum ESquadPromotionRequestResult
 {
     RESULT_Fatal,
-    RESULT_Throttled,
     RESULT_Duplicate,
     RESULT_Sent
 };
@@ -1095,7 +1094,7 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
     local DHPlayer PC;
     local bool bResult;
 
-    if (!IsInSquad(PRI, TeamIndex, SquadIndex) || HasSquadLeader(TeamIndex, SquadIndex))
+    if (!IsInSquad(PRI, TeamIndex, SquadIndex))
     {
         return false;
     }
@@ -3152,10 +3151,22 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
 {
     local SquadPromotionRequest PR;
     local DHPlayer SenderPC, RecipientPC;
+    local int i;
     
     if (!IsSquadLeader(SenderPRI, TeamIndex, SquadIndex) || !IsInSquad(RecipientPRI, TeamIndex, SquadIndex))
     {
         return RESULT_Fatal;
+    }
+
+    for (i = 0; i < SquadPromotionRequests.Length; ++i)
+    {
+        if (SquadPromotionRequests[i].TeamIndex == TeamIndex &&
+            SquadPromotionRequests[i].SquadIndex == SquadIndex &&
+            SquadPromotionRequests[i].Recipient == RecipientPRI)
+        {
+            // There is already an identical active promotion request.
+            return RESULT_Duplicate;
+        }
     }
 
     SenderPC = DHPlayer(SenderPRI.Owner);
@@ -3166,6 +3177,7 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
         return RESULT_Fatal;
     }
 
+    // Add the promotion request.
     PR.ID = NextSquadPromotionRequestID++;
     PR.TeamIndex = TeamIndex;
     PR.SquadIndex = SquadIndex;
@@ -3173,9 +3185,10 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
     PR.Sender = SenderPRI;
     SquadPromotionRequests[SquadPromotionRequests.Length] = PR;
 
+    // Send the promotion request to the recipient.
     RecipientPC.ClientReceiveSquadPromotionRequest(PR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SquadIndex));
 
-    // 
+    // Notify the sender that the request has been sent.
     SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 84, RecipientPRI);
 
     return RESULT_Sent;
