@@ -3234,8 +3234,8 @@ function int GetSquadPromotionRequestIndexByID(int SquadPromotionRequestID)
 function bool IsSquadPromotionRequestValid(SquadPromotionRequest SPR)
 {
     return IsSquadActive(SPR.TeamIndex, SPR.SquadIndex) &&
-        IsInSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex) &&
-        !IsSquadLeader(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
+           IsInSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex) &&
+           !IsSquadLeader(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
 }
 
 function bool DenySquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
