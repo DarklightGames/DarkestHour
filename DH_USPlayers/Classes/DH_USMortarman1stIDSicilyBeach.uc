@@ -7,9 +7,10 @@ class DH_USMortarman1stIDSicilyBeach extends DHUSMortarmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US1stPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest1stPawn',Weight=1.0)
+    RolePawns(0)=PawnClass=class'DH_USPlayers.DH_US1stIDSicilyBeachPawn'
     
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
+
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
 

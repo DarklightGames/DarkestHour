@@ -10,6 +10,8 @@ defaultproperties
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US1stIDSicilyPawnNCO',Weight=2.0)
     RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest1stPawnNCO',Weight=1.0)
 
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
+
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNCO'
 

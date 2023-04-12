@@ -7,8 +7,10 @@ class DH_USAntiTank1stIDSicilyBeach extends DH_USAntiTank1stIDSicily;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US1stIDSicilyPawn',Weight=2.0)
+    RolePawns(0)=PawnClass=class'DH_USPlayers.DH_US1stIDSicilyBeachPawn'
    
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
+
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
 
