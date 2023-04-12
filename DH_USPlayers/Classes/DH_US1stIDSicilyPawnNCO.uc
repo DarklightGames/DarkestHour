@@ -11,8 +11,6 @@ defaultproperties
 
     Skins(1)=Texture'DHUSCharactersTex.1stID.US_1stID_Sicily_Sarg_1'
 
-    //SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
-
     BodySkins(0)=Texture'DHUSCharactersTex.1stID.US_1stID_Sicily_Sarg_1'
     BodySkins(1)=Texture'DHUSCharactersTex.1stID.US_1stID_Sicily_Sarg_2'
 }
