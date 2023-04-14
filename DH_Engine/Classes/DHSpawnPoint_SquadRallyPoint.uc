@@ -508,11 +508,6 @@ function AwardScoreOnEstablishment()
 
 function Destroyed()
 {
-    if (SRI != none)
-    {
-        SRI.OnSquadRallyPointDestroyed(self);
-    }
-
     super.Destroyed();
 
     if (MetricsObject != none)
@@ -523,6 +518,11 @@ function Destroyed()
     if (ResupplyAttachment != none)
     {
         ResupplyAttachment.Destroy();
+    }
+
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointDestroyed(self);
     }
 }
 

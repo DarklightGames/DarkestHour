@@ -1948,6 +1948,11 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, int ElapsedTi
     }
 }
 
+simulated function bool SquadHasRallyPoint(int TeamIndex, int SquadIndex)
+{
+    return GetSquadRallyPointCount(TeamIndex, SquadIndex) > 0;
+}
+
 simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
 {
     local int i, Count;
@@ -1956,7 +1961,8 @@ simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
     {
         if (RallyPoints[i] != none &&
             RallyPoints[i].GetTeamIndex() == TeamIndex &&
-            RallyPoints[i].SquadIndex == SquadIndex)
+            RallyPoints[i].SquadIndex == SquadIndex &&
+            !RallyPoints[i].bPendingDelete)
         {
             ++Count;
         }
@@ -3159,7 +3165,7 @@ function UpdateSquadLeaderNoRallyPointsTime(int TeamIndex, int SquadIndex)
 
     SL = GetSquadLeader(TeamIndex, SquadIndex);
 
-    if (SL != none && GRI != none && GetSquadRallyPointCount(TeamIndex, SquadIndex) == 0)
+    if (SL != none && GRI != none && !SquadHasRallyPoint(TeamIndex, SquadIndex))
     {
         SL.NoRallyPointsTime = GRI.ElapsedTime;
     }
@@ -3184,7 +3190,7 @@ simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIn
     return SL != none &&
            MyGRI != none &&
            MyGRI.ElapsedTime >= SL.NoRallyPointsTime + SquadLeaderRallyPointInactivityThreshold &&
-           GetSquadRallyPointCount(TeamIndex, SquadIndex) == 0;
+           !SquadHasRallyPoint(TeamIndex, SquadIndex);
 }
 
 defaultproperties
