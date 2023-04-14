@@ -3154,7 +3154,7 @@ function UpdateSquadLeaderNoRallyPointsTime(int TeamIndex, int SquadIndex)
 
     if (!bAreRallyPointsEnabled)
     {
-	return;
+        return;
     }
 
     SL = GetSquadLeader(TeamIndex, SquadIndex);
@@ -3175,7 +3175,7 @@ simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIn
 
     if (!bAreRallyPointsEnabled)
     {
-	return false;
+        return false;
     }
 
     MyGRI = GetGameReplicationInfo();
