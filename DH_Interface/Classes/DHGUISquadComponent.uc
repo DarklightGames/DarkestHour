@@ -190,20 +190,26 @@ defaultproperties
     End Object
     i_LockSquad=LockSquadImage
 
+    Begin Object Class=GUIToolTip Name=NoRallyPointsImageTooltip
+    End Object
+
     Begin Object class=GUIImage Name=NoRallyPointsImage
         WinWidth=0.15
         WinHeight=0.075
-        WinLeft=0.8
+        WinLeft=0.76
         WinTop=0.05
-        Image=Texture'DH_InterfaceArt2_tex.Icons.rally_point'
-        ImageColor=(R=255,G=0,B=0,A=255)
+        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        ImageColor=(R=255,G=0,B=0,A=200)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
         bBoundToParent=true
         bScaleToParent=true
-	bVisible=false
+        bVisible=false
         RenderWeight=10.0
+        bAcceptsInput=true
+        ToolTip=NoRallyPointsImageTooltip
+        Hint="This squad had no rally points in a while. Respawn options will be limited!"
     End Object
     i_NoRallyPoints=NoRallyPointsImage
 
