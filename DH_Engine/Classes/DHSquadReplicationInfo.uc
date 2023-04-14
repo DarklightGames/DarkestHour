@@ -3152,6 +3152,11 @@ function UpdateSquadLeaderNoRallyPointsTime(int TeamIndex, int SquadIndex)
 {
     local DHPlayerReplicationInfo SL;
 
+    if (!bAreRallyPointsEnabled)
+    {
+	return;
+    }
+
     SL = GetSquadLeader(TeamIndex, SquadIndex);
 
     if (SL != none && GRI != none && GetSquadRallyPointCount(TeamIndex, SquadIndex) == 0)
@@ -3167,6 +3172,11 @@ simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIn
 {
     local DHGameReplicationInfo MyGRI;
     local DHPlayerReplicationInfo SL;
+
+    if (!bAreRallyPointsEnabled)
+    {
+	return false;
+    }
 
     MyGRI = GetGameReplicationInfo();
     SL = GetSquadLeader(TeamIndex, SquadIndex);
