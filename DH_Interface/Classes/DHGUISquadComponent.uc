@@ -19,6 +19,7 @@ var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only sh
 var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
 var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
+var automated   GUIImage            i_NoRallyPoints;
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
@@ -188,6 +189,29 @@ defaultproperties
         RenderWeight=10.0
     End Object
     i_LockSquad=LockSquadImage
+
+    Begin Object Class=GUIToolTip Name=NoRallyPointsImageTooltip
+    End Object
+
+    Begin Object class=GUIImage Name=NoRallyPointsImage
+        WinWidth=0.15
+        WinHeight=0.075
+        WinLeft=0.76
+        WinTop=0.05
+        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        ImageColor=(R=255,G=0,B=0,A=200)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+        bBoundToParent=true
+        bScaleToParent=true
+        bVisible=false
+        RenderWeight=10.0
+        bAcceptsInput=true
+        ToolTip=NoRallyPointsImageTooltip
+        Hint="This squad has had no rally points in a while. Deployment options may be limited!"
+    End Object
+    i_NoRallyPoints=NoRallyPointsImage
 
     Begin Object class=GUIImage Name=BackgroundImage
         WinWidth=1.0

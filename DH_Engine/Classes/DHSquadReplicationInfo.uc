@@ -58,6 +58,7 @@ var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
 var int                             SquadLockMemberCountMin;    // The amount of squad member required to be able to lock a squad and keep it locked.
+var int                             SquadLeaderRallyPointInactivityThreshold;
 
 struct SquadLeaderVolunteer
 {
@@ -796,6 +797,9 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             // from trying to exploit the system.
             SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
 
+            // New squad will have no rallies. Reset the no rally points time to now.
+            UpdateSquadLeaderNoRallyPointsTime(TeamIndex, i);
+
             // This new squad leader may need to have their role invalidated.
             MaybeInvalidateRole(PC);
 
@@ -1117,6 +1121,8 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
 
         // "{0} has become the squad leader"
         BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, PRI);
+
+        UpdateSquadLeaderNoRallyPointsTime(PRI.Team.TeamIndex, PRI.SquadIndex);
     }
 
     return bResult;
@@ -1968,6 +1974,11 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, int ElapsedTi
     }
 }
 
+simulated function bool SquadHasRallyPoint(int TeamIndex, int SquadIndex)
+{
+    return GetSquadRallyPointCount(TeamIndex, SquadIndex) > 0;
+}
+
 simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
 {
     local int i, Count;
@@ -1976,7 +1987,8 @@ simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
     {
         if (RallyPoints[i] != none &&
             RallyPoints[i].GetTeamIndex() == TeamIndex &&
-            RallyPoints[i].SquadIndex == SquadIndex)
+            RallyPoints[i].SquadIndex == SquadIndex &&
+            !RallyPoints[i].bPendingDelete)
         {
             ++Count;
         }
@@ -2393,6 +2405,10 @@ function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
 // Function is called when a rally point is destroyed for any reason.
 function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
 {
+    if (SRP != none)
+    {
+        UpdateSquadLeaderNoRallyPointsTime(SRP.GetTeamIndex(), SRP.SquadIndex);
+    }
 }
 
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
@@ -3314,6 +3330,47 @@ simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)
     return SquadLeaders;
 }
 
+// Remember the time when a squad leader loses all rally points, or joins a
+// squad with no rally points.
+function UpdateSquadLeaderNoRallyPointsTime(int TeamIndex, int SquadIndex)
+{
+    local DHPlayerReplicationInfo SL;
+
+    if (!bAreRallyPointsEnabled)
+    {
+        return;
+    }
+
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (SL != none && GRI != none && !SquadHasRallyPoint(TeamIndex, SquadIndex))
+    {
+        SL.NoRallyPointsTime = GRI.ElapsedTime;
+    }
+
+}
+
+// Returns true if SL hasn't placed any rally points in time specified by
+// SquadLeaderRallyPointInactivityThreshold.
+simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo MyGRI;
+    local DHPlayerReplicationInfo SL;
+
+    if (!bAreRallyPointsEnabled)
+    {
+        return false;
+    }
+
+    MyGRI = GetGameReplicationInfo();
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    return SL != none &&
+           MyGRI != none &&
+           MyGRI.ElapsedTime >= SL.NoRallyPointsTime + SquadLeaderRallyPointInactivityThreshold &&
+           !SquadHasRallyPoint(TeamIndex, SquadIndex);
+}
+
 defaultproperties
 {
     AlliesSquadSize=10
@@ -3329,6 +3386,7 @@ defaultproperties
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberFactor=2.5
     RallyPointInitialSpawnsDangerZoneFactor=0.25
+    SquadLeaderRallyPointInactivityThreshold=60
 
     SquadMergeRequestResultStrings(0)="Please wait a short time before sending another squad merge request."
     SquadMergeRequestResultStrings(1)="An error occurred while sending the squad merge request."
