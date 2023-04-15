@@ -72,7 +72,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-	VehHitpoints(3)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
+   VehHitpoints(3)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
     VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
     DamagedWheelSpeedFactor=0.4
     EngineDamageFromGrenadeModifier=0.05
