@@ -89,26 +89,23 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.05
     DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
-    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=0.0,Y=-2.0,Z=3.0),DamageMultiplier=2.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=10.0,Y=1.0,Z=1.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=0.0,Y=1.0,Z=25.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=30.0,Y=1.0,Z=25.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=55.0,Y=1.0,Z=25.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
-    VehHitpoints(5)=(PointRadius=12.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // Fuel tank
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="body",PointOffset=(X=-5.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-45.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
+    VehHitpoints(2)=(PointRadius=12.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // Fuel tank
     TreadHitMaxHeight=7.0
-    DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=-20,Y=-3.5,Z=15.0)
+    DamagedEffectScale=0.70
+    DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
     FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="passenger_l_2"
-    FireEffectOffset=(X=0.0,Y=0.0,Z=5.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
-    EngineToHullFireChance=0.55 //engine of the Uni Carrier is in middle of the hull/passenger compartment
-    AmmoIgnitionProbability=0.35
-    HullFireDamagePer2Secs=2
+    FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
     FireDetonationChance=0.05
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
 
 
     // Vehicle destruction

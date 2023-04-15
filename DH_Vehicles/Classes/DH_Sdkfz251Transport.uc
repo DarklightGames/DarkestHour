@@ -100,9 +100,9 @@ defaultproperties
     FireAttachBone="body"
     FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
     EngineToHullFireChance=0.05 //Unlikely for a fire to spread
-    AmmoIgnitionProbability=35.00
-    HullFireDamagePer2Secs=2
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
     FireDetonationChance=0.02
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
 	
     // Vehicle destruction
     ExplosionDamage=85.0
