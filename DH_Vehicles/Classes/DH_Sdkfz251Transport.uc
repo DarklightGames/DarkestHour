@@ -96,7 +96,7 @@ defaultproperties
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="body"
     FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
     EngineToHullFireChance=0.05 //Unlikely for a fire to spread

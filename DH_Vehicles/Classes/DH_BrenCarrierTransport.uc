@@ -99,7 +99,7 @@ defaultproperties
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="passenger_l_2"
     FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment

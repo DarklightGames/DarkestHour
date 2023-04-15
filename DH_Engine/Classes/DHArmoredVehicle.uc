@@ -2426,7 +2426,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
