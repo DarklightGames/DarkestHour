@@ -88,14 +88,14 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.05
     DamagedWheelSpeedFactor=0.4
     DirectHEImpactDamageMult=4.0
-    ImpactWorldDamageMult=2.0 // 2 before
+    ImpactWorldDamageMult=2.0
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-	bEnableHatchFires=true
+    bEnableHatchFires=true
     FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="body"
     FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)

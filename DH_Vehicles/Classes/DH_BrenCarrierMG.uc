@@ -51,5 +51,5 @@ defaultproperties
 	
 	// Hatch fire
     FireEffectOffset=(X=-84.0,Y=55.0,Z=8.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
-	FireEffectScale=0.5
+    FireEffectScale=0.5
 }
