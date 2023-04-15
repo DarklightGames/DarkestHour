@@ -209,7 +209,7 @@ defaultproperties
         RenderWeight=10.0
         bAcceptsInput=true
         ToolTip=NoRallyPointsImageTooltip
-        Hint="This squad had no rally points in a while. Respawn options will be limited!"
+        Hint="This squad has had no rally points in a while. Deployment options may be limited!"
     End Object
     i_NoRallyPoints=NoRallyPointsImage
 
