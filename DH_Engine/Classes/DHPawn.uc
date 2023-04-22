@@ -7533,8 +7533,8 @@ defaultproperties
     DeployedPitchDownLimit=-7300
 
     // Sound
-    FootStepSoundRadius=64
-    FootstepVolume=0.5
+    FootStepSoundRadius=128
+    FootstepVolume=1.0
     QuietFootStepVolume=0.66
     SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
