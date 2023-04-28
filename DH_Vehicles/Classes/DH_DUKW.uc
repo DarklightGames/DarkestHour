@@ -3,17 +3,33 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] wheels should appear to be stationary while in water
-// [ ] driver camera animations
 // [ ] have different driving characteristics when in water/on land
 // [ ] splash guard functionality
 // [ ] exit positions
 // [~] passengers
+// [ ] turn off wash sound when out of water
+// [ ] fx for propeller wash
+// [ ] fx for bow water spray
+// [ ] change sss
+// [ ] fix issue with wheel and suspension misalignment
+// [ ] add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] ADD ENGINE HITPOINT
 //==============================================================================
 
 class DH_DUKW extends DHBoatVehicle;
 
 var name WaterIdleAnim;
 var name GroundIdleAnim;
+
+var Sound WaterEngineSound;
+var Sound GroundEngineSound;
+
+var Sound WaterStartUpSound;
+var Sound WaterShutDownSound;
+var Sound GroundStartUpSound;
+var Sound GroundShutDownSound;
+
+var bool bIsInWater;
 
 var DH_DUKWSplashGuard SplashGuard;
 
@@ -59,37 +75,96 @@ simulated exec function ROMGOperation()
 
 simulated function OnWaterEntered()
 {
-    Level.Game.Broadcast(self, "" $ self @ "now in water");
-
     LoopAnim(WaterIdleAnim);
     
     SplashGuard.Raise();
 
     WheelRotationScale = 0;
+
+    // Change the engine sound to the boat engine.
+    Ambientsound = WaterEngineSound;
+
+    // Play the startup sound for the boat engine if the engine is on.
+    // if (!bEngineOff)
+    // {
+    //     PlaySound(WaterStartUpSound, SLOT_None, 1.0);
+    //     PlaySound(GroundShutDownSound, SLOT_None, 1.0);
+    // }
+    
+    // TODO: turn on the wash sound.
 }
 
 simulated function OnWaterLeft()
 {
-    Level.Game.Broadcast(self, "" $ self @ "now on land");
-
     WheelRotationScale = default.WheelRotationScale;
 
     SplashGuard.Lower();
 
     LoopAnim(GroundIdleAnim);
+
+    // Change the engine sound to the truck engine.
+    AmbientSound = GroundEngineSound;
+
+    // Play the startup sound for the truck engine if the engine is on.
+    // if (!bEngineOff)
+    // {
+    //     PlaySound(GroundStartUpSound, SLOT_None, 1.0);
+    //     PlaySound(WaterShutDownSound, SLOT_None, 1.0);
+    // }
+
+    // TODO: turn off the wash sound.
 }
 
 simulated event PhysicsVolumeChange(PhysicsVolume NewPhysicsVolume)
 {
     super.PhysicsVolumeChange(NewPhysicsVolume);
 
-    if (NewPhysicsVolume.bWaterVolume)
+    // TODO: check if the current water status is different from the new one.
+    if (NewPhysicsVolume.bWaterVolume && !bIsInWater)
     {
         OnWaterEntered();
     }
-    else
+    else if (!NewPhysicsVolume.bWaterVolume && bIsInWater)
     {
         OnWaterLeft();
+    }
+
+    bIsInWater = NewPhysicsVolume.bWaterVolume;
+}
+
+simulated function Sound GetIdleSound()
+{
+    if (PhysicsVolume.bWaterVolume)
+    {
+        return WaterEngineSound;
+    }
+    else
+    {
+        return GroundEngineSound;
+    }
+}
+
+simulated function Sound GetStartUpSound()
+{
+    if (PhysicsVolume.bWaterVolume)
+    {
+        return WaterStartUpSound;
+    }
+    else
+    {
+        return GroundStartUpSound;
+    }
+}
+
+simulated function Sound GetShutDownSound()
+{
+    if (PhysicsVolume.bWaterVolume)
+    {
+        return WaterShutDownSound;
+    }
+    else
+    {
+        return GroundShutDownSound;
     }
 }
 
@@ -117,6 +192,22 @@ defaultproperties
     DriverAttachmentBone="com_player"
     DrivePos=(X=0,Y=0,Z=57)
     DriveAnim="DUKW_driver_idle_closed"
+
+    // Sounds
+    EngineSoundBone="ENGINE"
+    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
+    WaterEngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
+    GroundEngineSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
+    WaterStartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
+    WaterShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
+    GroundStartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    GroundShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    // TODO: startup sounds for both types of engine, automatically play when the vehicle changes volumes
+
+    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
+    VehicleAttachments(0)=(AttachBone="WASH")
+
+    // TODO: idle sound?
 
     //================copypaste from gmc
 
@@ -175,7 +266,7 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="ENGINE",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     // VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     // VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     // VehHitpoints(3)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
@@ -204,7 +295,7 @@ defaultproperties
     // Sounds
     SoundPitch=32.0
     MaxPitchSpeed=10.0 //150.0
-    IdleSound=SoundGroup'DH_alliedvehiclesounds.gmc.gmctruck_engine_loop'
+    IdleSound=none
     StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     RumbleSound=Sound'Vehicle_Engines.tank_inside_rumble01'
@@ -214,7 +305,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-39.98,Y=-69.71,Z=46.37),ExhaustRotation=(Pitch=-4096,Yaw=-16384))
 
     SteerBoneName="steering_wheel"
-    SteerBoneAxis=AXIS_Y
+    SteerBoneAxis=AXIS_Z
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
@@ -224,6 +315,7 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
+
 
     //================copypaste from gmc
 

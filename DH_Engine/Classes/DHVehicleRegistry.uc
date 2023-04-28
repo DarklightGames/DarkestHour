@@ -228,5 +228,6 @@ defaultproperties
     Records(87)=(VehicleNames=("wirbelwind","flakpanzer4"),Variants=((ClassName="DH_Vehicles.DH_WirbelwindTank"),(ClassName="DH_Vehicles.DH_WirbelwindTank_Snow",VariantName="snow")))
 
     Records(88)=(VehicleNames=("dukw","duck"),Variants=((ClassName="DH_Vehicles.DH_DUKWTransport")))
+    Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 }
 

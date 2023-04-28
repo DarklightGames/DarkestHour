@@ -1789,6 +1789,17 @@ simulated function Fire(optional float F)
     }
 }
 
+// Override in sub-classes to have different start-up and shut down sounds depending on context (i.e., ambphibious vehicles)
+simulated function Sound GetStartUpSound()
+{
+    return StartUpSound;
+}
+
+simulated function Sound GetShutDownSound()
+{
+    return ShutDownSound;
+}
+
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
@@ -1819,15 +1830,20 @@ function ServerStartEngine()
             {
                 if (ShutDownSound != none)
                 {
-                    PlaySound(ShutDownSound, SLOT_None, 1.0);
+                    PlaySound(GetShutDownSound(), SLOT_None, 1.0);
                 }
             }
             else if (StartUpSound != none)
             {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
+                PlaySound(GetStartUpSound(), SLOT_None, 1.0);
             }
         }
     }
+}
+
+simulated function Sound GetIdleSound()
+{
+    return IdleSound;
 }
 
 // New function to set the engine properties & effects, based on whether engine is on & if it's damaged
@@ -1872,9 +1888,9 @@ simulated function SetEngine()
     // Engine on
     else
     {
-        if (IdleSound != none)
+        if (GetIdleSound() != none)
         {
-            AmbientSound = IdleSound;
+            AmbientSound = GetIdleSound();
         }
 
         if (!bEmittersOn)
