@@ -5,14 +5,11 @@
 
 class DH_Wz35Weapon extends DHBoltActionWeapon;
 
-
 // Modified to make ironsights key try to deploy/undeploy the bipod
 simulated function ROIronSights()
 {
     Deploy();
 }
-
-
 
 defaultproperties
 {
@@ -35,9 +32,9 @@ defaultproperties
 
     bCanBipodDeploy=true
     bCanRestDeploy=false
+    bCanFireFromHip=false
     bMustReloadWithBipodDeployed=true
     bMustFireWhileSighted=true
-    
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
