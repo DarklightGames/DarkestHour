@@ -125,7 +125,7 @@ simulated state WorkingBolt extends WeaponBusy
 
     simulated function BeginState()
     {
-        if (bUsingSights)
+        if (bUsingSights || Instigator.bBipodDeployed)
         {
             if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
             {
