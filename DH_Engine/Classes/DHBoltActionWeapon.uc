@@ -38,6 +38,8 @@ var     bool            bShouldSkipBolt;
 
 var     bool            bCanUseUnfiredRounds;
 
+var     bool            bShouldZoomWhenBolting; // if true, do a zoom cycle when working the bolt (similar to reloads)
+
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -127,11 +129,6 @@ simulated state WorkingBolt extends WeaponBusy
     {
         if (bUsingSights || Instigator.bBipodDeployed)
         {
-            if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
-            {
-                PlayerViewZoom(false);
-            }
-
             PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
         }
         else
@@ -154,6 +151,26 @@ simulated state WorkingBolt extends WeaponBusy
 
         bWaitingToBolt = false;
         FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
+    }
+
+Begin:
+    // Handles the zooming in and out of the player's view.
+    if (bShouldZoomWhenBolting && InstigatorIsLocalHuman())
+    {
+        if (bUsingSights || Instigator.bBipodDeployed)
+        {
+            ResetPlayerFOV();
+
+            if (DisplayFOV != default.DisplayFOV)
+            {
+                SmoothZoom(false);
+            }
+
+            Sleep(GetAnimDuration(BoltIronAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+
+            SetPlayerFOV(PlayerDeployFOV);
+            SmoothZoom(true);
+        }
     }
 }
 
