@@ -17,11 +17,11 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Turret armor
-    FrontArmorFactor=12.0
+    FrontArmorFactor=9.8
     RightArmorFactor=4.5
     LeftArmorFactor=4.5
     RearArmorFactor=4.5
-    FrontArmorSlope=9.0  // to do: spherical shape that has different slope depending on elevation
+    FrontArmorSlope=13.0  // to do: spherical shape that has different slope depending on elevation
     RightArmorSlope=25.0
     LeftArmorSlope=25.0
     RearArmorSlope=25.0
