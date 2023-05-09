@@ -354,6 +354,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
         TestCollisionRadius = VehicleClass.default.CollisionRadius;
 
+/*
         LocationHintTag = SM.GetVehiclePoolLocationHintTag(VehiclePoolIndex);
         
         if (LocationHintTag != '')
@@ -385,6 +386,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
                 }
             }
         }
+        */
     }
     else
     {
