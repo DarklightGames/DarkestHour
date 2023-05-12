@@ -8,5 +8,5 @@ class DH_Breda30Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_Breda30Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bren'    // TODO: replace
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Breda30'
 }
