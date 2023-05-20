@@ -64,4 +64,5 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1.0)
 
     bIsArtillery=true
+    ResupplyInterval=12.0
 }
