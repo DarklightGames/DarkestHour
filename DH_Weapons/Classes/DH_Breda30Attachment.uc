@@ -7,13 +7,26 @@ class DH_Breda30Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.bren_3rd'
+    Mesh=SkeletalMesh'DH_Breda30_anm.Breda30_world'
     MenuImage=Texture'DH_Breda30_tex.weapon_icons.breda30_icon'
     
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    MuzzleBoneName="tip"
-    ShellEjectionBoneName="weapon_eject"
+    MuzzleBoneName="MUZZLE"
+    ShellEjectionBoneName="EJECTOR"
+
+    WA_Idle="idle_breda"
+    WA_IdleEmpty="idle_breda"
+    WA_ProneIdle="idle_breda"
+    WA_DeployedIdle="idle_breda"
+    WA_Fire="idle_breda"
+    WA_DeployedFire="idle_breda"
+    WA_Reload="idle_breda"
+    WA_ReloadEmpty="idle_breda"
+    WA_CrouchReload="idle_breda"
+    WA_CrouchReloadEmpty="idle_breda"
+    WA_ProneReload="idle_breda"
+    WA_ProneReloadEmpty="idle_breda"
 
     PA_MovementAnims(0)="stand_jogF_zb30"
     PA_MovementAnims(1)="stand_jogB_zb30"
@@ -162,12 +175,4 @@ defaultproperties
     
     PA_DiveToProneStartAnim="prone_diveF_kar"
     PA_DiveToProneEndAnim="prone_diveend_kar"
-    
-    WA_Idle="idle_zb30"
-    WA_IdleEmpty="idle_zb30"
-    WA_Fire="idle_zb30"
-    WA_Reload="reload_zb30"
-    WA_ReloadEmpty="reload_zb30"
-    WA_ProneReload="prone_reload_zb30"
-    WA_ProneReloadEmpty="prone_reload_zb30"
 }
