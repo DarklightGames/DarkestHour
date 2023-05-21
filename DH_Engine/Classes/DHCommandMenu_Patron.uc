@@ -5,21 +5,21 @@
 
 class DHCommandMenu_Patron extends DHCommandMenu;
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
     PC = GetPlayerController();
 
-    if (PC == none || Index < 0 || Index >= Options.Length)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    switch (Index)
+    switch (OptionIndex)
     {
         case 0: // Construction
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");

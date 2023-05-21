@@ -50,6 +50,6 @@ defaultproperties
 
     //Add AMMO HIT BOX for 7.5 cm shell storage
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-45.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    //AmmoIgnitionProbability=0.75  // 0.75 default
-    //^ "unknown property"
+    FireDetonationChance=0.07 //increased fire detonation and ammo ignition probability over normal halftrack as ammo is explosive
+    AmmoIgnitionProbability=0.75
 }

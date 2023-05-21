@@ -19,8 +19,12 @@ var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only sh
 var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
 var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
+var automated   GUIImage            i_NoRallyPoints;
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
+
+var Color DarkBackgroundColor;
+var Color LightBackgroundColor;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -146,6 +150,18 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
     }
 }
 
+function UpdateBackgroundColor(DHPlayerReplicationInfo PRI)
+{
+    if (SquadIndex == PRI.SquadIndex)
+    {
+        i_Background.ImageColor = default.LightBackgroundColor;
+    }
+    else
+    {
+        i_Background.ImageColor = default.DarkBackgroundColor;
+    }
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUIButton Name=LockSquadButton
@@ -174,13 +190,36 @@ defaultproperties
     End Object
     i_LockSquad=LockSquadImage
 
+    Begin Object Class=GUIToolTip Name=NoRallyPointsImageTooltip
+    End Object
+
+    Begin Object class=GUIImage Name=NoRallyPointsImage
+        WinWidth=0.15
+        WinHeight=0.075
+        WinLeft=0.76
+        WinTop=0.05
+        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        ImageColor=(R=255,G=0,B=0,A=200)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+        bBoundToParent=true
+        bScaleToParent=true
+        bVisible=false
+        RenderWeight=10.0
+        bAcceptsInput=true
+        ToolTip=NoRallyPointsImageTooltip
+        Hint="This squad has had no rally points in a while. Deployment options may be limited!"
+    End Object
+    i_NoRallyPoints=NoRallyPointsImage
+
     Begin Object class=GUIImage Name=BackgroundImage
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
         Image=Texture'DH_GUI_tex.DeployMenu.squad_panel'
-        ImageColor=(R=255,G=255,B=255,A=255);
+        ImageColor=(R=192,G=192,B=192,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Stretched
         bBoundToParent=true
@@ -276,4 +315,7 @@ defaultproperties
     b_JoinSquad=JoinSquadButton
 
     OnShow=InternalOnShow
+    
+    DarkBackgroundColor=(R=128,G=128,B=128,A=255)
+    LightBackgroundColor=(R=255,G=255,B=255,A=255)
 }
