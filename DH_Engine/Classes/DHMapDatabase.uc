@@ -386,4 +386,6 @@ defaultproperties
     MapInfos(157)=(Name="DH-Stavelot_Defence",AlliedNation=NATION_USA,GameType=GAMETYPE_Defence,Size=SIZE_Medium)
     MapInfos(158)=(Name="DH-Targnon_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(159)=(Name="DH-Kharkov_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(160)=(Name="DH-Endsieg_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(161)=(Name="DH-Armored_La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
 }
