@@ -5861,10 +5861,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=11
-        Minor=4
-        Patch=6
-        Prerelease=""
+        Major=12
+        Minor=0
+        Patch=0
+        Prerelease="alpha"
     End Object
     Version=VersionObject
 
