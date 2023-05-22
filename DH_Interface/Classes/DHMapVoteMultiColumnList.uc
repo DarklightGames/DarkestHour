@@ -173,12 +173,16 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         GetCellLeftWidth(1, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
 
-        // Type
+        // Axis Side
         GetCellLeftWidth(2, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation), FontScale);
+
+        // Type
+        GetCellLeftWidth(3, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType), FontScale);
 
         // Map Size
-        GetCellLeftWidth(3, CellLeft, CellWidth);
+        GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawStyle = DrawStyle;
 
         class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
@@ -223,12 +227,17 @@ function string GetSortString(int i)
             {
                 return class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
             }
-        case 2: // Game Type
+        case 2: // Axis country
+            if (bHasMapInfo)
+            {
+                return class'DHMapDatabase'.static.GetAxisNationString(MI.AxisNation);
+            }
+        case 3: // Game Type
             if (bHasMapInfo)
             {
                 return class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
             }
-        case 3: // Map Size
+        case 4: // Map Size
             if (bHasMapInfo)
             {
                 return string(int(MI.Size));
@@ -242,21 +251,24 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    // Map Name | Allied Nation | Game Type | Map Size
+    // Map Name | Allied Nation | Axis Nation | Game Type | Map Size
     ColumnHeadings(0)="Map Name"
     ColumnHeadings(1)="Allied Nation"
-    ColumnHeadings(2)="Game Type"
-    ColumnHeadings(3)="Map Size"
+    ColumnHeadings(2)="Axis Nation"
+    ColumnHeadings(3)="Game Type"
+    ColumnHeadings(4)="Map Size"
 
-    InitColumnPerc(0)=0.35
-    InitColumnPerc(1)=0.20
-    InitColumnPerc(2)=0.20
-    InitColumnPerc(3)=0.25
+    InitColumnPerc(0)=0.40
+    InitColumnPerc(1)=0.15
+    InitColumnPerc(2)=0.15
+    InitColumnPerc(3)=0.15
+    InitColumnPerc(4)=0.15
 
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="The Allied country for the map."
-    ColumnHeadingHints(2)="What type of game or battle for the map."
-    ColumnHeadingHints(3)="Recommended players for the map."
+    ColumnHeadingHints(2)="The Axis country for the map."
+    ColumnHeadingHints(3)="What type of game or battle for the map."
+    ColumnHeadingHints(4)="Recommended players for the map."
 
     RedListStyleName="DHListRed"
 }
