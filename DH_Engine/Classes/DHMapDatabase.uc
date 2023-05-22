@@ -5,12 +5,6 @@
 
 class DHMapDatabase extends Object;
 
-enum EMapSource
-{
-    SOURCE_Official,
-    SOURCE_Community
-};
-
 enum EMapSize
 {
     SIZE_Any,           // 0-64 players
@@ -33,7 +27,6 @@ enum EMapGameType
 struct SMapInfo
 {
     var string Name;
-    var EMapSource Source;
     var EMapSize Size;
     var EMapGameType GameType;
     var DH_LevelInfo.EAlliedNation AlliedNation;
@@ -45,19 +38,6 @@ var HashTable_string_int    MapInfoIndexTable;
 function Initialize()
 {
     BuildMapInfos();
-}
-
-static function string GetMapSourceString(EMapSource MapSource)
-{
-    switch (MapSource)
-    {
-        case SOURCE_Official:
-            return "Official";
-        case SOURCE_Community:
-            return "Community";
-        default:
-            return "Invalid source";
-    }
 }
 
 static function string GetMapGameTypeString(EMapGameType GameType)
@@ -170,53 +150,6 @@ function bool GetMapInfo(string MapName, out SMapInfo MI)
     }
 
     return false;
-}
-
-function bool IsMapOfficial(string MapName)
-{
-    local SMapInfo MI;
-
-    if (GetMapInfo(MapName, MI))
-    {
-        return MI.Source == SOURCE_Official;
-    }
-
-    return false;
-}
-
-static function bool StaticIsMapOfficial(string MapName)
-{
-    local int i;
-
-    for (i = 0; i < default.MapInfos.Length; ++i)
-    {
-        if (default.MapInfos[i].Name ~= MapName)
-        {
-            return default.MapInfos[i].Source == SOURCE_Official;
-        }
-    }
-
-    return false;
-}
-
-static function EMapSource StaticGetMapSource(string MapName)
-{
-    local int i;
-
-    for (i = 0; i < default.MapInfos.Length; ++i)
-    {
-        if (default.MapInfos[i].Name ~= MapName)
-        {
-            return default.MapInfos[i].Source;
-        }
-    }
-
-    return SOURCE_Community;
-}
-
-static function string StaticGetMapSourceString(string MapName)
-{
-    return static.GetMapSourceString(static.StaticGetMapSource(MapName));
 }
 
 static function string GetHumanReadableMapName(string MapName)

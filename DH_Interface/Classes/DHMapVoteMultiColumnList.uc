@@ -169,20 +169,16 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     if (MapDatabase != none && MapDatabase.GetMapInfo(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, MI))
     {
-        // Source
-        GetCellLeftWidth(1, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSourceString(MI.Source), FontScale);
-
         // Allied Side
-        GetCellLeftWidth(2, CellLeft, CellWidth);
+        GetCellLeftWidth(1, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation), FontScale);
 
         // Type
-        GetCellLeftWidth(3, CellLeft, CellWidth);
+        GetCellLeftWidth(2, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType), FontScale);
 
         // Map Size
-        GetCellLeftWidth(4, CellLeft, CellWidth);
+        GetCellLeftWidth(3, CellLeft, CellWidth);
         OldDrawStyle = DrawStyle;
 
         class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
@@ -193,7 +189,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             DrawStyle = RedListStyle;
         }
 
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
         DrawStyle = OldDrawStyle;
     }
 }
@@ -222,22 +218,17 @@ function string GetSortString(int i)
     {
         case 0: // Map name
             return Locs(class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
-        case 1: // Source
-            if (bHasMapInfo)
-            {
-                return class'DHMapDatabase'.static.GetMapSourceString(MI.Source);
-            }
-        case 2: // Allied country
+        case 1: // Allied country
             if (bHasMapInfo)
             {
                 return class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
             }
-        case 3: // Game Type
+        case 2: // Game Type
             if (bHasMapInfo)
             {
                 return class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
             }
-        case 4: // Map Size
+        case 3: // Map Size
             if (bHasMapInfo)
             {
                 return string(int(MI.Size));
@@ -251,24 +242,21 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    // Map Name | Source | Allied Nation | Game Type | Map Size
+    // Map Name | Allied Nation | Game Type | Map Size
     ColumnHeadings(0)="Map Name"
-    ColumnHeadings(1)="Source"
-    ColumnHeadings(2)="Allied Nation"
-    ColumnHeadings(3)="Game Type"
-    ColumnHeadings(4)="Map Size"
+    ColumnHeadings(1)="Allied Nation"
+    ColumnHeadings(2)="Game Type"
+    ColumnHeadings(3)="Map Size"
 
-    InitColumnPerc(0)=0.25
-    InitColumnPerc(1)=0.2
-    InitColumnPerc(2)=0.15
-    InitColumnPerc(3)=0.15
-    InitColumnPerc(4)=0.25
+    InitColumnPerc(0)=0.35
+    InitColumnPerc(1)=0.20
+    InitColumnPerc(2)=0.20
+    InitColumnPerc(3)=0.25
 
     ColumnHeadingHints(0)="The map's name."
-    ColumnHeadingHints(1)="Current domain of the level, community or official."
-    ColumnHeadingHints(2)="The Allied country for the map."
-    ColumnHeadingHints(3)="What type of game or battle for the map."
-    ColumnHeadingHints(4)="Recommended players for the map."
+    ColumnHeadingHints(1)="The Allied country for the map."
+    ColumnHeadingHints(2)="What type of game or battle for the map."
+    ColumnHeadingHints(3)="Recommended players for the map."
 
     RedListStyleName="DHListRed"
 }
