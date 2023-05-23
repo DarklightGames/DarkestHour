@@ -193,7 +193,7 @@ simulated function PostBeginPlay()
 
     // Pre-apply bayonet based on user setting (the user setting gets updated when client connects or changes the setting)
     // If this is a bayonet weapon & is the server and client wants a bayonet attached at spawn, then set the bayonet mounted and update status
-    if (bHasBayonet && Role == ROLE_Authority && Instigator != none && Instigator.Controller != none)
+    if (bHasBayonet && Role == ROLE_Authority && Instigator != none)
     {
         PC = DHPlayer(Instigator.Controller);
 
@@ -219,13 +219,6 @@ simulated function PostBeginPlay()
         {
             PlayAnim(IdleAnim, IdleAnimRate, 0.0);
         }
-    }
-
-    if (InstigatorIsLocallyControlled())
-    {
-        CreateBipodPhysicsSimulation();
-        SetupMagazineAnimationChannels();
-        SpawnAmmoBelt();
     }
 
     if (bHasScope)
@@ -746,6 +739,13 @@ function byte BestMode()
     return super.BestMode();
 }
 
+simulated function InitializeClientWeaponSystems()
+{
+    CreateBipodPhysicsSimulation();
+    SetupMagazineAnimationChannels();
+    SpawnAmmoBelt();
+}
+
 // Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -758,6 +758,8 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocalHuman())
     {
+        InitializeClientWeaponSystems();
+
         if (bBarrelSteamActive)
         {
             SetBarrelSteamActive(true);
@@ -3342,7 +3344,7 @@ simulated function UpdateScopeMode()
     }
 }
 
-function SetupMagazineAnimationChannels()
+simulated function SetupMagazineAnimationChannels()
 {
     local int i;
 
@@ -3384,11 +3386,23 @@ simulated function UpdateAmmoBelt()
     }
 }
 
-// Spawn the first person linked ammo belt
+// Spawn the first person linked ammo belt.
 simulated function SpawnAmmoBelt()
 {
     local int i;
 
+    // Delete any existing belt bullets.
+    for (i = 0; i < MGBeltArray.Length; ++i)
+    {
+        if (MGBeltArray[i] != none)
+        {
+            MGBeltArray[i].Destroy();
+        }
+    }
+
+    MGBeltArray.Length = 0;
+
+    // Spawn in the new bullets.
     for (i = 0; i < MGBeltBones.Length; ++i)
     {
         MGBeltArray[i] = Spawn(BeltBulletClass, self);
