@@ -5,12 +5,6 @@
 
 class DHMapDatabase extends Object;
 
-enum EMapSource
-{
-    SOURCE_Official,
-    SOURCE_Community
-};
-
 enum EMapSize
 {
     SIZE_Any,           // 0-64 players
@@ -33,10 +27,10 @@ enum EMapGameType
 struct SMapInfo
 {
     var string Name;
-    var EMapSource Source;
     var EMapSize Size;
     var EMapGameType GameType;
     var DH_LevelInfo.EAlliedNation AlliedNation;
+    var DH_LevelInfo.EAxisNation AxisNation;
 };
 
 var array<SMapInfo>         MapInfos;
@@ -45,19 +39,6 @@ var HashTable_string_int    MapInfoIndexTable;
 function Initialize()
 {
     BuildMapInfos();
-}
-
-static function string GetMapSourceString(EMapSource MapSource)
-{
-    switch (MapSource)
-    {
-        case SOURCE_Official:
-            return "Official";
-        case SOURCE_Community:
-            return "Community";
-        default:
-            return "Invalid source";
-    }
 }
 
 static function string GetMapGameTypeString(EMapGameType GameType)
@@ -112,6 +93,17 @@ static function string GetAlliedNationString(DH_LevelInfo.EAlliedNation AlliedNa
             return "USSR";
         case NATION_Poland:
             return "Poland";
+    }
+}
+
+static function string GetAxisNationString(DH_LevelInfo.EAxisNation AxisNation)
+{
+    switch (AxisNation)
+    {
+        case NATION_Germany:
+            return "Germany";
+        case NATION_Italy:
+            return "Italy";
     }
 }
 
@@ -170,53 +162,6 @@ function bool GetMapInfo(string MapName, out SMapInfo MI)
     }
 
     return false;
-}
-
-function bool IsMapOfficial(string MapName)
-{
-    local SMapInfo MI;
-
-    if (GetMapInfo(MapName, MI))
-    {
-        return MI.Source == SOURCE_Official;
-    }
-
-    return false;
-}
-
-static function bool StaticIsMapOfficial(string MapName)
-{
-    local int i;
-
-    for (i = 0; i < default.MapInfos.Length; ++i)
-    {
-        if (default.MapInfos[i].Name ~= MapName)
-        {
-            return default.MapInfos[i].Source == SOURCE_Official;
-        }
-    }
-
-    return false;
-}
-
-static function EMapSource StaticGetMapSource(string MapName)
-{
-    local int i;
-
-    for (i = 0; i < default.MapInfos.Length; ++i)
-    {
-        if (default.MapInfos[i].Name ~= MapName)
-        {
-            return default.MapInfos[i].Source;
-        }
-    }
-
-    return SOURCE_Community;
-}
-
-static function string StaticGetMapSourceString(string MapName)
-{
-    return static.GetMapSourceString(static.StaticGetMapSource(MapName));
 }
 
 static function string GetHumanReadableMapName(string MapName)
@@ -301,7 +246,7 @@ defaultproperties
     MapInfos(72)=(Name="DH-Riga_Docks_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(73)=(Name="DH-Rhine_River_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(74)=(Name="DH-Salaca_River_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Medium)
-    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(76)=(Name="DH-Schijndel_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(77)=(Name="DH-Smolensk_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Small)
     MapInfos(78)=(Name="DH-Turqueville_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
@@ -388,4 +333,8 @@ defaultproperties
     MapInfos(159)=(Name="DH-Kharkov_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(160)=(Name="DH-Endsieg_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(161)=(Name="DH-Armored_La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
+    MapInfos(162)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
+    MapInfos(163)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
+    MapInfos(164)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
+    MapInfos(165)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
 }
