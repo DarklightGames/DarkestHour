@@ -151,19 +151,26 @@ var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each
 
 var     bool            bCanUseIronsights;      // allows firing from a shouldered/hipfire position (while not deployed)
 
-// Magazine animations
+enum EWeaponComponentAnimationDriverType
+{
+    DRIVER_MagazineAmmunition,  // Drives the animation based on the number of rounds in the magazine.
+                                // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
+                                // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
+                                // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+};
+
+// Weapon component animations
 // These are used to animate a part of the mesh based
-// on the number of rounds remaining in the magazine.
-struct MagazineAnimation
+// on the state of the weapon (e.g., the number of rounds
+// remaining in the magazine, etc.)
+struct WeaponComponentAnimation
 {
     var int Channel;    // Channel index
     var name BoneName;  // Used as the root of the new channel
     var name Animation; // The animation to use.
-                        // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
-                        // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
-                        // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+    var EWeaponComponentAnimationDriverType DriverType;
 };
-var array<MagazineAnimation> MagazineAnimations;
+var array<WeaponComponentAnimation> WeaponComponentAnimations;
 
 // Bullets for MG belts and magazines
 var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
@@ -742,7 +749,7 @@ function byte BestMode()
 simulated function InitializeClientWeaponSystems()
 {
     CreateBipodPhysicsSimulation();
-    SetupMagazineAnimationChannels();
+    SetupWeaponComponentAnimationChannels();
     SpawnAmmoBelt();
 }
 
@@ -766,7 +773,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
         }
 
         UpdateBayonet();
-        UpdateMagazineAnimations(GetMagazinePercent());
+        UpdateWeaponComponentAnimations();
         UpdateAmmoBelt();
     }
 }
@@ -834,7 +841,7 @@ simulated state RaisingWeapon
                 PlayerViewZoom(false);
             }
 
-            UpdateMagazineAnimations(GetMagazinePercent());
+            UpdateWeaponComponentAnimations();
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(SelectEmptyAnim))
@@ -3344,14 +3351,18 @@ simulated function UpdateScopeMode()
     }
 }
 
-simulated function SetupMagazineAnimationChannels()
+//=============================================================================
+// WEAPON COMPONENT ANIMATION CHANNELS
+//=============================================================================
+
+simulated function SetupWeaponComponentAnimationChannels()
 {
     local int i;
 
-    for (i = 0; i < MagazineAnimations.Length; ++i)
+    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
     {
-        AnimBlendParams(MagazineAnimations[i].Channel, 1.0,,, MagazineAnimations[i].BoneName);
-        PlayAnim(MagazineAnimations[i].Animation, 1.0,, MagazineAnimations[i].Channel);
+        AnimBlendParams(WeaponComponentAnimations[i].Channel, 1.0,,, WeaponComponentAnimations[i].BoneName);
+        PlayAnim(WeaponComponentAnimations[i].Animation, 1.0,, WeaponComponentAnimations[i].Channel);
     }
 }
 
@@ -3360,15 +3371,61 @@ simulated function float GetMagazinePercent()
     return FClamp(float(AmmoAmount(0)) / MaxAmmo(0), 0.0, 1.0);
 }
 
-simulated function UpdateMagazineAnimations(float Theta)
+// Returns the animation time (i.e. frame) for a given component and theta value.
+simulated private function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
+{
+    switch (WeaponComponentAnimations[ComponentIndex].DriverType)
+    {
+        case DRIVER_MagazineAmmunition:
+            // Magazine-driven animations are expected to have N+1 frames where N is the maximum ammo.
+            return Theta * MaxAmmo(0);
+        default:
+            return 0.0;
+    }
+}
+
+// The theta value is a percentage (0.0 - 1.0) of how far along the animation should be.
+simulated private function float GetWeaponComponentAnimationTheta(int ComponentIndex)
+{
+    switch (WeaponComponentAnimations[ComponentIndex].DriverType)
+    {
+        case DRIVER_MagazineAmmunition:
+            return GetMagazinePercent();
+        default:
+            return 0.0;
+    }
+}
+
+// Updates magazine ammunition animations with a given theta.
+// Used when needing to drive the animation manually (i.e., with animation triggers).
+simulated function UpdateWeaponComponentAnimationsWithDriverType(float Theta, EWeaponComponentAnimationDriverType DriverType)
 {
     local int i;
-    local int Frame;
 
-    for (i = 0; i < MagazineAnimations.Length; ++i)
+    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
     {
-        PlayAnim(MagazineAnimations[i].Animation, 1.0,, MagazineAnimations[i].Channel);
-        FreezeAnimAt(Theta * MaxAmmo(0), MagazineAnimations[i].Channel);
+        if (WeaponComponentAnimations[i].DriverType == DriverType)
+        {
+            UpdateWeaponComponentAnimation(i, Theta);
+        }
+    }
+}
+
+// Updates a single weapon component animation with a given theta.
+private simulated function UpdateWeaponComponentAnimation(int ComponentIndex, float Theta)
+{
+    PlayAnim(WeaponComponentAnimations[ComponentIndex].Animation, 1.0,, WeaponComponentAnimations[ComponentIndex].Channel);
+    FreezeAnimAt(GetWeaponComponentAnimationTime(ComponentIndex, Theta), WeaponComponentAnimations[ComponentIndex].Channel);
+}
+
+// Updates all weapon component animations with their respective theta values.
+simulated function UpdateWeaponComponentAnimations()
+{
+    local int i;
+
+    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
+    {
+        UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(i));
     }
 }
 
@@ -3377,7 +3434,7 @@ simulated function UpdateAmmoBelt()
 {
     local int i;
 
-    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
+    for (i = Max(0, AmmoAmount(0)); i < MGBeltArray.Length; ++i)
     {
         if (MGBeltArray[i] != none)
         {

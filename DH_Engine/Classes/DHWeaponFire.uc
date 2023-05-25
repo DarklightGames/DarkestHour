@@ -86,7 +86,7 @@ event ModeDoFire()
 
     if (ProjectileWeapon != none)
     {
-        ProjectileWeapon.UpdateMagazineAnimations(ProjectileWeapon.GetMagazinePercent());
+        ProjectileWeapon.UpdateWeaponComponentAnimations();
         ProjectileWeapon.UpdateAmmoBelt();
     }
 }
