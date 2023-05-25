@@ -3355,7 +3355,33 @@ simulated function UpdateScopeMode()
 // WEAPON COMPONENT ANIMATION CHANNELS
 //=============================================================================
 
-simulated function SetupWeaponComponentAnimationChannels()
+// Mute animation channels for a specific driver type.
+simulated function MuteWeaponComponentAnimationChannelsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
+{
+    SetWeaponComponentAnimationChannelsBlendAlpha(DriverType, 0.0);
+}
+
+// Unmute animation channels for a specific driver type.
+simulated function UnmuteWeaponComponentAnimationChannelsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
+{
+    SetWeaponComponentAnimationChannelsBlendAlpha(DriverType, 1.0);
+}
+
+// Set the blend alpha for animation channels for a specific driver type.
+private simulated function SetWeaponComponentAnimationChannelsBlendAlpha(EWeaponComponentAnimationDriverType DriverType, float BlendAlpha)
+{
+    local int i;
+
+    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
+    {
+        if (WeaponComponentAnimations[i].DriverType == DriverType)
+        {
+            AnimBlendParams(WeaponComponentAnimations[i].Channel, BlendAlpha,,, WeaponComponentAnimations[i].BoneName);
+        }
+    }
+}
+
+private simulated function SetupWeaponComponentAnimationChannels()
 {
     local int i;
 
@@ -3385,9 +3411,9 @@ simulated private function float GetWeaponComponentAnimationTime(int ComponentIn
 }
 
 // The theta value is a percentage (0.0 - 1.0) of how far along the animation should be.
-simulated private function float GetWeaponComponentAnimationTheta(int ComponentIndex)
+simulated private function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
 {
-    switch (WeaponComponentAnimations[ComponentIndex].DriverType)
+    switch (DriverType)
     {
         case DRIVER_MagazineAmmunition:
             return GetMagazinePercent();
@@ -3398,7 +3424,7 @@ simulated private function float GetWeaponComponentAnimationTheta(int ComponentI
 
 // Updates magazine ammunition animations with a given theta.
 // Used when needing to drive the animation manually (i.e., with animation triggers).
-simulated function UpdateWeaponComponentAnimationsWithDriverType(float Theta, EWeaponComponentAnimationDriverType DriverType)
+simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType, float Theta)
 {
     local int i;
 
@@ -3425,7 +3451,7 @@ simulated function UpdateWeaponComponentAnimations()
 
     for (i = 0; i < WeaponComponentAnimations.Length; ++i)
     {
-        UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(i));
+        UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(WeaponComponentAnimations[i].DriverType));
     }
 }
 

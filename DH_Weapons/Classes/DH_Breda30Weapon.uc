@@ -86,7 +86,7 @@ simulated event BredaClipInserted()
     RenewAmmoBelt();
 
     // Manually update the magazine animation with the pending ammo count.
-    UpdateWeaponComponentAnimationsWithDriverType(Theta, DRIVER_MagazineAmmunition);
+    UpdateWeaponComponentAnimationsWithDriverType(DRIVER_MagazineAmmunition, Theta);
 }
 
 simulated event BredaShowSpillBulletBones()
