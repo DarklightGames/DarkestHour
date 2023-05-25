@@ -6,17 +6,6 @@
 class DHMGAutomaticFire extends DHFastAutoFire
     abstract;
 
-// Modified to make rounds disappear from the visible ammo belt when nearly out of ammo
-event ModeDoFire()
-{
-    super.ModeDoFire();
-
-    if (Level.NetMode != NM_DedicatedServer && DHMGWeapon(Weapon) != none)
-    {
-        DHMGWeapon(Weapon).UpdateAmmoBelt();
-    }
-}
-
 // Modified to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
 simulated function float CustomHandleRecoil()
 {
