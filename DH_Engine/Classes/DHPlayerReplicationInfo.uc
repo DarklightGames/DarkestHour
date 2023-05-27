@@ -46,6 +46,7 @@ var     int                     CategoryScores[2];
 
 var     localized string        SquadLeaderAbbreviation;
 var     localized string        AssistantAbbreviation;
+var     localized string        LogisticCrewAbbreviation;
 
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
@@ -56,7 +57,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
+        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant, bIsLogisticCrew,
         TotalScore, CategoryScores, CountryIndex, PlayerIQ, NoRallyPointsTime;
 }
 
@@ -69,6 +70,10 @@ simulated function string GetNamePrefix()
     else if (bIsSquadAssistant)
     {
         return default.AssistantAbbreviation;
+    }
+    else if (IsLogisticCrew()) 
+    {
+        return default.LogisticCrewAbbreviation;
     }
     else if (IsInSquad())
     {
@@ -97,6 +102,11 @@ simulated function bool IsSL()
 simulated function bool IsAssistantLeader()
 {
     return IsInSquad() && bIsSquadAssistant;
+}
+
+simulated function bool IsLogisticCrew()
+{
+    return bIsLogisticCrew;
 }
 
 simulated function bool IsASL()
@@ -264,5 +274,6 @@ defaultproperties
     SquadMemberIndex=-1
     SquadLeaderAbbreviation="SL"
     AssistantAbbreviation="A"
+    LogisticCrewAbbreviation="L"
     CountryIndex=-1
 }
