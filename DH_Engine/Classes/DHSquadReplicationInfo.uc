@@ -236,7 +236,7 @@ function Timer()
         }
 
         // SLs, ASLs and radio operators should know where all squad leaders are.
-        if (PRI.IsSLorASL() || PRI.IsRadioman())
+        if (PRI.IsAbleToConstruct() || PRI.IsRadioman() || PRI.IsSLorASL())
         {
             UpdateSquadLeaderLocations(PC);
         }

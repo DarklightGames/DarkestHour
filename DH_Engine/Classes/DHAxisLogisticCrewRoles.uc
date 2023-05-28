@@ -9,10 +9,12 @@ class DHAxisLogisticCrewRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Logistic Crew"
-    AltName="Pioneer"
+    AltName="Pioneer Besatzung"
     Article="a "
     PluralName="Logistic Crew"
     Limit=3
     bIsLogiCrew=true
-    bSpawnWithExtraAmmo=false
+    bCanBeSquadLeader=false
+    bExemptSquadRequirement=true
+    bSpawnWithExtraAmmo=true
 }

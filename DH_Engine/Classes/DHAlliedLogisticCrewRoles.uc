@@ -15,5 +15,7 @@ defaultproperties
     PluralName="Logistic Crew"
     Limit=3
     bIsLogiCrew=true
-    bSpawnWithExtraAmmo=false
+    bCanBeSquadLeader=false
+    bExemptSquadRequirement=true
+    bSpawnWithExtraAmmo=true
 }

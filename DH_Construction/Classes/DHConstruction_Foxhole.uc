@@ -91,7 +91,7 @@ static function float GetTerrainScale(TerrainInfo TI)
 
 static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 {
-    return PRI.IsSLorASL() || PRI.IsPatron();
+    return PRI.IsAbleToConstruct() || PRI.IsPatron();
 }
 
 static function bool IsTerrainScaleLarge(TerrainInfo TI)

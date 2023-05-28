@@ -25,7 +25,9 @@ enum ERoleSelector
     ERS_ARTILLERY_SPOTTER,
     ERS_RADIOMAN,
     ERS_ADMIN,
-    ERS_PATRON
+    ERS_PATRON,
+    ERS_LOGISTICCREW,
+
 };
 
 var     EPatronTier             PatronTier;
@@ -57,7 +59,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant, bIsLogisticCrew,
+        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
         TotalScore, CategoryScores, CountryIndex, PlayerIQ, NoRallyPointsTime;
 }
 
@@ -106,7 +108,11 @@ simulated function bool IsAssistantLeader()
 
 simulated function bool IsLogisticCrew()
 {
-    return bIsLogisticCrew;
+    local DHPlayer PC;
+
+    PC = DHPlayer(Owner);
+
+    return PC != none && PC.IsLogisticCrew();
 }
 
 simulated function bool IsASL()
@@ -117,6 +123,11 @@ simulated function bool IsASL()
 simulated function bool IsSLorASL()
 {
     return IsSL() || IsASL();
+}
+
+simulated function bool IsAbleToConstruct() 
+{
+    return IsLogisticCrew() || IsSLorASL();
 }
 
 simulated function bool IsInSquad()
@@ -202,7 +213,7 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
 
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
-    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsAbleToConstruct();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -235,6 +246,8 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
             return IsSL();
         case ERS_ASL:
             return IsASL();
+        case ERS_LOGISTICCREW:
+            return IsLogisticCrew();
         case ERS_ARTILLERY_SPOTTER:
             return IsArtillerySpotter();
         case ERS_ARTILLERY_OPERATOR:

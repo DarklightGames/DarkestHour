@@ -3992,8 +3992,8 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
         SRI = PC.SquadReplicationInfo;
     }
 
-    // Draw other squad leaders on map
-    if (PRI.IsSLorASL() || PRI.IsRadioman())
+    // Draw other important roles on the map
+    if (PRI.IsRadioman() || PRI.IsAbleToConstruct() || PRI.IsSLorASL() )
     {
         for (i = 0; i < SRI.GetTeamSquadLimit(PC.GetTeamNum()); ++i)
         {
