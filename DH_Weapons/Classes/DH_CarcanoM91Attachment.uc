@@ -8,7 +8,7 @@ class DH_CarcanoM91Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Nagant9130'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
+    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
