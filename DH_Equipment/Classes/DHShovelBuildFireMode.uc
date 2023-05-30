@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHShovelBuildFireMode extends DHWeaponFire;
+class DHShovelBuildFireMode extends DHAutomaticFire;
 
 const SOUND_RADIUS = 32.0;
 
