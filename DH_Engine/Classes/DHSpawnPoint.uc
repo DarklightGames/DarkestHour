@@ -20,7 +20,7 @@ var()   ESpawnPointType Type;
 var()   bool            bNoSpawnVehicles;              // option to prevent SP from spawning spawn vehicles
 var()   bool            bIsInitiallyActive;            // whether or not the SP is active at the start of the round (or waits to be activated later)
 var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
-var()   bool            bBoatSpawn;                    // players can only spawn boat vehicles from here
+var(DHSpawnPointBase)   bool            bBoatSpawn;    // players can only spawn boat vehicles from here
 
 var     bool            bIsLocked;                     // locked spawn points will not be affected by enable or disable commands
 var     bool            bCanOnlySpawnInfantryVehicles; // players can spawn into infantry vehicles (as well as on foot) but can't spawn armoured fighting vehicles
