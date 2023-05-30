@@ -53,6 +53,8 @@ simulated event Destroyed()
             SpawnPoint.Destroy();
         }
     }
+    // "A Vehicle Pool has been destroyed."
+    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonVPMessage', 3);
 }
 
 defaultproperties
