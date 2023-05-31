@@ -40,6 +40,8 @@ simulated function OnBroken()
             SpawnPoint.Destroy();
         }
     }
+    // "A Vehicle Pool has been destroyed."
+    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHVehiclePoolMessage', 3);
 }
 
 simulated event Destroyed()
@@ -53,8 +55,7 @@ simulated event Destroyed()
             SpawnPoint.Destroy();
         }
     }
-    // "A Vehicle Pool has been destroyed."
-    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonVPMessage', 3);
+
 }
 
 defaultproperties
