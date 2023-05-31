@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHShovelBuildFireMode extends DHAutomaticFire;
+class DHShovelBuildFireMode extends DHWeaponFire;
 
 const SOUND_RADIUS = 32.0;
 
@@ -67,10 +67,16 @@ event ModeDoFire()
     {
         GotoState('Building');
     }
+    else 
+    {
+        Weapon.StopFire(ThisModeNum);
+    }
 }
 
 simulated state Building
 {
+    event ModeDoFire();
+
     simulated function BeginState()
     {
         PlayFiring();
@@ -127,7 +133,7 @@ defaultproperties
     TraceDistanceInMeters=2.15
     bModeExclusive=true
     bFireOnRelease=false
-    bWaitForRelease=true
+    bWaitForRelease=false
     FireAnim="dig"
     FireAnimRate=1.0
     FireTweenTime=0.25
