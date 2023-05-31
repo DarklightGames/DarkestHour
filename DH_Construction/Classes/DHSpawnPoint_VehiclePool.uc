@@ -26,7 +26,7 @@ function Timer()
                 HQSpawnPoint = SP;
 
                 // "A Vehicle Pool has been activated."
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonVPMessage', 0);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHVehiclePoolMessage', 0);
                 break;
             }
         }
