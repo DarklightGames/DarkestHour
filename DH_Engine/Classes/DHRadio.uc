@@ -145,7 +145,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
 simulated function bool IsPlayerQualified(DHPlayer PC)
 {
-    return PC != none && PC.IsSquadLeader();
+    return PC != none && PC.IsAbleToUseFireSupport();
 }
 
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
