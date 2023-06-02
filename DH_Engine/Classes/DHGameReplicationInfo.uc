@@ -1480,7 +1480,7 @@ simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer 
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToSpawnDriveVehicle(PC, RI))
     {
         return ERROR_NoLicense;
     }

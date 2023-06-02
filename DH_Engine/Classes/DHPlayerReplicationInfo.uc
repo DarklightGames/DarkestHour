@@ -216,6 +216,11 @@ simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
     return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsAbleToConstruct();
 }
 
+simulated static function bool IsPlayerLicensedToSpawnDriveVehicle(DHPlayer C, DHRoleInfo RI)
+{
+    return RI.bIsLogiCrew || C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+}
+
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
