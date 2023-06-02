@@ -8,7 +8,6 @@ class DHVehiclePoolMessage extends ROGameMessage
 
 var localized string ActivatedMessage;
 var localized string DestroyedMessage;
-var localized string ConstructedMessage;
 
 static function string GetString(
     optional int Switch,
@@ -23,8 +22,6 @@ static function string GetString(
             return default.ActivatedMessage;
         case 3:
             return default.DestroyedMessage;
-        case 4:
-            return default.ConstructedMessage;
     }
 
     return "";
@@ -35,6 +32,5 @@ defaultproperties
     DrawColor=(R=225,G=105,B=45,A=255)
     ActivatedMessage="A Vehicle Pool has been activated."
     DestroyedMessage="A Vehicle Pool has been destroyed."
-    ConstructedMessage="A Vehicle Pool has been constructed."
 }
 
