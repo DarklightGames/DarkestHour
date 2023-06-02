@@ -8,6 +8,6 @@ class DH_USLogisticCrewSummer extends DHUSLogisticCrewRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_AmericanPawn',Weight=3.0)
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetNet'
+    Headgear(0)=class'DH_USPlayers.DH_USTankerHat'
+    Headgear(1)=class'DH_USPlayers.DH_USTankerHat'
 }
