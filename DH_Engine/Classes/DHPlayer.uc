@@ -1172,8 +1172,7 @@ exec function ThrowMGAmmo()
             {
                 ServerThrowMGAmmo(OtherPawn);
             }
-
-            if (OtherPawn.bWeaponNeedsReload)
+            else if (OtherPawn.bWeaponNeedsReload)
             {
                 ServerLoadATAmmo(OtherPawn);
             }
@@ -1185,15 +1184,22 @@ exec function ThrowMGAmmo()
     }
 }
 
+// Resupply the gunner and perform an assisted reload if possible
 function ServerThrowMGAmmo(Pawn Gunner)
 {
-    local DHPawn P;
+    local DHPawn P, OtherP;
 
     P = DHPawn(Pawn);
+    OtherP = DHPawn(Gunner);
 
-    if (P != none && Gunner != none)
+    if (P != none && OtherP != none)
     {
-        P.TossAmmo(Gunner);
+        P.TossAmmo(OtherP);
+
+        if (OtherP.bWeaponNeedsReload)
+        {
+            P.LoadWeapon(OtherP);
+        }
     }
 }
 
