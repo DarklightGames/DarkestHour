@@ -25,6 +25,8 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+    
+    IronBringUpRest="iron_inrest"
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
