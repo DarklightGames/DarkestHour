@@ -240,7 +240,7 @@ var bool bIsArtillery;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex, StateName;
+        TeamIndex, StateName, Progress, ProgressMax;
 }
 
 simulated function OnConstructed();
@@ -270,6 +270,8 @@ final function SetTeamIndex(int TeamIndex)
 function IncrementProgress(Pawn InstigatedBy)
 {
     Progress += 1;
+    InstigatedBy.ReceiveLocalizedMessage(class'DHConstructionProgressMessage', 0,,, self); // Progress: Progress / ProgressMax
+
     OnProgressChanged(InstigatedBy);
 }
 
