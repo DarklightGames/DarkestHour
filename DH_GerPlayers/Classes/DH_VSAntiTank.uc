@@ -18,4 +18,6 @@ defaultproperties
 
     GivenItems(0)="DH_Weapons.DH_PanzerfaustWeapon"
     GivenItems(1)="none"
+    
+    bCanBeSquadLeader=false
 }

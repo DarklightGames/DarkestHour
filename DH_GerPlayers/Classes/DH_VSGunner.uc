@@ -19,4 +19,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon') // TO DO: some other weird sidearms?
     SecondaryWeapons(1)=(Item=none)
     SecondaryWeapons(2)=(Item=none)
+    
+    bCanBeSquadLeader=false
 }
