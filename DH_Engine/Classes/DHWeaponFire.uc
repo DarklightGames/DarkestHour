@@ -82,6 +82,11 @@ simulated function bool IsPlayerHipFiring()
     return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
 }
 
+simulated function DHConstruction GetCurrentConstruction() 
+{
+    return none;
+}
+
 // Modified to also eject shells from our new array of ejectors.
 // Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
 simulated function EjectShell()

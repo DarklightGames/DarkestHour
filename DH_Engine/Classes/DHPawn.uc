@@ -104,6 +104,8 @@ var     sound   MantleSound;
 
 // Diggin
 var     bool    bCanDig;
+var     DHConstruction  Construction;          // reference to the Construction actor we're building
+
 
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
@@ -180,6 +182,12 @@ replication
 simulated function PostBeginPlay()
 {
     super(Pawn).PostBeginPlay();
+
+    //For the CheckConstruction function
+    if (Role == ROLE_Authority)
+    {
+        SetTimer(0.25, true);
+    }
 
     if (Level.bStartup && !bNoDefaultInventory)
     {
@@ -2058,6 +2066,7 @@ function HandleStamina(float DeltaTime)
         }
     }
 }
+
 
 state Dying
 {
@@ -4344,7 +4353,7 @@ simulated function HUDCheckDig()
 {
     if (IsLocallyControlled())
     {
-        bCanDig = CanDig();
+        bCanDig = AllowedDig();
     }
 }
 
@@ -4361,10 +4370,66 @@ simulated function HUDCheckMantle()
     }
 }
 
-// Check whether there's anything in front of the player that can be built with the shovel
-simulated function bool CanDig()
+function Timer() {
+    CheckConstruction(2.15);
+}
+
+simulated function CheckConstruction(float traceDistanceInMeters) 
 {
-    return Weapon != none && Weapon.IsA('DHShovelItem') && Weapon.GetFireMode(0) != none && Weapon.GetFireMode(0).AllowFire();
+    local Actor  HitActor;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local DHPawn Pawn;
+
+    if (Weapon == none ||
+        Instigator == none ||
+        Instigator.Controller == none ||
+        Instigator.bIsCrawling ||
+        Instigator.IsProneTransitioning() ||
+        Instigator.Velocity != vect(0.0, 0.0, 0.0))
+    {
+        Construction = none;
+        return;
+    }
+
+    if (!CanBuildWithShovel())
+    {
+        Construction = none;
+        return;
+    }
+
+    TraceStart = Instigator.Location + Instigator.EyePosition();
+    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(traceDistanceInMeters) * vector(Instigator.GetViewRotation()));
+
+    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
+    {
+        if (HitActor != none &&
+            HitActor.bStatic &&
+            !HitActor.IsA('Volume') &&
+            !HitActor.IsA('ROBulletWhipAttachment') ||
+            HitActor.IsA('DHConstruction'))
+        {
+            break;
+        }
+    }
+    if (HitActor != none) {
+        Construction = DHConstruction(HitActor);
+    }
+}
+
+simulated function SetConstructionNone() 
+{
+    // Level.Game.Broadcast(self, "SetConstructionNone");
+    Construction = none;
+}
+
+simulated function bool AllowedDig()
+{
+    if (Construction == none)
+    {
+        return false;
+    }
+
+    return  (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
 }
 
 simulated function bool CanMantleActor(Actor A)
