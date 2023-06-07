@@ -896,14 +896,36 @@ function DrawHudPassC(Canvas C)
 
     if (P != none)
     {
-        // Mantling icon if an object can be climbed
-        if (P.bCanMantle)
+        if (P.bCanDig)
+        {
+            switch (P.Construction.Progress)
+            {
+                case 0:
+                    DrawSpriteWidget(C, CanDigIcon);
+                    break;
+                case 1:
+                    DrawSpriteWidget(C, CanCutWireIcon);
+                    break;
+                case 2:
+                    DrawSpriteWidget(C, CanDigIcon);
+                    break;
+                case 3:
+                    DrawSpriteWidget(C, CanCutWireIcon);
+                    break;
+                case 4:
+                    DrawSpriteWidget(C, CanDigIcon);
+                    break;
+                case 5:
+                    DrawSpriteWidget(C, CanCutWireIcon);
+                    break;
+                default:
+                    DrawSpriteWidget(C, CanDigIcon);
+                    break;
+            }
+        }
+        else if (P.bCanMantle) // Mantling icon if an object can be climbed
         {
             DrawSpriteWidget(C, CanMantleIcon);
-        }
-        else if (P.bCanDig)
-        {
-            DrawSpriteWidget(C, CanDigIcon);
         }
         // Wire cutting icon if an object can be cut
         else if (P.bCanCutWire)
