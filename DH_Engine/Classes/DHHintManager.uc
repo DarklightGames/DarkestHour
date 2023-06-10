@@ -207,6 +207,6 @@ defaultproperties
     Hints(54)=(Title="Find a Radio",Text="You have marked a target for long-range fire support. Find a radio so that you can call it in!")
 
     Hints(60)=(Title="Firing Range",Text="This weapon has an adjustable sight! Press %SWITCHFIREMODE% to change the range of the sight.")
-    Hints(61)=(Title="Desperate measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Dont waste your shots!")
+    Hints(61)=(Title="Desperate measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Don't waste your shots!")
 }
 
