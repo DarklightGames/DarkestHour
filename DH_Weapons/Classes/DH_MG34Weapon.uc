@@ -40,7 +40,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
     PickupClass=class'DH_Weapons.DH_MG34Pickup'
 
-    Mesh=SkeletalMesh'DH_Mg34_1st.MG34_Mesh' // TODO: check whether the DH version of MG34 anim file actually differs from the RO mesh & is worth keeping
+    Mesh=SkeletalMesh'DH_Mg34_1st.MG34_Mesh' 
     // Note - can't specify specularity shader as HighDetailOverlay as it doesn't work with the HDO system
     // Shader is fine when used as main weapon skin on its own, but when overlaid on top of standard texture (as the HDO is) it turns the weapon semi-transparent
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
