@@ -160,4 +160,10 @@ defaultproperties
     Records(100)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
     Records(101)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
     Records(102)=(ClasSName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
+    Records(103)=(ClasSName="DH_Weapons.DH_Kar98ScopedZF41Weapon",WeaponNames=("zf41","k98zf41"))
+    Records(104)=(ClasSName="DH_Weapons.DH_Vz24Weapon",WeaponNames=("vz24"))
+    Records(105)=(ClasSName="DH_Weapons.DH_G98Weapon",WeaponNames=("g98"))
+    Records(106)=(ClasSName="DH_Weapons.DH_M1924Weapon",WeaponNames=("m1924"))
+    Records(107)=(ClasSName="DH_Weapons.DH_M9530Weapon",WeaponNames=("manlicher","m9530"))
+    Records(108)=(ClasSName="DH_Weapons.DH_M9531Weapon",WeaponNames=("m9531"))
 }
