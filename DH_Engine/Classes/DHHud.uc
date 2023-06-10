@@ -45,6 +45,7 @@ var     float               PlayerIconScale, PlayerIconLargeScale;
 // Screen icons
 var     SpriteWidget        CanMantleIcon;
 var     SpriteWidget        CanDigIcon;
+var     SpriteWidget        CanDigProgressIcon;
 var     SpriteWidget        CanCutWireIcon;
 var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon, (white) indicates if the player has extra ammo otherwise its (grey), some roles can't carry extra ammo
 var     SpriteWidget        DeployOkayIcon;
@@ -263,6 +264,7 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DeployIcon');
     Level.AddPrecacheMaterial(CanMantleIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
+    Level.AddPrecacheMaterial(CanDigProgressIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
     Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
@@ -898,30 +900,36 @@ function DrawHudPassC(Canvas C)
     {
         if (P.bCanDig)
         {
-            switch (P.Construction.Progress)
-            {
-                case 0:
-                    DrawSpriteWidget(C, CanDigIcon);
-                    break;
-                case 1:
-                    DrawSpriteWidget(C, CanCutWireIcon);
-                    break;
-                case 2:
-                    DrawSpriteWidget(C, CanDigIcon);
-                    break;
-                case 3:
-                    DrawSpriteWidget(C, CanCutWireIcon);
-                    break;
-                case 4:
-                    DrawSpriteWidget(C, CanDigIcon);
-                    break;
-                case 5:
-                    DrawSpriteWidget(C, CanCutWireIcon);
-                    break;
-                default:
-                    DrawSpriteWidget(C, CanDigIcon);
-                    break;
-            }
+           
+            DrawSpriteWidget(C, CanDigProgressIcon);
+            DrawSpriteWidget(C, CanDigIcon);
+            CanDigProgressIcon.Scale = (float(P.Construction.Progress) * (1.0 / float(P.Construction.ProgressMax)));
+            Level.Game.Broadcast(self, "CanDigProgressIcon" @ CanDigProgressIcon.Scale);
+
+
+            // switch (P.Construction.Progress)
+            // {
+            //     case 0:
+            //         break;
+            //     case 1:
+            //         DrawSpriteWidget(C, CanDigIcon);
+            //         break;
+            //     case 2:
+            //         DrawSpriteWidget(C, CanDigIcon);
+            //         break;
+            //     case 3:
+            //         DrawSpriteWidget(C, CanCutWireIcon);
+            //         break;
+            //     case 4:
+            //         DrawSpriteWidget(C, CanDigIcon);
+            //         break;
+            //     case 5:
+            //         DrawSpriteWidget(C, CanCutWireIcon);
+            //         break;
+            //     default:
+            //         DrawSpriteWidget(C, CanDigIcon);
+            //         break;
+            // }
         }
         else if (P.bCanMantle) // Mantling icon if an object can be climbed
         {
@@ -6016,7 +6024,11 @@ defaultproperties
     NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.resupply_box'
     ExtraAmmoIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.resupply_box',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    
     CanDigIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    
+    CanDigProgressIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.85,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.93,ScaleMode=SM_UP,Scale=0.0,Tints[0]=(B=0,G=0,R=255,A=200),Tints[1]=(B=0,G=0,R=255,A=200))
+    
     CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))

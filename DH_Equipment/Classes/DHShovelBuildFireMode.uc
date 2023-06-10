@@ -16,10 +16,6 @@ simulated function bool AllowFire()
     
     Pawn = DHPawn(Instigator);
 
-    // if (Pawn != none) {
-    //     Pawn.CheckConstruction(TraceDistanceInMeters);
-    // }
-
     if (Pawn.Construction == none)
     {
         return false;
