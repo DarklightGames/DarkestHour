@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // A simple pendulum simulation to allow bipods to wobble around realistically.
 // All angles are in radians.
@@ -77,6 +77,7 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     local float YawDeltaAngularAcceleration;
     local float BarrelRoll;
     local float BarrelPitch;
+    local float BipodRoll;
     local float PendulumForce;
     local float T;
     local float AngleExcess;
@@ -151,7 +152,18 @@ function PhysicsTick(DHWeapon Weapon, float DeltaTime)
     // Reset instantaneous angular acceleration.
     InstantaneousAngularAcceleration = 0;
 
-    // Set the bone's rotation
-    BipodBoneRotation.Pitch = class'UUnits'.static.RadiansToUnreal(Angle * Settings.AngleFactor);
+    // Set the bipod bone's rotation
+    BipodRoll = class'UUnits'.static.RadiansToUnreal(Angle * Settings.AngleFactor);
+
+    switch (Settings.BipodRollAxis)
+    {
+        case AXIS_X:
+            BipodBoneRotation.Roll = BipodRoll; break;
+        case AXIS_Y:
+            BipodBoneRotation.Pitch = BipodRoll; break;
+        case AXIS_Z:
+            BipodBoneRotation.Yaw = BipodRoll; break;
+    }
+
     Weapon.SetBoneRotation(Settings.BipodBoneName, BipodBoneRotation);
 }

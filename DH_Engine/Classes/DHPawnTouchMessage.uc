@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPawnTouchMessage extends ROTouchMessagePlus
@@ -37,7 +37,7 @@ defaultproperties
 {
     Messages(0)="Press [%THROWMGAMMO%] to resupply {0}"
     Messages(1)="Press [%THROWMGAMMO%] to reload {0}"
-    Messages(2)="Press [%USE%] to request artillery"
+    Messages(2)="Press [%THROWMGAMMO%] to resupply and reload {0}"
     FallbackPlayerName="friendly soldier"
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSquadMessage extends LocalMessage
@@ -60,6 +60,10 @@ var localized string SquadMergeRequestDeniedMessage;
 var localized string SquadMergeRequestDeniedGenericMessage;
 var localized string SquadMergeFailedMessage;
 var localized string SquadTargetSelectionRefused;
+var localized string SquadPromotionRequestDeniedMessage;
+var localized string SquadPromotionRequestAcceptedMessage;
+var localized string SquadPromotionRequestSentMessage;
+var localized string SquadPromotionRequestDuplicateMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -199,6 +203,14 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.RallyPointBehindEnemyLines;
         case 81:
             return default.SquadTargetSelectionRefused;
+        case 82:
+            return Repl(default.SquadPromotionRequestDeniedMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 83:
+            return Repl(default.SquadPromotionRequestAcceptedMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 84:
+            return Repl(default.SquadPromotionRequestSentMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 85:
+            return Repl(default.SquadPromotionRequestDuplicateMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -263,6 +275,10 @@ defaultproperties
     SquadMergeRequestDeniedGenericMessage="Your squad merge was denied."
     SquadMergeFailedMessage="The squad merge failed,"
     SquadTargetSelectionRefused="You are an artillery spotter. You cannot switch the active artillery target to your own marker."
+    SquadPromotionRequestDeniedMessage="Your squad leader promotion request was denied by {0}."
+    SquadPromotionRequestAcceptedMessage="Your squad leader promotion request was accepted by {0}."
+    SquadPromotionRequestSentMessage="A squad leader promotion request has been sent to {0}."
+    SquadPromotionRequestDuplicateMessage="You have already sent {0} a squad promotion request."
 
     bIsSpecial=false
     bIsConsoleMessage=true

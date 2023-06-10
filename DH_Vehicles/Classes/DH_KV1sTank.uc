@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_KV1sTank extends DHArmoredVehicle;  //to do: is the standart texture really accurate? It's a light blue/grey color, i never found any images of such KV-1S

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMGWeapon extends DHProjectileWeapon
@@ -21,24 +21,30 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
+// TODO: REMOVE THIS WHEN WE MERGE ITALY BRANCH
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        UpdateAmmoBelt();
+    }
+}
+
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
 {
     local int i;
 
-    if (AmmoAmount(0) < 10)
+    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
     {
-        for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
-        {
-            if (MGBeltArray[i] != none)
-            {
-                MGBeltArray[i].SetDrawType(DT_None);
-            }
-        }
+        MGBeltArray[i].SetDrawType(DT_None);
     }
 }
 
-// Spawn the first person linked ammo belt
+// Spawn the first-person linked ammo belt
 simulated function SpawnAmmoBelt()
 {
     local int i;
@@ -50,16 +56,20 @@ simulated function SpawnAmmoBelt()
     }
 }
 
-// Make the full ammo belt visible again (called by anim notifies)
+// Make the ammo belt represent the ammo amount in the belt we are loading
 simulated function RenewAmmoBelt()
 {
     local int i;
 
     for (i = 0; i < MGBeltArray.Length; ++i)
     {
-        if (MGBeltArray[i] != none)
+        if (i < NextMagAmmoCount)
         {
             MGBeltArray[i].SetDrawType(DT_StaticMesh);
+        }
+        else
+        {
+            MGBeltArray[i].SetDrawType(DT_None);
         }
     }
 }
@@ -258,6 +268,7 @@ defaultproperties
     IdleAnim="Rest_Idle"
     BipodIdleAnim="Bipod_Idle"
     IdleToBipodDeploy="Rest_2_Bipod"
+    IronToBipodDeploy="Hip_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     MagEmptyReloadAnims(0)="Reload"
 

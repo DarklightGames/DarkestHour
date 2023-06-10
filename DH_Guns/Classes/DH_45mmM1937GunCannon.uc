@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_45mmM1937GunCannon extends DHATGunCannon;
@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64200
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellHE'
     //TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'

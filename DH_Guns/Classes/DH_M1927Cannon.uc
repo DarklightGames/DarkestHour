@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M1927Cannon extends DHATGunCannon;
@@ -42,9 +42,8 @@ defaultproperties
     nProjectileDescriptions(0)="OF-350"
     nProjectileDescriptions(1)="BP-350M"
 
-    ProjectileClass=class'DH_Guns.DH_M1927CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_M1927CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'    // TODO: replace
+    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
 
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=4
@@ -62,11 +61,11 @@ defaultproperties
     CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
     CannonFireSound(1)=Sound'Vehicle_Weapons.T34_76.76mm_fire02'
     CannonFireSound(2)=Sound'Vehicle_Weapons.T34_76.76mm_fire03'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=3)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=3)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=3)
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=2)
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=2)
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1)
     ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1)
 
     bIsArtillery=true
-    ResupplyInterval=25.0
+    ResupplyInterval=12.0
 }

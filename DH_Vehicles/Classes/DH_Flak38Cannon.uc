@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak38Cannon extends DHVehicleAutoCannon;
@@ -20,7 +20,6 @@ defaultproperties
     CustomPitchDownLimit=64800
 
     // Cannon ammo
-    ProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'

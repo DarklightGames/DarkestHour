@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MG34Weapon extends DHFastAutoWeapon;
@@ -70,17 +70,11 @@ defaultproperties
     bMustReloadWithBipodDeployed=true
     
     IdleToBipodDeploy="hip_2_bipod"
+    IdleToBipodDeployEmpty="hip_2_bipod"
     BipodDeployToIdle="bipod_2_hip"
     BipodIdleAnim="bipod_idle"
     BipodMagEmptyReloadAnim="bipod_reload_empty"
     BipodMagPartialReloadAnim="bipod_reload_empty"
-    
-    IdleToBipodDeployEmpty="hip_2_bipod"
-
-//    IronBringUp="Rest_2_Hip"
-//    IronPutDown="Hip_2_Rest"
-//    BipodHipIdle="Hip_Idle"
-//    BipodHipToDeploy="Hip_2_Bipod"
 
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PantherturmGun extends DHATGun;
@@ -18,7 +18,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
     ExitPositions(0)=(X=-91.0,Y=20.0,Z=110.0)
-	VehicleMass=14.0
+    VehicleMass=14.0
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -102,7 +102,7 @@ defaultproperties
     HealthMax=1600.0
     Health=1600
     EngineHealth=0
-	VehHitpoints(0)=(PointRadius=30.0,PointBone="Turret",DamageMultiplier=50.0,HitPointType=HP_AmmoStore)
+   VehHitpoints(0)=(PointRadius=30.0,PointBone="Turret",DamageMultiplier=50.0,HitPointType=HP_AmmoStore)
     DamagedEffectClass=none
     DestructionEffectClass=class'DH_Effects.DHVehicleDestroyedEmitter'
     DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'

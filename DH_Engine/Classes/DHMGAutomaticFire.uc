@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMGAutomaticFire extends DHFastAutoFire
@@ -25,10 +25,8 @@ simulated function float CustomHandleRecoil()
     {
         return PctHipMGPenalty;
     }
-    else
-    {
-        return 1.0;
-    }
+    
+    return 1.0;
 }
 
 // Modified to support ironsight mode (bUsingSights) being hipped-fire mode for MGs

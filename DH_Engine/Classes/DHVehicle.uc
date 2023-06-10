@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
@@ -4187,7 +4187,7 @@ defaultproperties
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"
     TouchMessageClass=class'DHVehicleTouchMessage'
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyAttachmentClass=class'DHResupplyAttachment_Vehicle'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
     MinRunOverSpeed=586.75 // increased from 0 to 35km/h so players don't get run over so easily by vehicles

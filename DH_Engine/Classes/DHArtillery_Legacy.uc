@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This is an artillery type used for backwards compatibility with the old
 // Red Orchestra artillery system.
@@ -60,6 +60,12 @@ function PostBeginPlay()
     // This actor's LifeSpan is set to the maximum possible length of the strike, assuming the max random time between shells & salvoes
     MaxSalvoDuration = 1.5 * (BatterySize - 1);
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
+}
+
+// Overridden so that we don't count the strike as started until the first shot has been fired.
+function bool HasStarted()
+{
+    return ShellCounter != 0 && SalvoCounter != 0;
 }
 
 // From deprecated ROArtillerySpawner

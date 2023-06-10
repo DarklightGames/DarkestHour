@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Sdkfz251MG extends DHVehicleMG;
@@ -56,4 +56,7 @@ defaultproperties
     ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
     ReloadStages(3)=(Sound=none,Duration=1.63)
+	
+    FireEffectOffset=(X=-25.0,Y=0.0,Z=-40.0)
+    FireEffectScale=0.70
 }

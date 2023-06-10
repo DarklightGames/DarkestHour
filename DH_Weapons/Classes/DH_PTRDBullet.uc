@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PTRDBullet extends DHBullet_ArmorPiercing; // this is a tungsten core BS-41 bullet; TO DO: B-39 steel core AP bullet and functionality of having 2 types of ammo in the same weapon

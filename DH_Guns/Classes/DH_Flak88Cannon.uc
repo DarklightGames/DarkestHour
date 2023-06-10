@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak88Cannon extends DHATGunCannon;
@@ -20,7 +20,6 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
 

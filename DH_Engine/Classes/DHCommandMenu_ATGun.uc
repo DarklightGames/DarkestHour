@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_ATGun extends DHCommandMenu
@@ -16,7 +16,7 @@ var localized string CooldownText;
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -25,7 +25,7 @@ function OnSelect(int Index, vector Location)
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);
 
-    if (PC == none || Index < 0 || Index >= Options.Length || Gun == none)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length || Gun == none)
     {
         return;
     }
@@ -39,7 +39,7 @@ function OnSelect(int Index, vector Location)
 
     UpdateRotationError();
 
-    switch (Index)
+    switch (OptionIndex)
     {
         case 0: // Rotate
             if (RotationError == ERROR_None)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHInventorySpawner extends Actor
@@ -18,6 +18,7 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
+var bool                bIsTeamLocked;
 var() ETeamOwner        TeamOwner;
 var private int         TeamIndex;
 
@@ -201,7 +202,7 @@ simulated event Timer()
 
 simulated function bool CanBeUsedByTeam(int TeamIndex)
 {
-    return self.TeamIndex == NEUTRAL_TEAM_INDEX || self.TeamIndex == TeamIndex;
+    return !bIsTeamLocked || self.TeamIndex == NEUTRAL_TEAM_INDEX || self.TeamIndex == TeamIndex;
 }
 
 simulated function bool CanBeUsedByPawn(Pawn User)
@@ -396,6 +397,7 @@ defaultproperties
     OpenedAnimation="opened"
     ClosedAnimation="closed"
     SavedPickupCount=-1
+    bIsTeamLocked=false
     TeamOwner=TEAM_Neutral
 }
 
