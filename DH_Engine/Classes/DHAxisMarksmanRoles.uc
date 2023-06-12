@@ -8,7 +8,8 @@ class DHAxisMarksmanRoles extends DHAxisRoles
 
 defaultproperties
 {
-    MyName="Marksman"   //historically, there was no "marksman" type role within the wehrmacht or Waffen-SS, however the ZF41 was given out to fullfill this role and there was no distinction between snipers with or without
+    //historically, there was no "marksman" type role within the wehrmacht or Waffen-SS, however the ZF41 was given out to fullfill this role and there was no distinction between snipers with or without 
+    MyName="Marksman"   //https://www.youtube.com/watch?v=sBstpqUAniw <--- reference to marksman being a thing in the wehr and SS
     AltName="Scharfsch�tze" //the native role name reflects this, but the translated name is there so that people can understand that this isnt a true "sniper"
     Article="a "        
     PluralName="Snipers"    
