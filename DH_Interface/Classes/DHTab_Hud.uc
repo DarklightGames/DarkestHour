@@ -229,6 +229,21 @@ function SaveSettings()
         }
     }
 
+    if (bUseNativeItemNamesD != bUseNativeItemNames)
+    {
+        if (PC != none)
+        {
+            PC.bUseNativeItemNames = bUseNativeItemNames;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeItemNames" @ string(bUseNativeItemNames));
+            PC.SaveConfig();
+        }
+        else
+        {
+            class'DHPlayer'.default.bUseNativeItemNames = bUseNativeItemNames;
+            class'DHPlayer'.static.StaticSaveConfig();
+        }
+    }
+
     if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
     {
         if (PC != none)
