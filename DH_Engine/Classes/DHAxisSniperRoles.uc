@@ -9,10 +9,10 @@ class DHAxisSniperRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Sniper"
-    AltName="Scharfschütze"
+    AltName="Scharfschï¿½tze"
     Article="a "
     PluralName="Snipers"
-    Limit=2
+    Limit=1
     AddedRoleRespawnTime=15
     bExemptSquadRequirement=true
     bCanBeSquadLeader=false
