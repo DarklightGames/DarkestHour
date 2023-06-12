@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_WHSniper_Snow extends DHGEMarksmanRoles;
+class DH_WHMarksman_Snow extends DHGEMarksmanRoles;
 
 defaultproperties
 {
