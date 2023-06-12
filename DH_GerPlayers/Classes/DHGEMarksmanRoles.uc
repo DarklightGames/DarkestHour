@@ -11,8 +11,7 @@ defaultproperties
     //ZF41 was used in place of regular snipers as a way to extend the gruppe's range and allow them to take out harder targets like machineguns and pillboxes
     //There was distinction between snipers and marksmen
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedZF41Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
