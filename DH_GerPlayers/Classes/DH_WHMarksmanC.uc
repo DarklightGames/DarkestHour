@@ -3,12 +3,13 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_WHMarksman extends DHGEMarksmanRoles;
+class DH_WHMarksmanC extends DHGEMarksmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn')
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn')
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'ROInventory.ROGermanHat'
 }
