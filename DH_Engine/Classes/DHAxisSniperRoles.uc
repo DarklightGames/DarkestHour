@@ -9,7 +9,7 @@ class DHAxisSniperRoles extends DHAxisRoles
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
     Limit=1
