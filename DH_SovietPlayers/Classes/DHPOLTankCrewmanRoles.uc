@@ -8,7 +8,6 @@ class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRoles
 
 defaultproperties
 {
-    //name with proper cyrilic 
     AltName="Czo?gista"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
