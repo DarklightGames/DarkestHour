@@ -1,12 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Vz24Pickup extends DHWeaponPickup;
+class DH_DT29Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_Vz24Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.vz24' 
+    FiringHeatIncrement=0.85
 }
