@@ -24,11 +24,11 @@ defaultproperties
     DefaultSquadNames(0)="Adam"
     DefaultSquadNames(1)="Bozena"
     DefaultSquadNames(2)="Cyril"
-    DefaultSquadNames(3)="Cenek"
-    DefaultSquadNames(4)="David"
-    DefaultSquadNames(5)="Dumbier"
-    DefaultSquadNames(6)="Emil"
-    DefaultSquadNames(7)="Frantisek"
+    DefaultSquadNames(3)="David"
+    DefaultSquadNames(4)="Emil"
+    DefaultSquadNames(5)="Frantisek"
+    DefaultSquadNames(6)="Gustav"
+    DefaultSquadNames(7)="Helena"
     HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
 }
