@@ -8,8 +8,8 @@ class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRoles
 
 defaultproperties
 {
-    AltName="Czolgista"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPS43AmmoPouch')
+    AltName="Czo?gista"
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItemSoviet"
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
@@ -18,4 +18,4 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietTankerHat'
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
-}
+} 
