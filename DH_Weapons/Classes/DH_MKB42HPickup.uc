@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_Vz24Pickup extends DHWeaponPickup;
+class DH_MKB42HPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_Vz24Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.vz24' 
+    InventoryType=class'DH_Weapons.DH_MKB42HWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.mkb42h'
 }

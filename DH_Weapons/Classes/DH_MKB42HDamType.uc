@@ -3,10 +3,14 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_Vz24Pickup extends DHWeaponPickup;
+class DH_MKB42HDamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_Vz24Weapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.vz24' 
+    WeaponClass=class'DH_Weapons.DH_MKB42HWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    KDamageImpulse=1500.0
+    KDeathVel=110.0
+    KDeathUpKick=2.0
 }

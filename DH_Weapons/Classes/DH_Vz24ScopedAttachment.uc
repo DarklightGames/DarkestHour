@@ -7,7 +7,7 @@ class DH_Vz24ScopedAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.kar98_3rd'  //change.
+    Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.vz24scoped_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.kar98k_icon' //change.
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
