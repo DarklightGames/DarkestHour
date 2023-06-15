@@ -7164,14 +7164,16 @@ function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
 
 static function bool isDHValidDistanceForMessageType(name messageType, float distance)
 {
-    switch (messageType) {
+    switch (messageType)
+    {
         case 'WHISPER':
             return distance < 512;
         default:
-            if (MessageType == 'ORDER' || messageType == 'ACK' || messageType == 'ENEMY' || messageType == 'ALERT' || messageType == 'TAUNT') {
+            if (MessageType == 'ORDER' || messageType == 'ACK' || messageType == 'ENEMY' || messageType == 'ALERT' || messageType == 'TAUNT')
+            {
                 return distance < 4096;
             }
-        break;
+            break;
     }
     return true;
 }
