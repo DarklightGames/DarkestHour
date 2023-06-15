@@ -7162,6 +7162,20 @@ function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
     }
 }
 
+static function bool isDHValidDistanceForMessageType(name messageType, float distance)
+{
+    switch (messageType) {
+        case 'WHISPER':
+            return distance < 512;
+        default:
+            if (MessageType == 'ORDER' || messageType == 'ACK' || messageType == 'ENEMY' || messageType == 'ALERT' || messageType == 'TAUNT') {
+                return distance < 4096;
+            }
+        break;
+    }
+    return true;
+}
+
 function SendVoiceMessage(PlayerReplicationInfo Sender,
                           PlayerReplicationInfo Recipient,
                           name MessageType,
@@ -7214,7 +7228,7 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
                 {
                     DistanceToOther = VSize(Pawn.Location - ROP.Pawn.Location);
 
-                    if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
+                    if (isDHValidDistanceForMessageType(messagetype, distanceToOther))
                     {
                         if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
                         {
