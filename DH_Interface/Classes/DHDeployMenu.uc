@@ -1217,6 +1217,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
+    else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
+    {
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
+    }
 
     SetButtonsEnabled(true);
 }
@@ -1639,6 +1644,7 @@ function UpdateSquads()
             SetVisible(C.b_LeaveSquad, false);
             SetVisible(C.b_LockSquad, false);
             SetVisible(C.i_LockSquad, false);
+            SetVisible(C.i_NoRallyPoints, false);
         }
 
         return;
@@ -1697,6 +1703,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
 
         if (bIsSquadLeader)
         {
@@ -1730,7 +1737,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
@@ -1788,6 +1795,7 @@ function UpdateSquads()
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
         SetVisible(C.eb_SquadName, false);
+        SetVisible(C.i_NoRallyPoints, false);
     }
 
     while (j < p_Squads.SquadComponents.Length - 1)
@@ -1820,6 +1828,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
+        SetVisible(C.i_NoRallyPoints, false);
 
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
@@ -1847,6 +1856,12 @@ function UpdateSquads()
     else
     {
         SetVisible(p_Squads.SquadComponents[j], false);
+    }
+
+    // Update the background colors.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
     }
 }
 

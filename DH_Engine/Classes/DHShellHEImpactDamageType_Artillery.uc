@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_30cal1stLinkEject extends RO1stShellEject;
+class DHShellHEImpactDamageType_Artillery extends DHShellHEImpactDamageType
+    abstract;
 
 defaultproperties
 {
-	StaticMesh=StaticMesh'DH_M1919_stc.1st.m1919_link_1st'
-	DrawScale=2.0
+    bIsArtilleryImpact=true
 }
+

@@ -6850,10 +6850,10 @@ exec function GimmeSupplies()
     switch (GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            SpawnVehicle("DH_OpelBlitzSupport");
+            SpawnVehicle("opellogi");
             break;
         case ALLIES_TEAM_INDEX:
-            SpawnVehicle("DH_GMCTruckSupport");
+            SpawnVehicle("gmclogi");
             break;
     }
 }
@@ -7538,8 +7538,8 @@ defaultproperties
     DeployedPitchDownLimit=-7300
 
     // Sound
-    FootStepSoundRadius=64
-    FootstepVolume=0.5
+    FootStepSoundRadius=96
+    FootstepVolume=0.75
     QuietFootStepVolume=0.66
     SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'

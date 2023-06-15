@@ -30,7 +30,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;

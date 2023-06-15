@@ -50,12 +50,14 @@ var     localized string        AssistantAbbreviation;
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
 
+var     int                     NoRallyPointsTime; // Time when SL lost all rally points
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores, CountryIndex, PlayerIQ;
+        TotalScore, CategoryScores, CountryIndex, PlayerIQ, NoRallyPointsTime;
 }
 
 simulated function string GetNamePrefix()

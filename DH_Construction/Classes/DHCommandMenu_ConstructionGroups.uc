@@ -49,7 +49,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroup", Options[OptionIndex].OptionalObject);
 }

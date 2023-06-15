@@ -7,7 +7,7 @@ class DHCommandMenu_LoneWolf extends DHCommandMenu;
 
 var localized string AutoJoinSquadDisabledText;
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
 

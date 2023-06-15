@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DHShellImpactDamageType_Artillery extends DHShellImpactDamageType
-    abstract;
+class DHResupplyAttachment_Vehicle extends DHResupplyAttachment;
 
 defaultproperties
 {
-    bIsArtilleryImpact=true
+    CollisionRadius=350
 }
-

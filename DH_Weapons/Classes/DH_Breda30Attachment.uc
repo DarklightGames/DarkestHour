@@ -177,7 +177,7 @@ defaultproperties
     PA_ProneFireLastShot="prone_shoot_breda"
 
     PA_ProneReloadAnim="prone_reload_m1919"      // TODO: PLACEHOLDER
-    PA_ProneReloadEmptyAnim="prone_reload_breda" // TODO: PLACEHOLDER
+    PA_ProneReloadEmptyAnim="prone_reload_m1919" // TODO: PLACEHOLDER
 
     PA_ProneIdleRestAnim="prone_idle_breda"
     PA_ProneWeaponDeployAnim="prone_idle_breda"

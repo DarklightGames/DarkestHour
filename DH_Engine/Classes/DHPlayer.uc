@@ -117,6 +117,7 @@ var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
 var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
+var     bool                    bIgnoreSquadPromotionRequestPrompts;
 
 // Squad assistant volunteers
 var         bool                           bIgnoreSquadLeaderAssistantVolunteerPrompts;
@@ -204,12 +205,13 @@ replication
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
-        ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
+        ServerSquadInvite, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
+        ServerSendSquadPromotionRequest, ServerAcceptSquadPromotionRequest, ServerDenySquadPromotionRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
@@ -225,6 +227,7 @@ replication
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
+        ClientReceiveSquadPromotionRequest, ClientSendSquadPromotionRequestResult,
         ClientTeamSurrenderResponse,
         ClientReceiveVotePrompt, ClientSetMapMarkerClassLock,
         ClientAddPersonalMapMarker;
@@ -1063,10 +1066,16 @@ function ServerSaveArtillerySupportSquadIndex(int Index)
 }
 
 // This function checks if the player can call artillery on the selected target.
-function bool IsArtilleryTargetValid(vector ArtilleryLocation)
+function bool IsArtilleryTargetValid(vector ArtilleryLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
     local bool         bValidTarget;
+
+    if (HitNormal == vect(0, 0, 0) || HitNormal.Z == -1)
+    {
+        // Do not allow marking beyond the fog distance or the roof of the level.
+        return false;
+    }
 
     VT = Spawn(class'DHVolumeTest', self,, ArtilleryLocation);
 
@@ -5334,6 +5343,7 @@ function ServerSquadVolunteerToAssist()
     local int TeamIndex, SquadIndex;
     local DHPlayerReplicationInfo PRI, SLPRI;
     local DHPlayer SLPC;
+    local DHBot SLBot;
 
     TeamIndex = GetTeamNum();
     SquadIndex = GetSquadIndex();
@@ -5341,25 +5351,30 @@ function ServerSquadVolunteerToAssist()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
 
-    if (PRI == none || SLPRI == none)
-    {
-        return;
-    }
-
-    SLPC = DHPlayer(SLPRI.Owner);
-
-    if (SLPC == none)
-    {
-        return;
-    }
-
     if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
     {
         // Squad assistant already exists.
         return;
     }
 
-    SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    if (PRI == none || SLPRI == none)
+    {
+        return;
+    }
+
+    SLPC = DHPlayer(SLPRI.Owner);
+    SLBot = DHBot(SLPRI.Owner);
+
+    if (SLPC != none)
+    {
+        // Prompt the squad leader with the player's request to become the assistant.
+        SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+    }
+    else if (SLBot != none)
+    {
+        // Bot auto-approves the new assistant.
+        SquadReplicationInfo.SetAssistantSquadLeader(TeamIndex, SquadIndex, PRI);
+    }
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -5815,15 +5830,18 @@ function ServerSquadLock(bool bIsLocked)
     }
 }
 
-function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
+function ServerSendSquadPromotionRequest(DHPlayerReplicationInfo Recipient)
 {
     local DHPlayerReplicationInfo PRI;
+    local DHSquadReplicationInfo.ESquadPromotionRequestResult Result;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
+        Result = SquadReplicationInfo.SendSquadPromotionRequest(PRI, Recipient, GetTeamNum(), PRI.SquadIndex);
+
+        ClientSendSquadPromotionRequestResult(Result);
     }
 }
 
@@ -6951,6 +6969,22 @@ function ServerDenySquadMergeRequest(int SquadMergeRequestID)
     }
 }
 
+function ServerAcceptSquadPromotionRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.AcceptSquadPromotionRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ServerDenySquadPromotionRequest(int SquadPromotionRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DenySquadPromotionRequest(self, SquadPromotionRequestID);
+    }
+}
+
 function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
 {
     if (bIgnoreSquadMergeRequestPrompts)
@@ -6964,6 +6998,23 @@ function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPl
     class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
+}
+
+
+// Squad Promotion Requests
+function ClientReceiveSquadPromotionRequest(int SquadPromotionRequestID, string SenderPlayerName, string SenderSquadName)
+{
+    if (bIgnoreSquadPromotionRequestPrompts)
+    {
+        ServerDenySquadPromotionRequest(SquadPromotionRequestID);
+        return;
+    }
+
+    class'DHSquadPromotionRequestInteraction'.default.SquadPromotionRequestID = SquadPromotionRequestID;
+    class'DHSquadPromotionRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    class'DHSquadPromotionRequestInteraction'.default.SenderSquadName = SenderSquadName;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadPromotionRequestInteraction", Player);
 }
 
 function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeRequestResult Result)
@@ -6984,6 +7035,27 @@ function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeReq
     if (Page != none)
     {
         Page.OnMessage("SQUAD_MERGE_REQUEST_RESULT", int(Result));
+    }
+}
+
+function ClientSendSquadPromotionRequestResult(DHSquadReplicationInfo.ESquadPromotionRequestResult Result)
+{
+    local UT2K4GUIController GUIController;
+    local GUIPage Page;
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GUIController = UT2K4GUIController(Player.GUIController);
+
+    if (GUIController == none)
+    {
+        return;
+    }
+
+    Page = GUIController.FindMenuByClass(class'GUIPage');
+
+    if (Page != none)
+    {
+        Page.OnMessage("SQUAD_PROMOTION_REQUEST_RESULT", int(Result));
     }
 }
 
@@ -7265,18 +7337,17 @@ exec function IpFuzz(int Iterations)
     }
 }
 
-simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal)
+simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
 {
     local vector TraceStart, TraceEnd;
-    local Actor A, HitActor;
+    local Actor A;
     local Actor PawnVehicleBase;
 
     if (Pawn == none)
     {
         HitLocation = vect(0, 0, 0);
     }
-
-
+    
     TraceStart = CalcViewLocation;
     TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
     PawnVehicleBase = Pawn.GetVehicleBase();

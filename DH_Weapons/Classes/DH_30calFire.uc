@@ -44,5 +44,5 @@ defaultproperties
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=1.2
 
-    PctHipMGPenalty=1.75
+    PctHipMGPenalty=1.5
 }
