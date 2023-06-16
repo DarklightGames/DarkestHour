@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Wz35Ammo extends DHAmmunition;
+class DH_Wz35Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    MaxAmmo=3
-    InitialAmount=3
-    IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
+    InventoryType=class'DH_Weapons.DH_Wz35Weapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PTRD'
 }

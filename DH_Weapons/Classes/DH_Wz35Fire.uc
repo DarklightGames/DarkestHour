@@ -7,7 +7,7 @@ class DH_Wz35Fire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_PTRDBullet'
+    ProjectileClass=class'DH_Weapons.DH_PTRDBullet' // TODO: replace with WZ35 bullet
     AmmoClass=class'DH_Weapons.DH_Wz35Ammo'
     bUsePreLaunchTrace=false
     Spread=75.0
@@ -18,8 +18,8 @@ defaultproperties
     FireSounds(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPTRD'
     ShellEjectClass=class'ROAmmo.ShellEject1st14mm'
-    ShellIronSightOffset=(X=10.0,Y=3.0,Z=0.0)
-    ShellRotOffsetIron=(Pitch=-10000)
+    //ShellIronSightOffset=(X=10.0,Y=3.0,Z=0.0)
+    //ShellRotOffsetIron=()
     bAnimNotifiedShellEjects=false
     FireIronAnim="deploy_shoot"
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)

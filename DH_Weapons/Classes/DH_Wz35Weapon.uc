@@ -15,11 +15,10 @@ defaultproperties
 {
     ItemName="Wz-35 Anti-Tank Rifle"
     FireModeClass(0)=class'DH_Weapons.DH_Wz35Fire'
-    AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
-    PickupClass=class'DH_Weapons.DH_PTRDPickup'
+    AttachmentClass=class'DH_Weapons.DH_Wz35Attachment'
+    PickupClass=class'DH_Weapons.DH_Wz35Pickup'
 
-    Mesh=SkeletalMesh'DH_Wz35.Ws35_mesh'
-    // HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
+    Mesh=SkeletalMesh'DH_Wz35_anm.wz35_1st'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -36,16 +35,14 @@ defaultproperties
     bMustReloadWithBipodDeployed=true
     bMustFireWhileSighted=true
 
-    SelectAnim="Draw"
-    PutDownAnim="Put_away"
-
-    MagEmptyReloadAnims(0)="Reload"
-   
+    SelectAnim="draw"
+    PutDownAnim="putaway"
     IdleToBipodDeploy="bipod_in"
-    // BipodDeployToIdle="bipod_out"
+    BipodDeployToIdle="bipod_out"
     BoltIronAnim="iron_bolt"
     BipodIdleAnim="iron_idle"
-    BipodMagEmptyReloadAnim="Reload"
+    BipodMagEmptyReloadAnim="reload_empty"
+    MagEmptyReloadAnims(0)="reload_empty"
 
     bShouldZoomWhenBolting=true
 }
