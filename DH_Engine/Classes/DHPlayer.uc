@@ -7162,16 +7162,16 @@ function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
     }
 }
 
-static function bool isDHValidDistanceForMessageType(name messageType, float distance)
+static function bool IsDHValidDistanceForMessageType(name MessageType, float Distance)
 {
     if (MessageType == 'WHISPER')
     {
-        return class'DHUnits'.static.UnrealToMeters(distance) < 9;
+        return class'DHUnits'.static.UnrealToMeters(Distance) < 9;
     }
 
-    if (MessageType == 'ORDER' || messageType == 'ACK' || messageType == 'ENEMY' || messageType == 'ALERT' || messageType == 'TAUNT')
+    if (MessageType == 'ORDER' || MessageType == 'ACK' || MessageType == 'ENEMY' || MessageType == 'ALERT' || MessageType == 'TAUNT')
     {
-        return class'DHUnits'.static.UnrealToMeters(distance) < 180;
+        return class'DHUnits'.static.UnrealToMeters(Distance) < 180;
     }
     return true;
 }
@@ -7228,7 +7228,7 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
                 {
                     DistanceToOther = VSize(Pawn.Location - ROP.Pawn.Location);
 
-                    if (isDHValidDistanceForMessageType(messagetype, distanceToOther))
+                    if (IsDHValidDistanceForMessageType(MessageType, DistanceToOther))
                     {
                         if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
                         {
