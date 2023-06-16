@@ -6,6 +6,7 @@
 class DHBoltActionWeapon extends DHProjectileWeapon
     abstract;
 
+// Bolt Action Weapon
 enum EReloadState
 {
     RS_None,
@@ -22,23 +23,14 @@ var     bool            bInterruptReload;   // set when one-by-one reload is sto
 var     name            PreReloadAnim;      // one-off anim when starting to reload
 var     name            PreReloadHalfAnim;  // same as above, but when there are one or more rounds in the chamber
 var     name            PreReloadEmptyAnim; // same as above, but when the weapon is empty
-
 var     name            SingleReloadAnim;       // looping anim for inserting a single round
 var     name            SingleReloadHalfAnim;   // same as above, but when there are one or more rounds in the chamber
-
 var     name            StripperReloadAnim; // stripper clip reload animation
-
 var     name            PostReloadAnim;     // one-off anim when reloading ends
-
 var     name            FullReloadAnim;     // full reload animation (takes precedence!)
 
 var     int             NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
-
-var     bool            bShouldSkipBolt;
-
 var     bool            bCanUseUnfiredRounds;
-
-var     bool            bShouldZoomWhenBolting; // if true, do a zoom cycle when working the bolt (similar to reloads)
 
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
@@ -52,174 +44,6 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetInterruptReload;
-}
-
-// Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
-simulated function Fire(float F)
-{
-    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
-    {
-        WorkBolt();
-    }
-    else
-    {
-        super.Fire(F);
-    }
-}
-
-// New function to work the bolt
-simulated function WorkBolt()
-{
-    if (bWaitingToBolt && AmmoAmount(0) > 0 && !FireMode[1].bIsFiring && !FireMode[1].IsInState('MeleeAttacking'))
-    {
-        GotoState('WorkingBolt');
-
-        if (Role < ROLE_Authority)
-        {
-            ServerWorkBolt();
-        }
-    }
-}
-
-// Client-to-server function to work the bolt
-function ServerWorkBolt()
-{
-    WorkBolt();
-}
-
-// State where the bolt is being worked
-simulated state WorkingBolt extends WeaponBusy
-{
-    simulated function bool ShouldUseFreeAim()
-    {
-        return global.ShouldUseFreeAim();
-    }
-
-    simulated function bool WeaponAllowSprint()
-    {
-        return false;
-    }
-
-    simulated function bool CanStartCrawlMoving()
-    {
-        return false;
-    }
-
-    simulated function AnimEnd(int Channel)
-    {
-        local name  Anim;
-        local float Frame, Rate;
-
-        if (InstigatorIsLocallyControlled())
-        {
-            GetAnimParams(0, Anim, Frame, Rate);
-
-            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
-            {
-                bWaitingToBolt = false;
-            }
-        }
-
-        super.AnimEnd(Channel);
-
-        GotoState('Idle');
-    }
-
-    simulated function BeginState()
-    {
-        if (bUsingSights || Instigator.bBipodDeployed)
-        {
-            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
-        }
-        else
-        {
-            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
-        }
-
-        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
-        {
-            ROPawn(Instigator).HandleBoltAction(); // play the animation on the pawn
-        }
-    }
-
-    simulated function EndState()
-    {
-        if (bUsingSights && bPlayerFOVZooms && InstigatorIsLocallyControlled())
-        {
-            PlayerViewZoom(true);
-        }
-
-        bWaitingToBolt = false;
-        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
-    }
-
-Begin:
-    // Handles the zooming in and out of the player's view.
-    if (bShouldZoomWhenBolting && InstigatorIsLocalHuman())
-    {
-        if (bUsingSights || Instigator.bBipodDeployed)
-        {
-            ResetPlayerFOV();
-
-            if (DisplayFOV != default.DisplayFOV)
-            {
-                SmoothZoom(false);
-            }
-
-            Sleep(GetAnimDuration(BoltIronAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
-
-            SetPlayerFOV(PlayerDeployFOV);
-            SmoothZoom(true);
-        }
-    }
-}
-
-// Called by the weapon fire code to send the weapon to the post firing state
-simulated function PostFire()
-{
-    GotoState('PostFiring');
-}
-
-// State where the weapon has just been fired
-simulated state PostFiring
-{
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function Timer()
-    {
-        if (!InstigatorIsHumanControlled())
-        {
-            if (AmmoAmount(0) > 0)
-            {
-                GotoState('WorkingBolt');
-            }
-            else
-            {
-               GotoState('Reloading');
-            }
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
-    simulated function BeginState()
-    {
-        bWaitingToBolt = true;
-
-        if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
-        {
-            SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
-        }
-        else
-        {
-            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
-        }
-    }
 }
 
 // Modified so bots don't go straight to the reloading state on bolt actions
@@ -301,15 +125,13 @@ simulated function ClientDoReload(optional byte NumRounds)
 }
 
 // Out of state this does nothing & should never be called anyway - it is only effective in state Reloading
-function ServerSetInterruptReload()
-{
-}
+function ServerSetInterruptReload();
 
 simulated function PostPreReload() {}
 simulated function PostFullReloadEnd() {}
 simulated function PostLoop() {}
 
-// Modified to handle substantially different one round at a time reload system
+// Modified to handle substantially different one-round-at-a-time reload system.
 simulated state Reloading
 {
     // Modified to allow interruption of reload by pressing fire
@@ -770,13 +592,14 @@ defaultproperties
     BobModifyFactor=0.6
     ZoomOutTime=0.4
 
-
     IronIdleAnim="Iron_idle"
     PostFireIdleAnim="Idle"
     PostFireIronIdleAnim="Iron_idlerest"
     BoltHipAnim="bolt"
     BoltIronAnim="iron_boltrest"
     MagEmptyReloadAnims(0)="Reload"
+
+    bIsBoltAction=true
 
     AIRating=0.4
     CurrentRating=0.4

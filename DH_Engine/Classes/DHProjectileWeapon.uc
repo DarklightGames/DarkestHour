@@ -119,6 +119,11 @@ var     bool                        bDoBipodPhysicsSimulation;
 var     DHBipodPhysicsSettings      BipodPhysicsSettings;
 var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
 
+// Bolting
+var     bool            bIsBoltAction;
+var     bool            bShouldSkipBolt;
+var     bool            bShouldZoomWhenBolting; // if true, do a zoom cycle when working the bolt (similar to reloads)
+
 // Scopes
 var     bool            bHasScope;
 var     bool            bHasModelScope;
@@ -339,11 +344,6 @@ simulated state WeaponBusy extends Busy
     {
         GotoState('Idle');
     }
-}
-
-// Implemented in subclasses
-function ServerWorkBolt()
-{
 }
 
 // Debug logging to show how much ammo we have in our mags
@@ -2832,8 +2832,11 @@ simulated event ClientStartFire(int Mode)
 // If the pawn calls Fire() on its Weapon, it appears that ClientStartFire() gets triggered by native code, which is where weapon actually commences firing process
 simulated function Fire(float F)
 {
-    // TODO: only do this if you MUST be deployed to fire (new bool!)
-    if (InstigatorIsHumanControlled() && bMustFireWhileSighted && !IsSighted())
+    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
+    {
+        WorkBolt();
+    }
+    else if (InstigatorIsHumanControlled() && bMustFireWhileSighted && !IsSighted())
     {
         // "You must be deployed to fire your weapon!";
         class'ROBipodWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
@@ -3040,6 +3043,177 @@ simulated function SetBarrelSteamActive(bool bSteaming)
         DHWeaponAttachment(ThirdPersonActor).SetBarrelSteamActive(bBarrelSteamActive);
     }
 }
+
+//=============================================================================
+// Bolting
+//=============================================================================
+
+// New function to work the bolt.
+simulated function WorkBolt()
+{
+    if (bIsBoltAction && bWaitingToBolt && AmmoAmount(0) > 0 && !FireMode[1].bIsFiring && !FireMode[1].IsInState('MeleeAttacking'))
+    {
+        GotoState('WorkingBolt');
+
+        if (Role < ROLE_Authority)
+        {
+            ServerWorkBolt();
+        }
+    }
+}
+
+// Client-to-server function to work the bolt
+function ServerWorkBolt()
+{
+    WorkBolt();
+}
+
+// Called by the weapon fire code to send the weapon to the post firing state
+simulated function PostFire()
+{
+    if (bIsBoltAction)
+    {
+        GotoState('PostFiring');
+    }
+}
+
+// State where the bolt is being worked
+simulated state WorkingBolt extends WeaponBusy
+{
+    simulated function bool ShouldUseFreeAim()
+    {
+        return global.ShouldUseFreeAim();
+    }
+
+    simulated function bool WeaponAllowSprint()
+    {
+        return false;
+    }
+
+    simulated function bool CanStartCrawlMoving()
+    {
+        return false;
+    }
+
+    simulated function AnimEnd(int Channel)
+    {
+        local name  Anim;
+        local float Frame, Rate;
+
+        if (InstigatorIsLocallyControlled())
+        {
+            GetAnimParams(0, Anim, Frame, Rate);
+
+            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
+            {
+                bWaitingToBolt = false;
+            }
+        }
+
+        super.AnimEnd(Channel);
+
+        GotoState('Idle');
+    }
+
+    simulated function BeginState()
+    {
+        if (bUsingSights || Instigator.bBipodDeployed)
+        {
+            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
+        }
+        else
+        {
+            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
+        }
+
+        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
+        {
+            ROPawn(Instigator).HandleBoltAction(); // play the animation on the pawn
+        }
+    }
+
+    simulated function EndState()
+    {
+        if (bUsingSights && bPlayerFOVZooms && InstigatorIsLocallyControlled())
+        {
+            PlayerViewZoom(true);
+        }
+
+        bWaitingToBolt = false;
+        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
+    }
+
+Begin:
+    // Handles the zooming in and out of the player's view.
+    if (bShouldZoomWhenBolting && InstigatorIsLocalHuman())
+    {
+        if (bUsingSights || Instigator.bBipodDeployed)
+        {
+            ResetPlayerFOV();
+
+            if (DisplayFOV != default.DisplayFOV)
+            {
+                SmoothZoom(false);
+            }
+
+            Sleep(GetAnimDuration(BoltIronAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+
+            SetPlayerFOV(PlayerDeployFOV);
+            SmoothZoom(true);
+        }
+    }
+}
+
+// State where the weapon has just been fired
+simulated state PostFiring
+{
+    simulated function bool ReadyToFire(int Mode)
+    {
+        return false;
+    }
+
+    simulated function Timer()
+    {
+        if (!InstigatorIsHumanControlled())
+        {
+            if (AmmoAmount(0) > 0)
+            {
+                GotoState('WorkingBolt');
+            }
+            else
+            {
+               GotoState('Reloading');
+            }
+        }
+        else
+        {
+            GotoState('Idle');
+        }
+    }
+
+    simulated function BeginState()
+    {
+        if (bIsBoltAction)
+        {
+            bWaitingToBolt = true;
+
+            if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
+            {
+                SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
+            }
+            else
+            {
+                SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
+            }
+        }
+        else
+        {
+            super.BeginState();
+        }
+    }
+}
+
+//=============================================================================
 
 // Modified so if the barrel is already steaming when the pawn gets this weapon, we set the same affect on the WeaponAttachment
 // Necessary as attachment may not yet exist when SetBarrelSteamActive() is called in this class (e.g. when picking up a pickup)
