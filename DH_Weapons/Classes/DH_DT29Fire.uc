@@ -12,7 +12,7 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_DT29Ammo'
     FireRate=0.105 // 632 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
-    FAProjSpawnOffset=(X=-20.0)
+    FAProjSpawnOffset=(X=-20.000000)
     Spread=70.0
 
     // Recoil
