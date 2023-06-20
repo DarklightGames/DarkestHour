@@ -8,7 +8,7 @@ class DH_M9531Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.m9531_3rd'
-    MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m9531_icon' 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
