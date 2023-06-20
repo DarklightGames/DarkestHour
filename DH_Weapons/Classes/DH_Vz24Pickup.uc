@@ -8,5 +8,5 @@ class DH_Vz24Pickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_Vz24Weapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98'  //change.
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.vz24' 
 }
