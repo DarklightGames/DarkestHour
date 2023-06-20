@@ -167,4 +167,6 @@ defaultproperties
     Records(107)=(ClasSName="DH_Weapons.DH_M1924Weapon",WeaponNames=("m1924"))
     Records(108)=(ClasSName="DH_Weapons.DH_M9530Weapon",WeaponNames=("mannlicher","m9530"))
     Records(109)=(ClasSName="DH_Weapons.DH_M9531Weapon",WeaponNames=("m9531"))
+    Records(110)=(ClasSName="DH_Weapons.DH_DT29Weapon",WeaponNames=("dt29","dt29"))
+    Records(111)=(ClasSName="DH_Weapons.DH_MKB42HWeapon",WeaponNames=("mkb42","mkb42h"))
 }
