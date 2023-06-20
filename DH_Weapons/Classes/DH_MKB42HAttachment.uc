@@ -8,7 +8,7 @@ class DH_MKB42HAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.mkb42h_3rd'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.stg44'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mkb42h_icon' 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
 
