@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_WHSMarksman_Autumn extends DHGEMarksmanRoles;
+class DH_WHMarksman_Autumn extends DHGEMarksmanRoles;
 
 defaultproperties
 {
