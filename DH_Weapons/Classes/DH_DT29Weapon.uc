@@ -76,7 +76,7 @@ defaultproperties
     //IdleEmptyAnim="idle_empty"
     IdleToBipodDeployEmpty="deploy_empty"
     BipodDeployToIdleEmpty="undeploy_empty"
-    //BipodIdleEmptyAnim="deploy_idle_empty"
+    BipodIdleEmptyAnim="deploy_idle_empty"
 
     //SprintStartEmptyAnim="sprint_start_empty"
     //SprintLoopEmptyAnim="sprint_middle_empty"
