@@ -197,7 +197,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
             return;
 
         case 4:
-            PC.ServerSquadPromote(SelectedPRI);
+            PC.ServerSendSquadPromotionRequest(SelectedPRI);
             return;
 
         case 5:
@@ -263,7 +263,7 @@ protected function ProcessEntry(int EntryIndex, GUIComponent Component)
                 return;
 
             case 14:
-                PC.ServerSquadPromote(SelectedPRI);
+                PC.ServerSendSquadPromotionRequest(SelectedPRI);
                 return;
 
             case 15:

@@ -58,6 +58,7 @@ var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
 var int                             SquadLockMemberCountMin;    // The amount of squad member required to be able to lock a squad and keep it locked.
+var int                             SquadLeaderRallyPointInactivityThreshold;
 
 struct SquadLeaderVolunteer
 {
@@ -75,6 +76,7 @@ struct SquadLeaderDraw
 };
 var array<SquadLeaderDraw>          SquadLeaderDraws;
 
+// Squads Bans
 struct SquadBan
 {
     var int TeamIndex;
@@ -83,6 +85,7 @@ struct SquadBan
 };
 var array<SquadBan>                 SquadBans;
 
+// Squad Merge Requests
 enum ESquadMergeRequestResult
 {
     RESULT_Throttled,
@@ -105,6 +108,27 @@ var int                             NextSquadMergeRequestID;
 var private DHGameReplicationInfo   GRI;    // only valid on the server, clients should use GetGameReplicationInfo()
 
 var localized array<string>         SquadMergeRequestResultStrings;
+var localized array<string>         SquadPromotionRequestResultStrings;
+
+// Squad Promotion Requests
+enum ESquadPromotionRequestResult
+{
+    SPPR_Fatal,
+    SPPR_Duplicate,
+    SPPR_Sent
+};
+
+struct SquadPromotionRequest
+{
+    var int ID;
+    var int TeamIndex;
+    var int SquadIndex;
+    var DHPlayerReplicationInfo Sender;
+    var DHPlayerReplicationInfo Recipient;
+};
+
+var array<SquadPromotionRequest>    SquadPromotionRequests;
+var int                             NextSquadPromotionRequestID;
 
 enum ERallyPointPlacementErrorType
 {
@@ -567,6 +591,8 @@ function ResetSquadInfo()
     SquadLeaderVolunteers.Length = 0;
     SquadMergeRequests.Length = 0;
     NextSquadMergeRequestID = default.NextSquadMergeRequestID;
+    SquadPromotionRequests.Length = 0;
+    NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
 // Gets the maximum size of a squad for a given team.
@@ -770,6 +796,9 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             // Have a slight delay in placing rally points to dissuade players
             // from trying to exploit the system.
             SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
+
+            // New squad will have no rallies. Reset the no rally points time to now.
+            UpdateSquadLeaderNoRallyPointsTime(TeamIndex, i);
 
             // This new squad leader may need to have their role invalidated.
             MaybeInvalidateRole(PC);
@@ -1057,6 +1086,7 @@ function ResetSquad(int TeamIndex, int SquadIndex)
     ClearSquadBans(TeamIndex, SquadIndex);
     ClearSquadLeaderVolunteers(TeamIndex, SquadIndex);
     ClearSquadMergeRequests(TeamIndex, SquadIndex);
+    ClearSquadPromotionRequests(TeamIndex, SquadIndex);
 }
 
 // Attempts to make the specified player the leader of the specified squad.
@@ -1066,7 +1096,7 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
     local DHPlayer PC;
     local bool bResult;
 
-    if (!IsInSquad(PRI, TeamIndex, SquadIndex) || HasSquadLeader(TeamIndex, SquadIndex))
+    if (!IsInSquad(PRI, TeamIndex, SquadIndex))
     {
         return false;
     }
@@ -1091,6 +1121,8 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
 
         // "{0} has become the squad leader"
         BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, PRI);
+
+        UpdateSquadLeaderNoRallyPointsTime(PRI.Team.TeamIndex, PRI.SquadIndex);
     }
 
     return bResult;
@@ -1942,6 +1974,11 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, int ElapsedTi
     }
 }
 
+simulated function bool SquadHasRallyPoint(int TeamIndex, int SquadIndex)
+{
+    return GetSquadRallyPointCount(TeamIndex, SquadIndex) > 0;
+}
+
 simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
 {
     local int i, Count;
@@ -1950,7 +1987,8 @@ simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
     {
         if (RallyPoints[i] != none &&
             RallyPoints[i].GetTeamIndex() == TeamIndex &&
-            RallyPoints[i].SquadIndex == SquadIndex)
+            RallyPoints[i].SquadIndex == SquadIndex &&
+            !RallyPoints[i].bPendingDelete)
         {
             ++Count;
         }
@@ -2367,6 +2405,10 @@ function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
 // Function is called when a rally point is destroyed for any reason.
 function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
 {
+    if (SRP != none)
+    {
+        UpdateSquadLeaderNoRallyPointsTime(SRP.GetTeamIndex(), SRP.SquadIndex);
+    }
 }
 
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
@@ -2656,6 +2698,9 @@ function StartSquadLeaderDraw(int TeamIndex, int SquadIndex)
             PC.ClientSquadLeaderVolunteerPrompt(TeamIndex, SquadIndex, SquadLeaderDraws[0].ExpirationTime);
         }
     }
+
+    // Promotion requests are no longer valid, the vote has started.
+    ClearSquadPromotionRequests(TeamIndex, SquadIndex);
 }
 
 function ClearSquadLeaderVolunteers(int TeamIndex, int SquadIndex)
@@ -3118,6 +3163,155 @@ static function string GetSquadMergeRequestResultString(int Result)
     return default.SquadMergeRequestResultStrings[Result];
 }
 
+static function string GetSquadPromotionRequestResultString(int Result)
+{
+    return default.SquadPromotionRequestResultStrings[Result];
+}
+
+// Squad Promotion Requests
+function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicationInfo SenderPRI, DHPlayerReplicationInfo RecipientPRI, int TeamIndex, int SquadIndex)
+{
+    local SquadPromotionRequest PR;
+    local DHPlayer SenderPC, RecipientPC;
+    local int i;
+    
+    if (!IsSquadLeader(SenderPRI, TeamIndex, SquadIndex) || !IsInSquad(RecipientPRI, TeamIndex, SquadIndex))
+    {
+        return SPPR_Fatal;
+    }
+
+    SenderPC = DHPlayer(SenderPRI.Owner);
+    RecipientPC = DHPlayer(RecipientPRI.Owner);
+
+    if (SenderPC == none || RecipientPC == none)
+    {
+        return SPPR_Fatal;
+    }
+    
+    for (i = 0; i < SquadPromotionRequests.Length; ++i)
+    {
+        if (SquadPromotionRequests[i].TeamIndex == TeamIndex &&
+            SquadPromotionRequests[i].SquadIndex == SquadIndex &&
+            SquadPromotionRequests[i].Recipient == RecipientPRI)
+        {
+            // "You have already sent {0} a squad promotion request."
+            SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 85, RecipientPRI);
+
+            // There is already an identical active promotion request.
+            return SPPR_Duplicate;
+        }
+    }
+
+    // Add the promotion request.
+    PR.ID = NextSquadPromotionRequestID++;
+    PR.TeamIndex = TeamIndex;
+    PR.SquadIndex = SquadIndex;
+    PR.Recipient = RecipientPRI;
+    PR.Sender = SenderPRI;
+    SquadPromotionRequests[SquadPromotionRequests.Length] = PR;
+
+    // Send the promotion request to the recipient.
+    RecipientPC.ClientReceiveSquadPromotionRequest(PR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SquadIndex));
+
+    // Notify the sender that the request has been sent.
+    SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 84, RecipientPRI);
+
+    return SPPR_Sent;
+}
+
+function ClearSquadPromotionRequests(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    for (i = SquadPromotionRequests.Length - 1; i >= 0; --i)
+    {
+        if (SquadPromotionRequests[i].TeamIndex == TeamIndex && SquadPromotionRequests[i].SquadIndex == SquadIndex)
+        {
+            SquadPromotionRequests.Remove(i, 1);
+        }
+    }
+}
+
+function int GetSquadPromotionRequestIndexByID(int SquadPromotionRequestID)
+{
+    local int i;
+
+    for (i = 0; i < SquadPromotionRequests.Length; ++i)
+    {
+        if (SquadPromotionRequests[i].ID == SquadPromotionRequestID)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function bool IsSquadPromotionRequestValid(SquadPromotionRequest SPR)
+{
+    return IsSquadActive(SPR.TeamIndex, SPR.SquadIndex) &&
+           IsInSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex) &&
+           !IsSquadLeader(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
+}
+
+function bool DenySquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    local int SquadPromotionRequestIndex;
+    local SquadPromotionRequest SPR;
+    local PlayerController PC;
+    
+    SquadPromotionRequestIndex = GetSquadPromotionRequestIndexByID(SquadPromotionRequestID);
+
+    if (SquadPromotionRequestIndex == -1)
+    {
+        return false;
+    }
+
+    SPR = SquadPromotionRequests[SquadPromotionRequestIndex];
+
+    // Send a message to the sender that the request has been denied (only if they are still the squad leader of this squad).
+    if (IsSquadPromotionRequestValid(SPR) &&
+        IsSquadLeader(SPR.Sender, SPR.TeamIndex, SPR.SquadIndex))
+    {
+        PC = PlayerController(SPR.Sender.Owner);
+
+        if (PC != none)
+        {
+            // "Your squad promotion request has been denied by {0}."
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 82, SPR.Recipient);
+        }
+    }
+
+    // Remove the request.
+    SquadPromotionRequests.Remove(SquadPromotionRequestIndex, 1);
+}
+
+function bool AcceptSquadPromotionRequest(DHPlayer SenderPC, int SquadPromotionRequestID)
+{
+    local int SquadPromotionRequestIndex;
+    local SquadPromotionRequest SPR;
+
+    SquadPromotionRequestIndex = GetSquadPromotionRequestIndexByID(SquadPromotionRequestID);
+
+    if (SquadPromotionRequestIndex == -1)
+    {
+        // Squad promotion request doesn't exist or has expired.
+        return false;
+    }
+
+    SPR = SquadPromotionRequests[SquadPromotionRequestIndex];
+    
+    if (!IsSquadPromotionRequestValid(SPR))
+    {
+        return false;
+    }
+
+    CommandeerSquad(SPR.Recipient, SPR.TeamIndex, SPR.SquadIndex);
+    ClearSquadPromotionRequests(SPR.TeamIndex, SPR.SquadIndex);
+
+    return true;
+}
+
 simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)
 {
     local int i;
@@ -3136,6 +3330,47 @@ simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)
     return SquadLeaders;
 }
 
+// Remember the time when a squad leader loses all rally points, or joins a
+// squad with no rally points.
+function UpdateSquadLeaderNoRallyPointsTime(int TeamIndex, int SquadIndex)
+{
+    local DHPlayerReplicationInfo SL;
+
+    if (!bAreRallyPointsEnabled)
+    {
+        return;
+    }
+
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (SL != none && GRI != none && !SquadHasRallyPoint(TeamIndex, SquadIndex))
+    {
+        SL.NoRallyPointsTime = GRI.ElapsedTime;
+    }
+
+}
+
+// Returns true if SL hasn't placed any rally points in time specified by
+// SquadLeaderRallyPointInactivityThreshold.
+simulated function bool SquadHadNoRallyPointsInAwhile(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo MyGRI;
+    local DHPlayerReplicationInfo SL;
+
+    if (!bAreRallyPointsEnabled)
+    {
+        return false;
+    }
+
+    MyGRI = GetGameReplicationInfo();
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    return SL != none &&
+           MyGRI != none &&
+           MyGRI.ElapsedTime >= SL.NoRallyPointsTime + SquadLeaderRallyPointInactivityThreshold &&
+           !SquadHasRallyPoint(TeamIndex, SquadIndex);
+}
+
 defaultproperties
 {
     AlliesSquadSize=10
@@ -3151,10 +3386,15 @@ defaultproperties
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberFactor=2.5
     RallyPointInitialSpawnsDangerZoneFactor=0.25
+    SquadLeaderRallyPointInactivityThreshold=60
 
     SquadMergeRequestResultStrings(0)="Please wait a short time before sending another squad merge request."
     SquadMergeRequestResultStrings(1)="An error occurred while sending the squad merge request."
     SquadMergeRequestResultStrings(2)="A merge request cannot be sent to this squad."
     SquadMergeRequestResultStrings(3)="There is already an existing merge request for this squad."
     SquadMergeRequestResultStrings(4)="Squad merge request has been sent."
+
+    SquadPromotionRequestResultStrings(0)="An error occurred while sending the squad merge request."
+    SquadPromotionRequestResultStrings(1)="There is already an existing squad leader promotion request for this player."
+    SquadPromotionRequestResultStrings(2)="Squad leader promotion request has been sent."
 }
