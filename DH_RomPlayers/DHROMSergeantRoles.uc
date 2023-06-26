@@ -8,8 +8,10 @@ class DHROMSergeantRoles extends DHAxisSergeantRoles
 
 defaultproperties
 {
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')  /m1912
-
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP41Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')  //m1912
+    //to do: mp28
     Grenades(0)=(Item=class'DH_Weapons.DH_M34GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')  //?
 
