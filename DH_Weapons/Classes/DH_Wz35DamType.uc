@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Wz35DDamType extends DHLargeCaliberDamageType
+class DH_Wz35DamType extends DHLargeCaliberDamageType
     abstract;
 
 defaultproperties
