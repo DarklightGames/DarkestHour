@@ -1907,7 +1907,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
-                    Playa.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
+                    
                     SetCharacter(aPlayer);
                 }
             }
@@ -5863,7 +5863,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=11
         Minor=4
-        Patch=3
+        Patch=10
         Prerelease=""
     End Object
     Version=VersionObject

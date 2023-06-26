@@ -65,7 +65,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
                     PC.ServerSquadKick(OtherPRI);
                     break;
                 case 1: // Promote to leader
-                    PC.ServerSquadPromote(OtherPRI);
+                    PC.ServerSendSquadPromotionRequest(OtherPRI);
                     break;
                 case 2: // Ban from squad
                     PC.ServerSquadBan(OtherPRI);
