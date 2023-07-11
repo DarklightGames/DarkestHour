@@ -64,6 +64,7 @@ var     float                   DHSwayDampingFactor;
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
+var     globalconfig float      DHISBipodTurnSpeedFactor;     // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 // Player flinch
@@ -984,13 +985,18 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 
         if (DHPW != none && DHPW.bHasScope && DHPW.bUsingSights)
         {
-            TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
+            TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs or is bipod deployed
         }
         else if (DHPwn != none)
         {
             if (DHPwn.bIronSights || DHPwn.bBipodDeployed)
             {
-                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
+                if (DHPwn.bBipodDeployed) {
+                    TurnSpeedFactor *= DHISBipodTurnSpeedFactor; // reduce if player is bipod deployed
+                }
+                else {
+                    TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights
+                }
             }
         }
         else if (ROVeh != none && ROVeh.DriverPositions[ROVeh.DriverPositionIndex].bDrawOverlays && ROVeh.HUDOverlay == none
