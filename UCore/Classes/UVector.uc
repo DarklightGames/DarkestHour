@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class UVector extends Object
     abstract;
 
-static final function vector RandomRange(rangevector Range)
+final static function vector RandomRange(rangevector Range)
 {
     local vector V;
 
@@ -17,22 +17,22 @@ static final function vector RandomRange(rangevector Range)
     return V;
 }
 
-static final function float MaxElement(vector V)
+final static function float MaxElement(vector V)
 {
     return FMax(V.X, FMax(V.Y, V.Z));
 }
 
-static final function float MinElement(vector V)
+final static function float MinElement(vector V)
 {
     return FMin(V.X, FMin(V.Y, V.Z));
 }
 
-static final function vector VLerp(float T, vector Start, vector End)
+final static function vector VLerp(float T, vector Start, vector End)
 {
     return Start + ((End - Start) * T);
 }
 
-static final function vector MinComponent(vector A, vector B)
+final static function vector MinComponent(vector A, vector B)
 {
     local vector V;
 
@@ -43,7 +43,7 @@ static final function vector MinComponent(vector A, vector B)
     return V;
 }
 
-static final function vector MaxComponent(vector A, vector B)
+final static function vector MaxComponent(vector A, vector B)
 {
     local vector V;
 
@@ -54,7 +54,7 @@ static final function vector MaxComponent(vector A, vector B)
     return V;
 }
 
-static final function float SignedAngle(vector From, vector To, vector PlaneNormal)
+final static function float SignedAngle(vector From, vector To, vector PlaneNormal)
 {
     return ATan((From cross To) dot PlaneNormal, From dot To);
 }

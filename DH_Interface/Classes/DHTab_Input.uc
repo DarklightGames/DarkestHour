@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTab_Input extends ROTab_Input;
@@ -73,7 +73,7 @@ function OnInputChange(GUIComponent Sender)
 
         if (DHPlayer(PC) != none)
         {
-            DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();;
+            DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();
             DHPlayer(PC).SaveConfig();
         }
     }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_6PounderGunCannon extends DH_AT57Cannon;
@@ -8,7 +8,6 @@ class DH_6PounderGunCannon extends DH_AT57Cannon;
 defaultproperties
 {
     Skins(1)=Texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
-    ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
@@ -21,13 +20,13 @@ defaultproperties
     nProjectileDescriptions(1)="Mk.I APDS"
     nProjectileDescriptions(2)="Mk.X HE-T"
 
-    InitialPrimaryAmmo=22
+    InitialPrimaryAmmo=20
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
-    MaxPrimaryAmmo=66
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=20
-    SecondarySpread=0.0048 // become APDS instead of HE
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=15
+    SecondarySpread=0.002 //become APDS instead of HE, was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00125
     WeaponFireOffset=19.0 // different from US 57mm AT gun due to 6 pdr's muzzle brake
     AddedPitch=50

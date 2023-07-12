@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SVT38MeleeFire extends DHMeleeFire;
@@ -8,6 +8,7 @@ class DH_SVT38MeleeFire extends DHMeleeFire;
 defaultproperties
 {
     BayonetTraceRange=155.0   // +15, SVT-38 had a longer bayonet
+    FireRate=0.34 // +0.09
     DamageType=class'DH_Weapons.DH_SVT38BashDamType'
     BayonetDamageType=class'DH_Weapons.DH_SVT38BayonetDamType'
     BayoBackAnim="stab_pullback"

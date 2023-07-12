@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_P38Weapon extends DHPistolWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_P38Pickup'
 
     Mesh=SkeletalMesh'DH_P38_1st.P-38-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Pistols.p38_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.p38_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

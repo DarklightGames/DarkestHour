@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_VG15Weapon extends DHSemiAutoWeapon;
+class DH_VG15Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
@@ -26,4 +26,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty_vg"
     MagPartialReloadAnims(0)="reload_half_vg"
     MuzzleBone="MuzzleNew"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }

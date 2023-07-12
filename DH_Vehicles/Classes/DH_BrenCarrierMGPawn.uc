@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
@@ -21,8 +21,7 @@ defaultproperties
     DriveAnim="VUC_com_idle_close"
     CameraBone="Camera_com"
     HUDOverlayClass=class'DH_Vehicles.DH_Bren_VehHUDOverlay'
-    HUDOverlayOffset=(X=-6.0)
-    HUDOverlayFOV=35.0
+    HUDOverlayFOV=65.0
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=1.5
     FirstPersonOffsetZScale=3.0

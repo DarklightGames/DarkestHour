@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This log function fixes a bug that exists in the FileLog actor where calling
 // Logf with a string larger than 1024 characters will crash the game. To
@@ -11,7 +11,7 @@ class UFileLog extends Object;
 
 const BUFFER_LIMIT = 1024;
 
-static final function Logf(FileLog F, string S)
+final static function Logf(FileLog F, string S)
 {
     local int i, L;
 

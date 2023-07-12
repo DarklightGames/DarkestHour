@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BARNoBipodWeapon extends DHAutoWeapon;
@@ -11,12 +11,12 @@ simulated function UpdateFireRate()
 {
     if (bSlowFireRate)
     {
-        FireMode[0].FireRate = 0.2;  // slow rate 300rpm
+        FireMode[0].FireRate = 0.2;  // slow rate ~330rpm (? to be tested)
 
     }
     else
     {
-        FireMode[0].FireRate = 0.12; // fast rate 500rpm
+        FireMode[0].FireRate = 0.12; // fast rate ~550rpm
     }
 }
 
@@ -69,6 +69,7 @@ defaultproperties
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
+    NumMagsToResupply=3
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"

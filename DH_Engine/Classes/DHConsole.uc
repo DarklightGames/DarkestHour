@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConsole extends ROConsole;
@@ -737,6 +737,7 @@ function UpdateSayType()
 function bool CanUseSayType(string SayType)
 {
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -756,7 +757,8 @@ function bool CanUseSayType(string SayType)
         case "VehicleSay":
             return PC.Pawn != none && PC.Pawn.IsA('Vehicle');
         case "CommandSay":
-            return PC.IsSLorASL();
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+            return PRI != none && PRI.CanAccessCommandChannel();
     }
 
     return false;

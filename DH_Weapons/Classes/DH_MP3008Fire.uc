@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MP3008Fire extends DHAutomaticFire;
@@ -8,15 +8,15 @@ class DH_MP3008Fire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP3008Bullet'
-    AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.105 // 570rpm
+    AmmoClass=class'DH_Weapons.DH_MP40Ammo'
+    FireRate=0.115 // ~575 rpm (value had to be found experimentally due to an engine bug)
     Spread=148.0
 
     // Recoil
     RecoilRate=0.075
     MaxVerticalRecoilAngle=260
     MaxHorizontalRecoilAngle=90
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=9.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'

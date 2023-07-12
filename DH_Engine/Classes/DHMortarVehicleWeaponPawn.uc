@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
@@ -16,9 +16,9 @@ var     float       LastElevationTime;        // records last time elevation was
 var     bool        bPendingFire;             // player has fired & mortar is about to fire
 
 // Operator ('Driver') animations
-const   IdleAnimIndex = 0;
-const   FiringAnimIndex = 1;
-const   UnflinchAnimIndex = 2;
+const  IDLE_ANIM_INDEX = 0;
+const  FIRING_ANIM_INDEX = 1;
+const  UNFLINCH_ANIM_INDEX = 2;
 
 var     name        DriverFiringAnim;         // anim for player operator when firing
 var     name        DriverUnflinchAnim;       // anim for operator when returning to normal pose after flinching when firing
@@ -110,7 +110,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
             WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
             WeaponAimRot.Roll = Gun.Rotation.Roll;
-            CameraLocation += (FPCamPos >> WeaponAimRot);
+            CameraLocation += FPCamPos >> WeaponAimRot;
         }
 
         // Set camera rotation
@@ -120,7 +120,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         // Finalise the camera with any shake
         if (PC != none)
         {
-            CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+            CameraLocation += PC.ShakeOffset >> PC.Rotation;
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
         }
     }
@@ -524,7 +524,7 @@ simulated state Idle
         }
     }
 
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -570,7 +570,7 @@ simulated state Busy
 {
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
     simulated function Fire(optional float F) { }
-    simulated exec function SwitchFireMode() { }
+    exec simulated function SwitchFireMode() { }
     exec function Deploy() { }
     function bool KDriverLeave(bool bForceLeave) { return false; }
     simulated function NextWeapon() { }
@@ -625,7 +625,7 @@ simulated state KnobRaised
         }
     }
 
-    simulated exec function Deploy()
+    exec simulated function Deploy()
     {
         if (DriverPositionIndex == ShooterIndex)
         {
@@ -728,7 +728,7 @@ simulated state FireToIdle extends Busy
     }
 
 Begin:
-    SetCurrentAnimationIndex(UnflinchAnimIndex);
+    SetCurrentAnimationIndex(UNFLINCH_ANIM_INDEX);
 
     if (Driver != none && Driver.HasAnim(DriverUnflinchAnim))
     {
@@ -780,7 +780,7 @@ simulated state Firing extends Busy
 
 Begin:
     PlayFirstPersonAnimation(OverlayFiringAnim);
-    SetCurrentAnimationIndex(FiringAnimIndex);
+    SetCurrentAnimationIndex(FIRING_ANIM_INDEX);
 
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
     {
@@ -950,7 +950,7 @@ simulated function PlayThirdPersonAnimations()
 {
     switch (CurrentAnimationIndex)
     {
-        case IdleAnimIndex:
+        case IDLE_ANIM_INDEX:
             if (Gun != none)
             {
                 Gun.LoopAnim(Gun.BeginningIdleAnim);
@@ -963,7 +963,7 @@ simulated function PlayThirdPersonAnimations()
 
             break;
 
-        case FiringAnimIndex:
+        case FIRING_ANIM_INDEX:
             if (DHMortarVehicleWeapon(Gun) != none)
             {
                 Gun.PlayAnim(DHMortarVehicleWeapon(Gun).GunFiringAnim);
@@ -976,7 +976,7 @@ simulated function PlayThirdPersonAnimations()
 
             break;
 
-        case UnflinchAnimIndex:
+        case UNFLINCH_ANIM_INDEX:
             if (Gun != none)
             {
                 Gun.LoopAnim(Gun.BeginningIdleAnim);
@@ -1054,7 +1054,7 @@ simulated function UpdatePrecacheMaterials()
 // Functions emptied out as not relevant to a mortar:
 simulated function SwitchWeapon(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
-simulated exec function ToggleVehicleLock();
+exec simulated function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
@@ -1111,14 +1111,12 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
-    OverlayHandTexNum=0
     OverlaySleeveTexNum=1
 
     // Fire adjustment info
     TargetMarkerClass=class'DHMapMarker_Ruler'
-    ShooterIndex=0;
-    PeriscopeIndex=1;
-    OverlayCorrectionY=-60.0;
+    PeriscopeIndex=1
+    OverlayCorrectionY=-60.0
 
     AmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     AmmoAmount=(TextureScale=0.25,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=135,OffsetY=-130,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

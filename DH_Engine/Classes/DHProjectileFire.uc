@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHProjectileFire extends DHWeaponFire;
@@ -188,11 +188,9 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4,YPos);
 }
 
-// New helper function to check whether player is hip firing
-// Allows easy subclassing, which avoids re-stating long functions just to change bUsingSights and/or bBipodDeployed
-simulated function bool IsPlayerHipFiring()
+simulated function bool IsInstigatorBipodDeployed()
 {
-    return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
+    return Instigator != none && Instigator.bBipodDeployed;   
 }
 
 function CalcSpreadModifiers()
@@ -731,52 +729,6 @@ simulated function float GetEffectiveRecoilGain()
 simulated function float GetRecoilGainFalloff(float TimeSeconds)
 {
     return (TimeSeconds ** RecoilFallOffExponent) * RecoilFallOffFactor;
-}
-
-// Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
-simulated function EjectShell()
-{
-    local ROShellEject Shell;
-    local coords       EjectBoneCoords;
-    local vector       SpawnLocation, X, Y, Z;
-    local rotator      ShellRotation;
-
-    if (ShellEjectClass == none)
-    {
-        return;
-    }
-
-    // Get location & rotation to spawn ejected shell case
-    if (IsPlayerHipFiring())
-    {
-        // Have to calculate the the shell ejection bone offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
-        EjectBoneCoords = Weapon.GetBoneCoords(ShellEmitBone);
-        SpawnLocation = Weapon.Location + (0.2 * (EjectBoneCoords.Origin - Weapon.Location));
-        SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) + (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
-        ShellRotation = rotator(-EjectBoneCoords.YAxis);
-        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
-        ShellRotation = rotator(EjectBoneCoords.XAxis) + ShellRotOffsetHip;
-    }
-    else
-    {
-        Weapon.GetViewAxes(X, Y, Z);
-        SpawnLocation = Instigator.Location + Instigator.EyePosition();
-        SpawnLocation += (X * ShellIronSightOffset.X) + (Y * ShellIronSightOffset.Y) + (Z * ShellIronSightOffset.Z);
-        ShellRotation = rotator(Y);
-        ShellRotation.Yaw += 16384;
-        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
-        ShellRotation = rotator(Y) + ShellRotOffsetIron;
-    }
-
-    // Apply random direction & speed to ejected shell
-    if (Shell != none)
-    {
-        ShellRotation.Yaw += Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
-        ShellRotation.Pitch += Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
-        ShellRotation.Roll += Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
-
-        Shell.Velocity = vector(ShellRotation) * (Shell.MinStartSpeed + (FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)));
-    }
 }
 
 defaultproperties

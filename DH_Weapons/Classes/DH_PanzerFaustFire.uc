@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerFaustFire extends DHRocketFire;
@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_PanzerFaustRocket'
     AmmoClass=class'DH_Weapons.DH_PanzerFaustAmmo'
     ExhaustDamageType=class'DH_Weapons.DH_PanzerfaustExhaustDamType'
-    ExhaustLength=32.0
+    ExhaustLength=320.0
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=600
     FireSounds(0)=Sound'DH_WeaponSounds.faust.panzerfaust60_fire011'

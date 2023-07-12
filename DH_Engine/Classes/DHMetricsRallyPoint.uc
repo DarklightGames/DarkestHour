@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMetricsRallyPoint extends JSONSerializable;
@@ -23,7 +23,7 @@ var int                 SquadIndex;
 var string              PlayerID;
 var vector              Location;
 var int                 SpawnCount;
-var bool                IsEstablished;
+var bool                bIsEstablished;
 var int                 EstablisherCount;
 var DateTime            CreatedAt;
 var DateTime            DestroyedAt;
@@ -62,7 +62,7 @@ function JSONValue ToJSON()
         .PutInteger("team_index", TeamIndex)
         .PutInteger("squad_index", SquadIndex)
         .PutString("player_id", PlayerID)
-        .PutBoolean("is_established", IsEstablished)
+        .PutBoolean("is_established", bIsEstablished)
         .PutInteger("establisher_count", EstablisherCount)
         .PutVector("location", Location)
         .PutString("created_at", CreatedAt.IsoFormat())

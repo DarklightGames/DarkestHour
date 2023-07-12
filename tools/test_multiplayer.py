@@ -26,6 +26,8 @@ def main():
     parser.add_argument('server_args')
     parser.add_argument('--client_path', default='System\\RedOrchestraLargeAddressAware.exe')
     parser.add_argument('--multihome', default='127.0.0.1')
+    parser.add_argument('--pktlag', default=50)
+    parser.add_argument('--pktloss', default=1)
     parser.add_argument('--unsafe', default=False)
     args = parser.parse_args()
 
@@ -44,7 +46,9 @@ def main():
         'server',
         args.server_args,
         f'-mod={args.mod}',
-        f'-ini={args.mod}.ini'
+        f'-ini={args.mod}.ini',
+        f'pktlag={int(args.pktlag)}',
+        f'pktloss={int(args.pktloss)}'
     ]
 
     rodir = os.environ['RODIR']

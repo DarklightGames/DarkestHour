@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPassengerPawn extends DHVehicleWeaponPawn
@@ -104,11 +104,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // Adjust camera location for any FPCamPos offset positioning
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        CameraLocation += (FPCamPos >> CameraRotation);
+        CameraLocation += FPCamPos >> CameraRotation;
     }
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 

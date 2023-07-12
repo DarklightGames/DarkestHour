@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
-const RADIOS_MAX = 10;
+const RADIOS_MAX = 32;
 const ROLES_MAX = 16;
 const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
@@ -21,7 +21,7 @@ const ARTILLERY_MAX = 8;
 const MINE_VOLUMES_MAX = 64;
 const NO_ARTY_VOLUMES_MAX = 32;
 
-enum VehicleReservationError
+enum EVehicleReservationError
 {
     ERROR_None,
     ERROR_Fatal,
@@ -57,6 +57,7 @@ enum EArtilleryTypeError
     ERROR_Unavailable,
     ERROR_Exhausted,
     ERROR_Unqualified,
+    ERROR_NotEnoughSquadMembers,
     ERROR_Cooldown,
     ERROR_Ongoing,
     ERROR_SquadTooSmall,
@@ -78,6 +79,7 @@ var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
 var DHRadio             Radios[RADIOS_MAX];
 
+var int                 AxisNationID;
 var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
@@ -279,7 +281,7 @@ replication
         TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AlliedNationID, ConstructionClasses, MapMarkerClasses;
+        AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
 }
 
 simulated event PreBeginPlay()
@@ -433,24 +435,35 @@ simulated function PostNetBeginPlay()
     // Loop all objectives to set index variables up based on tag ones (uses hash table)
     foreach AllActors(class'DHObjective', Obj)
     {
-        if (Obj != none)
+        if (Obj == none)
         {
-            // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
-            {
-                if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AxisRequiredObjForCapture[Obj.AxisRequiredObjForCapture.Length] = ObjIndex;
-                }
-            }
+            continue;
+        }
 
-            // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
-            for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
             {
-                if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    Obj.AlliesRequiredObjForCapture[Obj.AlliesRequiredObjForCapture.Length] = ObjIndex;
-                }
+                class'UArray'.static.IAddUnique(Obj.AxisRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
+        for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.AlliesRequiredObjForCapture, ObjIndex);
+            }
+        }
+
+        // Link up objective reliances from tags (add to the existing list, for backwards compatibility).
+        for (i = 0; i < Obj.GroupedObjectiveReliancesTags.Length; ++i)
+        {
+            if (DHObjectiveTable.Get(string(Obj.GroupedObjectiveReliancesTags[i]), ObjIndex))
+            {
+                class'UArray'.static.IAddUnique(Obj.GroupedObjectiveReliances, ObjIndex);
             }
         }
     }
@@ -529,6 +542,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
+    // TODO: eliminate this
     // Eliminate all objective indices that do not match the lowest depth
     if (Indices.Length > 0)
     {
@@ -543,6 +557,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
+    // Clear the depth bits from the indices.
     for (i = 0; i < Indices.Length; ++i)
     {
         Indices[i] = Indices[i] & 0xFFFF;
@@ -574,6 +589,8 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
     bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
     bIsActive = Node.Objective.IsActive();
+
+    // TODO: 
 
     if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
     {
@@ -786,7 +803,7 @@ function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
 }
 
 // This will return supply caches that are able to generate supply (aka not full)
-simulated function int GetNumberOfGeneratingSupplyPointsForTeam(int Team)
+function int GetNumberOfGeneratingSupplyPointsForTeam(int Team)
 {
     local int i, Count;
 
@@ -796,8 +813,7 @@ simulated function int GetNumberOfGeneratingSupplyPointsForTeam(int Team)
         if (SupplyPoints[i].Actor != none &&
             SupplyPoints[i].bIsActive == 1 &&
             SupplyPoints[i].TeamIndex == Team &&
-            !SupplyPoints[i].Actor.IsFull() &&
-            SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
+            SupplyPoints[i].Actor.IsGeneratingSupplies())
         {
             ++Count;
         }
@@ -888,6 +904,30 @@ simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
     }
 
     return SpawnPoints[SpawnPointIndex];
+}
+
+simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, optional out int OutDesirability)
+{
+    local int i, Desirability;
+    local DHSpawnPointBase SP;
+
+    OutDesirability = -MaxInt;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] != none && SpawnPoints[i].IsVisibleToPlayer(PC)) // TODO: should probably check if we can even spawn here
+        {
+            Desirability = SpawnPoints[i].GetDesirability();
+
+            if (Desirability > OutDesirability)
+            {
+                SP = SpawnPoints[i];
+                OutDesirability = Desirability;
+            }
+        }
+    }
+
+    return SP;
 }
 
 simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
@@ -995,7 +1035,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
                 PC.VehiclePoolIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }
@@ -1404,7 +1444,7 @@ simulated function int GetReservableTankCount(int TeamIndex)
     return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
 }
 
-simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+simulated function EVehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<DHVehicle> VC;
 
@@ -1907,8 +1947,8 @@ simulated function vector GetWorldCoords(float X, float Y)
 
     MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
-    WorldLocation.X = ((0.5 - X) * MapScale);
-    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation.X = (0.5 - X) * MapScale;
+    WorldLocation.Y = (0.5 - Y) * MapScale;
     WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
@@ -1968,6 +2008,7 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 {
     local ArtilleryTypeInfo ATI;
     local DH_LevelInfo LI;
+    local class<DHArtillery> ArtilleryClass;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
@@ -1980,9 +2021,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
         return ERROR_Fatal;
     }
 
-    if (!LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(PC))
+    ArtilleryClass = LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass;
+
+    if (!ArtilleryClass.static.HasQualificationToRequest(PC))
     {
         return ERROR_Unqualified;
+    }
+
+    if (!ArtilleryClass.static.HasEnoughSquadMembersToRequest(PC))
+    {
+        return ERROR_NotEnoughSquadMembers;
     }
 
     ATI = ArtilleryTypeInfos[ArtilleryTypeIndex];
@@ -2053,7 +2101,7 @@ function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 
 function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
 {
-    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+    DangerZoneBalance = 128 - Clamp(Factor, -127, 127);
 
     if (!bPostponeUpdate)
     {
@@ -2084,6 +2132,11 @@ simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInFriendlyZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return IsInDangerZone(PointerX, PointerY, int(!bool(TeamIndex)));
 }
 
 simulated function DangerZoneUpdated()
@@ -2397,4 +2450,3 @@ defaultproperties
     DangerZoneNeutral=128
     DangerZoneBalance=128
 }
-

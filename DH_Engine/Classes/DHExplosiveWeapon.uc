@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHExplosiveWeapon extends DHWeapon
@@ -433,7 +433,7 @@ simulated state WeaponSprinting
             // Make the sprinting animation match the sprinting speed
             LoopSpeed = 1.5;
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct) * 1.5);
+            LoopSpeed = Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct) * 1.5;
 
             Anim = SprintLoopAnim;
 

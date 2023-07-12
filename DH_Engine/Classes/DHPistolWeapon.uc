@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHPistolWeapon extends DHSemiAutoWeapon
+class DHPistolWeapon extends DHProjectileWeapon
     abstract;
 
 defaultproperties
@@ -12,6 +12,7 @@ defaultproperties
 
     BobModifyFactor=0.2 // Less weapon bob for pistols
 
+    bPlusOneLoading=true
     bCanAttachOnBack=false
     InventoryGroup=3
     Priority=5

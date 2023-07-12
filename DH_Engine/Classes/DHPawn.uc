@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -32,10 +32,13 @@ var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
-var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+var     class<Inventory>    ShovelClass;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
-var     string  BinocsClassName;
+var     class<Inventory>    BinocsClass;
+
+var     class<Inventory>    SmokeGrenadeClass;
+var     class<Inventory>    ColoredSmokeGrenadeClass;
 
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
@@ -126,15 +129,24 @@ var     Pawn                FireStarter;                   // who set a player o
 
 // Gore
 var     bool                bHeadSevered; //we want heads to be able to be blown off if large enough caliber locational hit
+var     bool                bAlwaysSeverBodyparts; // implemented for zombies
+var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
+
+// Stance
+const PRONE_FROM_CROUCH_DELAY_SECONDS = 0.2;
+var float                   LastStartCrouchTime; // Stores the last time that StartCrouch was called (used for avoiding prone eye-height bug)
 
 // Smoke grenades for squad leaders
-var DH_LevelInfo.SNationString SmokeGrenadeClassName;
-var DH_LevelInfo.SNationString ColoredSmokeGrenadeClassName;
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
 // (not) DUMB SHIT
 var     DHATGun             GunToRotate;
+
+var     DHBackpack          Backpack;
+var     class<DHBackpack>   BackpackClass;
+var     vector              BackpackLocationOffset;
+var     rotator             BackpackRotationOffset;
 
 replication
 {
@@ -152,7 +164,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight, Radio;
+        bOnFire, bCrouchMantle, MantleHeight, Radio, BackpackClass;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -291,6 +303,14 @@ simulated function PostNetReceive()
     if (Headgear == none && HeadgearClass != default.HeadgearClass && HeadgearClass != none)
     {
         Headgear = Spawn(HeadgearClass, self);
+    }
+
+    // Backpack
+    if (Backpack == none &&
+        BackpackClass != default.BackpackClass &&
+        BackpackClass != none)
+    {
+        Backpack = Spawn(BackpackClass, self);
     }
 
     if (AmmoPouches.Length == 0 && AmmoPouchClasses[0] != default.AmmoPouchClasses[0] && AmmoPouchClasses[0] != none)
@@ -432,9 +452,8 @@ function PossessedBy(Controller C)
 
         if (RI != none)
         {
-            // Apply role modifiers (implemented for Halloween 2021 event)
+            // Apply role modifiers (implemented for Halloween events)
             bCanPickupWeapons = RI.bCanPickupWeapons;
-            Health *= RI.HealthMultiplier;
 
             // Set classes for any ammo pouches based on player's role & weapon selections
             PC = ROPlayer(Controller);
@@ -474,6 +493,7 @@ function PossessedBy(Controller C)
             // Set classes for headgear & severed limbs, based on player's role
             // Any random headgear selection for role gets made here, when pawn first possessed
             HeadgearClass = RI.GetHeadgear();
+            BackpackClass = RI.GetBackpack(BackpackLocationOffset, BackpackRotationOffset);
             DetachedArmClass = RI.static.GetArmClass();
             DetachedLegClass = RI.static.GetLegClass();
 
@@ -484,6 +504,11 @@ function PossessedBy(Controller C)
                 if (HeadgearClass != none && HeadgearClass != default.HeadgearClass && Headgear == none)
                 {
                     Headgear = Spawn(HeadgearClass, self);
+                }
+
+                if (BackpackClass != none && BackpackClass != default.BackpackClass && Backpack == none)
+                {
+                    Backpack = Spawn(BackpackClass, self);
                 }
 
                 for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
@@ -541,8 +566,11 @@ simulated function AssignInitialPose()
 // Modified to stop "accessed none" log errors on trying to play invalid vehicle DriveAnim
 simulated event AnimEnd(int Channel)
 {
-    local name  WeapAnim, PlayerAnim, Anim;
+    local DHWeaponAttachment WA;
+    local name  Anim;
     local float Frame, Rate;
+
+    WA = DHWeaponAttachment(WeaponAttachment);
 
     if (DrivenVehicle != none)
     {
@@ -569,30 +597,35 @@ simulated event AnimEnd(int Channel)
                 IdleTime = Level.TimeSeconds;
             }
 
-            if (WeaponAttachment != none)
+            if (WA != none)
             {
-                WeaponAttachment.GetAnimParams(0, Anim, Frame, Rate);
+                WA.GetAnimParams(0, Anim, Frame, Rate);
 
-                if (WeaponAttachment.bBayonetAttached)
+                if (WA.bBayonetAttached)
                 {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetIdleEmpty != '' && Anim != WeaponAttachment.WA_BayonetReloadEmpty)
+                    if (WA.bOutOfAmmo && WA.WA_BayonetIdleEmpty != '' && Anim != WA.WA_BayonetReloadEmpty)
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdleEmpty);
+                        WA.LoopAnim(WA.WA_BayonetIdleEmpty);
                     }
-                    else if (WeaponAttachment.WA_BayonetIdle != '')
+                    else if (WA.WA_BayonetIdle != '')
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdle);
+                        WA.LoopAnim(WA.WA_BayonetIdle);
                     }
                 }
                 else
                 {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_IdleEmpty != '' && Anim != WeaponAttachment.WA_ReloadEmpty)
+		    // TODO: Add deployed idle empty
+                    if (WA.bOutOfAmmo && WA.WA_IdleEmpty != '' && Anim != WA.WA_ReloadEmpty)
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_IdleEmpty);
+                        WA.LoopAnim(WA.WA_IdleEmpty);
                     }
-                    else if (WeaponAttachment.WA_Idle != '')
+                    else if (bBipodDeployed && WA.WA_DeployedIdle != '')
                     {
-                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_Idle);
+                        WA.LoopAnim(WA.WA_DeployedIdle);
+                    }
+                    else if (WA.WA_Idle != '')
+                    {
+                        WA.LoopAnim(WA.WA_Idle);
                     }
                 }
             }
@@ -611,90 +644,16 @@ simulated event AnimEnd(int Channel)
             WeaponState = GS_GrenadeHoldBack;
             IdleTime = Level.TimeSeconds;
         }
-        else if (WeaponState == GS_PreReload && WeaponAttachment != none)
+        else if (WeaponState == GS_PreReload && WA != none)
         {
-            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
             AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
 
-            if (WeaponAttachment.bOutOfAmmo)
-            {
-                if (bIsCrawling)
-                {
-                    PlayerAnim = WeaponAttachment.PA_ProneReloadEmptyAnim;
-                }
-                else
-                {
-                    PlayerAnim = WeaponAttachment.PA_ReloadEmptyAnim;
-                }
-            }
-            else
-            {
-                if (bIsCrawling)
-                {
-                    PlayerAnim = WeaponAttachment.PA_ProneReloadAnim;
-                }
-                else
-                {
-                    PlayerAnim = WeaponAttachment.PA_ReloadAnim;
-                }
-            }
+            LoopAnim(WA.GetReloadPlayerAnim(self),, 0.0, 1);
 
-            LoopAnim(PlayerAnim,, 0.0, 1);
             WeaponState = GS_ReloadLooped;
             IdleTime = Level.TimeSeconds;
 
-            if (WeaponAttachment.bBayonetAttached)
-            {
-                if (bIsCrawling)
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetProneReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetProneReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_BayonetProneReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetProneReload;
-                    }
-                }
-                else
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_BayonetReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_BayonetReload;
-                    }
-                }
-            }
-            else
-            {
-                if (bIsCrawling)
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ProneReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ProneReloadEmpty;
-                    }
-                    else if (WeaponAttachment.WA_ProneReload != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ProneReload;
-                    }
-                }
-                else
-                {
-                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ReloadEmpty != '')
-                    {
-                        WeapAnim = WeaponAttachment.WA_ReloadEmpty;
-                    }
-                    else
-                    {
-                        WeapAnim = WeaponAttachment.WA_Reload;
-                    }
-                }
-            }
-
-            WeaponAttachment.LoopAnim(WeapAnim);
+            WA.LoopAnim(WA.GetReloadWeaponAnim(self));
         }
         else if (WeaponState != GS_ReloadLooped && WeaponState != GS_GrenadeHoldBack && WeaponState != GS_FireLooped)
         {
@@ -735,7 +694,7 @@ simulated function HelmetShotOff(rotator RotDir)
         }
 
         DroppedHelmet.Velocity = Velocity + vector(RotDir) * (DroppedHelmet.MaxSpeed * (1.0 + FRand() * 0.5));
-        DroppedHelmet.LifeSpan -= (FRand() * 2.0);
+        DroppedHelmet.LifeSpan -= FRand() * 2.0;
 
         Headgear.Destroy();
         HeadgearClass = none; // server should replicate this but let's make sure by setting it immediately
@@ -1166,7 +1125,7 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
             // Check whether a body part should be severed
             if (!class'GameInfo'.static.UseLowGore())
             {
-                if (DamageType.default.bAlwaysSevers || Damage == 1000)
+                if (DamageType.default.bAlwaysSevers || Damage == 1000 || bAlwaysSeverBodyparts)
                 {
                     bSever = true;
                 }
@@ -1452,6 +1411,11 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         if (CumulativeDamage >= Health)
         {
             break;
+        }
+
+        if (bNeverStaggers)
+        {
+            continue;
         }
 
         HitPointType = Hitpoints[PointsHit[i]].HitPointType;
@@ -2357,7 +2321,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
     local float             MaxDim;
     local string            RagSkelName;
     local KarmaParamsSkel   SkelParams;
-    local bool              PlayersRagdoll;
+    local bool              bPlayersRagdoll;
     local PlayerController  PC;
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -2370,7 +2334,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
         // Is this the local player's ragdoll?
         if (PC != none && PC.ViewTarget == self)
         {
-            PlayersRagdoll = true;
+            bPlayersRagdoll = true;
         }
 
         if (FRand() < 0.3)
@@ -2380,7 +2344,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
 
         // In low physics detail, if we were not just controlling this pawn,
         // and it has not been rendered in 3 seconds, just destroy it.
-        if ((Level.PhysicsDetailLevel != PDL_High) && !PlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
+        if ((Level.PhysicsDetailLevel != PDL_High) && !bPlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
         {
             Destroy();
             return;
@@ -2533,7 +2497,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
             SetPhysics(PHYS_KarmaRagdoll);
 
             // If viewing this ragdoll, set the flag to indicate that it is 'important'
-            if (PlayersRagdoll)
+            if (bPlayersRagdoll)
             {
                 SkelParams.bKImportantRagdoll = true;
             }
@@ -3026,7 +2990,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
         }
 
         ShotDir = Normal(Momentum);
-        PushLinVel = (RagDeathVel * ShotDir);
+        PushLinVel = RagDeathVel * ShotDir;
         PushLinVel.Z += RagDeathUpKick * (RagShootStrength * DamageType.default.KDeadLinZVelScale);
 
         PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
@@ -3320,18 +3284,21 @@ function CreateInventory(string InventoryClassName)
     }
 }
 
-// New function used to give all players a shovel (the appropriate shovel for their nationality)
+// New function used to give all non-squad leaders a shovel (the appropriate shovel for their nationality)
 function CheckGiveShovel()
 {
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
 
-    if (ShovelClassName != "" && Level.Game != none)
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (ShovelClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none && GRI.bAreConstructionsEnabled)
         {
-            CreateInventory(ShovelClassName);
+            CreateInventory(string(ShovelClass));
         }
     }
 }
@@ -3342,14 +3309,14 @@ function CheckGiveBinocs()
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
-    if (BinocsClassName != "" && Level.Game != none)
+    if (BinocsClass != none && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
         if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
         {
-            CreateInventory(BinocsClassName);
+            CreateInventory(string(BinocsClass));
         }
     }
 }
@@ -3364,112 +3331,47 @@ function CheckGiveSmoke()
     local DarkestHourGame DHG;
     local byte TeamIndex;
     local int SquadMemberCount;
-    local string ColoredSmokeGrenadeToGive;
-    local string SmokeGrenadeToGive;
+    local class<DHNation> NationClass;
 
-    if (Level.Game != none)
+    RI = GetRoleInfo();
+    TeamIndex = GetTeamNum();
+
+    DHG = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    PC = DHPlayer(Controller);
+    
+    NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
+
+    // Exclude tank crewmen and mortar operators
+    if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
     {
-        RI = GetRoleInfo();
+        return;
+    }
 
-        // Exclude tank crewmen and mortar operators
-        if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
-        {
-            return;
-        }
+    // Only squad leaders can recieve smoke.
+    if (!PC.IsSquadLeader())
+    {
+        return;
+    }
 
-        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-        PC = DHPlayer(Controller);
+    SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
 
-        if (GRI == none ||
-            PC == none ||
-            PC.SquadReplicationInfo == none ||
-            PRI == none ||
-            !PRI.IsSquadLeader())
-        {
-            return;
-        }
+    // Not enough people in the squad to receive any smoke
+    if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
+    {
+        return;
+    }
 
-        TeamIndex = GetTeamNum();
-        SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(TeamIndex, PRI.SquadIndex);
+    // Get the smoke grenade classes from the nation.
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeClass != none)
+    {
+        CreateInventory(string(SmokeGrenadeClass));
+    }
 
-        // Not enough people in the squad to receive any smoke
-        if (SquadMemberCount < Min(RequiredSquadMembersToReceiveSmoke, RequiredSquadMembersToReceiveColoredSmoke))
-        {
-            return;
-        }
-
-        switch (TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                SmokeGrenadeToGive = SmokeGrenadeClassName.Germany;
-                ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Germany;
-
-                break;
-
-            case ALLIES_TEAM_INDEX:
-                DHG = DarkestHourGame(Level.Game);
-
-                if (DHG == none || DHG.LevelInfo == none)
-                {
-                    return;
-                }
-
-                switch (DHG.DHLevelInfo.AlliedNation)
-                {
-                    case NATION_Canada:
-                        // Falls back to Britain
-                        if (SmokeGrenadeClassName.Canada != "")
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        }
-
-                        if (ColoredSmokeGrenadeClassName.Canada != "")
-                        {
-                            ColoredSmokeGrenadeToGive = SmokeGrenadeClassName.Canada;
-                        }
-                        else
-                        {
-                            ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        }
-
-                        break;
-
-                    case NATION_Britain:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Britain;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Britain;
-                        break;
-
-                    case NATION_USSR:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USSR;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USSR;
-                        break;
-
-                    case NATION_Poland:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.Poland;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.Poland;
-                        break;
-
-                    default:
-                        SmokeGrenadeToGive = SmokeGrenadeClassName.USA;
-                        ColoredSmokeGrenadeToGive = ColoredSmokeGrenadeClassName.USA;
-                        break;
-                }
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveSmoke && SmokeGrenadeToGive != "")
-        {
-            CreateInventory(SmokeGrenadeToGive);
-        }
-
-        if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeToGive != "")
-        {
-            CreateInventory(ColoredSmokeGrenadeToGive);
-        }
+    if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeClass != none)
+    {
+        CreateInventory(string(ColoredSmokeGrenadeClass));
     }
 }
 
@@ -3502,7 +3404,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'BackAttachment', self);
+                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
@@ -3710,7 +3612,7 @@ state PutWeaponAway
                 // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
                 if (AttachedBackItem == none)
                 {
-                    AttachedBackItem = Spawn(class'BackAttachment', self);
+                    AttachedBackItem = Spawn(class'DHBackAttachment', self);
 
                     if (AttachedBackItem != none)
                     {
@@ -3980,7 +3882,14 @@ function HandleAssistedReload()
     // Set the anim blend time so the server will make this player relevant for third person reload sounds to be heard
     if (Level.NetMode != NM_StandAlone && DHWeaponAttachment(WeaponAttachment) != none)
     {
-        PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
     }
@@ -3995,7 +3904,14 @@ simulated function PlayAssistedReload()
 
     if (DHWeaponAttachment(WeaponAttachment) != none)
     {
-        Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        if (bIsCrawling)
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_ProneAssistedReloadAnim;
+        }
+        else
+        {
+            Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
+        }
 
         if (HasAnim(Anim))
         {
@@ -4016,6 +3932,49 @@ simulated function PlayAssistedReload()
 
         WeaponState = GS_ReloadSingle;
     }
+}
+
+// Play a standard reload on the client
+simulated function PlayStandardReload()
+{
+    local DHWeaponAttachment WA;
+    local name PlayerAnim;
+    local name ChannelRootBone;
+    local bool bGlobalPose;
+
+    WA = DHWeaponAttachment(WeaponAttachment);
+
+    if (WA == none)
+    {
+        return;
+    }
+
+    if (WA.bStaticReload)
+    {
+        ChannelRootBone = '';
+        bGlobalPose = true;
+    }
+    else
+    {
+        if (bIsCrawling)
+        {
+            ChannelRootBone = FireRootBone;
+        }
+        else
+        {
+            ChannelRootBone = SpineBone2;
+        }
+    }
+
+    PlayerAnim = WA.GetReloadPlayerAnim(self);
+
+    AnimBlendParams(1, 1.0, 0.0, 0.2, ChannelRootBone, bGlobalPose);
+    PlayAnim(PlayerAnim,, 0.1, 1);
+
+    WA.PlayAnim(WA.GetReloadWeaponAnim(self),, 0.1);
+
+    AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
+    WeaponState = GS_ReloadSingle;
 }
 
 // Called on the server. Sends a message to the client to let them know to play the Mantle animation
@@ -4508,7 +4467,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         return false;
     }
 
-    EndLoc += (7.0 * Direction); // brings us to a total of 60uu out from our starting location, which is how far our animations go
+    EndLoc += 7.0 * Direction; // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
     EndLoc.Z = Location.Z - 22.0; // 36 UU above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
@@ -5130,7 +5089,7 @@ event UpdateEyeHeight(float DeltaTime)
             Smooth = FMin(0.9, 10.0 * DeltaTime);
             OldEyeHeight = EyeHeight;
             EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-            LandBob *= (1 - Smooth);
+            LandBob *= 1 - Smooth;
 
             if (EyeHeight >= BaseEyeHeight - 1.0)
             {
@@ -5189,7 +5148,7 @@ event UpdateEyeHeight(float DeltaTime)
     if (!bJustLanded)
     {
         Smooth = FMin(0.9, 10.0 * DeltaTime / Level.TimeDilation);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (Controller.WantsSmoothedView())
         {
@@ -5206,7 +5165,7 @@ event UpdateEyeHeight(float DeltaTime)
         Smooth = FMin(0.9, 10.0 * DeltaTime);
         OldEyeHeight = EyeHeight;
         EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
-        LandBob *= (1.0 - Smooth);
+        LandBob *= 1.0 - Smooth;
 
         if (EyeHeight >= BaseEyeHeight - 1.0)
         {
@@ -5414,9 +5373,22 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
-// Returns true if the player can switch the prone state - only valid on the client
+// Returns true if the player can switch the prone state - only valid on the client.
+// Modified to fix prone eye-height bug.
 simulated function bool CanProneTransition()
 {
+    // There is a bug that only occurrs in multiplayer environments where if the player is
+    // moving and hits crouch and prone in rapid succession, the eye height will appear incorrectly.
+    // To fix this, we just ensure that we leave enough time for the stance change to propagate to the
+    // client.
+    // NOTE: Investigation seems to point to there being some native RO code that is causing this buggy
+    // behavior, as the BaseEyeHeight gets set to a specific value (CrouchHeight * CrouchMoveEyeHeightMod)
+    // without that code path ever being accessed via script.
+    if (Level.TimeSeconds - LastStartCrouchTime < PRONE_FROM_CROUCH_DELAY_SECONDS)
+    {
+        return false;
+    }
+
     //TODO: Remove PHYS_Falling.
     return (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
 }
@@ -5508,6 +5480,11 @@ simulated function StartBurnFX()
     if (Headgear != none)
     {
         Headgear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+    }
+
+    if (Backpack != none)
+    {
+        Backpack.SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
     }
 
     for (i = 0; i < AmmoPouches.Length; ++i)
@@ -5778,10 +5755,10 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 
 simulated function float BobFunction(float T, float Amplitude, float Frequency, float Decay)
 {
-    return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
+    return Amplitude * (Sin(Frequency * T) / (Frequency ** ((Decay / Frequency) * T)));
 }
 
-simulated exec function BobAmplitude(optional float F)
+exec simulated function BobAmplitude(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5796,7 +5773,7 @@ simulated exec function BobAmplitude(optional float F)
     }
 }
 
-simulated exec function BobFrequencyY(optional float F)
+exec simulated function BobFrequencyY(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5811,7 +5788,7 @@ simulated exec function BobFrequencyY(optional float F)
     }
 }
 
-simulated exec function BobFrequencyZ(optional float F)
+exec simulated function BobFrequencyZ(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5826,7 +5803,7 @@ simulated exec function BobFrequencyZ(optional float F)
     }
 }
 
-simulated exec function BobDecay(optional float F)
+exec simulated function BobDecay(optional float F)
 {
     if (IsDebugModeAllowed())
     {
@@ -5987,7 +5964,7 @@ function CheckBob(float DeltaTime, vector Y)
         if (LandBob > 0.01)
         {
             AppliedBob += FMin(1.0, 16.0 * DeltaTime) * LandBob;
-            LandBob *= (1.0 - 8.0 * DeltaTime);
+            LandBob *= 1.0 - 8.0 * DeltaTime;
         }
 
         // Play footstep effects (if moving fast enough & not crawling)
@@ -6101,6 +6078,13 @@ event StartCrouch(float HeightAdjust)
 
     // Take stamina away with each stance change
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
+
+    if (IsLocallyControlled())
+    {
+        // Log the last time this function was called, as we will use this to delay
+        // a transition to prone to avoid the eye-height bug that is in native RO.
+        LastStartCrouchTime = Level.TimeSeconds;
+    }
 }
 
 // Modified to increase volume & radius of sound if sprinting, & to reduce sound radius if moving slowly
@@ -6481,7 +6465,15 @@ simulated function NotifySelected(Pawn User)
 
     if (!P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && bWeaponNeedsResupply)
     {
-        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        if (bWeaponNeedsReload && bIronSights)
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 2, self.PlayerReplicationInfo,, User.Controller);
+        }
+        else
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        }
+
         LastNotifyTime = Level.TimeSeconds;
     }
     else if (bWeaponNeedsReload)
@@ -6609,7 +6601,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = Rotation.Yaw;
-            TargetLocation += (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
+            TargetLocation += vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance);
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -6861,31 +6853,36 @@ exec function GimmeSupplies()
     switch (GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            DebugSpawnVehicle("DH_OpelBlitzSupport", 5.0);
+            SpawnVehicle("opellogi");
             break;
         case ALLIES_TEAM_INDEX:
-            DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
+            SpawnVehicle("gmclogi");
             break;
     }
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int Degrees)
+exec function SpawnVehicle(string VehicleName, optional string VariantName)
 {
-    local class<Vehicle> VehicleClass;
-    local Vehicle        V;
-    local vector         SpawnLocation;
-    local rotator        SpawnDirection;
+    local class<Vehicle>    VehicleClass;
+    local Vehicle           V;
+    local vector            SpawnLocation;
+    local rotator           SpawnDirection;
+    local int               Distance;
+    local float             Degrees;
+    local string            VehicleClassName;
+
+    VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
+
+    if (VehicleClassName == "")
+    {
+        VehicleClassName = VehicleName;
+    }
 
     // TODO: there really is no reason why a game admin should be able to spawn vehicles in the live game & the admin 'pass through' should be removed here - Matt
-    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
+    if (VehicleClassName != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
     {
-        if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
-        {
-            VehicleString = "DH_Vehicles." $ VehicleString;
-        }
-
-        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
+        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleClassName, class'class'));
 
         if (VehicleClass != none)
         {
@@ -7041,8 +7038,11 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 {
     local name FireAnim;
     local bool bIsMoving;
+    local DHWeaponAttachment WA;
 
-    if (Physics == PHYS_Swimming || WeaponAttachment == none)
+    WA = DHWeaponAttachment(WeaponAttachment);
+
+    if (Physics == PHYS_Swimming || WA == none)
     {
         return;
     }
@@ -7051,38 +7051,38 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
     if (bAltFire)
     {
-        if (WeaponAttachment.bBayonetAttached)
+        if (WA.bBayonetAttached)
         {
             if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneBayonetAltFire;
+                FireAnim = WA.PA_ProneBayonetAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchBayonetAltFire;
+                FireAnim = WA.PA_CrouchBayonetAltFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_BayonetAltFire;
+                FireAnim = WA.PA_BayonetAltFire;
             }
         }
         else
         {
             if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneAltFire;
+                FireAnim = WA.PA_ProneAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchAltFire;
+                FireAnim = WA.PA_CrouchAltFire;
             }
             else if (bBipodDeployed)
             {
-                FireAnim = WeaponAttachment.PA_DeployedAltFire;
+                FireAnim = WA.PA_DeployedAltFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_AltFire;
+                FireAnim = WA.PA_AltFire;
             }
         }
     }
@@ -7093,36 +7093,36 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsCrouched)
             {
-                FireAnim = WeaponAttachment.PA_CrouchDeployedFire;
+                FireAnim = WA.PA_CrouchDeployedFire;
             }
             else if (bIsCrawling)
             {
-                FireAnim = WeaponAttachment.PA_ProneDeployedFire;
+                FireAnim = WA.PA_ProneDeployedFire;
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_DeployedFire;
+                FireAnim = WA.PA_DeployedFire;
             }
         }
         else if (bIsCrawling)
         {
-            FireAnim = WeaponAttachment.PA_ProneFire;
+            FireAnim = WA.PA_ProneFire;
         }
         else if (bIsCrouched)
         {
             if (bIsMoving)
             {
-                FireAnim = WeaponAttachment.PA_MoveCrouchFire[Get8WayDirection()];
+                FireAnim = WA.PA_MoveCrouchFire[Get8WayDirection()];
             }
             else
             {
                 if (bIronSights)
                 {
-                    FireAnim = WeaponAttachment.PA_CrouchIronFire;
+                    FireAnim = WA.PA_CrouchIronFire;
                 }
                 else
                 {
-                    FireAnim = WeaponAttachment.PA_CrouchFire;
+                    FireAnim = WA.PA_CrouchFire;
                 }
             }
         }
@@ -7130,11 +7130,11 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsMoving)
             {
-                FireAnim = WeaponAttachment.PA_MoveStandIronFire[Get8WayDirection()];
+                FireAnim = WA.PA_MoveStandIronFire[Get8WayDirection()];
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_IronFire;
+                FireAnim = WA.PA_IronFire;
             }
         }
         else
@@ -7143,17 +7143,17 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
             {
                 if (bIsWalking)
                 {
-                    FireAnim = WeaponAttachment.PA_MoveWalkFire[Get8WayDirection()];
+                    FireAnim = WA.PA_MoveWalkFire[Get8WayDirection()];
                 }
                 else
                 {
-                    FireAnim = WeaponAttachment.PA_MoveStandFire[Get8WayDirection()];
+                    FireAnim = WA.PA_MoveStandFire[Get8WayDirection()];
 
                 }
             }
             else
             {
-                FireAnim = WeaponAttachment.PA_Fire;
+                FireAnim = WA.PA_Fire;
             }
         }
     }
@@ -7170,13 +7170,20 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
             if (!bAltFire)
             {
-                if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetFire != '')
+                if (bBipodDeployed && WA.WA_DeployedFire != '')
                 {
-                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetFire);
+                    WA.LoopAnim(WA.WA_DeployedFire);
                 }
-                else if (WeaponAttachment.WA_Fire != '')
+                else
                 {
-                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_Fire);
+                    if (WA.bBayonetAttached && WA.WA_BayonetFire != '')
+                    {
+                        WA.LoopAnim(WA.WA_BayonetFire);
+                    }
+                    else if (WA.WA_Fire != '')
+                    {
+                        WA.LoopAnim(WA.WA_Fire);
+                    }
                 }
             }
         }
@@ -7188,18 +7195,22 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
         if (!bAltFire)
         {
-            if (WeaponAttachment.bBayonetAttached)
+            if (bBipodDeployed && WA.WA_DeployedFire != '')
             {
-                if (WeaponAttachment.WA_BayonetFire != '')
-                {
-                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
-                }
+                WA.PlayAnim(WA.WA_DeployedFire);
             }
             else
             {
-                if (WeaponAttachment.WA_Fire != '')
+                if (WA.bBayonetAttached)
                 {
-                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
+                    if (WA.WA_BayonetFire != '')
+                    {
+                        WA.PlayAnim(WA.WA_BayonetFire);
+                    }
+                }
+                else if (WA.WA_Fire != '')
+                {
+                    WA.PlayAnim(WA.WA_Fire);
                 }
             }
         }
@@ -7267,36 +7278,6 @@ function bool UseSupplies(int SupplyCost, optional out array<DHConstructionSuppl
     }
 
     return true;
-}
-
-// Attempts to refund supplies to nearby supply attachments. Returns the total
-// amount of supplies that were actually refunded.
-function int RefundSupplies(int SupplyCount)
-{
-    local int i, SuppliesToRefund, SuppliesRefunded;
-    local array<DHConstructionSupplyAttachment> Attachments;
-    local UComparator AttachmentComparator;
-
-    // Sort the supply attachments by priority.
-    Attachments = TouchingSupplyAttachments;
-    AttachmentComparator = new class'UComparator';
-    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
-    class'USort'.static.Sort(Attachments, AttachmentComparator);
-
-    for (i = 0; i < Attachments.Length; ++i)
-    {
-        if (SupplyCount == 0)
-        {
-            break;
-        }
-
-        SuppliesToRefund = Min(SupplyCount, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
-        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
-        SuppliesRefunded += SuppliesToRefund;
-        SupplyCount -= SuppliesToRefund;
-    }
-
-    return SuppliesRefunded;
 }
 
 simulated function class<DHVoicePack> GetVoicePack()
@@ -7369,7 +7350,7 @@ exec function RotateAT()
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
-simulated exec function IronSightDisplayFOV(float FOV)
+exec simulated function IronSightDisplayFOV(float FOV)
 {
     local DHProjectileWeapon W;
 
@@ -7386,7 +7367,7 @@ simulated exec function IronSightDisplayFOV(float FOV)
     }
 }
 
-simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7403,7 +7384,7 @@ simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
+exec simulated function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
 {
     local ROWeaponFire WF;
 
@@ -7420,7 +7401,7 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
-simulated exec function ShellHipOffset(int X, int Y, int Z)
+exec simulated function ShellHipOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7437,7 +7418,7 @@ simulated exec function ShellHipOffset(int X, int Y, int Z)
     }
 }
 
-simulated exec function ShellIronSightOffset(float X, float Y, float Z)
+exec simulated function ShellIronSightOffset(int X, int Y, int Z)
 {
     local ROWeaponFire WF;
 
@@ -7454,12 +7435,12 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
-simulated exec function Give(string WeaponName)
+exec simulated function Give(string WeaponName)
 {
     local string ClassName;
     local int i;
 
-    if (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed())
+    if (Role != ROLE_Authority || (!PlayerReplicationInfo.bAdmin && !IsDebugModeAllowed()))
     {
         return;
     }
@@ -7494,6 +7475,35 @@ exec function BigHead(float V)
     SetHeadScale(V);
 }
 
+simulated function bool CanBuildWithShovel()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(50.0);
+}
+
+simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
+{
+    local Pawn P;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
+    {
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     // General class & interaction stuff
@@ -7504,6 +7514,7 @@ defaultproperties
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
     HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
+    BackpackClass=class'DH_Engine.DHBackpack'
     AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
     bCanPickupWeapons=true
 
@@ -7530,8 +7541,8 @@ defaultproperties
     DeployedPitchDownLimit=-7300
 
     // Sound
-    FootStepSoundRadius=64
-    FootstepVolume=0.5
+    FootStepSoundRadius=96
+    FootstepVolume=0.75
     QuietFootStepVolume=0.66
     SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
@@ -7576,8 +7587,6 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Smoke grenades for squad leaders
-    SmokeGrenadeClassName=(Germany="DH_Equipment.DH_NebelGranate39Weapon",USA="DH_Equipment.DH_USSmokeGrenadeWeapon",Britain="DH_Equipment.DH_USSmokeGrenadeWeapon",USSR="DH_Equipment.DH_RDG1SmokeGrenadeWeapon",Poland="DH_Equipment.DH_RDG1SmokeGrenadeWeapon")
-    ColoredSmokeGrenadeClassName=(Germany="DH_Equipment.DH_OrangeSmokeWeapon",USA="DH_Equipment.DH_RedSmokeWeapon",Britain="DH_Equipment.DH_RedSmokeWeapon")
     RequiredSquadMembersToReceiveSmoke=4
     RequiredSquadMembersToReceiveColoredSmoke=6
 

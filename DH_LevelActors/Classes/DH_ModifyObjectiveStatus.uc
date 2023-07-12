@@ -1,16 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ModifyObjectiveStatus extends DH_ModifyActors;
 
-var() enum eTypeOfRandom
+enum ETypeOfRandom
 {
     TR_NoRandom,
     TR_Percentage,
     TR_MaxToModify
-}                           HowToRandom; //Decides how to randomize the modification of each objective on the list
+};
+
+var()   ETypeOfRandom       HowToRandom; //Decides how to randomize the modification of each objective on the list
 var()   array<int>          ObjectivesNumsToModify;  //List of objective numbers to potentionally modify
 var()   int                 RandomPercent; //100 for always succeed, 0 for always fail
 var()   int                 MaxNumToModify; //In the random loop, it will stop once this number is hit
@@ -95,8 +97,4 @@ event Trigger(Actor Other, Pawn EventInstigator)
             }
         break;
     }
-}
-
-defaultproperties
-{
 }

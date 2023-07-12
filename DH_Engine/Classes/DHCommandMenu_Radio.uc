@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_Radio extends DHCommandMenu
     dependson(DHGameReplicationInfo);
 
+var DH_LevelInfo LevelInfo;
 var DHRadio Radio;
 var Sound   OnActiveSound;
 
@@ -19,26 +20,25 @@ var localized string CancelText;
 function Setup()
 {
     local int i;
-    local DH_LevelInfo LI;
     local Option O;
     local DHPlayer PC;
 
     PC = GetPlayerController();
     Radio = DHRadio(MenuObject);
-    LI = class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Interaction.ViewportOwner.Actor.Level);
 
-    if (PC == none || Radio == none || LI == none)
+    if (PC == none || Radio == none || LevelInfo == none)
     {
         return;
     }
 
-    for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
+    for (i = 0; i < LevelInfo.ArtilleryTypes.Length; ++i)
     {
-        if (LI.ArtilleryTypes[i].TeamIndex == PC.GetTeamNum())
+        if (LevelInfo.ArtilleryTypes[i].TeamIndex == PC.GetTeamNum())
         {
-            O.OptionalObject = LI.ArtilleryTypes[i].ArtilleryClass;
-            O.SubjectText = LI.ArtilleryTypes[i].ArtilleryClass.static.GetMenuName();
-            O.Material = LI.ArtilleryTypes[i].ArtilleryClass.default.MenuIcon;
+            O.OptionalObject = LevelInfo.ArtilleryTypes[i].ArtilleryClass;
+            O.SubjectText = LevelInfo.ArtilleryTypes[i].ArtilleryClass.static.GetMenuName();
+            O.Material = LevelInfo.ArtilleryTypes[i].ArtilleryClass.default.MenuIcon;
             O.ActionText = Interaction.GRI.ArtilleryTypeInfos[i].UsedCount $ "/" $ Interaction.GRI.ArtilleryTypeInfos[i].Limit;
             O.OptionalInteger = i;
             Options[Options.Length] = O;
@@ -51,13 +51,16 @@ function Setup()
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHGameReplicationInfo.EArtilleryTypeError Error;
-    local int Index;
-    local int CooldownTimeSeconds;
+    local int Index, CooldownTimeSeconds;
+    local DHPlayer PC;
+    local class<DHArtillery> ArtilleryClass;
+
+    PC = GetPlayerController();
 
     ORI.OptionName = Options[OptionIndex].SubjectText;
 
     Index = Options[OptionIndex].OptionalInteger;
-    Error = Interaction.GRI.GetArtilleryTypeError(GetPlayerController(), Index);
+    Error = Interaction.GRI.GetArtilleryTypeError(PC, Index);
 
     if (Error == ERROR_None)
     {
@@ -82,6 +85,24 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_Unqualified:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText[0] = default.UnqualifiedText;
+                break;
+            case ERROR_NotEnoughSquadMembers:
+                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+
+                if (LevelInfo != none && PC != none && PC.SquadReplicationInfo != none)
+                {
+                    ArtilleryClass = LevelInfo.GetArtilleryClass(OptionIndex);
+
+                    if (ArtilleryClass != none)
+                    {
+                        ORI.InfoText[0] = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex()) $
+                                          "/" $
+                                          ArtilleryClass.default.RequiredSquadMemberCount;
+                        break;
+                    }
+                }
+
+                ORI.InfoText[0] = "?/?";
                 break;
             case ERROR_Cooldown:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.StopWatch';
@@ -111,7 +132,7 @@ function OnActive()
     }
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local int Index;
@@ -167,4 +188,3 @@ defaultproperties
     OngoingText="Ongoing"
     CancelText="Ongoing (Cancel)"
 }
-

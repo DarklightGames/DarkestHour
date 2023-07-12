@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_StenMkVFire extends DHAutomaticFire;
@@ -9,14 +9,14 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_StenMkVBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
-    FireRate=0.1016 // 590rpm
+    FireRate=0.115 // ~575rpm  (value had to be found experimentally due to an engine bug)
     Spread=135.0
 
     // Recoil
     RecoilRate=0.075
     MaxVerticalRecoilAngle=250
     MaxHorizontalRecoilAngle=80
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=9.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'

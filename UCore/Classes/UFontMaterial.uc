@@ -38,7 +38,7 @@ var() enum EFormat
     DXT5,
 } TextureFormat;
 
-var() bool AntiAlias;
+var() bool bAntiAlias;
 var() string Chars;
 var() int Count;
 //var() int CharactersPerPage;      // obsolete UEngine stuff???
@@ -51,7 +51,7 @@ var() int ExtendBoxTop;
 var() float Gamma;
 var() int Kerning;
 var() string Path;
-var() bool Underline;
+var() bool bUnderline;
 var() string UnicodeRange;
 var() int USize;
 var() int VSize;
@@ -113,7 +113,7 @@ private function string NewTTFMaterial( string InPackage, string InGroup, string
     S = S $ " FONTNAME=\"" $ FontName $ "\"";                       // Windows font name
     S = S $ " YPAD=" $ string(YPad);                                        // texture tiles
     S = S $ " XPAD=" $ string(XPad);                                        // texture tiles
-    S = S $ " ANTIALIAS=" $ string(AntiAlias);                  // antialiasing
+    S = S $ " ANTIALIAS=" $ string(bAntiAlias);                  // antialiasing
     S = S $ " COUNT=" $ string(Count);                                  // char count
     S = S $ " DROPSHADOWX=" $ string(DropShadowX);          // shadow width X
     S = S $ " DROPSHADOWY=" $ string(DropShadowY);          // shadow width Y
@@ -125,7 +125,7 @@ private function string NewTTFMaterial( string InPackage, string InGroup, string
     S = S $ " EXTENDBOXTOP=" $ string(ExtendBoxTop);                // size box of the character letter (top edge)
     S = S $ " EXTENDBOXLEFT=" $ string(ExtendBoxLeft);          // size box of the character letter (left edge)
     S = S $ " EXTENDBOXRIGHT=" $ string(ExtendBoxRight);        // size box of the character letter (right edge)
-    S = S $ " UNDERLINE=" $ string(Underline);                          // underline style
+    S = S $ " UNDERLINE=" $ string(bUnderline);                          // underline style
     S = S $ " PATH=\"" $ Path $ "\"";                                               // use it with Unicoderange (e.g. ".")
     S = S $ " KERNING=" $ string(Kerning);                                  // spaces between the characters
     S = S $ GetFontStyle();                                                                 // font style
@@ -167,13 +167,12 @@ function Material CreateMaterial( Object InOuter, string InPackage, string InGro
 defaultproperties
 {
     MaterialClass=Engine.Texture
-    AntiAlias=False
+    bAntiAlias=false
     Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜ‗אבגהחטיךכלםמןסעףפצשתûüזרו"
     Count=256
     FontName="Arial"
     FontSize=10.000000
     Gamma=0.700000
-    Kerning=0
     YPad=1
     XPad=1
     USize=256

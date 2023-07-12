@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MP41RWeapon extends DHFastAutoWeapon;
@@ -36,7 +36,7 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    SwayModifyFactor=0.75 // -0.5
+    SwayModifyFactor=0.65 // -0.5
     ItemName="Maschinenpistole 41(r)"
 
     FireModeClass(0)=class'DH_Weapons.DH_MP41RFire'
@@ -45,13 +45,13 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP41RPickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.MP41R'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     Skins(0)=Texture'Weapons1st_tex.Arms.german_sleeves'
     Skins(1)=Texture'Weapons1st_tex.Arms.hands'
     Skins(2)=Shader'Weapons1st_tex.SMG.MP40_s'
-    //Skins(3)=shader'Weapons1st_tex.SMG.PPSH41_S'
+    //Skins(3)=Shader'Weapons1st_tex.SMG.PPSH41_S'
     HandNum=1
     SleeveNum=0
 

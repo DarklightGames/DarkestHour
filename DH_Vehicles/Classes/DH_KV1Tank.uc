@@ -1,10 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_KV1Tank extends DH_KV1ETank;  //WIP class, do not use it yet!
+class DH_KV1Tank extends DHDeprecated;
 
+/*
 defaultproperties
 {
     // Vehicle properties
@@ -19,8 +20,10 @@ defaultproperties
     Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
 
-    bUseHighDetailOverlayIndex=false
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Soviet_vehicles_stc.Kv1s.kv1b_visor_coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
+    bUseHighDetailOverlayIndex=false
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KV1CannonPawn',WeaponBone="Turret_Placement")
@@ -29,7 +32,6 @@ defaultproperties
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-195.0,Y=-35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-195.0,Y=35.0,Z=46.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-133.0,Y=31.0,Z=104.5),DriveRot=(Pitch=200),DriveAnim="crouch_idle_binoc")
-
 
     // Hull armor
     FrontArmor(0)=(Thickness=7.5,Slope=-30.0,MaxRelativeHeight=6.5,LocationName="lower")
@@ -76,7 +78,6 @@ defaultproperties
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
     DestroyedMeshSkins(2)=Combiner'DH_VehiclesSOV_tex.Destroyed.kv1_treads_dest'
 
-
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.KV-1S_body'
     VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.kv1s_turret_rot'
@@ -98,6 +99,5 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.57
     VehicleHudOccupantsY(6)=0.72
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.KV1'
-
-
 }
+*/

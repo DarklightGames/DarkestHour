@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_TigerTank extends DHArmoredVehicle;
@@ -18,7 +18,7 @@ defaultproperties
     Skins(1)=Texture'axis_vehicles_tex.Treads.Tiger1_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Tiger1_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.tiger1_int'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 

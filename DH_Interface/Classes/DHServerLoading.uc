@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHServerLoading extends UT2K4ServerLoading;
@@ -9,16 +9,12 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 var localized string DeployingText;
 var localized string AuthorText;
-var localized string OfficialMapText;
-var localized string CommunityMapText;
 var localized string UnspecifiedText;
 var localized string EnabledText;
 var localized string DisabledText;
 var localized string GameTypeText;
 
 var Material DHTextLogo;
-var Material OfficialMapIcon;
-var Material CommunityMapIcon;
 var Material DefaultControlsImage;
 
 var CacheManager.MapRecord LoadingMapRecord;
@@ -47,7 +43,7 @@ simulated function SetText()
         Author = default.UnspecifiedText;
     }
 
-    DrawOpText(Operations[7]).Text = Repl(AuthorText, "{0}", Author, false);
+    DrawOpText(Operations[5]).Text = Repl(AuthorText, "{0}", Author, false);
     DrawOpText(Operations[4]).Text = Repl(DeployingText, "{0}", Map, false);
 }
 
@@ -133,18 +129,7 @@ simulated function SetImage()
         DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
         DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
     }
-
-    if (class'DHMapDatabase'.static.StaticIsMapOfficial(LoadingMapRecord.MapName $ ".rom"))
-    {
-        DrawOpImage(Operations[5]).Image = OfficialMapIcon;
-    }
-    else
-    {
-        DrawOpImage(Operations[5]).Image = CommunityMapIcon;
-    }
-
-    DrawOpText(Operations[6]).Text = class'DHMapDatabase'.static.StaticGetMapSourceString(LoadingMapRecord.MapName $ ".rom");
-
+    
     DrawOpImage(Operations[0]).Image = M;
 }
 
@@ -155,10 +140,6 @@ defaultproperties
     DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
-    OfficialMapText="Official Map"
-    OfficialMapIcon=Texture'DH_GUI_Tex.Menu.OfficialMapLogo'
-    CommunityMapText="Community Map"
-    CommunityMapIcon=Texture'DH_GUI_Tex.Menu.CommunityMapLogo'
 
     // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
@@ -207,29 +188,6 @@ defaultproperties
     End Object
     Operations(4)=OpLoading
 
-    Begin Object class=DrawOpImage Name=OpConstitutionImg
-        ImageStyle=0
-        Top=0.01
-        Lft=0.685
-        Width=0.05
-        Height=0.07
-        DrawColor=(R=255,B=255,G=255,A=255)
-        SubXL=128
-        SubYL=128
-    End Object
-    Operations(5)=OpConstitutionImg
-
-    Begin Object class=RODrawOpShadowedText Name=OpConstitutionText
-        Top=0.02
-        Lft=0.735
-        Height=0.05
-        Width=0.32
-        Justification=0
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
-    End Object
-    Operations(6)=OpConstitutionText
-
     Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
         Top=0.02
         Lft=0.05
@@ -239,5 +197,5 @@ defaultproperties
         VertAlign=1
         FontName="ROInterface.fntROMainMenu"
     End Object
-    Operations(7)=OpMapAuthorText
+    Operations(5)=OpMapAuthorText
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_ATGun_HeavyTwo extends DHConstruction_Vehicle;
@@ -19,6 +19,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
             {
                 case NATION_USSR:
                 case NATION_Poland:
+                case NATION_Czechoslovakia:
                     switch (Context.LevelInfo.Weather)
                     {
                         case WEATHER_Snowy:

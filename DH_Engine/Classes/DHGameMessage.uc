@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGameMessage extends ROGameMessage;
@@ -10,6 +10,7 @@ var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
 var localized string VehicleTeamKilledMessage;
+var localized string RoleInvalidatedMessage;
 
 var localized string NeedMoreFriendliesToDeconstructHQMessage;
 
@@ -19,8 +20,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
 {
     local string S;
     local DHSpawnManager SM;
+    local DHRoleInfo RI;
 
     SM = DHSpawnManager(OptionalObject);
+    RI = DHRoleInfo(OptionalObject);
 
     switch (Switch)
     {
@@ -98,34 +101,19 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.FFDamageMessage;
         // Role change message
         case 16:
-            if (RORoleInfo(OptionalObject) == none)
+            if (RI != none)
             {
-                return "";
+                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RI.GetDisplayName();
             }
 
-            if (class'DHPlayer'.default.bUseNativeRoleNames)
-            {
-                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RORoleInfo(OptionalObject).default.AltName;
-            }
-            else
-            {
-                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RORoleInfo(OptionalObject).default.MyName;
-            }
+            break;
         // Unable to change role message
         case 17:
-            if (OptionalObject == none)
+            if (RI != none)
             {
-                return "";
+                return default.MaxRoleMsg $ RI.GetDisplayName();
             }
-
-            if (class'DHPlayer'.default.bUseNativeRoleNames)
-            {
-                return default.MaxRoleMsg $ RORoleInfo(OptionalObject).default.AltName;
-            }
-            else
-            {
-                return default.MaxRoleMsg $ RORoleInfo(OptionalObject).default.MyName;
-            }
+            break;
         // To forgive type "np" or "forgive" message
         case 18:
             if (RelatedPRI_1 == none)
@@ -166,6 +154,15 @@ static function string GetString(optional int Switch, optional PlayerReplication
             {
                 return "";
             }
+        // You are no longer qualified to be <article> <name>.
+        case 24:
+            if (RI != none)
+            {
+                S = Repl(default.RoleInvalidatedMessage, "{name}", RI.GetDisplayName());
+                S = Repl(S, "{article}", RI.Article);
+                return S;
+            }
+            break;
         default:
             break;
     }
@@ -210,5 +207,6 @@ defaultproperties
     VehicleTeamKilledMessage="{0} killed a friendly {1}."
 
     NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
+    RoleInvalidatedMessage="You are no longer qualified to be {article}{name}."
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_VehiclePool extends DHConstruction;
@@ -40,6 +40,8 @@ simulated function OnBroken()
             SpawnPoint.Destroy();
         }
     }
+    // "A Vehicle Pool has been destroyed."
+    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHVehiclePoolMessage', 3);
 }
 
 simulated event Destroyed()
@@ -53,6 +55,7 @@ simulated event Destroyed()
             SpawnPoint.Destroy();
         }
     }
+
 }
 
 defaultproperties

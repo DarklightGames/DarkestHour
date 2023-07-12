@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BrenCarrierMG extends DHVehicleMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_ext'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.BrenGun'
+    Skins(0)=Texture'DH_Bren_tex.one.BrenWorld_D'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
@@ -26,7 +26,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_BrenBullet'
     InitialPrimaryAmmo=30
     NumMGMags=20
-    FireInterval=0.12
+    FireInterval=0.13
     TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
@@ -35,17 +35,21 @@ defaultproperties
     WeaponFireAttachmentBone="Tip"
     WeaponFireOffset=-8.0
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
-    FireSoundClass=Sound'DH_WeaponSounds.Bren.Bren_Loop011'
-    FireEndSound=Sound'DH_WeaponSounds.Bren.Bren_LoopEnd'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Bren.Bren_FireLoopEnd'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=5.0,Y=5.0,Z=5.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=50.0,Y=50.0,Z=50.0)
 
     // Reload (HUDProportion overrides to better suit the curved magazine of the bren gun)
-    HUDOverlayReloadAnim="reload_empty"
-    ReloadStages(0)=(Sound=none,Duration=1.6) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.6,HUDProportion=0.67)
-    ReloadStages(2)=(Sound=none,Duration=1.9)
-    ReloadStages(3)=(Sound=none,Duration=1.9,HUDProportion=0.35)
+    HUDOverlayReloadAnim="bipod_reload"
+    ReloadStages(0)=(Sound=none,Duration=0.8) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=0.8,HUDProportion=0.67)
+    ReloadStages(2)=(Sound=none,Duration=0.7)
+    ReloadStages(3)=(Sound=none,Duration=0.7,HUDProportion=0.35)
+	
+	// Hatch fire
+    FireEffectOffset=(X=-84.0,Y=55.0,Z=8.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    FireEffectScale=0.5
 }

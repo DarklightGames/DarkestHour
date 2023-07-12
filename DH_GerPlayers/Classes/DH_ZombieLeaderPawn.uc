@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Halloween Special 2020
 
@@ -17,6 +17,13 @@ defaultproperties
 
     bReversedSkinsSlots=false
 
-    ShovelClassName="DH_Equipment.DHShovelItem_German"
-    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
+    ShovelClass=class'DH_Equipment.DHShovelItem_German'
+    BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
+
+    Health=500
+    Stamina=500
+    bNeverStaggers=true
+    bAlwaysSeverBodyparts=true
+
+    Hitpoints(1)=(DamageMultiplier=4.0) // head
 }

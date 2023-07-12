@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHLib extends Object
@@ -17,12 +17,12 @@ var ServerHealthStage           ServerHealthStages[6];
 
 // Returns current map name, stripping any ".rom" suffix to the name
 // The map name returned by the native GetURLMap() function includes the suffix on a server, but not in single player mode or on a net client
-static final function string GetMapName(LevelInfo L)
+final static function string GetMapName(LevelInfo L)
 {
     return Repl(L.GetURLMap(), ".rom", "");
 }
 
-static final function string GetDurationString(int Seconds, string Format)
+final static function string GetDurationString(int Seconds, string Format)
 {
     local int TotalYears;
     local int TotalDays;
@@ -156,7 +156,7 @@ static final function string GetDurationString(int Seconds, string Format)
 }
 
 // Draws a debugging cylinder out of wireframe lines - same as in ROHud but uses DrawStayingDebugLine(), so they stay on the screen
-static final function DrawStayingDebugCylinder(Actor A, vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
+final static function DrawStayingDebugCylinder(Actor A, vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
 {
     local float  AngleDelta;
     local vector LastVertex, Vertex;
@@ -180,7 +180,7 @@ static final function DrawStayingDebugCylinder(Actor A, vector Base, vector X, v
     }
 }
 
-static final function String GetServerHealthString(byte Tick, optional out color TextColor)
+final static function String GetServerHealthString(byte Tick, optional out color TextColor)
 {
     local int i;
 

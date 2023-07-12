@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_PTRDWeapon extends DHBipodWeapon;
+class DH_PTRDWeapon extends DHProjectileWeapon;
 
 // Modified so can't reload unless empty
 simulated function bool AllowReload()
@@ -41,7 +41,7 @@ simulated function AnimEnd(int channel)
 // Modified so we don't play idle empty anims after a reload
 simulated function PlayIdle()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (IsInstigatorBipodDeployed())
     {
         if (AmmoAmount(0) < 1 && !IsInState('Reloading') && HasAnim(IronIdleEmptyAnim))
         {
@@ -86,7 +86,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PTRDPickup'
 
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.PTRD_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -97,6 +97,13 @@ defaultproperties
     MaxNumPrimaryMags=20
     InitialNumPrimaryMags=20
 
+    bCanBipodDeploy=true
+    bCanRestDeploy=false
+    bMustReloadWithBipodDeployed=true
+    bMustFireWhileSighted=true
+
+    BipodMagEmptyReloadAnim="reload"
+    BipodMagPartialReloadAnim="reload"
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="Rest_Idle_Empty"
@@ -110,4 +117,14 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB"
     CrawlStartEmptyAnim="crawl_in"
     CrawlEndEmptyAnim="crawl_out"
+
+    Priority=10
+    
+    IronBringUp="Rest_2_Bipod"
+    IronPutDown="Bipod_2_Rest"
+    IdleAnim="Rest_Idle"
+    IronIdleAnim="Bipod_Idle"
+    IdleToBipodDeploy="Rest_2_Bipod"
+    BipodDeployToIdle="Bipod_2_Rest"
+    MagEmptyReloadAnims(0)="Reload"
 }

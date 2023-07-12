@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SpringfieldScopedFire extends DHBoltFire;
@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_SpringfieldScopedBullet'
     AmmoClass=class'DH_Weapons.DH_SpringfieldAmmo'
     Spread=20.0
-
+    AddedPitch=15
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire03'

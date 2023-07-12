@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
@@ -83,7 +83,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             DrawStyle = RedListStyle;
         }
 
-        DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
+        DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapSizeString(MI.Size), FontScale);
         DrawStyle = OldDrawStyle;
     }
 }
@@ -120,7 +120,7 @@ defaultproperties
 {
     ColumnHeadings(0)="Nominated Maps"
     ColumnHeadings(1)="Vote Weight"
-    ColumnHeadings(2)="Player Range"
+    ColumnHeadings(2)="Map Size"
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="The combined voting power of players for the map."
     ColumnHeadingHints(2)="Recommended players for the map."

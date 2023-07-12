@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ShermanFireFlyCannon extends DHVehicleCannon;
@@ -34,7 +34,6 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellHE'
@@ -52,7 +51,7 @@ defaultproperties
     MaxPrimaryAmmo=48
     MaxSecondaryAmmo=5
     MaxTertiaryAmmo=24
-    SecondarySpread=0.006
+    SecondarySpread=0.002 // was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00156
 
     // Coaxial MG ammo

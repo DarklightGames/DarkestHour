@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMortarProjectile extends DHBallisticProjectile
@@ -659,7 +659,7 @@ simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation
     {
         CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
         ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += (((5249.0 - ClampedDistance) / 5249.0) * 0.25);
+        Pitch += ((5249.0 - ClampedDistance) / 5249.0) * 0.25;
     }
 }
 

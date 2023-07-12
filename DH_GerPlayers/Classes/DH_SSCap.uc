@@ -1,16 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SSCap extends DHHeadgear;
-
-#exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
-}
 
 defaultproperties
 {

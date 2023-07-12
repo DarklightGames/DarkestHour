@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BT7CannonShellHE extends DHCannonShellHE;
@@ -17,7 +17,7 @@ defaultproperties
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     Damage=190.0  //118 gramms TNT
     DamageRadius=560.0
-    MyDamageType=Class'DH_Engine.DHShellHE50mmATDamageType'
+    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
     HullFireChance=0.50
     EngineFireChance=0.5
 

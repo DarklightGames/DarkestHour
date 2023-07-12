@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HigginsBoat extends DHBoatVehicle;
@@ -287,6 +287,9 @@ defaultproperties
     bEngineOff=false
     bSavedEngineOff=false
     MaxDesireability=1.9
+
+    // Spawning
+    bHasSpawnKillPenalty=false
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'

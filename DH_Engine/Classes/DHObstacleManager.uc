@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHObstacleManager extends Actor
@@ -145,7 +145,7 @@ simulated function GetBitfieldIndexAndMask(int Index, out int BitfieldIndex, out
 {
     BitfieldIndex = Index / BITS_PER_FIELD;
     ByteIndex = (Index / 8) % BITFIELD_LENGTH;
-    Mask = (1 << (Index % 8));
+    Mask = 1 << (Index % 8);
 }
 
 simulated event PostNetBeginPlay()
@@ -227,7 +227,7 @@ simulated event PostNetBeginPlay()
             {
                 for (j = 0; j < 8; ++j)
                 {
-                    Mask = (1 << j);
+                    Mask = 1 << j;
 
                     bIsCleared = (Bitfield[i] & Mask) == Mask;
 
@@ -334,7 +334,7 @@ simulated event PostNetReceive()
                 // Byte has changed, drill down and find what bit(s) changed.
                 for (j = 0; j < 8; ++j)
                 {
-                    Mask = (1 << j);
+                    Mask = 1 << j;
 
                     bIsCleared = (Bitfield[i] & Mask) == Mask;
                     bWasCleared = (SavedBitfield[i] & Mask) == Mask;
@@ -443,28 +443,28 @@ function SetCleared(DHObstacleInstance Obstacle, bool bIsCleared)
             switch (BitfieldIndex)
             {
                 case 0:
-                    Bitfield0[ByteIndex] = (Bitfield0[ByteIndex] | Mask);
+                    Bitfield0[ByteIndex] = Bitfield0[ByteIndex] | Mask;
                     break;
                 case 1:
-                    Bitfield1[ByteIndex] = (Bitfield1[ByteIndex] | Mask);
+                    Bitfield1[ByteIndex] = Bitfield1[ByteIndex] | Mask;
                     break;
                 case 2:
-                    Bitfield2[ByteIndex] = (Bitfield2[ByteIndex] | Mask);
+                    Bitfield2[ByteIndex] = Bitfield2[ByteIndex] | Mask;
                     break;
                 case 3:
-                    Bitfield3[ByteIndex] = (Bitfield3[ByteIndex] | Mask);
+                    Bitfield3[ByteIndex] = Bitfield3[ByteIndex] | Mask;
                     break;
                 case 4:
-                    Bitfield4[ByteIndex] = (Bitfield4[ByteIndex] | Mask);
+                    Bitfield4[ByteIndex] = Bitfield4[ByteIndex] | Mask;
                     break;
                 case 5:
-                    Bitfield5[ByteIndex] = (Bitfield5[ByteIndex] | Mask);
+                    Bitfield5[ByteIndex] = Bitfield5[ByteIndex] | Mask;
                     break;
                 case 6:
-                    Bitfield6[ByteIndex] = (Bitfield6[ByteIndex] | Mask);
+                    Bitfield6[ByteIndex] = Bitfield6[ByteIndex] | Mask;
                     break;
                 case 7:
-                    Bitfield7[ByteIndex] = (Bitfield7[ByteIndex] | Mask);
+                    Bitfield7[ByteIndex] = Bitfield7[ByteIndex] | Mask;
                     break;
             }
         }
@@ -473,28 +473,28 @@ function SetCleared(DHObstacleInstance Obstacle, bool bIsCleared)
             switch (BitfieldIndex)
             {
                 case 0:
-                    Bitfield0[ByteIndex] = (Bitfield0[ByteIndex] & ~Mask);
+                    Bitfield0[ByteIndex] = Bitfield0[ByteIndex] & ~Mask;
                     break;
                 case 1:
-                    Bitfield1[ByteIndex] = (Bitfield1[ByteIndex] & ~Mask);
+                    Bitfield1[ByteIndex] = Bitfield1[ByteIndex] & ~Mask;
                     break;
                 case 2:
-                    Bitfield2[ByteIndex] = (Bitfield2[ByteIndex] & ~Mask);
+                    Bitfield2[ByteIndex] = Bitfield2[ByteIndex] & ~Mask;
                     break;
                 case 3:
-                    Bitfield3[ByteIndex] = (Bitfield3[ByteIndex] & ~Mask);
+                    Bitfield3[ByteIndex] = Bitfield3[ByteIndex] & ~Mask;
                     break;
                 case 4:
-                    Bitfield4[ByteIndex] = (Bitfield4[ByteIndex] & ~Mask);
+                    Bitfield4[ByteIndex] = Bitfield4[ByteIndex] & ~Mask;
                     break;
                 case 5:
-                    Bitfield5[ByteIndex] = (Bitfield5[ByteIndex] & ~Mask);
+                    Bitfield5[ByteIndex] = Bitfield5[ByteIndex] & ~Mask;
                     break;
                 case 6:
-                    Bitfield6[ByteIndex] = (Bitfield6[ByteIndex] & ~Mask);
+                    Bitfield6[ByteIndex] = Bitfield6[ByteIndex] & ~Mask;
                     break;
                 case 7:
-                    Bitfield7[ByteIndex] = (Bitfield7[ByteIndex] & ~Mask);
+                    Bitfield7[ByteIndex] = Bitfield7[ByteIndex] & ~Mask;
                     break;
             }
         }

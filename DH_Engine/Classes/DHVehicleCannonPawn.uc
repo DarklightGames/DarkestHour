@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
@@ -77,7 +77,7 @@ simulated function PostBeginPlay()
     }
 }
 
-exec function SetCamPos(float X, float Y, float Z)
+exec function SetCamPos(int X, int Y, int Z)
 {
     if (IsDebugModeAllowed())
     {
@@ -160,7 +160,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if ((bOnGunsight && !bIsPeriscopicGunsight) || (bLockCameraDuringTransition && IsInState('ViewTransition')))
         {
-            CameraLocation += (FPCamPos >> CameraRotation);
+            CameraLocation += FPCamPos >> CameraRotation;
         }
         // In a 'look around' position, we need to make camera offset relative to the vehicle, not the way the player is facing
         else
@@ -177,12 +177,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
                 }
             }
 
-            CameraLocation += (FPCamPos >> BaseRotation);
+            CameraLocation += FPCamPos >> BaseRotation;
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += PC.ShakeOffset >> PC.Rotation;
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
@@ -500,7 +500,7 @@ exec function SwitchFireMode()
 
 // Modified to prevent attempting reload if don't have ammo (saves replicated function call to server) & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     if (Cannon == none || !Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {

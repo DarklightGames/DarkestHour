@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ActorReset extends DH_LevelActors;
@@ -26,8 +26,4 @@ function PostBeginPlay()
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     ActorReference.Reset();
-}
-
-defaultproperties
-{
 }

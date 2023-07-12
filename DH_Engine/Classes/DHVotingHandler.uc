@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVotingHandler extends xVotingHandler;
 
 var class<VotingReplicationInfo> VotingReplicationInfoClass;
 
-var private config float PatronVoteModifiers[5];
-var         config float MaxVotePower;
+var config private int   PatronVoteModifiers[5];
+var config         float MaxVotePower;
 
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;
@@ -201,20 +201,20 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
     if (Mutators != "" && Mutators != MapInfo.U)
     {
         MapInfo.U = Mutators;
-        bUpdate = True;
+        bUpdate = true;
     }
     */
 
     if (GameOptions != "" && GameOptions != MapInfo.G)
     {
         MapInfo.G = GameOptions;
-        bUpdate = True;
+        bUpdate = true;
     }
 
     if (MapInfo.M == "") // if map not found in MapVoteHistory then add it
     {
         MapInfo.M = MapName;
-        bUpdate = True;
+        bUpdate = true;
     }
 
     if (bUpdate)
@@ -458,7 +458,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     MVRI[Index].GameVote = GameIndex;
 
     // Sets the vote count for the player based on the player's score (to a maximum)
-    VoteCount = int(GetPlayerVotePower(PlayerController(Voter)));
+    VoteCount = GetPlayerVotePower(PlayerController(Voter));
     TextMessage = lmsgMapVotedForWithCount;
 
     if (P != none)
@@ -632,7 +632,7 @@ function TallyVotes(bool bForceMapSwitch)
             PlayersThatVoted++;
 
             // Get the vote power of the player
-            Votes = int(GetPlayerVotePower(MVRI[x].PlayerOwner));
+            Votes = GetPlayerVotePower(MVRI[x].PlayerOwner);
 
             VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] = VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] + Votes;
         }
@@ -764,33 +764,19 @@ function TallyVotes(bool bForceMapSwitch)
     }
 }
 
-// DH function which will calculate a specifici player's power
-function float GetPlayerVotePower(PlayerController Player)
+// DH function which will calculate a specific player's voting power
+function int GetPlayerVotePower(PlayerController Player)
 {
-
-    local int VotePower, NumPlayers;
     local DHPlayerReplicationInfo PRI;
-    local DarkestHourGame G;
 
     PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
-    G = DarkestHourGame(Level.Game);
 
-    if (PRI == none || G == none)
+    if (PRI == none)
     {
         return 0;
     }
 
-    NumPlayers = G.GetNumPlayers();
-    VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
-    VotePower += Clamp(PRI.Score / 1000, 0, MaxVotePower); // Add the clamped vote power from Score
-
-    // Everyone gets at least one vote
-    if (VotePower < 1)
-    {
-        VotePower = 1;
-    }
-
-    return VotePower;
+    return 1 + PatronVoteModifiers[PRI.PatronTier];
 }
 
 function ExitVoteAndSwap()
@@ -951,14 +937,14 @@ static function FillPlayInfo(PlayInfo PlayInfo)
 {
     super(VotingHandler).FillPlayInfo(PlayInfo);
 
-    PlayInfo.AddSetting(default.MapVoteGroup,"bMapVote",default.PropsDisplayText[0],0,1,"Check",,,True,False);
-    PlayInfo.AddSetting(default.MapVoteGroup,"bAutoOpen",default.PropsDisplayText[1],0,1,"Check",,,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"ScoreBoardDelay",default.PropsDisplayText[2],0,1,"Text","3;0:60",,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"RepeatLimit",default.PropsDisplayText[7],0,1,"Text","4;0:9999",,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"VoteTimeLimit",default.PropsDisplayText[8],0,1,"Text","3;10:300",,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"MidGameVotePercent",default.PropsDisplayText[9],0,1,"Text","3;1:100",,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"bDefaultToCurrentGameType",default.PropsDisplayText[10],0,1,"Check",,,True,True);
-    PlayInfo.AddSetting(default.MapVoteGroup,"GameConfig",default.PropsDisplayText[15],0, 1,"Custom",";;"$default.GameConfigPage,,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"bMapVote",default.PropsDisplayText[0],0,1,"Check",,,true,false);
+    PlayInfo.AddSetting(default.MapVoteGroup,"bAutoOpen",default.PropsDisplayText[1],0,1,"Check",,,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"ScoreBoardDelay",default.PropsDisplayText[2],0,1,"Text","3;0:60",,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"RepeatLimit",default.PropsDisplayText[7],0,1,"Text","4;0:9999",,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"VoteTimeLimit",default.PropsDisplayText[8],0,1,"Text","3;10:300",,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"MidGameVotePercent",default.PropsDisplayText[9],0,1,"Text","3;1:100",,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"bDefaultToCurrentGameType",default.PropsDisplayText[10],0,1,"Check",,,true,true);
+    PlayInfo.AddSetting(default.MapVoteGroup,"GameConfig",default.PropsDisplayText[15],0, 1,"Custom",";;"$default.GameConfigPage,,true,true);
 
     class'DefaultMapListLoader'.static.FillPlayInfo(PlayInfo);
     PlayInfo.PopClass();
@@ -975,9 +961,9 @@ defaultproperties
 
     MaxVotePower=10
 
-    PatronVoteModifiers(0)=0.0  //Not Patron
-    PatronVoteModifiers(1)=0.15 //Lead
-    PatronVoteModifiers(2)=0.25 //Bronze
-    PatronVoteModifiers(3)=0.35 //Silver
-    PatronVoteModifiers(4)=0.5  //Gold
+    PatronVoteModifiers(0)=0    // Not Patron
+    PatronVoteModifiers(1)=1    // Lead
+    PatronVoteModifiers(2)=2    // Bronze
+    PatronVoteModifiers(3)=3    // Silver
+    PatronVoteModifiers(4)=4    // Gold
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PzLehrTanker extends DHGETankCrewmanRoles;
@@ -11,5 +11,4 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.pzlehr_sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCap'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    b
 }

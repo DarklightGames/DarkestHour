@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BT7Cannon extends DHVehicleCannon;
@@ -35,8 +35,7 @@ defaultproperties
     CustomPitchUpLimit=4551 // +25/-8 degrees
     CustomPitchDownLimit=64079
 
-    // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
+    // Cannon ammo=
     PrimaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_BT7CannonShellHE'
 
@@ -68,11 +67,11 @@ defaultproperties
     RangeSettings(5)=2500
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     InitialAltAmmo=63
     NumMGMags=15
-    AltFireInterval=0.1
-    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
+    AltFireInterval=0.105
+    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
@@ -87,8 +86,8 @@ defaultproperties
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
 
-    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
-    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
-    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=1.35)
-    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=1.2,HUDProportion=0.35)
+    AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty01_000',Duration=1.0)
+    AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty02_052',Duration=2.0,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty03_098',Duration=2.0)
+    AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.DP27.dp27_reloadempty04_158',Duration=0.5,HUDProportion=0.35)
 }

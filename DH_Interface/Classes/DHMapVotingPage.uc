@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMapVotingPage extends MapVotingPage;
@@ -140,11 +140,10 @@ defaultproperties
         bScaleToParent=true
         bBoundToParent=true
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.25 // Map Name
-        HeaderColumnPerc(1)=0.2  // Source
-        HeaderColumnPerc(2)=0.15 // Country
-        HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.25 // Player Range
+        HeaderColumnPerc(0)=0.40 // Map Name
+        HeaderColumnPerc(1)=0.20 // Country
+        HeaderColumnPerc(2)=0.20 // Type
+        HeaderColumnPerc(3)=0.20 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
 

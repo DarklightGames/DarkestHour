@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M1928_30rndWeapon extends DHFastAutoWeapon;
@@ -36,8 +36,8 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    ItemName="M1928 Thompson /30rnd"
-    SwayModifyFactor=0.88 // +0.08
+    ItemName="M1928 Thompson (30rd)"
+    SwayModifyFactor=0.78 // +0.08
     FireModeClass(0)=class'DH_Weapons.DH_M1928_30rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1928_30rndAttachment'

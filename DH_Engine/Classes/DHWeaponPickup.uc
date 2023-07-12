@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponPickup extends ROWeaponPickup
@@ -24,6 +24,8 @@ var     bool                    bOldBarrelSteamActive;    // clientside record, 
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+
+var     StaticMesh              EmptyStaticMesh;
 
 replication
 {
@@ -172,6 +174,12 @@ function InitDroppedPickupFor(Inventory Inv)
                     }
                 }
             }
+        }
+        
+        // If the weapon is empty and we have an empty static mesh variant, show that instead
+        if (EmptyStaticMesh != none && W.AmmoAmount(0) == 0)
+        {
+            SetStaticMesh(EmptyStaticMesh);
         }
     }
 }

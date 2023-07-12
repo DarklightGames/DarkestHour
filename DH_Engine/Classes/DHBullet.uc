@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBullet extends DHBallisticProjectile
@@ -38,7 +38,7 @@ var     float           VehicleDeflectSoundVolume;
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
 
 // From deprecated ROBullet class:
-const       MinPenetrateVelocity = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
+const       MIN_PENETRATE_VELOCITY = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
 
 var         class<DHHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
@@ -405,7 +405,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 
     // Do any damage
-    if (!bHasDeflected && Role == ROLE_Authority && V > (MinPenetrateVelocity * ScaleFactor))
+    if (!bHasDeflected && Role == ROLE_Authority && V > (MIN_PENETRATE_VELOCITY * ScaleFactor))
     {
         UpdateInstigator();
 

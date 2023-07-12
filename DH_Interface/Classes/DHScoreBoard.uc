@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHScoreBoard extends ROScoreBoard;
@@ -126,7 +126,7 @@ function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out C
     switch (EScoreboardColumnType(ScoreboardColumnIndex))
     {
         case COLUMN_PlayerName:
-            CRI.TextColor = Class'UColor'.default.White;
+            CRI.TextColor = class'UColor'.default.White;
             CRI.Text = "No players";
             break;
         default:

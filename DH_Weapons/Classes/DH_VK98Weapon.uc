@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_VK98Weapon extends DHBoltActionWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_VK98Pickup'
 
     Mesh=SkeletalMesh'DH_Kar98_1st.VK98_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.k98_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

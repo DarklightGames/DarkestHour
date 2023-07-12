@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_KV1Tank_Snow extends DH_KV1Tank; //wip class
+class DH_KV1Tank_Snow extends DH_KV1Tank;  //wip class
 
-
+/*
 defaultproperties
 {
     bIsWinterVariant=true
@@ -15,3 +15,4 @@ defaultproperties
     CannonSkins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.KV1_body_snow'
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.destroyed.KV1_body_dest'
 }
+*/

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DateTime extends JSONSerializable;
@@ -16,7 +16,7 @@ var int Minute;
 var int Second;
 var int Millisecond;
 
-static final function DateTime Now(Actor A)
+final static function DateTime Now(Actor A)
 {
     local DateTime Now;
 
@@ -142,13 +142,9 @@ function JSONValue ToJSON()
 
 defaultproperties
 {
-    DayOfWeek=0
     Year=1970
     Month=1
     Day=1
-    Hour=0
-    Second=0
-    Millisecond=0
 
     DayOfWeekNames[0]="Sunday"
     DayOfWeekNames[1]="Monday"

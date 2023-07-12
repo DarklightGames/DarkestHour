@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIVJTank extends DH_PanzerIVHTank;
@@ -33,7 +33,7 @@ defaultproperties
 	// this modification was produced late in the war (1944-45), most (if not all) tanks of this modification had very low quality armor due to absence of proper alloys, which was less effective and caused a lot of spalling
     Health=535
     HealthMax=535.0
-	VehHitpoints(0)=(PointOffset=(X=-100.0,Y=0.0,Z=12.0)) // engine
+   VehHitpoints(0)=(PointOffset=(X=-100.0,Y=0.0,Z=12.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointOffset=(X=30.0,Y=-27.0,Z=0.0)) // ammo stores x 3
     VehHitpoints(2)=(PointRadius=20.0,PointOffset=(X=-20.0,Y=-27.0,Z=0.0))
     VehHitpoints(3)=(PointRadius=20.0,PointOffset=(X=-30.0,Y=27.0,Z=0.0))

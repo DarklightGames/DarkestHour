@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGetPassword extends UT2K4GetPassword;
@@ -25,9 +25,5 @@ function RetryPassword()
         PlayerOwner().ClientTravel(RetryURL, TRAVEL_Absolute, false);
     }
 
-    Controller.CloseAll(false,True);
-}
-
-defaultproperties
-{
+    Controller.CloseAll(false, true);
 }

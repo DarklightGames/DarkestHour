@@ -1,10 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHObstacleInfo extends Info
-    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Display,Advanced,Sound)
+    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Advanced,Sound)
     placeable;
 
 struct Type

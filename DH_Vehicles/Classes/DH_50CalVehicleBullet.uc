@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_50CalVehicleBullet extends DHBullet_ArmorPiercing;
@@ -24,7 +24,7 @@ defaultproperties
 
 	//Damage
     ImpactDamage=75
-    Damage=250.0
+    Damage=450.0
     HullFireChance=0.05
     EngineFireChance=0.07  //assuming that some bullets in the belt are incendiary
     MyDamageType=class'DH_Vehicles.DH_50CalDamType'

@@ -1,16 +1,29 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-var     name        PA_AssistedReloadAnim;
 var     name        PA_MortarDeployAnim;
 var     name        WA_MortarDeployAnim;
 
-var     bool        bBarrelCanOverheat;
+var     name        PA_AssistedReloadAnim;
+var     name        PA_ProneAssistedReloadAnim;
+var     name        PA_CrouchReloadAnim;
+var     name        PA_CrouchReloadEmptyAnim;
+var     name        WA_CrouchReload;
+var     name        WA_CrouchReloadEmpty;
+var     name        WA_BayonetCrouchReload;
+var     name        WA_BayonetCrouchReloadEmpty;
+
+var     name        WA_ProneIdle;
+var     name        WA_DeployedIdle;
+var     name        WA_DeployedFire;
+
+var     bool        bStaticReload; // Reload animations will take over the
+                                   // entire body (useful for deployed weapons).
 
 var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
@@ -19,6 +32,10 @@ var     vector      SavedmHitLocation; // used so net client's PostNetReceive() 
 // Unfortunately, we don't have access to these models any more so we can't fix them.
 // TODO: specify exact rotation for ejection, don't rely on "down" to be correct
 var     bool    bSpawnShellsOutBottom;
+
+// Mesh offsets for when the weapon is on the back.
+var     vector  BackAttachmentLocationOffset;
+var     rotator BackAttachmentRotationOffset;
 
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
@@ -384,13 +401,145 @@ simulated function PlayIdle()
     }
     else
     {
-        if (bOutOfAmmo && WA_IdleEmpty != '')
+        // TODO: Add "empty" support for crawl and deployed anims
+        if (WA_ProneIdle != '' && Instigator.bIsCrawling)
         {
-            LoopAnim(WA_IdleEmpty);
+            LoopAnim(WA_ProneIdle);
         }
-        else if (WA_Idle != '')
+        else if (WA_DeployedIdle != '' && Instigator.bBipodDeployed)
         {
+            LoopAnim(WA_DeployedIdle);
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_IdleEmpty != '')
+            {
+            LoopAnim(WA_IdleEmpty);
+            }
+            else if (WA_Idle != '')
+            {
             LoopAnim(WA_Idle);
+            }
+        }
+    }
+}
+
+simulated function name GetReloadPlayerAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (bOutOfAmmo)
+    {
+        if (Pawn.bIsCrawling)
+        {
+            return PA_ProneReloadEmptyAnim;
+        }
+        else if (Pawn.bIsCrouched && PA_CrouchReloadEmptyAnim != '')
+        {
+            return PA_CrouchReloadEmptyAnim;
+        }
+        else
+        {
+            return PA_ReloadEmptyAnim;
+        }
+    }
+    else
+    {
+        if (Pawn.bIsCrawling)
+        {
+            return PA_ProneReloadAnim;
+        }
+        else if (Pawn.bIsCrouched && PA_CrouchReloadAnim != '')
+        {
+            return PA_CrouchReloadAnim;
+        }
+        else
+        {
+            return PA_ReloadAnim;
+        }
+    }
+}
+
+simulated function name GetReloadWeaponAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (bBayonetAttached)
+    {
+        if (Pawn.bIsCrawling)
+        {
+            if (bOutOfAmmo && WA_BayonetProneReloadEmpty != '')
+            {
+                return WA_BayonetProneReloadEmpty;
+            }
+            else
+            {
+                return WA_BayonetProneReload;
+            }
+        }
+        else if (Pawn.bIsCrouched && (WA_BayonetCrouchReloadEmpty != '' || WA_BayonetCrouchReload != ''))
+        {
+            if (bOutOfAmmo && WA_BayonetCrouchReloadEmpty != '')
+            {
+                return WA_BayonetCrouchReloadEmpty;
+            }
+            else
+            {
+                return WA_BayonetCrouchReload;
+            }
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_BayonetReloadEmpty != '')
+            {
+                return WA_BayonetReloadEmpty;
+            }
+            else
+            {
+                return WA_BayonetReload;
+            }
+        }
+    }
+    else
+    {
+        if (Pawn.bIsCrawling)
+        {
+            if (bOutOfAmmo && WA_ProneReloadEmpty != '')
+            {
+                return WA_ProneReloadEmpty;
+            }
+            else
+            {
+                return WA_ProneReload;
+            }
+        }
+        else if (Pawn.bIsCrouched && (WA_CrouchReloadEmpty != '' || WA_CrouchReload != ''))
+        {
+            if (bOutOfAmmo && WA_CrouchReloadEmpty != '')
+            {
+                return WA_CrouchReloadEmpty;
+            }
+            else
+            {
+                return WA_CrouchReload;
+            }
+        }
+        else
+        {
+            if (bOutOfAmmo && WA_ReloadEmpty != '')
+            {
+                return WA_ReloadEmpty;
+            }
+            else
+            {
+                return WA_Reload;
+            }
         }
     }
 }
@@ -440,4 +589,39 @@ defaultproperties
     PA_LimpIronAnims(5)=""
     PA_LimpIronAnims(6)=""
     PA_LimpIronAnims(7)=""
+
+    // Override player movement anims inherited from ROWeaponAttachment that don't exist
+    PA_MovementAnims(0)="stand_jogF_kar"
+    PA_MovementAnims(1)="stand_jogB_kar"
+    PA_MovementAnims(2)="stand_jogL_kar"
+    PA_MovementAnims(3)="stand_jogR_kar"
+    PA_MovementAnims(4)="stand_jogFL_kar"
+    PA_MovementAnims(5)="stand_jogFR_kar"
+    PA_MovementAnims(6)="stand_jogBL_kar"
+    PA_MovementAnims(7)="stand_jogBR_kar"
+
+    PA_SprintAnims(0)="stand_sprintF_kar"
+    PA_SprintAnims(1)="stand_sprintB_kar"
+    PA_SprintAnims(2)="stand_sprintL_kar"
+    PA_SprintAnims(3)="stand_sprintR_kar"
+    PA_SprintAnims(4)="stand_sprintFL_kar"
+    PA_SprintAnims(5)="stand_sprintFR_kar"
+    PA_SprintAnims(6)="stand_sprintBL_kar"
+    PA_SprintAnims(7)="stand_sprintBR_kar"
+
+    PA_WalkIronAnims(0)="stand_walkFiron_kar"
+    PA_WalkIronAnims(1)="stand_walkBiron_kar"
+    PA_WalkIronAnims(2)="stand_walkLiron_kar"
+    PA_WalkIronAnims(3)="stand_walkRiron_kar"
+    PA_WalkIronAnims(4)="stand_walkFLiron_kar"
+    PA_WalkIronAnims(5)="stand_walkFRiron_kar"
+    PA_WalkIronAnims(6)="stand_walkBLiron_kar"
+    PA_WalkIronAnims(7)="stand_walkBRiron_kar"
+
+    PA_IdleRestAnim="stand_idlehip_kar"
+    PA_IdleWeaponAnim="stand_idlehip_kar"
+    PA_IdleIronRestAnim="stand_idleiron_kar"
+    PA_IdleIronWeaponAnim="stand_idleiron_kar"
+
+    PA_StandToProneAnim="StandtoProne_kar"
 }

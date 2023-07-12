@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTab_Hud extends ROTab_Hud;
@@ -190,22 +190,22 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
 function SaveSettings()
 {
-    local PlayerController PC;
+    local DHPlayer PC;
     local DHHud H;
     local bool bSave;
 
     super(UT2K4Tab_HudSettings).SaveSettings();
 
-    PC = PlayerOwner();
+    PC = DHPlayer(PlayerOwner());
     H = DHHud(PlayerOwner().myHud);
 
     if (bUseNativeRoleNamesD != bUseNativeRoleNames)
     {
-        if (DHPlayer(PC) != none)
+        if (PC != none)
         {
-            DHPlayer(PC).bUseNativeRoleNames = bUseNativeRoleNames;
+            PC.bUseNativeRoleNames = bUseNativeRoleNames;
             PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeRoleNames" @ string(bUseNativeRoleNames));
-            DHPlayer(PC).SaveConfig();
+            PC.SaveConfig();
         }
         else
         {
@@ -216,11 +216,11 @@ function SaveSettings()
 
     if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
     {
-        if (DHPlayer(PC) != none)
+        if (PC != none)
         {
-            DHPlayer(PC).bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
+            PC.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
             PC.ConsoleCommand("set DH_Engine.DHPlayer bShowMapOnFirstSpawn" @ string(bShowMapOnFirstSpawn));
-            DHPlayer(PC).SaveConfig();
+            PC.SaveConfig();
         }
         else
         {
@@ -236,20 +236,20 @@ function SaveSettings()
     {
         if (HintLevel == 0) // 0 = all hints
         {
-            if (DHPlayer(PC) != none)   // Colin: Player is in a level
+            if (PC != none)
             {
-                DHPlayer(PC).bShowHints = true;
+                PC.bShowHints = true;
                 PC.ConsoleCommand("set DH_Engine.DHPlayer bShowHints" @ true);
-                DHPlayer(PC).UpdateHintManagement(true);
+                PC.UpdateHintManagement(true);
 
-                if (DHPlayer(PC).DHHintManager != none)
+                if (PC.DHHintManager != none)
                 {
-                    DHPlayer(PC).DHHintManager.NonStaticReset();
+                    PC.DHHintManager.NonStaticReset();
                 }
 
-                DHPlayer(PC).SaveConfig();
+                PC.SaveConfig();
             }
-            else    // Colin: Player is outside of a level
+            else
             {
                 class'DHHintManager'.static.StaticReset();
                 class'DHPlayer'.default.bShowHints = true;
@@ -258,16 +258,16 @@ function SaveSettings()
         }
         else
         {
-            if (DHPlayer(PC) != none)
+            if (PC != none)
             {
-                DHPlayer(PC).bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
+                PC.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
                 PC.ConsoleCommand("set DH_Engine.DHPlayer bShowHints" @ string(HintLevel == 1));
-                DHPlayer(PC).UpdateHintManagement(HintLevel == 1); //true if (new hints), false if (no hints)
-                DHPlayer(PC).SaveConfig();
+                PC.UpdateHintManagement(HintLevel == 1); //true if (new hints), false if (no hints)
+                PC.SaveConfig();
             }
             else
             {
-                class'DHPlayer'.default.bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
+                class'DHPlayer'.default.bShowHints = HintLevel == 1; //true if (new hints), false if (no hints)
                 class'DHPlayer'.static.StaticSaveConfig();
             }
         }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVolumeTest extends ROVolumeTest;
@@ -40,8 +40,4 @@ function bool DHIsInNoArtyVolume(DHGameReplicationInfo GRI)
 function bool IsActiveSpawnPoint(DHSpawnPoint SP)
 {
     return SP != none && SP.IsActive();
-}
-
-defaultproperties
-{
 }

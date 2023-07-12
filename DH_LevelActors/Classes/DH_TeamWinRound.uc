@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_TeamWinRound extends DH_LevelActors;
@@ -12,6 +12,4 @@ function Trigger(Actor Other, Pawn EventInstigator)
     ROTeamGame(Level.Game).EndRound(TeamToWin);
 }
 
-defaultproperties
-{
-}
+

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HetzerCannon extends DHVehicleCannon;
@@ -14,9 +14,9 @@ defaultproperties
     GunMantletArmorFactor=6.000000
     GunMantletSlope=40.000000
 
-    PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
 
     ProjectileDescriptions(2)="Smoke"
 
@@ -66,7 +66,6 @@ defaultproperties
     YawEndConstraint=3000.000000
     PitchBone="gun_pitch"
     WeaponFireOffset=34.200001
-    ProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
     CustomPitchUpLimit=1820
     CustomPitchDownLimit=64444
     MaxPositiveYaw=2000

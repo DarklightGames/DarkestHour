@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSOVMachineGunnerRoles extends DHAlliedMachineGunnerRoles
@@ -9,7 +9,7 @@ class DHSOVMachineGunnerRoles extends DHAlliedMachineGunnerRoles
 defaultproperties
 {
     AltName="Pulemetchik"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP27Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"

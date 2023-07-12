@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PPSh41_StickWeapon extends DHFastAutoWeapon;
@@ -36,8 +36,8 @@ simulated function bool StartFire(int Mode)
 
 defaultproperties
 {
-    SwayModifyFactor=0.74 // -0.6
-    ItemName="PPSh-41 /35rnd"
+    SwayModifyFactor=0.64 // -0.6
+    ItemName="PPSh-41 (35rd)"
 
     FireModeClass(0)=class'DH_Weapons.DH_PPSH41_stickFire'
     FireModeClass(1)=class'DH_Weapons.DH_PPSH41_stickMeleeFire'
@@ -45,7 +45,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPSH41_stickPickup'
 
     Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-stick'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.PPShBox'

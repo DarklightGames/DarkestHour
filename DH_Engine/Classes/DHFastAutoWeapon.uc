@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHFastAutoWeapon extends DHAutoWeapon
@@ -35,20 +35,4 @@ simulated function AnimEnd(int Channel)
     {
         super.AnimEnd(channel);
     }
-}
-
-// Tells bot whether to charge or back off while using this weapon
-function float SuggestAttackStyle()
-{
-    return 0.7;
-}
-
-// Tells bot whether to charge or back off while defending against this weapon
-function float SuggestDefenseStyle()
-{
-    return -0.5;
-}
-
-defaultproperties
-{
 }

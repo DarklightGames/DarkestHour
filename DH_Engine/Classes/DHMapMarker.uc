@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMapMarker extends Object
@@ -74,11 +74,13 @@ enum EMarkerType
     MT_ArtilleryHit,
     MT_ArtilleryBarrage,
     MT_Measurement,
-    MT_Admin,
     MT_Movement
 };
 
 var EMarkerType Type;
+
+// The console command to run when this marker is placed as a result of using the spotting menu. Used for playing voice call-outs.
+var string SpottingConsoleCommand;
 
 // Override this function to determine if this map marker can be used. This
 // function is evaluated once at the beginning of the map.
@@ -261,7 +263,5 @@ defaultproperties
     Scope=TEAM
     OverwritingRule=OFF
     bShouldShowOnCompass=false
-    RequiredSquadMembers=0
-    ActivationTimeout=0
     CalculatingString="Calculating..."
 }

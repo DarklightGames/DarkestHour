@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVoteManager extends Actor
@@ -82,7 +82,7 @@ function AddNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
         Nominations[0].VoteClass = VoteClass;
 
         // Count the nominations and clean up the invalid ones while we at it
-        i = 0; while (i < Nominations.Length)
+        for (i = Nominations.Length - 1; i >= 0; --i)
         {
             if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
             {
@@ -91,17 +91,12 @@ function AddNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
                      Nominations[i].Player.GetTeamNum() == Nominations[i].TeamIndex))
                 {
                     PlayerNominators[PlayerNominators.Length] = Nominations[i].Player;
-                    ++i;
                 }
                 else
                 {
                     Nominations.Remove(i, 1);
                 }
-
-                continue;
             }
-
-            ++i;
         }
 
         if (PlayerNominators.Length >= NominationsThresholdCount)
@@ -129,8 +124,8 @@ function RemoveNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
        return;
    }
 
-   i = 0; while (i < Nominations.Length)
-   {
+    for (i = Nominations.Length - 1; i >= 0; --i)
+    {
        if (Nominations[i].VoteClass == VoteClass && Nominations[i].Player == Player)
        {
            // Avoid sending multiple notifications in case we have stale
@@ -142,10 +137,7 @@ function RemoveNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
            }
 
            Nominations.Remove(i, 1);
-           continue;
        }
-
-       ++i;
    }
 }
 
@@ -158,16 +150,13 @@ function ClearNominations(class<DHVoteInfo> VoteClass, byte TeamIndex)
         return;
     }
 
-    i = 0; while (i < Nominations.Length)
+    for (i = Nominations.Length - 1; i >= 0; --i)
     {
         if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
         {
             VoteClass.static.OnNominationRemoved(Nominations[i].Player);
             Nominations.Remove(i, 1);
-            continue;
         }
-
-        ++i;
     }
 }
 

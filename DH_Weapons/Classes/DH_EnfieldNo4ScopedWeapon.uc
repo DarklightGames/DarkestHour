@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Scoped Enfield No.4"
+    ItemName="Enfield No.4 Mk.I (T) (No.32)"
     SwayModifyFactor=0.65 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'

@@ -8,10 +8,41 @@ import shutil
 import json
 from binascii import crc32
 import zipfile
+from json import JSONDecodeError
+from pathlib import Path
 
 '''
 https://stackoverflow.com/questions/13921323/handling-duplicate-keys-with-configparser
 '''
+
+
+class Manifest:
+    def __init__(self):
+        self.package_crcs = dict()
+        self.default_ini_crc = None
+
+    @staticmethod
+    def load(path: str) -> 'Manifest':
+        with open(path, 'r') as fp:
+            manifest = Manifest()
+            try:
+                data = json.load(fp)
+                if isinstance(data, dict):
+                    manifest.package_crcs = data.get('package_crcs', dict())
+                    manifest.default_ini_crc = data.get('default_ini_crc', None)
+            except JSONDecodeError:
+                pass
+            return manifest
+
+    def write(self, path):
+        try:
+            with open(path, 'w') as f:
+                json.dump({
+                    'package_crcs': self.package_crcs,
+                    'default_ini_crc': self.default_ini_crc
+                }, f)
+        except OSError:
+            print('could not write mod make manifest')
 
 
 class ConfigParserMultiOpt(configparser.RawConfigParser):
@@ -180,31 +211,34 @@ def main():
         print('error: "{}" is not a directory'.format(dir))
         sys.exit(1)
 
-    # system directory
+    # System directory.
     sys_dir = os.path.join(args.dir, 'System')
 
     if not os.path.isdir(sys_dir):
         print('error: could not resolve System directory')
         sys.exit(1)
 
-    # mod directory
+    # Mod directory.
     mod_dir = os.path.join(args.dir, args.mod)
 
     if not os.path.isdir(mod_dir):
         print('error: could not resolve mod directory')
         sys.exit(1)
 
-    # mod system directory
+    # Mod system directory.
     mod_sys_dir = os.path.join(mod_dir, 'System')
 
     if not os.path.isdir(mod_sys_dir):
         print('error could not resolve mod system directory')
         sys.exit(1)
 
-
-    # read the default config
+    # Read the default config.
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
     if os.path.isfile(default_config_path):
+        # Calculate the CRC of the default config.
+        # We will check this against the one logged in the manifest and force a clean build if it has changed.
+        default_ini_crc = crc32(Path(default_config_path).read_bytes())
+
         config = ConfigParserMultiOpt()
         config.read(default_config_path)
         default_packages = config.get('Editor.EditorEngine', '+editpackages')
@@ -212,7 +246,7 @@ def main():
         print('error: could not resolve mod config file')
         sys.exit(1)
 
-    # read the paths and make sure that there are no ambiguous file names
+    # Read the paths and make sure that there are no ambiguous file names.
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
     paths = []
     if os.path.isfile(config_path):
@@ -243,7 +277,7 @@ def main():
     if did_error:
         sys.exit(1)
 
-    # delete ALL mod packages from the root system folder
+    # Delete all mod packages from the root System folder.
     for package in default_packages:
         package_path = os.path.join(sys_dir, package + '.u')
         if os.path.isfile(package_path):
@@ -253,15 +287,29 @@ def main():
                 print('error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package))
                 sys.exit(1)
 
-    # mod config path
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
 
+    # Load the manifest file.
+    manifest_path = os.path.join(mod_dir, '.make')
+
+    try:
+        manifest = Manifest.load(manifest_path)
+    except FileNotFoundError:
+        manifest = Manifest()
+
+    if default_ini_crc != manifest.default_ini_crc:
+        # Default configuration file has changed. This could mean that the EditPackages or ServerPackage have changed.
+        # To be safe, we force a clean build if this happens so that the user doesn't need to fiddle around with their
+        # generated configuration file. This has the nasty side-effect of wiping out graphics settings etc. In future,
+        # the ServerPackages and EditPackages should be explicitly updated and avoid changing the rest of the config.
+        print('Detected change in Default.ini, forcing a clean build!')
+        args.clean = True
+
     if args.clean and os.path.isfile(config_path):
-        # clean build deletes the existing mod config
-        # TODO: only have this find and re-set the EditPackages and ServerPackages entries!
+        # Clean build deletes the existing mod config.
         os.remove(config_path)
 
-    # get packages from generated INI?
+    # Get packages from generated INI.
     if os.path.isfile(config_path):
         config = ConfigParserMultiOpt()
         config.read(config_path)
@@ -271,21 +319,12 @@ def main():
 
     package_statuses = dict()
     changed_packages = set()
-    package_crcs = dict()
-
-    manifest_path = os.path.join(mod_dir, '.make')
 
     if args.clean and os.path.isfile(manifest_path):
         os.remove(manifest_path)
 
-    try:
-        with open(manifest_path, 'r') as f:
-            package_crcs = json.load(f)
-    except IOError:
-        pass
-
-    # store the old CRCs before we overwrite them
-    old_package_crcs = package_crcs
+    # Store the old CRCs before we overwrite them.
+    old_package_crcs = manifest.package_crcs
 
     package_build_count = 0
 
@@ -293,7 +332,7 @@ def main():
         sys_package_path = os.path.join(sys_dir, package + '.u')
 
         if os.path.isfile(sys_package_path):
-            # compiled file exists in root system folder
+            # Compiled file exists in root System folder.
             continue
 
         package_status = PACKAGE_OK
@@ -309,12 +348,12 @@ def main():
                 with open(os.path.join(root, filename), 'rb') as f:
                     package_crc = crc32(f.read(), package_crc)
 
-        if package not in package_crcs or package_crcs[package] != package_crc:
+        if package not in manifest.package_crcs or manifest.package_crcs[package] != package_crc:
             changed_packages.add(package + '.u')
             package_status = PACKAGE_SOURCE_MISMATCH
 
         package_statuses[package + '.u'] = package_status
-        package_crcs[package] = package_crc
+        manifest.package_crcs[package] = package_crc
 
         if package_status != PACKAGE_OK:
             package_build_count += 1
@@ -326,8 +365,8 @@ def main():
 
     ucc_log_path = os.path.join(sys_dir, 'UCC.log')
 
-    # write out an empty log file, so that even if there are no
-    # packages to compile, WOTgreal still has a log file to parse
+    # Write out an empty log file, so that even if there are no
+    # packages to compile, WOTgreal still has a log file to parse.
     ucc_log_file = open(ucc_log_path, 'w')
     ucc_log_file.write('Warning: No packages were marked for compilation')
     ucc_log_file.close()
@@ -342,7 +381,7 @@ def main():
         for package, status in sorted_package_statuses:
             print('{}: {}'.format(package, PACKAGE_STATUS_STRINGS[status]))
 
-        # delete packages marked for compiling from both the root AND mod system folder
+        # Delete packages marked for compiling from both the root and mod's System folder.
         for package in packages_to_compile:
             for package_dir in [sys_dir, mod_sys_dir]:
                 package_path = os.path.join(package_dir, package)
@@ -360,19 +399,19 @@ def main():
             print('error: compiler executable not found (do you have the SDK installed?)')
             sys.exit(1)
 
-        # run ucc make
-        ucc_args = ['ucc', 'make', '-mod=' + args.mod, '-silentbuild']
+        # Run ucc make.
+        ucc_args = ['ucc', 'make', '-mod=' + args.mod]
         if args.debug:
             ucc_args.append('-debug')
         proc = subprocess.Popen(ucc_args)
         proc.communicate()
 
-        # store contents of ucc.log before it's overwritten
+        # Store contents of ucc.log before it's overwritten.
         ucc_log_file = open(ucc_log_path, 'rb')
         ucc_log_contents = ucc_log_file.read()
         ucc_log_file.close()
 
-        # move compiled packages to mod directory
+        # Move compiled packages to mod directory.
         for root, dirs, filenames in os.walk(sys_dir):
             for filename in filenames:
                 if filename in packages_to_compile:
@@ -380,7 +419,7 @@ def main():
                     os.remove(os.path.join(root, filename))
                     compiled_packages.add(filename)
 
-        # run dumpint on changed and compiled packages
+        # Run dumpint on changed and compiled packages.
         if args.dumpint:
             print('running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)')
             processes = []
@@ -389,14 +428,14 @@ def main():
 
             [p.wait() for p in processes]
 
-            # move localization files to mod directory
+            # Move localization files to mod directory.
             for root, dirs, filenames in os.walk(sys_dir):
                 for filename in filenames:
                     if filename.replace('.int', '.u') in packages_to_compile:
                         shutil.copy(os.path.join(root, filename), mod_sys_dir)
                         os.remove(os.path.join(root, filename))
 
-        # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
+        # Rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly).
         ucc_log_file = open(ucc_log_path, 'wb')
         ucc_log_file.truncate()
         ucc_log_file.write(ucc_log_contents)
@@ -406,19 +445,16 @@ def main():
 
         for package_name in compiled_packages:
             package_name = os.path.splitext(package_name)[0]
-            old_package_crcs[package_name] = package_crcs[package_name]
+            old_package_crcs[package_name] = manifest.package_crcs[package_name]
 
-        # delete the CRCs of changed packages that failed to compile
+        # Delete the CRCs of changed packages that failed to compile.
         for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
             package_name = os.path.splitext(package_name)[0]
             del old_package_crcs[package_name]
 
-        # write package manifest
-        try:
-            with open(manifest_path, 'w') as f:
-                json.dump(old_package_crcs, f)
-        except OSError:
-            print('could not write mod make manifest')
+        # Write package manifest.
+        manifest.default_ini_crc = default_ini_crc
+        manifest.write(manifest_path)
 
     print_header('Build: {} succeeded, {} failed, {} skipped, {} up-to-date'.format(
         len(compiled_packages),
@@ -427,11 +463,11 @@ def main():
         len(up_to_date_packages),
     ))
 
-    # exit with an error code if the build fails
+    # Exit with an error code if the build fails
     if not did_build_succeed:
         sys.exit(1)
 
-    # create build snapshot
+    # Create build snapshot
     if args.snapshot:
         # TODO: make sure that all of the necessary files are here
         zf = zipfile.ZipFile(os.path.join(mod_dir, '{}.zip'.format(args.mod)), mode='w')

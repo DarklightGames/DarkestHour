@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHDeathMessage extends RODeathMessage;
@@ -64,8 +64,4 @@ static function string GetString(optional int Switch, optional PlayerReplication
     }
 
     return class'GameInfo'.static.ParseKillMessage(KillerName, VictimName, DeathString);
-}
-
-defaultproperties
-{
 }

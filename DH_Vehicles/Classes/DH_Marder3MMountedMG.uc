@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Marder3MMountedMG extends DHVehicleMG;
@@ -27,7 +27,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=50
     NumMGMags=24
-    FireInterval=0.07059
+    FireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 

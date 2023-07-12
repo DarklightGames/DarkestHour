@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleDestroyedEmitter extends Emitter;
@@ -17,7 +17,7 @@ defaultproperties
     bHardAttach=true
     LifeSpan = 8
 
-    AmbientSound=sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
+    AmbientSound=Sound'DH_Ambience.VehicleDestruction.Vehicle_cookoff2'
     SoundRadius=750.0 //experiment
     SoundVolume=255
     bFullVolume=true

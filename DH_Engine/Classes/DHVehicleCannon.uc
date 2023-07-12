@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -125,6 +125,10 @@ simulated function PostBeginPlay()
     {
         AltFireAttachmentBone = WeaponFireAttachmentBone;
     }
+
+    // Enforce that the starting projectile class is the primary one
+    // to eliminate the possibility that these are set differently.
+    ProjectileClass = PrimaryProjectileClass;
 }
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
@@ -551,7 +555,7 @@ function ServerFireSmokeLauncher()
 
         if (SmokeLauncherClass.static.CanRotate() && SmokeLauncherAdjustmentSetting > 0)
         {
-            FireRotation.Yaw += (float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536);
+            FireRotation.Yaw += float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536;
         }
 
         FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
@@ -1713,7 +1717,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
-        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
+        WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
     }
 }
 
@@ -2082,7 +2086,7 @@ defaultproperties
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
 
     // Reload
-    ReloadState=RL_Waiting
+    ReloadState=RL_ReadyToFire
     ReloadStages(0)=(HUDProportion=1.0)
     ReloadStages(1)=(HUDProportion=0.75)
     ReloadStages(2)=(HUDProportion=0.5)

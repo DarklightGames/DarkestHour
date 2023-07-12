@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_F1GrenadePickup'
 
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.f1grenade_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.f1grenade_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

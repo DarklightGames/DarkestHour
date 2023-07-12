@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIVGEarlyTank extends DHArmoredVehicle;
@@ -18,7 +18,7 @@ defaultproperties
     Skins(2)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CannonSkins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
@@ -68,7 +68,7 @@ defaultproperties
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
     DestroyedMeshSkins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' //hide the turret schurzen
 
     // Exit

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
@@ -45,17 +45,7 @@ simulated function BlowUp(vector HitLocation)
 
     if (Role == ROLE_Authority)
     {
-        if (bBounce)
-        {
-            // If the grenade hasn't landed, do 1/3 less damage
-            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
-            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-        else
-        {
-            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         HandleObjSatchels(HitLocation);
         HandleVehicles(HitLocation);
         HandleObstacles(HitLocation);
@@ -94,7 +84,7 @@ function HandleVehicles(vector HitLocation)
     local vector        HitLoc, HitNorm;
     local DHVehicle     Veh;
     local int           TrackNum;
-    local float         Distance;
+    local float         Distance, DistanceFactor;
     local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
 
     // Find out if we are on a vehicle
@@ -119,17 +109,19 @@ function HandleVehicles(vector HitLocation)
             {
                 Distance = VSize(Location - Veh.GetEngineLocation());
 
-                if (Distance < EngineDamageRadius)
+                // The chance of setting the engine on fire is based on the distance from the engine.
+                // The closer the satchel is to the engine, the higher the chance of setting it on fire.
+                // The chance is 100% at the engine, and 0% at the edge of the EngineDamageRadius, using
+                // a smoothstep function.
+                DistanceFactor = class'UInterp'.static.SmoothStep(Distance / EngineDamageRadius, 1, 0);
+
+                if (FRand() < DistanceFactor)
                 {
-                    // If enough strength, set the engine on fire
-                    if (EngineDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
-                    {
-                        Veh.StartEngineFire(SavedInstigator);
-                    }
-                    else // Otherwise do minor damage to the engine
-                    {
-                        Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
-                    }
+                    Veh.StartEngineFire(SavedInstigator);
+                }
+                else // Otherwise do minor damage to the engine
+                {
+                    Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
                 }
             }
 

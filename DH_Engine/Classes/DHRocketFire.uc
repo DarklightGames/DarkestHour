@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRocketFire extends DHProjectileFire
@@ -105,7 +105,14 @@ function PlayFiring()
 
                 if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
                 {
-                    Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+                    if (Instigator != none && Instigator.bBipodDeployed)
+                    {
+                        Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].BipodFireAnim;
+                    }
+                    else
+                    {
+                        Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].IronFireAnim;
+                    }
                 }
                 else
                 {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ISU152Cannon extends DHVehicleCannon;
@@ -30,7 +30,6 @@ defaultproperties
     CustomPitchDownLimit=64990
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
 

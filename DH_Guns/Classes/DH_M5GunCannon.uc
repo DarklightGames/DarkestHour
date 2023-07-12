@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M5GunCannon extends DHATGunCannon;
@@ -22,17 +22,16 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_M5CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_M5CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_M5CannonShellHE'
 
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42A1 HE-T"
 
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=30
+    InitialPrimaryAmmo=15
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00135
 
     // Weapon fire
@@ -47,4 +46,6 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+
+    ResupplyInterval=5.0
 }

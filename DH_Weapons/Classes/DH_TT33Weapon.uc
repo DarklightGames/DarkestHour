@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_TT33Weapon extends DHPistolWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_TT33Pickup'
 
     Mesh=SkeletalMesh'DH_Tt33_1st.TT-33-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Pistols.TT33_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Pistols.TT33_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

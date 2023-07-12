@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BritishPawn extends DHPawn;
@@ -17,6 +17,8 @@ defaultproperties
     FaceSkins(1)=Texture'DHBritishCharactersTex.Faces.BritParaFace2'
     FaceSkins(2)=Texture'DHBritishCharactersTex.Faces.BritParaFace3'
 
-    ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make British shovel
-    BinocsClassName="DH_Equipment.DHBinocularsItemAllied"
+    ShovelClass=class'DH_Equipment.DHShovelItem_US' // TODO: make British shovel
+    BinocsClass=class'DH_Equipment.DHBinocularsItemAllied'
+    SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
+    ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
 }

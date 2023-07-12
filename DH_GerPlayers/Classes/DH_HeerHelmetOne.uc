@@ -1,14 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_HeerHelmetOne extends DHHeadgear;
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_1');
-}
 
 defaultproperties
 {

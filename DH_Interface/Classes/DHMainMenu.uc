@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -77,7 +77,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         Controller.SteamGetUserName() != "")
     {
         // This converts an underscore to a non-breaking space (0xA0)
-        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", "�"));
+        PlayerOwner().ConsoleCommand("SetName" @ Controller.SteamGetUserName());
+    }
+
+    // Fix the player's name if it has been garbled with mojibake.
+    // A previous bug would replace an underscore with this string, so this undoes that.
+    if (InStr(PlayerOwner().GetUrlOption("Name"), "�") >= 0)
+    {
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(PlayerOwner().GetUrlOption("Name"), "�", "_"));
     }
 }
 
@@ -303,6 +310,7 @@ function HideAnnouncement()
 event Opened(GUIComponent Sender)
 {
     local UVersion SavedVersionObject;
+    local string TextureDetail, CharacterDetail;
 
     sb_ShowVersion.SetVisibility(true);
 
@@ -412,6 +420,11 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatLANCodec CODEC_96WB");
         PlayerOwner().SaveConfig();
     }
+
+    TextureDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailWorld");
+    CharacterDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailPlayerSkin");
+
+    Log(TextureDetail @ CharacterDetail);
 
     // Due to a bug introduced in 9.0, the VoiceVolume was being
     // set to 0.0 upon saving settings. Originally we thought the setting
@@ -828,7 +841,7 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
-    PatreonURL="http://www.patreon.com/theel"
+    PatreonURL="http://www.patreon.com/darkesthourgame"
     DiscordURL="http://discord.gg/EEwFhtk"
     ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"

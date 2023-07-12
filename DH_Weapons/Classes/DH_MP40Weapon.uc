@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MP40Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

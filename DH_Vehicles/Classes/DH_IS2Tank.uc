@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_IS2Tank extends DHArmoredVehicle;
@@ -20,7 +20,7 @@ defaultproperties
     Skins(3)=Texture'allies_vehicles_tex.int_vehicles.IS2_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
+    HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
@@ -80,8 +80,8 @@ defaultproperties
     FireAttachBone="Body"
     FireEffectOffset=(X=170.0,Y=0.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Is2_destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2_ext_dest'
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.IS2_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.IS2_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=250.0,Y=0.0,Z=50.0)        // driver

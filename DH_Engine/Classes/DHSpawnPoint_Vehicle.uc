@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This is a spawn point that gets attached to "spawn vehicles" like the
 // halftracks.
@@ -12,7 +12,12 @@ class DHSpawnPoint_Vehicle extends DHSpawnPointBase
 const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
 var     DHVehicle   Vehicle;        // Reference to the owning vehicle.
-var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon. Used for diplay purposes.
+var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon.
+
+var     bool        bHasSpawnKillPenalty;
+var     int         SpawnKillPenalty;
+var     int         SpawnKillPenaltyCounter;
+var     float       CreatedTimeSeconds;
 
 replication
 {
@@ -25,63 +30,106 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    CreatedTimeSeconds = Level.TimeSeconds;
+
     SetTimer(1.0, true);
+}
+
+function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
+{
+    if (bHasSpawnKillPenalty)
+    {
+        SpawnKillPenaltyCounter += default.SpawnKillPenalty;
+    }
+}
+
+function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
+{
+    local int i;
+    local DHObjective O;
+    local Pawn P;
+    local DHGameReplicationInfo GRI;
+    local bool bIsInSafeZone;
+    local bool bIsNewSpawn;
+
+    if (Vehicle.IsVehicleBurning())
+    {
+        return SPBR_Burning;
+    }
+
+    // Check to ensure that we are in our team's safe zone.
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    // Check that we are not inside the danger zone.
+    if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
+    {
+        return SPBR_EnemiesNearby;
+    }
+
+    if (bIsTemporary)
+    {
+        // For temporary spawn vehicles, we need to ensure that we are either a brand new
+        // vehicle or we are in our team's safe zone.
+        const NEW_SPAWN_THRESHOLD = 20.0;
+        bIsNewSpawn = (Level.TimeSeconds - CreatedTimeSeconds) < NEW_SPAWN_THRESHOLD;
+        bIsInSafeZone = GRI.IsInDangerZone(Location.X, Location.Y, int(!bool(GetTeamIndex())));
+
+        if (!GRI.bIsInSetupPhase && !bIsNewSpawn && !bIsInSafeZone)
+        {
+            return SPBR_NotInSafeZone;
+        }
+    }
+
+    // Check that we aren't blocked because of a recent spawn kill
+    if (SpawnKillPenaltyCounter > 0)
+    {
+        return SPBR_EnemiesNearby;
+    }
+
+    // Check whether this spawn vehicle is inside an active objective
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        O = GRI.DHObjectives[i];
+
+        if (O != none && O.bActive && O.WithinArea(Vehicle))
+        {
+            return SPBR_InObjective;
+        }
+    }
+
+    // Check whether there is an enemy pawn within blocking distance of this spawn vehicle
+    foreach Vehicle.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
+    {
+        if (P.Controller != none && Vehicle.GetTeamNum() != P.GetTeamNum())
+        {
+            return SPBR_EnemiesNearby;
+        }
+    }
+
+    // Check whether a suitable vehicle position is available
+    // The 'false' means we ignore positions that can only be used by tank crew - this is a global check, so we can only check positions that any player could use
+    // Rarely going to be an issue, as a tank used as a spawn vehicle is rare, perhaps never, but the functionality does allow for it
+    // But it does mean that if a tank is used as a spawn vehicle, it will only be shown as 'deployable' if there is a rider position free
+    if (FindEntryVehicle(false) == none)
+    {
+        return SPBR_Full;
+    }
+
+    return SPBR_None;
 }
 
 // Implemented to regularly check & update whether this spawn vehicle can be deployed into
 function Timer()
 {
-    local Pawn        P;
-    local DHObjective O;
-    local int         i;
-
     if (Role == ROLE_Authority && Vehicle != none)
     {
-        // 1. Check whether vehicle is burning, which prevents players from deploying
-        if (Vehicle.IsVehicleBurning())
+        if (SpawnKillPenaltyCounter > 0)
         {
-            BlockReason = SPBR_Burning;
-
-            return;
+            SpawnKillPenaltyCounter -= 1;
         }
 
-        // 2. Check whether this spawn vehicle is inside an active objective
-        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
-        {
-            O = GRI.DHObjectives[i];
-
-            if (O != none && O.bActive && O.WithinArea(Vehicle))
-            {
-                BlockReason = SPBR_InObjective;
-
-                return;
-            }
-        }
-
-        // 3. Check whether there is an enemy pawn within blocking distance of this spawn vehicle
-        foreach Vehicle.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
-        {
-            if (P.Controller != none && Vehicle.GetTeamNum() != P.GetTeamNum())
-            {
-                BlockReason = SPBR_EnemiesNearby;
-
-                return;
-            }
-        }
-
-        // 4. Check whether a suitable vehicle position is available
-        // The 'false' means we ignore positions that can only be used by tank crew - this is a global check, so we can only check positions that any player could use
-        // Rarely going to be an issue, as a tank used as a spawn vehicle is rare, perhaps never, but the functionality does allow for it
-        // But it does mean that if a tank is used as a spawn vehicle, it will only be shown as 'deployable' if there is a rider position free
-        if (FindEntryVehicle(false) == none)
-        {
-            BlockReason = SPBR_Full;
-
-            return;
-        }
+        BlockReason = GetSpawnPointBlockReason();
     }
-
-    BlockReason = SPBR_None; // if we got here then we didn't find any reason to prevent deployment
 }
 
 // Modified to make sure we have a vehicle & it's on the same team
@@ -215,7 +263,7 @@ function bool PerformSpawn(DHPlayer PC)
 
     // We failed to deploy, so invalidate spawn point & reset spawn vehicle index & next spawn time
     // Since next spawn time is set when player is reset above, without this the player would be forced to wait to spawn timer again
-    PC.bSpawnPointInvalidated = true;
+    PC.bSpawnParametersInvalidated = true;
     PC.SpawnPointIndex = -1;
     PC.NextSpawnTime = 0;
 
@@ -236,4 +284,6 @@ defaultproperties
     SpawnPointStyle="DHSpawnVehicleButtonStyle"
     bCombatSpawn=true
     bIsLowPriority=true
+    bHasSpawnKillPenalty=true
+    SpawnKillPenalty=30
 }

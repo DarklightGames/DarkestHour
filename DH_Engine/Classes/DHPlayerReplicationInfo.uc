@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
@@ -50,12 +50,14 @@ var     localized string        AssistantAbbreviation;
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
 
+var     int                     NoRallyPointsTime; // Time when SL lost all rally points
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores, CountryIndex, PlayerIQ;
+        TotalScore, CategoryScores, CountryIndex, PlayerIQ, NoRallyPointsTime;
 }
 
 simulated function string GetNamePrefix()
@@ -86,6 +88,7 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+// TODO: GET RID OF THIS!
 simulated function bool IsSL()
 {
     return IsSquadLeader();
@@ -109,6 +112,28 @@ simulated function bool IsSLorASL()
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
+simulated function bool HasSquadMembers(int MinCount)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    return SRI != none &&
+           Team != none &&
+           SRI.GetMemberCount(Team.TeamIndex, SquadIndex) >= MinCount;
 }
 
 simulated function bool IsPatron()
@@ -215,6 +240,12 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
     }
 
     return false;
+}
+
+simulated function bool CanAccessCommandChannel()
+{
+    return IsAssistantLeader() ||
+           (IsSquadLeader() && HasSquadMembers(2));
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round
