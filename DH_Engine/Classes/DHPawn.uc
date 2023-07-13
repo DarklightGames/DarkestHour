@@ -5655,6 +5655,21 @@ function bool ResupplyMortarAmmunition()
     return false;
 }
 
+function ResupplyEquipment(DHPawn P, DHRoleInfo RI)
+{
+    local int i;
+
+    for (i = 0; i < RI.GivenItems.Length; ++i)
+    {
+        if (RI.GivenItems[i] != "")
+        {
+            P.ServerGiveWeapon(RI.GivenItems[i]);
+            // P.Weapon[i].FillAmmo();
+            // CreateInventory(RI.GivenItems[i]);
+        }
+    }
+}
+
 function CheckIfMortarCanBeResupplied()
 {
     local int i;

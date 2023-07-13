@@ -61,13 +61,21 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             {
                 recvr_weapon = ROWeapon(recvr_inv);
 
-                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
+                if (recvr_weapon == none || recvr_weapon.IsA('DHMortarWeapon'))
                 {
                     continue;
                 }
 
                 bResupplied = bResupplied || recvr_weapon.FillAmmo();
             }
+
+            // recvr_weapon.IsGrenade() 
+
+            // RI = P.GetRoleInfo();
+            // if (RI != none)
+            // {
+            //     P.ResupplyEquipment(P, RI);
+            // }
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
             {
