@@ -27,6 +27,13 @@ enum ERoleEnabledResult
     RER_NonSquadLeaderOnly,
 };
 
+enum EAutomaticVehicleAlerts
+{
+    AVAM_Never,
+    AVAM_OnlyWithCrew,
+    AVAM_Always
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 var     Hashtable_string_int                                    MapMarkerCooldowns;
@@ -43,6 +50,7 @@ var     float                   MapVoteTime;
 var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
 var     globalconfig bool       bSpawnWithBayonet;   // option to automatically spawn with a bayonet attached if applicable
 var     globalconfig int        CorpseStayTime;      // determines how long corpses should stay around (default 30)
+var     globalconfig byte       AutomaticVehicleAlerts; // option to automatically alert other crew members of certain events (e.g., shell loaded, on fire etc.)
 var     int                     CorpseStayTimeMin;
 var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
@@ -216,7 +224,8 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
+        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
+        ServerSetAutomaticVehicleAlerts;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -324,6 +333,7 @@ simulated event PostNetBeginPlay()
     if (Role < ROLE_Authority)
     {
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+        ServerSetAutomaticVehicleAlerts(AutomaticVehicleAlerts);
         SetLockTankOnEntry(bLockTankOnEntry);
     }
 }
@@ -332,6 +342,18 @@ simulated event PostNetBeginPlay()
 function ServerSetBayonetAtSpawn(bool bBayonetAtSpawn)
 {
     bSpawnWithBayonet = bBayonetAtSpawn;
+}
+
+// This is needed because Unrealscript can't cast ints to enums that are declared in other classes.
+static function EAutomaticVehicleAlerts GetAutomaticVehicleAlertsFromIndex(int Index)
+{
+    return EAutomaticVehicleAlerts(Index);
+}
+
+// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
+function ServerSetAutomaticVehicleAlerts(byte Mode)
+{
+    self.AutomaticVehicleAlerts = Mode;
 }
 
 // New function to set the normal view FOV for this player, based on their own
@@ -7749,4 +7771,6 @@ defaultproperties
     ArtillerySupportSquadIndex=255
 
     LastTeamKillTimeSeconds=-100000
+
+    AutomaticVehicleAlerts=1 // AVAM_OnlyWithCrew
 }
