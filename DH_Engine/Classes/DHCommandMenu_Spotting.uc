@@ -63,6 +63,17 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
     Interaction.Hide();
 }
 
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local class<DHMapMarker> MapMarkerClass;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GetPlayerController().GameReplicationInfo);
+    MapMarkerClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
+
+    return GRI == none || (MapMarkerClass != none && !MapMarkerClass.static.CanBeUsed(GRI));
+}
+
 function Tick()
 {
     local DHPlayer PC;
