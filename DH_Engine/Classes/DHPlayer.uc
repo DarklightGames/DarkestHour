@@ -985,7 +985,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 
         if (DHPW != none && DHPW.bHasScope && DHPW.bUsingSights)
         {
-            TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs or is bipod deployed
+            TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
         else if (DHPwn != none)
         {
