@@ -62,7 +62,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             {
                 bShouldResupplyGrenades = true;
             }
-         
+
             // Resupply weapons
             for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
             {

@@ -3344,7 +3344,7 @@ function CheckGiveSmoke()
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     PC = DHPlayer(Controller);
-    
+
     NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
 
     // Exclude tank crewmen and mortar operators
@@ -5662,7 +5662,7 @@ function bool ResupplyMortarAmmunition()
 function ResupplyMissingGrenades(int TimeSeconds)
 {
     local DHRoleInfo RI;
-    
+
     RI = GetRoleInfo();
     LastResupplyGrenadesTime = TimeSeconds;
 
@@ -7009,10 +7009,10 @@ exec function DebugShootAP(optional string APProjectileClassName)
 function ServerGiveWeapon(string WeaponClass, bool SwitchToIfPossible)
 {
     local Weapon NewWeapon;
-    
+
     GiveWeapon(WeaponClass);
 
-    if (SwitchToIfPossible) 
+    if (SwitchToIfPossible)
     {
         NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
 
@@ -7523,7 +7523,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
     local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
-    
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
