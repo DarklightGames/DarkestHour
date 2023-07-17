@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_M1GarandWeapon extends DHProjectileWeapon;
+class DH_M1GarandGrenadeWeapon extends DHProjectileWeapon;
 
 var     bool    bIsLastRound;
 
@@ -53,7 +53,7 @@ defaultproperties
     MagEmptyReloadAnims(4)="reload"
     MagPartialReloadAnims(0)="reload_half_A"
 
-    bHasBayonet=true
+    bHasBayonet=false
     BayonetBoneName="Muzzle_Slave"
 
     BayoAttachAnim="Bayonet_on"

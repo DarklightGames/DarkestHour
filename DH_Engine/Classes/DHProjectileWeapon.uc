@@ -50,6 +50,7 @@ var         name        BayoAttachEmptyAnim;        // anim for attaching the ba
 var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
+var         bool        bHasGrenade;                // whether or not this weapon has a grenade
 
 var         name        MuzzleBone;                 // muzzle bone, used to get coordinates
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
@@ -716,8 +717,8 @@ simulated function bool IsInstigatorBipodDeployed()
 // Modified so no free aim if using ironsights, bipod, or melee attacking
 simulated function bool ShouldUseFreeAim()
 {
-    return bUsesFreeAim 
-        && !bUsingSights 
+    return bUsesFreeAim
+        && !bUsingSights
         && !(FireMode[1].IsFiring() && FireMode[1].bMeleeMode)
         && !(bCanBipodDeploy && IsInstigatorBipodDeployed());
 }
@@ -1474,7 +1475,7 @@ Begin:
     {
         ZoomOut();
     }
-    
+
     SetPlayerFOV(PlayerDeployFOV);
 
     if (InstigatorIsLocalHuman())
@@ -2259,7 +2260,7 @@ simulated state ReloadingBipod extends Reloading
 
         ResetPlayerFOV();
     }
-    
+
     simulated function EndState()
     {
         super.EndState();
@@ -2352,7 +2353,7 @@ simulated function name GetReloadAnim()
             return BipodMagEmptyReloadAnim;
         }
     }
-    
+
     if (AmmoAmount(0) > 0 || (bTwoMagsCapacity && CurrentMagCount < 2))
     {
         return MagPartialReloadAnims[Rand(MagPartialReloadAnims.Length)];
