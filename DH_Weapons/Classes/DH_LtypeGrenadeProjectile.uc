@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadeProjectile extends DHThrowableHEATProjectile;
+class DH_LTypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
 // Extends a HEAT projectile to make use of the impact fuze.
 // This is NOT an anti-tank grenade, so penetration values are small.
@@ -14,7 +14,7 @@ defaultproperties
     MaxSpeed=700.0
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
-    PickupClass=class'DH_Weapons.DH_LtypeGrenadePickup'
+    PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
 
     // Impact fuze
     bExplodesOnHittingWater=false
@@ -41,8 +41,8 @@ defaultproperties
     Damage=900.0
     DamageRadius=1500.0  //This thing is absolutely huge, 1.5kg of explosive charge, larger than the Geballte ladung.
     EngineFireChance=0.9 
-    ShellImpactDamage=class'DH_Weapons.DH_LtypeGrenadeImpactDamType'
-    MyDamageType=class'DH_Weapons.DH_LtypeGrenadeDamType'
+    ShellImpactDamage=class'DH_Weapons.DH_LTypeGrenadeImpactDamType'
+    MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'
 
     // Effects
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'

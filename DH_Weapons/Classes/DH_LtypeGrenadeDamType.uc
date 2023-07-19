@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadeDamType extends DHThrowableExplosiveDamageType
+class DH_LTypeGrenadeDamType extends DHThrowableExplosiveDamageType
     abstract;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_LtypeGrenadeWeapon'
+    WeaponClass=class'DH_Weapons.DH_LTypeGrenadeWeapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
 
     VehicleDamageModifier=1.0

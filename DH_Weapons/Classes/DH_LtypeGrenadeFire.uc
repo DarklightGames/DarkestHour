@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadeFire extends DHThrownExplosiveFire;
+class DH_LTypeGrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_LtypeGrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_LtypeGrenadeAmmo'
+    ProjectileClass=class'DH_Weapons.DH_LTypeGrenadeProjectile'
+    AmmoClass=class'DH_Weapons.DH_LTypeGrenadeAmmo'
     MaxHoldTime=160.0
     MinHoldTime=0.5
     bSplashDamage=false

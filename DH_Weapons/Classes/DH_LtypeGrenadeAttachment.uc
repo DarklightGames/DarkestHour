@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadeAttachment extends DHThrowableExplosiveAttachment;
+class DH_LTypeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 
 //placeholder from the rpg43 for now
 

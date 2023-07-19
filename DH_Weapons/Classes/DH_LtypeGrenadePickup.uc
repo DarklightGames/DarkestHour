@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadePickup extends DHOneShotWeaponPickup;
+class DH_LTypeGrenadePickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_LtypeGrenadeWeapon'
+    InventoryType=class'DH_Weapons.DH_LTypeGrenadeWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43Grenade'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_LtypeGrenadeAmmo extends DHAmmunition;
+class DH_LTypeGrenadeAmmo extends DHAmmunition;
 
 defaultproperties
 {
