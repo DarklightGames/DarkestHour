@@ -5,6 +5,9 @@
 
 class DH_LtypeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 
+//placeholder from the rpg43 for now
+
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.RPG43Grenade_3rd'

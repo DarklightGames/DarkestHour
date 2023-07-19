@@ -5,48 +5,51 @@
 
 class DH_LtypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
+// Extends a HEAT projectile to make use of the impact fuze.
+// This is NOT an anti-tank grenade, so penetration values are small.
+
 defaultproperties
 {
-    Speed=700.0  // reduced from 1100 as it was heavy grenade
+    Speed=500.0  // reduced from 1100 as it was a VERY heavy grenade
     MaxSpeed=700.0
-    ShellDiameter=9.5
-    bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
-    LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
+    ShellDiameter=10.5
+    LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     PickupClass=class'DH_Weapons.DH_LtypeGrenadePickup'
 
     // Impact fuze
     bExplodesOnHittingWater=false
-    MaxImpactAOIToExplode=70.0
+    MaxImpactAOIToExplode=90.0
     MinImpactSpeedToExplode=1.0
-    MaxVerticalAOIForTopArmor=33.0
+    MaxVerticalAOIForTopArmor=3.0
 
     // Armour penetration
-    DHPenetrationTable(0)=7.6  //7.5, but set to 7.6 so it will penetrate 75 mm with slight angle imperfection
-    DHPenetrationTable(1)=7.6
-    DHPenetrationTable(2)=7.6
-    DHPenetrationTable(3)=7.6
-    DHPenetrationTable(4)=7.6
-    DHPenetrationTable(5)=7.5
-    DHPenetrationTable(6)=7.5
-    DHPenetrationTable(7)=7.5
-    DHPenetrationTable(8)=7.5
-    DHPenetrationTable(9)=7.5
-    DHPenetrationTable(10)=7.5
+    //Not a HEAT grenade but still an AT grenade
+    DHPenetrationTable(0)=1.0  
+    DHPenetrationTable(1)=1.0
+    DHPenetrationTable(2)=1.0
+    DHPenetrationTable(3)=1.0
+    DHPenetrationTable(4)=1.0
+    DHPenetrationTable(5)=1.0
+    DHPenetrationTable(6)=1.0
+    DHPenetrationTable(7)=1.0
+    DHPenetrationTable(8)=1.0
+    DHPenetrationTable(9)=1.0
+    DHPenetrationTable(10)=1.0
 
     // Damage
-    ImpactDamage=300
-    Damage=300.0
-    DamageRadius=700.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
-    EngineFireChance=0.7  //weaker HEAT round
+    ImpactDamage=900
+    Damage=900.0
+    DamageRadius=1500.0  //This thing is absolutely huge, 1.5kg of explosive charge, larger than the Geballte ladung.
+    EngineFireChance=0.9 
     ShellImpactDamage=class'DH_Weapons.DH_LtypeGrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_LtypeGrenadeDamType'
 
     // Effects
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'
-    ShellHitDirtEffectClass=class'GrenadeExplosion'
-    ShellHitWoodEffectClass=class'GrenadeExplosion'
-    ShellHitRockEffectClass=class'GrenadeExplosion'
-    ShellHitSnowEffectClass=class'GrenadeExplosionSnow'
+    ShellHitDirtEffectClass=class'ROSatchelExplosion'
+    ShellHitWoodEffectClass=class'ROSatchelExplosion'
+    ShellHitRockEffectClass=class'ROSatchelExplosion'
+    ShellHitSnowEffectClass=class'ROSatchelExplosion'
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
     ShellHitVehicleEffectClass=class'DH_Effects.DHPanzerfaustHitTank'
     ShellDeflectEffectClass=class'GrenadeExplosion'
@@ -57,11 +60,11 @@ defaultproperties
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
     VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
-    VehicleDeflectSound=Sound'Inf_Weapons_Foley.grenadeland'
-    ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
-    DirtHitSound=Sound'Inf_Weapons_Foley.grenadeland'
-    RockHitSound=Sound'Inf_Weapons_Foley.grenadeland'
-    WoodHitSound=Sound'Inf_Weapons_Foley.grenadeland'
+    VehicleDeflectSound=Sound'DH_WeaponSounds.faust_explode021'
+    ImpactSound=Sound'DH_WeaponSounds.faust_explode021'
+    DirtHitSound=Sound'DH_WeaponSounds.faust_explode021'
+    RockHitSound=Sound'DH_WeaponSounds.faust_explode021'
+    WoodHitSound=Sound'DH_WeaponSounds.faust_explode021'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
     ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
