@@ -48,7 +48,7 @@ simulated function PostBeginPlay()
 
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 
-    if (bIsStickGrenade) //i ripped this from DHGrenadeProjectile as the LType is technically a stick grenade and is very front heavy
+    if (bIsStickGrenade) //Enfield: i ripped this from DHGrenadeProjectile as the LType is technically a stick grenade and is very front heavy
     {
         RotationRate.Pitch = -(90000 + Rand(30000)); // end over end tumbling flight
     }

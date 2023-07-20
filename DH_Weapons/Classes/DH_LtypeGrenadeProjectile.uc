@@ -10,8 +10,8 @@ class DH_LTypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
 defaultproperties
 {
-    Speed=500.0  // reduced from 1100 as it was a VERY heavy grenade
-    MaxSpeed=700.0
+    Speed=300.0  // reduced from 1100 as it was a VERY heavy grenade
+    MaxSpeed=500.0
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
