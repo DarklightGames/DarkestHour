@@ -6,7 +6,7 @@
 class DH_LTypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
 // Extends a HEAT projectile to make use of the impact fuze.
-// This is NOT an anti-tank grenade, so penetration values are small.
+// This is NOT a HEAT grenade, so penetration values are small.
 
 defaultproperties
 {
@@ -15,6 +15,7 @@ defaultproperties
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
+    bIsStickGrenade=true
 
     // Impact fuze
     bExplodesOnHittingWater=false
