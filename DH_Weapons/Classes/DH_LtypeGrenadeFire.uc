@@ -14,7 +14,7 @@ defaultproperties
     bSplashDamage=false
     bRecommendSplashDamage=false
     AddedFuseTime=9.0  // should be enough for the grenade to fly and land somewhere, so if it doesnt explode for some reason it will few seconds after
-    MinimumThrowSpeed=200.0
-    MaximumThrowSpeed=400.0
-    SpeedFromHoldingPerSec=100.0
+    MinimumThrowSpeed=500
+    MaximumThrowSpeed=750
+    SpeedFromHoldingPerSec=400.0
 }

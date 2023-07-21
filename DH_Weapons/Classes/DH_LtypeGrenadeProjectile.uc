@@ -10,8 +10,8 @@ class DH_LTypeGrenadeProjectile extends DHThrowableHEATProjectile;
 
 defaultproperties
 {
-    Speed=300.0  // reduced from 1100 as it was a VERY heavy grenade
-    MaxSpeed=500.0
+    Speed=750.0  // reduced from 1100 as it was a VERY heavy grenade
+    MaxSpeed=780.0
     ShellDiameter=10.5
     LifeSpan=10.0       // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
@@ -38,10 +38,10 @@ defaultproperties
     DHPenetrationTable(10)=1.0
 
     // Damage
-    ImpactDamage=900
-    Damage=900.0
-    DamageRadius=800  //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
-                      //calculated that the lethal effective radius is around 13 meters give or take
+    ImpactDamage=600
+    Damage=600.0
+    DamageRadius=910 //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
+                     //calculated that the lethal effective radius is around 15 meters give or take
     EngineFireChance=0.9 
     ShellImpactDamage=class'DH_Weapons.DH_LTypeGrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'
