@@ -40,7 +40,8 @@ defaultproperties
     // Damage
     ImpactDamage=900
     Damage=900.0
-    DamageRadius=1500.0  //This thing is absolutely huge, 1.5kg of explosive charge, larger than the Geballte ladung.
+    DamageRadius=800  //This thing is absolutely huge, 1.5kg of explosive charg, however HE effect only
+                      //calculated that the lethal effective radius is around 13 meters give or take
     EngineFireChance=0.9 
     ShellImpactDamage=class'DH_Weapons.DH_LTypeGrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'

@@ -10,11 +10,11 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_LTypeGrenadeProjectile'
     AmmoClass=class'DH_Weapons.DH_LTypeGrenadeAmmo'
     MaxHoldTime=160.0
-    MinHoldTime=0.5
+    MinHoldTime=1.0
     bSplashDamage=false
     bRecommendSplashDamage=false
     AddedFuseTime=9.0  // should be enough for the grenade to fly and land somewhere, so if it doesnt explode for some reason it will few seconds after
-    MinimumThrowSpeed=500.0
-    MaximumThrowSpeed=700.0
-    SpeedFromHoldingPerSec=300.0
+    MinimumThrowSpeed=200.0
+    MaximumThrowSpeed=400.0
+    SpeedFromHoldingPerSec=100.0
 }
