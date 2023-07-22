@@ -47,7 +47,7 @@ defaultproperties
     MyDamageType=class'DH_Weapons.DH_LTypeGrenadeDamType'
 
     // Effects
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.LType_throw'
     ShellHitDirtEffectClass=class'ROSatchelExplosion'
     ShellHitWoodEffectClass=class'ROSatchelExplosion'
     ShellHitRockEffectClass=class'ROSatchelExplosion'
