@@ -66,10 +66,11 @@ defaultproperties
 
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-8,Z=51)) // engine
+    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-93,Y=22,Z=41),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-93,Y=-22.0,Z=41),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+
     TreadHitMaxHeight=-5.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
