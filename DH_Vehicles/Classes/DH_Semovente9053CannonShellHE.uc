@@ -2,30 +2,31 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [1] https://en.wikipedia.org/wiki/Cannone_da_90/53
+//==============================================================================
 
 class DH_Semovente9053CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=33073.0
-    MaxSpeed=33073.0
-    ShellDiameter=7.5
-    BallisticCoefficient=2.1
+    Speed=50092.0               // 830m/s [1]
+    MaxSpeed=50092.0            
+    ShellDiameter=9.0           // 90mm [1]
+    BallisticCoefficient=2.1    // TODO: Find real value
 
     //Damage
     ImpactDamage=710
     ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     PenetrationMag=750.0
-    Damage=350.0   //725 gramms TNT, but is known for being inferior to soviet 76mm, so i assume worse/lighter  fragmentation
+    Damage=350.0                // 725 gramms TNT, but is known for being inferior to soviet 76mm, so i assume worse/lighter  fragmentation
     DamageRadius=950.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType' // replace this
     HullFireChance=0.8
     EngineFireChance=0.8
 
     //Effects
     bHasTracer=false
     bHasShellTrail=false
-
     bDebugInImperial=false
 
     //Penetration

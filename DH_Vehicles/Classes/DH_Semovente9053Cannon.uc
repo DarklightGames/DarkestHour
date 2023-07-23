@@ -7,22 +7,24 @@ class DH_Semovente9053Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    // Cannon mesh
+    // TODO: figure out where to put this
     FireEffectScale=1.75 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
-    Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_turret_ext'
+    // Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
 
     // Cannon movement
 //  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
     ManualRotationsPerSecond=0.033
     bLimitYaw=true
-    MaxPositiveYaw=3822
-    MaxNegativeYaw=-3822
-    YawStartConstraint=-4000.0
-    YawEndConstraint=4000.0
-    CustomPitchUpLimit=2367
-    CustomPitchDownLimit=64625
+    MaxPositiveYaw=7281
+    MaxNegativeYaw=-7281
+    YawStartConstraint=-7281  // -40 degrees
+    YawEndConstraint=7281  // +40 degrees
+    CustomPitchUpLimit=3458  // +19 degrees
+    CustomPitchDownLimit=64626  // -5 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShell'
@@ -31,12 +33,11 @@ defaultproperties
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.34"
 
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=6
+    InitialPrimaryAmmo=8
+    InitialSecondaryAmmo=1
 
-
-    MaxPrimaryAmmo=20
-    MaxSecondaryAmmo=7
+    MaxPrimaryAmmo=8
+    MaxSecondaryAmmo=1
     SecondarySpread=0.00127
 
     // Weapon fire
@@ -77,4 +78,21 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
+
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
+    WeaponFireAttachmentBone="MUZZLE"
+
+    ShootAnim="shoot"
+    ShootAnimBoneName="BARREL"
+
+    // TODO: this gets attached but doesn't move with the cannon
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_turret_collision')
+
+    // Make the gun sights rotate with the cannon.
+    GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(3)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(4)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
 }

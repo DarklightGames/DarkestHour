@@ -656,7 +656,6 @@ simulated function Tick(float DeltaTime)
     // Disable Tick if vehicle isn't moving & has no driver
     if (!bDriving && ForwardVel ~= 0.0)
     {
-        Level.Game.Broadcast(self, "DISABLING TICK");
         Disable('Tick');
     }
 }

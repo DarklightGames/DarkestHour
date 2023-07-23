@@ -12,22 +12,23 @@ defaultproperties
     VehicleMass=11.0 // 
     ReinforcementCost=4 // ?
 
+    ShadowZOffset=60.0
+
     // Hull mesh
-    Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
-    Skins(2)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(4)=Texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
+    Mesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext'
+    Skins(0)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_body_tex'
+    Skins(1)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_turret_tex'
+    Skins(2)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_treads_tex'
+    Skins(3)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_treads_tex'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=-5.0,Y=0.0,Z=2.0)
     DriveAnim="VPanzer3_driver_idle_open"
 
@@ -75,14 +76,17 @@ defaultproperties
     FireEffectOffset=(X=10.0,Y=0.0,Z=-20.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
 
-    // Exit
-    ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)      // driver's hatch
-    ExitPositions(1)=(X=-133.0,Y=-27.0,Z=120.0) // commander's position
-    ExitPositions(2)=(X=-135.0,Y=24.0,Z=120.0)  // MG position
-    ExitPositions(3)=(X=25.0,Y=106.0,Z=5.0)     // rider
+    // Exit Positions
+    ExitPositions(0)=(X=51.73,Y=-29.58,Z=139.28) // EXIT_POSITION.001
+    ExitPositions(1)=(X=51.73,Y=-102.06,Z=59.66) // EXIT_POSITION.002
+    ExitPositions(2)=(X=51.73,Y=31.24,Z=139.28) // EXIT_POSITION.003
+    ExitPositions(3)=(X=51.73,Y=102.06,Z=59.66) // EXIT_POSITION.004
+    ExitPositions(4)=(X=-186.73,Y=-31.24,Z=59.66) // EXIT_POSITION.005
+    ExitPositions(5)=(X=-186.73,Y=31.24,Z=59.66) // EXIT_POSITION.006
 
     // Sounds
     MaxPitchSpeed=450.0
+
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
@@ -94,7 +98,10 @@ defaultproperties
     LeftTreadIndex=3
     TreadVelocityScale=300.0
     WheelRotationScale=110500.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-142.0,Y=-28.0,Z=18.0),ExhaustRotation=(Pitch=40050))
+
+    ExhaustPipes(0)=(ExhaustPosition=(X=-110.64,Y=-68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=-23232))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-110.64,Y=68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=23596))
+
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 
@@ -119,20 +126,32 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'
 
     // Visible wheels
-    LeftWheelBones(0)="Wheel_L_1"
-    LeftWheelBones(1)="Wheel_L_2"
-    LeftWheelBones(2)="Wheel_L_3"
-    LeftWheelBones(3)="Wheel_L_4"
-    LeftWheelBones(4)="Wheel_L_5"
-    LeftWheelBones(5)="Wheel_L_6"
-    LeftWheelBones(6)="Wheel_L_7"
-    RightWheelBones(0)="Wheel_R_1"
-    RightWheelBones(1)="Wheel_R_2"
-    RightWheelBones(2)="Wheel_R_3"
-    RightWheelBones(3)="Wheel_R_4"
-    RightWheelBones(4)="Wheel_R_5"
-    RightWheelBones(5)="Wheel_R_6"
-    RightWheelBones(6)="Wheel_R_7"
+    LeftWheelBones(0)="WHEEL_B_01_L"
+    LeftWheelBones(1)="WHEEL_B_02_L"
+    LeftWheelBones(2)="WHEEL_B_03_L"
+    LeftWheelBones(3)="WHEEL_B_04_L"
+    LeftWheelBones(4)="WHEEL_B_05_L"
+    LeftWheelBones(5)="WHEEL_B_06_L"
+    LeftWheelBones(6)="WHEEL_B_07_L"
+    LeftWheelBones(7)="WHEEL_B_08_L"
+    LeftWheelBones(8)="WHEEL_T_01_L"
+    LeftWheelBones(9)="WHEEL_T_02_L"
+    LeftWheelBones(10)="WHEEL_T_03_L"
+    LeftWheelBones(11)="WHEEL_F_L"
+    LeftWheelBones(12)="WHEEL_R_L"
+    RightWheelBones(0)="WHEEL_B_01_R"
+    RightWheelBones(1)="WHEEL_B_02_R"
+    RightWheelBones(2)="WHEEL_B_03_R"
+    RightWheelBones(3)="WHEEL_B_04_R"
+    RightWheelBones(4)="WHEEL_B_05_R"
+    RightWheelBones(5)="WHEEL_B_06_R"
+    RightWheelBones(6)="WHEEL_B_07_R"
+    RightWheelBones(7)="WHEEL_B_08_R"
+    RightWheelBones(8)="WHEEL_T_01_R"
+    RightWheelBones(9)="WHEEL_T_02_R"
+    RightWheelBones(10)="WHEEL_T_03_R"
+    RightWheelBones(11)="WHEEL_F_R"
+    RightWheelBones(12)="WHEEL_R_R"
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
@@ -140,8 +159,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.0)
-        WheelRadius=30.0
+        WheelRadius=28.0
         bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LF_Steering'
@@ -150,8 +168,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.0)
-        WheelRadius=30.0
+        WheelRadius=28.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -159,8 +176,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.0)
-        WheelRadius=30.0
+        WheelRadius=28.0
         bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LR_Steering'
@@ -169,15 +185,14 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.0)
-        WheelRadius=30.0
+        WheelRadius=28.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=28.0
         bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Left_Drive_Wheel'
@@ -185,7 +200,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=28.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Right_Drive_Wheel'
 
@@ -194,7 +209,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.0) // default is -0.5
+        KCOMOffset=(X=-0.25,Z=1.5)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -211,4 +226,7 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Semovente9053Destroyer.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
+
+    LeftTrackSoundBone="DRIVE_WHEEL_L"
+    RightTrackSoundBone="DRIVE_WHEEL_R"
 }

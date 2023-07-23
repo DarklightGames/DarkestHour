@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Semovente9053Factory extends DH_GermanVehicles;
+class DH_Semovente9053Factory extends DH_GermanVehicles;    // TODO: Make an Italian superclass for organization.
 
 defaultproperties
 {
