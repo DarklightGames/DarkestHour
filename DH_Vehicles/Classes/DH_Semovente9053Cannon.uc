@@ -16,7 +16,7 @@ defaultproperties
     // Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
 
     // Cannon movement
-//  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
+    bHasTurret=true
     ManualRotationsPerSecond=0.033
     bLimitYaw=true
     MaxPositiveYaw=7281
@@ -44,9 +44,9 @@ defaultproperties
     WeaponFireOffset=0.0
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3.9 seconds reload
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
@@ -86,13 +86,18 @@ defaultproperties
     ShootAnim="shoot"
     ShootAnimBoneName="BARREL"
 
-    // TODO: this gets attached but doesn't move with the cannon
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_turret_collision')
 
-    // Make the gun sights rotate with the cannon.
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
     GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
     GunWheels(3)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
     GunWheels(4)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
+
+    ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=7.0
 }
