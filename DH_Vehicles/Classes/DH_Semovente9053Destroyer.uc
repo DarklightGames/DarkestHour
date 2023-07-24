@@ -67,9 +67,12 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
 
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-8,Z=51)) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-93,Y=22,Z=41),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-93,Y=-22.0,Z=41),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointBone="BODY",PointOffset=(X=-8,Z=51)) // engine
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="BODY",PointOffset=(X=-93,Y=22,Z=41),HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=22.0,PointBone="BODY",PointOffset=(X=-93,Y=-22.0,Z=41),HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=20.0,PointBone="GUN_YAW",NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="GUN_YAW",PointOffset=(X=-37.0887,Y=18.57,Z=19.6947),NewHitPointType=NHP_GunPitch)
+    NewVehHitpoints(2)=(PointRadius=15.0,PointBone="GUN_YAW",PointOffset=(X=-15.5125,Y=-26.1281,Z=53.7762),NewHitPointType=NHP_GunOptics)
 
     TreadHitMaxHeight=-5.0
     TreadDamageThreshold=0.5
@@ -79,10 +82,10 @@ defaultproperties
 
     // Exit Positions
     ExitPositions(0)=(X=51.73,Y=-29.58,Z=139.28) // EXIT_POSITION.001
-    ExitPositions(1)=(X=51.73,Y=-102.06,Z=59.66) // EXIT_POSITION.002
-    ExitPositions(2)=(X=51.73,Y=31.24,Z=139.28) // EXIT_POSITION.003
-    ExitPositions(3)=(X=51.73,Y=102.06,Z=59.66) // EXIT_POSITION.004
-    ExitPositions(4)=(X=-186.73,Y=-31.24,Z=59.66) // EXIT_POSITION.005
+    ExitPositions(1)=(X=-186.73,Y=-31.24,Z=59.66) // EXIT_POSITION.005
+    ExitPositions(2)=(X=51.73,Y=-102.06,Z=59.66) // EXIT_POSITION.002
+    ExitPositions(3)=(X=51.73,Y=31.24,Z=139.28) // EXIT_POSITION.003
+    ExitPositions(4)=(X=51.73,Y=102.06,Z=59.66) // EXIT_POSITION.004
     ExitPositions(5)=(X=-186.73,Y=31.24,Z=59.66) // EXIT_POSITION.006
 
     // Sounds
@@ -210,7 +213,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.25,Z=1.5)
+        KCOMOffset=(X=-0.25,Z=1.25)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -230,4 +233,16 @@ defaultproperties
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
+
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_hatch_collision',AttachBone="driver_hatch")
+
+    // Shell attachments
+    VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-31.8017,Z=46.0125))
+    VehicleAttachments(1)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-21.5638,Z=46.0125))
+    VehicleAttachments(2)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-26.7217,Z=37.901))
+    VehicleAttachments(3)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=-16.4839,Z=37.901))
+    VehicleAttachments(4)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=21.542,Z=46.0125))
+    VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
+    VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
+    VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
 }
