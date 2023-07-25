@@ -74,10 +74,10 @@ defaultproperties
     NewVehHitpoints(1)=(PointRadius=20.0,PointBone="GUN_YAW",PointOffset=(X=-37.0887,Y=18.57,Z=19.6947),NewHitPointType=NHP_GunPitch)
     NewVehHitpoints(2)=(PointRadius=15.0,PointBone="GUN_YAW",PointOffset=(X=-15.5125,Y=-26.1281,Z=53.7762),NewHitPointType=NHP_GunOptics)
 
-    TreadHitMaxHeight=-5.0
+    TreadHitMaxHeight=50
     TreadDamageThreshold=0.5
-    DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
-    FireEffectOffset=(X=10.0,Y=0.0,Z=-20.0)
+    DamagedEffectOffset=(X=0.0,Y=0.0,Z=80.0)
+    FireEffectOffset=(X=0.0,Y=0.0,Z=80.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
 
     // Exit Positions
@@ -110,24 +110,24 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_look'
-    VehicleHudEngineX=0.51
-    VehicleHudEngineY=0.47
-    VehicleHudTreadsPosX(0)=0.36
-    VehicleHudTreadsPosX(1)=0.64
-    VehicleHudTreadsPosY=0.51
-    VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsX(0)=0.55
-    VehicleHudOccupantsY(0)=0.33
+    VehicleHudImage=Texture'DH_Semovente9053_tex.Tank_Hud.semo9053_body'
+    VehicleHudTurret=TexRotator'DH_Semovente9053_tex.Tank_Hud.semo9053_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Semovente9053_tex.Tank_Hud.semo9053_turret_look'
+    VehicleHudEngineX=0.50
+    VehicleHudEngineY=0.50
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
+    VehicleHudTreadsPosY=0.5
+    VehicleHudTreadsScale=0.6
+    VehicleHudOccupantsX(0)=0.425
+    VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.45
-    VehicleHudOccupantsY(1)=0.71
-    VehicleHudOccupantsX(2)=0.55
-    VehicleHudOccupantsY(2)=0.71
-    VehicleHudOccupantsX(3)=0.575
-    VehicleHudOccupantsY(3)=0.5
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'
+    VehicleHudOccupantsY(1)=0.75
+    // VehicleHudOccupantsX(2)=0.55
+    // VehicleHudOccupantsY(2)=0.71
+    // VehicleHudOccupantsX(3)=0.575
+    // VehicleHudOccupantsY(3)=0.5
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'  // TODO: replace this!
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_B_01_L"
