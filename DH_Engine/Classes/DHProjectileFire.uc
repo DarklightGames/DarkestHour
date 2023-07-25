@@ -734,7 +734,7 @@ simulated function float GetRecoilGainFalloff(float TimeSeconds)
 defaultproperties
 {
     bInstantHit=false
-    bUsePreLaunchTrace=true
+    bUsePreLaunchTrace=false        // EXPERIMENTAL, TURNING THIS OFF FOR NOW TO TEST PERFORMANCE
     PreLaunchTraceLengthFactor=0.120704 // 50000 velocity = 100m trace
     ProjPerFire=1
     ProjSpawnOffset=(X=25.0)
