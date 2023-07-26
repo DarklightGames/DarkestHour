@@ -2660,7 +2660,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
     // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
     ClosestDistance = Sqrt(Difference dot Difference);
 
-    return ClosestDistance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
+    return ClosestDistance < (VehHitpoints[Index].PointRadius * AdditionalScale);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -4255,7 +4255,7 @@ defaultproperties
     TrackHealth(0)=100
     TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    VehHitpoints(1)=(PointRadius=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
     SatchelResistance=1.0

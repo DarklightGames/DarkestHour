@@ -88,13 +88,13 @@ defaultproperties
     HealthMax=1500.0
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(4)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(5)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(6)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=24.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=12.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(4)=(PointRadius=12.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(5)=(PointRadius=12.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(6)=(PointRadius=12.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0

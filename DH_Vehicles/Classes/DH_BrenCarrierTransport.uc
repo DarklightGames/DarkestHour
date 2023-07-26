@@ -90,8 +90,8 @@ defaultproperties
     DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
     VehHitpoints(0)=(PointRadius=25.0,PointBone="body",PointOffset=(X=-5.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-45.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=12.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // Fuel tank
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="body",PointOffset=(X=-45.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
+    VehHitpoints(2)=(PointRadius=12.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // Fuel tank
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
