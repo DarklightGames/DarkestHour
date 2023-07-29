@@ -1405,7 +1405,7 @@ simulated function BipodDeploy(bool bNewDeployedStatus)
 // Client-to-server function to set the deployed or undeployed state
 function ServerBipodDeploy(bool bNewDeployedStatus)
 {
-    if (Instigator != none && Instigator.bCanBipodDeploy)
+    if (Instigator != none)
     {
         BipodDeploy(bNewDeployedStatus);
     }

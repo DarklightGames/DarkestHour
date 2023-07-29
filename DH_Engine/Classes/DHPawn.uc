@@ -6470,7 +6470,15 @@ simulated function NotifySelected(Pawn User)
 
     if (!P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && bWeaponNeedsResupply)
     {
-        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        if (bWeaponNeedsReload && bIronSights)
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 2, self.PlayerReplicationInfo,, User.Controller);
+        }
+        else
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        }
+
         LastNotifyTime = Level.TimeSeconds;
     }
     else if (bWeaponNeedsReload)

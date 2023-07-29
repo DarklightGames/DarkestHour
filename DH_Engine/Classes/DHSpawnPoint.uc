@@ -45,6 +45,17 @@ var     ROMineVolume            MineVolumeProtectionRef;
 var     DHAmmoResupplyVolume    LinkedAmmoResupplyRef;
 var     array<DHVehicleFactory> LinkedVehicleFactories;
 
+// Spawn-limiting options.
+var()   int             MaxSpawns;
+var()   name            SpawnsExhaustedEvent;
+var     int             SpawnsRemaining;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SpawnsRemaining;
+}
+
 // Modified to find associated location hint actors, used as positions to spawn players or vehicles, & build arrays of actor references
 // Also to find any actors that are linked to this spawn point, so they are only active when the SP is active, & save actor references
 // And to check whether an infantry spawn point should also allow players to spawn into infantry vehicles, as well as on foot
@@ -131,6 +142,8 @@ function Reset()
     super.Reset();
 
     bIsLocked = bIsInitiallyLocked;
+
+    SpawnsRemaining = MaxSpawns;
 }
 
 function BuildLocationHintsArrays()
@@ -469,6 +482,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 }
 
 // Modified to increment the location hint index offsets after each successful spawn.
+// Also, if the spawn point has limited spawns, it will be deactivated when it has no spawns remaining.
 function OnPawnSpawned(Pawn P)
 {
     super.OnPawnSpawned(P);
@@ -482,6 +496,35 @@ function OnPawnSpawned(Pawn P)
     {
         ++InfantryLocationHintIndexOffset;
     }
+    
+    if (HasLimitedSpawns())
+    {
+        --SpawnsRemaining;
+
+        if (SpawnsRemaining <= 0)
+        {
+            // Deactivate the spawn point if it has no spawns remaining.
+            SetIsActive(false);
+
+            // Send an event with the exhausted event tag.
+            TriggerEvent(SpawnsExhaustedEvent, self, None);
+        }
+    }
+}
+
+simulated function bool HasLimitedSpawns()
+{
+    return MaxSpawns > 0;
+}
+
+simulated function string GetMapText()
+{
+    if (HasLimitedSpawns())
+    {
+        return string(SpawnsRemaining);
+    }
+
+    return "";
 }
 
 defaultproperties
