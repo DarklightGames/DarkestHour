@@ -229,5 +229,8 @@ defaultproperties
 
     Records(88)=(VehicleNames=("dukw","duck"),Variants=((ClassName="DH_Vehicles.DH_DUKWTransport")))
     Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
+
+    // Italian
+    Records(100)=(VehicleNames=("semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
 }
 

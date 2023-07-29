@@ -3258,7 +3258,7 @@ function DrawVehiclePointSphere()
                 C = GrayColor;
             }
 
-            V.DrawDebugSphere(HitPointLocation, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
+            V.DrawDebugSphere(HitPointLocation, V.VehHitpoints[i].PointRadius, 10, C.R, C.G, C.B);
         }
 
         AV = DHArmoredVehicle(V);
