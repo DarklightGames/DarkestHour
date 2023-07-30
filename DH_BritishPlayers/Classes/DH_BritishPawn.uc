@@ -21,4 +21,6 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemAllied'
     SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
+
+    HealthFigureClass=class'DH_BritishPlayers.DHHealthFigure_Britain'
 }

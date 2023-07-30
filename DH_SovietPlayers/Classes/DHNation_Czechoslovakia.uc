@@ -29,6 +29,5 @@ defaultproperties
     DefaultSquadNames(5)="Frantisek"
     DefaultSquadNames(6)="Gustav"
     DefaultSquadNames(7)="Helena"
-    HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
 }

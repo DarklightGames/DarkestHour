@@ -226,20 +226,8 @@ defaultproperties
     
     //German
     Records(87)=(VehicleNames=("wirbelwind","flakpanzer4"),Variants=((ClassName="DH_Vehicles.DH_WirbelwindTank"),(ClassName="DH_Vehicles.DH_WirbelwindTank_Snow",VariantName="snow")))
-    
 
-    //--+--
-
-    //to be filed. TEMPLATE:Records()=(VehicleNames=(""),Variants=((ClassName="DH_Vehicles."),(ClassName="DH_Vehicles.",VariantName="")))
-    //Soviet
-
-    //American
-
-    //British
-
-    //German
-
-    
-
+    Records(88)=(VehicleNames=("dukw","duck"),Variants=((ClassName="DH_Vehicles.DH_DUKWTransport")))
+    Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 }
 

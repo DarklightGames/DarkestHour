@@ -17,4 +17,5 @@ defaultproperties
     MinimumThrowSpeed=600.0
     MaximumThrowSpeed=780.0
     SpeedFromHoldingPerSec=600.0
+    
 }
