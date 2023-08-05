@@ -200,7 +200,7 @@ simulated function PostBeginPlay()
 
     // Pre-apply bayonet based on user setting (the user setting gets updated when client connects or changes the setting)
     // If this is a bayonet weapon & is the server and client wants a bayonet attached at spawn, then set the bayonet mounted and update status
-    if (bHasBayonet && Role == ROLE_Authority && Instigator != none)
+    if (bHasBayonet && Role == ROLE_Authority && Instigator != none && Instigator.Controller != none)
     {
         PC = DHPlayer(Instigator.Controller);
 
@@ -226,6 +226,11 @@ simulated function PostBeginPlay()
         {
             PlayAnim(IdleAnim, IdleAnimRate, 0.0);
         }
+    }
+
+    if (InstigatorIsLocallyControlled())
+    {
+        CreateBipodPhysicsSimulation();
     }
 
     if (bHasScope)
@@ -765,8 +770,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocalHuman())
     {
-        InitializeClientWeaponSystems();
-
         if (bBarrelSteamActive)
         {
             SetBarrelSteamActive(true);
@@ -830,9 +833,9 @@ simulated state RaisingWeapon
             ZoomOut();
         }
 
+        // Reset any zoom values
         if (InstigatorIsLocalHuman())
         {
-            // Reset any zoom values
             if (DisplayFOV != default.DisplayFOV)
             {
                 DisplayFOV = default.DisplayFOV;
@@ -2290,16 +2293,12 @@ Begin:
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodMagEmptyReloadAnim))
-        {    
-            Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
-        }
-        else if (HasAnim(BipodMagPartialReloadAnim))
         {
-            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+            Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
         else
         {
-            Warn("Missing animation for either BipodMagEmptyReloadAnim or BipodMagPartialReloadAnim");
+            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
         SetPlayerFOV(PlayerDeployFOV);

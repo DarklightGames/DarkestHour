@@ -25,7 +25,7 @@ defaultproperties
     bIsShallowWater=true // leveller can override
     LocationName=""
     FluidFriction=0.3        // 2.4 in WaterVolume
-    KExtraLinearDamping=0.4
+    KExtraLinearDamping=2.5  // same as WaterVolume
     KExtraAngularDamping=0.4 // same as WaterVolume
     bDistanceFog=true
     DistanceFogColor=(R=0,G=0,B=0,A=0) // 32/64/128/64 in WaterVolume

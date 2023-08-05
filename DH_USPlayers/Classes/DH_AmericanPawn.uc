@@ -31,6 +31,4 @@ defaultproperties
 
     SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
-
-    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
 }

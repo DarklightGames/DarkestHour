@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
 
     P = DHPawn(Owner);
 
-    if (P != none && BaseBone != '')
+    if (P != none)
     {
         SetBoneLocation(BaseBone, P.BackpackLocationOffset);
         SetBoneRotation(BaseBone, P.BackpackRotationOffset);

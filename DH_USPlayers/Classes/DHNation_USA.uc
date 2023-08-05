@@ -29,5 +29,6 @@ defaultproperties
     DefaultSquadNames(5)="Fox"
     DefaultSquadNames(6)="George"
     DefaultSquadNames(7)="How"
+    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
 }

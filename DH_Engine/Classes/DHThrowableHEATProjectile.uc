@@ -16,8 +16,6 @@ var     float           MaxImpactAOIToExplode;     // maximum angle, in degrees,
 var     float           MaxVerticalAOIForTopArmor; // max impact angle from vertical (in degrees, relative to vehicle) that registers as a hit on relatively thin top armor
 var class<WeaponPickup> PickupClass;               // pickup class if grenade is thrown but does not explode & lies on ground
 
-var     bool    bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
-
 // Functions entered out as not relevant to grenade
 simulated static function int GetPitchForRange(int Range) { return 0; }
 simulated static function float GetYAdjustForRange(int Range) { return 0; }
@@ -47,16 +45,6 @@ simulated function PostBeginPlay()
     }
 
     Acceleration = 0.5 * PhysicsVolume.Gravity;
-
-    if (bIsStickGrenade) //Enfield: i ripped this from DHGrenadeProjectile as the LType is technically a stick grenade and is very front heavy
-    {
-        RotationRate.Pitch = -(90000 + Rand(30000)); // end over end tumbling flight
-    }
-    else
-    {
-        RandSpin(100000.0); // normal random 3D spin for egg-shaped or canister grenades
-    }
-
 }
 
 // Modified to skip over Super in DHAntiVehicleProjectile, so we simply destroy the actor

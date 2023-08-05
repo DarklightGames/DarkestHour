@@ -7,18 +7,18 @@ class DH_MAB38Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_MAB_anm.MAB38_world'
-    MenuImage=Texture'DH_MAB38_tex.mab38.mab38_icon'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.MAB38_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mab_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
-    WA_Idle="idle"
-    WA_IdleEmpty="idle_empty"
-    WA_Fire="shoot"
-    WA_Reload="idle"
-    WA_ReloadEmpty="idle_empty"
-    WA_ProneReload="idle"
-    WA_ProneReloadEmpty="idle_empty"
+    WA_Idle="idle_MAB"
+    WA_IdleEmpty="idle_MAB"
+    WA_Fire="shoot_MAB"
+    WA_Reload="idle_MAB"
+    WA_ReloadEmpty="idle_MAB"
+    WA_ProneReload="idle_MAB"
+    WA_ProneReloadEmpty="idle_MAB"
     //reload animations are unused because mag movement is not synced with the hand movement
 
     PA_MovementAnims(0)="stand_jogF_stg44"

@@ -4197,34 +4197,24 @@ function DrawObjectives(Canvas C)
 {
 }
 
-// Returns the health figure class.
-function class<DHHealthFigure> GetHealthFigureClass()
-{
-    local DHPawn P;
-
-    P = DHPawn(PawnOwner);
-
-    if (P == none)
-    {
-        return none;
-    }
-
-    return P.HealthFigureClass;
-}
-
 function DrawLocationHits(Canvas C, ROPawn P)
 {
-    local int          i;
+    local int          Team, i;
     local bool         bNewDrawHits;
     local SpriteWidget Widget;
+    local DH_LevelInfo LI;
     local class<DHHealthFigure> HealthFigureClass;
-    local DHPawn        DHP;
 
-    HealthFigureClass = GetHealthFigureClass();
-
-    if (HealthFigureClass == none)
+    if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
     {
-        return;
+        Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(PawnOwner.Level);
+
+    if (LI != none)
+    {
+        HealthFigureClass = LI.GetTeamNationClass(Team).default.HealthFigureClass;
     }
 
     for (i = 0; i < arraycount(P.DamageList); ++i)
@@ -4251,6 +4241,7 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
+    local DH_LevelInfo LI;
     local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
@@ -4280,11 +4271,12 @@ function UpdateHud()
                 StanceIcon.WidgetTexture = StanceStanding;
             }
         }
-        
-        HealthFigureClass = GetHealthFigureClass();
 
-        if (HealthFigureClass != none)
+        if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
         {
+            LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
+            HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
+            
             HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
             HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 

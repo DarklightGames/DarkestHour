@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_MAB38Ammo extends DHAmmunition;
+class DH_mab38Ammo extends DHAmmunition;
 
 defaultproperties
 {

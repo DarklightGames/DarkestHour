@@ -6,9 +6,7 @@
 class DHBoatVehicle extends DHVehicle
     abstract;
 
-var     Sound   WashSound;
-var     name    WashSoundBoneName;
-var     float   WashSoundRadius;
+var     sound   WashSound;
 
 var     name    DestroyedAnimName;
 
@@ -26,7 +24,7 @@ simulated function SpawnVehicleAttachments()
     {
         VehicleAttachments[0].Actor.AmbientSound = WashSound;
         VehicleAttachments[0].Actor.SoundVolume = 255;
-        VehicleAttachments[0].Actor.SoundRadius = WashSoundRadius;
+        VehicleAttachments[0].Actor.SoundRadius = 300.0;
     }
 }
 
@@ -95,7 +93,6 @@ defaultproperties
     DustSlipRate=0.0
     DustSlipThresh=100000.0
     VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
-    WashSoundRadius=300.0
 
     // Vehicle properties
     CollisionRadius=300.0

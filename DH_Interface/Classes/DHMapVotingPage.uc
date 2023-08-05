@@ -141,10 +141,9 @@ defaultproperties
         bBoundToParent=true
         FontScale=FNS_Small
         HeaderColumnPerc(0)=0.40 // Map Name
-        HeaderColumnPerc(1)=0.15 // Allied Country
-        HeaderColumnPerc(2)=0.15 // Axis Country
-        HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.15 // Player Range
+        HeaderColumnPerc(1)=0.20 // Country
+        HeaderColumnPerc(2)=0.20 // Type
+        HeaderColumnPerc(3)=0.20 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
 
