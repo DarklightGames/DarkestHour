@@ -61,7 +61,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             {
                 recvr_weapon = ROWeapon(recvr_inv);
 
-                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
+                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon') || recvr_weapon.IsA('DH_M9530Weapon'))
                 {
                     continue;
                 }
