@@ -64,8 +64,8 @@ defaultproperties
     IdleToBipodDeploy="deploy"
     BipodDeployToIdle="undeploy"
     BipodIdleAnim="deploy_idle"
-    BipodMagEmptyReloadAnim=idle//"reload_empty"
-    BipodMagPartialReloadAnim=idle//"reload_half"
+    BipodMagEmptyReloadAnim="reload_empty"
+    BipodMagPartialReloadAnim="reload_half"
     
     SprintStartAnim="Sprint_Start"
     SprintLoopAnim="sprint_middle"
@@ -76,7 +76,7 @@ defaultproperties
     //IdleEmptyAnim="idle_empty"
     IdleToBipodDeployEmpty="deploy_empty"
     BipodDeployToIdleEmpty="undeploy_empty"
-    //BipodIdleEmptyAnim="deploy_idle_empty"
+    BipodIdleEmptyAnim="deploy_idle_empty"
 
     //SprintStartEmptyAnim="sprint_start_empty"
     //SprintLoopEmptyAnim="sprint_middle_empty"
