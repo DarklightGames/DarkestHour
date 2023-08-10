@@ -8,5 +8,5 @@ class DH_LTypeGrenadePickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_LTypeGrenadeWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.LType'
+    //StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.LType' // TODO: re-add the mesh
 }
