@@ -8,7 +8,7 @@ class DHITATankCrewmanRoles extends DHAxisTankCrewmanRoles
 
 defaultproperties
 {
-    AltName="Equipaggio di Carro Armato"
+    AltName="Carrista"
 
     PrimaryWeapons(0)=(Item=none,AssociatedAttachment=none)
     PrimaryWeapons(1)=(Item=none,AssociatedAttachment=none)
