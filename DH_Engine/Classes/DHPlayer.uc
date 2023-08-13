@@ -1005,7 +1005,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
             TurnSpeedFactor = DHStandardTurnSpeedFactor;
         }
 
-        if (DHPW != none && DHPW.bHasScope && DHPW.bUsingSights)
+        if (DHPW != none && DHPW.bHasScope && (DHPW.bUsingSights || DHPW.IsInstigatorBipodDeployed()))
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
