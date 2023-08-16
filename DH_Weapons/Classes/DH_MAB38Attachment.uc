@@ -12,13 +12,13 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 
-    WA_Idle="idle_MAB"
-    WA_IdleEmpty="idle_MAB"
-    WA_Fire="shoot_MAB"
-    WA_Reload="idle_MAB"
-    WA_ReloadEmpty="idle_MAB"
-    WA_ProneReload="idle_MAB"
-    WA_ProneReloadEmpty="idle_MAB"
+    WA_Idle="idle"
+    WA_IdleEmpty="idle_empty"
+    WA_Fire="shoot"
+    WA_Reload="idle"
+    WA_ReloadEmpty="idle_empty"
+    WA_ProneReload="idle"
+    WA_ProneReloadEmpty="idle_empty"
     //reload animations are unused because mag movement is not synced with the hand movement
 
     PA_MovementAnims(0)="stand_jogF_stg44"

@@ -127,7 +127,7 @@ defaultproperties
     Records(22)=(VehicleNames=("t60"),Variants=((ClassName="DH_Vehicles.DH_T60Tank"),(ClassName="DH_Vehicles.DH_T60Tank_Snow",VariantName="snow")))
     Records(23)=(VehicleNames=("bt7"),Variants=((ClassName="DH_Vehicles.DH_BT7Tank"),(ClassName="DH_Vehicles.DH_BT7Tank_Snow",VariantName="snow")))
     //American/British
-    Records(24)=(VehicleNames=("stuart","m5stuart"),Variants=((ClassName="DH_Vehicles.DH_StuartTank"),(ClassName="DH_Vehicles.DH_StuartTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_StuartTank_British",VariantName="british")))
+    Records(24)=(VehicleNames=("stuart","m5stuart"),Variants=((ClassName="DH_Vehicles.DH_StuartTank"),(ClassName="DH_Vehicles.DH_StuartTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_StuartTank_British",VariantName="british"),(ClassName="DH_Vehicles.DH_StuartTank_Sicily",VariantName="sicily")))
     //German(None currently)
 
     //--+--
@@ -143,7 +143,7 @@ defaultproperties
     Records(31)=(VehicleNames=("capturedpanzer4f1","sovietpanzer4f1","t4f1","t_4f1"),Variants=((ClassName="DH_Vehicles.DH_T_4F1Tank")))
     Records(32)=(VehicleNames=("capturedpanzer4g","sovietpanzer4g","t4g","t_4g"),Variants=((ClassName="DH_Vehicles.DH_T_4GEarlyTank")))
     //American
-    Records(33)=(VehicleNames=("m4a1","shermanearly","m4a175","m4a1/75"),Variants=((ClassName="DH_Vehicles.DH_ShermanTank"),(ClassName="DH_Vehicles.DH_ShermanTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_ShermanTank_Camo",VariantName="camo"),(ClassName="DH_ShermanTank_DDay",VariantName="dday"),(ClassName="DH_ShermanTank_DDay",VariantName="DD")))
+    Records(33)=(VehicleNames=("m4a1","shermanearly","m4a175","m4a1/75"),Variants=((ClassName="DH_Vehicles.DH_ShermanTank"),(ClassName="DH_Vehicles.DH_ShermanTank_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_ShermanTank_Camo",VariantName="camo"),(ClassName="DH_ShermanTank_DDay",VariantName="dday"),(ClassName="DH_ShermanTank_DDay",VariantName="DD"),(ClassName="DH_Vehicles.DH_ShermanTank_Sicily",VariantName="sicily")))
     Records(34)=(VehicleNames=("m4a3","m4a375","m4a3/75"),Variants=((ClassName="DH_Vehicles.DH_ShermanTank_M4A375W"),(ClassName="DH_Vehicles.DH_ShermanTank_M4A375W_Snow",VariantName="snow")))
     Records(35)=(VehicleNames=("m4a176","m4a1/76"),Variants=((ClassName="DH_ShermanTankA_M4A176W"),(ClassName="DH_Vehicles.DH_ShermanTankA_M4A176W_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_ShermanTankA_M4A176W_Early",VariantName="early"),(ClassName="DH_Vehicles.DH_ShermanTankA_M4A176W_Early_Camo",VariantName="earlycamo"),(ClassName="DH_Vehicles.DH_ShermanTankA_M4A176W_Camo",VariantName="camo"),(ClassName="DH_Vehicles.DH_ShermanTankB_M4A176W",VariantName="b"),(ClassName="DH_Vehicles.DH_ShermanTankB_M4A176W_Snow",VariantName="snowb")))
     Records(36)=(VehicleNames=("m4a376","m4a3/76"),Variants=((ClassName="DH_Vehicles.DH_ShermanTank_M4A376W"),(ClassName="DH_Vehicles.DH_ShermanTank_M4A376W_Early",VariantName="early"),(ClassName="DH_Vehicles.DH_ShermanTank_M4A376W_Snow",VariantName="snow")))
@@ -226,20 +226,11 @@ defaultproperties
     
     //German
     Records(87)=(VehicleNames=("wirbelwind","flakpanzer4"),Variants=((ClassName="DH_Vehicles.DH_WirbelwindTank"),(ClassName="DH_Vehicles.DH_WirbelwindTank_Snow",VariantName="snow")))
-    
 
-    //--+--
+    Records(88)=(VehicleNames=("dukw","duck"),Variants=((ClassName="DH_Vehicles.DH_DUKWTransport")))
+    Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 
-    //to be filed. TEMPLATE:Records()=(VehicleNames=(""),Variants=((ClassName="DH_Vehicles."),(ClassName="DH_Vehicles.",VariantName="")))
-    //Soviet
-
-    //American
-
-    //British
-
-    //German
-
-    
-
+    // Italian
+    Records(100)=(VehicleNames=("semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
 }
 

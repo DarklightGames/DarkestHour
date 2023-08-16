@@ -60,6 +60,8 @@ var     name        PlayerCameraBone;            // just to avoid using literal 
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
+var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
+var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
 
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
@@ -210,6 +212,11 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+simulated function name GetIdleAnim()
+{
+    return BeginningIdleAnim;
+}
+
 // Modified to create passenger pawn classes from PassengerWeapons array, to make net clients show empty rider positions on HUD vehicle icon,
 // to match position indexes to initial position, to set bDriverAlreadyEntered in single player, to avoid setting initial timer RO's 'waiting for crew' system is deprecated,
 // and to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
@@ -220,9 +227,9 @@ simulated function PostBeginPlay()
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     // Play neutral idle animation
-    if (HasAnim(BeginningIdleAnim))
+    if (HasAnim(GetIdleAnim()))
     {
-        PlayAnim(BeginningIdleAnim);
+        PlayAnim(GetIdleAnim());
     }
 
     // Create passenger pawn classes from the PassengerWeapons array
@@ -265,6 +272,12 @@ simulated function PostBeginPlay()
         // Set up new NotifyParameters object
         NotifyParameters = new class'TreeMap_string_Object';
         NotifyParameters.Put("VehicleClass", Class);
+    }
+
+    if (DriverAnimationChannelBone != '')
+    {
+        // Separate animation channel for driver camera.
+        AnimBlendParams(DriverAnimationChannel, 1.0,,, DriverAnimationChannelBone);
     }
 }
 
@@ -1238,9 +1251,9 @@ simulated state EnteringVehicle
     {
         SwitchMesh(InitialPositionIndex);
 
-        if (HasAnim(BeginningIdleAnim))
+        if (HasAnim(GetIdleAnim()))
         {
-            PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
+            PlayAnim(GetIdleAnim()); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
         SetViewFOV(InitialPositionIndex);
@@ -1257,9 +1270,9 @@ simulated event DrivingStatusChanged()
     {
         Enable('Tick'); // necessary even if engine is off, if we have a driver, to prevent vehicle from being driven
     }
-    else if (HasAnim(BeginningIdleAnim))
+    else if (HasAnim(GetIdleAnim()))
     {
-        PlayAnim(BeginningIdleAnim);
+        PlayAnim(GetIdleAnim());
     }
 }
 
@@ -1367,13 +1380,13 @@ simulated state ViewTransition
         {
             if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
             {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim,,, DriverAnimationChannel);
                 ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
             }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim,,, DriverAnimationChannel);
             ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
         }
     }
@@ -1775,6 +1788,17 @@ simulated function Fire(optional float F)
     }
 }
 
+// Override in sub-classes to have different start-up and shut down sounds depending on context (i.e., ambphibious vehicles)
+simulated function Sound GetStartUpSound()
+{
+    return StartUpSound;
+}
+
+simulated function Sound GetShutDownSound()
+{
+    return ShutDownSound;
+}
+
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
@@ -1805,15 +1829,20 @@ function ServerStartEngine()
             {
                 if (ShutDownSound != none)
                 {
-                    PlaySound(ShutDownSound, SLOT_None, 1.0);
+                    PlaySound(GetShutDownSound(), SLOT_None, 1.0);
                 }
             }
             else if (StartUpSound != none)
             {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
+                PlaySound(GetStartUpSound(), SLOT_None, 1.0);
             }
         }
     }
+}
+
+simulated function Sound GetIdleSound()
+{
+    return IdleSound;
 }
 
 // New function to set the engine properties & effects, based on whether engine is on & if it's damaged
@@ -1858,9 +1887,9 @@ simulated function SetEngine()
     // Engine on
     else
     {
-        if (IdleSound != none)
+        if (GetIdleSound() != none)
         {
-            AmbientSound = IdleSound;
+            AmbientSound = GetIdleSound();
         }
 
         if (!bEmittersOn)
@@ -2631,7 +2660,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
     // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
     ClosestDistance = Sqrt(Difference dot Difference);
 
-    return ClosestDistance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
+    return ClosestDistance < (VehHitpoints[Index].PointRadius * AdditionalScale);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3060,8 +3089,8 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
         if (VehicleAnim != '' && HasAnim(VehicleAnim))
         {
-            PlayAnim(VehicleAnim);
-            SetAnimFrame(1.0);
+            PlayAnim(VehicleAnim,,, DriverAnimationChannel);  // TODO: needs to use the channel index!
+            SetAnimFrame(1.0, DriverAnimationChannel);
         }
 
         if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
@@ -4187,7 +4216,7 @@ defaultproperties
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"
     TouchMessageClass=class'DHVehicleTouchMessage'
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyAttachmentClass=class'DHResupplyAttachment_Vehicle'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
     MinRunOverSpeed=586.75 // increased from 0 to 35km/h so players don't get run over so easily by vehicles
@@ -4226,7 +4255,7 @@ defaultproperties
     TrackHealth(0)=100
     TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    VehHitpoints(1)=(PointRadius=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
     SatchelResistance=1.0

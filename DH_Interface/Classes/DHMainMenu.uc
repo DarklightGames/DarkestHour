@@ -77,7 +77,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         Controller.SteamGetUserName() != "")
     {
         // This converts an underscore to a non-breaking space (0xA0)
-        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", "�"));
+        PlayerOwner().ConsoleCommand("SetName" @ Controller.SteamGetUserName());
+    }
+
+    // Fix the player's name if it has been garbled with mojibake.
+    // A previous bug would replace an underscore with this string, so this undoes that.
+    if (InStr(PlayerOwner().GetUrlOption("Name"), "�") >= 0)
+    {
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(PlayerOwner().GetUrlOption("Name"), "�", "_"));
     }
 }
 

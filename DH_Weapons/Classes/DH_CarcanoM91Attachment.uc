@@ -2,38 +2,43 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2022
 //==============================================================================
+// TODO:
+// - Add WA anims.
+// - Add PA reload and bayonet attachment anims.
 
 class DH_CarcanoM91Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Nagant9130'
+    Mesh=SkeletalMesh'DH_Carcano_3rd.CarcanoM91_world'
     MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
     bRapidFire=false
+    MuzzleBoneName="MUZZLE"
+    ShellEjectionBoneName="EJECTOR"
 
-    WA_Idle="idle_nagant"
-    WA_Fire="shoot_nagant9130"
-    WA_Reload="idle_nagant"
-    WA_ProneReload="idle_nagant"
-    WA_ReloadEmpty="stand_reload_nagant9130"
-    WA_ProneReloadEmpty="prone_reload_nagant9130"
-    WA_PostReload="close_nagant9130"
-    WA_BayonetIdle="idle_nagant_bayo"
-    WA_BayonetIdleEmpty="idle_nagant_bayo"
-    WA_BayonetFire="shoot_nagant9130_bayo"
-    WA_BayonetReload="idle_nagant_bayo"
-    WA_BayonetProneReload="idle_nagant_bayo"
-    WA_BayonetReloadEmpty="stand_reload_nagant9130_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_nagant9130_bayo"
-    WA_BayonetAttach="bayattach_nagant9130"
-    WA_BayonetDetach="bayremove_nagant9130"
-    WA_BayonetAttachProne="prone_bayattach_nagant9130"
-    WA_BayonetDetachProne="prone_bayremove_nagant9130"
-    WA_WorkBolt="Bolt_nagant9130"
-    WA_BayonetWorkBolt="Bolt_nagant9130_bayo"
+    WA_Idle="idle_carcano"
+    WA_Fire="idle_carcano"
+    WA_Reload="idle_carcano"
+    WA_ProneReload="idle_carcano"
+    WA_ReloadEmpty="idle_carcano"
+    WA_ProneReloadEmpty="idle_carcano"
+    WA_PostReload="idle_carcano"
+    WA_BayonetIdle="idle_bayonet_carcano"
+    WA_BayonetIdleEmpty="idle_bayonet_carcano"
+    WA_BayonetFire="idle_bayonet_carcano"
+    WA_BayonetReload="idle_bayonet_carcano"
+    WA_BayonetProneReload="idle_bayonet_carcano"
+    WA_BayonetReloadEmpty="idle_bayonet_carcano"
+    WA_BayonetProneReloadEmpty="idle_bayonet_carcano"
+    WA_BayonetAttach="idle_bayonet_carcano"
+    WA_BayonetDetach="idle_bayonet_carcano"
+    WA_BayonetAttachProne="idle_bayonet_carcano"
+    WA_BayonetDetachProne="idle_bayonet_carcano"
+    WA_WorkBolt="idle_carcano"
+    WA_BayonetWorkBolt="idle_bayonet_carcano"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"

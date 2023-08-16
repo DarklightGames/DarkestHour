@@ -142,7 +142,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.NeedMoreFriendliesToDeconstructHQMessage;
         // A vehicle was team killed
         case 23:
-            if (RelatedPRI_1 != none && DHVehicle(OptionalObject) != none)
+            if (RelatedPRI_1 != none && DHVehicle(OptionalObject) != none && SM != none)
             {
                 Repl(S, "{0}", SM.VehiclePools[Switch % 100].VehicleClass.default.VehicleNameString);
 

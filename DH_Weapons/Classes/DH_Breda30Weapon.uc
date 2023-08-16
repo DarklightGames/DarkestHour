@@ -69,7 +69,7 @@ simulated event BredaMagazineOpened()
         AmmoCharge[0] -= 1;
     }
 
-    UpdateMagazineAnimations(GetMagazinePercent());
+    UpdateWeaponComponentAnimations();
 
     // Hide the 2 bullets that end up on the other side of the feed lip.
     AmmoCharge[0] -= 2;
@@ -79,14 +79,14 @@ simulated event BredaMagazineOpened()
 
 simulated event BredaClipInserted()
 {
-    local float F;
+    local float Theta;
 
-    F = Min(1.0, float(NextMagAmmoCount) / MaxAmmo(0));
-
-    Log("BredaClipInserted" @ NextMagAmmoCount @ F);
+    Theta = Min(1.0, float(NextMagAmmoCount) / MaxAmmo(0));
 
     RenewAmmoBelt();
-    UpdateMagazineAnimations(F);
+
+    // Manually update the magazine animation with the pending ammo count.
+    UpdateWeaponComponentAnimationsWithDriverType(DRIVER_MagazineAmmunition, Theta);
 }
 
 simulated event BredaShowSpillBulletBones()
@@ -119,7 +119,7 @@ simulated function ROIronSights()
 
 defaultproperties
 {
-    MagazineAnimations(0)=(Channel=1,BoneName="magazine_internals",Animation="magazine_animation")
+    WeaponComponentAnimations(0)=(Channel=1,BoneName="magazine_internals",Animation="magazine_animation")
 
     SpillBulletBones(0)="MAGAZINE_BULLET_SPILL_01"
     SpillBulletBones(1)="MAGAZINE_BULLET_SPILL_02"
