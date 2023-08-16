@@ -19,6 +19,10 @@ defaultproperties
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-10.0,Y=30.0,Z=85.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(4)=(AttachBone="body",DrivePos=(X=-45.0,Y=30.0,Z=85.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
 
+    //Damage
+    VehHitpoints(5)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-160.0,Y=52.0,Z=80.0),DamageMultiplier=1.5,HitPointType=HP_AmmoStore) // Spare .50 tombstones, won't really explode but incendiaries and propellent might start a fire
+    VehHitpoints(6)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-160.0,Y=-52.0,Z=80.0),DamageMultiplier=1.5,HitPointType=HP_AmmoStore)
+
     // HUD
     VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m16_body'
     VehicleHudTurret=TexRotator'DH_M3Halftrack_tex.hud.m16_turret_rot'

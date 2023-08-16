@@ -21,7 +21,7 @@ defaultproperties
     SupplyAttachmentRotation=(Yaw=-16384)
     SupplyAttachmentOffset=(X=0.0,Y=55.0,Z=-10.0)
     ResupplyAttachmentBone="supply"
-    VehHitpoints(5)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(5)=(PointRadius=40.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'

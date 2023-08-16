@@ -20,6 +20,7 @@ var()   ESpawnPointType Type;
 var()   bool            bNoSpawnVehicles;              // option to prevent SP from spawning spawn vehicles
 var()   bool            bIsInitiallyActive;            // whether or not the SP is active at the start of the round (or waits to be activated later)
 var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
+var(DHSpawnPointBase)   bool            bBoatSpawn;    // players can only spawn boat vehicles from here
 
 var     bool            bIsLocked;                     // locked spawn points will not be affected by enable or disable commands
 var     bool            bCanOnlySpawnInfantryVehicles; // players can spawn into infantry vehicles (as well as on foot) but can't spawn armoured fighting vehicles
@@ -43,6 +44,17 @@ var()   name                    LinkedVehicleFactoriesTag;
 var     ROMineVolume            MineVolumeProtectionRef;
 var     DHAmmoResupplyVolume    LinkedAmmoResupplyRef;
 var     array<DHVehicleFactory> LinkedVehicleFactories;
+
+// Spawn-limiting options.
+var()   int             MaxSpawns;
+var()   name            SpawnsExhaustedEvent;
+var     int             SpawnsRemaining;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SpawnsRemaining;
+}
 
 // Modified to find associated location hint actors, used as positions to spawn players or vehicles, & build arrays of actor references
 // Also to find any actors that are linked to this spawn point, so they are only active when the SP is active, & save actor references
@@ -130,6 +142,8 @@ function Reset()
     super.Reset();
 
     bIsLocked = bIsInitiallyLocked;
+
+    SpawnsRemaining = MaxSpawns;
 }
 
 function BuildLocationHintsArrays()
@@ -276,8 +290,18 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
 
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-    return VehicleClass != none &&
-           GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
+    if (VehicleClass == none)
+    {
+        return false;
+    }
+
+    // If this is not a boat, and the spawn point only allows boats, then don't allow spawning into it
+    if (bBoatSpawn != VehicleClass.default.bCanSwim)
+    {
+        return false;
+    }
+
+    return GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
            !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
            GRI.CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck);                                                   // check one of these vehicles is available at the current time
@@ -323,13 +347,15 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     local array<DHLocationHint> LocationHints;
     local DHLocationHint        LocationHint;
     local array<vector>         EnemyLocations;
-    local array<int>            LocationHintIndices, EncroachedLocationHintIndices;
-    local int                   LocationHintIndex, LocationHintIndexOffset, i, j, k;
+    local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;
     local Pawn                  P;
     local bool                  bIsBlocked;
     local float                 TestCollisionRadius;
+    local DHSpawnManager        SM;
+
+    SM = DarkestHourGame(Level.Game).SpawnManager;
 
     if (VehiclePoolIndex >= 0)
     {
@@ -337,6 +363,40 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         LocationHintIndexOffset = VehicleLocationHintIndexOffset;
         VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
         TestCollisionRadius = VehicleClass.default.CollisionRadius;
+
+/*
+        LocationHintTag = SM.GetVehiclePoolLocationHintTag(VehiclePoolIndex);
+        
+        if (LocationHintTag != '')
+        {
+            // The vehicle pool has a location hint tag.
+            // Try to preferentially use location hints with this tag.
+
+            // First, determine if any of the location hints have this tag.
+            for (i = 0; i < LocationHints.Length; ++i)
+            {
+                if (LocationHints[i].LocationHintTag == LocationHintTag)
+                {
+                    bHasMatchingLocationHintTag = true;
+                    break;
+                }
+            }
+
+            if (bHasMatchingLocationHintTag)
+            {
+                // We have location hints with the tag corresponding to the vehicle pool.
+                // Remove all location hints that don't have this tag.
+                for (i = LocationHints.Length; i >= 0; --i)
+                {
+                    if (VehicleLocationHints[i].LocationHintTag != LocationHintTag)
+                    {
+                        VehicleLocationHints.Remove(i, 1);
+                        --i;
+                    }
+                }
+            }
+        }
+        */
     }
     else
     {
@@ -422,6 +482,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 }
 
 // Modified to increment the location hint index offsets after each successful spawn.
+// Also, if the spawn point has limited spawns, it will be deactivated when it has no spawns remaining.
 function OnPawnSpawned(Pawn P)
 {
     super.OnPawnSpawned(P);
@@ -435,6 +496,35 @@ function OnPawnSpawned(Pawn P)
     {
         ++InfantryLocationHintIndexOffset;
     }
+    
+    if (HasLimitedSpawns())
+    {
+        --SpawnsRemaining;
+
+        if (SpawnsRemaining <= 0)
+        {
+            // Deactivate the spawn point if it has no spawns remaining.
+            SetIsActive(false);
+
+            // Send an event with the exhausted event tag.
+            TriggerEvent(SpawnsExhaustedEvent, self, None);
+        }
+    }
+}
+
+simulated function bool HasLimitedSpawns()
+{
+    return MaxSpawns > 0;
+}
+
+simulated function string GetMapText()
+{
+    if (HasLimitedSpawns())
+    {
+        return string(SpawnsRemaining);
+    }
+
+    return "";
 }
 
 defaultproperties

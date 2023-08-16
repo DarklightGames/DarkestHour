@@ -56,4 +56,7 @@ defaultproperties
     ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
     ReloadStages(3)=(Sound=none,Duration=1.63)
+	
+    FireEffectOffset=(X=-25.0,Y=0.0,Z=-40.0)
+    FireEffectScale=0.70
 }

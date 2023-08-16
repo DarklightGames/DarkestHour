@@ -6470,7 +6470,15 @@ simulated function NotifySelected(Pawn User)
 
     if (!P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && bWeaponNeedsResupply)
     {
-        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        if (bWeaponNeedsReload && bIronSights)
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 2, self.PlayerReplicationInfo,, User.Controller);
+        }
+        else
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        }
+
         LastNotifyTime = Level.TimeSeconds;
     }
     else if (bWeaponNeedsReload)
@@ -7538,8 +7546,8 @@ defaultproperties
     DeployedPitchDownLimit=-7300
 
     // Sound
-    FootStepSoundRadius=64
-    FootstepVolume=0.5
+    FootStepSoundRadius=96
+    FootstepVolume=0.75
     QuietFootStepVolume=0.66
     SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'

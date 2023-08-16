@@ -10,7 +10,6 @@ defaultproperties
 {
     AltName="Mitragliere"
 
-    // TODO: replace this once we get the carcanos
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Breda30Weapon',AssociatedAttachment=class'DH_Weapons.DH_Breda30AmmoPouch')
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
