@@ -12,6 +12,7 @@ defaultproperties
     ProjPerFire=9
     bUsePreLaunchTrace=false // due to multiple buckshot projectiles fired with each shot
     BotRefireRate=0.95
+    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
 
     Spread=300.0
     CrouchSpreadModifier=1.0 // spread modifiers all neutral as it's a very high spread, multi-projectile weapon
@@ -29,5 +30,9 @@ defaultproperties
     ShellHipOffset=(X=4.6,Y=14.0,Z=6.8)
     ShellIronSightOffset=(X=9.5,Y=1.6,Z=-2.4)
     FireForce="AssaultRifleFire"
+    MuzzleBone="muzzle"
     ShakeOffsetMag=(X=3.0,Y=2.0,Z=8.0)
+
+    
+    
 }
