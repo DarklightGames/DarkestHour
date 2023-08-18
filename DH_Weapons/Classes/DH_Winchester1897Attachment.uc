@@ -37,7 +37,7 @@ simulated function PlayThirdPersonPumpActionSound()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_3rd'
-    Skins(0)=Texture'DH_Winchester1897.Winchester.Winchester1897_3rdP'
+    Skins(0)=Texture'DH_Winchester1897_tex.Winchester.Winchester1897_3rdP'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'

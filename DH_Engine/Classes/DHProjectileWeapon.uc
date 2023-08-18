@@ -157,6 +157,7 @@ enum EWeaponComponentAnimationDriverType
                                 // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
                                 // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
                                 // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+    DRIVER_Bayonet,             // Drives the animation based on the state of the bayonet (e.g., attached or unattached)
 };
 
 // Weapon component animations
@@ -207,7 +208,6 @@ simulated function PostBeginPlay()
         if (PC != none && PC.bSpawnWithBayonet)
         {
             bBayonetMounted = true;
-            UpdateBayonet();
         }
     }
 
@@ -779,10 +779,31 @@ simulated function BringUp(optional Weapon PrevWeapon)
         }
 
         InitializeClientWeaponSystems();
+        InitializeBayonetAnimationChannels();
 
         UpdateBayonet();
         UpdateWeaponComponentAnimations();
         UpdateAmmoBelt();
+    }
+}
+
+// Mute or unmute any bayonet animation channels based on whether bayonet is mounted.
+// This is meant to be called only when the weapon is initially brought up.
+// Any further changes to the bayonet mute state will be handled by animation notifies.
+simulated function InitializeBayonetAnimationChannels()
+{
+    if (!bHasBayonet)
+    {
+        return;
+    }
+
+    if (bBayonetMounted)
+    {
+        UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Bayonet);
+    }
+    else
+    {
+        MuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Bayonet);
     }
 }
 
@@ -836,7 +857,7 @@ simulated state RaisingWeapon
             ZoomOut();
         }
 
-        // Reset any zoom values
+        // Reset any zoom values and update the weapon component animations.
         if (InstigatorIsLocalHuman())
         {
             if (DisplayFOV != default.DisplayFOV)
