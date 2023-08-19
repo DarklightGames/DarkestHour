@@ -33,7 +33,4 @@ defaultproperties
     MuzzleBone="muzzle"
     ShellEmitBone="ejector"
     ShakeOffsetMag=(X=3.0,Y=2.0,Z=8.0)
-
-    
-    
 }

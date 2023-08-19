@@ -153,7 +153,6 @@ var     bool            bCanUseIronsights;      // allows firing from a shoulder
 
 enum EWeaponComponentAnimationDriverType
 {
-    DRIVER_None,                // Not driven by anything other than animation notifies.
     DRIVER_MagazineAmmunition,  // Drives the animation based on the number of rounds in the magazine.
                                 // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
                                 // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
