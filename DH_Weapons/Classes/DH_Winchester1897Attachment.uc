@@ -5,7 +5,6 @@
 
 class DH_Winchester1897Attachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_WeaponSounds.uax // Required
 
 // Modified so we don't play play the idle anim (which is all the Super does) if we just played reload or pre-reload animation
 // This is because the reload anims play in a sequence, ending with the post-reload anim (same as bolt action sniper rifles)
@@ -19,18 +18,6 @@ simulated function AnimEnd(int Channel)
     if (Anim != WA_Reload && Anim != WA_PreReload)
     {
         super.AnimEnd(Channel);
-    }
-}
-
-// New function to play the pump action sound for other players
-// Can't do this from an animation notify in weapon attachment's 'pump' anim, as it would also play for the 1st person player
-// He would then get the sound twice, creating an echo effect, as he already gets it from the 1st person weapon anim notifies
-// So instead we make the attachment anim notify call this function, where we can apply a 3rd person player check
-simulated function PlayThirdPersonPumpActionSound()
-{
-    if (Instigator != none && !Instigator.IsFirstPerson())
-    {
-        PlaySound(Sound'DH_WeaponSounds.Winchester1897.Shotgun_PumpAction');
     }
 }
 
