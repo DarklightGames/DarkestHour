@@ -59,7 +59,7 @@ defaultproperties
     WA_BayonetDetachProne="prone_bayremove_1897"   
     WA_BayonetWorkBolt="pump_standing_bayo_1897"
 
-    //need to add the pumping anims
+    //pumping animations
     PA_StandBoltActionAnim="pump_standing_1897"
     PA_StandIronBoltActionAnim="pump_standing_iron_1897"
     PA_CrouchBoltActionAnim="pump_crouch_1897"
@@ -128,9 +128,7 @@ defaultproperties
     PA_WalkIronAnims(6)="stand_walkBLiron_1897"
     PA_WalkIronAnims(7)="stand_walkBRiron_1897"
 
-
     //prone iron anims
-
     PA_ProneIronAnims(0)="prone_slowcrawlF_1897"
 	PA_ProneIronAnims(1)="prone_slowcrawlB_1897"
 	PA_ProneIronAnims(2)="prone_slowcrawlL_1897"
