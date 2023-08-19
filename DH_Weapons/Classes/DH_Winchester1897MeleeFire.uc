@@ -8,7 +8,7 @@ class DH_Winchester1897MeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=class'DH_Weapons.DH_Winchester1897BashDamType'
-
+    BayonetDamageType=class'DH_Weapons.DH_Winchester1897BayonetDamType'
     BashBackEmptyAnim="bash_pullback_empty"
     BashHoldEmptyAnim="bash_hold_empty"
     BashEmptyAnim="bash_attack_empty"
