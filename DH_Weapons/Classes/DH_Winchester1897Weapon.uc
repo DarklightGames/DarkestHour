@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_Winchester1897Attachment'
     PickupClass=class'DH_Weapons.DH_Winchester1897Pickup'
 
-    Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897'
+    Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_1st'
 
     DisplayFOV=90.0
     PlayerIronsightFOV=65.0
@@ -23,6 +23,7 @@ defaultproperties
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
 
+    PutDownAnim="put_away"
 
     IronBringUp="iron_in"
 //  IronBringUpRest="Post_fire_iron_in" // TODO: ideally should have this, with hammer up after firing (played when ironsighting while waiting to work the pump action)
@@ -42,12 +43,11 @@ defaultproperties
     bIsSniper=false
     bSniping=false
     
-
     bHasBayonet=true
     BayonetBoneName="bayonet"
-
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
+    WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer") // TODO: add animation with 2 frames, 1 where the hammer is forward, and the next where it's fully back
 }
