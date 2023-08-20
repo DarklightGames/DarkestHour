@@ -76,7 +76,6 @@ defaultproperties
     PA_PostReloadAnim="reload_end_1897"
     PA_PronePostReloadAnim="prone_reload_end_1897"
 
-
     //bayonet attaching animations
     PA_BayonetAttachAnim="stand_bayattach_1897"
     PA_ProneBayonetAttachAnim="prone_Bayattach_1897"
