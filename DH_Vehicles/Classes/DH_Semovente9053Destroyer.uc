@@ -2,13 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Armor thicknesses and angles
+// == Red ==
 // [ ] Destroyed mesh
-// [ ] Sounds for hatch opening/closing
-// [ ] Don't transfer damage to the hull when the turret is hit
 // [ ] Broken tread meshes
-// [ ] Menu selection image
+// == Colin ==
+// [ ] Armor thicknesses and angles
+// [ ] Don't transfer damage to the hull when the turret is penetrated
 // [ ] Names of round types
+// [ ] Fix/add gun reticle & zero sights (Nap will make it!)
+// [ ] Re-import character anims for driver
+// [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
+// [ ] Shell attachments updating when rounds are fired/reloaded
+// [ ] Check radio attachment in MP
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -132,11 +137,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.75
-    // VehicleHudOccupantsX(2)=0.55
-    // VehicleHudOccupantsY(2)=0.71
-    // VehicleHudOccupantsX(3)=0.575
-    // VehicleHudOccupantsY(3)=0.5
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'  // TODO: replace this!
+    SpawnOverlay(0)=Material'DH_Semovente9053_tex.Interface.semovente9053_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_B_01_L"

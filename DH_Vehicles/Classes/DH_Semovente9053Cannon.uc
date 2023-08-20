@@ -100,4 +100,7 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0
+
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_Italy.rf1ca_radio',RelativeLocation=(X=-42.1971,Y=-54.814,Z=37.2554),RelativeRotation=(Yaw=-16384))
+    VehicleAttachments(1)=(AttachClass=class'DH_Engine.DHRadio',RelativeLocation=(X=-42.1971,Y=-54.814,Z=37.2554))
 }
