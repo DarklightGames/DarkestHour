@@ -2,6 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Armor thicknesses and angles
+// [ ] Destroyed mesh
+// [ ] Sounds for hatch opening/closing
+// [ ] Don't transfer damage to the hull when the turret is hit
+// [ ] Broken tread meshes
+// [ ] Menu selection image
+// [ ] Names of round types
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
