@@ -129,13 +129,13 @@ defaultproperties
 
     //prone iron anims
     PA_ProneIronAnims(0)="prone_slowcrawlF_1897"
-	PA_ProneIronAnims(1)="prone_slowcrawlB_1897"
-	PA_ProneIronAnims(2)="prone_slowcrawlL_1897"
-	PA_ProneIronAnims(3)="prone_slowcrawlR_1897"
-	PA_ProneIronAnims(4)="prone_slowcrawlL_1897"
-	PA_ProneIronAnims(5)="prone_slowcrawlR_1897"
-	PA_ProneIronAnims(6)="prone_slowcrawlB_1897"
-	PA_ProneIronAnims(7)="prone_slowcrawlB_1897"
+    PA_ProneIronAnims(1)="prone_slowcrawlB_1897"
+    PA_ProneIronAnims(2)="prone_slowcrawlL_1897"
+    PA_ProneIronAnims(3)="prone_slowcrawlR_1897"
+    PA_ProneIronAnims(4)="prone_slowcrawlL_1897"
+    PA_ProneIronAnims(5)="prone_slowcrawlR_1897"
+    PA_ProneIronAnims(6)="prone_slowcrawlB_1897"
+    PA_ProneIronAnims(7)="prone_slowcrawlB_1897"
 
     //sprint, anims match up, no change
     PA_SprintAnims(0)="stand_sprintF_kar" 
