@@ -21,7 +21,7 @@ var array<string> PastPatreonSupporters;
 var array<string> OtherContributors;
 var array<string> SpecialThanks;
 
-var localized array<string> CreditLines;
+var array<string> CreditLines;
 
 function AddSystemMenu(){}
 
@@ -39,6 +39,8 @@ function AddHeader(string Header)
 function BuildCreditLines()
 {
     local int i;
+
+    CreditLines.Length = 0;
 
     AddHeader("DARKEST HOUR: EUROPE '44-'45");
 
