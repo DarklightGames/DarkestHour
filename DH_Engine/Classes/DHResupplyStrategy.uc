@@ -70,16 +70,6 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
             }
 
             bResupplied = bResupplied || recvr_weapon.FillAmmo();
-            {
-                recvr_weapon = ROWeapon(recvr_inv);
-
-                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
-                {
-                    continue;
-                }
-
-                bResupplied = bResupplied || recvr_weapon.FillAmmo();
-            }
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
             {
