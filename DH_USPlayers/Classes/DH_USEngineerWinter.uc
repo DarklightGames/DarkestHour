@@ -12,6 +12,6 @@ defaultproperties
     RolePawns(2)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=0.6)
     RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
+    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet'
     HandType=Hand_Gloved
 }

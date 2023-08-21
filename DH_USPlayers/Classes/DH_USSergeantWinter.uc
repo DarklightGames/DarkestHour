@@ -13,7 +13,7 @@ defaultproperties
     RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
+    Headgear(2)=class'DH_USPlayers.DH_AmericanHelmetNCO'
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.4
     HeadgearProbabilities(2)=0.4
