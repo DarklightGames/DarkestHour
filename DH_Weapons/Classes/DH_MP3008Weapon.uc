@@ -7,7 +7,8 @@ class DH_MP3008Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Maschinenpistole 3008"
+    ItemName="MP 3008"
+    NativeItemName="Maschinenpistole 3008"
     FireModeClass(0)=class'DH_Weapons.DH_MP3008Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP3008MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MP3008Attachment'

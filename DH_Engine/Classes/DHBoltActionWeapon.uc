@@ -211,6 +211,8 @@ simulated state PostFiring
     {
         bWaitingToBolt = true;
 
+        UpdateWeaponComponentAnimationsWithDriverType(DRIVER_Bolt);
+
         if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
         {
             SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);

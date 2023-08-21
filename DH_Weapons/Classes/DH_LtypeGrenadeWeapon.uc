@@ -12,10 +12,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_LTypeGrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_LTypeGrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_LTypeGrenadePickup'
-    Mesh=SkeletalMesh'DH_Ltype_1st.Ltype_mesh'
-    //Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade' // no texture yet
-
-
+    Mesh=SkeletalMesh'DH_Ltype_anm.Ltype_1st'
     GroupOffset=4
     DisplayFOV=80.0
 }

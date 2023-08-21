@@ -6,6 +6,8 @@
 class DHWeapon extends ROWeapon
     abstract;
 
+var     string  NativeItemName;                 // The designation name used by the nation that created it (not translated to English)
+
 var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
                                                 // Default: 2 which is neutral and allows anyone to reupply it
 
@@ -847,6 +849,30 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
                 }
             }
         }
+    }
+}
+
+// Function for setting the offset of the 3rd person weapon's muzzle location.
+exec function SetMuzzleFlashOffset(int X, int Y, int Z)
+{
+    local DHWeaponAttachment WA;
+    local Vector MuzzleFlashOffset;
+
+    WA = DHWeaponAttachment(ThirdPersonActor);
+
+    if (WA == none)
+    {
+        Log("SetTipOffset: ThirdPersonActor is not a DHWeaponAttachment");
+        return;
+    }
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        MuzzleFlashOffset.X = X;
+        MuzzleFlashOffset.Y = Y;
+        MuzzleFlashOffset.Z = Z;
+
+        WA.mMuzFlash3rd.SetRelativeLocation(MuzzleFlashOffset);
     }
 }
 

@@ -491,7 +491,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanBeUsed(GRI) && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }

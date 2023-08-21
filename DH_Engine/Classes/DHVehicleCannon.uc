@@ -165,6 +165,43 @@ simulated function PostNetReceive()
     }
 }
 
+function bool ShouldPlayAutomaticVehicleAlerts()
+{
+    local DHPlayer PC;
+    local bool bShouldPlayAlert;
+    local Vehicle VehicleBase;
+
+    if (Instigator == none) return false;
+
+    VehicleBase = Instigator.GetVehicleBase();
+    PC = DHPlayer(Instigator.Controller);
+
+    if (PC == none || VehicleBase == none) return false;
+
+    switch (PC.GetAutomaticVehicleAlertsFromIndex(PC.AutomaticVehicleAlerts))
+    {
+        case AVAM_Always:
+            return true;
+        case AVAM_OnlyWithCrew:
+            return VehicleBase.NumPassengers() > 1;
+        default:
+            return false;
+    }
+}
+
+function OnMainGunReloadFinished()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none && ShouldPlayAutomaticVehicleAlerts())
+    {
+        // "Shell loaded" alert.
+        PC.ServerSpeech('VEH_ALERTS', 9, "");
+    }
+}
+
 // Modified to handle multi-stage coaxial MG or smoke launcher reload in the same way as cannon
 // Higher ranked weapon (cannon then coax then launcher) reload takes precedence over other weapon reload & puts that on hold
 simulated function Timer()
@@ -180,6 +217,8 @@ simulated function Timer()
         // Note owning net client runs this independently from server & may resume a paused reload (but not start a new one)
         if (ReloadState >= RL_ReadyToFire)
         {
+            OnMainGunReloadFinished();
+
             if (AltReloadState != RL_ReadyToFire)
             {
                 AttemptAltReload();

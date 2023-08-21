@@ -5,12 +5,8 @@
 
 class DH_LTypeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 
-//placeholder from the rpg43 for now
-
-
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.ltypemesh_3rd'
-    //Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms_3rdP.RPG43Grenade_3rdP' // TODO: there's no specular mask for this weapon
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_icon'
+    Mesh=SkeletalMesh'DH_Ltype_anm.ltype_3rd'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_icon'  // TODO: make our own, put it in the Ltype package
 }

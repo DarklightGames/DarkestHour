@@ -3381,7 +3381,7 @@ defaultproperties
     RallyPointRadiusInMeters=100.0
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=45
-    SquadLockMemberCountMin=3
+    SquadLockMemberCountMin=2
     RallyPointSquadmatePlacementRadiusInMeters=25.0
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberFactor=2.5

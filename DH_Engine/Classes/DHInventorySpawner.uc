@@ -370,9 +370,9 @@ simulated event Destroyed()
     }
 }
 
-static function string GetMenuName()
+static function string GetMenuName(DHPlayer PC)
 {
-    return default.WeaponClass.default.ItemName @ default.ContainerNoun;
+    return PC.GetInventoryName(default.WeaponClass) @ default.ContainerNoun;
 }
 
 defaultproperties

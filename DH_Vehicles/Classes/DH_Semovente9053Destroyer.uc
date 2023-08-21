@@ -2,6 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// == Red ==
+// [ ] Destroyed mesh
+// [ ] Broken tread meshes
+// == Colin ==
+// [ ] Armor thicknesses and angles
+// [ ] Don't transfer damage to the hull when the turret is penetrated
+// [ ] Names of round types
+// [ ] Fix/add gun reticle & zero sights (Nap will make it!)
+// [ ] Re-import character anims for driver
+// [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
+// [ ] Shell attachments updating when rounds are fired/reloaded
+// [ ] Check radio attachment in MP
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -16,21 +28,22 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext'
-    Skins(0)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_body_tex'
-    Skins(1)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_turret_tex'
-    Skins(2)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_treads_tex'
-    Skins(3)=Texture'DH_Semovente9053_tex.semovente9053.semovente9053_treads_tex'
+    Skins(0)=Texture'DH_Semovente9053_tex.semovente9053_body_ext'
+    Skins(1)=Texture'DH_Semovente9053_tex.semovente9053_body_int'
+    Skins(2)=Texture'DH_Semovente9053_tex.semovente9053_treads'
+    Skins(3)=Texture'DH_Semovente9053_tex.semovente9053_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
-    DrivePos=(X=-5.0,Y=0.0,Z=2.0)
-    DriveAnim="VPanzer3_driver_idle_open"
+    InitialPositionIndex=0
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_int',DriverTransitionAnim="semo9053_driver_close",TransitionUpAnim="body_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_body_int',DriverTransitionAnim="semo9053_driver_open",TransitionDownAnim="body_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bExposed=true)
+    DrivePos=(X=0,Y=0.0,Z=59) // ??
+    DriveRot=(Yaw=32768)
+    DriveAnim="semo9053_driver_close_idle"
 
     // Hull armor
     FrontArmor(0)=(Thickness=1.5,Slope=-72.0,MaxRelativeHeight=-25.5,LocationName="lower nose") // measured most of the slopes in the hull mesh
@@ -99,9 +112,10 @@ defaultproperties
     RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
-    LeftTreadIndex=3
-    TreadVelocityScale=300.0
-    WheelRotationScale=110500.0
+    LeftTreadIndex=2
+    RightTreadIndex=3
+    TreadVelocityScale=69.0
+    WheelRotationScale=20000.0
 
     ExhaustPipes(0)=(ExhaustPosition=(X=-110.64,Y=-68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=-23232))
     ExhaustPipes(1)=(ExhaustPosition=(X=-110.64,Y=68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=23596))
@@ -123,11 +137,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.75
-    // VehicleHudOccupantsX(2)=0.55
-    // VehicleHudOccupantsY(2)=0.71
-    // VehicleHudOccupantsX(3)=0.575
-    // VehicleHudOccupantsY(3)=0.5
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'  // TODO: replace this!
+    SpawnOverlay(0)=Material'DH_Semovente9053_tex.Interface.semovente9053_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_B_01_L"
@@ -228,8 +238,8 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Semovente9053Destroyer.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
+    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
