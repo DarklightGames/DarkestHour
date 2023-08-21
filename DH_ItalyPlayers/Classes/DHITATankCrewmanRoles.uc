@@ -16,6 +16,8 @@ defaultproperties
 
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')  // TODO: Beretta M1934, once it's ready
 
+    GivenItems(0)="DH_Equipment.DHBinocularsItemItalian"
+
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
     BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
