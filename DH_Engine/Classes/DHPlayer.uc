@@ -27,6 +27,13 @@ enum ERoleEnabledResult
     RER_NonSquadLeaderOnly,
 };
 
+enum EAutomaticVehicleAlerts
+{
+    AVAM_Never,
+    AVAM_OnlyWithCrew,
+    AVAM_Always
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
 var     Hashtable_string_int                                    MapMarkerCooldowns;
@@ -43,11 +50,13 @@ var     float                   MapVoteTime;
 var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
 var     globalconfig bool       bSpawnWithBayonet;   // option to automatically spawn with a bayonet attached if applicable
 var     globalconfig int        CorpseStayTime;      // determines how long corpses should stay around (default 30)
+var     globalconfig byte       AutomaticVehicleAlerts; // option to automatically alert other crew members of certain events (e.g., shell loaded, on fire etc.)
 var     int                     CorpseStayTimeMin;
 var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
+var 	config    	bool  		bUseNativeItemNames; // client option to display native item names instead of translated ones
 
 var     byte                    ArtillerySupportSquadIndex;
 
@@ -216,7 +225,8 @@ replication
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
-        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex;
+        ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
+        ServerSetAutomaticVehicleAlerts;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -324,6 +334,7 @@ simulated event PostNetBeginPlay()
     if (Role < ROLE_Authority)
     {
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+        ServerSetAutomaticVehicleAlerts(AutomaticVehicleAlerts);
         SetLockTankOnEntry(bLockTankOnEntry);
     }
 }
@@ -332,6 +343,18 @@ simulated event PostNetBeginPlay()
 function ServerSetBayonetAtSpawn(bool bBayonetAtSpawn)
 {
     bSpawnWithBayonet = bBayonetAtSpawn;
+}
+
+// This is needed because Unrealscript can't cast ints to enums that are declared in other classes.
+static function EAutomaticVehicleAlerts GetAutomaticVehicleAlertsFromIndex(int Index)
+{
+    return EAutomaticVehicleAlerts(Index);
+}
+
+// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
+function ServerSetAutomaticVehicleAlerts(byte Mode)
+{
+    self.AutomaticVehicleAlerts = Mode;
 }
 
 // New function to set the normal view FOV for this player, based on their own
@@ -982,7 +1005,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
             TurnSpeedFactor = DHStandardTurnSpeedFactor;
         }
 
-        if (DHPW != none && DHPW.bHasScope && DHPW.bUsingSights)
+        if (DHPW != none && DHPW.bHasScope && (DHPW.bUsingSights || DHPW.IsInstigatorBipodDeployed()))
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
@@ -7670,6 +7693,20 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     return RER_Enabled;
 }
 
+// Function for getting the correct inventory item name to display depending on settings.
+simulated static function string GetInventoryName(class<Inventory> InventoryClass)
+{
+    if (default.bUseNativeItemNames && ClassIsChildOf(InventoryClass, class'DHWeapon'))
+    {
+        if (class<DHWeapon>(InventoryClass).default.NativeItemName != "")
+        {
+            return class<DHWeapon>(InventoryClass).default.NativeItemName;
+        }
+    }
+
+    return InventoryClass.default.ItemName;
+}
+
 simulated exec function ListVehicles()
 {
     class'DHVehicleRegistry'.static.DumpToLog(self);
@@ -7749,4 +7786,6 @@ defaultproperties
     ArtillerySupportSquadIndex=255
 
     LastTeamKillTimeSeconds=-100000
+
+    AutomaticVehicleAlerts=1 // AVAM_OnlyWithCrew
 }

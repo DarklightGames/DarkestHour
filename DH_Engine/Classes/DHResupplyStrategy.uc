@@ -54,20 +54,22 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 
     if (P != none)
     {
-        if (CanResupplyType(SourceType, RT_Players))
-        { 
-            // Resupply weapons
-            for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+        RI = P.GetRoleInfo();
+    }
+
+    // Resupply weapons
+    if (P != none && CanResupplyType(SourceType, RT_Players))
+    {
+        for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+        {
+            recvr_weapon = ROWeapon(recvr_inv);
+
+            if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon') || recvr_weapon.IsA('DH_M9530Weapon'))
             {
-                recvr_weapon = ROWeapon(recvr_inv);
-
-                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
-                {
-                    continue;
-                }
-
-                bResupplied = bResupplied || recvr_weapon.FillAmmo();
+                continue;
             }
+
+            bResupplied = bResupplied || recvr_weapon.FillAmmo();
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
             {

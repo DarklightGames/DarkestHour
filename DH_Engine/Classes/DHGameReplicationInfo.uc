@@ -345,11 +345,7 @@ simulated function PostBeginPlay()
         for (i = 0; i < MapMarkerClassNames.Length; ++i)
         {
             MapMarkerClass = class<DHMapMarker>(DynamicLoadObject(MapMarkerClassNames[i], class'class'));
-
-            if (MapMarkerClass != none && MapMarkerClass.static.CanBeUsed(self))
-            {
-                MapMarkerClasses[j++] = MapMarkerClass;
-            }
+            MapMarkerClasses[j++] = MapMarkerClass;
         }
 
         RegisterMineVolumes();

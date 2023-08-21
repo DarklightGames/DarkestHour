@@ -84,7 +84,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 defaultproperties
 {
-    ItemName="DP-27 Machine Gun"
+    ItemName="DP-27"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_DP27Fire'
     AttachmentClass=class'DH_Weapons.DH_DP27Attachment'

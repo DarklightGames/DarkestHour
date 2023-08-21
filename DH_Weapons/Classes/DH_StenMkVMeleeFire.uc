@@ -11,6 +11,7 @@ defaultproperties
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 
     BayonetTraceRange=120.0   // -20
+    FireRate=0.23 // -0.02
 
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"

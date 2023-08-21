@@ -10,6 +10,6 @@ defaultproperties
     Speed=25347.0   // 420m/s
     BallisticCoefficient=0.16
     WhizType=2
-    Damage=56.0
+    Damage=59.0
     MyDamageType=class'DH_Weapons.DH_MAB38DamType'
 }

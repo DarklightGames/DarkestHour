@@ -7,7 +7,8 @@ class DH_STG44Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Sturmgewehr 44"
+    ItemName="StG 44"
+    NativeItemName="Sturmgewehr 44"
     FireModeClass(0)=class'DH_Weapons.DH_STG44Fire'
     FireModeClass(1)=class'DH_Weapons.DH_STG44MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_STG44Attachment'

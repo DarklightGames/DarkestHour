@@ -157,6 +157,10 @@ enum EWeaponComponentAnimationDriverType
                                 // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
                                 // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
                                 // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+    DRIVER_Bayonet,             // Drives the animation based on the state of the bayonet (e.g., attached or unattached)
+    DRIVER_Bolt,                // Drives the animation based on the state of the bolt (i.e., whether or not bWaitingToBolt is true or false)
+                                // This driver is only forcibly updated when a shot is fired (when bWaitingToBolt becomes true).
+                                // Animation triggers must be used to lock the bolt/hammer back in place (using a Theta value of 1.0).
 };
 
 // Weapon component animations
@@ -207,7 +211,6 @@ simulated function PostBeginPlay()
         if (PC != none && PC.bSpawnWithBayonet)
         {
             bBayonetMounted = true;
-            UpdateBayonet();
         }
     }
 
@@ -398,7 +401,10 @@ exec simulated function LogAmmo()
 // Called by animations to force the scope rendering.
 simulated event DHForceRenderScope()
 {
-    bForceRenderScope = true;
+    if (bHasScope)
+    {
+        bForceRenderScope = true;
+    }
 }
 
 simulated event RenderOverlays(Canvas Canvas)
@@ -471,7 +477,7 @@ simulated event RenderOverlays(Canvas Canvas)
         Skins[LensMaterialID] = ScriptedTextureFallback;
     }
 
-    if (bHasScope && (bUsingSights || bForceRenderScope))  // TODO: also we shouldn't be in the idlerest animation!
+    if (bHasScope && (bUsingSights || IsInstigatorBipodDeployed() || bForceRenderScope))  // TODO: also we shouldn't be in the idlerest animation!
     {
         if (bForceModelScope || ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
         {
@@ -578,7 +584,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
+    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || ((bUsingSights || IsInstigatorBipodDeployed()) && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
@@ -772,9 +778,32 @@ simulated function BringUp(optional Weapon PrevWeapon)
             SetBarrelSteamActive(true);
         }
 
+        InitializeClientWeaponSystems();
+        InitializeBayonetAnimationChannels();
+
         UpdateBayonet();
         UpdateWeaponComponentAnimations();
         UpdateAmmoBelt();
+    }
+}
+
+// Mute or unmute any bayonet animation channels based on whether bayonet is mounted.
+// This is meant to be called only when the weapon is initially brought up.
+// Any further changes to the bayonet mute state will be handled by animation notifies.
+simulated function InitializeBayonetAnimationChannels()
+{
+    if (!bHasBayonet)
+    {
+        return;
+    }
+
+    if (bBayonetMounted)
+    {
+        UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Bayonet);
+    }
+    else
+    {
+        MuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Bayonet);
     }
 }
 
@@ -828,9 +857,9 @@ simulated state RaisingWeapon
             ZoomOut();
         }
 
+        // Reset any zoom values and update the weapon component animations.
         if (InstigatorIsLocalHuman())
         {
-            // Reset any zoom values
             if (DisplayFOV != default.DisplayFOV)
             {
                 DisplayFOV = default.DisplayFOV;
@@ -3405,6 +3434,8 @@ simulated private function float GetWeaponComponentAnimationTime(int ComponentIn
         case DRIVER_MagazineAmmunition:
             // Magazine-driven animations are expected to have N+1 frames where N is the maximum ammo.
             return Theta * MaxAmmo(0);
+        case DRIVER_Bolt:
+            return Theta;
         default:
             return 0.0;
     }
@@ -3417,14 +3448,39 @@ simulated private function float GetWeaponComponentAnimationTheta(EWeaponCompone
     {
         case DRIVER_MagazineAmmunition:
             return GetMagazinePercent();
+        case DRIVER_Bolt:
+            // Bolt-driven animations are expected to have 2 frames.
+            // The first frame is when the gun is waiting to bolt, and the second frame is where the 
+            // gun is bolted and ready to fire.
+            if (bWaitingToBolt)
+            {
+                return 0.0;
+            }
+            else
+            {
+                return 1.0;
+            }
         default:
             return 0.0;
     }
 }
 
+simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
+{
+    local int i;
+
+    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
+    {
+        if (WeaponComponentAnimations[i].DriverType == DriverType)
+        {
+            UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(DriverType));
+        }
+    }
+}
+
 // Updates magazine ammunition animations with a given theta.
 // Used when needing to drive the animation manually (i.e., with animation triggers).
-simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType, float Theta)
+simulated function UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(EWeaponComponentAnimationDriverType DriverType, float Theta)
 {
     local int i;
 
