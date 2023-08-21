@@ -264,50 +264,51 @@ simulated function DrawGunsightOverlay(Canvas C)
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
     local float PosX, PosY;
 
-    if (GunsightOverlay != none)
+    if (GunsightOverlay == none)
     {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(GunsightOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / GunsightSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        return;
+    }
+    // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+    // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+    // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+    // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+    TextureSize = float(GunsightOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / GunsightSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
 
-        // Draw the gunsight overlay
+    // Draw the gunsight overlay
+    C.SetPos(0.0, 0.0);
+
+    C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+
+    // Draw any gunsight aiming reticle
+    if (CannonScopeCenter != none)
+    {
         C.SetPos(0.0, 0.0);
+        C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+    }
 
-        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+    DrawGunsightRangeSetting(C);
 
-        // Draw any gunsight aiming reticle
-        if (CannonScopeCenter != none)
-        {
-            C.SetPos(0.0, 0.0);
-            C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-        }
-
-        DrawGunsightRangeSetting(C);
-
-        // Debug - draw cross on center of screen to check sight overlay is properly centred
-        if (bDebugSights)
-        {
-            PosX = C.SizeX / 2.0;
-            PosY = C.SizeY / 2.0;
-            C.SetPos(0.0, 0.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, PosY + 3.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-            C.SetPos(PosX + 3.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-        }
+    // Debug - draw cross on center of screen to check sight overlay is properly centred
+    if (bDebugSights)
+    {
+        PosX = C.SizeX / 2.0;
+        PosY = C.SizeY / 2.0;
+        C.SetPos(0.0, 0.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, PosY + 3.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
+        C.SetPos(PosX + 3.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
     }
 }
 

@@ -19,7 +19,7 @@ defaultproperties
     DriveAnim="semo9053_com_idle_close"
     bHasAltFire=false
     // Figure out what gunsight to use (also maybe refactor to have the gunsights be a separate class that can just be referenced and reused by multiple vehicles)
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_Semovente9053_tex.Interface.semovente9053_gunsight'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
