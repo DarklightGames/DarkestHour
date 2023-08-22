@@ -2,14 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+
 // == Red ==
 // [ ] Destroyed mesh
 // [ ] Broken tread meshes
+
 // == Colin ==
 // [ ] Armor thicknesses and angles
 // [ ] Don't transfer damage to the hull when the turret is penetrated
 // [ ] Names of round types
-// [ ] Fix/add gun reticle & zero sights (Nap will make it!)
+// [ ] Add mechanical ranges and sights (will need to do some research into how the debugging tools work for this, set it up like the KV1)
 // [ ] Re-import character anims for driver
 // [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
 // [ ] Shell attachments updating when rounds are fired/reloaded

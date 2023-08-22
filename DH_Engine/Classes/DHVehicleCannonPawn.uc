@@ -341,23 +341,24 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
-    if (PeriscopeOverlay != none)
+    if (PeriscopeOverlay == none)
     {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(PeriscopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-
-        // Draw the periscope overlay
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        return;
     }
+    // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+    // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+    // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+    // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+    TextureSize = float(PeriscopeOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+    // Draw the periscope overlay
+    C.SetPos(0.0, 0.0);
+
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 }
 
 // Modified so player faces forwards if he's on the gunsight when switching to behind view

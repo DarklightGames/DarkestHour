@@ -44,5 +44,25 @@ defaultproperties
     DHPenetrationTable(9)=1.9
     DHPenetrationTable(10)=1.5
     
-    bMechanicalAiming=false
+    bOpticalAiming=true
+    OpticalRanges(0)=(Range=100,RangeValue=0.0)
+    OpticalRanges(1)=(Range=200,RangeValue=0.477)
+    OpticalRanges(2)=(Range=300,RangeValue=0.468)
+    OpticalRanges(3)=(Range=400,RangeValue=0.458)
+    OpticalRanges(4)=(Range=500,RangeValue=0.446)
+    OpticalRanges(5)=(Range=600,RangeValue=0.433)
+    OpticalRanges(6)=(Range=700,RangeValue=0.420)
+    OpticalRanges(7)=(Range=800,RangeValue=0.407)
+    OpticalRanges(8)=(Range=900,RangeValue=0.393)
+    OpticalRanges(9)=(Range=1000,RangeValue=0.378)
+    OpticalRanges(10)=(Range=1100,RangeValue=0.365)
+    OpticalRanges(11)=(Range=1200,RangeValue=0.348)
+    OpticalRanges(12)=(Range=1300,RangeValue=0.333)
+    OpticalRanges(13)=(Range=1400,RangeValue=0.317)
+    OpticalRanges(14)=(Range=1500,RangeValue=0.298)
+    OpticalRanges(15)=(Range=1600,RangeValue=0.283)
+    OpticalRanges(16)=(Range=1700,RangeValue=0.265)
+    OpticalRanges(17)=(Range=1800,RangeValue=0.248)
+    OpticalRanges(18)=(Range=1900,RangeValue=0.228)
+    OpticalRanges(19)=(Range=2000,RangeValue=0.200)
 }
