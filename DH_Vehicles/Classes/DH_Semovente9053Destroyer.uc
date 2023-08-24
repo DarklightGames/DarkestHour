@@ -3,16 +3,12 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-// == Red ==
-// [ ] Destroyed mesh
-// [ ] Broken tread meshes
-
 // == Colin ==
 // [ ] Armor thicknesses and angles
 // [ ] Don't transfer damage to the hull when the turret is penetrated
 // [ ] Names of round types
-// [ ] Add mechanical ranges and sights (will need to do some research into how the debugging tools work for this, set it up like the KV1)
-// [ ] Re-import character anims for driver
+// [~] Re-import character anims for driver
+// [ ] Add optical ranges (will need to do some research into how the debugging tools work for this, set it up like the KV1)
 // [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
 // [ ] Shell attachments updating when rounds are fired/reloaded
 // [ ] Check radio attachment in MP
@@ -34,6 +30,8 @@ defaultproperties
     Skins(1)=Texture'DH_Semovente9053_tex.semovente9053_body_int'
     Skins(2)=Texture'DH_Semovente9053_tex.semovente9053_treads'
     Skins(3)=Texture'DH_Semovente9053_tex.semovente9053_treads'
+
+    bUsesCodedDestroyedSkins=false
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
@@ -93,7 +91,7 @@ defaultproperties
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=0.0,Y=0.0,Z=80.0)
     FireEffectOffset=(X=0.0,Y=0.0,Z=80.0)
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_destroyed'
 
     // Exit Positions
     ExitPositions(0)=(X=51.73,Y=-29.58,Z=139.28) // EXIT_POSITION.001
@@ -245,6 +243,8 @@ defaultproperties
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_Semovente9053_stc.semovente9053_treads_destroyed_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_Semovente9053_stc.semovente9053_treads_destroyed_right'
 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_hatch_collision',AttachBone="driver_hatch")
 
