@@ -23,7 +23,7 @@ defaultproperties
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
 
-    PutDownAnim="put_away"
+    PutDownAnim="putaway"
 
     IronBringUp="iron_in"
 //  IronBringUpRest="Post_fire_iron_in" // TODO: ideally should have this, with hammer up after firing (played when ironsighting while waiting to work the pump action)
