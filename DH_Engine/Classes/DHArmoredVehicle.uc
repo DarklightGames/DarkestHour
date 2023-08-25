@@ -57,6 +57,9 @@ var     bool        bVehicleHit;                // A simple check used in TakeDa
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
+var     float       TurretPenetrationHullDamageChanceModifier; // chance modifier for hull damage when a turret penetration occurs
+var     float       HullPenetrationTurretDamageChanceModifier; // chance modifier for turret damage when a hull penetration occurs
+var     float       TurretPenetrationDamageModifier; // damage modifier for incoming damage when a turret penetration occurs
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
@@ -1833,13 +1836,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bTurretPenetration)
                     {
-                        HullChanceModifier = 0.25;   // 25% usual chance of damage to things in the hull
+                        HullChanceModifier = TurretPenetrationHullDamageChanceModifier;
                         TurretChanceModifier = 1.0;
+                        Damage *= TurretPenetrationDamageModifier;
                     }
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier = 0.35; // 35% usual chance of damage to things in the turret
+                        TurretChanceModifier =HullPenetrationTurretDamageChanceModifier;
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
@@ -2440,6 +2444,9 @@ defaultproperties
     TurretDetonationThreshold=1750.0
     // above values are misleading: the greater the number, the lower the chance is
     AmmoIgnitionProbability=0.75
+    TurretPenetrationHullDamageChanceModifier=0.25
+    HullPenetrationTurretDamageChanceModifier=0.35
+    TurretPenetrationDamageModifier=1.0
 
     // Vehicle fires
     bEnableHatchFires=true

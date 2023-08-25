@@ -7,10 +7,6 @@ class DH_Semovente9053Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    // TODO: figure out where to put this
-    FireEffectScale=1.75 // turret fire is larger & positioned in centre of open superstructure
-    FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
-
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_turret_ext'
     Skins(0)=Texture'DH_Semovente9053_tex.semovente9053_turret_ext'
@@ -43,6 +39,10 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=0.0
+    
+    // Fire Effects
+    FireEffectScale=1.75
+    FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'

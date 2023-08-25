@@ -249,4 +249,11 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_SU76Destroyer.KParams0'
+
+    // Because the turret area is partially disconnected from the hull, we assign a smaller chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.5
+    HullPenetrationTurretDamageChanceModifier=0.10
+    TurretPenetrationDamageModifier=0.25
 }

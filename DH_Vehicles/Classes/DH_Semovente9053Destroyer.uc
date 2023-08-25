@@ -2,12 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-
-// == Colin ==
+// [~] Re-import character anims for driver
 // [ ] Armor thicknesses and angles
 // [ ] Don't transfer damage to the hull when the turret is penetrated
 // [ ] Names of round types
-// [~] Re-import character anims for driver
 // [ ] Add optical ranges (will need to do some research into how the debugging tools work for this, set it up like the KV1)
 // [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
 // [ ] Shell attachments updating when rounds are fired/reloaded
@@ -257,4 +255,11 @@ defaultproperties
     VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
     VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
     VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Semovente9053_stc.deco.semovente9053_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
+
+    // Because the turret is completely disconnected from the hull, there should be no chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.0
+    HullPenetrationTurretDamageChanceModifier=0.0
+    TurretPenetrationDamageModifier=0.25
 }

@@ -212,4 +212,11 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Marder3MDestroyer.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
+
+    // Because the turret is completely disconnected from the hull, there should be no chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.0
+    HullPenetrationTurretDamageChanceModifier=0.0
+    TurretPenetrationDamageModifier=0.25
 }
