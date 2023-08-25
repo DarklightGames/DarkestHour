@@ -66,6 +66,10 @@ var     bool        bRearHullPenetration;       // shell has penetrated the rear
 var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points (new DH types) that may be hit & damaged
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
+var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
+
+// The naming on these are extremely deceptive.
+// These are not "chances", but are damage thresholds that, when reached, will have a base 100% chance of doing damage to the thing in question.
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
 var     float       DriverKillChance;           // chance that shrapnel will kill driver
 var     float       CommanderKillChance;        // chance that shrapnel will kill commander
@@ -73,7 +77,6 @@ var     float       GunnerKillChance;           // chance that shrapnel will kil
 var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
-var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
@@ -1843,7 +1846,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier =HullPenetrationTurretDamageChanceModifier;
+                        TurretChanceModifier = HullPenetrationTurretDamageChanceModifier;
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)

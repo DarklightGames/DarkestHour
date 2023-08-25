@@ -4,8 +4,6 @@
 //==============================================================================
 // [~] Re-import character anims for driver
 // [ ] Armor thicknesses and angles
-// [ ] Don't transfer damage to the hull when the turret is penetrated
-// [ ] Names of round types
 // [ ] Add optical ranges (will need to do some research into how the debugging tools work for this, set it up like the KV1)
 // [ ] Fix issue where the vehicle can shoot itself (use 2 karma boxes?)
 // [ ] Shell attachments updating when rounds are fired/reloaded
@@ -58,6 +56,7 @@ defaultproperties
     RearArmor(1)=(Thickness=1.0,Slope=8.0,MaxRelativeHeight=29.0,LocationName="lower super")
     RearArmor(2)=(Thickness=1.0,Slope=17.0,LocationName="superstructure")
 
+    // What a fucking terrible system.
     FrontLeftAngle=330.0
     FrontRightAngle=30.0
     RearRightAngle=150.0
