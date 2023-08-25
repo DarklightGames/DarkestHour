@@ -26,9 +26,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShellHE'
 
-    // TODO: figure out what these are supposed to be
-    nProjectileDescriptions(0)="PzGr.39"
-    nProjectileDescriptions(1)="Sprgr.Patr.34"
+    nProjectileDescriptions(0)="Granata Perforante da 90"
+    nProjectileDescriptions(1)="Granata da 90"
 
     InitialPrimaryAmmo=8
     InitialSecondaryAmmo=1
