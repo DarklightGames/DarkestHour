@@ -43,6 +43,8 @@ defaultproperties
     WA_ProneReload="idle_1897"
     WA_PostReload="reload_end_1897"
 
+    
+
     // bayonet
     WA_BayonetIdle="idle_bayo_1897" 
     WA_BayonetIdleEmpty="idle_bayo_1897"
@@ -187,10 +189,10 @@ defaultproperties
     PA_IdleProneAnim="prone_idle_1897"
 
     //shooting
-    PA_Fire="stand_shoothip_kar"
-    PA_IronFire="stand_shootiron_kar"
-    PA_CrouchFire="crouch_shoot_kar"
-    PA_ProneFire="prone_shoot_kar"
+    PA_Fire="stand_shoothip_1897"
+    PA_IronFire="stand_shootiron_1897"
+    PA_CrouchFire="crouch_shoot_1897"
+    PA_ProneFire="prone_shoot_1897"
 
     //moving shooting
     PA_MoveStandFire(0)="stand_shootFhip_1897"
