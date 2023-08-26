@@ -31,7 +31,6 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
 
     // Driver
     InitialPositionIndex=0
