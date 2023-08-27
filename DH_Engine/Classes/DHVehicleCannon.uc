@@ -2011,7 +2011,7 @@ function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
         // Or if debug projectile didn't hit target wall - most likely the shot was too low & hit ground before wall, so raise pitch a little & we'll try again
         else
         {
-            DebugPitchAdjustment += 1;
+            DebugPitchAdjustment += 10;
         }
     }
 
