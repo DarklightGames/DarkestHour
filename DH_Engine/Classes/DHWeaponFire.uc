@@ -77,7 +77,6 @@ simulated function InitEffects()
 
 event ModeDoFire()
 {
-    local float Theta;
     local DHProjectileWeapon ProjectileWeapon;
 
     super.ModeDoFire();

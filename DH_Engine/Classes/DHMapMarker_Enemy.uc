@@ -17,7 +17,7 @@ static function float GetMapMarkerLifetimePercent(int ElapsedTime, DHGameReplica
 static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     local Color C;
-    local float T, MinA;
+    local float T;
     local int ElapsedTime;
 
     C = default.IconColor;
