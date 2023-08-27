@@ -424,8 +424,6 @@ event Opened(GUIComponent Sender)
     TextureDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailWorld");
     CharacterDetail = PlayerOwner().ConsoleCommand("get ini:Engine.Engine.ViewportManager TextureDetailPlayerSkin");
 
-    Log(TextureDetail @ CharacterDetail);
-
     // Due to a bug introduced in 9.0, the VoiceVolume was being
     // set to 0.0 upon saving settings. Originally we thought the setting
     // did *nothing*, but it appears to disable VOIP entirely if you start
