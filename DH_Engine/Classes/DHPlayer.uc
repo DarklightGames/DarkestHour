@@ -191,6 +191,10 @@ var     DHIQManager             IQManager;
 var     int                     MinIQToGrowHead;
 var     bool                    bIQManaged;
 
+// Client GUID
+var globalconfig GUID           ClientGUID;
+var     float                   LastListClientGUIDTime;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -226,7 +230,7 @@ replication
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
-        ServerSetAutomaticVehicleAlerts;
+        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -336,7 +340,37 @@ simulated event PostNetBeginPlay()
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
         ServerSetAutomaticVehicleAlerts(AutomaticVehicleAlerts);
         SetLockTankOnEntry(bLockTankOnEntry);
+
+        if (!HasClientGUID())
+        {
+            // Client GUID is not set, so generate one.
+            GenerateClientGUID();
+        }
+
+        ServerSetClientGUID(ClientGUID);
     }
+}
+
+simulated function bool HasClientGUID()
+{
+    return ClientGUID.A != 0 || ClientGUID.B != 0 || ClientGUID.C != 0 || ClientGUID.D != 0;
+}
+
+simulated function GenerateClientGUID()
+{
+    // Generate a unique client tag.
+    ClientGUID.A = 0x7F010000 | Rand(65536);
+    ClientGUID.B = 0x7F230000 | Rand(65536);
+    ClientGUID.C = 0x7F450000 | Rand(65536);
+    ClientGUID.D = 0x7F670000 | Rand(65536);
+
+    SaveConfig();
+}
+
+function ServerSetClientGUID(GUID ClientGUID)
+{
+    // Send the client tag to the server.
+    self.ClientGUID = ClientGUID;
 }
 
 // Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
@@ -3442,6 +3476,44 @@ function RORoleInfo GetRoleInfo()
 simulated function ClientCopyToClipboard(string Str)
 {
     CopyToClipBoard(Str);
+}
+
+function ServerListClientGUIDs()
+{
+    local Controller C;
+    local DHPlayer PC;
+    local string ClipboardString, Message;
+
+    // Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
+    if (!IsDebugModeAllowed() && !PlayerReplicationInfo.bAdmin && !PlayerReplicationInfo.bSilentAdmin)
+    {
+        return;
+    }
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        PC = DHPlayer(C);
+
+        if (PC != none)
+        {
+            Message = PC.GetPlayerIDHash() @ Caps(class'MD5Hash'.static.GetHashString(PC.ClientGUID)) @ C.PlayerReplicationInfo.PlayerName;
+
+            ClipboardString $= Message @ class'UString'.static.CRLF();
+
+            ClientMessage(Message);
+        }
+    }
+
+    ClientCopyToClipboard(ClipboardString);
+}
+
+exec function ListClientGUIDs()
+{
+	if (Level.TimeSeconds - LastListClientGUIDTime > 1.0)
+	{
+   	   	LastListClientGUIDTime = Level.TimeSeconds;
+	   	ServerListClientGUIDs();
+   	}
 }
 
 // Will have the client make a .txt file on their machine with the listplayers info in it, very useful to be able to copy ROIDs

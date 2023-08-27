@@ -336,8 +336,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     local array<DHLocationHint> LocationHints;
     local DHLocationHint        LocationHint;
     local array<vector>         EnemyLocations;
-    local array<int>            LocationHintIndices, EncroachedLocationHintIndices;
-    local int                   LocationHintIndex, LocationHintIndexOffset, i, j, k;
+    local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;
     local Pawn                  P;

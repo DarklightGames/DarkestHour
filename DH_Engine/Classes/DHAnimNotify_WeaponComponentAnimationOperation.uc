@@ -30,11 +30,11 @@ event Notify(Actor Owner)
     switch (Operation)
     {
         case OP_Set:
-            Weapon.UpdateWeaponComponentAnimationsWithDriverType(DriverType, Theta);
+            Weapon.UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(DriverType, Theta);
             break;
         case OP_Update:
             // TODO: get natural theta value.
-            Weapon.UpdateWeaponComponentAnimationsWithDriverType(DriverType, Theta);
+            Weapon.UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(DriverType, Theta);
             break;
         case OP_Mute:
             Weapon.MuteWeaponComponentAnimationChannelsWithDriverType(DriverType);

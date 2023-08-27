@@ -32,7 +32,6 @@ function PostBeginPlay()
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int i, RandomNum;
-    local ROMineVolume MineVolume;
 
     if (UseRandomness)
     {

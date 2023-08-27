@@ -174,7 +174,6 @@ replication
 simulated function PostBeginPlay()
 {
     local DH_LevelInfo LI;
-    local PlayerController PC;
 
     super.PostBeginPlay();
 
@@ -206,7 +205,6 @@ function PostNetBeginPlay()
 function Timer()
 {
     local DHPlayer PC;
-    local Controller OtherController;
     local DHPlayerReplicationInfo PRI;
     local Controller C;
 
@@ -468,7 +466,6 @@ private function OnSquadLeaderDrawEnded(SquadLeaderDraw SquadLeaderDraw)
 private function UpdateSquadLeaderDraws()
 {
     local int i, TeamIndex, SquadIndex;
-    local array<DHPlayerReplicationInfo> Volunteers;
 
     // Squad leader draws
     for (i = SquadLeaderDraws.Length - 1; i >= 0; --i)
@@ -954,9 +951,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHBot Bot;
     local DHVoiceReplicationInfo VRI;
     local VoiceChatRoom SquadVCR;
-    local int i;
-    local array<DHPlayerReplicationInfo> Volunteers;
-    local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
     local bool bHasActiveChannelChanged;
 
@@ -1233,7 +1227,7 @@ private function int GetEmptySquadMemberIndex(byte TeamIndex, int SquadIndex)
 // they were unable to join the squad.
 function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited, optional bool bIsQuiet)
 {
-    local int i, MemberIndex;
+    local int MemberIndex;
     local DHPlayer PC;
     local DHBot Bot;
     local DHVoiceReplicationInfo VRI;
@@ -3381,7 +3375,7 @@ defaultproperties
     RallyPointRadiusInMeters=100.0
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=45
-    SquadLockMemberCountMin=3
+    SquadLockMemberCountMin=2
     RallyPointSquadmatePlacementRadiusInMeters=25.0
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberFactor=2.5

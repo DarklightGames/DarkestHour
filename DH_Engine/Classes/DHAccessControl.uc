@@ -158,6 +158,7 @@ defaultproperties
     DeveloperIDs(7)="76561198020507621" // jwjw
     DeveloperIDs(8)="76561198176185585" // Backis
     DeveloperIDs(9)="76561198144056227" // Mechanic
+    DeveloperIDs(10)="76561197981578171"// Enfield
 
     // Mac clients are unable to determine their patron status
     // normally, so we hard-code these
