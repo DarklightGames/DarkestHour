@@ -5,7 +5,6 @@
 // [~] Re-import character anims for driver (waiting for shotgun anims)
 // [ ] Armor thicknesses and angles (WOLFkraut)
 // [ ] Shell attachments updating when rounds are fired/reloaded
-// [ ] Minor fixes to optical range dial positions
 // [ ] Maybe make the radio silent? Might be irritating to hear it all the time in the vehicle
 // [ ] Check radio attachment in MP
 

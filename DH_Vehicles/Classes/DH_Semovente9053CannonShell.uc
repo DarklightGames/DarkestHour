@@ -36,14 +36,14 @@ defaultproperties
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.5)
-    OpticalRanges(1)=(Range=200,RangeValue=0.522)
-    OpticalRanges(2)=(Range=400,RangeValue=0.538)
-    OpticalRanges(3)=(Range=600,RangeValue=0.553)
+    OpticalRanges(1)=(Range=200,RangeValue=0.520)
+    OpticalRanges(2)=(Range=400,RangeValue=0.536)
+    OpticalRanges(3)=(Range=600,RangeValue=0.552)
     OpticalRanges(4)=(Range=800,RangeValue=0.568)
-    OpticalRanges(5)=(Range=1000,RangeValue=0.584)
-    OpticalRanges(6)=(Range=1200,RangeValue=0.603)
+    OpticalRanges(5)=(Range=1000,RangeValue=0.583)
+    OpticalRanges(6)=(Range=1200,RangeValue=0.601)
     OpticalRanges(7)=(Range=1400,RangeValue=0.620)
-    OpticalRanges(8)=(Range=1600,RangeValue=0.640)
+    OpticalRanges(8)=(Range=1600,RangeValue=0.638)
     OpticalRanges(9)=(Range=1800,RangeValue=0.659)
     OpticalRanges(10)=(Range=2000,RangeValue=0.678)
 

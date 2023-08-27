@@ -65,7 +65,7 @@ defaultproperties
     bHasAltFire=false
     // Figure out what gunsight to use (also maybe refactor to have the gunsights be a separate class that can just be referenced and reused by multiple vehicles)
     GunsightOverlay=Texture'DH_Semovente9053_tex.Interface.semovente9053_sight_background'
-    GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
+    GunsightSize=0.4
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     FireImpulse=(X=-110000)
