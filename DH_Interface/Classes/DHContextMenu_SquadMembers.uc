@@ -25,7 +25,7 @@ protected function AssembleMenu(GUIComponent Component)
     local DHPlayerReplicationInfo PRI, SelectedPRI;
     local DHGUISquadComponent SquadComponent;
     local DHPlayer PC;
-    local int SquadMemberIndex, SquadIndex, TeamIndex, InsertSeparatorIndex;
+    local int SquadIndex, TeamIndex, InsertSeparatorIndex;
     local bool bParadropMarkerPlaced, bSquadLeaderIsAlive;
 
     PC = GetComponentController(Component);

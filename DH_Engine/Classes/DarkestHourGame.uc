@@ -3790,7 +3790,7 @@ exec function SetInfluence(string InfluenceType, int Index, float Value)
             return;
         }
 
-        if (GRI.SpawnPoints[Index].bMainSpawn)
+        if (!GRI.SpawnPoints[Index].bMainSpawn)
         {
             Log("Spawn [" $ Index $ "] is not a main spawn!");
             return;

@@ -3647,13 +3647,10 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
     for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGRI.DHObjectives[i] == none)
-        {
-            continue;
-        }
-
         // Do not show the objective if it is supposed to be hidden on the map
-        if (DHGRI.DHObjectives[i].bHideOnMap || (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideOnMapWhenInactive))
+        if (DHGRI.DHObjectives[i] == none ||
+            DHGRI.DHObjectives[i].bHideOnMap || 
+            (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideOnMapWhenInactive))
         {
             continue;
         }
@@ -3744,6 +3741,23 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                 Widget = MapIconDispute[ALLIES_TEAM_INDEX];
                 DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 6);
             }
+        }
+    }
+
+    if (bShowDebugInfoOnMap)
+    {
+        // Draw debug info for main spawn points.
+        for (i = 0; i < arraycount(DHGRI.SpawnPoints); ++i)
+        {
+            if (DHGRI.SpawnPoints[i] == none || !DHGRI.SpawnPoints[i].bMainSpawn)
+            {
+                continue;
+            }
+
+            ObjLabel = "[" $ i $ "]" @
+                        "B" @  DHGRI.SpawnPoints[i].BaseInfluenceModifier;
+                    
+            DHDrawIconOnMap(C, SubCoords, MapIconTeam[DHGRI.SpawnPoints[i].GetTeamIndex()], MyMapScale, DHGRI.SpawnPoints[i].Location, MapCenter, Viewport, 1, ObjLabel, DHGRI);
         }
     }
 
