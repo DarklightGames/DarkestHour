@@ -5,9 +5,9 @@
 
 class DH_Semovente9053CannonPawn extends DHAssaultGunCannonPawn;
 
-// Modified to include different handling for Soviet optical range adjustment (from RO's RussianTankCannonPawn)
-// Some cannons have optical (not mechanically linked) range setting, so range adjustment moves vertical position of reticle to facilitate aiming for range
-// Or on some mechanically linked sights the optical adjustment can just be an additional moving range indicator bar
+// TODO: This sucks, but will suffice for now.
+// We really ought to have a separate gunsight object and have the cannon pawn reference it.
+// There it can override the gunsight drawing function and do whatever it wants.
 simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
