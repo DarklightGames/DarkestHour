@@ -259,4 +259,6 @@ defaultproperties
     TurretPenetrationHullDamageChanceModifier=0.0
     HullPenetrationTurretDamageChanceModifier=0.0
     TurretPenetrationDamageModifier=0.25
+
+    UnbuttonedPositionIndex=1
 }
