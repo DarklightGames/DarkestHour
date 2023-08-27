@@ -44,8 +44,6 @@ defaultproperties
     DHPenetrationTable(9)=1.9
     DHPenetrationTable(10)=1.5
     
-
-    // Repeat the same optical range table, but have RangeValue = (1 - RangeValue)
     // This is used for the optical range table for the gunner
     bOpticalAiming=true
     OpticalRanges(0)=(Range=100,RangeValue=0.5)
@@ -68,4 +66,25 @@ defaultproperties
     OpticalRanges(17)=(Range=1800,RangeValue=0.752)
     OpticalRanges(18)=(Range=1900,RangeValue=0.772)
     OpticalRanges(19)=(Range=2000,RangeValue=0.800)
-}
+
+    bMechanicalAiming=true
+    MechanicalRanges(0)=(Range=100,RangeValue=0)
+    MechanicalRanges(1)=(Range=200,RangeValue=52)
+    MechanicalRanges(2)=(Range=300,RangeValue=49)
+    MechanicalRanges(3)=(Range=400,RangeValue=52)
+    MechanicalRanges(4)=(Range=500,RangeValue=57)
+    MechanicalRanges(5)=(Range=600,RangeValue=64)
+    MechanicalRanges(6)=(Range=700,RangeValue=72)
+    MechanicalRanges(7)=(Range=800,RangeValue=77)
+    MechanicalRanges(8)=(Range=900,RangeValue=85)
+    MechanicalRanges(9)=(Range=1000,RangeValue=96)
+    MechanicalRanges(10)=(Range=1100,RangeValue=104)
+    MechanicalRanges(11)=(Range=1200,RangeValue=112)
+    MechanicalRanges(12)=(Range=1300,RangeValue=121)
+    MechanicalRanges(13)=(Range=1400,RangeValue=132)
+    MechanicalRanges(14)=(Range=1500,RangeValue=141)
+    MechanicalRanges(15)=(Range=1600,RangeValue=152)
+    MechanicalRanges(16)=(Range=1700,RangeValue=161)
+    MechanicalRanges(17)=(Range=1800,RangeValue=172)
+    MechanicalRanges(18)=(Range=1900,RangeValue=184)
+    MechanicalRanges(19)=(Range=2000,RangeValue=193)
