@@ -1499,6 +1499,8 @@ function ServerChangeDriverPosition(byte F)
 // or a tank crew position he can't use, including in an armored vehicle that he's locked out of (although shouldn't be an issue as he's already in the driver position)
 simulated function bool CanSwitchToVehiclePosition(byte F)
 {
+    local VehicleWeaponPawn VWP;
+
     F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
 
     // Can't switch if player has selected an invalid weapon pawn position
@@ -1514,12 +1516,14 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         return false;
     }
 
+    VWP = WeaponPawns[F];
+
     // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
     // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
     // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
-    if (WeaponPawns[F] != none)
+    if (VWP != none)
     {
-        if (WeaponPawns[F].IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WeaponPawns[F]).bMustBeTankCrew)
+        if (VWP.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(VWP).bMustBeTankCrew)
         {
             // Can't switch if player has selected a tank crew position but isn't a tank crew role
             if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
@@ -1539,7 +1543,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
 
         // Can't switch if new vehicle position already has a human occupant
         // bDriving check is there to also catch 'LeaveBody' debug pawns, which won't have a PRI, stopping player switching into same position as one
-        if (WeaponPawns[F].bDriving && !(WeaponPawns[F].PlayerReplicationInfo != none && WeaponPawns[F].PlayerReplicationInfo.bBot))
+        if (VWP.bDriving && !(VWP.PlayerReplicationInfo != none && VWP.PlayerReplicationInfo.bBot))
         {
             return false;
         }

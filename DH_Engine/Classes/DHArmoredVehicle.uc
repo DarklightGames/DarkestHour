@@ -38,6 +38,7 @@ struct NewHitpoint
 
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
+var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
@@ -187,6 +188,27 @@ simulated function PostNetReceive()
     {
         SetEngineFireEffects();
     }
+}
+
+simulated function bool IsUnbuttoned()
+{
+    return DriverPositionIndex >= UnbuttonedPositionIndex && !IsInState('ViewTransition');
+}
+
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    if (!super.CanSwitchToVehiclePosition(F))
+    {
+        return false;
+    }
+
+    if (bMustBeUnbuttonedToChangePositions && !IsUnbuttoned())
+    {
+        DisplayVehicleMessage(30,, true);
+        return false;
+    }
+
+    return true;
 }
 
 // Modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer

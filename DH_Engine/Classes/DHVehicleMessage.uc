@@ -32,6 +32,7 @@ var localized string OtherCrewmanCanLockVehicle;
 // Other
 var localized string UnbuttonToReload;
 var localized string VehicleScuttleInitiated;
+var localized string UnbuttonHatchToChangePosition;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -108,6 +109,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 29:
             S = default.VehicleScuttleInitiated;
             break;
+        case 30:
+            S = default.UnbuttonHatchToChangePosition;
+            break;
         default:
             break;
     }
@@ -130,6 +134,7 @@ defaultproperties
     NoRiderPositions="Cannot ride on this vehicle"
     VehicleBurning="Vehicle is on fire!"
     OpenHatchToExit="You must unbutton the hatch [%NEXTWEAPON%] to exit"
+    UnbuttonHatchToChangePosition="You must unbutton the hatch [%NEXTWEAPON%] to change position"
     ExitCommandersHatch="You must exit through commander's hatch"
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
