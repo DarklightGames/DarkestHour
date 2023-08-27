@@ -8,6 +8,7 @@ class DHITAAntiTankRoles extends DHAxisAntiTankRoles
 
 defaultproperties
 {
+    AltName="Anticarro Fuciliere"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Wz35Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon') // TODO: Beretta M934
     Grenades(0)=(Item=class'DH_Weapons.DH_LTypeGrenadeWeapon')
