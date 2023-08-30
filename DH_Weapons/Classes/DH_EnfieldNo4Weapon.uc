@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // TODO:
-// - [ ] Fix finger clipping on sprint animations.
-// - [ ] Clean-up old assets.
+// - Clean-up old assets.
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 
@@ -36,5 +35,5 @@ defaultproperties
     SingleReloadAnim="reload_single"
     StripperReloadAnim="reload_stripper"
 
-    WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="cocker",Animation="cocker") 
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="cocker",Animation="cocker")
 }
