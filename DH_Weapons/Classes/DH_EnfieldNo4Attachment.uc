@@ -7,7 +7,7 @@ class DH_EnfieldNo4Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_3rd'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_3rd.EnfieldNo4_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
@@ -15,20 +15,34 @@ defaultproperties
     ShellEjectionBoneName="ejector"
     bRapidFire=false
 
-    WA_Idle="idle_enfieldno4"
-    WA_Fire="idle_enfieldno4"
-    WA_Reload="idle_enfieldno4"
-    WA_ProneReload="idle_enfieldno4"
-    WA_BayonetIdle="idle_enfieldno4_bayo"
-    WA_BayonetFire="idle_enfieldno4_bayo"
-    WA_BayonetReload="idle_enfieldno4_bayo"
-    WA_BayonetProneReload="idle_enfieldno4_bayo"
-    WA_BayonetAttach="idle_enfieldno4"
-    WA_BayonetDetach="idle_enfieldno4_bayo"
-    WA_BayonetAttachProne="idle_enfieldno4"
-    WA_BayonetDetachProne="idle_enfieldno4_bayo"
-    WA_WorkBolt="idle_enfieldno4"
-    WA_BayonetWorkBolt="idle_enfieldno4_bayo"
+    WA_Idle="idle_enfield"
+    WA_Fire="idle_enfield"
+    WA_WorkBolt="bolt_enfield"
+    WA_BayonetIdle="idle_enfield_bayo"
+    WA_BayonetFire="idle_enfield_bayo"
+    WA_BayonetWorkBolt="bolt_enfield_bayo"
+
+    // Bayonet attachment
+    WA_BayonetAttach="bayattach_enfield"
+    WA_BayonetDetach="bayremove_enfield"
+    WA_BayonetAttachProne="prone_bayattach_enfield"
+    WA_BayonetDetachProne="prone_bayremove_enfield"
+
+    // Reload empty
+    WA_ReloadEmpty="reload_enfield"
+    WA_ProneReloadEmpty="prone_reload_enfield"
+    WA_BayonetReloadEmpty="reload_enfield_bayo"
+    WA_BayonetProneReloadEmpty="prone_reload_enfield_bayo"
+
+    // Reload single
+    WA_PreReload="open_enfield"
+    WA_Reload="insert_enfield"
+    WA_ProneReload="insert_enfield"
+    WA_PostReload="close_enfield"
+    WA_BayonetPreReload="open_enfield_bayo"
+    WA_BayonetReload="insert_enfield_bayo"
+    WA_BayonetProneReload="insert_enfield_bayo"
+    WA_BayonetPostReload="close_enfield_bayo"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -106,10 +120,10 @@ defaultproperties
     PA_PronePostReloadAnim="prone_close_karscope"
 
     PA_ProneIdleRestAnim="prone_idle_kar"
-    PA_BayonetAttachAnim="stand_bayattach_kar"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
-    PA_BayonetDetachAnim="stand_bayremove_kar"
-    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
+    PA_BayonetAttachAnim="stand_bayattach_svt40"
+    PA_ProneBayonetAttachAnim="prone_Bayattach_svt40"
+    PA_BayonetDetachAnim="stand_bayremove_svt40"
+    PA_ProneBayonetDetachAnim="prone_Bayremove_svt40"
     PA_CrouchIronBoltActionAnim="crouch_bolt_kar"
     PA_Fire="stand_shoothip_kar"
     PA_IronFire="stand_shootiron_kar"
