@@ -2,8 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// TODO:
-// - Clean-up old assets.
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 
