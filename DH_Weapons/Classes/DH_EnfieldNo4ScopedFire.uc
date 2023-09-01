@@ -20,10 +20,10 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     FireAnim="shoot_last"
     FireIronAnim="Scope_shoot"
+    ShellIronSightOffset=(X=12.0,Y=2.0,Z=-3.0)
     ShellRotOffsetIron=(Pitch=8000)
     ShellRotOffsetHip=(Pitch=-8000)
     ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
     ShakeRotTime=5.0
     AimError=500.0
-    ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
 }
