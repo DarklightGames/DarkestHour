@@ -2,9 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// TODO:
-// - Add notifies to scope animations.
-// - Fix hands clipping through scope on bolting animations.
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 
