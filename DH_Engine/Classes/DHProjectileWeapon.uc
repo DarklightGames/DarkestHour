@@ -3660,6 +3660,18 @@ exec simulated function DebugAddedPitch(int AddedPitch)
     }
 }
 
+exec simulated function DebugAddedYaw(int AddedYaw)
+{
+    // Added to debug the distance zeroing.
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (DHProjectileFire(FireMode[0]) != none)
+        {
+            DHProjectileFire(FireMode[0]).AddedYaw = AddedYaw;
+        }
+    }
+}
+
 defaultproperties
 {
     Priority=9
