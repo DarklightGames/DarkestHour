@@ -54,7 +54,7 @@ defaultproperties
 
     PreReloadHalfAnim="reload_start_cocked"
     PreReloadAnim="reload_start"
-    PostReloadAnim="scope_reload_end"
+    PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="cocker",Animation="cocker")
