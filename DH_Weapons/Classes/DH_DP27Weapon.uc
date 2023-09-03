@@ -5,8 +5,6 @@
 
 class DH_DP27Weapon extends DHFastAutoWeapon;
 
-var name MagRotationBone;
-
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
 {
@@ -25,45 +23,6 @@ simulated function ROIronSights()
     Deploy();
 }
 
-//=============================================================================
-// Magazine Rotation
-// 
-// The DP-27 magazine rotates as rounds are expended from it.
-//
-// The DH_DP27Fire class explicitly calls UpdateMagRotation when a shot is
-// fired to accomplish this.
-//
-// The magazine rotation also needs to be updated in other places, such as
-// reload animations and when the gun is first brought up.
-//=============================================================================
-
-// Called from animation notifys to reset the mag rotation during a reload.
-simulated event UpdateMagRotationMidReload()
-{
-    SetMagRotation(float(NextMagAmmoCount) / MaxAmmo(0));
-}
-
-// Updated the magazine rotation based on the number of rounds remaining in the magazine.
-simulated function UpdateMagRotation()
-{
-    SetMagRotation(float(AmmoAmount(0)) / MaxAmmo(0));
-}
-
-// Sets the rotation of the magazine as a percentage of a full rotation (i.e., 0..1)
-simulated function SetMagRotation(float Theta)
-{
-    local Rotator R;
-
-    // We only want the magazine to spin around most of the way, not a full 360.
-    Theta = class'UInterp'.static.Lerp(Theta, 1.0 / MaxAmmo(0), 1.0);
-    R.Yaw = Class'UUnits'.static.RadiansToUnreal(Theta * Pi * 2);
-
-    if (MagRotationBone != '')
-    {
-        SetBoneRotation(MagRotationBone, R);
-    }
-}
-
 // Modified to update the magazine rotation.
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -77,8 +36,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
         {
             SetBoneScale(0, 0.0, 'Round');
         }
-
-        UpdateMagRotation();
     }
 }
 
@@ -146,5 +103,5 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="putaway_empty"
 
-    MagRotationBone="MagRotation"
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_MagazineAmmunition,Channel=2,Animation="DP27MagRotation",BoneName="MagRotation")
 }

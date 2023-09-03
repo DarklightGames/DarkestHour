@@ -3464,6 +3464,17 @@ simulated private function float GetWeaponComponentAnimationTheta(EWeaponCompone
     }
 }
 
+// Animation notify hook to call when the magazine is being swapped off-screen during a reload.
+// This sets the weapon component to have the correct amount of rounds for the incoming magazine.
+simulated event UpdateMagazineAmmunitionMidReload()
+{
+    local float Theta;
+
+    Theta = float(NextMagAmmoCount) / MaxAmmo(0);
+
+    UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(DRIVER_MagazineAmmunition, Theta);
+}
+
 simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
 {
     local int i;
