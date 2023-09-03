@@ -76,6 +76,9 @@ var()       name        PutDownEmptyAnim;           // animation for putting awa
 // Manual bolting anims
 var()       name        BoltHipAnim;                // animation for bolting after hip firing
 var()       name        BoltIronAnim;               // animation for bolting while in ironsight view
+var()       name        BoltHipLastAnim;            // animation for bolting after hip firing when there is only one round left in the magazine
+var()       name        BoltIronLastAnim;           // animatwion for bolting while in ironsight view when there is only one round left in the magazine
+
 var()       name        PostFireIdleAnim;           // animation after hip firing
 var()       name        PostFireIronIdleAnim;       // animation after firing while in ironsight view
 

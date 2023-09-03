@@ -112,7 +112,10 @@ simulated state WorkingBolt extends WeaponBusy
         {
             GetAnimParams(0, Anim, Frame, Rate);
 
-            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
+            if (Anim == BoltIronAnim || 
+                Anim == BoltHipAnim ||
+                Anim == BoltIronLastAnim ||
+                Anim == BoltHipLastAnim)
             {
                 bWaitingToBolt = false;
             }
@@ -132,11 +135,25 @@ simulated state WorkingBolt extends WeaponBusy
                 PlayerViewZoom(false);
             }
 
-            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
+            if (HasAnim(BoltIronLastAnim) && AmmoAmount(0) == 1)
+            {
+                PlayAnimAndSetTimer(BoltIronLastAnim, 1.0, 0.1);
+            }
+            else
+            {
+                PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
+            }
         }
         else
         {
-            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
+            if (HasAnim(BoltHipLastAnim) && AmmoAmount(0) == 1)
+            {
+                PlayAnimAndSetTimer(BoltHipLastAnim, 1.0, 0.1);
+            }
+            else
+            {
+                PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
+            }
         }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
