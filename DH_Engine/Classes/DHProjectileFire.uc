@@ -16,6 +16,7 @@ struct WhizInfo
 var     int             ProjPerFire;                 // how many projectiles are spawned each fire (normally 1)
 var     vector          ProjSpawnOffset;             // positional offset to spawn projectile
 var     vector          FAProjSpawnOffset;           // positional offset to spawn projectile for free-aim mode
+var     int             AddedYaw;                    // additional yaw to add to firing calculations (added as the scoped enfield seemed to fire to the left)
 var     int             AddedPitch;                  // additional pitch to add to firing calculations (primarily used for rocket launchers)
 var     bool            bUsePreLaunchTrace;          // use pre-projectile spawn trace to see if we hit anything close before launching projectile (saves CPU and net usage)
 var     float           PreLaunchTraceDistance;      // length of a pre-launch trace, in Unreal units (calculated automatically, based on bullet's maximum speed)
@@ -254,8 +255,9 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     local Actor              Other;
     local vector             HitLocation, HitNormal;
 
-    // Do any additional pitch changes before launching the projectile
+    // Do any additional pitch/yaw changes before launching the projectile
     Dir.Pitch += AddedPitch;
+    Dir.Yaw += AddedYaw;
 
     // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here
     if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))

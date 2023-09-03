@@ -5,24 +5,6 @@
 
 class DH_DP27LateFire extends DHFastAutoFire;
 
-// Modified to rotate the magazine after a shot.
-event ModeDoFire()
-{
-    local DH_DP27Weapon W;
-
-    super.ModeDoFire();
-
-    if (Instigator.IsLocallyControlled())
-    {
-        W = DH_DP27Weapon(Weapon);
-
-        if (W != none)
-        {
-            W.UpdateMagRotation();
-        }
-    }
-}
-
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_DP27Bullet'

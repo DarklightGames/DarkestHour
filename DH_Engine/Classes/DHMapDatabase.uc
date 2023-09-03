@@ -305,7 +305,7 @@ defaultproperties
     MapInfos(131)=(Name="DH-Armored_Mickistein_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(132)=(Name="DH-Armored_Preaux_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Any)
     MapInfos(133)=(Name="DH-Armored_Raid_to_Bastogne_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
-    MapInfos(134)=(Name="DH-Armored_Road_to_Leningrad_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Any)
+    MapInfos(134)=(Name="DH-Armored_Iskra_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(135)=(Name="DH-Armored_Suedwind_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(136)=(Name="DH-Armored_Tank_Clash_At_Bastogne_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(137)=(Name="DH-Armored_Tractable_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Any)
@@ -334,8 +334,10 @@ defaultproperties
     MapInfos(160)=(Name="DH-Endsieg_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(161)=(Name="DH-Armored_La_Feuillie_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(162)=(Name="DH-Maupertus_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
-    MapInfos(163)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
-    MapInfos(164)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
-    MapInfos(165)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
-    MapInfos(166)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
+    MapInfos(163)=(Name="DH-Jurques_Dusk_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(164)=(Name="DH-Br�moy_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(165)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
+    MapInfos(166)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
+    MapInfos(167)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
+    MapInfos(168)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
 }

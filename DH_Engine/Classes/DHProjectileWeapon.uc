@@ -76,6 +76,9 @@ var()       name        PutDownEmptyAnim;           // animation for putting awa
 // Manual bolting anims
 var()       name        BoltHipAnim;                // animation for bolting after hip firing
 var()       name        BoltIronAnim;               // animation for bolting while in ironsight view
+var()       name        BoltHipLastAnim;            // animation for bolting after hip firing when there is only one round left in the magazine
+var()       name        BoltIronLastAnim;           // animatwion for bolting while in ironsight view when there is only one round left in the magazine
+
 var()       name        PostFireIdleAnim;           // animation after hip firing
 var()       name        PostFireIronIdleAnim;       // animation after firing while in ironsight view
 
@@ -3465,6 +3468,17 @@ simulated private function float GetWeaponComponentAnimationTheta(EWeaponCompone
     }
 }
 
+// Animation notify hook to call when the magazine is being swapped off-screen during a reload.
+// This sets the weapon component to have the correct amount of rounds for the incoming magazine.
+simulated event UpdateMagazineAmmunitionMidReload()
+{
+    local float Theta;
+
+    Theta = float(NextMagAmmoCount) / MaxAmmo(0);
+
+    UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(DRIVER_MagazineAmmunition, Theta);
+}
+
 simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
 {
     local int i;
@@ -3657,6 +3671,18 @@ exec simulated function DebugAddedPitch(int AddedPitch)
         if (DHProjectileFire(FireMode[0]) != none)
         {
             DHProjectileFire(FireMode[0]).AddedPitch = AddedPitch;
+        }
+    }
+}
+
+exec simulated function DebugAddedYaw(int AddedYaw)
+{
+    // Added to debug the distance zeroing.
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (DHProjectileFire(FireMode[0]) != none)
+        {
+            DHProjectileFire(FireMode[0]).AddedYaw = AddedYaw;
         }
     }
 }
