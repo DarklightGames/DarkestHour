@@ -40,4 +40,7 @@ defaultproperties
     FullReloadAnim="reload"
     SingleReloadAnim="reload_half_middle"
     PostReloadAnim="reload_half_end"
+
+    BoltHipLastAnim="bolt_clipfall"
+    BoltIronLastAnim="iron_bolt_clipfall"
 }
