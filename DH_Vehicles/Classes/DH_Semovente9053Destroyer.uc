@@ -2,10 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Armor thicknesses and angles (WOLFkraut)
+// [ ] Add positional offset to turret angle calculations to fix hit detection issues
 // [ ] Shell attachments updating when rounds are fired/reloaded
-// [ ] Maybe make the radio silent? Might be irritating to hear it all the time in the vehicle
 // [ ] Check radio attachment in MP
+// [ ] UI textures for shells
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -13,8 +13,8 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Semovente da 90/53"
-    VehicleMass=11.0 // 
-    ReinforcementCost=4 // ?
+    VehicleMass=11.0
+    ReinforcementCost=4
 
     ShadowZOffset=60.0
 
