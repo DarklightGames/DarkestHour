@@ -11,6 +11,21 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Semovente9053_anm.semovente9053_turret_ext'
     Skins(0)=Texture'DH_Semovente9053_tex.semovente9053_turret_ext'
 
+    // Turret armor
+    FrontArmorFactor=3.0
+    RightArmorFactor=1.5
+    LeftArmorFactor=1.5
+    RearArmorFactor=0.0
+    FrontArmorSlope=29.0
+    RightArmorSlope=0.0
+    LeftArmorSlope=0.0
+    RearArmorSlope=0.0
+
+    FrontLeftAngle=270.0
+    FrontRightAngle=90.0
+    RearRightAngle=132.0
+    RearLeftAngle=228.0
+
     // Cannon movement
     bHasTurret=true
     ManualRotationsPerSecond=0.033

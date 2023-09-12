@@ -40,25 +40,24 @@ defaultproperties
     DriveAnim="semo9053_driver_close_idle"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=1.5,Slope=-72.0,MaxRelativeHeight=-25.5,LocationName="lower nose") // measured most of the slopes in the hull mesh
-    FrontArmor(1)=(Thickness=5.0,Slope=-16.0,MaxRelativeHeight=-2.0,LocationName="nose")
-    FrontArmor(2)=(Thickness=1.5,Slope=68.0,MaxRelativeHeight=29.0,LocationName="glacis")
-    FrontArmor(3)=(Thickness=1.0,Slope=30.0,LocationName="superstructure")
-    RightArmor(0)=(Thickness=1.5,MaxRelativeHeight=5.0,LocationName="lower")
-    RightArmor(1)=(Thickness=1.0,MaxRelativeHeight=29.0,LocationName="lower super")
-    RightArmor(2)=(Thickness=1.0,Slope=15.0,LocationName="superstructure")
-    LeftArmor(0)=(Thickness=1.5,MaxRelativeHeight=5.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=1.0,MaxRelativeHeight=29.0,LocationName="lower super")
-    LeftArmor(2)=(Thickness=1.0,Slope=15.0,LocationName="superstructure")
-    RearArmor(0)=(Thickness=1.5,Slope=-37.0,MaxRelativeHeight=4.8,LocationName="lower")
-    RearArmor(1)=(Thickness=1.0,Slope=8.0,MaxRelativeHeight=29.0,LocationName="lower super")
-    RearArmor(2)=(Thickness=1.0,Slope=17.0,LocationName="superstructure")
+    FrontArmor(0)=(Thickness=3.0,Slope=-41.0,MaxRelativeHeight=40.5,LocationName="lower nose") // measured most of the slopes in the hull mesh
+    FrontArmor(1)=(Thickness=3.0,Slope=13.0,MaxRelativeHeight=56,LocationName="nose")
+    FrontArmor(2)=(Thickness=3.0,Slope=36.0,MaxRelativeHeight=62.9,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=2.5,Slope=80.0,MaxRelativeHeight=69.7,LocationName="transmision cover")
+    FrontArmor(4)=(Thickness=3.0,Slope=68.0,MaxRelativeHeight=73.5,LocationName="driver plate lower")
+    FrontArmor(5)=(Thickness=3.0,Slope=19.0,MaxRelativeHeight=80.9,LocationName="driver plate upper")
+    FrontArmor(6)=(Thickness=1.5,Slope=81.0,LocationName="driver roof")
+    RightArmor(0)=(Thickness=2.5,MaxRelativeHeight=81.0,LocationName="right side")
+    RightArmor(1)=(Thickness=1.5,Slope=75.0,LocationName="right side upper")
+    LeftArmor(0)=(Thickness=2.5,MaxRelativeHeight=81.0,LocationName="left side")
+    LeftArmor(1)=(Thickness=1.5,Slope=75.0,LocationName="left side upper")
+    RearArmor(0)=(Thickness=2.5,Slope=-16.0,LocationName="rear")
 
     // What a fucking terrible system.
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=150.0
-    RearLeftAngle=210.0
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=152.0
+    RearLeftAngle=208.0
 
     // Movement
     MaxCriticalSpeed=729.0 // 43 kph
