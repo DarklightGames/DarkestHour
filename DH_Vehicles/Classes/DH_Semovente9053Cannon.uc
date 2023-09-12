@@ -44,11 +44,11 @@ defaultproperties
     nProjectileDescriptions(0)="Granata Perforante da 90"
     nProjectileDescriptions(1)="Granata da 90"
 
-    InitialPrimaryAmmo=8
-    InitialSecondaryAmmo=1
+    InitialPrimaryAmmo=7
+    InitialSecondaryAmmo=2
 
-    MaxPrimaryAmmo=8
-    MaxSecondaryAmmo=1
+    MaxPrimaryAmmo=7
+    MaxSecondaryAmmo=2
     SecondarySpread=0.00127
 
     // Weapon fire
