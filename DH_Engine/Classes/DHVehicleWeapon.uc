@@ -36,6 +36,8 @@ struct VehicleAttachment
     var name            AttachBone;
     var Vector          RelativeLocation;
     var Rotator         RelativeRotation;
+    var float           RadioCollisionRadius;
+    var float           RadioCollisionHeight;
     // TODO: have flag for whether this is server-only or client-only
 };
 var array<VehicleAttachment> VehicleAttachments;
@@ -152,6 +154,19 @@ simulated function SpawnVehicleAttachments()
         {
             Radio = DHRadio(VA.Actor);
             Radio.TeamIndex = ROVehicle(Base).default.VehicleTeam;
+            Radio.SoundVolume = 64;
+
+            if (VA.RadioCollisionRadius == 0.0)
+            {
+                VA.RadioCollisionRadius = class'DHRadio'.default.CollisionRadius;
+            }
+
+            if (VA.RadioCollisionHeight == 0.0)
+            {
+                VA.RadioCollisionHeight = class'DHRadio'.default.CollisionHeight;
+            }
+            
+            Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
         }
 
         if (VA.StaticMesh != none)
