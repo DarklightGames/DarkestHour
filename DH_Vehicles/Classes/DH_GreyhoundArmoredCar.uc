@@ -121,6 +121,8 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
 
+    ShadowZOffset=30.0
+
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
