@@ -96,8 +96,6 @@ defaultproperties
     ShootAnim="shoot"
     ShootAnimBoneName="BARREL"
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_turret_collision')
-
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
     GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
     GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
@@ -113,4 +111,7 @@ defaultproperties
 
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_Italy.rf1ca_radio',RelativeLocation=(X=-42.1971,Y=-54.814,Z=37.2554),RelativeRotation=(Yaw=-16384))
     VehicleAttachments(1)=(AttachClass=class'DH_Engine.DHRadio',RelativeLocation=(X=-42.1971,Y=-54.814,Z=37.2554))
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_turret_collision')
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_gun_collision',AttachBone="GUN_PITCH")
 }

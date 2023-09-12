@@ -2,7 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [~] Re-import character anims for driver (waiting for shotgun anims)
 // [ ] Armor thicknesses and angles (WOLFkraut)
 // [ ] Shell attachments updating when rounds are fired/reloaded
 // [ ] Maybe make the radio silent? Might be irritating to hear it all the time in the vehicle
