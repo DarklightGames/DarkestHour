@@ -190,6 +190,7 @@ function HandleRoot(DHWebRequest Request, DHWebResponse Response)
 function HandleServer(DHWebRequest Request, DHWebResponse Response)
 {
     local DHGameReplicationInfo GRI;
+    local JSONObject Payload;
 
     switch (Request.HTTPMethod)
     {
@@ -206,10 +207,10 @@ function HandleServer(DHWebRequest Request, DHWebResponse Response)
 
             Payload = (new class'JSONObject')
                       .PutString("server_name", GRI.ServerName)
-                      .PutString("max_players", GRI.MaxPlayers)
-                      .PutString("players", PRIArray.Length)
-                      .PutString("tick", GRI.ServerTickHealth)
-                      .PutString("loss", GRI.ServerNetHealth);
+                      .PutInteger("max_players", GRI.MaxPlayers)
+                      .PutInteger("players", GRI.PRIArray.Length)
+                      .PutInteger("tick", GRI.ServerTickHealth)
+                      .PutInteger("loss", GRI.ServerNetHealth);
 
             Response.SendStandardHeaders("application/json");
             Response.SendText(Payload.Encode());
