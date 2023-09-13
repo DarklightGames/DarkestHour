@@ -2742,7 +2742,7 @@ function ServerCutConstruction(DHConstruction C)
 // Keep this function as it's used as a control to show communication page allowing fast muting of players
 exec function CommunicationMenu()
 {
-    ClientReplaceMenu("ROInterface.ROCommunicationPage");
+    ClientReplaceMenu("DH_Interface.DHCommunicationPage");
 }
 
 // This function returns the time the player will be able to spawn next
@@ -7302,6 +7302,12 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
 
         if (ROP != none)
         {
+            // Sender is banned by recipient
+            if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
+            {
+                continue;
+            }
+
             if (Pawn != none)
             {
                 // do we want people who are dead to hear voice commands? - Antarian
@@ -7374,6 +7380,36 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
         if (Pawn != none)
         {
             AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 3, Pawn.location);
+        }
+    }
+}
+
+function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
+                                 PlayerReplicationInfo Recipient,
+                                 name MessageType,
+                                 byte MessageID,
+                                 name BroadcastType)
+{
+    local ROPlayer ROP,P;
+    local int i;
+    local array<PlayerController> VehicleOccupants;
+
+    P = ROPlayer(Sender.Owner);
+    VehicleOccupants = GetVehicleOccupants(P);
+
+    for (i = 0; i < VehicleOccupants.Length; ++i)
+    {
+        ROP =  ROPlayer(VehicleOccupants[i]);
+
+        // Sender is banned by recipient
+        if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
+        {
+            continue;
+        }
+
+        if (ROP != None)
+        {
+            ROP.ClientLocationalVoiceMessage(Sender, Recipient, Messagetype, MessageID, Pawn);
         }
     }
 }
