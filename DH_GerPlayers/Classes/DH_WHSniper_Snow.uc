@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_WHSniper_Snow extends DHGESniperRoles;
@@ -12,4 +12,5 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetSnow'
     HeadgearProbabilities(0)=1.0
+    HandType=Hand_Gloved
 }

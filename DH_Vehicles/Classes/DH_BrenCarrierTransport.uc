@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_BrenCarrierTransport extends DHVehicle;
+class DH_BrenCarrierTransport extends DHArmoredVehicle;
 
 simulated event DestroyAppearance()
 {
@@ -30,8 +30,12 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=3
     MaxDesireability=1.2
+    MinRunOverSpeed=350 //Lighter vehicle so slightly higher min speed than other APCs
+    PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
@@ -39,7 +43,7 @@ defaultproperties
     Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
-    HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="driver_hatch_idle_close"
@@ -78,22 +82,31 @@ defaultproperties
     WheelLatFrictionScale=3.0
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
-    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=0.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=27.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=15.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-83.0,Y=0.0,Z=30.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore)
-    DirectHEImpactDamageMult=8.0
+    Health=500.0
+    HealthMax=500.0
+    DamagedEffectHealthFireFactor=0.1
+    EngineHealth=150.0
+    EngineDamageFromGrenadeModifier=0.05
+    DirectHEImpactDamageMult=4.0
+    ImpactWorldDamageMult=2.0
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="body",PointOffset=(X=-5.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="body",PointOffset=(X=-45.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine)
+    VehHitpoints(2)=(PointRadius=12.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // Fuel tank
     TreadHitMaxHeight=7.0
-    DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
+    DamagedEffectScale=0.70
+    DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=true
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireAttachBone="passenger_l_2"
+    FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
+    FireDetonationChance=0.05
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
+
 
     // Vehicle destruction
     ExplosionDamage=85.0

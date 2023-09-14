@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIVF1Cannon extends DHVehicleCannon;
@@ -11,9 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panzer4F1_anm.Panzer4F1_turret_ext'
     skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
     skins(1)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll')
 
-    //DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    //DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
 
     // Turret armor
     FrontArmorFactor=5.0
@@ -38,7 +38,6 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVF1CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVF1CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVF1CannonShellHEAT'
     TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
@@ -65,7 +64,7 @@ defaultproperties
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=8
-    AltFireInterval=0.07059
+    AltFireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 
@@ -78,7 +77,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')

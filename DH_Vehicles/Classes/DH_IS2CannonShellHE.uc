@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_IS2CannonShellHE extends DHCannonShellHE;
@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=2.35
 
     //Damage
-    ImpactDamage=2400  //3.6 KG TNT, destroys anything that gets penetrated  by it 
+    ImpactDamage=2400  //3.6 KG TNT, destroys anything that gets penetrated  by it
     Damage=1500.0
     DamageRadius=2000.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 122mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)

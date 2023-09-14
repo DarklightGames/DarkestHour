@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTab_Controls extends ROTab_Controls;
@@ -17,7 +17,7 @@ struct CPCmds
     var array<string> Cmds;
 };
 
-enum CategoryIDs
+enum ECategoryIDs
 {
     CID_Movement,
     CID_Looking,
@@ -150,7 +150,7 @@ function LoadCommands()
 }
 
 // Function which replaces "AddBindings" in ROTab_Controls
-function AddControlBindings(string Section_Title, int Num_Elements, CategoryIDs Category_ID)
+function AddControlBindings(string Section_Title, int Num_Elements, ECategoryIDs Category_ID)
 {
     local int i;
     local string BindStr, CaptionStr;
@@ -286,10 +286,12 @@ defaultproperties
     Captions_Game(4)="Lock/Unlock Armored Vehicle"
     Bindings_Game(5)="ShowOrderMenu | OnRelease HideOrderMenu"
     Captions_Game(5)="Squad Orders Menu"
-    Bindings_Game(6)="SquadJoinAuto"
-    Captions_Game(6)="Auto-Join Squad"
-    Bindings_Game(7)="PlaceRallyPoint"
-    Captions_Game(7)="Place Rally Point"
+    Bindings_Game(6)="SquadMenu"
+    Captions_Game(6)="Squad Menu"
+    Bindings_Game(7)="SquadJoinAuto"
+    Captions_Game(7)="Auto-Join Squad"
+    Bindings_Game(8)="PlaceRallyPoint"
+    Captions_Game(8)="Place Rally Point"
 
     // Additional movement keybinds
     Bindings_Movement(12)="ToggleRun"
@@ -306,6 +308,8 @@ defaultproperties
     Captions_Weapons(12)="Increase Vehicle Smoke Launcher Range/Rotation Setting"
     Bindings_Weapons(13)="DecreaseSmokeLauncherSetting"
     Captions_Weapons(13)="Decrease Vehicle Smoke Launcher Range/Rotation Setting"
+    Bindings_Weapons(14)="ToggleSelectedArtilleryTarget"
+    Captions_Weapons(14)="Toggle Selected Artillery Target"
 
     // Overriden & Additional Communications keybinds
     Bindings_Comm(3)="SquadTalk"
@@ -326,6 +330,8 @@ defaultproperties
     Captions_Comm(10)="Switch to Squad Voice Channel"
     Bindings_Comm(11)="StartTyping"
     Captions_Comm(11)="Start typing a chat message"
+    Bindings_Comm(12)="CommunicationMenu"
+    Captions_Comm(12)="Mute Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'

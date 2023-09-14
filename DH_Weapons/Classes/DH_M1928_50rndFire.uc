@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M1928_50rndFire extends DHFastAutoFire;
@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_ThompsonBullet'
     AmmoClass=class'DH_Weapons.DH_M1928_50rndAmmo'
-    FireRate=0.073 // ~800rpm
+    FireRate=0.085 // ~800rpm (value had to be found experimentally due to an engine bug)
     Spread=140.0
 
     // Recoil
@@ -29,7 +29,7 @@ defaultproperties
     //PreFireAnim="Shoot1_start"
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
-    
+
     FireIronEndAnim="iron_shoot_end"
     FireIronLastAnim="iron_idle_empty"
     FireLastAnim="shoot_end_empty"

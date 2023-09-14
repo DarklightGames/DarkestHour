@@ -1,14 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMortarVehicle extends ROVehicle
+class DHMortarVehicle extends DHVehicle
     abstract;
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
 var     bool        bCanBeResupplied; // flags that the mortar doesn't have full ammo & so can receive passed ammo
-var     TreeMap_string_Object NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 replication
 {
@@ -231,4 +230,7 @@ defaultproperties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
     End Object
     KParams=KarmaParamsRBFull'KParams0'
+
+    bShouldDrawPositionDots=false
+    bShouldDrawOccupantList=false
 }

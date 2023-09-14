@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHThrownExplosiveFire extends DHProjectileFire
@@ -14,6 +14,7 @@ var     float   SpeedFromHoldingPerSec; // speed increase projectile will have f
 var     float   AddedFuseTime;          // additional fuse time to add to compensate for the pin pull animation
 var     bool    bPullAnimCompensation;  // add time to the fuse time to compensate for the pin pull animation
 var     bool    bIsSmokeGrenade;        // is a smoke grenade, which will not harm the thrower
+var     float   MinHoldTime;            // require weapon to be primed for a certain time before throwing
 
 // Modified to allow player to throw explosive while prone transitioning (removes restriction in Super)
 simulated function bool AllowFire()
@@ -33,6 +34,19 @@ simulated function bool AllowFire()
 // And to stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
 event ModeDoFire()
 {
+    if (HoldTime < MinHoldTime)
+    {
+        HoldTime = 0.0;
+
+        if (Weapon != none)
+        {
+            Weapon.PutDown();
+            Weapon.PostFire();
+        }
+
+        return;
+    }
+
     // Stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
     // Happens because that forces the fire button to be released, which triggers this event
     // TODO: clean this up & perhaps find a better place to do this, it's just a quick fix with some problems (Matt, Jan 2017)

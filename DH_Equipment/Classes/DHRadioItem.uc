@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRadioItem extends DHWeapon;
@@ -19,7 +19,7 @@ simulated event StopFire(int Mode) {return;}
 simulated function bool IsFiring(){return false;}
 function bool FillAmmo(){return false;}
 function bool ResupplyAmmo(){return false;}
-simulated exec function ROManualReload() {return;}
+exec simulated function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;} // not busy in the idle state because we never fire
 simulated function bool ShouldUseFreeAim() {return false;}
 
@@ -42,6 +42,7 @@ simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perha
 simulated function PostBeginPlay()
 {
     local DHPawn P;
+    local DHPlayer PC;
 
     P = DHPawn(Instigator);
 
@@ -51,6 +52,17 @@ simulated function PostBeginPlay()
     }
 
     super.PostBeginPlay();
+
+    if (P != none)
+    {
+        PC = DHPlayer(P.Controller);
+
+        if (PC != none && PC.IsRadioman())
+        {
+            // "You are a radio operator! Stay close to squad leaders so they can call in artillery strikes!"
+            PC.QueueHint(13, false);
+        }
+    }
 }
 
 function AttachToPawn(Pawn P)

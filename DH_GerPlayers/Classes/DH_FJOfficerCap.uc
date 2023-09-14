@@ -1,17 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_FJOfficercap extends DHHeadgear;
 
 // Current cap doesn't fit new FJ model, so this is temporarily displaying as a grey helmet instead
-
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_FJ_crashcap');
-//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1');
-}
 
 defaultproperties
 {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstructionSupplyAttachment extends Actor
@@ -15,7 +15,7 @@ var int                 SupplyCountMax;
 var private int         TeamIndex;
 var bool                bIsMainSupplyCache;
 
-var private localized string   HumanReadableName;
+var localized private string   HumanReadableName;
 
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
@@ -45,6 +45,7 @@ var bool                bIsAttachedToVehicle;
 //==============================================================================
 // Supply Generation
 //==============================================================================
+var bool                bIsInDangerZone;                    // Whether or not this supply attachment is in the danger zone.
 var bool                bCanGenerateSupplies;               // Whether or not this supply attachment is able to generate supplies.
 var int                 SupplyDepositInterval;              // The amount of seconds before generated supplies are deposited into the supply count.
 var int                 SupplyDepositCounter;               // The next time that generated supplies will be deposited.
@@ -65,6 +66,11 @@ replication
 
 // This delegate will be called whenever the SupplyCount changes.
 delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
+
+function bool IsGeneratingSupplies()
+{
+    return bCanGenerateSupplies && !IsFull() && (bIsMainSupplyCache || !bIsInDangerZone);
+}
 
 // Overridden to bypass bizarre logic that necessitated the Owner be a Pawn.
 simulated function PostBeginPlay()
@@ -133,33 +139,13 @@ simulated function float GetSupplyCount()
 
 static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 {
-    //local float SupplyPercent;
-    //local int StaticMeshIndex;
     local DH_LevelInfo LI;
 
-    //SupplyPercent = (float(SupplyCount) / SupplyCountMax);
-    //StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        return StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full';
-    }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-        if (LI != none)
-        {
-            switch (LI.AlliedNation)
-            {
-                case NATION_USA:
-                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
-                case NATION_Britain:
-                case NATION_Canada:
-                case NATION_USSR:
-                case NATION_Poland:
-                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
-            }
-        }
+    if (LI != none)
+    {
+        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheStaticMesh;
     }
 
     return none;
@@ -217,6 +203,11 @@ function Destroyed()
     super.Destroyed();
 }
 
+function bool IsTouchingActor(Actor A)
+{
+    return A != none && VSize(Location - A.Location) <= class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters);
+}
+
 function Timer()
 {
     local Pawn Pawn;
@@ -227,6 +218,11 @@ function Timer()
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        bIsInDangerZone = GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
+    }
 
     if (GRI != none && SupplyPointIndex != -1)
     {
@@ -290,7 +286,7 @@ function Timer()
 
     TouchingPawns = NewTouchingPawns;
 
-    if (bCanGenerateSupplies)
+    if (IsGeneratingSupplies())
     {
         ++SupplyDepositCounter;
 

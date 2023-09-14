@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ShermanCannonA_76mm extends DHVehicleCannon;
@@ -25,7 +25,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext' // TODO: merge this material slot for the pistol port into main turret material & re-map to 76mm turret texture
     Skins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
     WeaponAttachOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_76mm_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_76mm_Coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -49,7 +49,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'

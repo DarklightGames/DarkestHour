@@ -1,12 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GMCTruckSupport_Snow extends DH_GMCTruckSupport;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC_snow'
-    DestroyedMeshSkins(0)=combiner'DH_Allied_MilitarySM.American.GMC_snow_dest'
+    Skins(0)=Texture'DH_GMC_tex.GMC.GMC_USOD_Snow'
+    Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas_Snow'
+    DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_USOD_Snow_Destroyed'
+    DestroyedMeshSkins(1)=Shader'DH_GMC_tex.GMC.GMC_Canvas_Destroyed'
 }
+

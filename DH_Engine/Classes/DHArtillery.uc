@@ -1,22 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHArtillery extends Actor
     abstract
-    notplaceable;
+    notplaceable
+    dependson(DHGameReplicationInfo);
 
-var protected localized string  MenuName;
+var DHGameReplicationInfo.EArtilleryType              ArtilleryType;
+
+var localized protected string  MenuName;
 var Material                    MenuIcon;
-
-var Material                    MapIcon;
-var IntBox                      MapIconTextureCoords;
 
 var protected int               TeamIndex;
 var PlayerController            Requester;
 
 var bool                        bCanBeCancelled;
+var int                         RequiredSquadMemberCount;
+
+var class<DHMapMarker> ActiveArtilleryMarkerClass;
 
 replication
 {
@@ -30,6 +33,14 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // Set the team index based on the team of the authoring player.
+        Requester = PlayerController(Owner);
+
+        if (Requester != none)
+        {
+            SetTeamIndex(Requester.GetTeamNum());
+        }
+
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
         if (GRI != none)
@@ -38,6 +49,11 @@ function PostBeginPlay()
         }
     }
 }
+
+// Returns whether or not this artillery has actually started.
+// An artilley strike that hasn't been started yet can be cancelled without
+// decrementing the total number of strikes available.
+function bool HasStarted() { return true; }
 
 function Reset()
 {
@@ -49,32 +65,20 @@ static function string GetMenuName()
     return default.MenuName;
 }
 
-// Returns true if the specified player is able to request this class of artillery.
-static function bool CanBeRequestedBy(DHPlayer PC)
+// Check if the specified player has an appropriate role to request this artillery
+static function bool HasQualificationToRequest(DHPlayer PC)
+{
+    return PC != none && PC.IsArtillerySpotter();
+}
+
+// Check the player has enough members in his squad to request this artillery
+static function bool HasEnoughSquadMembersToRequest(DHPlayer PC)
 {
     local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo RI;
-
-    if (PC == none)
-    {
-        return false;
-    }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (PRI == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-
-    if (RI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    
+    return PRI != none && PRI.HasSquadMembers(default.RequiredSquadMemberCount);
 }
 
 // These override function are meant to facilitate gathering the limit and
@@ -107,18 +111,20 @@ function SetTeamIndex(int TeamIndex)
     }
 }
 
+simulated function bool IsParadrop()
+{
+    return false;
+}
+
 defaultproperties
 {
     DrawType=DT_None
     RemoteRole=ROLE_SimulatedProxy
-    MenuName="Artillery Barrage"
+    MenuName="Long-Range Artillery"
     bAlwaysRelevant=true
 
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Artillery'
 
-    MapIcon=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
-    MapIconTextureCoords=(X1=0,Y1=64,X2=63,Y2=127)
-
     bCanBeCancelled=true
+    RequiredSquadMemberCount=3
 }
-

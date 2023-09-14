@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_T3476Tank extends DHArmoredVehicle;
@@ -79,8 +79,8 @@ defaultproperties
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3476_Destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=215.0,Y=-14.0,Z=50.0)  // driver

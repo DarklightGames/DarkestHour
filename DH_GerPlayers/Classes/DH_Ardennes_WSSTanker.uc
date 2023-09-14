@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Ardennes_WSSTanker extends DHGETankCrewmanRoles;
@@ -12,7 +12,7 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
     Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
-	
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M712Weapon')
 
     SecondaryWeapons(0)=(Item=none)

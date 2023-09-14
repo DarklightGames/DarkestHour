@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BARNoBipodAttachment extends DHWeaponAttachment;
@@ -21,7 +21,7 @@ defaultproperties
     WA_ReloadEmpty="reloadhalf_svt40" //bolt is on the other side, so better not use empty reload animation
     WA_ProneReload="prone_reloadhalf_svt40"
     WA_ProneReloadEmpty="prone_reloadhalf_svt40"
-    
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"

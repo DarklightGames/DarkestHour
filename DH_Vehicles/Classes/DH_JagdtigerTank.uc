@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_JagdtigerTank extends DHArmoredVehicle;
@@ -57,7 +57,7 @@ defaultproperties
     GearRatios(4)=0.67
     TransRatio=0.07
     SteerSpeed=50.0
-	
+
 	EngineRestartFailChance=0.5 //unreliability and extreme weight
 
     // Damage
@@ -70,7 +70,7 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     TurretDetonationThreshold=1300.0 // reduced from 1750 (this vehicle is turretless though? i am not sure how this works so put it here just in case)
-	
+
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-150.0,Z=-20.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

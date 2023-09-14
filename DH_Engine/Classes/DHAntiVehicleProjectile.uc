@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHAntiVehicleProjectile extends DHBallisticProjectile
@@ -92,6 +92,9 @@ var float   EngineFireChance;
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
 var     float           DampenFactor;               // the smaller the number, the less the projectile will move after deflection
 var     float           DampenFactorParallel;
+var     bool            bDeflectAOI;                // when true, round can be deflected if AOI is too steep (see DeflectAOI)
+var     float           DeflectAOI;                 // if the round impacts armor with >= this angle of incidence, it will deflect
+var     bool            bRoundDeflected;            // set to true when the round deflects
 
 // Impact sounds
 var     sound           VehicleHitSound;            // sound of this shell penetrating a vehicle
@@ -217,17 +220,17 @@ simulated function float GetMaxPenetration(vector LaunchLocation, vector HitLoca
 
     DistanceMeters = class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
 
-    if      (DistanceMeters < 100.0)   MaxPenetration = (DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
-    else if (DistanceMeters < 250.0)   MaxPenetration = (DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
-    else if (DistanceMeters < 500.0)   MaxPenetration = (DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
-    else if (DistanceMeters < 750.0)   MaxPenetration = (DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
-    else if (DistanceMeters < 1000.0)  MaxPenetration = (DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
-    else if (DistanceMeters < 1250.0)  MaxPenetration = (DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
-    else if (DistanceMeters < 1500.0)  MaxPenetration = (DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
-    else if (DistanceMeters < 1750.0)  MaxPenetration = (DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
-    else if (DistanceMeters < 2000.0)  MaxPenetration = (DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
-    else if (DistanceMeters < 2500.0)  MaxPenetration = (DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
-    else if (DistanceMeters < 3000.0)  MaxPenetration = (DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
+    if      (DistanceMeters < 100.0)   MaxPenetration = DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0;
+    else if (DistanceMeters < 250.0)   MaxPenetration = DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0;
+    else if (DistanceMeters < 500.0)   MaxPenetration = DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0;
+    else if (DistanceMeters < 750.0)   MaxPenetration = DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0;
+    else if (DistanceMeters < 1000.0)  MaxPenetration = DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0;
+    else if (DistanceMeters < 1250.0)  MaxPenetration = DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0;
+    else if (DistanceMeters < 1500.0)  MaxPenetration = DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0;
+    else if (DistanceMeters < 1750.0)  MaxPenetration = DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0;
+    else if (DistanceMeters < 2000.0)  MaxPenetration = DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0;
+    else if (DistanceMeters < 2500.0)  MaxPenetration = DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0;
+    else if (DistanceMeters < 3000.0)  MaxPenetration = DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0;
     else                               MaxPenetration =  DHPenetrationTable[10];
 
     if (NumDeflections > 0)
@@ -830,7 +833,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
     }
     // Round explodes on vehicle armor
     // TODO: just a note that this does the same as calling SpawnExplosionEffects() except this plays VehicleDeflectSound/ShellDeflectEffectClass instead of VehicleHitSound/ShellHitVehicleEffectClass
-    else if (bExplodesOnArmor)
+    else if (bExplodesOnArmor && !bRoundDeflected)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -1130,7 +1133,7 @@ simulated function HandleShellDebug(vector RealHitLocation)
     {
         ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
         Log("Shell drop =" @ class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
-            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
+            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z @ "Distance=" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - RealHitLocation)) $ "m");
     }
 }
 
@@ -1162,9 +1165,6 @@ defaultproperties
 
     TracerHue=45
     TracerSaturation=128
-
-    HullFireChance=0.0
-    EngineFireChance=0.0
 
     // From deprecated ROAntiVehicleProjectile class:
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'

@@ -1,10 +1,10 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class UCore extends Object;
 
-static final function Swap(out Object A, out Object B)
+final static function Swap(out Object A, out Object B)
 {
     local Object T;
 
@@ -13,7 +13,7 @@ static final function Swap(out Object A, out Object B)
     B = T;
 }
 
-static final function ISwap(out int A, out int B)
+final static function ISwap(out int A, out int B)
 {
     local int T;
 
@@ -22,7 +22,7 @@ static final function ISwap(out int A, out int B)
     B = T;
 }
 
-static final function FSwap(out float A, out float B)
+final static function FSwap(out float A, out float B)
 {
     local float T;
 
@@ -31,14 +31,14 @@ static final function FSwap(out float A, out float B)
     B = T;
 }
 
-static final function VSwap(out vector A, out vector B)
+final static function VSwap(out vector A, out vector B)
 {
     FSwap(A.X, B.X);
     FSwap(A.Y, B.Y);
     FSwap(A.Z, B.Z);
 }
 
-static final function SSwap(out string A, out string B)
+final static function SSwap(out string A, out string B)
 {
     local string T;
 
@@ -47,17 +47,17 @@ static final function SSwap(out string A, out string B)
     B = T;
 }
 
-static final function vector VReflect(vector V, vector N)
+final static function vector VReflect(vector V, vector N)
 {
     return V - (N * 2.0 * (V dot N));
 }
 
-static final function vector VHalf(vector A, vector B)
+final static function vector VHalf(vector A, vector B)
 {
     return (A + B) / VSize(A + B);
 }
 
-static final function vector VClamp(vector V, vector A, vector B)
+final static function vector VClamp(vector V, vector A, vector B)
 {
     local vector R;
 
@@ -68,7 +68,7 @@ static final function vector VClamp(vector V, vector A, vector B)
     return R;
 }
 
-static final function vector VClampSize(vector V, float Min, float Max)
+final static function vector VClampSize(vector V, float Min, float Max)
 {
     // Avoid divide-by-zero error.
     if (V == vect(0, 0, 0))

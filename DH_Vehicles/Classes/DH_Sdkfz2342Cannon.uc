@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Sdkfz2342Cannon extends DHVehicleCannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -33,7 +33,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
 

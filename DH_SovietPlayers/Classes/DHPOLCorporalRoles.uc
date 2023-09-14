@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPOLCorporalRoles extends DHAlliedCorporalRoles
@@ -14,4 +14,5 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHPolishVoice"
     AltVoiceType="DH_SovietPlayers.DHPolishVoice"
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

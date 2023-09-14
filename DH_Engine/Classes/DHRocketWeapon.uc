@@ -1,25 +1,34 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHRocketWeapon extends DHSemiAutoWeapon
+class DHRocketWeapon extends DHProjectileWeapon
     abstract;
 
+// Range Settings
 struct RangeSetting
 {
     var int  FirePitch;
     var name IronIdleAnim;
-    var name FireIronAnim;
+    var name IronFireAnim;
+    var name BipodIdleAnim;
+    var name BipodFireAnim;
+    var name AssistedReloadAnim;
 };
 
 var     array<RangeSetting>     RangeSettings;                // array of different range settings, with firing pitch angle & idle animation
 var     int                     RangeIndex;                   // current range setting
+
+// Assisted Reload
 var     bool                    bCanHaveAsssistedReload;      // another friendly player can provide an assisted reload, which is much quicker //COMPAREPIAT added
-var     name                    AssistedMagEmptyReloadAnim;   // 1st person animation for assisted empty reload
-var     name                    AssistedMagPartialReloadAnim; // 1st person animation for assisted partial reload
+
+
+// Rocket Attachment
 var     class<ROFPAmmoRound>    RocketAttachmentClass;
 var     ROFPAmmoRound           RocketAttachment;             // the attached first person ammo round
+var     name                    RocketBone;
+
 var     class<LocalMessage>     WarningMessageClass;
 
 replication
@@ -33,12 +42,20 @@ replication
         ClientDoAssistedReload;
 }
 
-// Overridden to cycle the weapon aiming range
-simulated exec function Deploy()
+exec simulated function DebugAssistReloading()
 {
-    if (bUsingSights && !IsBusy())
+    if (Level.NetMode == NM_Standalone)
     {
-        RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeds last range setting
+        AssistedReload();
+    }
+}
+
+// Overridden to cycle the weapon aiming range
+exec simulated function SwitchFireMode()
+{
+    if (!IsBusy() && (bUsingSights || IsInstigatorBipodDeployed()))
+    {
+        RangeIndex = ++RangeIndex % RangeSettings.Length; // loops back to 0 when exceeding last range setting
 
         if (InstigatorIsLocallyControlled())
         {
@@ -50,13 +67,37 @@ simulated exec function Deploy()
 // Modified to play the weapon iron animations for different ranges
 simulated function PlayIdle()
 {
-    if (bUsingSights && HasAnim(RangeSettings[RangeIndex].IronIdleAnim))
+    if (IsInstigatorBipodDeployed())
     {
-        LoopAnim(RangeSettings[RangeIndex].IronIdleAnim, IdleAnimRate, 0.2);
+        if (HasAnim(RangeSettings[RangeIndex].BipodIdleAnim))
+        {
+            LoopAnim(RangeSettings[RangeIndex].BipodIdleAnim, IdleAnimRate, 0.2);
+        }
+    }
+    else if (bUsingSights)
+    {
+        if (HasAnim(RangeSettings[RangeIndex].IronIdleAnim))
+        {
+            LoopAnim(RangeSettings[RangeIndex].IronIdleAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+        }
     }
     else if (HasAnim(IdleAnim))
     {
         LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+    }
+}
+
+// HACK: Remove this once we move range setting to DHProjectileWeapon.
+// This just ensures that the right idle animation is played at the end of a bipodded reload.
+simulated state ReloadingBipod
+{
+    simulated function PlayIdle()
+    {
+        global.PlayIdle();
     }
 }
 
@@ -139,43 +180,32 @@ simulated function NotifyOwnerJumped()
 }
 
 // New function to spawn any RocketAttachment actor (note this may get called by a reload animation notify, so the timing is spot on, e.g. PIAT)
-simulated function SpawnRocketAttachment()
+simulated event SpawnRocketAttachment()
 {
     local vector ProjectileLocation;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        ProjectileLocation = GetBoneCoords(MuzzleBone).Origin;
+        if (RocketBone == '')
+        {
+            Log("SpawnRocketAttachment failed, RocketBone not set");
+            return;
+        }
+
+        ProjectileLocation = GetBoneCoords(RocketBone).Origin;
         RocketAttachment = Spawn(RocketAttachmentClass, self,, ProjectileLocation);
-        AttachToBone(RocketAttachment, MuzzleBone);
+        AttachToBone(RocketAttachment, RocketBone);
     }
 }
 
-// New function to check if weapon can fire
-// Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
-simulated function bool CanFire(optional bool bShowFailureMessage)
+simulated function bool ReadyToFire(int Mode)
 {
-    if (InstigatorIsLocallyControlled() && !bUsingSights)
+    if (!CanFire())
     {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
-        }
-
         return false;
     }
 
-    if (VSize(Instigator.Velocity) > 0 || (Instigator.Base != none && VSize(Instigator.Base.Velocity) > 0))
-    {
-        if (bShowFailureMessage && InstigatorIsHumanControlled())
-        {
-            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 7,,, self); // must be stationary to fire
-        }
-
-        return false;
-    }
-
-    return true;
+    return super.ReadyToFire(Mode);
 }
 
 // Modified to check CanFire() & to set firing pitch based on current range setting
@@ -185,7 +215,7 @@ simulated function Fire(float F)
     {
         if (IsLoaded() && DHProjectileFire(FireMode[0]) != none)
         {
-            if (bUsingSights)
+            if (IsSighted())
             {
                 ServerSetFirePitch(RangeSettings[RangeIndex].FirePitch);
             }
@@ -197,6 +227,21 @@ simulated function Fire(float F)
 
         super.Fire(F);
     }
+}
+
+simulated function bool CanFire(optional bool bShowFailureMessage)
+{
+    if (InstigatorIsLocallyControlled() && !(bUsingSights || Instigator.bBipodDeployed))
+    {
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
+        {
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 // Switch the weapon aiming range on the server
@@ -211,6 +256,8 @@ function ServerSetFirePitch(int AddedPitch)
 // Modified to update the player's reload & resupply status, & to destroy any RocketAttachment
 simulated function PostFire()
 {
+    local DHRocketWeaponAttachment RWA;
+
     if (Role == ROLE_Authority)
     {
         if (PrimaryAmmoArray.Length > 0)
@@ -219,6 +266,13 @@ simulated function PostFire()
         }
 
         UpdateResupplyStatus(true);
+
+        RWA = DHRocketWeaponAttachment(ThirdPersonActor);
+
+        if (RWA != none)
+        {
+            RWA.bOutOfAmmo = true; // IMPORTANT TODO: Don't just assume that we're out of ammo after firing. Check the ammo count!
+        }
     }
 
     if (RocketAttachment != none)
@@ -236,7 +290,12 @@ simulated function OutOfAmmo()
 // Modified to prevent reloading if player is prone (with message) or if weapon is not empty
 simulated function bool AllowReload()
 {
-    if (Instigator != none && Instigator.bIsCrawling)
+    if (!super.AllowReload())
+    {
+        return false;
+    }
+
+    if (Instigator != none && Instigator.bIsCrawling && !Instigator.bBipodDeployed)
     {
         if (Instigator.IsHumanControlled())
         {
@@ -252,7 +311,7 @@ simulated function bool AllowReload()
     }
 }
 
-// Modified to prevent proning while reloading & to make 3rd person WeaponAttachment switch back to normal mesh if was the EmptyMesh
+// Modified to prevent proning while reloading
 simulated state Reloading
 {
     simulated function BeginState()
@@ -268,23 +327,6 @@ simulated state Reloading
     simulated function bool WeaponAllowProneChange()
     {
         return false;
-    }
-
-    simulated function EndState()
-    {
-        local DHRocketWeaponAttachment WA;
-
-        super.EndState();
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            WA = DHRocketWeaponAttachment(ThirdPersonActor);
-
-            if (WA != none && WA.Mesh == WA.EmptyMesh)
-            {
-                WA.LinkMesh(WA.default.Mesh);
-            }
-        }
     }
 }
 
@@ -310,14 +352,20 @@ simulated state AssistedReloading extends Reloading
             UpdateResupplyStatus(true);
         }
 
-        if (IsLoaded())
-        {
-            PlayAnimAndSetTimer(AssistedMagPartialReloadAnim, 1.0, 0.1);
-        }
-        else
-        {
-            PlayAnimAndSetTimer(AssistedMagEmptyReloadAnim, 1.0, 0.1);
-        }
+        PlayAnimAndSetTimer(RangeSettings[RangeIndex].AssistedReloadAnim, 1.0, 0.1);
+    }
+    
+    // HACK: Just play the idle anims as normal.
+    simulated function PlayIdle()
+    {
+        global.PlayIdle();
+    }
+
+    simulated function bool ShouldDrawPortal()
+    {
+        // The sight won't be moving that much, so just draw the portal.
+        // Looks weird otherwise!
+        return true;
     }
 
 // Emptied to avoid taking player out of ironsights when someone else is loading them
@@ -477,6 +525,46 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     bHurtEntry = false;
 }
 
+simulated function QueueFiringRangeHint()
+{
+    local DHPlayer PC;
+
+    if (InstigatorIsLocallyControlled())
+    {
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none)
+        {
+            // Hint about changing firing range.
+            PC.QueueHint(60, true);
+        }
+    }
+}
+
+// Modified to hint about the changing firing range.
+// Remove this once that functionality is moved to the superclass.
+simulated state IronSightZoomIn
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        QueueFiringRangeHint();
+    }
+}
+
+// Modified to hint about the changing firing range.
+// Remove this once that functionality is moved to the superclass.
+simulated state DeployingBipod
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        QueueFiringRangeHint();
+    }
+}
+
 defaultproperties
 {
     InventoryGroup=5
@@ -484,7 +572,7 @@ defaultproperties
     WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
 
     IronSightDisplayFOV=25.0
-    FreeAimRotationSpeed=7.5
+    FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=2
     InitialNumPrimaryMags=2
@@ -494,8 +582,6 @@ defaultproperties
 
     MagEmptyReloadAnims(0)="Reloads"
     MagPartialReloadAnims(0)="Reloads"
-    AssistedMagEmptyReloadAnim="reloadA"
-    AssistedMagPartialReloadAnim="reloadA"
     PutDownAnim="putaway"
     IronIdleAnim=""
 

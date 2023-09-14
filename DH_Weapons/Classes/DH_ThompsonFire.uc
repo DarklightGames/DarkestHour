@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ThompsonFire extends DHAutomaticFire;
@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_ThompsonBullet'
     AmmoClass=class'DH_Weapons.DH_ThompsonAmmo'
-    FireRate=0.092307 // 650rpm
+    FireRate=0.1 // ~662 rpm (value had to be found experimentally due to an engine bug)
     Spread=140.0
 
     // Recoil

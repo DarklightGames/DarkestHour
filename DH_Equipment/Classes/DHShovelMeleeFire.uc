@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHShovelMeleeFire extends DHMeleeFire;
@@ -33,7 +33,10 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 defaultproperties
 {
     DamageType=class'DH_Equipment.DHShovelBashDamageType'
+    DamageMin=50
+    DamageMax=90
     TraceRange=95.0
+    FireRate=0.21
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"
     BashAnim="bash_attack"

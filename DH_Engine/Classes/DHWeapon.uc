@@ -1,10 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeapon extends ROWeapon
     abstract;
+
+var     string  NativeItemName;                 // The designation name used by the nation that created it (not translated to English)
 
 var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
                                                 // Default: 2 which is neutral and allows anyone to reupply it
@@ -29,6 +31,15 @@ var     float           BobModifyFactor;
 // for a first time.
 var()   name            FirstSelectAnim;
 var     bool            bHasBeenDrawn;
+
+var     float           ResupplyInterval;
+var     int             LastResupplyTimestamp;
+
+// For some absolutely fucked reason, RO sets their sprint animation rates at 1.5x by default.
+// We allow ourselves the ability to override this nonsense.
+var     float           SprintEndAnimRate;
+var     float           SprintStartAnimRate;
+var     float           SprintLoopAnimRate;
 
 replication
 {
@@ -415,11 +426,14 @@ function bool HandlePickupQuery(Pickup Item)
 // Modified so resupply point gradually replenishes ammo (no full resupply in one go)
 function bool FillAmmo()
 {
-    if (AmmoAmount(0) < MaxAmmo(0))
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        AddAmmo(1, 0);
-
-        return true;
+        if (AmmoAmount(0) < MaxAmmo(0))
+        {
+            AddAmmo(1, 0);
+            LastResupplyTimestamp = Level.TimeSeconds;
+            return true;
+        }
     }
 
     return false;
@@ -457,8 +471,17 @@ simulated state PostFiring
 
 simulated state RaisingWeapon
 {
-Begin:
-    bHasBeenDrawn = true;
+    simulated function bool IsBusy()
+    {
+        return Mesh != none && HasAnim(FirstSelectAnim) && !bHasBeenDrawn;
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
@@ -829,6 +852,30 @@ exec function SetMuzzleOffset(int X, int Y, int Z)
     }
 }
 
+// Function for setting the offset of the 3rd person weapon's muzzle location.
+exec function SetMuzzleFlashOffset(int X, int Y, int Z)
+{
+    local DHWeaponAttachment WA;
+    local Vector MuzzleFlashOffset;
+
+    WA = DHWeaponAttachment(ThirdPersonActor);
+
+    if (WA == none)
+    {
+        Log("SetTipOffset: ThirdPersonActor is not a DHWeaponAttachment");
+        return;
+    }
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        MuzzleFlashOffset.X = X;
+        MuzzleFlashOffset.Y = Y;
+        MuzzleFlashOffset.Z = Z;
+
+        WA.mMuzFlash3rd.SetRelativeLocation(MuzzleFlashOffset);
+    }
+}
+
 // New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
 exec function ToggleHDO()
 {
@@ -963,7 +1010,7 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
-simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+exec simulated function SetPlayerViewOffset(int X, int Y, int Z)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -1006,21 +1053,8 @@ simulated function HandleSleeveSwapping()
 
     if (RI != none)
     {
-        if (RI.static.GetSleeveTexture() == none)
-        {
-            Warn("Sleeve texture for role info" @ RI @ "is not set!");
-        }
-
         RoleSleeveTexture = RI.static.GetSleeveTexture();
-
-        /*
-        if (RI.static.GetHandTexture() == none)
-        {
-            Warn("Hand texture for role info" @ RI @ "is not set!");
-        }
-        */
-
-        RoleHandTexture = RI.static.GetHandTexture();
+        RoleHandTexture = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
     }
 
     if (RoleSleeveTexture != none && SleeveNum >= 0)
@@ -1047,7 +1081,7 @@ simulated function HandleSleeveSwapping()
 defaultproperties
 {
     // Sway modifiers
-    SwayModifyFactor=0.8
+    SwayModifyFactor=0.7
     SwayNotMovingModifier=0.5
     SwayRestingModifier=0.25
     SwayCrouchedModifier=0.9
@@ -1073,4 +1107,10 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=true
 
     bUsesIronsightFOV=true
+
+    ResupplyInterval=2.5
+
+    SprintStartAnimRate=1.5
+    SprintEndAnimRate=1.5
+    SprintLoopAnimRate=1.5
 }

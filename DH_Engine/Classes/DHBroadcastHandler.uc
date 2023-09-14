@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBroadcastHandler extends ROBroadcastHandler;
@@ -100,7 +100,7 @@ event AllowBroadcastLocalized(
             RI = DHRoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
 
             // Only show these messages to people involved with the mortars
-            if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || P.IsInArtilleryVehicle()))
+            if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bCanUseMortars || P.IsInArtilleryVehicle()))
             {
                 switch (Switch)
                 {
@@ -323,8 +323,4 @@ function LogMessage(PlayerController Sender, string Msg, coerce string Type)
     {
         G.Metrics.OnTextMessage(Sender, Type, Msg);
     }
-}
-
-defaultproperties
-{
 }

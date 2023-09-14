@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GLAttachment extends DHThrowableExplosiveAttachment;
@@ -11,6 +11,4 @@ defaultproperties
    Skins(0)=Texture'Weapons3rd_tex.German.Stielhandgranate'
 
    MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.Geballt'
-   WA_Idle="idle_gl"
-   WA_Fire="idle_gl"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
@@ -8,13 +8,14 @@ class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="F1 Grenade"
+    NativeItemName="F1 Granata"
     FireModeClass(0)=class'DH_Weapons.DH_F1GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_F1GrenadePickup'
 
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.f1grenade_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.f1grenade_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

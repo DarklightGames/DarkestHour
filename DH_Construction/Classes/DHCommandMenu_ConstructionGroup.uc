@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroup extends DHCommandMenu
@@ -13,6 +13,8 @@ var Material SuppliesIcon;
 var localized string NotAvailableText;
 var localized string TeamLimitText;
 var localized string BusyText;
+var localized string ExhaustedText;
+var localized string RemainingText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHActorProxy.Context Context;
@@ -58,7 +60,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPawn P;
     local DH_ConstructionWeapon CW;
@@ -143,7 +145,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHConstruction> ConstructionClass;
     local DHConstruction.ConstructionError E;
     local DHPlayer PC;
-    local int SquadMemberCount;
+    local int SquadMemberCount, Remaining;
+    local DHGameReplicationInfo GRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
@@ -153,6 +156,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     if (ConstructionClass != none && PC != none)
     {
         E = ConstructionClass.static.GetPlayerError(Context);
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
         ORI.OptionName = ConstructionClass.static.GetMenuName(Context);
 
@@ -170,15 +174,23 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             case ERROR_RestrictedType:
             case ERROR_Fatal:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.NotAvailableText;
+                ORI.InfoText[0] = default.NotAvailableText;
                 break;
             case ERROR_PlayerBusy:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.BusyText;
+                ORI.InfoText[0] = default.BusyText;
                 break;
             case ERROR_TeamLimit:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText = default.TeamLimitText;
+                ORI.InfoText[0] = default.TeamLimitText;
+                break;
+            case ERROR_Exhausted:
+                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoText[0] = default.ExhaustedText;
+                if (E.OptionalInteger >= 0)
+                {
+                    ORI.InfoText[0] @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
+                }
                 break;
             case ERROR_SquadTooSmall:
                 if (PC != none && PC.SquadReplicationInfo != none)
@@ -187,15 +199,26 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 }
 
                 ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-                ORI.InfoText = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
+                ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
                 break;
             default:
                 ORI.InfoIcon = SuppliesIcon;
-                ORI.InfoText = string(ConstructionClass.static.GetSupplyCost(Context));
+                ORI.InfoText[0] = string(ConstructionClass.static.GetSupplyCost(Context));
                 break;
         }
 
         ORI.DescriptionText = ConstructionClass.default.MenuDescription;
+
+        if (GRI != none && ORI.DescriptionText == "")
+        {
+            Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
+
+            // GetTeamConstructionRemaining returns -1 if it can't find anything
+            if (Remaining != -1)
+            {
+                ORI.DescriptionText = string(Remaining) @ default.RemainingText;
+            }
+        }
     }
 }
 
@@ -212,6 +235,8 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
+    ExhaustedText="Exhausted"
+    RemainingText="Remaining"
     BusyText="Busy"
     SlotCountOverride=8
 }

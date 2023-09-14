@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_TriggerArrayActor extends DH_LevelActors;
@@ -28,6 +28,4 @@ function Reset()
     bFired = false; //Because round reset, bFired should be set back to false
 }
 
-defaultproperties
-{
-}
+

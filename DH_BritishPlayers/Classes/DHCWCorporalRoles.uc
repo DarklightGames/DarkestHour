@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCWCorporalRoles extends DHAlliedCorporalRoles
@@ -13,6 +13,7 @@ defaultproperties
     PluralName="Lance Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')
 
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')

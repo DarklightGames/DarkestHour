@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_12thSSAntiTank extends DHGEAntiTankRoles;
@@ -14,4 +14,6 @@ defaultproperties
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Camo"
 }

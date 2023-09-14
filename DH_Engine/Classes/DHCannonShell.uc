@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -16,6 +16,8 @@ var()   bool                bMechanicalAiming;    // uses the mechanical range s
 var()   array<RangePoint>   MechanicalRanges;     // the range setting values for tank cannons that do mechanical pitch adjustments for aiming
 var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
 var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
+
+var()   class<DHMapMarker_ArtilleryHit>  HitMapMarkerClass;
 
 simulated function PostBeginPlay()
 {
@@ -134,6 +136,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             bDidExplosionFX = true;
         }
 
+        if (Role == ROLE_Authority && HitMapMarkerClass != none)
+        {
+            SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
+        }
+
         if (bDebugBallistics)
         {
             HandleShellDebug(HitLocation); // simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
@@ -206,6 +213,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             case EST_Rock:
             case EST_Gravel:
             case EST_Concrete:
+            case EST_Custom03:  //Brick
                 HitSound = RockHitSound;
                 HitEmitterClass = ShellHitRockEffectClass;
                 bShowDecal = true;
@@ -262,7 +270,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
         if (ActualLocationAdjustment != 0.0)
         {
-            HitLocation -= (ActualLocationAdjustment * HitNormal);
+            HitLocation -= ActualLocationAdjustment * HitNormal;
         }
 
         if (bSnowDecal && ExplosionDecalSnow != none)

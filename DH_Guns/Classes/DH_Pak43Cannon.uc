@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Pak43Cannon extends DHATGunCannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret'
     Skins(0)=Texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_turret_coll')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -23,17 +23,16 @@ defaultproperties
     CustomPitchDownLimit=64350
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak43CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39/43"
     nProjectileDescriptions(1)="Sprgr.Patr."
 
-    InitialPrimaryAmmo=8
-    InitialSecondaryAmmo=4
-    MaxPrimaryAmmo=50
-    MaxSecondaryAmmo=42
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=15
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00135
 
     // Weapon fire
@@ -74,4 +73,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
+
+    ResupplyInterval=12.0
 }

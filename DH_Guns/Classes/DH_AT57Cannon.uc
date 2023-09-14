@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_AT57Cannon extends DHATGunCannon;
@@ -14,7 +14,7 @@ defaultproperties
     Skins(0)=Texture'DH_Artillery_Tex.6pounder.6pounder'
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides 6 pounder's muzzle brake
     Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.6pounder.6pounder_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.6pounder.6pounder_turret_coll')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -26,7 +26,6 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
 
@@ -35,8 +34,8 @@ defaultproperties
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=25
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=15
     SecondarySpread=0.00125
 
     // Weapon fire
@@ -51,4 +50,6 @@ defaultproperties
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
+
+    ResupplyInterval=3.0
 }

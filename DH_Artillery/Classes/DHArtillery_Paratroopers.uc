@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHArtillery_Paratroopers extends DHArtillery;
@@ -9,8 +9,6 @@ var DHSpawnPointBase SpawnPoint;
 
 simulated function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
     if (Role == ROLE_Authority)
     {
         SpawnPoint = Spawn(class'DHSpawnPoint_Parachute', self);
@@ -23,6 +21,8 @@ simulated function PostBeginPlay()
 
         SpawnPoint.SetIsActive(true);
     }
+
+    super.PostBeginPlay();
 }
 
 function OnTeamIndexChanged()
@@ -45,11 +45,16 @@ event Destroyed()
     }
 }
 
+simulated function bool IsParadrop()
+{
+    return true;
+}
+
 defaultproperties
 {
     MenuName="Paratroopers"
     MenuIcon=Material'DH_InterfaceArt2_tex.Icons.paratroopers'
     LifeSpan=90
-    MapIcon=none
+    ArtilleryType=ArtyType_Paradrop
 }
 

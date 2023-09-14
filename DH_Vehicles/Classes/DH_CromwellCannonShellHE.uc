@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_CromwellCannonShellHE extends DHCannonShellHE;
@@ -21,7 +21,7 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     HullFireChance=0.8
     EngineFireChance=0.8
-	
+
 
     //Penetration
     DHPenetrationTable(0)=3.3

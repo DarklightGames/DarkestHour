@@ -1,20 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_G43ScopedWeapon extends DHSniperWeapon;
 
 defaultproperties
 {
-    ItemName="Gewehr 43"
+    ItemName="G 43 (ZF4)"
+    NativeItemName="Gewehr 43 (ZF4)"
     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_G43ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
 
     Mesh=SkeletalMesh'DH_G43_1st.g43_scoped_mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.g43_sniper_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -23,11 +24,11 @@ defaultproperties
     //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
 
     DisplayFOV=83.0
-    IronSightDisplayFOV=44.1
-    IronSightDisplayFOVHigh=44.1
+    IronSightDisplayFOV=45.5
+    IronSightDisplayFOVHigh=45.5
     PlayerFOVZoom=15.0
-    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
-    ScopePortalFOVHigh=5.4
+    ScopePortalFOV=5.7  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.7
     LensMaterialID=4
 
     PlayerIronsightFOV=60.0
@@ -36,7 +37,7 @@ defaultproperties
     InitialNumPrimaryMags=8
 
     ScopeOverlaySize=0.32
-    
+
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="scope_idle_empty"
     IronBringUpEmpty="scope_in_empty"

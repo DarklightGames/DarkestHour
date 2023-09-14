@@ -1,9 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHAmmoResupplyVolume extends Volume;
+class DHAmmoResupplyVolume extends Volume
+  dependson(DHResupplyStrategy);
 
 enum EOwningTeam
 {
@@ -12,26 +13,22 @@ enum EOwningTeam
     OWNER_Neutral,
 };
 
-enum EResupplyType
-{
-    RT_Players,
-    RT_Vehicles,
-    RT_All,
-    RT_Mortars
-};
-
-var()   EOwningTeam     Team;                    // team this volume resupplies
-var()   bool            bUsesSpawnAreas;         // is activated/deactivated based on a spawn area associated with a tag
-var()   EResupplyType   ResupplyType;            // who this volume will resupply
+var()   EOwningTeam                       Team;                    // team this volume resupplies
+var()   bool                              bUsesSpawnAreas;         // is activated/deactivated based on a spawn area associated with a tag
+var()   DHResupplyStrategy.EResupplyType  ResupplyType;            // who this volume will resupply
 
 var     float           UpdateTime;              // how often this thing needs to do it's business
 var     bool            bActive;                 // whether this ammo resupply volume is active
 var     bool            bControlledBySpawnPoint; // flags that this resupply is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
+var     DHResupplyStrategy ResupplyStrategy;
+
 // Modified so doesn't activate if controlled by a DH spawn point, as well as if linked to an RO spawn area
 function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    ResupplyStrategy = new class'DHResupplyStrategy';
 
     UpdateTime = default.UpdateTime; // force UpdateTime to be default (no overriding it in the editor)
 
@@ -58,12 +55,6 @@ function Reset()
 function Timer()
 {
     local Pawn P;
-    local Inventory I;
-    local ROWeapon W;
-    local bool bResupplied;
-    local DHPawn DHP;
-    local Vehicle V;
-    local DHRoleInfo RI;
 
     if (!bActive)
     {
@@ -72,87 +63,12 @@ function Timer()
 
     foreach TouchingActors(class'Pawn', P)
     {
-        bResupplied = false;
-
         if ((Team != OWNER_Neutral && P.GetTeamNum() != Team) || Level.TimeSeconds - P.LastResupplyTime < UpdateTime)
         {
             continue;
         }
 
-        DHP = DHPawn(P);
-
-        if (DHP != none)
-        {
-            RI = DHP.GetRoleInfo();
-        }
-
-        if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
-        {
-            //Resupply weapons
-            for (I = P.Inventory; I != none; I = I.Inventory)
-            {
-                W = ROWeapon(I);
-
-                if (W == none || W.IsGrenade() || W.IsA('DHMortarWeapon'))
-                {
-                    continue;
-                }
-
-                if (W.FillAmmo())
-                {
-                    bResupplied = true;
-                }
-            }
-
-            if (RI != none && DHP != none && DHP.bUsedCarriedMGAmmo && DHP.bCarriesExtraAmmo)
-            {
-                DHP.bUsedCarriedMGAmmo = false;
-
-                bResupplied = true;
-            }
-        }
-
-        V = Vehicle(P);
-
-        if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) && !V.IsA('DHMortarVehicle'))
-        {
-            // Resupply vehicles
-            if (V.ResupplyAmmo())
-            {
-                bResupplied = true;
-            }
-        }
-
-        //Mortar specific resupplying.
-        if (ResupplyType == RT_Players || ResupplyType == RT_Mortars || ResupplyType == RT_All)
-        {
-            // Resupply player carrying a mortar
-            if (DHP != none)
-            {
-                if (RI != none && RI.bCanUseMortars && DHP.ResupplyMortarAmmunition())
-                {
-                    bResupplied = true;
-                }
-
-                if (DHP.bUsedCarriedMGAmmo && DHP.bCarriesExtraAmmo)
-                {
-                    DHP.bUsedCarriedMGAmmo = false;
-                    bResupplied = true;
-                }
-            }
-            // Resupply deployed mortar
-            else if (DHMortarVehicle(V) != none && V.ResupplyAmmo())
-            {
-                bResupplied = true;
-            }
-        }
-
-        //Play sound if applicable
-        if (bResupplied)
-        {
-            P.LastResupplyTime = Level.TimeSeconds;
-            P.ClientResupplied();
-        }
+        ResupplyStrategy.HandleResupply(P, ResupplyType, Level.TimeSeconds);
     }
 }
 
@@ -213,7 +129,6 @@ event UnTouch(Actor Other)
 defaultproperties
 {
     Team=OWNER_Neutral
-    UpdateTime=2.5
     ResupplyType=RT_All
     bStatic=false
 }

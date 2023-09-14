@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSovietCannonPawn extends DHVehicleCannonPawn
@@ -40,6 +40,8 @@ simulated function DrawGunsightOverlay(Canvas C)
 
             C.DrawTileScaled(CannonScopeCenter, Scale * ScopeCenterScaleX, Scale * ScopeCenterScaleY);
         }
+
+        DrawGunsightRangeSetting(C);
     }
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerschreckRocket extends DHRocketProjectile;
@@ -42,7 +42,7 @@ defaultproperties
     WoodHitSound=Sound'DH_WeaponSounds.faust.faust_explode021'
     WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     VehicleDeflectSound=Sound'Vehicle_Weapons.Hits.HE_deflect01'
-	
+
     ExplosionSound(0)=Sound'DH_WeaponSounds.faust.faust_explode011'
     ExplosionSound(1)=Sound'DH_WeaponSounds.faust.faust_explode021'
     ExplosionSound(2)=Sound'DH_WeaponSounds.faust.faust_explode031'

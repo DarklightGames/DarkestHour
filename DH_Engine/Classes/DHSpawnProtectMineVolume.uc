@@ -178,9 +178,9 @@ defaultproperties
     SafePeriodWarnInterval=10.0
     KillTime=15.0
     WarningMessageClass=class'DH_Engine.DHSpawnProtectMineVolMessage'
-    SafePeriodWarningMessage="This is now an enemy spawn area: %remaining% SECONDS TO EVACUATE before a minefield is enabled!"
-    SpawnMFActivatedMessage="This is now an enemy spawn area: you're safe in the minefield but may want to fall back"
-    ExitedMinefieldMessage="You have exited the spawn protection minefield - if you go back in it will be live"
-    UnprotectedVehicleWarning="Minefield is LIVE for this vehicle and it will soon be blown up!"
-    WarningMessage="Warning: you have entered a spawn protection minefield - move back !" // this is the normal warning message after mine volume goes live
+    SafePeriodWarningMessage="This is now an enemy controlled area! You have %remaining% seconds to return to your lines!"
+    SpawnMFActivatedMessage="This is now an enemy controlled area, fall back!"
+    ExitedMinefieldMessage="You have left enemy territory. Returning again will be considered desertion!"
+    UnprotectedVehicleWarning="This vehicle has been spotted by the enemy!"
+    WarningMessage="You have entered an enemy controlled area, fall back!"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_InventorySpawner extends DHConstruction
@@ -74,12 +74,12 @@ static function string GetMenuName(DHActorProxy.Context Context)
     local class<DHInventorySpawner> SpawnerClass;
 
     SpawnerClass = GetSpawnerClass(Context);
-    
+
     if (SpawnerClass != none)
     {
-        return SpawnerClass.static.GetMenuName();
+        return SpawnerClass.static.GetMenuName(Context.PlayerController);
     }
-    
+
     return "";
 }
 

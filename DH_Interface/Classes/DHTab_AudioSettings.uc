@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTab_AudioSettings extends ROTab_AudioSettings;
@@ -40,7 +40,7 @@ function InternalOnChange(GUIComponent Sender)
 {
     super.InternalOnChange(Sender);
 
-    switch(Sender)
+    switch (Sender)
     {
         case nu_AudioChannels:
             NumberOfChannels = nu_AudioChannels.GetValue();

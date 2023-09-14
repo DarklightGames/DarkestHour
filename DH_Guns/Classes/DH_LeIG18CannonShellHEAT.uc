@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LeIG18CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
-    Speed=12674.0      // 210 m/s
-    MaxSpeed=12674.0
+    Speed=25348.0
+    MaxSpeed=25348.0
     SpeedFudgeScale=1.0
     ShellDiameter=7.5
     BallisticCoefficient=2.1 //TODO: pls, check
@@ -58,5 +58,6 @@ defaultproperties
     MechanicalRanges(18)=(Range=1800,RangeValue=408.0)
     MechanicalRanges(19)=(Range=1900,RangeValue=438.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=468.0)
+
     bMechanicalAiming=true
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak38Cannon extends DHVehicleAutoCannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll')
     GunnerAttachmentBone="Turret" // gunner doesn't move so we don't need a dedicated attachment bone
 
     // Turret movement
@@ -20,7 +20,6 @@ defaultproperties
     CustomPitchDownLimit=64800
 
     // Cannon ammo
-    ProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
@@ -47,9 +46,9 @@ defaultproperties
     ShellCaseEmitterClass=class'DH_Effects.DH_20mmShellCaseEmitter'
     ShellCaseEjectorBone="Gun"
 
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="Elevation_wheel",Scale=-32.0)
-    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="Sight_arm",Scale=-1.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="Traverse_wheel",Scale=-32.0,RotationAxis=AXIS_Z)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="Elevation_wheel",Scale=-32.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="Sight_arm",Scale=-1.0,RotationAxis=AXIS_Y)
 
     // Animations
     BeginningIdleAnim="optic_idle"

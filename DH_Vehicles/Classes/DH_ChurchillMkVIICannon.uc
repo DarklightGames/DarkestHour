@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ChurchillMkVIICannon extends DHVehicleCannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Turret mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_turret' // TODO: think cupola & hatches are incorrect - believe should have all round vision cupola
     Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
-    CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col')
     FireAttachBone="Turret"
     FireEffectOffset=(X=12.0,Y=-25.0,Z=60.0)
     FireEffectScale=0.8
@@ -32,7 +32,6 @@ defaultproperties
     CustomPitchDownLimit=65008
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_WHAntiTank_Autumn extends DHGEAntiTankRoles;
@@ -12,4 +12,5 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Camo"
 }

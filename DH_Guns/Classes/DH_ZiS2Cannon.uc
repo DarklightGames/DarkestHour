@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ZiS2Cannon extends DHATGunCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS2_gun'
     Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
     Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision')
 
     // Turret movement
     MaxPositiveYaw=4915 // 27 degrees
@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64100
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_ZiS2CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellHE'
     TertiaryProjectileClass=class'DH_Guns.DH_ZiS2CannonShellAPCR'
@@ -31,15 +30,15 @@ defaultproperties
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(2)="APCR"
 
-    nProjectileDescriptions(0)="BR-271" 
+    nProjectileDescriptions(0)="BR-271"
     nProjectileDescriptions(1)="O-271"
     nProjectileDescriptions(2)="BR-271P"
 
     InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=15
+    InitialSecondaryAmmo=5
     InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=45
-    MaxSecondaryAmmo=45
+    MaxPrimaryAmmo=25
+    MaxSecondaryAmmo=15
     MaxTertiaryAmmo=6
     SecondarySpread=0.002
 
@@ -73,4 +72,6 @@ defaultproperties
     RangeSettings(18)=3600
     RangeSettings(19)=3800
     RangeSettings(20)=4000
+
+    ResupplyInterval=5.0
 }

@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SpringfieldScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="M1903A4 Springfield Scoped"  
+    ItemName="M1903A4 Springfield (M73 Weaver)"
     FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'
@@ -27,7 +27,7 @@ defaultproperties
     ScriptedScopeTexture=Texture'DH_Springfield_tex.Scopes.Scope3D'
     OverlayCorrectionX=-0.5
     ScopeOverlaySize=0.222
-	
+
     DisplayFOV=80.0
     IronSightDisplayFOV=46.8
     IronSightDisplayFOVHigh=46.8
@@ -35,7 +35,7 @@ defaultproperties
     ScopePortalFOV=6.77  // "24.1  ft @ 100 yards" for M73 scope, which is about 4.5 degrees
     ScopePortalFOVHigh=6.77  //however, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
     LensMaterialID=4
-	
+
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
 
@@ -49,7 +49,7 @@ defaultproperties
     BoltHipAnim="bolt_scope"
     PostFireIronIdleAnim=none
     SingleReloadAnim="single_insert"
-    SingleReloadHalfAnim="single_insert"  //you dont really see inside the mag 
+    SingleReloadHalfAnim="single_insert"  //you dont really see inside the mag
     PreReloadAnim="single_open"
     PreReloadHalfAnim="single_open_half"
     PostReloadAnim="single_close"

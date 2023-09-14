@@ -1,61 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
-
-// Modified to include extra collision meshes for the turret covers
-exec function ShowColMesh()
-{
-    local DHCollisionMeshActor LeftCover, RightCover;
-
-    if (VehWep != none && VehWep.CollisionMeshActor != none && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
-    {
-        if (VehWep.IsA('DH_Sdkfz2341Cannon'))
-        {
-            LeftCover = DH_Sdkfz2341Cannon(VehWep).TurretCoverColMeshLeft;
-            RightCover = DH_Sdkfz2341Cannon(VehWep).TurretCoverColMeshRight;
-        }
-
-        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
-        if (VehWep.CollisionMeshActor.DrawType == DT_None)
-        {
-            VehWep.CollisionMeshActor.ToggleVisible();
-
-            if (LeftCover != none && RightCover != none)
-            {
-                LeftCover.ToggleVisible();
-                RightCover.ToggleVisible();
-            }
-        }
-        // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
-        else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
-        {
-            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
-
-            if (LeftCover != none && RightCover != none)
-            {
-                LeftCover.HideOwner(true);
-                RightCover.HideOwner(true);
-            }
-        }
-        // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
-        else
-        {
-            VehWep.CollisionMeshActor.HideOwner(false);
-            VehWep.CollisionMeshActor.ToggleVisible();
-
-            if (LeftCover != none && RightCover != none)
-            {
-                LeftCover.HideOwner(false);
-                LeftCover.ToggleVisible();
-                RightCover.HideOwner(false);
-                RightCover.ToggleVisible();
-            }
-        }
-    }
-}
 
 defaultproperties
 {

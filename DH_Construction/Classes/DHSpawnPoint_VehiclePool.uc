@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
@@ -24,6 +24,9 @@ function Timer()
             if (SP.GetTeamIndex() == GetTeamIndex() && SP.IsActive() && !SP.IsBlocked())
             {
                 HQSpawnPoint = SP;
+
+                // "A Vehicle Pool has been activated."
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHVehiclePoolMessage', 0);
                 break;
             }
         }
@@ -78,5 +81,6 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=1
 
     SpawnTimeInterval=10
+    SpawnKillProtectionTime=15
 }
 

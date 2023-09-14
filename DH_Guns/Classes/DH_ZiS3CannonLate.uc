@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ZiS3CannonLate extends DH_ZiS3Cannon; //added APCR
@@ -11,7 +11,7 @@ defaultproperties
     ProjectileDescriptions(2)="APCR"
 	nProjectileDescriptions(2)="BR-350P"
 
-    InitialTertiaryAmmo=2 
+    InitialTertiaryAmmo=2
     MaxTertiaryAmmo=4
 
 }

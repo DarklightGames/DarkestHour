@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_SquadManageNonMember extends DHCommandMenu;
@@ -41,7 +41,7 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local Pawn P;
@@ -119,12 +119,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     {
         if (OtherPRI.IsInSquad())
         {
-            ORI.InfoText = default.AlreadyInASquadText;
+            ORI.InfoText[0] = default.AlreadyInASquadText;
             ORI.InfoColor = class'UColor'.default.Red;
         }
         else if (PC != none && PC.SquadReplicationInfo != none && PC.SquadReplicationInfo.IsSquadFull(PC.GetTeamNum(), PC.GetSquadIndex()))
         {
-            ORI.InfoText = default.SquadIsFullText;
+            ORI.InfoText[0] = default.SquadIsFullText;
             ORI.InfoColor = class'UColor'.default.Red;
         }
     }

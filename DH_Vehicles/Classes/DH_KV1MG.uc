@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_KV1MG extends DHVehicleMG;
@@ -23,11 +23,11 @@ defaultproperties
     CustomPitchDownLimit=63000
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
-    FireInterval=0.1
-    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
+    FireInterval=0.105
+    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // http://www.flounder.com/csharp_color_table.htm
 //==============================================================================
@@ -155,17 +155,17 @@ var color WhiteSmoke;
 var color Yellow;
 var color YellowGreen;
 
-static final function bool IsZero(color C)
+final static function bool IsZero(color C)
 {
     return C.R == 0 && C.G == 0 && C.B == 0 && C.A == 0;
 }
 
-static final function string ToString(color C)
+final static function string ToString(color C)
 {
     return "(R=" $ C.R $ ",G=" $ C.G $ ",B=" $ C.B $ ",A=" $ C.A $ ")";
 }
 
-static final function color Interp(float X, color A, color B)
+final static function color Interp(float X, color A, color B)
 {
     local color C;
 
@@ -178,7 +178,7 @@ static final function color Interp(float X, color A, color B)
 }
 
 // Given a string eg. #ffba23, will return the color (R=255,G=181,B=35)
-static final function color FromHex(string S)
+final static function color FromHex(string S)
 {
     local color C;
 
@@ -189,7 +189,7 @@ static final function color FromHex(string S)
     return C;
 }
 
-static final function color HSV2RGB(HSV HSV)
+final static function color HSV2RGB(HSV HSV)
 {
     local int i;
     local float P, Q, T, FF;
@@ -254,7 +254,7 @@ static final function color HSV2RGB(HSV HSV)
 }
 
 // http://www.javascripter.net/faq/rgb2hsv.htm
-static final function HSV RGB2HSV(color RGB)
+final static function HSV RGB2HSV(color RGB)
 {
     local float R, G, B, MinRGB, MaxRGB, D, H;
     local HSV HSV;

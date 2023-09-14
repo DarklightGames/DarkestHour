@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIIINTank extends DH_PanzerIIILTank;
@@ -15,6 +15,6 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3n_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3n_turret_look'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_n'
-	
+
 	AmmoIgnitionProbability=0.75  // 0.75 default; 75mm ammo instead of 50mm
 }

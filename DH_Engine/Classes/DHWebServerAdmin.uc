@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWebServerAdmin extends UTServerAdmin config;
@@ -23,7 +23,7 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
         menu = "";
         CurPageTitle = "";
 
-        for (i=0; i<QueryHandlers.Length; ++i)
+        for (i = 0; i < QueryHandlers.Length; ++i)
         {
             if (QueryHandlers[i].DefaultPage == GroupPage)
             {
@@ -31,6 +31,7 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
             }
 
             Dis = "";
+
             if (QueryHandlers[i].NeededPrivs != "" && !CanPerform(QueryHandlers[i].NeededPrivs))
             {
                 Dis = "d";
@@ -55,9 +56,4 @@ function QueryHeaderPage(WebRequest Request, WebResponse Response)
 
     // Set URIs
     ShowPage(Response, HeaderPage);
-}
-
-defaultproperties
-{
-
 }

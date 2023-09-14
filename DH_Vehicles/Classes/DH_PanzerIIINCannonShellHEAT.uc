@@ -1,14 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIIINCannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
-    Speed=25348.0
-    MaxSpeed=25348.0
+    Speed=45000.0
+    MaxSpeed=45000.0
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
@@ -23,18 +23,18 @@ defaultproperties
 
     bDebugInImperial=false
 
-    //Penetration
-    DHPenetrationTable(0)=10.0
-    DHPenetrationTable(1)=10.0
-    DHPenetrationTable(2)=10.0
-    DHPenetrationTable(3)=10.0
-    DHPenetrationTable(4)=10.0
-    DHPenetrationTable(5)=10.0
-    DHPenetrationTable(6)=10.0
-    DHPenetrationTable(7)=10.0
-    DHPenetrationTable(8)=10.0
-    DHPenetrationTable(9)=10.0
-    DHPenetrationTable(10)=10.0
+    //Penetration Gr.38 Hl/B (HEAT) December 1942
+    DHPenetrationTable(0)=8.7
+    DHPenetrationTable(1)=8.7
+    DHPenetrationTable(2)=8.7
+    DHPenetrationTable(3)=8.7
+    DHPenetrationTable(4)=8.7
+    DHPenetrationTable(5)=8.7
+    DHPenetrationTable(6)=8.7
+    DHPenetrationTable(7)=8.7
+    DHPenetrationTable(8)=8.7
+    DHPenetrationTable(9)=8.7
+    DHPenetrationTable(10)=8.7
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHATGunProxy extends DHActorProxy;
@@ -85,7 +85,3 @@ function Tick(float DeltaTime)
 
 // TODO; we need to run an "update proxy" type thing here, but make the rest of
 // the "update proxy" calls generic enough to be used
-defaultproperties
-{
-}
-

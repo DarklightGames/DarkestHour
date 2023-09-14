@@ -1,12 +1,12 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class UString extends Object;
 
 var string Value;
 
-static final function UString Create(optional string Value)
+final static function UString Create(optional string Value)
 {
     local UString S;
 
@@ -16,7 +16,7 @@ static final function UString Create(optional string Value)
     return S;
 }
 
-static final function string Join(string Divider, array<string> Strings)
+final static function string Join(string Divider, array<string> Strings)
 {
     local string S;
     local int i;
@@ -36,7 +36,7 @@ static final function string Join(string Divider, array<string> Strings)
     return S;
 }
 
-static final function int FindLastOf(string Haystack, string Needle)
+final static function int FindLastOf(string Haystack, string Needle)
 {
     local int i, j;
 
@@ -65,17 +65,17 @@ static final function int FindLastOf(string Haystack, string Needle)
     return -1;
 }
 
-static final function string Remove(string S, int Offset, int Count)
+final static function string Remove(string S, int Offset, int Count)
 {
     return Mid(S, 0, Offset) $ Mid(S, Offset + Count);
 }
 
-static final function string Insert(string Dst, string Src, int Offset)
+final static function string Insert(string Dst, string Src, int Offset)
 {
     return Left(Dst, Offset) $ Src $ Mid(Dst, Offset, Len(Dst));
 }
 
-static final function array<int> ToBytes(string S)
+final static function array<int> ToBytes(string S)
 {
     local int i;
     local array<int> Bytes;
@@ -88,7 +88,7 @@ static final function array<int> ToBytes(string S)
     return Bytes;
 }
 
-static final function string FromBytes(array<int> Bytes)
+final static function string FromBytes(array<int> Bytes)
 {
     local int i;
     local string S;
@@ -101,7 +101,7 @@ static final function string FromBytes(array<int> Bytes)
     return S;
 }
 
-static final function bool IsWhitespace(string S)
+final static function bool IsWhitespace(string S)
 {
     local int A;
 
@@ -114,7 +114,7 @@ static final function bool IsWhitespace(string S)
             A == 0xFEFF);
 }
 
-static final function bool IsAlpha(string S)
+final static function bool IsAlpha(string S)
 {
     local int A;
 
@@ -123,7 +123,7 @@ static final function bool IsAlpha(string S)
     return (A >= 0x41 && A <= 0x5A) || (A >= 0x61 && A <= 0x7A);
 }
 
-static final function bool IsDigit(string S)
+final static function bool IsDigit(string S)
 {
     local int A;
 
@@ -132,12 +132,12 @@ static final function bool IsDigit(string S)
     return A >= 0x30 && A <= 0x39;
 }
 
-static final function bool IsAlphanumeric(string S)
+final static function bool IsAlphanumeric(string S)
 {
     return IsAlpha(S) || IsDigit(S);
 }
 
-static final function string Trim(string S)
+final static function string Trim(string S)
 {
     local int i, j;
 
@@ -162,7 +162,7 @@ static final function string Trim(string S)
     return Mid(S, i, j - i + 1);
 }
 
-static final function string ZFill(coerce string S, int N)
+final static function string ZFill(coerce string S, int N)
 {
     N -= Len(S);
 
@@ -174,7 +174,7 @@ static final function string ZFill(coerce string S, int N)
     return S;
 }
 
-static final function string CRLF()
+final static function string CRLF()
 {
     return Chr(13) $ Chr(10);
 }
@@ -182,7 +182,7 @@ static final function string CRLF()
 // This is essentially a redeclaration of the same function found in GameInfo.
 // Unfortunately, that function is not static, which is why this one is
 // necessary.
-static final function string StripColor(string S)
+final static function string StripColor(string S)
 {
     local int i;
 

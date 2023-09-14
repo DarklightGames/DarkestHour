@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ParachuteStaticLine extends Weapon;
@@ -17,7 +17,7 @@ simulated event StopFire(int Mode) {return;}
 simulated function bool IsFiring() {return false;}
 function bool FillAmmo() {return false;}
 function bool ResupplyAmmo() {return false;}
-simulated exec function ROManualReload() {return;}
+exec simulated function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;} // not busy in the idle state because we never fire
 simulated function bool ShouldUseFreeAim() {return false;}
 

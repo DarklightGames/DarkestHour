@@ -1,23 +1,20 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Scoped Enfield No.4"
+    ItemName="Enfield No.4 Mk.I (T) (No.32)"
     SwayModifyFactor=0.65 // +0.05
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
-    HighDetailOverlay=Shader'DH_EnfieldNo4_tex.EnfieldNo4.No4MainSniper_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped_1st'
 
     bHasScope=true
     bIsSniper=true
@@ -40,9 +37,6 @@ defaultproperties
     PlayerIronsightFOV=60.0
     bUsesIronsightFOV=true
 
-    HandNum=1
-    SleeveNum=0
-
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles
 
@@ -58,7 +52,10 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
+    PreReloadHalfAnim="reload_start_cocked"
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"
+
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="cocker",Animation="cocker")
 }

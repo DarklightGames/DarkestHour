@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSOVAssaultRoles extends DHAlliedAssaultRoles
@@ -13,4 +13,6 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+    GivenItems(0)="DH_Equipment.DHShovelItem_Russian"
 }

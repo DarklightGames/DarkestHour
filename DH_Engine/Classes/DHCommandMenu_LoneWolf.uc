@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_LoneWolf extends DHCommandMenu;
 
 var localized string AutoJoinSquadDisabledText;
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
 
@@ -71,7 +71,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case 0: // Auto-Join Squad
             if (IsOptionDisabled(OptionIndex))
             {
-                ORI.InfoText = default.AutoJoinSquadDisabledText;
+                ORI.InfoText[0] = default.AutoJoinSquadDisabledText;
                 ORI.InfoColor = class'UColor'.default.Red;
             }
             break;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHObjectiveMessage extends ROObjectiveMsg
@@ -14,7 +14,7 @@ var(Messages) localized string NotificationTypes[3];
 var(Messages) localized string  NotificationMessage;
 
 // Modified to handle more sounds (ran by client)
-static simulated function ClientReceive(
+simulated static function ClientReceive(
     PlayerController P,
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,

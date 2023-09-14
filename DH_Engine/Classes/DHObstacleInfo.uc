@@ -1,10 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHObstacleInfo extends Info
-    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Display,Advanced,Sound)
+    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Advanced,Sound)
     placeable;
 
 struct Type
@@ -12,6 +12,7 @@ struct Type
     var()   StaticMesh              IntactStaticMesh;
     var()   array<StaticMesh>       ClearedStaticMeshes;
     var()   sound                   ClearSound;
+    var()   float                   ClearSoundRadius;
     var()   array<class<Emitter> >  ClearEmitterClasses;
     var()   bool                    bCanBeCut;
     var()   bool                    bCanBeMantled;
@@ -145,14 +146,34 @@ simulated function int GetDamageThreshold(int Index, bool bIsDefault)
     }
 }
 
-simulated function sound GetClearSound(int Index, bool bIsDefault)
+simulated function sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
 {
     if (bIsDefault)
     {
+        if (DefaultTypes[Index].ClearSoundRadius == 0.0)
+        {
+            // NOTE: Sound radius was added after-the-fact, so we have to maintain backwards compatibility
+            // by returning what the hard-coded value was (60.0)
+            ClearSoundRadius = 60.0;
+        }
+        else
+        {
+            ClearSoundRadius = DefaultTypes[Index].ClearSoundRadius;
+        }
+
         return DefaultTypes[Index].ClearSound;
     }
     else
     {
+        if (Types[Index].ClearSoundRadius == 0.0)
+        {
+            ClearSoundRadius = 60.0;
+        }
+        else
+        {
+            ClearSoundRadius = DefaultTypes[Index].ClearSoundRadius;
+        }
+
         return Types[Index].ClearSound;
     }
 }

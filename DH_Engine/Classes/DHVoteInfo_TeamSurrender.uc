@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
@@ -77,7 +77,7 @@ function OnVoteEnded()
     {
         // Inform both teams and end the round after a brief delay.
         G.DelayedEndRound(G.default.SurrenderEndRoundDelaySeconds,
-                          "The {0} won the round because the other team has surrendered",
+                          "The {0} won the round because the other team has retreated",
                           int(!bool(TeamIndex)),
                           class'DHEnemyInformationMsg',
                           1,
@@ -204,15 +204,6 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
         return false;
     }
 
-    // Reinforcements are above the limit.
-    if (Game.SpawnsAtRoundStart[TeamIndex] >= GRI.SpawnsRemaining[TeamIndex] &&
-        GRI.SpawnsRemaining[TeamIndex] > 0 &&
-        GRI.SpawnsRemaining[TeamIndex] > Game.SpawnsAtRoundStart[TeamIndex] * GetReinforcementsRequiredPercent())
-    {
-        PC.ClientTeamSurrenderResponse(8);
-        return false;
-    }
-
     // Vote in play.
     if (VM.GetVoteIndex(default.Class, TeamIndex) >= 0)
     {
@@ -264,8 +255,13 @@ static function int GetCooldownSeconds()
 
 defaultproperties
 {
-    QuestionText="Do you want to throw down your weapons and surrender?"
+    QuestionText="Do you want to retreat to fight another day?"
 
     bIsGlobalVote=false
     bNominatorsVoteAutomatically=true
+    // Players notoriously refuse to surrender even when they're getting their
+    // asses handed to them and the team is screaming at each other and
+    // completely demoralized. Plus some people are dummies and don't vote.
+    // For everyone's sanity, we set this at 40%.
+    VotesThresholdPercent=0.4
 }

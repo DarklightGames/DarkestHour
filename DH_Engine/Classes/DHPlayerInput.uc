@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHPlayerInput extends ROPlayerInput within DHPlayer
@@ -18,14 +18,14 @@ event PlayerInput(float DeltaTime)
 
     // Check for Double click move
     // flag transitions
-    bEdgeForward = (bWasForward ^^ (aBaseY > 0));
-    bEdgeBack = (bWasBack ^^ (aBaseY < 0));
-    bEdgeLeft = (bWasLeft ^^ (aStrafe < 0));
-    bEdgeRight = (bWasRight ^^ (aStrafe > 0));
-    bWasForward = (aBaseY > 0);
-    bWasBack = (aBaseY < 0);
-    bWasLeft = (aStrafe < 0);
-    bWasRight = (aStrafe > 0);
+    bEdgeForward = bWasForward ^^ (aBaseY > 0);
+    bEdgeBack = bWasBack ^^ (aBaseY < 0);
+    bEdgeLeft = bWasLeft ^^ (aStrafe < 0);
+    bEdgeRight = bWasRight ^^ (aStrafe > 0);
+    bWasForward = aBaseY > 0;
+    bWasBack = aBaseY < 0;
+    bWasLeft = aStrafe < 0;
+    bWasRight = aStrafe > 0;
 
     // Calculate FOVScale
     if (Outer.GetMouseModifier() < 0)

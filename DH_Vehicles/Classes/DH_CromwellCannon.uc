@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_CromwellCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
     Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll')
     FireAttachBone="Turret"
     FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
 
@@ -32,7 +32,6 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'

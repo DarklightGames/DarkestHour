@@ -1,13 +1,23 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
-//==============================================================================
-// This gun still need a bunch of work, and it's utility is extremely limited
-// because the gun has such a limited yaw range. This gun can be implemented
-// fully once we have the ability to rotate AT guns.
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LeIG18Gun extends DHATGun;
+
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    local DHPlayer DHP;
+
+    super.ClientKDriverEnter(PC);
+
+    DHP = DHPlayer(PC);
+
+    if (DHP != none && DHP.IsArtilleryOperator())
+    {
+        DHP.QueueHint(50, false);
+    }
+}
 
 defaultproperties
 {
@@ -27,14 +37,18 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
+    SupplyCost=1500
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    RotateCooldown=2
+    ShadowZOffset=10
+    bIsArtilleryVehicle=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.0)
+        KCOMOffset=(Z=-10)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

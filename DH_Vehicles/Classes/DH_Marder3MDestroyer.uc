@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Marder3MDestroyer extends DHArmoredVehicle;
@@ -63,7 +63,7 @@ defaultproperties
     Health=525
     HealthMax=525.0
 	EngineHealth=300
-	
+
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine

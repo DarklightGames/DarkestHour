@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_WSSRifleman_Snow extends DHGERiflemanRoles;
@@ -12,4 +12,5 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
+    HandType=Hand_Gloved
 }

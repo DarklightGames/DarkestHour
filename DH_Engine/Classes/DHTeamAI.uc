@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTeamAI extends ROTeamAI;
@@ -30,8 +30,4 @@ function bool DefendHere(Bot B, GameObjective O)
     }
 
     return true;
-}
-
-defaultproperties
-{
 }

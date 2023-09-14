@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_KorovinWeapon extends DHAutoWeapon;
@@ -8,7 +8,7 @@ class DH_KorovinWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="Korovin 1941"
-    SwayModifyFactor=0.67 // -0.13 because its a light SMG
+    SwayModifyFactor=0.57 // -0.13 because its a light SMG
     FireModeClass(0)=class'DH_Weapons.DH_KorovinFire'
     FireModeClass(1)=class'DH_Weapons.DH_KorovinMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_KorovinAttachment'

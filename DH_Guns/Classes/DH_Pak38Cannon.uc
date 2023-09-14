@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Pak38Cannon extends DHATGunCannon;
@@ -12,7 +12,7 @@ defaultproperties
     Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
     Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -24,7 +24,6 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'
@@ -36,13 +35,13 @@ defaultproperties
     nProjectileDescriptions(1)="PzGr.40"
     nProjectileDescriptions(2)="Sprgr.Patr.38"
 
-    InitialPrimaryAmmo=40
-    InitialSecondaryAmmo=6
-    InitialTertiaryAmmo=15
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=10
 
-    MaxPrimaryAmmo=55
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=30
+    MaxPrimaryAmmo=40
+    MaxSecondaryAmmo=8
+    MaxTertiaryAmmo=20
 
     SecondarySpread=0.00165
     TertiarySpread=0.0013
@@ -58,7 +57,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ReloadStages(0)=(Sound=none) //~2.8 seconds reload for a lower caliber AT gun
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_1') //~3 seconds reload for a lower caliber AT gun
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_2')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')

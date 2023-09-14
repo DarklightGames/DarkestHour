@@ -1,37 +1,22 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_BARWeapon extends DHBipodAutoWeapon;
+class DH_BARWeapon extends DHAutoWeapon;
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
-
-var     DHBipodPhysicsSimulation    BipodPhysicsSimulation;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // TODO: in future, move this to the super-class!
-        BipodPhysicsSimulation = new class'DHBipodPhysicsSimulation';
-        BipodPhysicsSimulation.BarrelBoneName = 'MuzzleNew';
-        BipodPhysicsSimulation.BipodBoneName = 'bipod';
-    }
-}
 
 simulated function UpdateFireRate()
 {
     if (bSlowFireRate)
     {
-        FireMode[0].FireRate = 0.2;  // slow rate 300rpm
+        FireMode[0].FireRate = 0.2;  // slow rate ~330rpm (? to be tested)
 
     }
     else
     {
-        FireMode[0].FireRate = 0.12; // fast rate 500rpm
+        FireMode[0].FireRate = 0.12; // fast rate ~550rpm
     }
 }
 
@@ -47,33 +32,6 @@ simulated function ToggleFireMode()
 simulated function bool UsingAutoFire()
 {
     return !bSlowFireRate;
-}
-
-simulated event WeaponTick(float DeltaTime)
-{
-    super.WeaponTick(DeltaTime);
-
-    if (BipodPhysicsSimulation != none)
-    {
-        BipodPhysicsSimulation.PhysicsTick(self, DeltaTime);
-    }
-}
-
-simulated function BipodDeploy(bool bNewDeployedStatus)
-{
-    super.BipodDeploy(bNewDeployedStatus);
-
-    if (BipodPhysicsSimulation != none)
-    {
-        if (bNewDeployedStatus)
-        {
-            BipodPhysicsSimulation.LockBipod(self, 0, 0.5);
-        }
-        else
-        {
-            BipodPhysicsSimulation.UnlockBipod();
-        }
-    }
 }
 
 simulated state Reloading
@@ -99,48 +57,6 @@ simulated state Reloading
             BipodPhysicsSimulation.UnlockBipod();
         }
     }
-}
-
-simulated exec function PAL(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.ArmLength = V;
-    }
-}
-
-simulated exec function PAD(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.AngularDamping = V;
-    }
-}
-
-simulated exec function PGS(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.GravityScale = V;
-    }
-}
-
-simulated exec function PYDF(float V)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        BipodPhysicsSimulation.YawDeltaFactor = V;
-    }
-}
-
-simulated exec function PAVT(float V)
-{
-    BipodPhysicsSimulation.AngularVelocityThreshold = V;
-}
-
-simulated exec function PCOR(float V)
-{
-    BipodPhysicsSimulation.CoefficientOfRestitution = V;
 }
 
 defaultproperties
@@ -170,6 +86,7 @@ defaultproperties
 
     MaxNumPrimaryMags=12
     InitialNumPrimaryMags=12
+    NumMagsToResupply=3
 
     bHasSelectFire=true
     bSlowFireRate=true
@@ -183,11 +100,21 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
-    SightUpIronBringUp="bipod_in"
-    SightUpIronPutDown="bipod_out"
-    SightUpIronIdleAnim="iron_idle"
-    SightUpMagEmptyReloadAnim="bipod_reload_empty"
-    SightUpMagPartialReloadAnim="bipod_reload_half"
+    IdleToBipodDeploy="bipod_in"
+    BipodDeployToIdle="bipod_out"
+    BipodIdleAnim="iron_idle"
+    BipodMagEmptyReloadAnim="bipod_reload_empty"
+    BipodMagPartialReloadAnim="bipod_reload_half"
+    IronToBipodDeploy="aim_to_Bipod"
 
-    IronBipodDeployAnim="aim_to_Bipod"
+    bCanBipodDeploy=true
+    bCanBeResupplied=true
+    ZoomOutTime=0.1
+
+    // Bipod Physics
+    bDoBipodPhysicsSimulation=true
+    Begin Object Class=DHBipodPhysicsSettings Name=DHBarBipodPhysicsSettings
+        BarrelBoneRotationOffset=(Roll=-16384)
+    End Object
+    BipodPhysicsSettings=DHBarBipodPhysicsSettings
 }

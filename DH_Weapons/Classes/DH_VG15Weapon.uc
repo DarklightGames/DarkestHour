@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_VG15Weapon extends DHSemiAutoWeapon;
+class DH_VG15Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
-    ItemName="Volkssturmgewehr 1-5"
+    ItemName="VG 1-5"
+    NativeItemName="Volkssturmgewehr 1-5"
     FireModeClass(0)=class'DH_Weapons.DH_VG15Fire'
     FireModeClass(1)=class'DH_Weapons.DH_VG15MeleeFire'
     PickupClass=class'DH_Weapons.DH_VG15Pickup'
@@ -26,4 +27,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty_vg"
     MagPartialReloadAnims(0)="reload_half_vg"
     MuzzleBone="MuzzleNew"
+
+    bPlusOneLoading=true
+    FreeAimRotationSpeed=6.0
 }

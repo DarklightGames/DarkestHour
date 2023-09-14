@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMapIconAttachment_Resupply extends DHMapIconAttachment
@@ -10,7 +10,7 @@ class DHMapIconAttachment_Resupply extends DHMapIconAttachment
 var Material IconMaterialVehicle;
 var float    IconScaleVehicle;
 
-var private DHResupplyAttachment.EResupplyType ResupplyType;
+var private DHResupplyStrategy.EResupplyType ResupplyType;
 
 replication
 {
@@ -18,12 +18,12 @@ replication
         ResupplyType;
 }
 
-final function DHResupplyAttachment.EResupplyType GetResupplyType()
+final function DHResupplyStrategy.EResupplyType GetResupplyType()
 {
     return ResupplyType;
 }
 
-final function SetResupplyType(DHResupplyAttachment.EResupplyType ResupplyType)
+final function SetResupplyType(DHResupplyStrategy.EResupplyType ResupplyType)
 {
     self.ResupplyType = ResupplyType;
 }
@@ -35,7 +35,7 @@ function EVisibleFor GetVisibility()
 
 function EVisibleFor GetVisibilityInDangerZone()
 {
-    return VISIBLE_None;
+    return VISIBLE_All;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)
@@ -70,5 +70,5 @@ defaultproperties
     IconScale=0.05
 
     IconMaterialVehicle=Texture'DH_InterfaceArt2_tex.Icons.munitions_vehicle'
-    IconScaleVehicle=0.038
+    IconScaleVehicle=0.05
 }

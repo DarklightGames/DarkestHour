@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSovietVoice extends DHVoicePack;
@@ -77,9 +77,9 @@ defaultproperties
     OrderSound[1]=SoundGroup'voice_sov_infantry.commander.defend_objective'
     OrderSound[2]=SoundGroup'voice_sov_infantry.commander.hold_this_position'
     OrderSound[3]=SoundGroup'voice_sov_infantry.commander.follow_me'
-    OrderSound[4]=SoundGroup'voice_sov_infantry.commander.Attack'
+    OrderSound[6]=SoundGroup'voice_sov_infantry.commander.Attack'
     OrderSound[5]=SoundGroup'voice_sov_infantry.commander.retreat'
-    OrderSound[6]=SoundGroup'voice_sov_infantry.commander.fire_at_will'
+    OrderSound[4]=SoundGroup'voice_sov_infantry.commander.fire_at_will' //attack and fire at will are swapped as they were wrong in RO
     OrderSound[7]=SoundGroup'voice_sov_infantry.commander.cease_fire'
 
     // Extras sound groups

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Tiger2BCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
     Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -35,7 +35,6 @@ defaultproperties
     CustomPitchDownLimit=64189
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShellHE'
 
@@ -52,7 +51,7 @@ defaultproperties
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=10
-    AltFireInterval=0.07059
+    AltFireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 
@@ -69,7 +68,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')

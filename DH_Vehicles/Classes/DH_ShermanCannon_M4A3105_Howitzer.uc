@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ShermanCannon_M4A3105_Howitzer extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     WeaponAttachOffset=(X=8.0,Y=0.0,Z=4.5)
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll')
 
     // Turret armor
     FrontArmorFactor=9.0
@@ -31,7 +31,6 @@ defaultproperties
     CustomPitchDownLimit=64625 // 5 degrees - probably should be 10, but any more & barrel clips hull (a howitzer, so depression isn't really an issue anyway)
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'

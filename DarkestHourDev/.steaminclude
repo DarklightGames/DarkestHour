@@ -11,7 +11,6 @@ System/dh_server_launcher.bat
 !*.make
 !*.steaminclude
 !*.i18n
-!*.version
 !DarkestHourDev/System/DarkestHourDev.ini
 !DarkestHourDev/System/DarkestHourDevUser.ini
 !tools

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak88Cannon extends DHATGunCannon;
@@ -20,17 +20,16 @@ defaultproperties
     CustomPitchDownLimit=64500
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Schw.Sprgr.Patr."
 
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    MaxPrimaryAmmo=50
-    MaxSecondaryAmmo=42
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=15
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00125
 
     // Weapon fire
@@ -72,4 +71,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
+
+    ResupplyInterval=12.0
 }

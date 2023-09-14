@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak88Gun extends DHATGun;
@@ -12,7 +12,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_base'
     Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
     DestroyedVehicleMesh=StaticMesh'MilitaryAxisSM.Artillery.Flak88_destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_Artillery_tex.88mmFlak36.flak_88_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_Artillery_tex.88mmFlak36.flak_88_dest'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.flak88_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_look'

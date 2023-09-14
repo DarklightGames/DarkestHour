@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_StuH42MountedMG extends DHVehicleMG;
@@ -12,7 +12,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="loader_attachment"
@@ -37,7 +37,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=50
     NumMGMags=12
-    FireInterval=0.07059
+    FireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMortarProjectile extends DHBallisticProjectile
@@ -34,6 +34,10 @@ var     vector  DebugForward;
 var     vector  DebugRight;
 var     vector  DebugLocation;
 var     bool    bDebug;
+
+var     Texture HudTexture;
+
+var     class<DHMapMarker_ArtilleryHit> HitMapMarkerClass;
 
 replication
 {
@@ -218,8 +222,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
-        SetHitLocation(HitLocation);
-
         MakeNoise(1.0); // shell landing makes noise, even if a dud & doesn't detonate
     }
 
@@ -227,6 +229,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (!bDud)
     {
+        if (Role == ROLE_Authority && HitMapMarkerClass != none)
+        {
+            SaveHitPosition(HitLocation, HitNormal, HitMapMarkerClass);
+        }
+
         SpawnExplosionEffects(HitLocation, HitNormal);
         BlowUp(HitLocation);
     }
@@ -303,7 +310,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     local DHVehicle     V;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
-    local Controller    C;
     local bool          bAlreadyChecked, bAlreadyDead;
     local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
     local float         DamageScale, Distance, DamageExposure;
@@ -439,17 +445,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         if (ROVehicle(Victim) != none && ROVehicle(Victim).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
-        }
-
-        // Added to give additional points to the observer & the mortarman for working together for a kill!
-        if (!bAlreadyDead && Victim.IsA('Pawn') && Pawn(Victim).Health <= 0 && InstigatorController.GetTeamNum() != Pawn(Victim).GetTeamNum())
-        {
-            C = GetClosestArtilleryTargetController();
-
-            if (C != none)
-            {
-                DarkestHourGame(Level.Game).ScoreMortarSpotAssist(C, InstigatorController);
-            }
         }
     }
 
@@ -664,7 +659,7 @@ simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation
     {
         CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
         ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += (((5249.0 - ClampedDistance) / 5249.0) * 0.25);
+        Pitch += ((5249.0 - ClampedDistance) / 5249.0) * 0.25;
     }
 }
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponPickup extends ROWeaponPickup
@@ -24,6 +24,8 @@ var     bool                    bOldBarrelSteamActive;    // clientside record, 
 var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+
+var     StaticMesh              EmptyStaticMesh;
 
 replication
 {
@@ -81,7 +83,10 @@ auto state Pickup
 {
     function bool ValidTouch(Actor Other)
     {
-        return !(DHPawn(Other) != none && DHPawn(Other).bOnFire) && super.ValidTouch(Other);
+        return !(DHPawn(Other) != none &&
+                 (DHPawn(Other).bOnFire ||
+                 !DHPawn(Other).bCanPickupWeapons)) &&
+               super.ValidTouch(Other);
     }
 
     function Timer()
@@ -170,6 +175,12 @@ function InitDroppedPickupFor(Inventory Inv)
                 }
             }
         }
+        
+        // If the weapon is empty and we have an empty static mesh variant, show that instead
+        if (EmptyStaticMesh != none && W.AmmoAmount(0) == 0)
+        {
+            SetStaticMesh(EmptyStaticMesh);
+        }
     }
 }
 
@@ -212,9 +223,9 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
     switch (Switch)
     {
         case 0:
-            return Repl(default.PickupMessage, "{0}", default.InventoryType.default.ItemName);
+            return Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
         case 1:
-            return Repl(default.TouchMessage, "{0}", default.InventoryType.default.ItemName);
+            return Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
     }
 }
 

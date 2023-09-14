@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_M1GarandWeapon extends DHSemiAutoWeapon;
+class DH_M1GarandWeapon extends DHProjectileWeapon;
 
 var     bool    bIsLastRound;
 
@@ -19,17 +19,6 @@ simulated function Fire(float F)
 simulated function bool WasLastRound()
 {
     return AmmoAmount(0) == 0;
-}
-
-// Modified to add hint about garand's ping noise on clip ejection
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp(PrevWeapon);
-
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
-    {
-        DHPlayer(Instigator.Controller).QueueHint(20, true);
-    }
 }
 
 defaultproperties

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // https://tools.ietf.org/html/rfc626
 //==============================================================================
@@ -66,11 +66,11 @@ function HTTPCookie SetCookie(string S)
         }
         else if (AttributeName ~= "Secure")
         {
-            Cookie.Secure = true;
+            Cookie.bSecure = true;
         }
         else if (AttributeName ~= "HttpOnly")
         {
-            Cookie.HTTPOnly = true;
+            Cookie.bHTTPOnly = true;
         }
         else
         {

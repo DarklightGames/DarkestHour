@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHHighROFWeaponAttachment extends DHWeaponAttachment
@@ -49,7 +49,7 @@ simulated function Int2Rot(int N, out rotator R)
     // 0x0 - Pitch (16-bit signed integer)
     // 0xF - Yaw (16-bit signed integer)
     R.Pitch = (N >> 16) & 0xFFFF;
-    R.Yaw = (N & 0xFFFF);
+    R.Yaw = N & 0xFFFF;
 }
 
 simulated function Rot2Int(rotator R, out int N)

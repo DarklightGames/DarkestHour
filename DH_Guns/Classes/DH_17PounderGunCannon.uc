@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_17PounderGunCannon extends DHATGunCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret'
     Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -25,17 +25,16 @@ defaultproperties
     CustomPitchDownLimit=64444
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
 
     nProjectileDescriptions(0)="Mk.IV APC"
     nProjectileDescriptions(1)="Mk.I HE-T"
 
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=8
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=30
+    InitialPrimaryAmmo=15
+    InitialSecondaryAmmo=5
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=10
     SecondarySpread=0.00156
 
     // Weapon fire
@@ -71,4 +70,6 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
+
+    ResupplyInterval=7.5
 }

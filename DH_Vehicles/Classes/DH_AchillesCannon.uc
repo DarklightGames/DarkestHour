@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_AchillesCannon extends DHVehicleCannon;
@@ -12,7 +12,7 @@ defaultproperties
     Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
     Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll')
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
 
@@ -35,7 +35,6 @@ defaultproperties
     CustomPitchDownLimit=64653
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
@@ -53,7 +52,7 @@ defaultproperties
     MaxPrimaryAmmo=32
     MaxSecondaryAmmo=4
     MaxTertiaryAmmo=15
-    SecondarySpread=0.006
+    SecondarySpread=0.002 // was originally 0.006 but was found to be too much, APDS should have a half chance of hitting a frontal panther turret at 400 yards, it now does.
     TertiarySpread=0.00156
 
     // Weapon fire

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHThrowableExplosiveProjectile extends DHProjectile
@@ -595,17 +595,7 @@ function BlowUp(vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
-        if (bBounce)
-        {
-            // If the grenade hasn't landed, do 1/3 less damage
-            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
-            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-        else
-        {
-            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-        }
-
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         MakeNoise(1.0);
     }
 }
@@ -633,7 +623,7 @@ simulated function DoShakeEffect()
             if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
             {
                 BlastShielding = 1.0 - ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
-                Scale -= (0.5 * BlastShielding * Scale);
+                Scale -= 0.5 * BlastShielding * Scale;
                 ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
             }
         }
@@ -752,7 +742,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Snow:
             DampenFactor = 0.0;
-            DampenFactorParallel = 0.0;;
+            DampenFactorParallel = 0.0;
             break;
 
         case EST_Water:
@@ -763,6 +753,26 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
         case EST_Glass:
             DampenFactor = 0.3;
+            DampenFactorParallel = 0.55;
+            break;
+
+        case EST_Custom01: //Sand
+            DampenFactor = 0.1;
+            DampenFactorParallel = 0.45;
+            break;
+
+        case EST_Custom02: //SandBag
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.55;
+            break;
+
+        case EST_Custom03: //Brick
+            DampenFactor = 0.2;
+            DampenFactorParallel = 0.5;
+            break;
+
+        case EST_Custom04: //Hedgerow
+            DampenFactor = 0.15;
             DampenFactorParallel = 0.55;
             break;
     }

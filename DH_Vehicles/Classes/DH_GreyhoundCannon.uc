@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GreyhoundCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
     Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll')
     FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
 
@@ -31,7 +31,6 @@ defaultproperties
     CustomPitchDownLimit=63716
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'

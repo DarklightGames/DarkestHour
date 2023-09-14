@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSOVSniperRoles extends DHAlliedSniperRoles
@@ -13,4 +13,5 @@ defaultproperties
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
 }

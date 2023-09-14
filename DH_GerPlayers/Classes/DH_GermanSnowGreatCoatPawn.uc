@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_GermanSnowGreatCoatPawn extends DH_GermanGreatCoatPawn;
+class DH_GermanSnowGreatCoatPawn extends DH_GermanGreatCoatPawn_Winter;
 
 defaultproperties
 {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHAxisSniperRoles extends DHAxisRoles
@@ -12,7 +12,8 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
-    Limit=2
+    Limit=1
     AddedRoleRespawnTime=15
     bExemptSquadRequirement=true
+    bCanBeSquadLeader=false
 }

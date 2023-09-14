@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_ATGun extends DHCommandMenu
@@ -16,7 +16,7 @@ var localized string CooldownText;
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
 
-function OnSelect(int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -25,7 +25,7 @@ function OnSelect(int Index, vector Location)
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);
 
-    if (PC == none || Index < 0 || Index >= Options.Length || Gun == none)
+    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length || Gun == none)
     {
         return;
     }
@@ -39,7 +39,7 @@ function OnSelect(int Index, vector Location)
 
     UpdateRotationError();
 
-    switch (Index)
+    switch (OptionIndex)
     {
         case 0: // Rotate
             if (RotationError == ERROR_None)
@@ -83,28 +83,28 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     switch (RotationError)
     {
         case ERROR_Occupied:
-            ORI.InfoText = default.OccupiedText;
+            ORI.InfoText[0] = default.OccupiedText;
             break;
         case ERROR_Fatal:
-            ORI.InfoText = default.FatalText;
+            ORI.InfoText[0] = default.FatalText;
             break;
         case ERROR_Cooldown:
             PC = GetPlayerController();
             GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-            ORI.InfoText = default.CooldownText @ string(Gun.NextRotationTime - GRI.ElapsedTime) $ "s";
+            ORI.InfoText[0] = default.CooldownText @ string(Gun.NextRotationTime - GRI.ElapsedTime) $ "s";
             break;
         case ERROR_CannotBeRotated:
-            ORI.InfoText = default.CannotBeRotatedText;
+            ORI.InfoText[0] = default.CannotBeRotatedText;
             break;
         case ERROR_IsBeingRotated:
-            ORI.InfoText = class'DHATCannonMessage'.default.GunIsRotating;
+            ORI.InfoText[0] = class'DHATCannonMessage'.default.GunIsRotating;
             break;
         case ERROR_EnemyGun:
-            ORI.InfoText = default.EnemyGunText;
+            ORI.InfoText[0] = default.EnemyGunText;
             break;
         case ERROR_NeedMorePlayers:
             ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-            ORI.InfoText = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
+            ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
             break;
         default:
             break;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -95,7 +95,10 @@ var     float       TurretHatchFireSpawnTime;
 var     bool        bHullMGFireNeeded;
 var     float       HullMGHatchFireSpawnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a vehicle up, runs each time the fire does damage
-var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle, runs each time engine takes fire damage
+var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle
+var     bool        bEngineFireSpreadPending;  // if true, engine fire will spread to the rest of the vehicle once it has burned for a while.
+var     float       EngineFireSpreadTime;
+var     Range       EngineToHullFireDelayRange;
 var     bool        bFirstPenetratingHit;
 var     bool        bHEATPenetration;       // a penetrating round is a HEAT round
 var     Controller  WhoSetOnFire;
@@ -103,6 +106,7 @@ var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
 var     sound       SmokingEngineSound;
+var     bool        bEnableHatchFires;     // allow hatch fires for this vehicle
 
 // Debugging
 var     bool        bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
@@ -203,6 +207,17 @@ simulated function Timer()
         if (bEngineOnFire && Now >= NextEngineFireDamageTime)
         {
             TakeEngineFireDamage();
+        }
+
+        // Handle the spread of engine fire to the rest of the vehicle.
+        if (bEngineOnFire && !bOnFire && bEngineFireSpreadPending && Now >= EngineFireSpreadTime)
+        {
+            if (bDebuggingText)
+            {
+                Log("Engine fire has spread to the rest of the vehicle!");
+            }
+
+            StartHullFire(WhoSetEngineOnFire);
         }
 
         // Check to see if we need to destroy a spiked, abandoned vehicle
@@ -399,8 +414,8 @@ simulated function DrawPeriscopeOverlay(Canvas C)
         TextureSize = float(PeriscopeOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);// - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);// - OverlayCorrectionY;
+        TileStartPosU = (TextureSize - TilePixelWidth) / 2.0;// - OverlayCorrectionX;
+        TileStartPosV = (TextureSize - TilePixelHeight) / 2.0;// - OverlayCorrectionY;
 
         // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
@@ -515,7 +530,7 @@ simulated function bool CanExit()
 
 // New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
 // CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
-simulated exec function ToggleVehicleLock()
+exec simulated function ToggleVehicleLock()
 {
     if (Role == ROLE_Authority || CanPlayerLockVehicle(self))
     {
@@ -857,7 +872,7 @@ function bool IsAnAllowedCrewman(Pawn P, optional out DHPawn DHP)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to handle starting a hull fire
-function StartHullFire(Pawn InstigatedBy)
+function StartHullFire(Controller InstigatedBy)
 {
     bOnFire = true;
 
@@ -869,7 +884,7 @@ function StartHullFire(Pawn InstigatedBy)
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
     if (InstigatedBy != none)
     {
-        WhoSetOnFire = InstigatedBy.Controller;
+        WhoSetOnFire = InstigatedBy;
         DelayedDamageInstigatorController = WhoSetOnFire;
     }
 
@@ -919,6 +934,21 @@ function StartEngineFire(Pawn InstigatedBy)
 
     // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
     NextEngineFireDamageTime = Level.TimeSeconds;
+
+    if (FRand() <= EngineToHullFireChance)
+    {
+        // Set a flag to indicate that the engine fire will spread to the hull.
+        bEngineFireSpreadPending = true;
+
+        // Set the time that the engine fire will spread to the hull.
+        EngineFireSpreadTime = Level.TimeSeconds + class'UInterp'.static.Linear(FRand(), EngineToHullFireDelayRange.Min, EngineToHullFireDelayRange.Max);
+
+        if (bDebuggingText)
+        {
+            Log("Engine fire will spread to hull!");
+        }
+    }
+
     Timer();
 
     // Engine fire effect
@@ -930,7 +960,7 @@ simulated function SetFireEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (IsVehicleBurning())
+        if (IsVehicleBurning() && bEnableHatchFires)
         {
             // Hatch fire effects
             if (bOnFire && !bSetHullFireEffects)
@@ -1081,7 +1111,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
 
     if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += (NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+        HitPointLocation += NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -1105,7 +1135,7 @@ function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, op
         if (t < DotMM)
         {
             t /= DotMM;
-            Difference -= (t * LineCheck);
+            Difference -= t * LineCheck;
         }
         else
         {
@@ -1286,6 +1316,16 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
         ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
         AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
+
+        // Check if round is to be deflected because the AOI is too high.
+        if (P.bDeflectAOI && AngleOfIncidence > P.DeflectAOI)
+        {
+            P.bRoundDeflected = true;
+
+            ResetTakeDamageVariables();
+
+            return false;
+        }
 
         //Added side armor (schurzen) defeat HEAT projectiles if angle of shot is above 45°
         if (bSideHit && bHasAddedSideArmor && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
@@ -1919,7 +1959,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
             if (FRand() < HullFirePercent)
             {
-                StartHullFire(InstigatedBy);
+                if (InstigatedBy != none)
+                {
+                    StartHullFire(InstigatedBy.Controller);
+                }
+                else
+                {
+                    StartHullFire(none);
+                }
             }
             // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations (spilled fuel, loose electrical circuits, etc)
             else if (bFirstPenetratingHit)
@@ -2089,12 +2136,6 @@ function TakeEngineFireDamage()
             }
 
             DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-
-            // Small chance each time of engine fire spreading & setting whole vehicle on fire
-            if (!bOnFire && FRand() < EngineToHullFireChance)
-            {
-                StartHullFire(PawnWhoSetOnFire);
-            }
 
             // Engine not dead, so set next engine damage due in the normal 3 seconds
             if (EngineHealth > 0)
@@ -2401,6 +2442,7 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
+    bEnableHatchFires=true
     EngineToHullFireChance=0.05  //increased to 0.1 on all petrol engines
     PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death; reduced to 12 on all diesels
     FireDetonationChance=0.07  //reduced to 0.045 on all diesels
@@ -2414,7 +2456,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
@@ -2511,4 +2553,7 @@ defaultproperties
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
+
+    EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
+    bDebuggingText=true
 }

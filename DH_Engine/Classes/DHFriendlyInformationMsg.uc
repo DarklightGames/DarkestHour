@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHFriendlyInformationMsg extends LocalMessage
@@ -25,7 +25,7 @@ static function string GetString(
 
 defaultproperties
 {
-    TeamSurrendered="Your team has decided to surrender, the battle will be over shortly!"
+    TeamSurrendered="Your team has decided to retreat, the battle will be over shortly!"
 
     bFadeMessage=true
     bIsUnique=true

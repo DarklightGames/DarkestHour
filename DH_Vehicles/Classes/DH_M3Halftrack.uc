@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_M3Halftrack extends DHVehicle
+class DH_M3Halftrack extends DHArmoredVehicle
     abstract;
 
 defaultproperties
@@ -15,9 +15,12 @@ defaultproperties
     VehicleMass=8.5
     ReinforcementCost=3
     MaxDesireability=1.2
+    MinRunOverSpeed=300
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
@@ -26,6 +29,7 @@ defaultproperties
     Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
+    bUsesCodedDestroyedSkins=false
 
     // Driver
     DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
@@ -45,6 +49,11 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    ChassisTorqueScale=0.4
+    bSpecialTankTurning=false
+    TurnDamping=35.0
 
     // Physics wheels properties
     WheelLongFrictionScale=1.25
@@ -56,22 +65,32 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=10.0
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
-    VehHitpoints(0)=(PointRadius=35.0) // engine
+    Health=500.0
+    HealthMax=500.0
+    DamagedEffectHealthFireFactor=0.1
+    EngineHealth=150.0
+    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=125.0,Z=65.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+   VehHitpoints(3)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // right fuel tank
+    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-31.0,Y=-52.0,Z=95.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // left fuel tank
     DamagedWheelSpeedFactor=0.4
     EngineDamageFromGrenadeModifier=0.05
-    DirectHEImpactDamageMult=8.0
+    DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
     TreadHitMaxHeight=64.0
     DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
+    DamagedEffectOffset=(X=120.0,Y=0.0,Z=68.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    bEnableHatchFires=true
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireAttachBone="body"
+    FireEffectOffset=(X=-35.0,Y=30.0,Z=85.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    EngineToHullFireChance=0.05 //Unlikely for a fire to spread
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
+    FireDetonationChance=0.02
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
 
     // Vehicle destruction
     ExplosionDamage=85.0

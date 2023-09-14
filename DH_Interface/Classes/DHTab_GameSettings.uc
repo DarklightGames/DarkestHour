@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHTab_GameSettings extends Settings_Tabs;
@@ -15,7 +15,7 @@ var automated DHmoCheckBox      ch_TankThrottle, ch_VehicleThrottle, ch_ManualRe
 var automated GUILabel          l_PlayerROID;     // label showing player's unique ROID
 var automated DHGUIButton       b_CopyPlayerROID; // button to copy player's ROID to clipboard
 var automated DHmoCheckBox      ch_DynamicNetSpeed;
-var automated DHmoComboBox      co_Netspeed, co_PurgeCacheDays;
+var automated DHmoComboBox      co_Netspeed, co_PurgeCacheDays, co_AutomaticVehicleAlerts;
 
 var     int                     OriginalNetSpeed, OriginalPurgeCacheDays; // save initial values so can tell later if they have changed & need to be saved
 var     int                     PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
@@ -27,6 +27,8 @@ var     localized string        DegreesText;
 
 var     localized string        NetSpeedText[7];
 var     int                     NetSpeedValues[7];
+
+var     localized string        AutomaticVehicleAlertsText[3];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -43,6 +45,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_VehicleThrottle);
     i_BG2.ManageComponent(ch_ManualReloading);
     i_BG2.ManageComponent(ch_LockTankOnEntry);
+    i_BG2.ManageComponent(co_AutomaticVehicleAlerts);
 
     i_BG3.ManageComponent(l_PlayerROID);
     i_BG3.ManageComponent(b_CopyPlayerROID);
@@ -65,6 +68,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     for (i = 0; i < arraycount(PurgeCacheDaysValues); ++i) // deliberately using PurgeCacheDaysValues array size, as highest list text is reserved for possible custom value
     {
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
+    }
+
+    for (i = 0; i < arraycount(AutomaticVehicleAlertsText); ++i)
+    {
+        co_AutomaticVehicleAlerts.AddItem(AutomaticVehicleAlertsText[i]);
     }
 }
 
@@ -114,7 +122,10 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case ch_BayonetAtStart:
             ch_BayonetAtStart.Checked(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer bSpawnWithBayonet"));
             break;
-
+        
+        case co_AutomaticVehicleAlerts:
+            co_AutomaticVehicleAlerts.SetIndex(int(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer AutomaticVehicleAlerts")));
+            break;
         // Vehicle settings
         case ch_TankThrottle:
             if (DHPlayer(PC) != none)
@@ -266,6 +277,7 @@ function SaveSettings()
     local int              GoreLevel, NetSpeed, PurgeCacheDays;
     local bool             bTankThrottle, bVehicleThrottle, bManualReloading, bDynamicNetSpeed, bSaveConfig, bStaticSaveConfig;
     local bool             bSpawnWithBayonet, bLockTankOnEntry;
+    local byte             AutomaticVehicleAlerts;
 
     PC = PlayerOwner();
     DHP = DHPlayer(PC);
@@ -323,6 +335,7 @@ function SaveSettings()
     bVehicleThrottle = ch_VehicleThrottle.IsChecked();
     bManualReloading = ch_ManualReloading.IsChecked();
     bLockTankOnEntry = ch_LockTankOnEntry.IsChecked();
+    AutomaticVehicleAlerts = co_AutomaticVehicleAlerts.GetIndex();
 
     if (DHP != none)
     {
@@ -349,6 +362,13 @@ function SaveSettings()
             DHP.SetLockTankOnEntry(bLockTankOnEntry);
             bSaveConfig = true;
         }
+        
+        if (DHP.AutomaticVehicleAlerts != AutomaticVehicleAlerts)
+        {
+            DHP.AutomaticVehicleAlerts = AutomaticVehicleAlerts;
+            DHP.ServerSetAutomaticVehicleAlerts(AutomaticVehicleAlerts);
+            bSaveConfig = true;
+        }
     }
     else
     {
@@ -373,6 +393,12 @@ function SaveSettings()
         if (class'DHPlayer'.default.bLockTankOnEntry != bLockTankOnEntry)
         {
             class'DHPlayer'.default.bLockTankOnEntry = bLockTankOnEntry;
+            bStaticSaveConfig = true;
+        }
+        
+        if (class'DHPlayer'.default.AutomaticVehicleAlerts != AutomaticVehicleAlerts)
+        {
+            class'DHPlayer'.default.AutomaticVehicleAlerts = AutomaticVehicleAlerts;
             bStaticSaveConfig = true;
         }
 
@@ -432,6 +458,7 @@ function ResetClicked()
     class'DHPlayer'.static.ResetConfig("ConfigViewFOV");
     class'GameInfo'.static.ResetConfig("GoreLevel");
     class'DHPlayer'.static.ResetConfig("bSpawnWithBayonet");
+    class'DHPlayer'.static.ResetConfig("AutomaticVehicleAlerts");
     class'DHPlayer'.static.ResetConfig("bInterpolatedTankThrottle");
     class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
     class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
@@ -450,6 +477,7 @@ function ResetClicked()
         DHP.bInterpolatedVehicleThrottle = class'DHPlayer'.default.bInterpolatedVehicleThrottle;
         DHP.bManualTankShellReloading = class'DHPlayer'.default.bManualTankShellReloading;
         DHP.bLockTankOnEntry = class'DHPlayer'.default.bLockTankOnEntry;
+        DHP.AutomaticVehicleAlerts = class'DHPlayer'.default.AutomaticVehicleAlerts;
     }
 
     for (i = 0; i < Components.Length; ++i)
@@ -486,6 +514,10 @@ defaultproperties
     NetSpeedText(4)="High ({0})"
     NetSpeedText(5)="Extreme ({0})"
     NetSpeedText(6)="User Defined (%NetSpeed%)"
+
+    AutomaticVehicleAlertsText(0)="Never"
+    AutomaticVehicleAlertsText(1)="Only with crewmates"
+    AutomaticVehicleAlertsText(2)="Always"
 
     PurgeCacheDaysValues(0)=0
     PurgeCacheDaysValues(1)=30
@@ -671,4 +703,16 @@ defaultproperties
         OnLoadINI=InternalOnLoadINI
     End Object
     co_PurgeCacheDays=DHmoComboBox'PurgeCacheDays'
+
+    Begin Object Class=DHmoComboBox Name=AutomaticVehicleAlerts
+        Caption="Automatic Vehicle Alerts"
+        Hint="When to send automatic vehicle voice alerts"
+        CaptionWidth=0.38
+        ComponentJustification=TXTA_Left
+        bReadOnly=true
+        IniOption="@Internal"
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
+    End Object
+    co_AutomaticVehicleAlerts=DHmoComboBox'AutomaticVehicleAlerts'
 }

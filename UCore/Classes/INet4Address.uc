@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class INet4Address extends Object;
@@ -42,7 +42,7 @@ function string ToString()
     return S;
 }
 
-static final function INet4Address FromString(string S)
+final static function INet4Address FromString(string S)
 {
     local INet4Address Address;
     local string T;

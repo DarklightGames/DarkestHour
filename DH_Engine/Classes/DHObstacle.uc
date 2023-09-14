@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This is the placeable obstacle class.
 // This acts simply as an informational actor. The client and server will spawn
@@ -104,7 +104,7 @@ simulated function bool CanBeDestroyedByExplosives() {return Info.CanBeDestroyed
 simulated function bool CanBeDestroyedByWeapons() {return Info.CanBeDestroyedByWeapons(TypeIndex, bIsDefault);}
 simulated function int GetExplosionDamageThreshold() {return Info.GetExplosionDamageThreshold(TypeIndex, bIsDefault);}
 simulated function int GetDamageThreshold() {return Info.GetDamageThreshold(TypeIndex, bIsDefault);}
-simulated function sound GetClearSound() {return Info.GetClearSound(TypeIndex, bIsDefault);}
+simulated function sound GetClearSound(out float SoundRadius) {return Info.GetClearSound(TypeIndex, bIsDefault, SoundRadius);}
 simulated function float GetCutDuration() {return Info.GetCutDuration(TypeIndex, bIsDefault);}
 simulated function class<Emitter> GetClearEmitterClass() {return Info.GetClearEmitterClass(TypeIndex, Index, bIsDefault);}
 
@@ -124,7 +124,6 @@ defaultproperties
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
     RemoteRole=ROLE_None
-    SpawnClearedChance=0.0
     TypeIndex=-1
     bDebug=false
     bNoDelete=false

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_ConstructionWeapon extends DH_ProxyWeapon;
@@ -213,6 +213,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         }
 
         C.UpdateAppearance();
+        C.OnSpawnedByPlayer();
     }
 }
 
@@ -227,8 +228,4 @@ simulated function ResetCursor()
         // This resets the proxy.
         CP.SetConstructionClass(CP.ConstructionClass);
     }
-}
-
-defaultproperties
-{
 }

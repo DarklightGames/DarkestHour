@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BA64MG extends DHVehicleMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_BA64_anm.BA64_turret_ext'
-    CollisionStaticMesh=StaticMesh'DH_BA64_stc.BA64.BA64_Turret_Coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_BA64_stc.BA64.BA64_Turret_Coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bMatchSkinToVehicle=true
     GunnerAttachmentBone=com_attachment
@@ -38,11 +38,11 @@ defaultproperties
     WeaponAttachOffset=(X=0.0,Y=0.0,Z=-1.0) //need to lower the turret a bit due to gap
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    ProjectileClass=class'DH_Weapons.DH_DP27Bullet'
     InitialPrimaryAmmo=63
     NumMGMags=15
-    FireInterval=0.1
-    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
+    FireInterval=0.105
+    TracerProjectileClass=class'DH_Weapons.DH_DP27TracerBullet'
     TracerFrequency=5
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 

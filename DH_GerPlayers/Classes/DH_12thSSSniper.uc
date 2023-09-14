@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_12thSSSniper extends DHGESniperRoles;
@@ -14,5 +14,5 @@ defaultproperties
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BHPWeapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_ColtM1914Weapon')
+    SecondaryWeapons(2)=(Item=class'DH_Weapons.DH_TT33Weapon')
 }

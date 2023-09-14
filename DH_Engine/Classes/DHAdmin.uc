@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHAdmin extends AdminIni;
@@ -12,9 +12,4 @@ function DoLoginSilent( string Username, string Password)
         bAdmin = true;
         Outer.ReceiveLocalizedMessage(Level.Game.GameMessageClass, 20);
     }
-}
-
-defaultproperties
-{
-
 }

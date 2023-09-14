@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIVGLateTank extends DHArmoredVehicle;
@@ -17,7 +17,7 @@ defaultproperties
     Skins(1)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
@@ -53,7 +53,7 @@ defaultproperties
 
     // Damage
 	// pros: 5 men crew
-	// cons: petrol fuel 
+	// cons: petrol fuel
     Health=565
     HealthMax=565.0
 	EngineHealth=300
@@ -67,8 +67,8 @@ defaultproperties
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
-    DestroyedMeshSkins(2)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'
+    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    DestroyedMeshSkins(2)=Combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'
 
     // Exit
     ExitPositions(0)=(X=91.0,Y=-38.0,Z=110.0)  // driver

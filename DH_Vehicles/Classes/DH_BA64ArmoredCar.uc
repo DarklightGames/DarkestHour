@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BA64ArmoredCar extends DHArmoredVehicle;
@@ -27,7 +27,10 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BA64MGPawn',WeaponBone=turret_placement)
+
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BA64.BA64_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Driver
     DriverAttachmentBone=driver_attachment
@@ -81,8 +84,8 @@ defaultproperties
     FTScale=0.030000
     ChassisTorqueScale=0.095
     MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-    SteerSpeed=160.000000
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    SteerSpeed=85.000000
     TurnDamping=35.000000
     StopThreshold=100.000000
     HandbrakeThresh=200.000000
@@ -100,8 +103,8 @@ defaultproperties
     GearRatios(1)=0.12
     GearRatios(2)=0.24
     GearRatios(3)=0.4
-    GearRatios(4)=0.54
-    TransRatio=0.12
+    GearRatios(4)=0.6
+    TransRatio=0.14
     ChangeUpPoint=2200.000000
     ChangeDownPoint=1000.000000
     EngineBrakeFactor=0.000100
@@ -135,9 +138,9 @@ defaultproperties
     ExitPositions(1)=(X=-92.0,Y=4.0,Z=150.0)
 
     // Sounds
-    IdleSound=sound'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.BA64.ba64_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.BA64.ba64_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.BA64.ba64_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.BA64.ba64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64.ba64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-20,Y=30,Z=-35),ExhaustRotation=(pitch=34000,yaw=-5000,roll=0))

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -122,12 +122,13 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NotQualified;
     }
 
-    if (PC.SavedArtilleryCoords == vect(0, 0, 0))
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    // SavedArtilleryCoords is saved in DHCommandMenu_FireSupport.OnSelect()
+    if (PC.SavedArtilleryCoords == vect(0, 0, 0) && PC.GetActiveOffMapSupportNumber() == 0)
     {
         return ERROR_NoTarget;
     }
-
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
     {
@@ -144,23 +145,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 
 simulated function bool IsPlayerQualified(DHPlayer PC)
 {
-    local DHRoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
-
-    if (PC == none)
-    {
-        return false;
-    }
-
-    RI = DHRoleInfo(PC.GetRoleInfo());
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (RI == none || PRI == none)
-    {
-        return false;
-    }
-
-    return RI.bIsArtilleryOfficer || PRI.IsSquadLeader();
+    return PC != none && PC.IsSquadLeader();
 }
 
 function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
@@ -208,8 +193,8 @@ state Requesting extends Busy
 {
     function BeginState()
     {
-        local SoundGroup RequestSound;
         local DH_LevelInfo LI;
+        local Sound RequestSound;
 
         super.BeginState();
 
@@ -222,13 +207,11 @@ state Requesting extends Busy
 
         if (Request == none ||
             Request.Sender == none ||
-            Request.Location == vect(0, 0, 0) ||
             Request.ArtilleryTypeIndex < 0 ||
             Request.ArtilleryTypeIndex >= LI.ArtilleryTypes.Length ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass == none ||
             LI.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex != Request.Sender.GetTeamNum())
         {
-            Warn("Invalid request parameters.");
             return;
         }
 
@@ -236,7 +219,7 @@ state Requesting extends Busy
         Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 0,,, Request.GetArtilleryClass());
 
         // Play request sound.
-        RequestSound = GetRequestSound(LI);
+        RequestSound = GetRequestSound(Request.TeamIndex, LI);
 
         if (Request.Sender.Pawn != none)
         {
@@ -260,6 +243,8 @@ state Responding extends Busy
         local SoundGroup ResponseSound;
         local DarkestHourGame.ArtilleryResponse Response;
         local DH_LevelInfo LI;
+        local DHGameReplicationInfo GRI;
+        local vector MapLocation;
 
         super.BeginState();
 
@@ -276,9 +261,12 @@ state Responding extends Busy
         // Determine the response sound from the response type.
         if (Response.Type == RESPONSE_OK)
         {
+            GRI = DHGameReplicationInfo(Request.Sender.GameReplicationInfo);
+            GRI.GetMapCoords(Request.Location, MapLocation.X, MapLocation.Y);
+
             // "Artillery strike confirmed."
             Request.Sender.ReceiveLocalizedMessage(class'DHArtilleryMessage', 1,,, Request.GetArtilleryClass());
-            ResponseSound = GetConfirmSound(LI);
+            ResponseSound = GetConfirmSound(Request.TeamIndex, LI);
         }
         else
         {
@@ -297,6 +285,10 @@ state Responding extends Busy
                     // "Invalid target location for {name}."
                     Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 6,,, Request.GetArtilleryClass());
                     break;
+                case RESPONSE_NoTarget:
+                    // "No target location."
+                    Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 9,,, Request.GetArtilleryClass());
+                    break;
                 case RESPONSE_TooSoon:
                     // "{name}s are currently in use, try again soon."
                     Request.Sender.ReceiveLocalizedMessage(ArtilleryMessageClass, 3,,, Request.GetArtilleryClass());
@@ -310,7 +302,7 @@ state Responding extends Busy
                     break;
             }
 
-            ResponseSound = GetDenySound(LI);
+            ResponseSound = GetDenySound(Request.TeamIndex, LI);
         }
 
         // Play the response sound.
@@ -370,48 +362,20 @@ simulated function NotifySelected(Pawn User)
 // and results in nonsense like this needing to be coded up.
 function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
 {
-    local string VoicePackClassName;
-
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            VoicePackClassName = "DH_GerPlayers.DHGerVoice";
-            break;
-        case ALLIES_TEAM_INDEX:
-            switch (LI.AlliedNation)
-            {
-                case NATION_USA:
-                    VoicePackClassName = "DH_USPlayers.DHUSVoice";
-                    break;
-                case NATION_Canada:
-                    VoicePackClassName = "DH_BritishPlayers.DHCanadianVoice";
-                    break;
-                case NATION_Britain:
-                    VoicePackClassName = "DH_BritishPlayers.DHBritishVoice";
-                    break;
-                case NATION_USSR:
-                    VoicePackClassName = "DH_SovietPlayers.DHSovietVoice";
-                    break;
-                case NATION_Poland:
-                    VoicePackClassName = "DH_SovietPlayers.DHPolishVoice";
-                    break;
-            }
-    }
-
-    return class<DHVoicePack>(DynamicLoadObject(VoicePackClassName, class'Class'));
+    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass;
 }
 
-function SoundGroup GetRequestSound(DH_LevelInfo LI)
+function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioRequestSound;
 }
 
-function SoundGroup GetConfirmSound(DH_LevelInfo LI)
+function SoundGroup GetConfirmSound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioResponseConfirmSound;
 }
 
-function SoundGroup GetDenySound(DH_LevelInfo LI)
+function SoundGroup GetDenySound(int TeamIndex, DH_LevelInfo LI)
 {
     return GetVoicePack(TeamIndex, LI).default.RadioResponseDenySound;
 }
@@ -449,4 +413,3 @@ defaultproperties
     MapIconMaterial=none    // TODO: fill this in
     bShouldShowOnSituationMap=true
 }
-

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // Menu to display while you are in a squad.
 //==============================================================================
@@ -18,7 +18,7 @@ function bool ShouldHideMenu()
     return PC == none || PC.Pawn == none || PC.Pawn.Health <= 0 || PRI == none || !PRI.IsInSquad();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
 

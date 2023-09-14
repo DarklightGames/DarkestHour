@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_Resupply extends DHConstruction
@@ -9,7 +9,7 @@ class DHConstruction_Resupply extends DHConstruction
 var class<DHResupplyAttachment>         ResupplyAttachmentClass;
 var DHResupplyAttachment                ResupplyAttachment;
 var int                                 ResupplyCount;
-var DHResupplyAttachment.EResupplyType  ResupplyType;
+var DHResupplyStrategy.EResupplyType    ResupplyType;
 var float                               ResupplyAttachmentCollisionRadius;
 var float                               ResupplyAttachmentCollisionHeight;
 

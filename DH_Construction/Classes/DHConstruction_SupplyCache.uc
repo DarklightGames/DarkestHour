@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_SupplyCache extends DHConstruction;
@@ -161,6 +161,7 @@ defaultproperties
     bCanPlaceIndoors=true
     bCanBeTornDownByFriendlies=false
     bCanBeTornDownWhenConstructed=true
+    bCanBePlacedInDangerZone=false
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"

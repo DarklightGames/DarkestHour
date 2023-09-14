@@ -1,17 +1,30 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRocketWeaponAttachment extends DHWeaponAttachment
     abstract;
 
-var     mesh            EmptyMesh;       // the mesh to swap to after a round is fired
+var           bool bHideWarheadWhenFired;
+var           bool bWarheadVisible;
+var           name WarheadBoneName;
+var           int  WarheadScaleSlot; // Slot holding the scalar values for the warhead bone
+var           Mesh EmptyMesh;        // TODO: EmptyMesh is kept for backwards compatibility. Deprecate this when possible!
 
-var     bool            bPanzerfaustAttachment; //Panzerfaust 3rd person muzzle flash needs to be handled differently
-var     name            ExhaustBoneName;
-var     class<Emitter>  mExhFlashClass;
-var     Emitter         mExhFlash3rd;
+var bool           bPanzerfaustAttachment; // Panzerfaust 3rd person muzzle flash needs to be handled differently
+var name           ExhaustBoneName;
+var class<Emitter> mExhFlashClass;
+var Emitter        mExhFlash3rd;
+
+// HACK: Fixes the issue where warhead is incorrectly shown when the weapon is pulled out.
+var     bool    bInitiallyLoaded;
+
+replication
+{
+    reliable if (bHideWarheadWhenFired && bNetDirty && Role == ROLE_Authority)
+        bWarheadVisible;
+}
 
 // Overridden to use standard muzzle flash code for non-Panzerfaust rocket weps
 simulated function PostBeginPlay()
@@ -21,8 +34,57 @@ simulated function PostBeginPlay()
         mMuzFlash3rd = Spawn(mMuzFlashClass);
         AttachToBone(mMuzFlash3rd, MuzzleBoneName);
     }
+
+    if (bHideWarheadWhenFired)
+    {
+        bWarheadVisible = bInitiallyLoaded;
+        ShowWarhead(bInitiallyLoaded);
+    }
 }
 
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bHideWarheadWhenFired && bWarheadVisible == bOutOfAmmo)
+    {
+        ShowWarhead(bWarheadVisible);
+    }
+}
+
+simulated function ShowWarhead(bool bShow)
+{
+    local Mesh NewMesh;
+
+    if (EmptyMesh != none)
+    {
+        // TODO: EmptyMesh is kept for backwards compatibility. Deprecate this when possible!
+        if (bShow)
+        {
+            NewMesh = default.Mesh;
+        }
+        else
+        {
+            NewMesh = EmptyMesh;
+        }
+
+        if (NewMesh != Mesh)
+        {
+            LinkMesh(NewMesh);
+        }
+    }
+    else
+    {
+        if (WarheadBoneName != '')
+        {
+            SetBoneScale(WarheadScaleSlot, float(bShow), WarheadBoneName);
+        }
+        else
+        {
+            Warn("Failed to scale the warhead bone: WarheadBoneName is empty!");
+        }
+    }
+}
 
 // Modified because the 3rd person effects are handled differently for rocket weapons
 simulated event ThirdPersonEffects()
@@ -32,9 +94,9 @@ simulated event ThirdPersonEffects()
         return;
     }
 
-    if (EmptyMesh != none && FiringMode == 0) // switch to empty mesh if has one & it's not a melee attack
+    if (bHideWarheadWhenFired && FiringMode == 0)
     {
-        LinkMesh(EmptyMesh);
+        ShowWarhead(false);
     }
 
     if (FlashCount > 0 && (FiringMode == 0 || bAltFireFlash))
@@ -52,8 +114,8 @@ simulated event ThirdPersonEffects()
         }
         else
         {
-                mMuzFlash3rd = Spawn(mMuzFlashClass);
-                AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+            mMuzFlash3rd = Spawn(mMuzFlashClass);
+            AttachToBone(mMuzFlash3rd, MuzzleBoneName);
         }
 
         if (mExhFlash3rd == none && mExhFlashClass != none && ExhaustBoneName != '')
@@ -80,6 +142,5 @@ simulated event ThirdPersonEffects()
 defaultproperties
 {
     bPanzerfaustAttachment=false
-    bNetNotify=false // don't need to update bayonet fixing or steaming barrel for a rocket weapon
     bRapidFire=false
 }

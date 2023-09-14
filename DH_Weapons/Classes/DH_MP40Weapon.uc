@@ -1,20 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Maschinenpistole 40"
+    ItemName="MP 40"
+    NativeItemName="Maschinenpistole 40"
     FireModeClass(0)=class'DH_Weapons.DH_MP40Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP40MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MP40Attachment'
     PickupClass=class'DH_Weapons.DH_MP40Pickup'
 
     Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
@@ -27,7 +28,7 @@ defaultproperties
     InitialNumPrimaryMags=9
 
     bPlusOneLoading=false
-    
+
     //alternative reload
     MagEmptyReloadAnims(1)="reload_emptyB"
     MagEmptyReloadAnims(2)="reload_empty"

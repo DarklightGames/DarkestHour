@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_JacksonCannon extends DHVehicleCannon;
@@ -13,7 +13,7 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
     Skins(2)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
     Skins(3)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext' // shows the muzzle brake
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col')
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=-12.0,Y=0.0,Z=41.0)
@@ -38,7 +38,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'

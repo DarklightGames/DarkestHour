@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 // This is an artillery type used for backwards compatibility with the old
 // Red Orchestra artillery system.
@@ -24,8 +24,8 @@ var DHGameReplicationInfo GRI;
 // And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
 {
-    local DH_LevelInfo LI;
-    local float StrikeDelay, MaxSalvoDuration;
+    local DH_LevelInfo      LI;
+    local float             StrikeDelay, MaxSalvoDuration;
 
     super.PostBeginPlay();
 
@@ -43,12 +43,9 @@ function PostBeginPlay()
         return;
     }
 
-    // Record the team that called this arty strike
-    // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
-    GRI.ArtyStrikeLocation[TeamIndex] = Location;
-
     // Get arty strike properties from our team's settings in the map's DHLevelInfo
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
     BatterySize = LI.GetBatterySize(TeamIndex);
     SalvoAmount = LI.GetSalvoAmount(TeamIndex);
     SpreadAmount = LI.GetSpreadAmount(TeamIndex);
@@ -65,6 +62,12 @@ function PostBeginPlay()
     LifeSpan = StrikeDelay + (20.0 * (SalvoAmount - 1)) + (SalvoAmount * MaxSalvoDuration) + 1.0;
 }
 
+// Overridden so that we don't count the strike as started until the first shot has been fired.
+function bool HasStarted()
+{
+    return ShellCounter > 0 || SalvoCounter > 0;
+}
+
 // From deprecated ROArtillerySpawner
 function Destroyed()
 {
@@ -77,8 +80,8 @@ function Destroyed()
     {
         Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
-
     LastSpawnedShell = none;
+    GRI.InvalidateOngoingBarrageMarker(TeamIndex);
 }
 
 // Modified from deprecated ROArtillerySpawner to fix log errors causing 1 extra salvo & 1 extra shell per salvo (& re-factored a little to optimise)
@@ -103,7 +106,7 @@ function Timer()
 
         if (VT != none)
         {
-            if (VT.IsInNoArtyVolume())
+            if (VT.DHIsInNoArtyVolume(GRI))
             {
                 bInvalid = true;
 
@@ -210,3 +213,8 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
     return LI.GetStrikeInterval(TeamIndex) * 2.0;
 }
 
+defaultproperties
+{
+    ActiveArtilleryMarkerClass=class'DHMapMarker_OngoingBarrage'
+    ArtilleryType=ArtyType_Barrage
+}

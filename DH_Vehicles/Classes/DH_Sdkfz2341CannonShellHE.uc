@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
@@ -9,16 +9,16 @@ defaultproperties
 {
     bNetTemporary=true // so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
 
-    Speed=47075.0
-    MaxSpeed=47075.0
+    Speed=53592.58
+    MaxSpeed=53592.58
     ShellDiameter=2.0
-    BallisticCoefficient=0.68 //G1 figure based on JBM calculation for US M95 20mm AP
+    BallisticCoefficient=0.70 //G1 figure based on JBM calculation for US M95 20mm AP
 
     //Damage
     ImpactDamage=200
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
-    Damage=75.0 //10.2 gr of TNT 
-    DamageRadius=250
+    Damage=80.0 // 6.2g PETN
+    DamageRadius=375.0
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.25
     EngineFireChance=0.35
@@ -39,8 +39,8 @@ defaultproperties
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 
-    BlurTime=2.0
-    BlurEffectScalar=0.9
+    BlurTime=1.9
+    BlurEffectScalar=1.3
     PenetrationMag=110.0
 
     //Sound
@@ -59,17 +59,18 @@ defaultproperties
     DHPenetrationTable(7)=0.1
 
     //Gunsights adjustment
-    MechanicalRanges(1)=(Range=100,RangeValue=33.0)
-    MechanicalRanges(2)=(Range=200,RangeValue=37.0)
-    MechanicalRanges(3)=(Range=300,RangeValue=41.0)
-    MechanicalRanges(4)=(Range=400,RangeValue=48.0)
-    MechanicalRanges(5)=(Range=500,RangeValue=56.0)
-    MechanicalRanges(6)=(Range=600,RangeValue=64.0)
-    MechanicalRanges(7)=(Range=700,RangeValue=76.0)
-    MechanicalRanges(8)=(Range=800,RangeValue=87.0)
-    MechanicalRanges(9)=(Range=900,RangeValue=97.0)
-    MechanicalRanges(10)=(Range=1000,RangeValue=109.0)
-    MechanicalRanges(11)=(Range=1100,RangeValue=122.0)
-    MechanicalRanges(12)=(Range=1200,RangeValue=131.0)
+    MechanicalRanges(0)=(Range=0,RangeValue=-2.0)
+    MechanicalRanges(1)=(Range=100,RangeValue=11.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=18.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=26.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=35.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=42.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=52.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=61.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=73.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=85.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=100.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=116.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=132.0)
     bMechanicalAiming=true
 }

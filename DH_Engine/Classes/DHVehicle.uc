@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
@@ -132,6 +132,8 @@ var     TexRotator          VehicleHudTurretLook;
 var     float               VehicleHudTreadsPosX[2]; // 0.0 to 1.0 X positioning of tread damage indicators (index 0 = left, 1 = right)
 var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
+var     bool                bShouldDrawPositionDots;
+var     bool                bShouldDrawOccupantList;
 
 // Map icon
 var     class<DHMapIconAttachment>  MapIconAttachmentClass;
@@ -159,6 +161,8 @@ var     int                                     SupplyDropCountMax;         // H
 var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
+var     float                                   ResupplyInterval;
+var     int                                     LastResupplyTimestamp;
 
 var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
@@ -168,11 +172,13 @@ var     int                                     SupplyCost;             // The a
 
 // Construction
 var     vector                                  ConstructionPlacementOffset;
+var     Mesh                                    ConstructionBaseMesh;
 
 // Spawning
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
+var     bool                    bHasSpawnKillPenalty;
 
 // Absolute exit positions
 struct SExitPosition
@@ -695,14 +701,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        CameraLocation += (FPCamPos >> Rotation);
+        CameraLocation += FPCamPos >> Rotation;
     }
 
     // Finalise the camera with any shake
     if (PC != none)
     {
         CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-        CameraLocation += (PC.ShakeOffset >> PC.Rotation);
+        CameraLocation += PC.ShakeOffset >> PC.Rotation;
     }
 }
 
@@ -1220,12 +1226,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     if (DHP != none)
     {
         DHP.QueueHint(40, true);
-
-        if (IsSpawnVehicle())
-        {
-            DHP.QueueHint(14, true);
-            DHP.QueueHint(16, true);
-        }
     }
 
     super(Vehicle).ClientKDriverEnter(PC);
@@ -2560,6 +2560,15 @@ function bool IsSpawnKillProtected()
     return SpawnKillTimeEnds > Level.TimeSeconds;
 }
 
+// Debug function to simulate a spawn kill happening on the vehicle
+exec function DebugSpawnKill()
+{
+    if (Level.NetMode == NM_Standalone && SpawnPointAttachment != none)
+    {
+        SpawnPointAttachment.OnSpawnKill(None, None);
+    }
+}
+
 // Modified to handle a turret's yaw bone being specified for a vehicle hit point, with any positional offset being based on turret's rotation
 // Also optimised a little & PointHeight is deprecated (concerned head shot calcs that aren't relevant here)
 function bool IsPointShot(vector HitLocation, vector LineCheck, float AdditionalScale, int Index, optional float CheckDistance)
@@ -2587,7 +2596,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
 
     if (VehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
     {
-        HitPointLocation += (VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+        HitPointLocation += VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis);
     }
 
     // Set the hit line to check
@@ -2611,7 +2620,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
         if (t < DotMM)
         {
             t /= DotMM;
-            Difference -= (t * LineCheck);
+            Difference -= t * LineCheck;
         }
         else
         {
@@ -3387,7 +3396,7 @@ simulated function DestroyAttachments()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Unloading supplies.
-simulated exec function ROManualReload()
+exec simulated function ROManualReload()
 {
     LoadSupplies();
 }
@@ -3421,7 +3430,7 @@ simulated function UnloadSupplies()
 }
 
 // Loading supplies.
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     UnloadSupplies();
 }
@@ -3578,11 +3587,19 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    bDidResupply = super.ResupplyAmmo();
-
-    if (SupplyAttachment != none && SupplyAttachment.Resupply())
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        bDidResupply = true;
+        bDidResupply = super.ResupplyAmmo();
+
+        if (SupplyAttachment != none && SupplyAttachment.Resupply())
+        {
+            bDidResupply = true;
+        }
+    }
+
+    if (bDidResupply)
+    {
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidResupply;
@@ -3650,7 +3667,7 @@ function MaybeDestroyVehicle()
         // (If the vehicle was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
         // AND is not meant to reset)
         // OR is a spawn vehicle, return
-        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || IsSpawnVehicle())
+        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || IsPermanentSpawnVehicle())
         {
             return;
         }
@@ -3694,7 +3711,7 @@ event CheckReset()
     // Do nothing if vehicle is a spawn vehicle or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
     // Occupied vehicle shouldn't have CheckReset timer running & if player exits, leaving vehicle empty, then a new CheckReset timer gets started
-    if (IsSpawnVehicle() || !IsVehicleEmpty())
+    if (IsPermanentSpawnVehicle() || !IsVehicleEmpty())
     {
         return;
     }
@@ -3848,7 +3865,7 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 }
 
 // New helper function to check whether vehicle is a spawn vehicle
-simulated function bool IsSpawnVehicle()
+simulated function bool IsPermanentSpawnVehicle()
 {
     return SpawnPointAttachment != none && !SpawnPointAttachment.bIsTemporary;
 }
@@ -4170,7 +4187,7 @@ defaultproperties
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"
     TouchMessageClass=class'DHVehicleTouchMessage'
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyAttachmentClass=class'DHResupplyAttachment_Vehicle'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
     MinRunOverSpeed=586.75 // increased from 0 to 35km/h so players don't get run over so easily by vehicles
@@ -4192,6 +4209,9 @@ defaultproperties
     SupplyDropSound=Sound'Inf_Weapons_Foley.AmmoPickup'
     SupplyDropSoundRadius=10.0
     SupplyDropSoundVolume=1.0
+
+    // Spawning
+    bHasSpawnKillPenalty=true
 
     // Hull corner angles (used to determine which side of vehicle was hit for armour penetration calcs)
     FrontLeftAngle=333.0
@@ -4267,6 +4287,8 @@ defaultproperties
     VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.65
+    bShouldDrawPositionDots=true
+    bShouldDrawOccupantList=true
 
     // Engine
     bEngineOff=true
@@ -4321,4 +4343,5 @@ defaultproperties
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
     //bDebuggingText=true
+    ResupplyInterval=2.5
 }

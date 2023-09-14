@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHMapIconAttachment_SupplyCache extends DHMapIconAttachment
     notplaceable;
 
-simulated delegate function bool IsCacheConstructed() { return true; }
+simulated delegate bool IsCacheConstructed() { return true; }
 function Setup();
 
 function BaseChange()

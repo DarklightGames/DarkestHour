@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -64,8 +64,9 @@ var(ROObjective) bool               bIsInitiallyActive;         // Purpose is ma
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Objective Spawn variables
-var(DHObjectiveSpawn) name          SpawnPointHintTags[2];      // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
-var DHSpawnPoint_Objective          SpawnPoint;                 // Reference to the attached DHSpawnPoint_Objective if one exists
+var(DHObjectiveSpawn) name          SpawnPointHintTags[2];          // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
+var(DHObjectiveSpawn) name          VehicleSpawnPointHintTags[2];   // Tags of hints for vehicle obj spawns (0 = Axis, 1 = Allies)
+var DHSpawnPoint_Objective          SpawnPoint;                     // Reference to the attached DHSpawnPoint_Objective if one exists
 
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
@@ -141,6 +142,7 @@ var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents
 
 // Grouped capture operations (these will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
 var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; // array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)      array<name>                 GroupedObjectiveReliancesTags;  // TODO: populate above array based on tag lookups
 var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
 var(DH_GroupedActions)      array<SpawnPointAction>     AlliesGroupSpawnPointActions;
@@ -156,18 +158,30 @@ var         DHObjectiveGroup ObjectiveGroup;
 
 // Replication
 var                         EObjectiveState             OldObjState;
+var                         bool                        bOldActive;
 
 // Danger zone
 var(DHDangerZone) float BaseInfluenceModifier;
 var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
+var private int         OldInfluenceReplicationCounter;
+var private int         InfluenceReplicationCounter;
+
+// Team capture variable
+var() enum ETeamCapture
+{
+	TEAM_Axis,
+	TEAM_Allies,
+	TEAM_Both,
+} TeamCanCapture;
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime;
+        UnfreezeTime, InfluenceReplicationCounter, BaseInfluenceModifier,
+        AxisInfluenceModifier, AlliesInfluenceModifier, NeutralInfluenceModifier;
 }
 
 simulated function PostBeginPlay()
@@ -175,6 +189,7 @@ simulated function PostBeginPlay()
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
     local DHObjectiveGroup      ObjectiveGroupFound;
+    local DarkestHourGame       G;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -207,10 +222,28 @@ simulated function PostBeginPlay()
         bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
         bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
 
+        G = DarkestHourGame(Level.Game);
+
         // Add self to game objectives
-        if (DarkestHourGame(Level.Game) != none)
+        if (G != none)
         {
-            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+            // Aggressively enforce correct ObjNums! We delete the objective if these numbers are bad because
+            // a missing objective is a hell of a lot more noticeable than a slightly misbehaving objective.
+            if (ObjNum >= arraycount(G.DHObjectives))
+            {
+                Warn("BAD OBJECTIVE!!! The objective \"" $ GetHumanReadableName() $ "\" has an invalid ObjNum of" @ ObjNum $ "! ObjNum must be between 0 and" @ (arraycount(G.DHObjectives) - 1) @ "(inclusive)");
+                Destroy();
+                return;
+            }
+
+            if (G.DHObjectives[ObjNum] != none)
+            {
+                Warn("BAD OBJECTIVE!!! The objective \"" $ GetHumanReadableName() $ "\" has an identical ObjNum value as objective" @ G.DHObjectives[ObjNum].ObjectiveName);
+                Destroy();
+                return;
+            }
+
+            G.DHObjectives[ObjNum] = self;
 
             foreach AllActors(class'DHObjectiveGroup', ObjectiveGroupFound, ObjectiveGroupTag)
             {
@@ -791,7 +824,7 @@ function GetPlayersInObjective(out int PlayerNums[2], optional out int TeamTotal
     {
         if (C.bIsPlayer && C.PlayerReplicationInfo.Team != none && ((ROPlayer(C) != none && ROPlayer(C).GetRoleInfo() != none) || ROBot(C) != none))
         {
-            if (C.Pawn != none && C.Pawn.Health > 0 && WithinArea(C.Pawn))
+            if (C.Pawn != none && C.Pawn.Health > 0 && WithinArea(C.Pawn) && (TeamCanCapture == TEAM_Both || TeamCanCapture == C.GetTeamNum()))
             {
                 ROVeh = ROVehicle(C.Pawn);
                 VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
@@ -1455,28 +1488,56 @@ simulated function PostNetReceive()
 {
     local DHPlayer PC;
     local DHHud Hud;
+    local bool bHasStateChanged;
 
     super.PostNetReceive();
 
-    // Listen for state changes so we can notify the HUD!
+    // Listen for state & active changes so we can notify the HUD!
     if (ObjState != OldObjState)
     {
         if (ObjState != OBJ_Neutral)
         {
-            PC = DHPlayer(Level.GetLocalPlayerController());
-
-            if (PC != none)
-            {
-                Hud = DHHud(PC.myHUD);
-
-                if (Hud != none)
-                {
-                    Hud.OnObjectiveCompleted();
-                }
-            }
+            bHasStateChanged = true;
         }
 
         OldObjState = ObjState;
+    }
+
+    if (bOldActive != bActive)
+    {
+        bHasStateChanged = true;
+        bOldActive = bActive;
+    }
+
+    if (OldInfluenceReplicationCounter != InfluenceReplicationCounter)
+    {
+        bHasStateChanged = true;
+        OldInfluenceReplicationCounter = InfluenceReplicationCounter;
+    }
+
+    if (bHasStateChanged)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveStateChanged();
+            }
+        }
+    }
+}
+
+// Call this when the danger zone influences are changed
+// so that the client knows to re-calculate the danger zone.
+function OnInfluenceChanged()
+{
+    if (Role == ROLE_Authority)
+    {
+        InfluenceReplicationCounter++;
     }
 }
 
@@ -1494,4 +1555,6 @@ defaultproperties
     AxisInfluenceModifier=1
     AlliesInfluenceModifier=1
     NeutralInfluenceModifier=1
+
+    TeamCanCapture=TEAM_Both
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Sdkfz251MG extends DHVehicleMG;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
     Skins(1)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_MG_coll')
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 
@@ -35,7 +35,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=50
     NumMGMags=15
-    FireInterval=0.07059
+    FireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 
@@ -56,4 +56,7 @@ defaultproperties
     ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
     ReloadStages(3)=(Sound=none,Duration=1.63)
+	
+    FireEffectOffset=(X=-25.0,Y=0.0,Z=-40.0)
+    FireEffectScale=0.70
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Flak88CannonShell extends DHGermanCannonShell;
@@ -14,7 +14,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=975  //109 gramms TNT filler
-    HullFireChance=0.5 
+    HullFireChance=0.5
     EngineFireChance=0.98
 
     //Penetration

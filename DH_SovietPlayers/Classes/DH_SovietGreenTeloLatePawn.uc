@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_SovietGreenTeloLatePawn extends DH_SovietPawn;
@@ -12,4 +12,5 @@ defaultproperties
     Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
 
     bReversedSkinsSlots=true
+
 }

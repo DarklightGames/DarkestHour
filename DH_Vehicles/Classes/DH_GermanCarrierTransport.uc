@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GermanCarrierTransport extends DHVehicle;  //to do: destroyed texture
@@ -39,7 +39,7 @@ defaultproperties
     Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
-    HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     BeginningIdleAnim="driver_hatch_idle_close"

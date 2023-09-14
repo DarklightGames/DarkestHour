@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_RKKA_TanTelogreikaAssaultEarly extends DHSOVAssaultRoles;
@@ -9,6 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloEarlyPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')

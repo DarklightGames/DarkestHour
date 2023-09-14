@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -750,4 +750,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
+
+    bShouldDrawPositionDots=false
+    bShouldDrawOccupantList=false
 }

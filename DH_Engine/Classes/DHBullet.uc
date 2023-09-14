@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBullet extends DHBallisticProjectile
@@ -38,9 +38,9 @@ var     float           VehicleDeflectSoundVolume;
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
 
 // From deprecated ROBullet class:
-const       MinPenetrateVelocity = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
+const       MIN_PENETRATE_VELOCITY = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
 
-var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
+var         class<DHHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
 var         class<Actor>            SplashEffect;    // water splash effect class
 var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
@@ -143,17 +143,18 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(Other) != none)
-    {
-        CheckForSplash(Location);
-    }
 
     // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
     // This is so a collision static mesh gets handled properly in ProcessTouch, as it will have bBlockHitPointTraces=false
     if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) || !Other.bBlockHitPointTraces)
     {
         return;
+    }
+
+    // Added splash if projectile hits a fluid surface
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
@@ -404,7 +405,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 
     // Do any damage
-    if (!bHasDeflected && Role == ROLE_Authority && V > (MinPenetrateVelocity * ScaleFactor))
+    if (!bHasDeflected && Role == ROLE_Authority && V > (MIN_PENETRATE_VELOCITY * ScaleFactor))
     {
         UpdateInstigator();
 
@@ -677,8 +678,6 @@ simulated function Deflect(vector HitNormal)
 
     if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) //14.4 m/s
     {
-        AmbientGlow=0.0;
-        LightBrightness=0.0;
         TracerEffect.Destroy();
     }
 
@@ -712,7 +711,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        Velocity *= 0.5;
+        Velocity *= 0.1;
         CheckForSplash(Location);
     }
 }
@@ -783,10 +782,10 @@ defaultproperties
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletHitMetalArmorEffect'
     VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
-    VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehicleDeflectEffectClass=class'DH_Effects.DHBulletHitMetalEffect'
     VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
@@ -807,5 +806,5 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    SplashEffect=class'DH_Effects.DHBulletHitWaterEffect'
 }

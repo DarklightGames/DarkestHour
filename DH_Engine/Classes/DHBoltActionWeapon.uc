@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBoltActionWeapon extends DHProjectileWeapon
@@ -112,7 +112,10 @@ simulated state WorkingBolt extends WeaponBusy
         {
             GetAnimParams(0, Anim, Frame, Rate);
 
-            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
+            if (Anim == BoltIronAnim || 
+                Anim == BoltHipAnim ||
+                Anim == BoltIronLastAnim ||
+                Anim == BoltHipLastAnim)
             {
                 bWaitingToBolt = false;
             }
@@ -132,11 +135,25 @@ simulated state WorkingBolt extends WeaponBusy
                 PlayerViewZoom(false);
             }
 
-            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
+            if (HasAnim(BoltIronLastAnim) && AmmoAmount(0) == 1)
+            {
+                PlayAnimAndSetTimer(BoltIronLastAnim, 1.0, 0.1);
+            }
+            else
+            {
+                PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
+            }
         }
         else
         {
-            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
+            if (HasAnim(BoltHipLastAnim) && AmmoAmount(0) == 1)
+            {
+                PlayAnimAndSetTimer(BoltHipLastAnim, 1.0, 0.1);
+            }
+            else
+            {
+                PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
+            }
         }
 
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
@@ -193,6 +210,8 @@ simulated state PostFiring
     simulated function BeginState()
     {
         bWaitingToBolt = true;
+
+        UpdateWeaponComponentAnimationsWithDriverType(DRIVER_Bolt);
 
         if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
         {
@@ -316,7 +335,7 @@ simulated state Reloading
         // Give back the unfired round that was in the chamber.
         if (Role == ROLE_Authority)
         {
-            if(!bWaitingToBolt && bCanUseUnfiredRounds)
+            if (!bWaitingToBolt && bCanUseUnfiredRounds)
             {
                 GiveBackAmmo(1);
             }
@@ -326,7 +345,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLoopedStripper;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetStripperReloadTimer();
             }
@@ -337,7 +356,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLooped;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetSingleReloadTimer();
             }

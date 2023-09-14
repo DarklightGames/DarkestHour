@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LWP_StandardSniperLate extends DHPOLSniperRoles;
@@ -8,7 +8,6 @@ class DH_LWP_StandardSniperLate extends DHPOLSniperRoles;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawn',Weight=3.0)
-    RolePawns(1)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicNocoatLatePawnM35',Weight=1.0)
 
     Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
 

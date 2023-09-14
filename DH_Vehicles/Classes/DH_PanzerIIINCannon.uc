@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIIINCannon extends DH_PanzerIIILCannon;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_turret_ext'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_coll')
 
     // Turret armor
     FrontArmorSlope=15.0
@@ -22,7 +22,6 @@ defaultproperties
     CustomPitchDownLimit=64080
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'

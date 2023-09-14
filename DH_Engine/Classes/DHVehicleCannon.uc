@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -84,9 +84,10 @@ enum ERotationType
 
 struct SGunWheel
 {
-    var ERotationType RotationType;
-    var name          BoneName;
-    var float         Scale;
+    var ERotationType   RotationType;
+    var name            BoneName;
+    var float           Scale;
+    var EAxis           RotationAxis;
 };
 
 var array<SGunWheel> GunWheels;
@@ -124,6 +125,10 @@ simulated function PostBeginPlay()
     {
         AltFireAttachmentBone = WeaponFireAttachmentBone;
     }
+
+    // Enforce that the starting projectile class is the primary one
+    // to eliminate the possibility that these are set differently.
+    ProjectileClass = PrimaryProjectileClass;
 }
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
@@ -138,6 +143,43 @@ simulated function PostNetReceive()
         SavedProjectileClass = ProjectileClass;
         LocalPendingAmmoIndex = GetAmmoIndex();
         ServerPendingAmmoIndex = LocalPendingAmmoIndex; // this is a record of last setting updated to server, so match it up
+    }
+}
+
+function bool ShouldPlayAutomaticVehicleAlerts()
+{
+    local DHPlayer PC;
+    local bool bShouldPlayAlert;
+    local Vehicle VehicleBase;
+
+    if (Instigator == none) return false;
+
+    VehicleBase = Instigator.GetVehicleBase();
+    PC = DHPlayer(Instigator.Controller);
+
+    if (PC == none || VehicleBase == none) return false;
+
+    switch (PC.GetAutomaticVehicleAlertsFromIndex(PC.AutomaticVehicleAlerts))
+    {
+        case AVAM_Always:
+            return true;
+        case AVAM_OnlyWithCrew:
+            return VehicleBase.NumPassengers() > 1;
+        default:
+            return false;
+    }
+}
+
+function OnMainGunReloadFinished()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none && ShouldPlayAutomaticVehicleAlerts())
+    {
+        // "Shell loaded" alert.
+        PC.ServerSpeech('VEH_ALERTS', 9, "");
     }
 }
 
@@ -156,6 +198,8 @@ simulated function Timer()
         // Note owning net client runs this independently from server & may resume a paused reload (but not start a new one)
         if (ReloadState >= RL_ReadyToFire)
         {
+            OnMainGunReloadFinished();
+
             if (AltReloadState != RL_ReadyToFire)
             {
                 AttemptAltReload();
@@ -550,7 +594,7 @@ function ServerFireSmokeLauncher()
 
         if (SmokeLauncherClass.static.CanRotate() && SmokeLauncherAdjustmentSetting > 0)
         {
-            FireRotation.Yaw += (float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536);
+            FireRotation.Yaw += float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536;
         }
 
         FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
@@ -811,57 +855,65 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    if (!bUsesMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval)
     {
-        if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
+        if (!bUsesMags)
         {
-            ++MainAmmoChargeExtra[0];
-            bDidResupply = true;
+            if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
+            {
+                ++MainAmmoChargeExtra[0];
+                bDidResupply = true;
+            }
+
+            if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
+            {
+                ++MainAmmoChargeExtra[1];
+                bDidResupply = true;
+            }
+
+            if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
+            {
+                ++MainAmmoChargeExtra[2];
+                bDidResupply = true;
+            }
+
+            // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
+            if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
+            {
+                AttemptReload();
+            }
         }
 
-        if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
+        // Coaxial MG
+        if (NumMGMags < default.NumMGMags)
         {
-            ++MainAmmoChargeExtra[1];
+            ++NumMGMags;
             bDidResupply = true;
+
+            // If coaxial MG is out of ammo & waiting to reload & we have a player, try to start a reload
+            if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
+            {
+                AttemptAltReload();
+            }
         }
 
-        if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
+        // Smoke launcher
+        if (SmokeLauncherClass != none && NumSmokeLauncherRounds < SmokeLauncherClass.default.InitialAmmo)
         {
-            ++MainAmmoChargeExtra[2];
+            ++NumSmokeLauncherRounds;
             bDidResupply = true;
-        }
 
-        // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
-        if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
-        {
-            AttemptReload();
+            // If smoke launcher is out of ammo & waiting to reload & we have a player, try to start a reload
+            if (SmokeLauncherReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
+            {
+                AttemptSmokeLauncherReload();
+            }
         }
     }
 
-    // Coaxial MG
-    if (NumMGMags < default.NumMGMags)
+    if (bDidResupply)
     {
-        ++NumMGMags;
-        bDidResupply = true;
-
-        // If coaxial MG is out of ammo & waiting to reload & we have a player, try to start a reload
-        if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
-        {
-            AttemptAltReload();
-        }
-    }
-
-    // Smoke launcher
-    if (SmokeLauncherClass != none && NumSmokeLauncherRounds < SmokeLauncherClass.default.InitialAmmo)
-    {
-        ++NumSmokeLauncherRounds;
-        bDidResupply = true;
-
-        // If smoke launcher is out of ammo & waiting to reload & we have a player, try to start a reload
-        if (SmokeLauncherReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
-        {
-            AttemptSmokeLauncherReload();
-        }
+        LastResupplyTimestamp = Level.TimeSeconds;
     }
 
     return bDidResupply;
@@ -1704,7 +1756,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
-        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
+        WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
     }
 }
 
@@ -1993,6 +2045,7 @@ simulated function UpdateGunWheels()
 {
     local int i;
     local rotator BoneRotation;
+    local int Value;
 
     for (i = 0; i < GunWheels.Length; ++i)
     {
@@ -2001,12 +2054,25 @@ simulated function UpdateGunWheels()
         switch (GunWheels[i].RotationType)
         {
             case ROTATION_Yaw:
-                BoneRotation.Yaw = CurrentAim.Yaw * GunWheels[i].Scale;
+                Value = CurrentAim.Yaw * GunWheels[i].Scale;
                 break;
             case ROTATION_Pitch:
-                BoneRotation.Pitch = CurrentAim.Pitch * GunWheels[i].Scale;
+                Value = CurrentAim.Pitch * GunWheels[i].Scale;
                 break;
             default:
+                break;
+        }
+
+        switch (GunWheels[i].RotationAxis)
+        {
+            case AXIS_X:
+                BoneRotation.Roll = Value;
+                break;
+            case AXIS_Y:
+                BoneRotation.Pitch = Value;
+                break;
+            case AXIS_Z:
+                BoneRotation.Yaw = Value;
                 break;
         }
 
@@ -2059,7 +2125,7 @@ defaultproperties
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
 
     // Reload
-    ReloadState=RL_Waiting
+    ReloadState=RL_ReadyToFire
     ReloadStages(0)=(HUDProportion=1.0)
     ReloadStages(1)=(HUDProportion=0.75)
     ReloadStages(2)=(HUDProportion=0.5)

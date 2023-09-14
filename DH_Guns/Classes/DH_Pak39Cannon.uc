@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Pak39Cannon extends DHATGunCannon;
@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak39_anm.pak39_turret'
     Skins(0)=Texture'DH_Pak39_tex.body.pak39_body'
-    CollisionStaticMesh=StaticMesh'DH_Pak39_stc.Collision.pak39_turret_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Pak39_stc.Collision.pak39_turret_collision')
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -19,7 +19,6 @@ defaultproperties
     CustomPitchDownLimit=63850
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak38CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Guns.DH_Pak38CannonShellHE'
@@ -54,9 +53,9 @@ defaultproperties
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_3')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="TravWheel",Scale=-64.0)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="ElevGear",Scale=-32.0)
-    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="ElevWheel",Scale=-64.0)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="TravWheel",Scale=-64.0,RotationAxis=AXIS_Z)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="ElevGear",Scale=-32.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="ElevWheel",Scale=-64.0,RotationAxis=AXIS_Y)
 
     // Cannon range settings
     RangeSettings(1)=100

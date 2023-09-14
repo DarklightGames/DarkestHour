@@ -1,17 +1,8 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHAxisMortarObserverRoles extends DHAxisRoles
+class DHAxisMortarObserverRoles extends DHDeprecated
     abstract;
 
-defaultproperties
-{
-    bIsMortarObserver=true
-    MyName="Artillery Observer"
-    AltName="Artilleriebeobachter"
-    Article="a "
-    PluralName="Artillery Observers"
-    Limit=1
-}

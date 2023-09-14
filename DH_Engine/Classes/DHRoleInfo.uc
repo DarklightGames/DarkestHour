@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
@@ -16,17 +16,42 @@ struct RolePawn
 var()   array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
 var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
 
-var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
-var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 var     bool                bCanCarryExtraAmmo;     // role can carry extra ammo
 var     bool                bSpawnWithExtraAmmo;    // role spawns with extra ammo
+var     bool                bCarriesRadio;          // role can carry radios
+var     bool                bCanPickupWeapons;
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
+var     bool                bRequiresSL;
+var     bool                bCanBeSquadLeader;      // squad leaders can take this role (disabled for special weapon roles!)
 
-var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
-var     Material            HandTexture;          // the hand texture this role should use
+var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
+
+
+enum EHandType
+{
+    HAND_Automatic,     // Checks the season, if it's winter, gloves, otherwise bare.
+    HAND_Bare,
+    HAND_Gloved,
+    HAND_Custom
+};
+
+var()   EHandType           HandType;
+var     Material            BareHandTexture;            // the hand texture this role should use
+var     Material            GlovedHandTexture;
+var()   Material            CustomHandTexture;
+
+struct SBackpack
+{
+    var class<DHBackpack> BackpackClass;
+    var float             Probability;
+    var vector            LocationOffset;
+    var rotator           RotationOffset;
+};
+
+var array<SBackpack> Backpack;
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -78,6 +103,11 @@ simulated function HandlePrecache()
         for (i = 0; i < default.Headgear.Length; ++i)
         {
             default.Headgear[i].static.StaticPrecache(Level);
+        }
+
+        for (i = 0; i < default.Backpack.Length; ++i)
+        {
+            default.Backpack[i].BackpackClass.static.StaticPrecache(Level);
         }
 
         if (default.DetachedArmClass != none)
@@ -155,6 +185,43 @@ static function string GetPawnClass()
     return default.RolePawnClass;
 }
 
+// TODO: Refactor offset stuff!
+function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator RotationOffset)
+{
+    local float R, ProbabilitySum;
+    local int   i;
+
+    if (Backpack.Length == 0)
+    {
+        return none;
+    }
+
+    if (Backpack.Length == 1)
+    {
+        LocationOffset = Backpack[0].LocationOffset;
+        RotationOffset = Backpack[0].RotationOffset;
+        return Backpack[0].BackpackClass;
+    }
+
+    R = FRand();
+
+    for (i = 0; i < Backpack.Length; ++i)
+    {
+        ProbabilitySum += Backpack[i].Probability;
+
+        if (R <= ProbabilitySum)
+        {
+            LocationOffset = Backpack[0].LocationOffset;
+            RotationOffset = Backpack[0].RotationOffset;
+
+            return Backpack[i].BackpackClass;
+        }
+    }
+
+    return none;
+
+}
+
 function class<ROHeadgear> GetHeadgear()
 {
     local float R, ProbabilitySum;
@@ -182,12 +249,52 @@ function class<ROHeadgear> GetHeadgear()
         }
     }
 
-    return none;
+    // This fallback is here since it's technically possible for the sum of all probabilities
+    // to be less than 1.0, which screws up the above calculation.
+    return Headgear[0];
 }
 
-static function Material GetHandTexture()
+simulated function Material GetHandTexture(DH_LevelInfo LI)
 {
-    return default.HandTexture;
+    local EHandType HT;
+    local Material HandTexture;
+
+    HT = HandType;
+
+    if (HT == HAND_Automatic)
+    {
+        if (LI != none && LI.Season == SEASON_Winter)
+        {
+            HT = HAND_Gloved;
+        }
+        else
+        {
+            HT = HAND_Bare;
+        }
+    }
+
+    switch (HT)
+    {
+        case HAND_Gloved:
+            HandTexture = GlovedHandTexture;
+            break;
+        case HAND_Custom:
+            HandTexture = CustomHandTexture;
+            break;
+        case HAND_Bare:
+        default:
+            HandTexture = BareHandTexture;
+            break;
+    }
+
+    if (HandTexture == none)
+    {
+        // If the hand texture somehow ends up being null, just use
+        // bare hand texture that we know is set in DHRoleInfo.
+        HandTexture = default.BareHandTexture;
+    }
+
+    return HandTexture;
 }
 
 // New function to check whether a CharacterName for a player record is valid for this role
@@ -214,10 +321,32 @@ simulated function bool IsValidCharacterName(string InCharacterName)
     return false;
 }
 
+simulated static function string GetDisplayName()
+{
+    if (class'DHPlayer'.default.bUseNativeRoleNames)
+    {
+        return default.AltName;
+    }
+    else
+    {
+        return default.MyName;
+    }
+}
+
+simulated function bool IsLimited()
+{
+    return Limit != 255;
+}
+
 defaultproperties
 {
     Limit=255 // unlimited (0 is now deactivated)
     HeadgearProbabilities(0)=1.0
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false
+    BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandType=Hand_Bare
+    bCanPickupWeapons=true
+    bCanBeSquadLeader=true
 }

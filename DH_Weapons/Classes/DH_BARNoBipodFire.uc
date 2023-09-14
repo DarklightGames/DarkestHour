@@ -1,19 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BARNoBipodFire extends DHAutomaticFire;
-
-function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
-{
-    super.ModeTick(DeltaTime);
-
-    if (bIsFiring && !AllowFire())
-    {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
 
 defaultproperties
 {
@@ -30,9 +20,9 @@ defaultproperties
 
     // Recoil //adjusted from full variant
     RecoilRate=0.1
-    MaxVerticalRecoilAngle=700
-    MaxHorizontalRecoilAngle=150
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=3.0,OutVal=0.8),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.15),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=688
+    MaxHorizontalRecoilAngle=140
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=8.0,OutVal=1.1),(InVal=16.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
@@ -53,6 +43,10 @@ defaultproperties
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     bReverseShellSpawnDirection=true
 
-    ShakeRotMag=(X=45.0,Y=30.0,Z=120.0)
-    ShakeRotTime=0.75
+    ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=90.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=1.2
 }

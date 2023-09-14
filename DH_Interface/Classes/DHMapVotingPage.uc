@@ -1,41 +1,21 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
+class DHMapVotingPage extends MapVotingPage;
 
 var localized string                            lmsgMapOutOfBounds;
 
-var(DHMapVotingInfo) config array<string>       MapVoteInfo;
+var automated moEditBox ed_Filter;
+var automated GUIButton b_FilterClear;
 
 function InternalOnOpen()
 {
-    local int i, m;
-
     super.InternalOnOpen();
 
-    // Loops the Vote Replication Map List, for each map, it loops the client's MapList config and if matches, changes the string
-    if (MVRI != none || !MVRI.bMapVote)
-    {
-        for (m = 0; m < MVRI.MapList.Length; m++)
-        {
-            for (i = 0; i < MapVoteInfo.Length; ++i)
-            {
-                if (MVRI.MapList[m].MapName ~= Left(MapVoteInfo[i], Len(MVRI.MapList[m].MapName)))
-                {
-                    MVRI.MapList[m].MapName = MapVoteInfo[i];
-
-                    // Disable the level completely if it has been blacklisted!
-                    if (InStr(MapVoteInfo[i], "BLACKLISTED") != -1)
-                    {
-                        MVRI.MapList[m].bEnabled = false;
-                    }
-                }
-            }
-        }
-    }
-
+    // Fill the filter box in case a pattern is set
+    ed_Filter.SetText(DHMapVoteMultiColumnList(lb_MapListBox.List).GetFilterPattern());
 }
 
 function bool AlignBK(Canvas C)
@@ -53,13 +33,15 @@ function SendVote(GUIComponent Sender)
     local int MapIndex, GameConfigIndex;
     local DHGameReplicationInfo GRI;
     local int Min, Max;
-    local array<string> Parts;
+    local DHMapDatabase MDB;
+    local DHMapDatabase.SMapInfo MI;
 
     if (PlayerOwner() == none)
     {
         return;
     }
 
+    MDB = DHPlayer(PlayerOwner()).MapDatabase;
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
     if (MVRI == none || GRI == none)
@@ -75,16 +57,12 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
 
-            // Split the mapname string, which may be consolitated with other variables
-            Split(MVRI.MapList[MapIndex].MapName, ";", Parts);
-
-            // Do a check if the current player count is in bounds of recommended range or if level has failed QA
-            if (Parts.Length >= 5) //Require all info
+            if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
             {
-                Min = int(Parts[3]);
-                Max = int(Parts[4]);
+                class'DHMapDatabase'.static.GetMapSizePlayerCountRange(MI.Size, Min, Max);
 
-                if (GRI.PRIArray.Length < Min || (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers))
+                // Do a check if the current player count is in bounds of recommended range or if level has failed QA
+                if (!GRI.IsPlayerCountInRange(Min, Max))
                 {
                     PlayerOwner().ClientMessage(lmsgMapOutOfBounds);
                     return;
@@ -121,6 +99,31 @@ function SendVote(GUIComponent Sender)
     }
 }
 
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    // Update map list on "key down" event
+    if (State == 3)
+    {
+        DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern(ed_Filter.GetText());
+        return true;
+    }
+}
+
+function bool InternalOnClick(GUIComponent Sender)
+{
+    if (Sender == b_FilterClear)
+    {
+        OnFilterClear();
+        return true;
+    }
+}
+
+delegate OnFilterClear()
+{
+    ed_Filter.SetText("");
+    DHMapVoteMultiColumnList(lb_MapListBox.List).SetFilterPattern("");
+}
+
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
@@ -129,7 +132,7 @@ defaultproperties
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
-        WinHeight=0.293104
+        WinHeight=0.50
         WinLeft=0.02
         WinTop=0.371020
         bVisibleWhenEmpty=true
@@ -137,13 +140,13 @@ defaultproperties
         bScaleToParent=true
         bBoundToParent=true
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.25 // Map Name
-        HeaderColumnPerc(1)=0.2  // Source
-        HeaderColumnPerc(2)=0.15 // Country
-        HeaderColumnPerc(3)=0.15 // Type
-        HeaderColumnPerc(4)=0.25 // Player Range
+        HeaderColumnPerc(0)=0.40 // Map Name
+        HeaderColumnPerc(1)=0.20 // Country
+        HeaderColumnPerc(2)=0.20 // Type
+        HeaderColumnPerc(3)=0.20 // Player Range
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
+
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
         HeaderColumnPerc(1)=0.3 // Votes
@@ -161,6 +164,7 @@ defaultproperties
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
+
     Begin Object Class=moComboBox Name=GameTypeCombo
         CaptionWidth=0.35
         Caption="Filter Game Type:"
@@ -169,6 +173,7 @@ defaultproperties
         bVisible=false
     End Object
     co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
+
     i_MapListBackground=none
     Begin Object Class=GUIImage Name=MapCountListBackground
         Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
@@ -176,4 +181,35 @@ defaultproperties
         OnDraw=DHMapVotingPage.AlignBK
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
+
+    Begin Object class=moEditBox Name=FilterEditbox
+        WinWidth=0.86
+        WinHeight=0.12
+        WinLeft=0.02
+        WinTop=0.90
+        Caption="Search"
+        CaptionWidth=0.074
+        OnKeyEvent=InternalOnKeyEvent
+        // TabOrder=0
+        bScaleToParent=true
+        bBoundToParent=true
+    End Object
+    ed_Filter=FilterEditbox
+
+    Begin Object Class=GUIButton Name=FilterClearButton
+        WinWidth=0.08
+        WinHeight=0.04
+        WinLeft=0.90
+        WinTop=0.894
+        Caption="Clear"
+        FontScale=FNS_Small
+        OnClick=InternalOnClick
+        // TabOrder=1
+        bStandardized=true
+        bBoundToParent=true
+        bScaleToParent=true
+    End Object
+    b_FilterClear=FilterClearButton
+
+    f_Chat=none
 }

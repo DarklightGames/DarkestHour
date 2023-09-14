@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LocustCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_turret'
     Skins(0)=Texture'DH_Locust_tex.Locust_turret_ext'
     Skins(1)=Texture'DH_Locust_tex.Locust_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_collision'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_collision')
     FireAttachBone="turret"
     FireEffectOffset=(X=-21.0,Y=16.0,Z=35.0)
 
@@ -34,8 +34,7 @@ defaultproperties
     CustomPitchDownLimit=63716 // 10 degrees depression
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
-    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
 

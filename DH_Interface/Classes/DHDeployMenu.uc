@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -97,7 +97,9 @@ var localized   string                      NoneText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
                                             RecommendJoiningSquadText,
-                                            UnassignedPlayersCaptionText;
+                                            UnassignedPlayersCaptionText,
+                                            NonSquadLeaderOnlyText
+                                            ;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -111,7 +113,7 @@ var             byte                        SpawnVehicleIndex;
 
 var             bool                        bButtonsEnabled;
 
-var             material                    VehicleNoneMaterial;
+var             Material                    VehicleNoneMaterial;
 
 var             EMapMode                    MapMode;
 
@@ -129,6 +131,7 @@ var int                     SurrenderButtonCooldownSeconds;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
+    local class<DHNation> AxisNationClass, AlliedNationClass;
 
     super.InitComponent(MyController, MyOwner);
 
@@ -157,6 +160,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Teams.ManageComponent(l_Axis);
     c_Teams.ManageComponent(b_Spectate);
     c_Teams.ManageComponent(i_Spectate);
+
+    // Team flags
+    if (PC != none && PC.ClientLevelInfo != none)
+    {
+        AxisNationClass = PC.ClientLevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
+        AlliedNationClass = PC.ClientLevelInfo.GetTeamNationClass(ALLIES_TEAM_INDEX);
+
+        i_Axis.Image = AxisNationClass.default.DeployMenuFlagTexture;
+        i_Allies.Image = AlliedNationClass.default.DeployMenuFlagTexture;
+    }
 
     c_Loadout.ManageComponent(c_Equipment);
     c_Loadout.ManageComponent(c_Vehicle);
@@ -272,27 +285,6 @@ function Timer()
 
         if (GRI != none)
         {
-            // Now that we have the GRI, we can set the Allied flag on
-            // the team button.
-            switch (GRI.AlliedNationID)
-            {
-                case 0: // USA
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_usa';
-                    break;
-                case 1: // UK
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_uk';
-                    break;
-                case 2: // Canada
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_canada';
-                    break;
-                case 3: // USSR
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
-                    break;
-                case 4: // Poland
-                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_poland';
-                    break;
-            }
-
             // This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
             // SHOCKING: we actually can, but they never used it!
@@ -525,7 +517,7 @@ function UpdateVehicles(optional bool bShowAlert)
     local float            RespawnTime;
     local int              i, j;
     local string           S;
-    local DHGameReplicationInfo.VehicleReservationError VRE;
+    local DHGameReplicationInfo.EVehicleReservationError VRE;
 
     if (GRI == none)
     {
@@ -595,6 +587,18 @@ function UpdateVehicles(optional bool bShowAlert)
             li_Vehicles.SetIndex(0);
         }
     }
+    
+    // Update the max vehicles number as well.
+    l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
+
+    if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.Red;
+    }
+    else
+    {
+        l_MaxVehicles.TextColor = class'UColor'.default.White;
+    }
 }
 
 function OnOKButtonClick(byte Button)
@@ -605,14 +609,9 @@ function OnOKButtonClick(byte Button)
 function UpdateRoles()
 {
     local DHRoleInfo RI;
-    local bool       bShouldBeDisabled;
     local int        Count, BotCount, Limit, i;
     local string     S;
-
-    if (PRI == none)
-    {
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    }
+    local DHPlayer.ERoleEnabledResult RoleEnabledResult;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
@@ -631,6 +630,8 @@ function UpdateRoles()
         {
             S = RI.MyName;
         }
+
+        RoleEnabledResult = PC.GetRoleEnabledResult(RI);
 
         GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
@@ -652,24 +653,27 @@ function UpdateRoles()
             S @= "*" $ BotsText $ "*";
         }
 
-        bShouldBeDisabled = PC.GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0;
-
-        // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless AND the role is not excempt
-        if (PRI != none && !PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255 && !RI.bExemptSquadRequirement)
+        switch (RoleEnabledResult)
         {
-            S @= "*" $ SquadOnlyText $ "*";
-            bShouldBeDisabled = true;
+            case RER_SquadOnly:
+                S @= "*" $ SquadOnlyText $ "*";
+                break;
+            case RER_SquadLeaderOnly:
+                S @= "*" $ SquadLeadershipOnlyText $ "*";
+                break;
+            CASE RER_NonSquadLeaderOnly:
+                S @= "*" $ NonSquadLeaderOnlyText $ "*";
+                break;
         }
-
-        // If in a squad AND role requires sl/asl AND not a sl/asl AND gametype restricts specialized roles to squads only
-        if (PRI != none && PRI.IsInSquad() && RI.bRequiresSLorASL && !PRI.IsSLorASL() && GRI.GameType.default.bSquadSpecialRolesOnly)
-        {
-            S @= "*" $ SquadLeadershipOnlyText $ "*";
-            bShouldBeDisabled = true;
-        }
-
+        
         li_Roles.SetItemAtIndex(i, S);
-        li_Roles.SetDisabledAtIndex(i, bShouldBeDisabled);
+        li_Roles.SetDisabledAtIndex(i, RoleEnabledResult != RER_Enabled);
+    }
+
+    // If we end up having a newly disabled element selected, deselect it.
+    if (li_Roles.IsIndexDisabled(li_Roles.Index))
+    {
+        li_Roles.SetIndex(-1);
     }
 }
 
@@ -1056,7 +1060,7 @@ function PopulateRoles()
     AutoSelectRole();
 }
 
-// Colin: Automatically selects a role from the roles list. If the player is
+// Automatically selects a role from the roles list. If the player is
 // currently assigned to a role, that role will be selected. Otherwise, a role
 // that has no limit will be selected. In the rare case that no role is
 // limitless, no role will be selected.
@@ -1200,16 +1204,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
         {
             // The request was denied by the server
-
-            switch (Result)
-            {
-                case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
-                    break;
-                default:
-                    MessageText = SurrenderResponseMessages[Result];
-            }
-
+            MessageText = SurrenderResponseMessages[Result];
             Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
@@ -1220,6 +1215,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
     {
         MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
+    }
+    else if (Msg ~= "SQUAD_PROMOTION_REQUEST_RESULT")
+    {
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadPromotionRequestResultString(Result);
         Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
 
@@ -1308,17 +1308,17 @@ function InternalOnChange(GUIComponent Sender)
             {
                 for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
                 {
-                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(RI.PrimaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.PrimaryWeapons[i].Item != none && cb_PrimaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item)) == -1)
                     {
-                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
+                        cb_PrimaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.PrimaryWeapons[i].Item), RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
                 for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
                 {
-                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(RI.SecondaryWeapons[i].Item.default.ItemName) == -1)
+                    if (RI.SecondaryWeapons[i].Item != none && cb_SecondaryWeapon.FindIndex(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item)) == -1)
                     {
-                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
+                        cb_SecondaryWeapon.AddItem(class'DHPlayer'.static.GetInventoryName(RI.SecondaryWeapons[i].Item), RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
@@ -1486,16 +1486,6 @@ function UpdateVehicleImage()
         {
             i_MaxVehicles.Show();
             l_MaxVehicles.Show();
-            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
-
-            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.Red;
-            }
-            else
-            {
-                l_MaxVehicles.TextColor = class'UColor'.default.White;
-            }
         }
     }
     else
@@ -1654,6 +1644,7 @@ function UpdateSquads()
             SetVisible(C.b_LeaveSquad, false);
             SetVisible(C.b_LockSquad, false);
             SetVisible(C.i_LockSquad, false);
+            SetVisible(C.i_NoRallyPoints, false);
         }
 
         return;
@@ -1712,6 +1703,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
 
         if (bIsSquadLeader)
         {
@@ -1745,7 +1737,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
@@ -1803,6 +1795,7 @@ function UpdateSquads()
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
         SetVisible(C.eb_SquadName, false);
+        SetVisible(C.i_NoRallyPoints, false);
     }
 
     while (j < p_Squads.SquadComponents.Length - 1)
@@ -1835,6 +1828,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
+        SetVisible(C.i_NoRallyPoints, false);
 
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
@@ -1862,6 +1856,12 @@ function UpdateSquads()
     else
     {
         SetVisible(p_Squads.SquadComponents[j], false);
+    }
+
+    // Update the background colors.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
     }
 }
 
@@ -1907,28 +1907,29 @@ defaultproperties
     BotsText="BOTS"
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
+    NonSquadLeaderOnlyText="NON-LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
-    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to retreat."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
-    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[0]="Retreat"
     SurrenderButtonText[1]="Keep fighting"
 
-    SurrenderResponseMessages[0]="Fatal error!";
-    SurrenderResponseMessages[1]="You haven't picked a team.";
-    SurrenderResponseMessages[2]="Round hasn't started yet.";
-    SurrenderResponseMessages[3]="Surrender vote is disabled.";
-    SurrenderResponseMessages[4]="Vote is already in progress.";
-    SurrenderResponseMessages[5]="You've already surrendered.";
-    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
-    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
-    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
-    SurrenderResponseMessages[9]="You cannot surrender this early.";
-    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
+    SurrenderResponseMessages[0]="Fatal error!"
+    SurrenderResponseMessages[1]="You haven't picked a team."
+    SurrenderResponseMessages[2]="Round hasn't started yet."
+    SurrenderResponseMessages[3]="Retreat vote is disabled."
+    SurrenderResponseMessages[4]="Vote is already in progress."
+    SurrenderResponseMessages[5]="You've already retreated."
+    SurrenderResponseMessages[6]="Your team already had a vote to retreat earlier. Try again later."
+    SurrenderResponseMessages[7]="You cannot retreat after the round is over."
+    // SurrenderResponseMessages[8]="Your team has too many reinforcements to surrender."
+    SurrenderResponseMessages[9]="You cannot retreat this early."
+    SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 
     MapMode=MODE_Map
     bButtonsEnabled=true
@@ -2324,15 +2325,15 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Surrender"
+    Begin Object Class=DHGUIButton Name=RetreatButtonObject
+        Caption="Retreat"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(2)=KickVoteButtonObject
+    b_MenuOptions(2)=RetreatButtonObject
 
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"

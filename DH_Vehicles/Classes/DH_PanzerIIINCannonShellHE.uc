@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIIINCannonShellHE extends DHCannonShellHE;
@@ -31,15 +31,15 @@ defaultproperties
     //Penetration
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
-    DHPenetrationTable(2)=2.8
-    DHPenetrationTable(3)=2.4
-    DHPenetrationTable(4)=2.4
-    DHPenetrationTable(5)=2.4
-    DHPenetrationTable(6)=2.4
-    DHPenetrationTable(7)=2.41
-    DHPenetrationTable(8)=2.4
-    DHPenetrationTable(9)=2.4
-    DHPenetrationTable(10)=2.4
+    DHPenetrationTable(2)=3.1
+    DHPenetrationTable(3)=3.1
+    DHPenetrationTable(4)=3.1
+    DHPenetrationTable(5)=3.1
+    DHPenetrationTable(6)=3.0
+    DHPenetrationTable(7)=2.9
+    DHPenetrationTable(8)=2.85
+    DHPenetrationTable(9)=2.8
+    DHPenetrationTable(10)=2.9
 
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)

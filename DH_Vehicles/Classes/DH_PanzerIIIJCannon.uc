@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerIIIJCannon extends DHVehicleCannon;
@@ -12,8 +12,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3J_turret_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext'
 
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_turret_coll'
-    //HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_turret_coll')
+    //HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=false
 
     // Turret armor
@@ -36,7 +36,6 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIIIJCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIIJCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIIJCannonShellHE'
 
@@ -58,7 +57,7 @@ defaultproperties
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialAltAmmo=150
     NumMGMags=8
-    AltFireInterval=0.07059
+    AltFireInterval=0.08
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 
@@ -71,7 +70,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=none) // quickier reload due to shorter shells and comfortable interior
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')

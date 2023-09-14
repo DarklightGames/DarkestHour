@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
@@ -32,12 +32,6 @@ simulated function int GetHudAmmoCount()
 // Emptied out as faust doesn't use CurrentMagCount & can't be resupplied or reloaded
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
-}
-
-// Modified as faust can be fired from the hip, unlike other rocket weapons
-simulated function bool CanFire(optional bool bShowFailureMessage)
-{
-    return true;
 }
 
 // Modified as faust is one-shot weapon, so auto-lowers after firing & then either switches to a new weapon or brings up another faust (if player has another - not normally in DH)
@@ -114,24 +108,26 @@ Begin:
 defaultproperties
 {
     ItemName="Panzerfaust 60"
+    NativeItemName="Panzerfaust 60"
     FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
     FireModeClass(1)=class'DH_Weapons.DH_PanzerFaustMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
 
-    Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
-    HighDetailOverlay=shader'Weapons1st_tex.Grenades.Panzerfaust_S'
+    Mesh=SkeletalMesh'DH_Panzerfaust_1st.Panzerfaust_Mesh'
+    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
     RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
     MuzzleBone="Warhead"
+    RocketBone="Warhead"
     MaxNumPrimaryMags=1
     InitialNumPrimaryMags=1
     bCanBeResupplied=false
 
-    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",FireIronAnim="shoot30")
-    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",FireIronAnim="shoot")
-    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",FireIronAnim="shoot90")
-    IdleAnim="idle30"
+    RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
+    RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
+    RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",IronFireAnim="shoot90")
+    IdleAnim="idle2"
 }

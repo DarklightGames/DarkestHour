@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_WHSquadLeader_SnowTwo extends DHGESergeantRoles;
@@ -18,6 +18,6 @@ defaultproperties
     HeadgearProbabilities(1)=0.25
     HeadgearProbabilities(2)=0.3
     HeadgearProbabilities(3)=0.05
-
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    HandType=Hand_Gloved
 }

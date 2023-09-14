@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_WHAntiTank_SnowTwo extends DHGEAntiTankRoles;
@@ -18,4 +18,6 @@ defaultproperties
     HeadgearProbabilities(1)=0.25
     HeadgearProbabilities(2)=0.3
     HeadgearProbabilities(3)=0.05
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon_Winter"
+    HandType=HAND_Gloved
 }

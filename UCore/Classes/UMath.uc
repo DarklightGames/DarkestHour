@@ -1,11 +1,11 @@
 //==============================================================================
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class UMath extends Object
     abstract;
 
-static final function int Sign(int I)
+final static function int Sign(int I)
 {
     if (I >= 0.0)
     {
@@ -15,7 +15,7 @@ static final function int Sign(int I)
     return -1;
 }
 
-static final function float FSign(float F)
+final static function float FSign(float F)
 {
     if (F >= 0.0)
     {
@@ -26,7 +26,7 @@ static final function float FSign(float F)
 }
 
 // Swaps 0 and 1
-static final function byte SwapFirstPair(byte Num)
+final static function byte SwapFirstPair(byte Num)
 {
     if (Num < 2)
     {
@@ -34,4 +34,25 @@ static final function byte SwapFirstPair(byte Num)
     }
 
     return Num;
+}
+
+// Normal integer division in UnrealScript (truncated division) does this:
+// 1/2      = 0, 3/2     = 1, -1/2   = 0, -3/2   = -1
+// This function (floored divion) does this:
+// 1/2      = 0, 3/2     = 1, -1/2  = -1, -3/2   = -2
+// See more on https://en.wikipedia.org/wiki/Modulo_operation
+final static function float FlooredDivision(float Value, float Divisor)
+{
+    if (Value % Divisor < 0)
+    {
+        return (Value - Divisor) / Divisor;
+    }
+
+    return Value / Divisor;
+}
+
+
+final static function float Floor(float Value, float Divisor)
+{
+    return Value - Value % Divisor;
 }

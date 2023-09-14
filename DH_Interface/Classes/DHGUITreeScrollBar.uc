@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGUITreeScrollBar extends DHGUIVertScrollBar;
@@ -99,8 +99,4 @@ delegate AlignThumb()
     }
 
     GripPos = FClamp(NewPos, 0.0, 1.0);
-}
-
-defaultproperties
-{
 }

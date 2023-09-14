@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_KorovinFire extends DHAutomaticFire;
@@ -8,8 +8,8 @@ class DH_KorovinFire extends DHAutomaticFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_KorovinBullet'
-    AmmoClass=class'ROAmmo.PPS43Ammo'
-    FireRate=0.128 // 470 rpm
+    AmmoClass=class'DH_Weapons.DH_PPS43Ammo'
+    FireRate=0.14 // ~474 rpm (value had to be found experimentally due to an engine bug)
     Spread=140.0
 
     // Recoil

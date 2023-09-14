@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHCommandMenu_Spotting extends DHCommandMenu;
@@ -16,7 +16,7 @@ function Setup()
 
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && ClassIsChildOf(GRI.MapMarkerClasses[i], class'DHMapMarker_Enemy'))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].default.Type == MT_Enemy)
         {
             Options.Insert(j, 1);
             Options[j].OptionalObject = GRI.MapMarkerClasses[i];
@@ -30,7 +30,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location)
+function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
@@ -56,11 +56,43 @@ function OnSelect(int OptionIndex, vector Location)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    PC.ServerAddMapMarker(MapMarkerClass, MapLocation.X, MapLocation.Y);
+    PC.AddMarker(MapMarkerClass, MapLocation.X, MapLocation.Y, Location);
+    
+    PC.ServerSignal(class'DHSignal_Spotting', Location, MapMarkerClass);
 
     Interaction.Hide();
 }
 
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local class<DHMapMarker> MapMarkerClass;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GetPlayerController().GameReplicationInfo);
+    MapMarkerClass = class<DHMapMarker>(Options[OptionIndex].OptionalObject);
+
+    return GRI == none || (MapMarkerClass != none && !MapMarkerClass.static.CanBeUsed(GRI));
+}
+
+function Tick()
+{
+    local DHPlayer PC;
+    local vector HitLocation, HitNormal;
+
+    PC = GetPlayerController();
+
+    if (PC == none || PC.SpottingMarker == none)
+    {
+        return;
+    }
+
+    PC.GetEyeTraceLocation(HitLocation, HitNormal);
+    PC.SpottingMarker.SetLocation(HitLocation);
+    PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
+}
+
 defaultproperties
 {
+    bShouldTick=true
+    bUsesSpottingMarker=true
 }

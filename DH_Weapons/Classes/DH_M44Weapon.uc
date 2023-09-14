@@ -1,25 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_M44Weapon extends DHBoltActionWeapon;
 
 // Modified as this rifle has a fixed bayonet
-simulated exec function Deploy()
+exec simulated function Deploy()
 {
 }
 
 defaultproperties
 {
-    ItemName="Mosin-Nagant M44 Carbine"
+    ItemName="Mosin M44"
     FireModeClass(0)=class'DH_Weapons.DH_M44Fire'
     FireModeClass(1)=class'DH_Weapons.DH_M44MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M44Attachment'
     PickupClass=class'DH_Weapons.DH_M44Pickup'
 
     Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_M44'
-    HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
+    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

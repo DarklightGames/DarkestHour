@@ -1,12 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DHVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
+class DH_Sdkfz251Transport extends DHArmoredVehicle;
 
 defaultproperties
 {
@@ -17,9 +14,12 @@ defaultproperties
     VehicleMass=8.5
     ReinforcementCost=3
     MaxDesireability=1.2
+    MinRunOverSpeed=300
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
+    bMustBeTankCommander=false
+    UnbuttonedPositionIndex=0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
@@ -27,11 +27,12 @@ defaultproperties
     Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(3)=Texture'axis_vehicles_tex.int_vehicles.halftrack_int'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
+    bUsesCodedDestroyedSkins=false
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
@@ -63,6 +64,11 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    ChassisTorqueScale=0.4
+    bSpecialTankTurning=true // Sd. Kfz. 251 had tank steering with the tracks braking if the steering wheel was fully turned
+    TurnDamping=35.0
 
     // Physics wheels properties
     WheelLongFrictionScale=1.25
@@ -71,16 +77,17 @@ defaultproperties
     WheelLatFrictionScale=1.5
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
-    DamagedEffectHealthFireFactor=0.9
-    EngineHealth=50
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=15.0,Y=0.0,Z=-15.0)) // engine
+    Health=500.0
+    HealthMax=500.0
+    DamagedEffectHealthFireFactor=0.2
+    EngineHealth=150.0
+    VehHitpoints(0)=(PointRadius=50.0,PointOffset=(X=120.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+   VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.000000,Y=0.0,Z=-35.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // fuel tank
     EngineDamageFromGrenadeModifier=0.05
     DamagedWheelSpeedFactor=0.4
-    DirectHEImpactDamageMult=8.0
+    DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
@@ -88,7 +95,15 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-
+    bEnableHatchFires=true
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireAttachBone="body"
+    FireEffectOffset=(X=-70.000000,Y=0.0,Z=-15.0)
+    EngineToHullFireChance=0.05 //Unlikely for a fire to spread
+    AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
+    FireDetonationChance=0.02
+    PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
+	
     // Vehicle destruction
     ExplosionDamage=85.0
     ExplosionRadius=150.0

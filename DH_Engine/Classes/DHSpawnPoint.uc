@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnPoint extends DHSpawnPointBase
@@ -25,6 +25,8 @@ var     bool            bIsLocked;                     // locked spawn points wi
 var     bool            bCanOnlySpawnInfantryVehicles; // players can spawn into infantry vehicles (as well as on foot) but can't spawn armoured fighting vehicles
 
 // Location hints - placed actors used for locations for spawning players
+var     int             InfantryLocationHintIndexOffset;
+var     int             VehicleLocationHintIndexOffset;
 var()   name            InfantryLocationHintTag;       // the Tag for associated LocationHint actors used to spawn players on foot
 var()   name            VehicleLocationHintTag;        // the Tag for associated LocationHint actors used to spawn players in vehicles
 var     array<DHLocationHint>   InfantryLocationHints; // saved references to linked location hint actors
@@ -41,6 +43,17 @@ var()   name                    LinkedVehicleFactoriesTag;
 var     ROMineVolume            MineVolumeProtectionRef;
 var     DHAmmoResupplyVolume    LinkedAmmoResupplyRef;
 var     array<DHVehicleFactory> LinkedVehicleFactories;
+
+// Spawn-limiting options.
+var()   int             MaxSpawns;
+var()   name            SpawnsExhaustedEvent;
+var     int             SpawnsRemaining;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SpawnsRemaining;
+}
 
 // Modified to find associated location hint actors, used as positions to spawn players or vehicles, & build arrays of actor references
 // Also to find any actors that are linked to this spawn point, so they are only active when the SP is active, & save actor references
@@ -128,9 +141,11 @@ function Reset()
     super.Reset();
 
     bIsLocked = bIsInitiallyLocked;
+
+    SpawnsRemaining = MaxSpawns;
 }
 
-simulated function BuildLocationHintsArrays()
+function BuildLocationHintsArrays()
 {
     local DHLocationHint LH;
 
@@ -319,9 +334,9 @@ function bool PerformSpawn(DHPlayer PC)
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
     local array<DHLocationHint> LocationHints;
+    local DHLocationHint        LocationHint;
     local array<vector>         EnemyLocations;
-    local array<int>            LocationHintIndices;
-    local int                   LocationHintIndex, i, j, k;
+    local int                   LocationHintIndexOffset, i, j, k;
     local class<ROVehicle>      VehicleClass;
     local Controller            C;
     local Pawn                  P;
@@ -331,23 +346,21 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     if (VehiclePoolIndex >= 0)
     {
         LocationHints = VehicleLocationHints;
+        LocationHintIndexOffset = VehicleLocationHintIndexOffset;
         VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
         TestCollisionRadius = VehicleClass.default.CollisionRadius;
     }
     else
     {
         LocationHints = InfantryLocationHints;
+        LocationHintIndexOffset = InfantryLocationHintIndexOffset;
         TestCollisionRadius = class'DHPawn'.default.CollisionRadius;
     }
-
-    // Scramble location hint indices so we don't use the same ones repeatedly
-    LocationHintIndices = class'UArray'.static.Range(0, LocationHints.Length - 1);
-    class'UArray'.static.IShuffle(LocationHintIndices);
 
     // TODO: make this functionality generic so it applied to all spawn point types?
 
     // Put location hints with enemies nearby at the end of the array to be evaluated last
-    if (LocationHintIndices.Length > 1)
+    if (LocationHints.Length > 1)
     {
         // Get all enemy locations
         for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -357,64 +370,113 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
                 EnemyLocations[EnemyLocations.Length] = C.Pawn.Location;
             }
         }
-
-        for (i = LocationHintIndices.Length - 1; i >= 0; --i)
-        {
-            for (j = 0; j < EnemyLocations.Length; ++j)
-            {
-                // Location hint has enemies nearby, so move to end of the array
-                if (VSize(EnemyLocations[j] - LocationHints[LocationHintIndices[i]].Location) <= LocationHintDeferDistance)
-                {
-                    k = LocationHintIndices[i];
-                    LocationHintIndices.Remove(i, 1);
-                    LocationHintIndices[LocationHintIndices.Length] = k;
-                }
-            }
-        }
     }
 
-    LocationHintIndex = -1; // initialize with invalid index, so later we can tell if we found a valid one
+    LocationHint = none;
 
     // Loop through location hints & try to find one that isn't blocked by a nearby pawn
-    for (i = 0; i < LocationHintIndices.Length; ++i)
+    for (i = 0; i < LocationHints.Length; ++i)
     {
-        if (LocationHints[LocationHintIndices[i]] == none)
+        // Apply the location hint offset.
+        j = (i + LocationHintIndexOffset) % LocationHints.Length;
+
+        if (LocationHints[j] == none)
         {
             continue;
         }
 
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, TestCollisionRadius, LocationHints[LocationHintIndices[i]].Location)
+        foreach RadiusActors(class'Pawn', P, TestCollisionRadius, LocationHints[j].Location)
         {
             // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
             bIsBlocked = true;
             break;
         }
+        
+        for (k = 0; k < EnemyLocations.Length; ++k)
+        {
+            // Location hint has enemies nearby, so mark it as blocked.
+            if (VSize(EnemyLocations[k] - LocationHints[j].Location) <= LocationHintDeferDistance)
+            {
+                bIsBlocked = true;
+                break;
+            }
+        }
 
         if (!bIsBlocked)
         {
             // Location hint isn't blocked, so we'll use it & exit the for loop
-            LocationHintIndex = LocationHintIndices[i];
+            LocationHint = LocationHints[j];
             break;
         }
     }
 
-    if (LocationHintIndex == -1)
+    if (LocationHint == none)
     {
         if (LocationHints.Length == 0 || bUseLocationAsFallback)
         {
+            // There are no location hints or we are using the location as a fallback.
             return super.GetSpawnPosition(SpawnLocation, SpawnRotation, VehiclePoolIndex);
         }
-
-        LocationHintIndex = Rand(LocationHints.Length);
+        else
+        {
+            // Last ditch effort, just pick a random location hint to try to spawn at.
+            LocationHint = LocationHints[Rand(LocationHints.Length)];
+        }
     }
 
     // TODO: Add in the ability to spawn infantry in a radius around the location hints.
-    SpawnLocation = LocationHints[LocationHintIndex].Location;
-    SpawnRotation = LocationHints[LocationHintIndex].Rotation;
+    SpawnLocation = LocationHint.Location;
+    SpawnRotation = LocationHint.Rotation;
 
     return true;
+}
+
+// Modified to increment the location hint index offsets after each successful spawn.
+// Also, if the spawn point has limited spawns, it will be deactivated when it has no spawns remaining.
+function OnPawnSpawned(Pawn P)
+{
+    super.OnPawnSpawned(P);
+    
+    // Increment the location hint index offset.
+    if (P.IsA('Vehicle'))
+    {
+        ++VehicleLocationHintIndexOffset;
+    }
+    else
+    {
+        ++InfantryLocationHintIndexOffset;
+    }
+    
+    if (HasLimitedSpawns())
+    {
+        --SpawnsRemaining;
+
+        if (SpawnsRemaining <= 0)
+        {
+            // Deactivate the spawn point if it has no spawns remaining.
+            SetIsActive(false);
+
+            // Send an event with the exhausted event tag.
+            TriggerEvent(SpawnsExhaustedEvent, self, None);
+        }
+    }
+}
+
+simulated function bool HasLimitedSpawns()
+{
+    return MaxSpawns > 0;
+}
+
+simulated function string GetMapText()
+{
+    if (HasLimitedSpawns())
+    {
+        return string(SpawnsRemaining);
+    }
+
+    return "";
 }
 
 defaultproperties

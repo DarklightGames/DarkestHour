@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_USSquadMGWinter extends DHUSAutoRifleRoles;
@@ -13,4 +13,8 @@ defaultproperties
     RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
+    HandType=Hand_Gloved
+    GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    BareHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
+    CustomHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
 }

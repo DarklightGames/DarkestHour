@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_STG44Fire extends DHAutomaticFire;
@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_STG44Bullet'
     AmmoClass=class'ROAmmo.STG44Ammo'
     FAProjSpawnOffset=(X=-28.0)
-    FireRate=0.14
+    FireRate=0.135 // ~491rpm  (value had to be found experimentally due to an engine bug)
 
     Spread=65.0
 

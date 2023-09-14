@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_EnfieldNo4ScopedAttachment extends DHWeaponAttachment;
@@ -22,8 +22,8 @@ simulated function AnimEnd(int Channel) // TODO: re-factor into a parent as this
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_Scoped_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_3rd.EnfieldNo4_Scoped_3rd'
+    MenuImage=Texture'DH_EnfieldNo4_tex.weapon_icons.EnfieldNo4Scoped_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
@@ -31,12 +31,14 @@ defaultproperties
     bAnimNotifiedShellEjects=true
     bRapidFire=false
 
-    WA_Idle="idle_enfieldno4_scoped"
-    WA_Fire="idle_enfieldno4_scoped"
-    WA_Reload="idle_enfieldno4_scoped"
-    WA_PreReload="idle_enfieldno4_scoped"
-    WA_PostReload="idle_enfieldno4_scoped"
-    WA_WorkBolt="idle_enfieldno4_scoped"
+    WA_Idle="idle_enfield"
+    WA_Fire="idle_enfield"
+    WA_WorkBolt="bolt_enfield"
+
+    WA_PreReload="open_enfield"
+    WA_Reload="insert_enfield"
+    WA_ProneReload="insert_enfield"
+    WA_PostReload="close_enfield"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"

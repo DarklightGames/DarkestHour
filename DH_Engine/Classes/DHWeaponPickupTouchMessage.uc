@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponPickupTouchMessage extends ROTouchMessagePlus;
@@ -23,13 +23,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
         if (P.InventoryClass != none)
         {
-            S = Repl(S, "{0}", P.InventoryClass.default.ItemName);
+            S = Repl(S, "{0}", class'DHPlayer'.static.GetInventoryName(P.InventoryClass));
         }
     }
 
     return S;
-}
-
-defaultproperties
-{
 }

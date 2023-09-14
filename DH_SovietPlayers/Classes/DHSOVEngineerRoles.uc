@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSOVEngineerRoles extends DHAlliedEngineerRoles
@@ -9,12 +9,16 @@ class DHSOVEngineerRoles extends DHAlliedEngineerRoles
 defaultproperties
 {
     AltName="Saper"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"  //to do: RPG-40
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
+    GivenItems(2)="DH_Equipment.DHShovelItem_Russian"
     VoiceType="DH_SovietPlayers.DHSovietVoice"
     AltVoiceType="DH_SovietPlayers.DHSovietVoice"
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves'
+    GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves'
+
 }

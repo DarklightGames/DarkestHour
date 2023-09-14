@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_Tiger2BTank extends DHArmoredVehicle;
@@ -54,7 +54,7 @@ defaultproperties
     GearRatios(4)=0.7
     TransRatio=0.07
     SteerSpeed=50.0
-	
+
     EngineRestartFailChance=0.5 //unreliability
 
     // Damage

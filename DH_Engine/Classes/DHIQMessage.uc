@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHIQMessage extends LocalMessage
@@ -10,7 +10,7 @@ var localized string LeaderAWOLMessage;
 var localized string MemberAWOLMessage;
 var localized string NotInSquadMessage;
 
-var array<localized string> Congratulations;
+var localized array<string> Congratulations;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

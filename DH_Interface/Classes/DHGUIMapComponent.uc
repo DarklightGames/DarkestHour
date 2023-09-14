@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGUIMapComponent extends GUIPanel;
 
 const   SPAWN_POINTS_MAX =                  63; // Max spawn points total (make sure this matches GRI)
-const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
-const   SQUAD_RALLY_POINTS_MAX =            16; // Max squad rally points (make sure this matches SRI)
 
 var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX];
 
@@ -44,6 +42,12 @@ var             bool                        bIsViewportInterpolating;
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
+var localized string        ActiveTargetSelectText;
+var localized string        ActiveTargetDeselectText;
+
+var             bool                        bSelectArtilleryTarget;
+var             bool                        bDeselectArtilleryTarget;
+var             int                         TargetSquadIndex;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 delegate OnZoomLevelChanged(int ZoomLevel);
@@ -77,6 +81,11 @@ function SetViewport(vector Origin, int ZoomLevel)
 {
     SetZoomLevel(ZoomLevel);
     Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
+}
+
+function vector GetViewportOrigin()
+{
+    return (Viewport.Min + Viewport.Max) * 0.5;
 }
 
 function UpdateSpawnPointPositions()
@@ -140,12 +149,15 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
             if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true))
             {
+                // Spawn is acessible to spawn at, make the button clickable.
                 b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
             else
             {
                 if (SpawnPointIndex != -1 && SpawnPointIndex == b_SpawnPoints[i].Tag)
                 {
+                    // This is our currently selected spawn, but it is inaccessible.
+                    // Deselect the spawn point.
                     SelectSpawnPoint(-1);
                 }
 
@@ -391,10 +403,9 @@ function bool IsMarkerUnderCursor(float LocationX, float LocationY, float Cursor
 
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
-    local int i;
-    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
-    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
-    local array<int> Indices;
+    local int i, ElapsedTime;
+    local array<DHGameReplicationInfo.MapMarker> PersonalMapMarkers;
+    local array<DHGameReplicationInfo.MapMarker> PublicMapMarkers;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
 
@@ -410,20 +421,24 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     Sender.ContextItems.Length = 0;
 
     // Iterate through existing map markers and check if any were clicked on.
-    GRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+    PublicMapMarkers = GRI.GetMapMarkers(PC);
     PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;
     MapMarkerIndexToRemove = -1;
     bRemoveMapMarker = false;
+    ElapsedTime = GRI.ElapsedTime;
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (IsMarkerUnderCursor(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+        if (PersonalMapMarkers[i].MapMarkerClass != none &&
+           (PersonalMapMarkers[i].ExpiryTime == -1 || PersonalMapMarkers[i].ExpiryTime > ElapsedTime) &&
+           PersonalMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PersonalMapMarkers[i]) &&
+           IsMarkerUnderCursor(float(PersonalMapMarkers[i].LocationX) / 255.0, float(PersonalMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
         {
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
-            Sender.AddItem(RemoveText);
+            Sender.AddItem(Repl(RemoveText, "{0}", PersonalMapMarkers[i].MapMarkerClass.default.MarkerName));
             MenuItemObjects[MenuItemObjects.Length] = PersonalMapMarkers[i].MapMarkerClass;
             break;
         }
@@ -431,36 +446,65 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     if (!bRemoveMapMarker)
     {
-        for (i = 0; i < MapMarkers.Length; ++i)
+        for (i = 0; i < PublicMapMarkers.Length; ++i)
         {
-            if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) ||
-                !IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            if (PublicMapMarkers[i].MapMarkerClass != none &&
+                (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                PublicMapMarkers[i].MapMarkerClass.static.CanRemoveMarker(PRI, PublicMapMarkers[i]) &&
+                IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
-                continue;
+                bRemoveMapMarker = true;
+                MapMarkerIndexToRemove = i;
+                Sender.AddItem(Repl(RemoveText, "{0}", PublicMapMarkers[i].MapMarkerClass.default.MarkerName));
+                MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                break;
             }
 
-            bRemoveMapMarker = true;
-            MapMarkerIndexToRemove = Indices[i];
-            Sender.AddItem(RemoveText);
-            MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
-            break;
+            if (PublicMapMarkers[i].MapMarkerClass != none &&
+                (PublicMapMarkers[i].ExpiryTime == -1 || PublicMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                PublicMapMarkers[i].MapMarkerClass.default.Type == MT_OnMapArtilleryRequest &&
+                PublicMapMarkers[i].MapMarkerClass.static.CanSeeMarker(PRI, PublicMapMarkers[i]) &&
+                (PC.IsArtilleryOperator() && !(PC.IsArtillerySpotter() && PC.GetSquadIndex() == PublicMapMarkers[i].SquadIndex)) &&
+                IsMarkerUnderCursor(float(PublicMapMarkers[i].LocationX) / 255.0, float(PublicMapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            {
+                if (PC.ArtillerySupportSquadIndex == PublicMapMarkers[i].SquadIndex)
+                {
+                    bDeselectArtilleryTarget = true;
+                    TargetSquadIndex = -1;
+                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                    Sender.AddItem(ActiveTargetDeselectText);
+                    PC.ReceiveLocalizedMessage(class'DHArtilleryMessage', 10);
+                }
+                else
+                {
+                    bSelectArtilleryTarget = true;
+                    TargetSquadIndex = PublicMapMarkers[i].SquadIndex;
+                    MenuItemObjects[MenuItemObjects.Length] = PublicMapMarkers[i].MapMarkerClass;
+                    Sender.AddItem(ActiveTargetSelectText);
+                }
+
+                break;
+            }
         }
     }
 
     // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlayerUse(PRI))
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanBeUsed(GRI) && GRI.MapMarkerClasses[i].static.CanPlaceMarker(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
     }
 
-    for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
+    if (!bDeselectArtilleryTarget && !bSelectArtilleryTarget)
     {
-        if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlayerUse(PRI))
+        for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
         {
-            MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+            if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlaceMarker(PRI))
+            {
+                MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+            }
         }
     }
 
@@ -505,13 +549,26 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         return;
     }
 
-    if (bRemoveMapMarker && ClickIndex == 0)
+    if (bRemoveMapMarker && ClickIndex == 0 && MenuItemObjects[ClickIndex] != none)
     {
-        MenuItemObjects[ClickIndex].static.RemoveMarker(PC, MapMarkerIndexToRemove);
+        PC.RemoveMarker(MenuItemObjects[ClickIndex], MapMarkerIndexToRemove);
     }
     else
     {
-        MenuItemObjects[ClickIndex].static.AddMarker(PC, MapClickLocation.X, MapClickLocation.Y);
+        if (bSelectArtilleryTarget && ClickIndex == 0)
+        {
+            PC.ServerSaveArtillerySupportSquadIndex(TargetSquadIndex);
+            bSelectArtilleryTarget = false;
+        }
+        else if (bDeselectArtilleryTarget && ClickIndex == 0)
+        {
+            PC.ServerSaveArtillerySupportSquadIndex(255);
+            bDeselectArtilleryTarget = false;
+        }
+        else
+        {
+            PC.AddMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+        }
     }
 }
 
@@ -536,8 +593,8 @@ function SetZoomLevel(int NewZoomLevel)
 // Given a viewport and a location within that viewport, get the frame coordinates.
 function vector ViewportToFrame(Box Viewport, vector Location)
 {
-    Location.X = (Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X)));
-    Location.Y = (Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y)));
+    Location.X = Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X));
+    Location.Y = Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y));
     return Location;
 }
 
@@ -577,7 +634,7 @@ function ZoomIn()
     // Save the old zoom scale.
     OldZoomScale = Viewport.Max.X - Viewport.Min.X;
 
-    // Increment the zoom leve.
+    // Increment the zoom level.
     SetZoomLevel(ZoomLevel + 1);
 
     // Calculate the new zoom scale.
@@ -704,7 +761,10 @@ defaultproperties
 
     SquadRallyPointDestroyText="Destroy Rally"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
-    RemoveText="Remove Marker"
+    RemoveText="Remove {0}"
+    ActiveTargetSelectText="Select as Active Target"
+    ActiveTargetDeselectText="Deselect Active Target"
+    TargetSquadIndex=-1;
 
     OnKeyEvent=InternalOnKeyEvent
     OnMousePressed=InternalOnMousePressed
@@ -814,11 +874,8 @@ defaultproperties
     b_SpawnPoints(61)=SpawnPointButton
     b_SpawnPoints(62)=SpawnPointButton
 
-    ZoomLevel=0
-    ZoomLevelMin=0
     ZoomLevelMax=3
     ZoomScaleRange=(Min=0.25,Max=1.0)
     ViewportInterpDuration=0.33
     Viewport=(Min=(X=0,Y=0),Max=(X=1,Y=1))
 }
-

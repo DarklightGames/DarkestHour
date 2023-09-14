@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHGETankCrewmanRoles extends DHAxisTankCrewmanRoles
@@ -21,4 +21,6 @@ defaultproperties
 
     HeadgearProbabilities(0)=0.5
     HeadgearProbabilities(1)=0.5
+
+    GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
 }

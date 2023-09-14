@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHWeaponRegistry extends Object
@@ -57,18 +57,18 @@ defaultproperties
     // NOTE: Feel free to insert new records anywhere in this list, the order
     // is not important
 
-    Records(0)=(ClassName="DH_Weapons.DH_30CalWeapon",WeaponNames=("30cal","30c"))
-    Records(1)=(ClassName="DH_Weapons.DH_AVT40Weapon",WeaponNames=("avt", "avt40"),)
+    Records(0)=(ClassName="DH_Weapons.DH_30CalWeapon",WeaponNames=("30cal","m1919"))
+    Records(1)=(ClassName="DH_Weapons.DH_AVT40Weapon",WeaponNames=("avt", "avt40"))
     Records(2)=(ClassName="DH_Weapons.DH_BARWeapon",WeaponNames=("bar"))
     Records(3)=(ClassName="DH_Weapons.DH_BazookaWeapon",WeaponNames=("bazooka"))
     Records(4)=(ClassName="DH_Weapons.DH_BHPWeapon",WeaponNames=("bhp"))
     Records(5)=(ClassName="DH_Weapons.DH_BrenWeapon",WeaponNames=("bren"))
     Records(6)=(ClassName="DH_Weapons.DH_C96Weapon",WeaponNames=("c96"))
     Records(7)=(ClassName="DH_Weapons.DH_ColtM1911Weapon",WeaponNames=("colt", "1911"))
-    Records(8)=(ClassName="DH_Weapons.DH_DP28Weapon",WeaponNames=("dp28"))
+    Records(8)=(ClassName="DH_Weapons.DH_DP27Weapon",WeaponNames=("dp27"))
     Records(9)=(ClassName="DH_Weapons.DH_EnfieldNo2Weapon",WeaponNames=("enfield2", "webley"))
     Records(10)=(ClassName="DH_Weapons.DH_EnfieldNo4Weapon",WeaponNames=("enfield", "enfield4"))
-    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfield4scoped"))
+    Records(11)=(ClassName="DH_Weapons.DH_EnfieldNo4ScopedWeapon",WeaponNames=("enfieldscoped", "enfield4scoped"))
     Records(12)=(ClassName="DH_Weapons.DH_F1GrenadeWeapon",WeaponNames=("f1"))
     Records(13)=(ClassName="DH_Weapons.DH_FG42Weapon",WeaponNames=("fg42"))
     Records(14)=(ClassName="DH_Weapons.DH_G41Weapon",WeaponNames=("g41"))
@@ -116,7 +116,7 @@ defaultproperties
     Records(56)=(ClassName="DH_Weapons.DH_SatchelCharge10lb10sWeapon",WeaponNames=("satchel"))
     Records(57)=(ClassName="DH_Weapons.DH_SpringfieldA1Weapon",WeaponNames=("springfield"))
     Records(58)=(ClassName="DH_Weapons.DH_SpringfieldScopedWeapon",WeaponNames=("springfieldscoped"))
-    Records(59)=(ClassName="DH_Weapons.DH_StenMkIIWeapon",WeaponNames=("sten"))
+    Records(59)=(ClassName="DH_Weapons.DH_StenMkIIWeapon",WeaponNames=("sten", "sten2", "stenmk2"))
     Records(60)=(ClassName="DH_Weapons.DH_STG44Weapon",WeaponNames=("stg", "stg44", "mp44"))
     Records(61)=(ClassName="DH_Weapons.DH_StielGranateWeapon",WeaponNames=("stiel"))
     Records(62)=(ClassName="DH_Weapons.DH_SVT38Weapon",WeaponNames=("svt38"))
@@ -145,5 +145,28 @@ defaultproperties
     Records(85)=(ClassName="DH_Weapons.DH_M1T17CarbineWeapon",WeaponNames=("m1t17", "t17"))
     Records(86)=(ClassName="DH_Weapons.DH_VG15Weapon",WeaponNames=("vg15"))
     Records(87)=(ClassName="DH_Weapons.DH_BARNoBipodWeapon",WeaponNames=("barnobipod"))
+    Records(88)=(ClassName="DH_Weapons.DH_StenMkIIIWeapon",WeaponNames=("stenmk3", "sten3"))
+    Records(89)=(ClassName="DH_Weapons.DH_StenMkIICWeapon",WeaponNames=("stenmk2c", "sten2c", "stenc"))
+    Records(90)=(ClassName="DH_Weapons.DH_StenMkVWeapon",WeaponNames=("stenmk5", "sten5"))
+    Records(91)=(ClassName="DH_Weapons.DH_BazookaM9Weapon",WeaponNames=("bazookam9", "m9", "m9bazooka"))
+    Records(92)=(ClassName="DH_Weapons.DH_ZB30Weapon",WeaponNames=("zb30", "zb"))
+    Records(93)=(ClassName="DH_Weapons.DH_MP3008Weapon",WeaponNames=("mp3008"))
+    Records(94)=(ClassName="DH_Weapons.DH_GeratPWeapon",WeaponNames=("geratp"))
+    Records(95)=(ClassName="DH_Weapons.DH_Stg44ScopedWeapon",WeaponNames=("stg44scoped", "mp44scoped"))
+    Records(96)=(ClassName="DH_Weapons.DH_MN9130ScopedPEWeapon",WeaponNames=("mosinscopedpe","scopedmosinpe","scopedmosinearly"))
+    Records(97)=(ClassName="DH_Weapons.DH_Nagant1895BramitWeapon",WeaponNames=("bramit"))
+    Records(98)=(ClassName="DH_Equipment.DHTrenchMaceItem",WeaponNames=("trenchmace"))
+    Records(99)=(ClassName="DH_Equipment.DHTrenchMaceItem_Bone",WeaponNames=("bonemace"))
+    Records(100)=(ClassName="DH_Equipment.DHTrenchMaceItem_Grenade",WeaponNames=("grenademace"))
+    Records(101)=(ClassName="DH_Weapons.DH_GeratPIIWeapon",WeaponNames=("wunderwaffe","geratp2"))
+    Records(102)=(ClasSName="DH_Weapons.DH_Kar98ScopedZF41Weapon",WeaponNames=("zf41","k98zf41"))
+    Records(103)=(ClasSName="DH_Weapons.DH_Vz24Weapon",WeaponNames=("vz24"))
+    Records(104)=(ClasSName="DH_Weapons.DH_Vz24ScopedWeapon",WeaponNames=("vz24scoped","vz24IOR"))
+    Records(105)=(ClasSName="DH_Weapons.DH_G98Weapon",WeaponNames=("g98"))
+    Records(106)=(ClasSName="DH_Weapons.DH_M1924Weapon",WeaponNames=("m1924"))
+    Records(107)=(ClasSName="DH_Weapons.DH_M9530Weapon",WeaponNames=("mannlicher","m9530"))
+    Records(108)=(ClasSName="DH_Weapons.DH_M9531Weapon",WeaponNames=("m9531"))
+    Records(109)=(ClasSName="DH_Weapons.DH_DT29Weapon",WeaponNames=("dt29","dt29"))
+    Records(110)=(ClasSName="DH_Weapons.DH_MKB42HWeapon",WeaponNames=("mkb42","mkb42h"))
+    Records(111)=(ClassName="DH_Weapons.DH_FG42ScopedWeapon",WeaponNames=("fg42scoped", "zfg42"))
 }
-

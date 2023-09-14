@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstructionManager extends Actor
@@ -8,7 +8,7 @@ class DHConstructionManager extends Actor
 
 var private array<DHConstruction> Constructions;
 
-static simulated function DHConstructionManager GetInstance(LevelInfo Level)
+simulated static function DHConstructionManager GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;
     local DHPlayer PC;
@@ -54,6 +54,11 @@ function Register(DHConstruction C)
 {
     local int i;
 
+    if (C == none)
+    {
+        return;
+    }
+
     for (i = 0; i < Constructions.Length; ++i)
     {
         if (Constructions[i] == C)
@@ -68,6 +73,11 @@ function Register(DHConstruction C)
 function Unregister(DHConstruction C)
 {
     local int i;
+
+    if (C == none)
+    {
+        return;
+    }
 
     for (i = Constructions.Length - 1; i >= 0; --i)
     {
@@ -87,8 +97,8 @@ function int CountOf(int TeamIndex, class<DHConstruction> ConstructionClass)
     {
         if (Constructions[i] != none &&
             Constructions[i].GetTeamIndex() == TeamIndex &&
-            Constructions[i].Class == ConstructionClass ||
-            ClassIsChildOf(Constructions[i].Class, ConstructionClass))
+            (Constructions[i].Class == ConstructionClass ||
+            ClassIsChildOf(Constructions[i].Class, ConstructionClass)))
         {
             ++Count;
         }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
@@ -99,6 +99,17 @@ function Timer()
         // If any enemies are capturing, spawning must be disabled.
         BlockReason = SPBR_EnemiesNearby;
     }
+
+    // Danger Zone
+    if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
+    {
+        BlockReason = SPBR_EnemiesNearby;
+    }
+}
+
+simulated function int GetDesirability()
+{
+    return 3;
 }
 
 defaultproperties

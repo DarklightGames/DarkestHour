@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_StuartCannon extends DHVehicleCannon;
@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_turret_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
     Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.Stuart_turret_col'
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.Stuart_turret_col')
 
     // Turret armor
     FrontArmorFactor=5.1
@@ -31,7 +31,6 @@ defaultproperties
     CustomPitchDownLimit=63352
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SU76Destroyer_Berlin extends DH_SU76Destroyer; 
+class DH_SU76Destroyer_Berlin extends DH_SU76Destroyer;
 
 defaultproperties
 {

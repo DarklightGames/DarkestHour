@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_BT7Tank extends DHArmoredVehicle;
@@ -23,6 +23,9 @@ defaultproperties
     HighDetailOverlay=Material'allies_ahz_vehicles_tex.int_vehicles.BT7_Int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+
+    // Collision
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.BT7.BT7_visor_Coll',AttachBone="hatch_driver") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BT7CannonPawn',WeaponBone="Turret_Placement")
@@ -84,16 +87,18 @@ defaultproperties
     DisintegrationHealth=-800.0 //petrol
     TurretDetonationThreshold=3000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=28.0,PointOffset=(X=-73.0,Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=30,Y=0,Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=28,Y=-45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=28,Y=45.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-3.25
     TreadDamageThreshold=0.15
     DamagedEffectOffset=(X=-78.0,Y=0.0,Z=25.0)
     FireAttachBone="turret_placement" // we don't need a driver hatch fire since the tank is so tiny. Just spawn a fire right in the middle!
 
+    // Destroyed mesh
+    bUsesCodedDestroyedSkins=false
     DestroyedVehicleMesh=StaticMesh'allies_ahz_vehicles_stc.BT7_destroyed'
-
+    DestroyedMeshSkins(0)=Texture'allies_ahz_destroyed_vehicles_tex.BT7.destroyed_texture'
 
     // Exit positions
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
@@ -115,8 +120,8 @@ defaultproperties
     RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
-    TreadVelocityScale=110.0
-    WheelRotationScale=29250.0
+    TreadVelocityScale=250.0
+    WheelRotationScale=100000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-185,Y=23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-185,Y=-23,Z=48),ExhaustRotation=(pitch=34000,yaw=0,roll=0))
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'

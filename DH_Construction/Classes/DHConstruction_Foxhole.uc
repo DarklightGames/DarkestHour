@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -9,6 +9,7 @@ var TerrainInfo         TerrainInfo;
 
 // Dirt projector
 var DynamicProjector    DirtProjector;
+var Material            DirtProjectorMaterial;
 var float               DirtProjectorDrawScale;
 var float               DirtProjectorDrawScaleLarge;
 
@@ -20,6 +21,7 @@ var float               LargeTerrainScaleCollisionRadius;
 // Large foxhole
 var int                 PokeTerrainDepthLarge;
 var int                 PokeTerrainRadiusLarge;
+
 
 simulated function PostBeginPlay()
 {
@@ -52,7 +54,7 @@ simulated function OnConstructed()
             DirtProjector.bProjectParticles = false;
             DirtProjector.bProjectBSP = true;
             DirtProjector.MaterialBlendingOp = PB_AlphaBlend;
-            DirtProjector.ProjTexture = Material'DH_Construction_tex.Foxholes.foxhole_01_projector';
+            DirtProjector.ProjTexture = DirtProjectorMaterial;
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
             DirtProjector.MaxTraceDistance = 1024.0;
@@ -170,6 +172,7 @@ defaultproperties
     TerrainSurfaceTypes(2)=EST_Snow
     TerrainSurfaceTypes(3)=EST_Mud
     TerrainSurfaceTypes(4)=EST_Plant
+    TerrainSurfaceTypes(5)=EST_Custom01 // Sand
     bShouldBlockSquadRallyPoints=true
     bIsNeutral=true
     LargeTerrainScaleThreshold=128.0
@@ -178,4 +181,5 @@ defaultproperties
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
     GroupClass=class'DHConstructionGroup_Defenses'
+    DirtProjectorMaterial=Material'DH_Construction_tex.Foxholes.foxhole_01_projector'
 }

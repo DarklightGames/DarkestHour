@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_GameWinner extends DH_LevelActors;
@@ -20,8 +20,4 @@ event Trigger(Actor Other, Pawn EventInstigator)
         TriggerEvent(AlliesWonEvent, Other, EventInstigator);
     else
         Level.Game.Broadcast(self, "The Game Was Tie!");
-}
-
-defaultproperties
-{
 }

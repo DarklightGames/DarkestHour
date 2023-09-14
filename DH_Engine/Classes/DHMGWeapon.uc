@@ -1,77 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMGWeapon extends DHBipodWeapon
+class DHMGWeapon extends DHProjectileWeapon
     abstract;
-
-var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
-var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
-var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
-
-// Modified to spawn the ammo belt
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SpawnAmmoBelt();
-    }
-}
-
-// Handles making ammo belt bullets disappear
-simulated function UpdateAmmoBelt()
-{
-    local int i;
-
-    if (AmmoAmount(0) < 10)
-    {
-        for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
-        {
-            if (MGBeltArray[i] != none)
-            {
-                MGBeltArray[i].SetDrawType(DT_None);
-            }
-        }
-    }
-}
-
-// Spawn the first person linked ammo belt
-simulated function SpawnAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltBones.Length; ++i)
-    {
-        MGBeltArray[i] = Spawn(BeltBulletClass, self);
-        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
-    }
-}
-
-// Make the full ammo belt visible again (called by anim notifies)
-simulated function RenewAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltArray.Length; ++i)
-    {
-        if (MGBeltArray[i] != none)
-        {
-            MGBeltArray[i].SetDrawType(DT_StaticMesh);
-        }
-    }
-}
-
-// Modified to prevent deploying if player is moving
-simulated exec function Deploy()
-{
-    if (Instigator != none && VSizeSquared(Instigator.Velocity) == 0.0)
-    {
-        super.Deploy();
-    }
-}
 
 // Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
@@ -178,64 +111,6 @@ Begin:
     SetTimer(FastTweenTime, false);
 }
 
-simulated event RenderOverlays(Canvas Canvas)
-{
-    local ROPlayer Playa;
-    local ROPawn   RPawn;
-    local rotator  RollMod;
-    local int      LeanAngle, i;
-
-    if (Instigator == none)
-    {
-        return;
-    }
-
-    Playa = ROPlayer(Instigator.Controller);
-
-    // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
-    Canvas.DrawActor(none, false, true);
-
-    for (i = 0; i < NUM_FIRE_MODES; ++i)
-    {
-        FireMode[i].DrawMuzzleFlash(Canvas);
-    }
-
-    // Adjust weapon position for lean
-    RPawn = ROPawn(Instigator);
-
-    if (RPawn != none && RPawn.LeanAmount != 0.0)
-    {
-        LeanAngle += RPawn.LeanAmount;
-    }
-
-    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
-
-    // Remove the roll component so the weapon doesn't tilt with the terrain
-    RollMod = Instigator.GetViewRotation();
-    RollMod.Roll += LeanAngle;
-
-    if (IsCrawling())
-    {
-        RollMod.Pitch = CrawlWeaponPitch;
-    }
-
-    if (Playa != none)
-    {
-        if (!IsCrawling())
-        {
-            RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
-        }
-
-        RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
-    }
-
-    SetRotation(RollMod);
-
-    bDrawingFirstPerson = true;
-    Canvas.DrawActor(self, false, false, DisplayFOV);
-    bDrawingFirstPerson = false;
-}
-
 simulated state StartSprinting
 {
 // Take the player out of ironsights
@@ -311,5 +186,23 @@ defaultproperties
     SprintStartAnim="Rest_Sprint_Start"
     SprintLoopAnim="Rest_Sprint_Middle"
     SprintEndAnim="Rest_Sprint_End"
-    bSniping=false
+    BipodMagEmptyReloadAnim="Reload"
+    BipodMagPartialReloadAnim="Reload"
+
+    Priority=10
+    bCanBipodDeploy=true
+    bCanRestDeploy=false
+    bMustReloadWithBipodDeployed=true
+    bMustFireWhileSighted=true
+
+    IronBringUp="Rest_2_Bipod"
+    IronPutDown="Bipod_2_Rest"
+    IdleAnim="Rest_Idle"
+    BipodIdleAnim="Bipod_Idle"
+    IdleToBipodDeploy="Rest_2_Bipod"
+    IronToBipodDeploy="Hip_2_Bipod"
+    BipodDeployToIdle="Bipod_2_Rest"
+    MagEmptyReloadAnims(0)="Reload"
+
+    bCanUseIronsights=false
 }

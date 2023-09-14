@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -15,6 +15,7 @@ enum ESpawnPointBlockReason
     SPBR_Burning,
     SPBR_Constructing,
     SPBR_MissingRequirement,
+    SPBR_NotInSafeZone,
     SPBR_Waiting,
 };
 
@@ -288,10 +289,20 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     return true;
 }
 
+simulated function bool IsVisibleToPlayer(DHPlayer PC)
+{
+    return IsVisibleTo(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex);
+}
+
 // Returns true if the spawn point is "visible" to a player with the arguments provided
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     if (self.TeamIndex != TeamIndex || !bIsActive)
+    {
+        return false;
+    }
+
+    if (BlockReason == SPBR_NotInSafeZone)
     {
         return false;
     }
@@ -349,7 +360,7 @@ function SetIsActive(bool bIsActive)
             if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
             {
                 PC.SpawnPointIndex = -1;
-                PC.bSpawnPointInvalidated = true;
+                PC.bSpawnParametersInvalidated = true;
             }
         }
     }
@@ -386,7 +397,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
-        if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
+        if (P != none && !P.bHidden && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
         {
             if (P.GetTeamNum() == TeamIndex)
             {
@@ -413,7 +424,7 @@ simulated function int GetSpawnTimePenalty()
     return BaseSpawnTimePenalty;
 }
 
-simulated final function int GetTeamIndex()
+final simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }
@@ -433,12 +444,30 @@ final function SetTeamIndex(int TeamIndex)
     }
 }
 
+simulated function bool CanPlayerSpawnImmediately(DHPlayer PC)
+{
+    return false;
+}
+
+// Desirability of the spawn point. Higher value means more desireable.
+// Used for determining whether or not to invalidate the player's spawn
+// if a more desirable spawn point is available.
+simulated function int GetDesirability()
+{
+    if (bMainSpawn)
+    {
+        // Main spawns are the least desirable spawns.
+        return 0;
+    }
+
+    return 1;
+}
+
 function OnTeamIndexChanged();
 
 defaultproperties
 {
     SpawnPointStyle="DHSpawnButtonStyle"
-    BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
     SpawnKillProtectionTime=7.0

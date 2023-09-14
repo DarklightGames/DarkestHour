@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleMG extends DHVehicleWeapon
@@ -12,7 +12,7 @@ var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses
 // Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
 {
-    if (NumMGMags < default.NumMGMags)
+    if (Level.TimeSeconds > LastResupplyTimestamp + ResupplyInterval && NumMGMags < default.NumMGMags)
     {
         ++NumMGMags;
 
@@ -21,7 +21,7 @@ function bool ResupplyAmmo()
         {
             AttemptReload();
         }
-
+        LastResupplyTimestamp = Level.TimeSeconds;
         return true;
     }
 
@@ -89,12 +89,21 @@ simulated function PauseReload()
 // Have to add this here as won't get this hint from AttemptReload() as client won't call that function if MG is waiting to start a reload
 simulated function ClientSetReloadState(byte NewState)
 {
+    local DHPlayer PC;
+    local bool bMustUnbuttonToReload;
+
     super.ClientSetReloadState(NewState);
 
-    if (ReloadState == RL_Waiting && DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload
-        && !WeaponPawn.CanReload() && DHPlayer(WeaponPawn.Controller) != none)
+    bMustUnbuttonToReload = DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload;
+
+    if (ReloadState == RL_Waiting && bMustUnbuttonToReload && !WeaponPawn.CanReload())
     {
-        DHPlayer(WeaponPawn.Controller).QueueHint(48, true);
+        PC = DHPlayer(WeaponPawn.Controller);
+
+        if (PC != none)
+        {
+            PC.QueueHint(48, true);
+        }
     }
 }
 
