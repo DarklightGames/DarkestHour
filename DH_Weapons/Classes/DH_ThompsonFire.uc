@@ -19,13 +19,13 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=3.0,OutVal=0.66),(InVal=6.0,OutVal=1.2),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=12.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG3'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     PreFireAnim="Shoot1_start"
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st45ACP'
     ShellRotOffsetIron=(Pitch=5000)
     ShellIronSightOffset=(X=20)
 }

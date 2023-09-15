@@ -71,7 +71,7 @@ defaultproperties
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        BlendBetweenSubdivisions=True
+        BlendBetweenSubdivisions=false
         UseRandomSubdivision=True
         UseVelocityScale=True
         ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))

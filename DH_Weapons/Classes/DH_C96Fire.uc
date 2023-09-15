@@ -16,7 +16,7 @@ defaultproperties
     MaxVerticalRecoilAngle=870
     MaxHorizontalRecoilAngle=350
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
     ShellHipOffset=(X=0.0,Y=0.0,Z=0.0)
 
     FireLastAnim="Shoot_Empty"

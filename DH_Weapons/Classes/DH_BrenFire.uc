@@ -15,6 +15,8 @@ defaultproperties
     FireRate=0.13 // ~512 rpm (value had to be found experimentally due to an engine bug)
     FAProjSpawnOffset=(X=-28.0)
 
+    MuzzleOffset=(X=1.5)
+
     Spread=70.0
     HipSpreadModifier=6.0
 
@@ -26,15 +28,17 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=6.0
 
-    FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
+    
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)
     bReverseShellSpawnDirection=true
+    
     BipodDeployFireAnim="deploy_shoot"
     FireIronAnim="iron_shoot"
     FireAnim="shoot"

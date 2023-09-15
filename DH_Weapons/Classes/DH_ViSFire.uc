@@ -17,5 +17,5 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_old_inf_Weapons.waltherp38.vis_fire01'
     FireSounds(1)=SoundGroup'DH_old_inf_Weapons.waltherp38.vis_fire02'
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
 }

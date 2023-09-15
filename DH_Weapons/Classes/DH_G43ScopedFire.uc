@@ -11,6 +11,7 @@ defaultproperties
     AddedPitch=5
 
     ProjectileClass=class'DH_Weapons.DH_G43ScopedBullet'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     FireIronAnim="Scope_Shoot"
     FireLastAnim="shoot_last"
     FireIronLastAnim="Scope_Shoot_Last"

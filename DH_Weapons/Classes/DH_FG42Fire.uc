@@ -62,7 +62,8 @@ defaultproperties
     BipodDeployFireAnim="deploy_shoot"
     BipodDeployFireLoopAnim="deploy_shoot"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

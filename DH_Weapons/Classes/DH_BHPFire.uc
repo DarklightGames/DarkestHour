@@ -17,5 +17,5 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire01'
     FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire02'
     FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.browninghp.browninghpfire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
 }

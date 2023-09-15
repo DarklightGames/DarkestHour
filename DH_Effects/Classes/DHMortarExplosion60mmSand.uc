@@ -3,19 +3,10 @@
 // Darklight Games (c) 2008-2021
 //==============================================================================
 
-class DHMortarExplosion60mmSand extends Emitter;
+class DHMortarExplosion60mmSand extends DHMortarExplosion;
 
 defaultproperties
 {
-    AutoDestroy=True
-    Style=STY_Masked
-    bUnlit=true
-    bDirectional=True
-    bNoDelete=false
-    RemoteRole=ROLE_SimulatedProxy
-    bNetTemporary=true
-    bHardAttach=true
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter37
         FadeOut=True
         RespawnDeadParticles=False
@@ -28,20 +19,21 @@ defaultproperties
         Acceleration=(Z=500.000000)
         ColorScale(0)=(Color=(B=84,G=96,R=101,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=115,G=136,R=145,A=255))
+        FadeOutStartTime=0.306000
         MaxParticles=1
       
-        StartLocationOffset=(Z=-50.000000)
+        StartLocationOffset=(Z=50.000000)
         StartSpinRange=(X=(Min=0.500000,Max=0.500000))
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.500000)
-        StartSizeRange=(X=(Min=30.000000,Max=40.000000))
+        StartSizeRange=(X=(Min=30.000000,Max=45.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=0.250000,Max=0.350000)
-        StartVelocityRange=(Z=(Min=100.000000,Max=350.000000))
+        LifetimeRange=(Min=0.500000,Max=0.750000)
+        StartVelocityRange=(Z=(Min=50.000000,Max=150.000000))
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter37'
 
@@ -132,8 +124,8 @@ defaultproperties
         UseRandomSubdivision=True
         TriggerDisabled=False
         ResetOnTrigger=True
-        ColorScale(0)=(Color=(B=98,G=132,R=162,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=146,G=164,R=184,A=255))
+        ColorScale(0)=(Color=(B=94,G=145,R=157,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=180,G=196,R=201,A=255))
         FadeOutStartTime=1.860000
         FadeInEndTime=0.180000
         MaxParticles=6
@@ -231,15 +223,15 @@ defaultproperties
         FadeInEndTime=0.210000
       
         StartLocationOffset=(Z=-50.000000)
-        SizeScale(0)=(RelativeSize=0.500000)
+        SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=0.500000,RelativeSize=1.500000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.800000)
-        StartSizeRange=(X=(Min=150.000000,Max=150.000000),Y=(Min=200.000000,Max=200.000000),Z=(Min=250.000000,Max=300.000000))
-        InitialParticlesPerSecond=50.000000
+        StartSizeRange=(X=(Min=225.000000,Max=250.000000),Y=(Min=200.000000,Max=200.000000),Z=(Min=250.000000,Max=350.000000))
+        InitialParticlesPerSecond=25.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'DH_FX_Tex.Effects.Impact01'
         LifetimeRange=(Min=2.500000,Max=3.000000)
-        InitialDelayRange=(Max=0.150000)
+        InitialDelayRange=(Min=0.150000,Max=0.200000)
         StartVelocityRange=(X=(Min=-200.000000,Max=250.000000),Y=(Min=-225.000000,Max=200.000000),Z=(Min=150.000000,Max=225.000000))
     End Object
     Emitters(7)=BeamEmitter'BeamEmitter11'

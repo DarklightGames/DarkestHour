@@ -26,7 +26,7 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.MAB38.Mabsingle02'
     FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.MAB38.Mabsingle03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
 
     ShellRotOffsetIron=(Pitch=25000)
     ShellRotOffsetHip=(Pitch=10000)

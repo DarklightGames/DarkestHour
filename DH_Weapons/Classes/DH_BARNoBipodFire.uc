@@ -13,6 +13,7 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
 
     MuzzleBone=MuzzleNew
+    MuzzleOffset=(X=-0.3,Y=0.0,Z=0.15)
 
     // Spread
     HipSpreadModifier=6.0
@@ -26,7 +27,7 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=40.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
 

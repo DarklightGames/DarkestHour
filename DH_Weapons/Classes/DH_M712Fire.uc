@@ -25,7 +25,7 @@ defaultproperties
     FireEndSound=SoundGroup'DH_WeaponSounds.c96.C96_FireEnd01'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
 
     FireIronLastAnim="iron_shoot_last"

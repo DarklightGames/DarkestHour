@@ -12,6 +12,9 @@ defaultproperties
     FireRate=2.6
     Spread=30.0
     FAProjSpawnOffset=(X=-30.0)
+
+    MuzzleOffset=(X=1.5)
+    
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
@@ -20,9 +23,11 @@ defaultproperties
     ShellIronSightOffset=(X=12.0,Y=2.0,Z=-3.0)
     ShellRotOffsetIron=(Pitch=11000)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
+    
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
+    
     FireAnim="shoot_last"
     FireIronAnim="Iron_shootrest"
 }

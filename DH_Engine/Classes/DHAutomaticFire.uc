@@ -223,7 +223,7 @@ defaultproperties
     bPawnRapidFireAnim=true
     FAProjSpawnOffset=(X=-20.0)
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmoke'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=0.0)
 
     // Recoil

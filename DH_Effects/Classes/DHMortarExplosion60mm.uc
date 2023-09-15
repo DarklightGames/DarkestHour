@@ -3,19 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMortarExplosion60mm extends Emitter;
+class DHMortarExplosion60mm extends DHMortarExplosion;
 
 defaultproperties
 {
-    AutoDestroy=True
-    Style=STY_Masked
-    bUnlit=true
-    bDirectional=True
-    bNoDelete=false
-    RemoteRole=ROLE_SimulatedProxy
-    bNetTemporary=true
-    bHardAttach=true
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter23
         FadeOut=True
         RespawnDeadParticles=False

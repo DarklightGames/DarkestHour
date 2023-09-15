@@ -16,7 +16,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
+    //FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     FireAnim="shoot_last"
     FireIronAnim="Scope_shoot"

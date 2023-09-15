@@ -13,7 +13,7 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer && bUseFlash)
     {
         bDynamicLight = true;
-        SetTimer(0.15, false);
+        SetTimer(0.1, false);
     }
 
     Super.PostBeginPlay();

@@ -734,7 +734,7 @@ defaultproperties
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
-    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
+    HitWaterEmitterClass=class'DH_Effects.DHMortarExplosion60mmWater'
     HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
     HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'

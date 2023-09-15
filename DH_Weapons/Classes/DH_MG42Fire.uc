@@ -10,6 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
     TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     AmmoClass=class'DH_Weapons.DH_MG42Ammo'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMG'
     FireRate=0.055 // ~1250 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=7
     Spread=90.0

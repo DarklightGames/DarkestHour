@@ -149,9 +149,9 @@ simulated function EjectShell()
 			EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
-        EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
-        EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
-        EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
+        EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange);
+        EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange; // - Rand(Shell.RandomPitchRange * 2);
+        EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange; // - Rand(Shell.RandomRollRange * 2);
 
         Shell.Velocity = Vector(EjectRot) * class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
     }

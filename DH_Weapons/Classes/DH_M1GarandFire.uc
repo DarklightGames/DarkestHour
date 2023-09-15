@@ -98,6 +98,8 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
+    MuzzleOffset=(X=4.5,Y=-0.9,Z=0.3)
     FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760
@@ -115,10 +117,12 @@ defaultproperties
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
-    ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
+    
+    ShellRotOffsetIron=(Pitch=5000,Yaw=-10000)
+    ShellRotOffsetHip=(Roll=0,Pitch=54000,Yaw=-5000)
     ShellHipOffset=(X=0,Y=-3,Z=0)
+    
     FireLastAnim="shoot_last"
     FireIronLastAnim="Iron_Shoot_Last"
-    MuzzleOffset=(X=10)
 }

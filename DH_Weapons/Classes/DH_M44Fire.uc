@@ -16,7 +16,7 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.newMN.newM38_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.newMN.newM38_fire03'
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
+    //FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
     ShellRotOffsetHip=(Pitch=5000)
     ShakeRotMag=(X=50.0,Y=50.0,Z=350.0)
     ShakeRotTime=2.5

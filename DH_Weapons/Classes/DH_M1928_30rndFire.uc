@@ -27,6 +27,6 @@ defaultproperties
     FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Thompson.Thompson_fire03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     //PreFireAnim="Shoot1_start"
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st45ACP'
     ShellRotOffsetIron=(Pitch=5000)
 }

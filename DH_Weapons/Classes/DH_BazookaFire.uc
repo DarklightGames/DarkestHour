@@ -17,5 +17,5 @@ defaultproperties
 
     //** Effects **//
     FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stBazooka'
-    SmokeEmitterClass = class'ROEffects.ROMuzzleSmoke'
+    SmokeEmitterClass = class'DH_Effects.DHMuzzleSmoke'
 }
