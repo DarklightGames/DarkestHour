@@ -3529,9 +3529,15 @@ simulated function UpdateWeaponComponentAnimations()
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
 {
-    local int i;
+    local int i, AmmoAmountOffset;
 
-    for (i = Max(0, AmmoAmount(0)); i < MGBeltArray.Length; ++i)
+    if (bAmmoAmountNotReplicated)
+    {
+        // Offset ammo count to account for replication delay.
+        AmmoAmountOffset = FireMode[0].AmmoPerFire;
+    }
+
+    for (i = Max(0, AmmoAmount(0) - AmmoAmountOffset); i < MGBeltArray.Length; ++i)
     {
         if (MGBeltArray[i] != none)
         {
