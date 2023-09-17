@@ -559,7 +559,7 @@ function PlayFiring()
             }
             else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 2 && Weapon.HasAnim(FireIronLastAnim))
+                if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
                 {
                     Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
                 }
