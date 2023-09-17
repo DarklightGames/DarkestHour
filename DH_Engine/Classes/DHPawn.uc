@@ -149,7 +149,7 @@ var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
 
 // Resupply Grenades
-var     int                LastResupplyGrenadesTime;
+var     int                NextResupplyGrenadesTime;
 
 replication
 {
@@ -197,7 +197,7 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
-    LastResupplyGrenadesTime = Level.TimeSeconds - 1.0;
+    NextResupplyGrenadesTime = Level.TimeSeconds - 1.0;
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
@@ -5667,9 +5667,9 @@ function ResupplyMissingGrenades(int TimeSeconds)
     RI = GetRoleInfo();
     if (RI == None) return;
 
-    LastResupplyGrenadesTime = TimeSeconds;
+    NextResupplyGrenadesTime = TimeSeconds;
 
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < arraycount(RI.Grenades); i++)
     {
         if (RI.Grenades[i].Item != None)
         {
