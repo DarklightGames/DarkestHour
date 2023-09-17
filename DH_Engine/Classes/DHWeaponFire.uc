@@ -78,15 +78,115 @@ simulated function InitEffects()
 event ModeDoFire()
 {
     local DHProjectileWeapon ProjectileWeapon;
+    local bool bIsLocal;
 
-    super.ModeDoFire();
-
-    ProjectileWeapon = DHProjectileWeapon(Weapon);
-
-    if (ProjectileWeapon != none)
+    if (!AllowFire())
     {
-        ProjectileWeapon.UpdateWeaponComponentAnimations();
-        ProjectileWeapon.UpdateAmmoBelt();
+        return;
+    }
+
+    if (MaxHoldTime > 0.0)
+    {
+        HoldTime = FMin(HoldTime, MaxHoldTime);
+    }
+
+    bIsLocal = Instigator.IsLocallyControlled();
+
+    if (bIsLocal)
+    {
+        ProjectileWeapon = DHProjectileWeapon(Weapon);
+    }
+
+    // Server
+    if (Weapon.Role == ROLE_Authority)
+    {
+        Weapon.ConsumeAmmo(ThisModeNum, Load);
+        DoFireEffect();
+        HoldTime = 0; // if bot decides to stop firing, HoldTime must be reset first
+
+        if ((Instigator == none) || (Instigator.Controller == none))
+        {
+            return;
+        }
+
+        if (AIController(Instigator.Controller) != none)
+        {
+            AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
+        }
+
+        Instigator.DeactivateSpawnProtection();
+    }
+    else if (ProjectileWeapon != none)
+    {
+        // Client (multiplayer only)
+        // Should be set before any animation updates
+        ProjectileWeapon.bAmmoAmountNotReplicated = true;
+    }
+
+    // Client
+    if (bIsLocal)
+    {
+        if (!bDelayedRecoil)
+        {
+            HandleRecoil();
+        }
+        else
+        {
+            SetTimer(DelayedRecoilTime, False);
+        }
+
+        ShakeView();
+        PlayFiring();
+
+        if (!bMeleeMode)
+        {
+            if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+            {
+                EjectShell();
+            }
+
+            FlashMuzzleFlash();
+            StartMuzzleSmoke();
+        }
+
+        if (ProjectileWeapon != none)
+        {
+            ProjectileWeapon.UpdateWeaponComponentAnimations();
+            ProjectileWeapon.UpdateAmmoBelt();
+        }
+    }
+    else
+    {
+        ServerPlayFiring();
+    }
+
+    Weapon.IncrementFlashCount(ThisModeNum);
+
+    // set the next firing time. must be careful here so client and server do not get out of sync
+    if (bFireOnRelease)
+    {
+        if (bIsFiring)
+        {
+            NextFireTime += MaxHoldTime + FireRate;
+        }
+        else
+        {
+            NextFireTime = Level.TimeSeconds + FireRate;
+        }
+    }
+    else
+    {
+        NextFireTime += FireRate;
+        NextFireTime = FMax(NextFireTime, Level.TimeSeconds);
+    }
+
+    Load = AmmoPerFire;
+    HoldTime = 0;
+
+    if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != None)
+    {
+        bIsFiring = false;
+        Weapon.PutDown();
     }
 }
 

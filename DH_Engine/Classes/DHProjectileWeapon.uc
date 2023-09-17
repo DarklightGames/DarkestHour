@@ -184,6 +184,8 @@ var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bu
 var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
 var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
 
+var     bool                    bAmmoAmountNotReplicated; // set on clients in multiplayer
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -3683,6 +3685,16 @@ exec simulated function DebugAddedYaw(int AddedYaw)
         {
             DHProjectileFire(FireMode[0]).AddedYaw = AddedYaw;
         }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bAmmoAmountNotReplicated)
+    {
+        bAmmoAmountNotReplicated = false;
     }
 }
 
