@@ -7,61 +7,30 @@ class DHShovelBuildFireMode extends DHWeaponFire;
 
 const SOUND_RADIUS = 32.0;
 
-var     DHConstruction  Construction;          // reference to the Construction actor we're building
 var     float           TraceDistanceInMeters; // player has to be within this distance of a construction to build it
 
 // Modified to check (via a trace) that player is facing an obstacle that can be built & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
-    local Actor  HitActor;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local DHPawn Pawn;
-
-    if (Weapon == none ||
-        Instigator == none ||
-        Instigator.Controller == none ||
-        Instigator.bIsCrawling ||
-        Instigator.IsProneTransitioning() ||
-        Instigator.Velocity != vect(0.0, 0.0, 0.0))
-    {
-        return false;
-    }
-
-    TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Instigator.GetViewRotation()));
-
-    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
-    {
-        if (HitActor != none &&
-            HitActor.bStatic &&
-            !HitActor.IsA('Volume') &&
-            !HitActor.IsA('ROBulletWhipAttachment') ||
-            HitActor.IsA('DHConstruction'))
-        {
-            break;
-        }
-    }
-
-    Construction = DHConstruction(HitActor);
-
-    if (Construction == none)
-    {
-        return false;
-    }
     
     Pawn = DHPawn(Instigator);
 
-    if (Pawn != none && !Pawn.CanBuildWithShovel())
+    if (Pawn.Construction == none)
     {
         return false;
     }
 
-    return  (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
+    return (Pawn.Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Pawn.Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Pawn.Construction.CanBeBuilt();
 }
+
 
 event ModeDoFire()
 {
-    Construction = none;
+    // local DHPawn Pawn;
+    
+    // Pawn = DHPawn(Instigator);
+    // Pawn.SetConstructionNone();
 
     if (AllowFire())
     {
@@ -122,9 +91,17 @@ simulated state Building
 
 simulated function DigDone()
 {
-    if (Construction != none && Construction.Role == ROLE_Authority)
+    local DHPawn Pawn;
+    
+    Pawn = DHPawn(Instigator);
+
+    if (Pawn.Construction != none && Pawn.Construction.Role == ROLE_Authority)
     {
-        Construction.IncrementProgress(Instigator);
+        Pawn.Construction.IncrementProgress(Instigator);
+        if (Pawn.Construction.Progress >= Pawn.Construction.ProgressMax)
+        {
+            Pawn.SetConstructionNone();
+        }
     }
 }
 
