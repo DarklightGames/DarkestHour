@@ -5661,26 +5661,19 @@ function bool ResupplyMortarAmmunition()
 
 function ResupplyMissingGrenades(int TimeSeconds)
 {
+    local int i, j;
     local DHRoleInfo RI;
 
     RI = GetRoleInfo();
+    if (RI == None) return;
+
     LastResupplyGrenadesTime = TimeSeconds;
 
-    if (RI != None)
+    for (i = 0; i < 3; i++)
     {
-        if (RI.Grenades[0].Item != None)
+        if (RI.Grenades[i].Item != None)
         {
-            ServerGiveWeapon(string(RI.Grenades[0].Item), false);
-        }
-
-        if (RI.Grenades[1].Item != None)
-        {
-            ServerGiveWeapon(string(RI.Grenades[1].Item), false);
-        }
-
-        if (RI.Grenades[2].Item != None)
-        {
-            ServerGiveWeapon(string(RI.Grenades[2].Item), false);
+            ServerGiveWeapon(string(RI.Grenades[i].Item), false);
         }
     }
 }
