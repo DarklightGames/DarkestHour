@@ -148,6 +148,9 @@ var     class<DHBackpack>   BackpackClass;
 var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
 
+// Resupply Grenades
+var     int                LastResupplyGrenadesTime;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -194,6 +197,7 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
+    LastResupplyGrenadesTime = Level.TimeSeconds - 1.0;
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
@@ -3340,7 +3344,7 @@ function CheckGiveSmoke()
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     PC = DHPlayer(Controller);
-    
+
     NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
 
     // Exclude tank crewmen and mortar operators
@@ -5655,6 +5659,32 @@ function bool ResupplyMortarAmmunition()
     return false;
 }
 
+function ResupplyMissingGrenades(int TimeSeconds)
+{
+    local DHRoleInfo RI;
+
+    RI = GetRoleInfo();
+    LastResupplyGrenadesTime = TimeSeconds;
+
+    if (RI != None)
+    {
+        if (RI.Grenades[0].Item != None)
+        {
+            ServerGiveWeapon(string(RI.Grenades[0].Item), false);
+        }
+
+        if (RI.Grenades[1].Item != None)
+        {
+            ServerGiveWeapon(string(RI.Grenades[1].Item), false);
+        }
+
+        if (RI.Grenades[2].Item != None)
+        {
+            ServerGiveWeapon(string(RI.Grenades[2].Item), false);
+        }
+    }
+}
+
 function CheckIfMortarCanBeResupplied()
 {
     local int i;
@@ -6976,18 +7006,23 @@ exec function DebugShootAP(optional string APProjectileClassName)
     }
 }
 
-function ServerGiveWeapon(string WeaponClass)
+function ServerGiveWeapon(string WeaponClass, bool SwitchToIfPossible)
 {
     local Weapon NewWeapon;
 
     GiveWeapon(WeaponClass);
-    NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
 
-    if (NewWeapon != none)
+    if (SwitchToIfPossible)
     {
-        NewWeapon.ClientWeaponSet(true);
+        NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
+
+        if (NewWeapon != none)
+        {
+            NewWeapon.ClientWeaponSet(true);
+        }
     }
 }
+
 
 // Modified to fix an accessed none that could happen if Weapon was none
 simulated function NextWeapon()
@@ -7289,7 +7324,7 @@ function EnterATRotation(DHATGun Gun)
 {
     GunToRotate = Gun;
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", true);
 }
 
 function ServerExitATRotation()
@@ -7347,7 +7382,7 @@ exec function RotateAT()
 
     GunToRotate = Gun;
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", true);
 }
 
 exec simulated function IronSightDisplayFOV(float FOV)
@@ -7488,7 +7523,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
     local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
-    
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))

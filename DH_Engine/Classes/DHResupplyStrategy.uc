@@ -10,10 +10,11 @@ enum EResupplyType
     RT_Players,
     RT_Vehicles,
     RT_All,
-    RT_Mortars
+    RT_Mortars,
 };
 
 var float   UpdateTime;
+var float   UpdateGrenadesTime;
 var bool    bGivesExtraAmmo;
 
 delegate OnPawnResupplied(Pawn P); // Called for every pawn that is resupplied
@@ -37,6 +38,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 {
     local Inventory recvr_inv;
     local bool bResupplied;
+    local bool bShouldResupplyGrenades;
     local DHPawn P;
     local Vehicle V;
     local DHRoleInfo RI;
@@ -54,22 +56,30 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 
     if (P != none)
     {
-        RI = P.GetRoleInfo();
-    }
-
-    // Resupply weapons
-    if (P != none && CanResupplyType(SourceType, RT_Players))
-    {
-        for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+        if (CanResupplyType(SourceType, RT_Players))
         {
-            recvr_weapon = ROWeapon(recvr_inv);
-
-            if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon') || recvr_weapon.IsA('DH_M9530Weapon'))
+            if (default.UpdateGrenadesTime < TimeSeconds - P.LastResupplyGrenadesTime)
             {
-                continue;
+                bShouldResupplyGrenades = true;
             }
 
-            bResupplied = bResupplied || recvr_weapon.FillAmmo();
+            // Resupply weapons
+            for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+            {
+                recvr_weapon = ROWeapon(recvr_inv);
+
+                if (recvr_weapon == none || (!bShouldResupplyGrenades && recvr_weapon.IsGrenade()) || recvr_weapon.IsA('DHMortarWeapon') || recvr_weapon.IsA('DH_M9530Weapon'))
+                {
+                    continue;
+                }
+
+                bResupplied = bResupplied || recvr_weapon.FillAmmo();
+            }
+
+            if (bShouldResupplyGrenades)
+            {
+                P.ResupplyMissingGrenades(TimeSeconds);
+            }
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
             {
@@ -112,5 +122,6 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 defaultproperties
 {
     UpdateTime=2.5
+    UpdateGrenadesTime=20
     bGivesExtraAmmo=true
 }

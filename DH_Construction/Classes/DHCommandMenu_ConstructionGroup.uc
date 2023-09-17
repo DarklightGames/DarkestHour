@@ -114,7 +114,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
             class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
 
             // Tell the server to give us the construction weapon.
-            P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon");
+            P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon", true);
         }
 
         Interaction.Hide();
