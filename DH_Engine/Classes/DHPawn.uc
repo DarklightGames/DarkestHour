@@ -3349,7 +3349,7 @@ function CheckGiveSmoke()
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     PC = DHPlayer(Controller);
-    
+
     NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
 
     // Exclude tank crewmen and mortar operators
@@ -4370,11 +4370,12 @@ simulated function HUDCheckMantle()
     }
 }
 
-function Timer() {
+function Timer()
+{
     CheckConstruction(2.15);
 }
 
-simulated function CheckConstruction(float traceDistanceInMeters) 
+simulated function CheckConstruction(float traceDistanceInMeters)
 {
     local Actor  HitActor;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
@@ -4411,12 +4412,14 @@ simulated function CheckConstruction(float traceDistanceInMeters)
             break;
         }
     }
-    if (HitActor != none) {
+
+    if (HitActor != none)
+    {
         Construction = DHConstruction(HitActor);
     }
 }
 
-simulated function SetConstructionNone() 
+simulated function SetConstructionNone()
 {
     // Level.Game.Broadcast(self, "SetConstructionNone");
     Construction = none;
@@ -4429,7 +4432,7 @@ simulated function bool AllowedDig()
         return false;
     }
 
-    return  (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
+    return (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
 }
 
 simulated function bool CanMantleActor(Actor A)
@@ -7553,7 +7556,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
 {
     local Pawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
-    
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))

@@ -264,7 +264,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DeployIcon');
     Level.AddPrecacheMaterial(CanMantleIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
-    Level.AddPrecacheMaterial(CanDigProgressIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
     Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
@@ -900,36 +899,10 @@ function DrawHudPassC(Canvas C)
     {
         if (P.bCanDig)
         {
-           
-            DrawSpriteWidget(C, CanDigProgressIcon);
             DrawSpriteWidget(C, CanDigIcon);
-            CanDigProgressIcon.Scale = (float(P.Construction.Progress) * (1.0 / float(P.Construction.ProgressMax)));
-            Level.Game.Broadcast(self, "CanDigProgressIcon" @ CanDigProgressIcon.Scale);
+            DrawSpriteWidget(C, CanDigProgressIcon);
 
-
-            // switch (P.Construction.Progress)
-            // {
-            //     case 0:
-            //         break;
-            //     case 1:
-            //         DrawSpriteWidget(C, CanDigIcon);
-            //         break;
-            //     case 2:
-            //         DrawSpriteWidget(C, CanDigIcon);
-            //         break;
-            //     case 3:
-            //         DrawSpriteWidget(C, CanCutWireIcon);
-            //         break;
-            //     case 4:
-            //         DrawSpriteWidget(C, CanDigIcon);
-            //         break;
-            //     case 5:
-            //         DrawSpriteWidget(C, CanCutWireIcon);
-            //         break;
-            //     default:
-            //         DrawSpriteWidget(C, CanDigIcon);
-            //         break;
-            // }
+            CanDigProgressIcon.Scale = 0.5 + (float(P.Construction.Progress) * (0.5 / float(P.Construction.ProgressMax)));
         }
         else if (P.bCanMantle) // Mantling icon if an object can be climbed
         {
@@ -3426,7 +3399,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     {
         OwnerTeam = 255;
     }
-    
+
     // Draw objectives
     LevelInfo = class'DH_LevelInfo'.static.GetInstance(Player.Level);
     AxisNationClass = LevelInfo.GetTeamNationClass(AXIS_TEAM_INDEX);
@@ -3679,7 +3652,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     {
         // Do not show the objective if it is supposed to be hidden on the map
         if (DHGRI.DHObjectives[i] == none ||
-            DHGRI.DHObjectives[i].bHideOnMap || 
+            DHGRI.DHObjectives[i].bHideOnMap ||
             (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideOnMapWhenInactive))
         {
             continue;
@@ -3786,7 +3759,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
             ObjLabel = "[" $ i $ "]" @
                         "B" @  DHGRI.SpawnPoints[i].BaseInfluenceModifier;
-                    
+
             DHDrawIconOnMap(C, SubCoords, MapIconTeam[DHGRI.SpawnPoints[i].GetTeamIndex()], MyMapScale, DHGRI.SpawnPoints[i].Location, MapCenter, Viewport, 1, ObjLabel, DHGRI);
         }
     }
@@ -4320,7 +4293,7 @@ function UpdateHud()
         {
             LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
             HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
-            
+
             HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
             HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 
@@ -6038,11 +6011,11 @@ defaultproperties
     NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.resupply_box'
     ExtraAmmoIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.resupply_box',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    
+
     CanDigIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    
-    CanDigProgressIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.85,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.93,ScaleMode=SM_UP,Scale=0.0,Tints[0]=(B=0,G=0,R=255,A=200),Tints[1]=(B=0,G=0,R=255,A=200))
-    
+
+    CanDigProgressIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,ScaleMode=SM_UP,Scale=0.0,Tints[0]=(B=45,G=166,R=55,A=255),Tints[1]=(B=45,G=166,R=55,A=255))
+
     CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
