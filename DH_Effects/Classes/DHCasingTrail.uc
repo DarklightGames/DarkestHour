@@ -22,6 +22,8 @@ defaultproperties
     bNoDelete=false
     Physics=PHYS_Trailer
     bHardAttach=true
+    bTrailerSameRotation=true
+    bTrailerAllowRotation=false
     //DrawScale=2.0
 
     Begin Object Class=TrailEmitter Name=TrailEmitter0

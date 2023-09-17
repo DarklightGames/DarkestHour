@@ -20,7 +20,9 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMP'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st30Carbine'
+    ShellHipOffset=(X=-0.3,Y=-1,Z=0.1)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 
     MuzzleBone="MuzzleNew"

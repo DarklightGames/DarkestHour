@@ -26,7 +26,7 @@ defaultproperties
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stDP'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     BipodDeployFireAnim="Deploy_shoot_loop"
     BipodDeployFireLoopAnim="Deploy_Shoot_Loop"
     BipodDeployFireEndAnim="Deploy_Shoot_End"
@@ -37,7 +37,7 @@ defaultproperties
     FireLastAnim="shoot_last"
     BipodDeployFireLastAnim="deploy_shoot_last"
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=0.0,Y=0.0,Z=0.0)
     ShellHipOffset=(X=-24.0,Y=0.0,Z=0.0)
     ShellRotOffsetIron=(Pitch=-16384)  

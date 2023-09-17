@@ -23,7 +23,7 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.pps43.PPS43_Single3'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)
 
     FireIronLastAnim="iron_idle_empty"

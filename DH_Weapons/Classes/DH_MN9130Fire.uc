@@ -14,8 +14,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'Inf_Weapons.nagant9130.nagant9130_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.nagant9130.nagant9130_fire02'
     FireSounds(2)=SoundGroup'Inf_Weapons.nagant9130.nagant9130_fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stNagant'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mmGreen'
     FireAnim="shoot_last"
     FireIronAnim="Iron_shootrest"
 }

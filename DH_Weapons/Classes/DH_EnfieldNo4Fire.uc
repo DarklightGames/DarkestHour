@@ -18,8 +18,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
     ShellIronSightOffset=(X=12.0,Y=2.0,Z=-3.0)
     ShellRotOffsetIron=(Pitch=11000)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

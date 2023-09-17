@@ -14,10 +14,11 @@ defaultproperties
     MaxHorizontalRecoilAngle=150
     FireRate=0.21
 
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     FireSounds(0)=SoundGroup'DH_old_inf_Weapons.g43.vg15shot1'
     FireSounds(1)=SoundGroup'DH_old_inf_Weapons.g43.vg15shot2'
     FireSounds(2)=SoundGroup'DH_old_inf_Weapons.g43.vg15shot3'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st556mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
     MuzzleBone="MuzzleNew"
 }

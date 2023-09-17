@@ -19,7 +19,7 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=5.0,OutVal=0.85),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=9.0
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g3'

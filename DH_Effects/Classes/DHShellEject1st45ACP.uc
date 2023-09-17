@@ -9,9 +9,6 @@ defaultproperties
 {
 	StaticMesh=StaticMesh'WeaponPickupSM.S9mm_SMG_Pistol'
 
-    RotationRate=(Pitch=50000)
-    //DesiredRotation=(Pitch=50000)
-
     DrawScale3D=(X=0.9,Y=1.27,Z=1.27)
     
     Speed=140

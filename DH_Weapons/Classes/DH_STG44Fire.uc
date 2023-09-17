@@ -21,10 +21,11 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.7),(InVal=6.0,OutVal=1.2),(InVal=10.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'
-    ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st556mm'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-2.5)
     ShellRotOffsetIron=(Pitch=2000)
     bReverseShellSpawnDirection=true

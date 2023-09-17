@@ -24,7 +24,7 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=6.0
 
-    FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
+    FlashEmitterClass=Class'DH_Effects.DHMuzzleFlash1stKar'
     
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
@@ -37,7 +37,7 @@ defaultproperties
     ProjSpawnOffset=(X=25.000000)
     TracerFrequency=5
 
-    ShellEjectClass=Class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=Class'DH_Effects.DHShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Z=-10.0)
     ShellHipOffset=(Y=-7.0)
     ShellRotOffsetIron=(Pitch=-13000)

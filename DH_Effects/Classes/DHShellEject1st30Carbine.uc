@@ -3,23 +3,23 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHShellEject1st9x19mm extends DH1stShellEject;
+class DHShellEject1st30Carbine extends DH1stShellEject;
 
 defaultproperties
 {
 	StaticMesh=StaticMesh'WeaponPickupSM.S9mm_SMG_Pistol'
 
-    //RotationRate=(Pitch=12000)
+    RotationRate=(Pitch=50000)
     //DesiredRotation=(Pitch=50000)
 
-    DrawScale3D=(X=0.75,Y=1.1,Z=1.1)
+    DrawScale3D=(X=1.6,Y=1.0,Z=1.0)
     
-    Speed=140
-    MinStartSpeed=100
-    MaxStartSpeed=140
+    //Speed=250
+    //MinStartSpeed=200
+    //MaxStartSpeed=250
     
     //trajectory
-    RandomYawRange=1000//2000
-    RandomPitchRange=4000//2500
-    RandomRollRange=500//500
+    RandomYawRange=0//2000
+    RandomPitchRange=0//2500
+    RandomRollRange=0//500
 }

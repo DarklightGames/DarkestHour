@@ -38,7 +38,7 @@ defaultproperties
     FireIronAnim=Iron_fire
     ShellEmitBone=ejector3
 
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)

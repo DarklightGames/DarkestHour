@@ -25,8 +25,7 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-    RotationRate.Yaw = -(180000 + Rand(30000));
-    RotationRate.Pitch = -(180000 + Rand(30000)); // end over end tumbling flight
+    RotationRate.Pitch = -(70000 + Rand(30000)); // end over end tumbling flight
 
     //RandSpin(100000);
     
@@ -41,4 +40,7 @@ defaultproperties
 {       
     CasingTrailClass=class'DH_Effects.DHCasingTrail'	
     bHasCasingTrail=true
+    //RotationRate=(Pitch=150000)
+    bFixedRotationDir=true
+    bRotateToDesired=false
 }

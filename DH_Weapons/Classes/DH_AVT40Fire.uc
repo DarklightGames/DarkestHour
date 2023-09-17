@@ -25,7 +25,7 @@ defaultproperties
     FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
     FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
     FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mmGreen'
     ShellEmitBone="ejector"
     ShellRotOffsetHip=(Pitch=-3000,Yaw=0,Roll=-3000)
 

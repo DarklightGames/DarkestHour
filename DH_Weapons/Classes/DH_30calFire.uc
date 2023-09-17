@@ -27,6 +27,7 @@ defaultproperties
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=30.0
 
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShellEjectClass=class'DH_Weapons.DH_30cal1stLinkEject'

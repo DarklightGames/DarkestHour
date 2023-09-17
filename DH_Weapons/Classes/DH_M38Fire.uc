@@ -13,7 +13,7 @@ defaultproperties
     Spread=55.0
     MaxVerticalRecoilAngle=1550
     MaxHorizontalRecoilAngle=200
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
     ShellRotOffsetHip=(Pitch=5000)
     ShakeRotMag=(X=50.0,Y=50.0,Z=350.0)
     ShakeRotTime=2.5

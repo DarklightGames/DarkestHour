@@ -48,12 +48,12 @@ defaultproperties
     SizeScale(0)=(RelativeSize=0.500000)
     SizeScale(1)=(RelativeTime=0.15000,RelativeSize=4.000000)
     SizeScale(2)=(RelativeTime=1.000000,RelativeSize=3.5000000)
-    StartSizeRange=(X=(Min=8.000000,Max=15.000000))
+    StartSizeRange=(X=(Min=10.000000,Max=15.000000))
     DrawStyle=PTDS_AlphaBlend
     Texture=Texture'Effects_Tex.BulletHits.metalsmokefinal'
     TextureUSubdivisions=2
     TextureVSubdivisions=2
-    LifetimeRange=(Min=0.5,Max=0.5)
+    LifetimeRange=(Min=0.75,Max=0.75)
     StartVelocityRange=(Y=(Min=-15.000000,Max=15.000000),Z=(Min=-15.000000,Max=15.000000))
     VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
     VelocityScale(1)=(RelativeTime=0.475000,RelativeVelocity=(X=0.100000,Y=0.200000,Z=0.200000))

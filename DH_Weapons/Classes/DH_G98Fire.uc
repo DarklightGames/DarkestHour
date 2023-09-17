@@ -17,8 +17,8 @@ defaultproperties
     
     MuzzleBone="MuzzleG98"
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stKar'
+    ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
     ShellRotOffsetIron=(Pitch=14000)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
     FireAnim="shoot_last"
