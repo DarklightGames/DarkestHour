@@ -202,51 +202,51 @@ simulated function bool IsPlayerHipFiring()
 simulated function EjectShell()
 {
     local int i;
-	local Coords EjectCoords;
-	local Vector EjectOffset, X, Y, Z;
-	local Rotator EjectRot;
-	local ROShellEject Shell;
+    local Coords EjectCoords;
+    local Vector EjectOffset, X, Y, Z;
+    local Rotator EjectRot;
+    local ROShellEject Shell;
 
     for (i = 0; i < ShellEjectors.Length; ++i)
     {
-	    if (ShellEjectors[i].EjectClass == none)
+        if (ShellEjectors[i].EjectClass == none)
         {
             continue;
         }
 
         if (IsPlayerHipFiring())
         {
-			// Find the shell eject location then scale it down 5x (since the weapons are scaled up 5x)
-        	EjectCoords = Weapon.GetBoneCoords(ShellEjectors[i].EjectBone);
-			EjectOffset = (EjectCoords.Origin - Weapon.Location) / 5.0;
-        	EjectOffset += Weapon.Location;
-        	EjectOffset += (EjectCoords.XAxis * ShellEjectors[i].HipOffset.X) 
+            // Find the shell eject location then scale it down 5x (since the weapons are scaled up 5x)
+            EjectCoords = Weapon.GetBoneCoords(ShellEjectors[i].EjectBone);
+            EjectOffset = (EjectCoords.Origin - Weapon.Location) / 5.0;
+            EjectOffset += Weapon.Location;
+            EjectOffset += (EjectCoords.XAxis * ShellEjectors[i].HipOffset.X)
                          + (EjectCoords.YAxis * ShellEjectors[i].HipOffset.Y)
                          + (EjectCoords.ZAxis * ShellEjectors[i].HipOffset.Z);
 
-			if (bReverseShellSpawnDirection)
-			{
-            	EjectRot = Rotator(EjectCoords.YAxis);
+            if (bReverseShellSpawnDirection)
+            {
+                EjectRot = Rotator(EjectCoords.YAxis);
             }
             else
             {
-            	EjectRot = Rotator(-EjectCoords.YAxis);
+                EjectRot = Rotator(-EjectCoords.YAxis);
             }
 
-	    	Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
-	    	EjectRot = Rotator(EjectCoords.XAxis) + ShellEjectors[i].RotOffsetHip;
+            Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
+            EjectRot = Rotator(EjectCoords.XAxis) + ShellEjectors[i].RotOffsetHip;
         }
         else
         {
-			Weapon.GetViewAxes(X, Y, Z);
-			EjectOffset = Instigator.Location + Instigator.EyePosition();
-			EjectOffset += (X * ShellEjectors[i].IronSightOffset.X)
+            Weapon.GetViewAxes(X, Y, Z);
+            EjectOffset = Instigator.Location + Instigator.EyePosition();
+            EjectOffset += (X * ShellEjectors[i].IronSightOffset.X)
                          + (Y * ShellEjectors[i].IronSightOffset.Y)
                          + (Z * ShellEjectors[i].IronSightOffset.Z);
-    		EjectRot = Rotator(Y);
-			EjectRot.Yaw += 16384;
-			Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
-			EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
+            EjectRot = Rotator(Y);
+            EjectRot.Yaw += 16384;
+            Shell = Weapon.Spawn(ShellEjectors[i].EjectClass, none,, EjectOffset, EjectRot);
+            EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
         EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
