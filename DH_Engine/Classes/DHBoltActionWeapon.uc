@@ -19,9 +19,10 @@ enum EReloadState
 var     EReloadState    ReloadState;        // weapon's current reloading state (none means not reloading)
 var     bool            bInterruptReload;   // set when one-by-one reload is stopped by player part way through, by pressing fire button
 
-var     name            PreReloadAnim;      // one-off anim when starting to reload
-var     name            PreReloadHalfAnim;  // same as above, but when there are one or more rounds in the chamber
-var     name            PreReloadEmptyAnim; // same as above, but when the weapon is empty
+var     name            PreReloadAnim;       // one-off anim when starting to reload
+var     name            PreReloadHalfAnim;   // same as above, but when there are one or more rounds in the chamber
+var     name            PreReloadEmptyAnim;  // same as above, but when the weapon is empty
+var     name            PreReloadCockedAnim; // same as half and regular pre-reload, but with a cocked hammer
 
 var     name            SingleReloadAnim;       // looping anim for inserting a single round
 var     name            SingleReloadHalfAnim;   // same as above, but when there are one or more rounds in the chamber
@@ -455,7 +456,10 @@ simulated state Reloading
             GetAnimParams(0, Anim, Frame, Rate);
 
             // Just finished playing pre-reload anim so now load 1st round
-            if (Anim == PreReloadAnim || Anim == PreReloadHalfAnim || Anim == PreReloadEmptyAnim)
+            if (Anim == PreReloadAnim ||
+                Anim == PreReloadHalfAnim ||
+                Anim == PreReloadEmptyAnim ||
+                Anim == PreReloadCockedAnim)
             {
                 PostPreReload();
                 return;
@@ -602,14 +606,19 @@ simulated function name GetPreReloadAnim()
     {
         return PreReloadEmptyAnim;
     }
-    else if (AmmoAmount(0) > 0 && HasAnim(PreReloadHalfAnim))
+    else if (AmmoAmount(0) > 0)
     {
-        return PreReloadHalfAnim;
+        if (!bWaitingToBolt && HasAnim(PreReloadCockedAnim))
+        {
+            return PreReloadCockedAnim;
+        }
+        else if (HasAnim(PreReloadHalfAnim))
+        {
+            return PreReloadHalfAnim;
+        }
     }
-    else
-    {
-        return PreReloadAnim;
-    }
+
+    return PreReloadAnim;
 }
 
 simulated function name GetSingleReloadAnim()
