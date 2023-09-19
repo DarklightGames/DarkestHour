@@ -344,6 +344,12 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // It also facilitates the player having a customisable view FOV
 simulated function float GetViewFOV(int PositionIndex)
 {
+    if (PositionIndex == BinocPositionIndex && BinocularsClass != none)
+    {
+        // Use the binoculars' FOV if player is using binoculars.
+        return BinocularsClass.default.PlayerFOVZoom;
+    }
+
     if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
     {
         return DriverPositions[PositionIndex].ViewFOV;
