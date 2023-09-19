@@ -901,9 +901,10 @@ function DrawHudPassC(Canvas C)
         {
             DrawSpriteWidget(C, CanMantleIcon);
         }
-        else if (P.bCanDig)
+        else if (P.ConstructionToDig != none)
         {
             DrawSpriteWidget(C, CanDigIcon);
+            // TODO: add the progress bar for digging
         }
         // Wire cutting icon if an object can be cut
         else if (P.bCanCutWire)
