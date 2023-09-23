@@ -233,6 +233,6 @@ defaultproperties
     // Italian
     Records(100)=(VehicleNames=("semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
 
-    Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert")))
+    Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert"),(ClassName="DH_Guns.DH_Cannone4732Gun_DesertCamo",VariantName="desertcamo"),(ClassName="DH_Guns.DH_Cannone4732Gun_Winter",VariantName="winter")))
 }
 
