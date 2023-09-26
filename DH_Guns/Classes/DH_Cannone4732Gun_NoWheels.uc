@@ -1,0 +1,14 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2023
+//==============================================================================
+
+class DH_Cannone4732Gun_NoWheels extends DH_Cannone4732Gun;
+
+defaultproperties
+{
+    Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body_nowheels'
+    //DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.57mmGun.AT57mm_destroyed'
+    VehicleHudImage=Texture'DH_Cannone4732_tex.Interface.cannone4732_body_nowheels_icon'
+    RotationsPerSecond=0.05 // Rotates slower than the wheeled version
+}

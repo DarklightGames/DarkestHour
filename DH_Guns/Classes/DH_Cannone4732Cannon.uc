@@ -11,7 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_turret'
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
 
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Artillery_stc.6pounder.6pounder_turret_coll')
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_barrel_collision',AttachBone="BARREL")
     
     GunnerAttachmentBone="com_player"
     
@@ -30,8 +32,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
 
-    nProjectileDescriptions(0)="M86 APC"
-    nProjectileDescriptions(1)="M303 HE-T"
+    nProjectileDescriptions(0)="Granata Perforante da 47"   // not sure if this is the right name or not!
+    nProjectileDescriptions(1)="Granata da 47"
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
@@ -65,8 +67,4 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0
-
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
-    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_barrel_collision',AttachBone="BARREL")
 }
