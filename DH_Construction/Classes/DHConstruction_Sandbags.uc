@@ -14,6 +14,7 @@ defaultproperties
     StartRotationMax=(Yaw=16384)
     bShouldAlignToGround=false
     bCanTakeImpactDamage=true
+    bCanDieOfStagnation=false
     bIsNeutral=true
     bAcceptsProjectors=false
 
