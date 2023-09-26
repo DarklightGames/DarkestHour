@@ -29,11 +29,13 @@ defaultproperties
     CustomPitchDownLimit=62806  // -15 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
+    PrimaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShell'
+    //SecondaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShellHE'
+    //TertiaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonHEAT'
 
     nProjectileDescriptions(0)="Granata Perforante da 47"   // not sure if this is the right name or not!
-    nProjectileDescriptions(1)="Granata da 47"
+    //nProjectileDescriptions(1)="Granata da 47"
+    //nProjectileDescriptions(2)="Effeto Pronto da 47"
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
@@ -54,6 +56,27 @@ defaultproperties
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_short_4')
 
     ResupplyInterval=3.0
+
+    RangeSettings(1)=100
+    RangeSettings(2)=200
+    RangeSettings(3)=300
+    RangeSettings(4)=400
+    RangeSettings(5)=500
+    RangeSettings(6)=600
+    RangeSettings(7)=700
+    RangeSettings(8)=800
+    RangeSettings(9)=900
+    RangeSettings(10)=1000
+    RangeSettings(11)=1100
+    RangeSettings(12)=1200
+    RangeSettings(13)=1300
+    RangeSettings(14)=1400
+    RangeSettings(15)=1500
+    RangeSettings(16)=1600
+    RangeSettings(17)=1700
+    RangeSettings(18)=1800
+    RangeSettings(19)=1900
+    RangeSettings(20)=2000
 
     PitchBone="gun_pitch"
     YawBone="gun_yaw"
