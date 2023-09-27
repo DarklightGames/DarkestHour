@@ -36,6 +36,7 @@ defaultproperties
     PreReloadAnim="Reload_start"
     SingleReloadAnim="Reload_single_round"
     PostReloadAnim="Reload_end_pump_action"
+    PostReloadNoBoltAnim="reload_end"
     SprintStartAnim="sprint_start"
     SprintLoopAnim="sprint_middle"
     SprintEndAnim="sprint_end"

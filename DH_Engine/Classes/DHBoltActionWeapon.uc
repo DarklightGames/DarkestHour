@@ -28,7 +28,8 @@ var     name            SingleReloadHalfAnim;   // same as above, but when there
 
 var     name            StripperReloadAnim; // stripper clip reload animation
 
-var     name            PostReloadAnim;     // one-off anim when reloading ends
+var     name            PostReloadAnim;       // one-off anim when reloading ends
+var     name            PostReloadNoBoltAnim; // alternative "post reload" when bolting is not required (e.g. on shotguns)
 
 var     name            FullReloadAnim;     // full reload animation (takes precedence!)
 
@@ -472,7 +473,7 @@ simulated state Reloading
                 PostLoop();
                 return;
             }
-            else if (Anim == PostReloadAnim)
+            else if (Anim == PostReloadAnim || Anim == PostReloadNoBoltAnim)
             {
                 GotoState('Idle');
             }
@@ -641,12 +642,26 @@ simulated function PlayPostReload()
 {
     if (Role == ROLE_Authority)
     {
-        SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
+        if (!bWaitingToBolt && HasAnim(PostReloadNoBoltAnim))
+        {
+            SetTimer(GetAnimDuration(PostReloadNoBoltAnim, 1.0), false);
+        }
+        else
+        {
+            SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
+        }
     }
 
-    if (InstigatorIsLocallyControlled() && HasAnim(PostReloadAnim))
+    if (InstigatorIsLocallyControlled())
     {
-        PlayAnim(PostReloadAnim, 1.0);
+        if (!bWaitingToBolt && HasAnim(PostReloadNoBoltAnim))
+        {
+            PlayAnim(PostReloadNoBoltAnim, 1.0);
+        }
+        else
+        {
+            PlayAnim(PostReloadAnim, 1.0);
+        }
     }
 }
 
