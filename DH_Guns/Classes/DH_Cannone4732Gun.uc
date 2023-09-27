@@ -2,13 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Version without wheels on
 // [ ] Adjust COM
-// [ ] Destroyed mesh
 // [ ] Projectiles
 // [ ] Gun calibration & sight
 // [ ] Third person animations
-// [ ] exit positions (verify correctness)
 // [ ] Add as option for Italians to build re: construction
 // [ ] UI elements for shells
 // [ ] New audio??
@@ -24,7 +21,7 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body'
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
-    //DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.57mmGun.AT57mm_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.Destroyed.cannone4732_destroyed'
     VehicleHudImage=Texture'DH_Cannone4732_tex.Interface.cannone4732_body_icon'
     VehicleHudTurret=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_look
@@ -36,9 +33,7 @@ defaultproperties
     ConstructionPlacementOffset=(Z=10.0)
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
-
     ShadowZOffset=10.0
-
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

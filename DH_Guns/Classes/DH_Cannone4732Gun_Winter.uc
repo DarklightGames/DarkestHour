@@ -9,4 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext_winter'
     CannonSkins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext_winter'
+    DestroyedMeshSkins(0)=Combiner'DH_Cannone4732_tex.cannone4732_body_winter_dest'
 }
