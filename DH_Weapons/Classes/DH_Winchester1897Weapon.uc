@@ -5,6 +5,15 @@
 
 class DH_Winchester1897Weapon extends DHBoltActionWeapon;
 
+// Overriden to allow only 5 rounds loaded in one go. The 6th round can be
+// loaded once there's a round in the chamber. When reloading with an empty
+// chamber, the player would have to manually top up the magazine by initiating
+// a second reload.
+simulated function int GetMaxLoadedRounds()
+{
+    return AmmoClass[0].default.InitialAmount - int(bWaitingToBolt);
+}
+
 defaultproperties
 {
     ItemName="Winchester Model 1897"
