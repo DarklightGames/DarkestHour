@@ -43,6 +43,8 @@ defaultproperties
     // Revert unwanted inherited values from DHSniperWeapon:
     bIsSniper=false
     bSniping=false
+    bCanUseUnfiredRounds=false
+    bEjectRoundOnReload=false
     
     bHasBayonet=true
     BayonetBoneName="bayonet"
