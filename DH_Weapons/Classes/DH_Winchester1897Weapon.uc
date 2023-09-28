@@ -25,8 +25,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_1st'
 
     DisplayFOV=90.0
-    PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=50.0
+    PlayerIronsightFOV=50.0
+    IronSightDisplayFOV=65.0
     BobModifyFactor=0.4
 
     MaxNumPrimaryMags=7
@@ -35,7 +35,6 @@ defaultproperties
     PutDownAnim="putaway"
 
     IronBringUp="iron_in"
-//  IronBringUpRest="Post_fire_iron_in" // TODO: ideally should have this, with hammer up after firing (played when ironsighting while waiting to work the pump action)
     IronIdleAnim="Iron_idle"
     IronPutDown="iron_out"
     PostFireIdleAnim="Post_fire_idle"
