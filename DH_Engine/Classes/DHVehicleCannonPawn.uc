@@ -1025,6 +1025,22 @@ exec function DebugRange()
     }
 }
 
+exec function DebugSpeed()
+{
+    local DHAntiVehicleProjectile Projectile;
+
+    if (IsDebugModeAllowed() && Cannon != none)
+    {
+        // Spawn a shell, then set it's bDebugSpeed to true.
+        Projectile = DHAntiVehicleProjectile(Cannon.SpawnProjectile(Cannon.ProjectileClass, false));
+
+        if (Projectile != none)
+        {
+            Projectile.bDebugSpeed = true;
+        }
+    }
+}
+
 // New debug exec to automatically calibrate the current range setting
 exec function AutoDebugRange()
 {

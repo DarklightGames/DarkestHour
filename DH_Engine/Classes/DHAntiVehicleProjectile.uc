@@ -29,7 +29,7 @@ var     bool            bExplodesOnHittingBody;  // shell explodes on hitting a 
 var     bool            bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
 var     bool            bBotNotifyIneffective;   // notify bot of an ineffective attack on target
 
-var     array<sound>    ExplosionSound;          // sound of the round exploding (array for random selection)
+var     array<Sound>    ExplosionSound;          // sound of the round exploding (array for random selection)
 var     float           ExplosionSoundVolume;    // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
 var     bool            bAlwaysDoShakeEffect;    // this shell will always DoShakeEffect when it explodes, not just if hit vehicle armor
 
@@ -37,8 +37,8 @@ var     bool            bAlwaysDoShakeEffect;    // this shell will always DoSha
 var     bool            bShatterProne;           // projectile may shatter on vehicle armor
 var     bool            bRoundShattered;         // projectile has shattered
 var     class<Emitter>  ShellShatterEffectClass; // effect for this shell shattering against a vehicle
-var     sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
-var     sound           ShatterSound[4];         // sound of the round shattering
+var     Sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
+var     Sound           ShatterSound[4];         // sound of the round shattering
 
 // Shell Tracer Effects
 var     bool            bHasTracer;
@@ -57,11 +57,11 @@ var     StaticMesh          DeflectedMesh;
 var     float               TracerPullback;
 
 // Camera shakes
-var     vector          ShakeRotMag;             // how far to rot view
-var     vector          ShakeRotRate;            // how fast to rot view
+var     Vector          ShakeRotMag;             // how far to rot view
+var     Vector          ShakeRotRate;            // how fast to rot view
 var     float           ShakeRotTime;            // how much time to rot the instigator's view
-var     vector          ShakeOffsetMag;          // max view offset vertically
-var     vector          ShakeOffsetRate;         // how fast to offset view vertically
+var     Vector          ShakeOffsetMag;          // max view offset vertically
+var     Vector          ShakeOffsetRate;         // how fast to offset view vertically
 var     float           ShakeOffsetTime;         // how much time to offset view
 var     float           BlurTime;                // how long blur effect should last for this shell
 var     float           BlurEffectScalar;        // scales the shake effect
@@ -75,7 +75,8 @@ var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to tru
 // Variables from deprecated ROAntiVehicleProjectile class:
 var     Actor           SavedTouchActor;
 var     Pawn            SavedHitActor;
-var     vector          LaunchLocation;
+var     Vector          LaunchLocation;
+var     Vector          LaunchDirection;
 var     bool            bCollided;
 var     float           DestroyTime;                // how long for the server to wait to destroy the actor after it has collided
 var     bool            bDidExplosionFX;            // already did the explosion effects
@@ -97,12 +98,12 @@ var     float           DeflectAOI;                 // if the round impacts armo
 var     bool            bRoundDeflected;            // set to true when the round deflects
 
 // Impact sounds
-var     sound           VehicleHitSound;            // sound of this shell penetrating a vehicle
-var     sound           VehicleDeflectSound;        // sound of this shell deflecting off a vehicle
-var     sound           DirtHitSound;               // sound of this shell hitting dirt
-var     sound           RockHitSound;               // sound of this shell hitting rock
-var     sound           WaterHitSound;              // sound of this shell hitting water
-var     sound           WoodHitSound;               // sound of this shell hitting wood
+var     Sound           VehicleHitSound;            // sound of this shell penetrating a vehicle
+var     Sound           VehicleDeflectSound;        // sound of this shell deflecting off a vehicle
+var     Sound           DirtHitSound;               // sound of this shell hitting dirt
+var     Sound           RockHitSound;               // sound of this shell hitting rock
+var     Sound           WaterHitSound;              // sound of this shell hitting water
+var     Sound           WoodHitSound;               // sound of this shell hitting wood
 
 // Impact effects
 var     class<Emitter>  ShellHitVehicleEffectClass; // effect for this shell hitting a vehicle
@@ -116,13 +117,16 @@ var     class<Emitter>  ShellHitWaterEffectClass;   // effect for this shell hit
 // Debug
 var     bool            bDrawDebugLines;
 var     bool            bFirstHit;
+var     bool            bDebugSpeed;
+var     int             DebugSpeedSamplingIndex;
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
 simulated function PostBeginPlay()
 {
     LaunchLocation = Location;
     BCInverse = 1.0 / BallisticCoefficient;
-    Velocity = vector(Rotation) * Speed;
+    LaunchDirection = vector(Rotation);
+    Velocity = LaunchDirection * Speed;
 
     if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
     {
@@ -207,10 +211,50 @@ simulated function PostNetBeginPlay()
     }
 }
 
+simulated function TickDebugSpeedSampling()
+{
+    local float Distances[11];
+    local float DistanceToPlane;
+
+    if (DebugSpeedSamplingIndex >= arraycount(Distances))
+    {
+        return;
+    }
+
+    Distances[0] = 100;
+    Distances[1] = 250;
+    Distances[2] = 500;
+    Distances[3] = 750;
+    Distances[4] = 1000;
+    Distances[5] = 1250;
+    Distances[6] = 1500;
+    Distances[7] = 1750;
+    Distances[8] = 2000;
+    Distances[9] = 2500;
+    Distances[10] = 3000;
+
+    // Get the distance to the plane created from the launch location & direction.
+    DistanceToPlane = (Location - LaunchLocation) dot LaunchDirection;
+    DistanceToPlane = class'DHUnits'.static.UnrealToMeters(DistanceToPlane);
+
+    if (DistanceToPlane >= Distances[DebugSpeedSamplingIndex])
+    {
+        Log("Speed at " @ Distances[DebugSpeedSamplingIndex] @ "m: " @ class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
+        DebugSpeedSamplingIndex += 1;
+    }
+}
+
 // Disabled no longer use delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
 simulated function Tick(float DeltaTime)
 {
-    Disable('Tick');
+    if (bDebugSpeed)
+    {
+        TickDebugSpeedSampling();
+    }
+    else
+    {
+        Disable('Tick');
+    }
 }
 
 // Borrowed from AB: just using a standard linear interpolation equation here

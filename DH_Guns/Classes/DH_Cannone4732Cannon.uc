@@ -30,18 +30,25 @@ defaultproperties
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShell'
-    //SecondaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShellHE'
-    //TertiaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonHEAT'
+    SecondaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShellHE'
+    TertiaryProjectileClass=class'DH_Guns.DH_Cannone4732CannonShellHEAT'
+
+    ProjectileDescriptions(0)="AP"
+    ProjectileDescriptions(1)="HE"
+    ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="Granata Perforante da 47"   // not sure if this is the right name or not!
-    //nProjectileDescriptions(1)="Granata da 47"
-    //nProjectileDescriptions(2)="Effeto Pronto da 47"
+    nProjectileDescriptions(1)="Granata da 47"
+    nProjectileDescriptions(2)="Effeto Pronto da 47"
 
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
+    InitialTertiaryAmmo=4
     MaxPrimaryAmmo=30
     MaxSecondaryAmmo=15
+    MaxTertiaryAmmo=6
     SecondarySpread=0.00125
+    TertiarySpread=0.00125
 
     // Weapon fire
     AddedPitch=-15
