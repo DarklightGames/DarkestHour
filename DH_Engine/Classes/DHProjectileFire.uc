@@ -544,6 +544,20 @@ function PlayFiring()
     {
         if (Weapon.Mesh != none)
         {
+            if (Weapon.AmmoAmount(ThisModeNum) < 1)
+            {
+                W = DHProjectileWeapon(Weapon);
+
+                if (W != none)
+                {
+                    Log("unmuting slide driver");
+
+                    // If the weapon has a slide, unmute the slide animation driver
+                    // so that the slide locks back after the last round is fired.
+                    W.UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
+                }
+            }
+
             if (FireCount > 0)
             {
                 if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronLoopAnim))
@@ -575,15 +589,6 @@ function PlayFiring()
                 if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
                 {
                     Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
-
-                    W = DHProjectileWeapon(Weapon);
-
-                    if (W != none)
-                    {
-                        // If the weapon has a slide, unmute the slide animation driver
-                        // so that the slide locks back after the last round is fired.
-                        W.UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
-                    }
                 }
                 else
                 {
