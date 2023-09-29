@@ -538,6 +538,8 @@ function ServerPlayFiring()
 // Modified to handle different firing animations when on sights
 function PlayFiring()
 {
+    local DHProjectileWeapon W;
+
     if (Weapon != none)
     {
         if (Weapon.Mesh != none)
@@ -573,6 +575,15 @@ function PlayFiring()
                 if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
                 {
                     Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+
+                    W = DHProjectileWeapon(Weapon);
+
+                    if (W != none)
+                    {
+                        // If the weapon has a slide, unmute the slide animation driver
+                        // so that the slide locks back after the last round is fired.
+                        W.UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
+                    }
                 }
                 else
                 {

@@ -13,8 +13,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MAB42Weapon',AssociatedAttachment=none)
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=none)
 
-    // TODO: give Berretta eventually!
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon',AssociatedAttachment=class'DH_BerettaM1934AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon',AssociatedAttachment=class'DH_BerettaM1934AmmoPouch')
 
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')  // TODO: replace with italian grenade
 

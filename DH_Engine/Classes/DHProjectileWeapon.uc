@@ -160,10 +160,17 @@ enum EWeaponComponentAnimationDriverType
                                 // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
                                 // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
                                 // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
+
     DRIVER_Bayonet,             // Drives the animation based on the state of the bayonet (e.g., attached or unattached)
+
     DRIVER_Bolt,                // Drives the animation based on the state of the bolt (i.e., whether or not bWaitingToBolt is true or false)
                                 // This driver is only forcibly updated when a shot is fired (when bWaitingToBolt becomes true).
                                 // Animation triggers must be used to lock the bolt/hammer back in place (using a Theta value of 1.0).
+
+    DRIVER_Slide,               // Drives a pistol slide or equivalent state. The animation only needs to have one frame, where the slide is in
+                                // the locked back position. This driver is forcibly unmuted when the last round is fired and when the weapon is
+                                // first drawn. The driver will be unmuted when an empty reload plays.
+    DRIVER_Empty,
 };
 
 // Weapon component animations
@@ -176,6 +183,7 @@ struct WeaponComponentAnimation
     var name BoneName;  // Used as the root of the new channel
     var name Animation; // The animation to use.
     var EWeaponComponentAnimationDriverType DriverType;
+    var bool bStartMuted;
 };
 var array<WeaponComponentAnimation> WeaponComponentAnimations;
 
@@ -787,6 +795,12 @@ simulated function BringUp(optional Weapon PrevWeapon)
         UpdateBayonet();
         UpdateWeaponComponentAnimations();
         UpdateAmmoBelt();
+
+        // If the weapon is empty, un-mute the slide animation channel so that the slide appears locked back.
+        if (AmmoAmount(0) < 1)
+        {
+            UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
+        }
     }
 }
 
@@ -2398,6 +2412,9 @@ simulated function name GetReloadAnim()
 simulated function PlayReload()
 {
     PlayAnimAndSetTimer(GetReloadAnim(), 1.0, 0.1);
+
+    // Mute the slide animation driver, as the slide will be animated by the reload animation.
+    MuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
 }
 
 // Gets the index of the fullest magazine that is not our current magazine.
@@ -3416,10 +3433,20 @@ private simulated function SetWeaponComponentAnimationChannelsBlendAlpha(EWeapon
 private simulated function SetupWeaponComponentAnimationChannels()
 {
     local int i;
+    local float BlendAlpha;
 
     for (i = 0; i < WeaponComponentAnimations.Length; ++i)
     {
-        AnimBlendParams(WeaponComponentAnimations[i].Channel, 1.0,,, WeaponComponentAnimations[i].BoneName);
+        if (WeaponComponentAnimations[i].bStartMuted)
+        {
+            BlendAlpha = 0.0;
+        }
+        else
+        {
+            BlendAlpha = 1.0;
+        }
+
+        AnimBlendParams(WeaponComponentAnimations[i].Channel, BlendAlpha,,, WeaponComponentAnimations[i].BoneName);
         PlayAnim(WeaponComponentAnimations[i].Animation, 1.0,, WeaponComponentAnimations[i].Channel);
     }
 }

@@ -14,7 +14,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=none,AssociatedAttachment=none)
     PrimaryWeapons(2)=(Item=none,AssociatedAttachment=none)
 
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')  // TODO: Beretta M1934, once it's ready
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon',AssociatedAttachment=class'DH_BerettaM1934AmmoPouch')
 
     GivenItems(0)="DH_Equipment.DHBinocularsItemItalian"
 

@@ -11,6 +11,7 @@ defaultproperties
     AltName="Mitragliere"
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Breda30Weapon',AssociatedAttachment=class'DH_Weapons.DH_Breda30AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon',AssociatedAttachment=class'DH_BerettaM1934AmmoPouch')
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"
