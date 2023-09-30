@@ -2204,6 +2204,8 @@ simulated state Reloading extends WeaponBusy
             {
                 NextMagAmmoCount += 1;
             }
+
+            Log("NextMagAmmoCount" @ NextMagAmmoCount);
         }
 
         PlayReload();
@@ -3462,7 +3464,7 @@ simulated private function float GetWeaponComponentAnimationTime(int ComponentIn
     switch (WeaponComponentAnimations[ComponentIndex].DriverType)
     {
         case DRIVER_MagazineAmmunition:
-            // Magazine-driven animations are expected to have N+1 frames where N is the maximum ammo.
+            // Magazine-driven animations are expected to have N+1 frames where N is the maximum ammo (including plus-one loading)
             return Theta * MaxAmmo(0);
         case DRIVER_Bolt:
             return Theta;
@@ -3501,9 +3503,10 @@ simulated event UpdateMagazineAmmunitionMidReload()
 {
     local float Theta;
 
-    Theta = float(NextMagAmmoCount) / MaxAmmo(0);
+    Theta = FClamp(float(NextMagAmmoCount) / MaxAmmo(0), 0.0, 1.0);
 
     UpdateWeaponComponentAnimationsWithDriverTypeAndTheta(DRIVER_MagazineAmmunition, Theta);
+    ForceUpdateAmmoBelt(NextMagAmmoCount);
 }
 
 simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
@@ -3549,6 +3552,29 @@ simulated function UpdateWeaponComponentAnimations()
     for (i = 0; i < WeaponComponentAnimations.Length; ++i)
     {
         UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(WeaponComponentAnimations[i].DriverType));
+    }
+}
+
+// Set the visibility status of the ammo belt based on the ammo count passed in.
+simulated function ForceUpdateAmmoBelt(int MyAmmoAmount)
+{
+    local int i;
+
+    for (i = 0; i < MGBeltArray.Length; ++i)
+    {
+        if (MGBeltArray[i] == none)
+        {
+            continue;
+        }
+        
+        if (i < MyAmmoAmount)
+        {
+            MGBeltArray[i].SetDrawType(DT_StaticMesh);
+        }
+        else
+        {
+            MGBeltArray[i].SetDrawType(DT_None);
+        }
     }
 }
 

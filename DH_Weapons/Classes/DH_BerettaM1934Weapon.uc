@@ -35,7 +35,11 @@ defaultproperties
     MaxNumPrimaryMags=5
 
     MagEmptyReloadAnims(0)="reload_empty"
-    MagPartialReloadAnims(0)="reload_empty" // TODO: replace
+    MagPartialReloadAnims(0)="reload"
+
+    SprintStartAnimRate=1.0
+    SprintEndAnimRate=1.0
+    SprintLoopAnimRate=1.0
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_MagazineAmmunition,Channel=1,Animation="driver_magazine",BoneName="MAGAZINE_INTERNALS")
     WeaponComponentAnimations(1)=(DriverType=DRIVER_Slide,Channel=2,Animation="driver_slide",BoneName="SLIDE",bStartMuted=true)
