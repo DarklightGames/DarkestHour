@@ -36,7 +36,7 @@ defaultproperties
 
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
-    ProjectileDescriptions(2)="SMOKE"
+    ProjectileDescriptions(2)="Smoke"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
     nProjectileDescriptions(1)="Gr.38 Hl/C"
