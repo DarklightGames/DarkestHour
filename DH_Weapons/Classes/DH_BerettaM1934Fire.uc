@@ -15,9 +15,9 @@ defaultproperties
     MaxVerticalRecoilAngle=300
     MaxHorizontalRecoilAngle=175
 
-    FireSounds(0)=Sound'Inf_Weapons.tt33.tt33_fire01'
-    FireSounds(1)=Sound'Inf_Weapons.tt33.tt33_fire02'
-    FireSounds(2)=Sound'Inf_Weapons.tt33.tt33_fire03'
+    FireSounds(0)=Sound'DH_BerettaM1934_sounds.beretta_m1934_fire_sg_01'
+    FireSounds(1)=Sound'DH_BerettaM1934_sounds.beretta_m1934_fire_sg_02'
+    FireSounds(2)=Sound'DH_BerettaM1934_sounds.beretta_m1934_fire_sg_03'
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellHipOffset=(X=0.0,Y=0.0,Z=0.0)
     ShellRotOffsetHip=(Pitch=0,Yaw=0,Roll=0)
