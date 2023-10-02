@@ -8,7 +8,7 @@ class DH_Wz35Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
+    MenuImage=Texture'DH_Wz35_tex.Interface.wz35_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
     bRapidFire=false
