@@ -74,6 +74,7 @@ defaultproperties
     BoltIronAnim="iron_bolt"
     BipodIdleAnim="iron_idle"
     BipodMagEmptyReloadAnim="reload_empty"
+    BipodMagPartialReloadAnim="reload_empty"
     MagEmptyReloadAnims(0)="reload_empty"
 
     bShouldZoomWhenBolting=true
