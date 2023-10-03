@@ -30,6 +30,19 @@ simulated function ROIronSights()
     Deploy();
 }
 
+// Modified because bolt action class can't handle reloads for this type of
+// a weapon.
+// TODO: Add proper reload handling to the base class and remove this.
+simulated function PerfomReload()
+{
+    super(DHProjectileWeapon).PerformReload();
+}
+
+simulated function bool AllowReload()
+{
+    return super(DHProjectileWeapon).AllowReload();
+}
+
 defaultproperties
 {
     ItemName="Wz-35 Anti-Tank Rifle"
