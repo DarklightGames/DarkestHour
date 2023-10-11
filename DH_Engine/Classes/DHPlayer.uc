@@ -57,6 +57,7 @@ var     globalconfig string     ROIDHash;            // client ROID hash (this g
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
 var 	config    	bool  		bUseNativeItemNames; // client option to display native item names instead of translated ones
+var     globalconfig bool       bIsIncognito;        // when true, patron & developer tags are not displayed on the scoreboard
 
 var     byte                    ArtillerySupportSquadIndex;
 
@@ -225,7 +226,7 @@ replication
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSendSquadPromotionRequest, ServerAcceptSquadPromotionRequest, ServerDenySquadPromotionRequest,
-        ServerSquadVolunteerToAssist,
+        ServerSquadVolunteerToAssist, ServerSetIncognitoMode,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
@@ -3610,8 +3611,7 @@ function ClientSaveROIDHash(string ROID)
     ROIDHash = ROID;
 
     SaveConfig();
-
-    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    
     PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
 
     // If we have script patron status, then set patron status on server
@@ -3628,6 +3628,8 @@ function ClientSaveROIDHash(string ROID)
         PatronRequest.OnResponse = PatronRequestOnResponse;
         PatronRequest.Send();
     }
+
+    ServerSetIncognitoMode(bIsIncognito);
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -6806,6 +6808,19 @@ function ServerSetPatronTier(string PatronTier)
     if (PRI != none)
     {
         PRI.PatronTier = GetPatronTier(PatronTier);
+    }
+}
+
+// Client-to-server function that reports the player's incognito mode to the server.
+function ServerSetIncognitoMode(bool bIsIncognito)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.bIsIncognito = bIsIncognito;
     }
 }
 
