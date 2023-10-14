@@ -10,6 +10,6 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_vest'
     Skins(1)=Texture'DHUSCharactersTex.GI.GI_AssualtVest'
 
-    BodySkins(0)=Texture'DHUSCharactersTex.GI.GI_1'
-    BodySkins(1)=Texture'DHUSCharactersTex.GI.GI_1' //Dumb skin duplication here appears to be required as GI_2 skin inhereted from AmericanPawn is not compatible with vest models.
+    BodySkins(0)=Texture'DHUSCharactersTex.GI.GI_AssualtVest'
+    BodySkins(1)=Texture'DHUSCharactersTex.GI.GI_AssualtVest' //Dumb skin duplication here appears to be required as skin inhereted from AmericanPawn is not compatible with vest models.
 }
