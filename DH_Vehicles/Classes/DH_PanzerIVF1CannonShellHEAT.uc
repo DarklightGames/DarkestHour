@@ -7,13 +7,13 @@ class DH_PanzerIVF1CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
-    Speed=25348.0
-    MaxSpeed=25348.0
+    Speed=27158.0
+    MaxSpeed=27158.0
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=330   //~~600 gramms TNT, assuming (couldnt find anything)
+    ImpactDamage=350   //~~600 gramms TNT, assuming (couldnt find anything)
     Damage=300.0
     DamageRadius=700.0
 

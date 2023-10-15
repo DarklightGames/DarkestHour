@@ -7,8 +7,8 @@ class DH_PanzerIIINCannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
-    Speed=45000.0
-    MaxSpeed=45000.0
+    Speed=27158.0
+    MaxSpeed=27158.0
     ShellDiameter=7.5
     BallisticCoefficient=2.0
 
