@@ -84,7 +84,7 @@ defaultproperties
     CollisionHeight=30.0
     SupplyCost=500
     bCanPlaceIndoors=true
-    ResupplyCount=100
+    ResupplyCount=30
     HealthMax=50
     ConstructionVerb="drop"
     StartRotationMin=(Yaw=-16384)
