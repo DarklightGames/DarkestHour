@@ -36,7 +36,7 @@ defaultproperties
    VehHitpoints(0)=(PointOffset=(X=-100.0,Y=0.0,Z=12.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointOffset=(X=30.0,Y=-27.0,Z=0.0)) // ammo stores x 3
     VehHitpoints(2)=(PointRadius=20.0,PointOffset=(X=-20.0,Y=-27.0,Z=0.0))
-    VehHitpoints(3)=(PointRadius=20.0,PointOffset=(X=-30.0,Y=27.0,Z=0.0))
+    VehHitpoints(3)=(PointRadius=25.0,PointOffset=(X=-30.0,Y=27.0,Z=0.0))
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.PanzerIVJ.PanzerIVJ_dest'
 
     // Hull armor

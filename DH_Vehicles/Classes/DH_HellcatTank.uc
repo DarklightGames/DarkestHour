@@ -71,6 +71,10 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=74.00,Y=-16.00,Z=30.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=15.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=0.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=10.0,PointBone="turret",PointOffset=(X=55.00,Y=-0.00,Z=30.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=8.0
     DamagedEffectOffset=(X=-140.0,Y=0.0,Z=35.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_dest'

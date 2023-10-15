@@ -24,6 +24,10 @@ defaultproperties
     RightArmor(1)=(Thickness=5.8,LocationName="upper")
     LeftArmor(0)=(Thickness=3.81,MaxRelativeHeight=69.7,LocationName="lower")
     LeftArmor(1)=(Thickness=5.8,LocationName="upper")
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=83.00,Y=23.00,Z=5.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-30.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=55.00,Y=0.00,Z=-5.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_dest'
     GearRatios(4)=0.67
     TransRatio=0.07

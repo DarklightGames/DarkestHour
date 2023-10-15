@@ -69,10 +69,14 @@ defaultproperties
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-    VehHitpoints(0)=(PointRadius=35.0,PointBone="Jackson_body_ext",PointOffset=(X=-90.0,Z=-35.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=-20.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=35.0,PointBone="Jackson_body_ext",PointOffset=(X=-110,y=0.00,Z=-100.0)) // engine //jacksons origin points are awfully messed up, may need to fix at some point
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=55.0,Z=-0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)  //jacksons origin points are awfully messed up, may need to fix at some point
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=20.0,Y=-55.0,Z=-0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) //jacksons origin points are awfully messed up, may need to fix at some point
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Jackson_body_ext",PointOffset=(X=-20.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)     //jacksons origin points are awfully messed up, may need to fix at some point
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=71.00,Y=31.00,Z=6.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-30.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=15.0,PointBone="turret",PointOffset=(X=50.00,Y=0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
     TreadHitMaxHeight=65.0
     DamagedEffectOffset=(X=-126.0,Y=20.0,Z=105.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_Dest'

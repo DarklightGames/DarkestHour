@@ -3283,13 +3283,17 @@ function DrawVehiclePointSphere()
 
                 HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> rotator(HitPointCoords.XAxis));
 
-                if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse)
                 {
                     C = GoldColor;
                 }
                 else if (AV.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || AV.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
                 {
                     C = PurpleColor;
+                }
+                else if (AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch) //changed so they are easier to differenciate between pitch and traverse
+                {
+                    C = GreenColor;
                 }
                 else
                 {

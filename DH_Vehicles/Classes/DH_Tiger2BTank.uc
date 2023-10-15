@@ -66,10 +66,15 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//was smaller than the tiger 1 for some reason, was 15 now 25
+    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//
+    VehHitpoints(4)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//
+    VehHitpoints(5)=(PointRadius=35.0,PointScale=1.0,PointBone="turret",PointOffset=(X=-80.0,Y=0,Z=25),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)//tiger2 had an ammo rack in the bustle of the turret, added to enable the functionality 
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=109.00,Y=-29.00,Z=26.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=30.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=0.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=25.0,PointBone="turret",PointOffset=(X=90.00,Y=0.00,Z=26.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=
     TreadHitMaxHeight=-38.3
     TreadDamageThreshold=1.0
     DamagedEffectScale=1.25

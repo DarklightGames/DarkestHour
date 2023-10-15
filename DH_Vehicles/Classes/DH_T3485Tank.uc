@@ -32,6 +32,11 @@ defaultproperties
     HealthMax=525
     EngineHealth=300
 
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=90.00,Y=-12.50,Z=4.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-25.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=16.0,PointBone="turret",PointOffset=(X=75.00,Y=0.00,Z=0.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
+
     PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel

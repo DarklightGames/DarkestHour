@@ -19,4 +19,9 @@ defaultproperties
 	// Compared to M4A375W: 105mm ammo is more likely to explode
 	AmmoIgnitionProbability=0.88  // 0.75 default
 
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=57.00,Y=20.00,Z=0.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=-30.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=30.00,Y=0.00,Z=-10.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
+
 }

@@ -146,6 +146,10 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=70.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=2.0,PointBone="turret",PointOffset=(X=75.00,Y=21.50,Z=36.00),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=0.00,Y=0.00,Z=0.00),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="turret",PointOffset=(X=55.00,Y=0.00,Z=25.00),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
 
     LeftWheelBones(0)="wheel.L.001"
     LeftWheelBones(1)="wheel.L.002"
