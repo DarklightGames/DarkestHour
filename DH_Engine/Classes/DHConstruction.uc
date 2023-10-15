@@ -143,7 +143,7 @@ var     bool    bCanBeTornDownWhenConstructed;      // Whether or not players ca
 var     bool    bCanBeTornDownByFriendlies;         // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
 var     bool    bBreakOnTearDown;                   // If true, the construction breaks when torn down
 var     float   TearDownProgress;
-var     float   TakeDownProgressInterval;
+var     float   TakeDownProgressInterval;           // ProgressMax / Desired Hits
 
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
