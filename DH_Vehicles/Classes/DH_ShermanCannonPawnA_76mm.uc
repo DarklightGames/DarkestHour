@@ -24,4 +24,5 @@ defaultproperties
     PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     FireImpulse=(X=-95000.0)
+    OverlayCorrectionY=10
 }
