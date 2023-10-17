@@ -8,7 +8,7 @@ class DH_BerettaM1934Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.tt33'  // TODO: replace
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'   // TODO: replace
+    MenuImage=Texture'DH_BerettaM1934_tex.interface.beretta_m1934_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'  // TODO: replace
     bRapidFire=false
