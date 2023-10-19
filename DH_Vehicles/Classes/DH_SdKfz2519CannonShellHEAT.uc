@@ -26,17 +26,17 @@ defaultproperties
     // Penetration
 
     // Gr.38 Hl/C April 1943
-    DHPenetrationTable(0)=11.6
-    DHPenetrationTable(1)=11.6
-    DHPenetrationTable(2)=11.6
-    DHPenetrationTable(3)=11.6
-    DHPenetrationTable(4)=11.6
-    DHPenetrationTable(5)=11.6
-    DHPenetrationTable(6)=11.6
-    DHPenetrationTable(7)=11.6
-    DHPenetrationTable(8)=11.6
-    DHPenetrationTable(9)=11.6
-    DHPenetrationTable(10)=11.6
+    DHPenetrationTable(0)=11.5
+    DHPenetrationTable(1)=11.5
+    DHPenetrationTable(2)=11.5
+    DHPenetrationTable(3)=11.5
+    DHPenetrationTable(4)=11.5
+    DHPenetrationTable(5)=11.5
+    DHPenetrationTable(6)=11.5
+    DHPenetrationTable(7)=11.5
+    DHPenetrationTable(8)=11.5
+    DHPenetrationTable(9)=11.5
+    DHPenetrationTable(10)=11.5
 
     // Gr.38 Hl/B December 1942
     // DHPenetrationTable(0)=8.7
