@@ -12,7 +12,7 @@ struct HintInfo
     var localized string    Text;  // hint display text
 };
 
-const                   HINT_COUNT = 64;
+const                   HINT_COUNT = 70;
 
 var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
 var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
@@ -200,7 +200,7 @@ defaultproperties
     Hints(48)=(Title="Externally Mounted MG Reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
 
     Hints(49)=(Title="Spotting Scope",Text="You are operating an artillery piece equipped with a spotting scope. Press %NEXTWEAPON% to look through the spotting scope.")
-    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use RMB on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
+    Hints(50)=(Title="Artillery Operators",Text="Open map to coordinate fire. Use [RIGHTMOUSE] on a fire support request to select it as the active target or use the Ruler marker to measure distances from you to a given spot on the map.")
     Hints(51)=(Title="Map Interaction",Text="You can interact with the map by pressing %JUMP%.")
     Hints(52)=(Title="Map Navigation",Text="To zoom the map, hover the cursor over the map and use the scroll wheel. To pan the map, press and hold [LEFTMOUSE] then move the cursor.")
     Hints(53)=(Title="Map Markers",Text="To add and interact with markers on the map, hover the cursor over the area or object of interest and press [RIGHTMOUSE] to bring up the context menu.")
@@ -208,5 +208,9 @@ defaultproperties
 
     Hints(60)=(Title="Firing Range",Text="This weapon has an adjustable sight! Press %SWITCHFIREMODE% to change the range of the sight.")
     Hints(61)=(Title="Desperate measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Don't waste your shots!")
+
+    Hints(62)=(Title="Barrel Overheating",Text="Your weapon's barrel is overheating! Overheating barrels will result in reduced accuracy and eventual destruction of the barrel.")
+    Hints(63)=(Title="Barrel Swapping",Text="You can swap the barrel of this weapon. Press %ROMGOPERATION% while deployed to change to your secondary barrel.")
+    Hints(64)=(Title="Barrel Destroyed",Text="Your weapon's barrel has been destroyed by overheating! You can no longer fire this weapon.")
 }
 
