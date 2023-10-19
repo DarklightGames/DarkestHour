@@ -25,7 +25,7 @@ defaultproperties
 
     // Penetration
 
-    // Gr.38 Hl/C April 1943
+    // Gr.38 Hl/C Early/Mid 1944
     DHPenetrationTable(0)=11.5
     DHPenetrationTable(1)=11.5
     DHPenetrationTable(2)=11.5
@@ -77,27 +77,27 @@ defaultproperties
     // DHPenetrationTable(9)=5.2
     // DHPenetrationTable(10)=5.2
 
-    MechanicalRanges(0)=(RangeValue=16.0)
-    MechanicalRanges(1)=(Range=100,RangeValue=32.0)
-    MechanicalRanges(2)=(Range=200,RangeValue=64.0)
-    MechanicalRanges(3)=(Range=300,RangeValue=96.0)
-    MechanicalRanges(4)=(Range=400,RangeValue=128.0)
-    MechanicalRanges(5)=(Range=500,RangeValue=168.0)
-    MechanicalRanges(6)=(Range=600,RangeValue=196.0)
-    MechanicalRanges(7)=(Range=700,RangeValue=222.0)
-    MechanicalRanges(8)=(Range=800,RangeValue=268.0)
-    MechanicalRanges(9)=(Range=900,RangeValue=304.0)
-    MechanicalRanges(10)=(Range=1000,RangeValue=344.0)
-    MechanicalRanges(11)=(Range=1100,RangeValue=388.0)
-    MechanicalRanges(12)=(Range=1200,RangeValue=428.0)
-    MechanicalRanges(13)=(Range=1300,RangeValue=468.0)
-    MechanicalRanges(14)=(Range=1400,RangeValue=512.0)
-    MechanicalRanges(15)=(Range=1500,RangeValue=556.0)
-    MechanicalRanges(16)=(Range=1600,RangeValue=600.0)
-    MechanicalRanges(17)=(Range=1700,RangeValue=644.0)
-    MechanicalRanges(18)=(Range=1800,RangeValue=688.0)
-    MechanicalRanges(19)=(Range=1900,RangeValue=728.0)
-    MechanicalRanges(20)=(Range=2000,RangeValue=764.0)
+    MechanicalRanges(0)=(RangeValue=59.0)
+    MechanicalRanges(1)=(Range=100,RangeValue=35.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=58.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=86.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=114.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=142.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=171.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=202.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=234.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=266.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=299.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=334.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=370.0)
+    MechanicalRanges(13)=(Range=1300,RangeValue=406.0)
+    MechanicalRanges(14)=(Range=1400,RangeValue=443.0)
+    MechanicalRanges(15)=(Range=1500,RangeValue=482.0)
+    MechanicalRanges(16)=(Range=1600,RangeValue=521.0)
+    MechanicalRanges(17)=(Range=1700,RangeValue=559.0)
+    MechanicalRanges(18)=(Range=1800,RangeValue=602.0)
+    MechanicalRanges(19)=(Range=1900,RangeValue=643.0)
+    MechanicalRanges(20)=(Range=2000,RangeValue=687.0) //Maximum range of this gun is 2000 meters, you cannot zero above that value.
     MechanicalRanges(21)=(Range=2200,RangeValue=808.0)
     MechanicalRanges(22)=(Range=2400,RangeValue=852.0)
     MechanicalRanges(23)=(Range=2600,RangeValue=898.0)
