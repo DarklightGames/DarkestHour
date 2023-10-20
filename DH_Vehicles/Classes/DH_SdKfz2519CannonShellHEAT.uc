@@ -7,7 +7,7 @@ class DH_SdKfz2519CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
-    Speed=27158.0
+    Speed=27158.0 //450m/s
     MaxSpeed=27158.0
     ShellDiameter=7.5
     BallisticCoefficient=2.0
