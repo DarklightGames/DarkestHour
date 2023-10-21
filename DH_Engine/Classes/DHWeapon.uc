@@ -92,9 +92,16 @@ simulated function bool StartFire(int Mode)
 
     if (super.StartFire(Mode))
     {
-        if (FireMode[Mode].bMeleeMode && ROPawn(Instigator) != none)
+        if (FireMode[Mode].bMeleeMode)
         {
-            ROPawn(Instigator).SetMeleeHoldAnims(true);
+            if (ROPawn(Instigator) != none)
+            {
+                ROPawn(Instigator).SetMeleeHoldAnims(true);
+            }
+
+            // Pop out of the current state (e.g. WeaponSprinting) so melee
+            // animations take precedence.
+            GotoState('Idle');
         }
 
         return true;
@@ -351,10 +358,27 @@ simulated state StartMantle extends Busy
     }
 }
 
+simulated function WeaponFire GetFiringMode()
+{
+    local int i;
+
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
+    {
+        if (FireMode[i].bIsFiring)
+        {
+            return FireMode[i];
+        }
+    }
+}
+
 // Modified to include states PostFiring & AutoLoweringWeapon
 simulated function SetSprinting(bool bNewSprintStatus)
 {
-    if (FireMode[1].bMeleeMode && FireMode[1].bIsFiring)
+    local WeaponFire FiringMode;
+
+    FiringMode = GetFiringMode();
+
+    if (FiringMode != none && FiringMode.bMeleeMode)
     {
         return;
     }
