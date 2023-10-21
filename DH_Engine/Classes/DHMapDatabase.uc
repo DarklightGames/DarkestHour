@@ -324,4 +324,5 @@ defaultproperties
     MapInfos(162)=(Name="DH-Maupertus_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(163)=(Name="DH-Jurques_Dusk_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(164)=(Name="DH-Bremoy_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
+    MapInfos(165)=(Name="DH-Armored_Wacht_am_Rhein_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
 }
