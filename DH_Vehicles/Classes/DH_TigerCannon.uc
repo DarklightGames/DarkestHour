@@ -16,7 +16,7 @@ defaultproperties
     HighDetailOverlayIndex=1
 
     // Turret armor
-    FrontArmorFactor=13.0
+    FrontArmorFactor=13.5 // Pages 33 and 35 of WWII Ballistics: Armor and Gunnery
     RightArmorFactor=8.7
     LeftArmorFactor=8.7
     RearArmorFactor=8.7
