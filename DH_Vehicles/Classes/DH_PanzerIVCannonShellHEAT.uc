@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=350   //~~600 gramms TNT
+    ImpactDamage=425 //~~600 gramms TNT
     Damage=300.0
     DamageRadius=700.0
 

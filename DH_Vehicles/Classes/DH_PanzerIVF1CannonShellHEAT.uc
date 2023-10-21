@@ -13,7 +13,7 @@ defaultproperties
     BallisticCoefficient=2.0
 
     //Damage
-    ImpactDamage=350   //~~600 gramms TNT, assuming (couldnt find anything)
+    ImpactDamage=400   //~~600 gramms TNT, assuming (couldnt find anything)
     Damage=300.0
     DamageRadius=700.0
 
@@ -22,7 +22,7 @@ defaultproperties
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     //Penetration
-    DHPenetrationTable(0)=8.7
+    DHPenetrationTable(0)=8.7 //Hl/B, PanzerIV F1 should perhaps use Hl/A instead given that we use it in 1941 maps before Hl/B was introduced. 
     DHPenetrationTable(1)=8.7
     DHPenetrationTable(2)=8.7
     DHPenetrationTable(3)=8.7
