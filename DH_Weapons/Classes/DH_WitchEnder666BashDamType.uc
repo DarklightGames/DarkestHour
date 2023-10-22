@@ -8,5 +8,5 @@ class DH_WitchEnder666BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_Winchester1897Weapon'
+    WeaponClass=class'DH_Weapons.DH_WitchEnder666Weapon'
 }

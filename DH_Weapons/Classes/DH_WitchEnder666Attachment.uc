@@ -23,8 +23,8 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_3rd'
-    Skins(0)=Texture'DH_Winchester1897_tex.Winchester.Winchester1897_3rdP'
+    Mesh=SkeletalMesh'DH_Winchester1897_anm.WitchEnder666_3rd'
+    Skins(0)=Texture'DH_Winchester1897_tex.Winchester.WinchesterEvent_3rdP'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
@@ -43,24 +43,6 @@ defaultproperties
     WA_ProneReload="idle_1897"
     WA_PostReload="reload_end_1897"
 
-    
-
-    // bayonet
-    WA_BayonetIdle="idle_bayo_1897" 
-    WA_BayonetIdleEmpty="idle_bayo_1897"
-    WA_BayonetFire="idle_bayo_1897"
-    WA_BayonetReload="idle_bayo_1897"
-    WA_BayonetReloadEmpty="idle_bayo_1897"
-    WA_BayonetProneReload="idle_bayo_1897"
-    WA_BayonetProneReloadEmpty="idle_bayo_1897"
-    WA_BayonetPreReload="idle_bayo_1897"
-    WA_BayonetPostReload="reload_end_bayo_1897"
-    WA_BayonetAttach="stand_bayattach_1897" 
-    WA_BayonetDetach="stand_bayremove_1897" 
-    WA_BayonetAttachProne="prone_bayattach_1897" 
-    WA_BayonetDetachProne="prone_bayremove_1897"   
-    WA_BayonetWorkBolt="pump_standing_bayo_1897"
-
     //pumping animations
     PA_StandBoltActionAnim="pump_standing_1897"
     PA_StandIronBoltActionAnim="pump_standing_iron_1897"
@@ -77,17 +59,6 @@ defaultproperties
     PA_ProneReloadEmptyAnim="prone_reload_single_1897"
     PA_PostReloadAnim="reload_end_1897"
     PA_PronePostReloadAnim="prone_reload_end_1897"
-
-    //bayonet attaching animations
-    PA_BayonetAttachAnim="stand_bayattach_1897"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_1897"
-    PA_BayonetDetachAnim="stand_bayremove_1897" 
-    PA_ProneBayonetDetachAnim="prone_bayremove_1897"
-    
-    //bayonet stabbing animations
-    PA_BayonetAltFire="stand_stab_kar"
-    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
-    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     
     //movement animations
     PA_MovementAnims(0)="stand_jogF_1897"
@@ -242,4 +213,56 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
+
+    //bash anims, bespoke for the axe handling
+
+    PA_MoveHoldBash(0)="stand_jogFholdbash_axe"
+    PA_MoveHoldBash(1)="stand_jogBholdbash_axe"
+    PA_MoveHoldBash(2)="stand_jogLholdbash_axe"
+    PA_MoveHoldBash(3)="stand_jogRholdbash_axe"
+    PA_MoveHoldBash(4)="stand_jogFLholdbash_axe"
+    PA_MoveHoldBash(5)="stand_jogFRholdbash_axe"
+    PA_MoveHoldBash(6)="stand_jogBLholdbash_axe"
+    PA_MoveHoldBash(7)="stand_jogBRholdbash_axe"
+
+    PA_WalkHoldBash(0)="stand_walkFholdbash_axe"
+    PA_WalkHoldBash(1)="stand_walkBholdbash_axe"
+    PA_WalkHoldBash(2)="stand_walkLholdbash_axe"
+    PA_WalkHoldBash(3)="stand_walkRholdbash_axe"
+    PA_WalkHoldBash(4)="stand_walkFLholdbash_axe"
+    PA_WalkHoldBash(5)="stand_walkFRholdbash_axe"
+    PA_WalkHoldBash(6)="stand_walkBLholdbash_axe"
+    PA_WalkHoldBash(7)="stand_walkBRholdbash_axe"
+
+    PA_CrouchHoldBash(0)="crouch_walkFholdbash_axe"
+    PA_CrouchHoldBash(1)="crouch_walkBholdbash_axe"
+    PA_CrouchHoldBash(2)="crouch_walkLholdbash_axe"
+    PA_CrouchHoldBash(3)="crouch_walkRholdbash_axe"
+    PA_CrouchHoldBash(4)="crouch_walkFLholdbash_axe"
+    PA_CrouchHoldBash(5)="crouch_walkFRholdbash_axe"
+    PA_CrouchHoldBash(6)="crouch_walkBLholdbash_axe"
+    PA_CrouchHoldBash(7)="crouch_walkBRholdbash_axe"
+
+    PA_SprintHoldBash(0)="stand_sprintFholdbash_axe"
+    PA_SprintHoldBash(1)="stand_sprintBholdbash_axe"
+    PA_SprintHoldBash(2)="stand_sprintLholdbash_axe"
+    PA_SprintHoldBash(3)="stand_sprintRholdbash_axe"
+    PA_SprintHoldBash(4)="stand_sprintFLholdbash_axe"
+    PA_SprintHoldBash(5)="stand_sprintFRholdbash_axe"
+    PA_SprintHoldBash(6)="stand_sprintBLholdbash_axe"
+    PA_SprintHoldBash(7)="stand_sprintBRholdbash_axe"
+    
+    PA_SprintCrouchHoldBash(0)="crouch_sprintFholdbash_axe"
+    PA_SprintCrouchHoldBash(1)="crouch_sprintBholdbash_axe"
+    PA_SprintCrouchHoldBash(2)="crouch_sprintLholdbash_axe"
+    PA_SprintCrouchHoldBash(3)="crouch_sprintRholdbash_axe"
+    PA_SprintCrouchHoldBash(4)="crouch_sprintFLholdbash_axe"
+    PA_SprintCrouchHoldBash(5)="crouch_sprintFRholdbash_axe"
+    PA_SprintCrouchHoldBash(6)="crouch_sprintBLholdbash_axe"
+    PA_SprintCrouchHoldBash(7)="crouch_sprintBRholdbash_axe"
+
+    PA_IdleBashHold="stand_idleholdbash_axe"
+    PA_IdleCrouchBashHold="crouch_idleholdbash_axe"
+    PA_IdleProneBashHold="prone_idlehold_bayo"
+
 }

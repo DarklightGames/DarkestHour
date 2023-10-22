@@ -7,9 +7,9 @@ class DH_WitchEnder666Fire extends DHBoltFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_Winchester1897Bullet'
-    AmmoClass=class'DH_Weapons.DH_Winchester1897Ammo'
-    ProjPerFire=9
+    ProjectileClass=class'DH_Weapons.DH_WitchEnder666Bullet'
+    AmmoClass=class'DH_Weapons.DH_WitchEnder666Ammo'
+    ProjPerFire=15
     bUsePreLaunchTrace=false // due to multiple buckshot projectiles fired with each shot
     BotRefireRate=0.95
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'

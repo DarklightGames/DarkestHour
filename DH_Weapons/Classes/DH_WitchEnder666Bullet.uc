@@ -10,5 +10,5 @@ defaultproperties
     Speed=22029.0
     BallisticCoefficient=0.10
     Damage=55
-    MyDamageType=class'DH_Weapons.DH_Winchester1897DamType'
+    MyDamageType=class'DH_Weapons.DH_WitchEnder666DamType'
 }

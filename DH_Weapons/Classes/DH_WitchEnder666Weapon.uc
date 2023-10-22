@@ -17,7 +17,7 @@ simulated function int GetMaxLoadedRounds()
 defaultproperties
 {
     ItemName="WitchEnder 666 'Satan's Bane'"
-    FireModeClass(0)=class'DH_Weapons.DH_Winchester1897Fire'
+    FireModeClass(0)=class'DH_Weapons.DH_WitchEnder666Fire'
     FireModeClass(1)=class'DH_Weapons.DH_WitchEnder666MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_WitchEnder666Attachment'
     PickupClass=class'DH_Weapons.DH_WitchEnder666Pickup'
@@ -54,10 +54,8 @@ defaultproperties
     bCanUseUnfiredRounds=false
     bEjectRoundOnReload=false
     
-    bHasBayonet=true
-    BayonetBoneName="bayonet"
-    BayoAttachAnim="Bayonet_on"
-    BayoDetachAnim="Bayonet_off"
+    bHasBayonet=false
+    
 
     WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
     WeaponComponentAnimations(1)=(DriverType=DRIVER_Bolt,Channel=2,BoneName="hammer",Animation="Hammer") 
