@@ -11,5 +11,7 @@ defaultproperties
     WeaponClass=class'DH_Weapons.DH_WitchEnder666Weapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     KDamageImpulse=2500.0
-    bAlwaysSevers=true
+    GibModifier=4.0
+    PawnDamageEmitter=class'DH_Effects.DHBloodPuffLargeCaliber'
+    
 }

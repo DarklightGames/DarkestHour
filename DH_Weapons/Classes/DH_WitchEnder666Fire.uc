@@ -14,7 +14,7 @@ defaultproperties
     BotRefireRate=0.95
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stKar'
 
-    Spread=300.0
+    Spread=250.0
     CrouchSpreadModifier=1.0 // spread modifiers all neutral as it's a very high spread, multi-projectile weapon
     ProneSpreadModifier=1.0
     BipodDeployedSpreadModifier=1.0
@@ -24,8 +24,9 @@ defaultproperties
     RecoilRate=0.075
     MaxVerticalRecoilAngle=900
     MaxHorizontalRecoilAngle=120
+    
 
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Winchester1897.Winchester1897_fire01'
+    FireSounds(0)=Sound'DH_WeaponSounds.Winchester1897.WitchEnderFire'
     ShellEjectClass=class'DH_Weapons.DH_1stShellEjectShotgun'
     ShellHipOffset=(X=0,Y=0,Z=0)
     ShellIronSightOffset=(X=0,Y=0,Z=0)
