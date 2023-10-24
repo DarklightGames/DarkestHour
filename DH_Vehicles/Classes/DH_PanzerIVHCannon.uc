@@ -14,6 +14,11 @@ defaultproperties
     Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
 
+    // Cannon ammo
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+
+    nProjectileDescriptions(2)="Gr.38 Hl/C" //PzIVH variant began production in June 1943, a bit before Hl/C seems to have been introduced, but is generally only used on our 1944 maps.
+
     WeaponFireOffset=1.0
     AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
 }
