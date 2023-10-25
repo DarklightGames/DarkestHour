@@ -13,8 +13,8 @@ defaultproperties
     BallisticCoefficient=2.96
 
     //Damage
-    ImpactDamage=373  //~~600 gramms TNT
-    Damage=300.0
+    ImpactDamage=650 // 1.49kg of PETN: UK HANDBOOK OF ENEMY AMMUNITION PAMPHLET No. 14
+    Damage=415.0
     DamageRadius=700.0
 
     bDebugInImperial=false

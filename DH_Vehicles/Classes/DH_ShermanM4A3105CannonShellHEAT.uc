@@ -14,8 +14,8 @@ defaultproperties
 
     //Damage
     ImpactDamage=650  //1.6 KG TNT
-    Damage=700.0
-    DamageRadius=1000.0
+    Damage=415.0
+    DamageRadius=700.0
 
     //Effects
     DrawScale=1.5
