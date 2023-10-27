@@ -9,10 +9,10 @@ class DH_50CalDamType extends DHLargeCaliberDamageType
 defaultproperties
 {
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
-    TankDamageModifier=0.2
-    APCDamageModifier=0.3
-    VehicleDamageModifier=0.4
-    TreadDamageModifier=0.25  // 0.5 in 234/1, 1.0 in PTRD
+    TankDamageModifier=0.05 // These values are unusually low to compensate for the now significantly increased bullet damage of the .50 cal.
+    APCDamageModifier=0.08
+    VehicleDamageModifier=0.12
+    TreadDamageModifier=0.07  // 0.5 in 234/1, 1.0 in PTRD
     WeaponClass=class'DH_Weapons.DH_30calWeapon' // 50 cal is vehicle only & doesn't have a WeaponClass in DH_Weapons - never mind, just use dummy class & 50 cal specific death strings
     DeathString="%o was killed by %k's .50 cal machine gun."
     FemaleSuicide="%o was killed by her own .50 cal machine gun."
