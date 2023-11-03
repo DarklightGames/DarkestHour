@@ -319,6 +319,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
+    local DHConstruction C;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked;
@@ -363,15 +364,25 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
-        // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
-        // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
-        VictimLocation = Victim.Location;
-        V = DHVehicle(Victim);
+        // Before tracing the victim, we must adjust its location for certain types of actors
+        // Tracing to origin can be unreliable as it's usually located at the bottom and can sink under the terrain, blocking the blast damage
+        C = DHConstruction(Victim);
 
-        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+        if (C != none)
         {
-            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            VictimLocation = C.GetOptimalTraceLocation();
+        }
+        else
+        {
+            VictimLocation = Victim.Location;
+
+            V = DHVehicle(Victim);
+
+            if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+            {
+                // Raise the trace location to the cannon bone height
+                VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            }
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast

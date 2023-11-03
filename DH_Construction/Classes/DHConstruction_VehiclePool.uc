@@ -67,6 +67,7 @@ defaultproperties
     ProgressMax=12
     SupplyCost=1500
     MinDamagetoHurt=5
+    OptimalTraceOffset=(Z=40.0)
 
     // Temp
     StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'

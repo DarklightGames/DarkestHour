@@ -339,6 +339,7 @@ defaultproperties
     ProgressMax=9
     SupplyCost=750
     MinDamagetoHurt=50
+    OptimalTraceOffset=(Z=40.0)
 
     // Placement
     bCanPlaceIndoors=false

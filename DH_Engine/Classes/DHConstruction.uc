@@ -126,6 +126,8 @@ var     float   FloatToleranceInMeters;             // The distance the construc
 var     float   DuplicateFriendlyDistanceInMeters;  // The distance required between identical constructions of the same type for FRIENDLY constructions.
 var     float   DuplicateEnemyDistanceInMeters;     // The distance required between identical constructions of the same type for ENEMY constructions.
 
+var     vector  OptimalTraceOffset;                 // Optimal location for tracing this actor (relative to origin). Generally, should be near the center of the mesh.
+
 // Construction
 var private int SupplyCost;                     // The amount of supply points this construction costs
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
@@ -265,6 +267,13 @@ final function SetTeamIndex(int TeamIndex)
     self.TeamIndex = TeamIndex;
     OnTeamIndexChanged();
     NetUpdateTime = Level.TimeSeconds - 1.0;
+}
+
+// Return a reliable location for tracing this actor, as tracing origin can
+// fail unexpectedly (for example, if it's sunk under the terrain)
+simulated function vector GetOptimalTraceLocation()
+{
+    return Location + (OptimalTraceOffset >> Rotation);
 }
 
 function IncrementProgress(Pawn InstigatedBy)
@@ -1311,6 +1320,7 @@ defaultproperties
     bProjTarget=true
     bPathColliding=true
     bWorldGeometry=true
+    OptimalTraceOffset=(Z=10.0)
 
     // Placement
     bCanPlaceInWater=false
