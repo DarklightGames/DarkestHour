@@ -5676,6 +5676,15 @@ function ResupplyMissingGrenades(int TimeSeconds)
             ServerGiveWeapon(string(RI.Grenades[i].Item), false);
         }
     }
+
+    //Resupplying of satchels etc
+    for (i = 0; i < RI.GivenItems.Length; i++)
+    {
+        if (RI.GivenItems[i] != "")
+        {
+            ServerGiveWeapon(RI.GivenItems[i], true);
+        }
+    }
 }
 
 function CheckIfMortarCanBeResupplied()
