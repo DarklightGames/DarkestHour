@@ -149,7 +149,7 @@ var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
 
 // Resupply Grenades
-var     int                NextResupplyGrenadesTime;
+var     int                NextResupplyThrowablesTime;
 
 replication
 {
@@ -197,7 +197,7 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
-    NextResupplyGrenadesTime = Level.TimeSeconds - 1.0;
+    NextResupplyThrowablesTime = Level.TimeSeconds - 1.0;
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
@@ -5659,19 +5659,22 @@ function bool ResupplyMortarAmmunition()
     return false;
 }
 
-function ResupplyMissingGrenades(int TimeSeconds)
+function ResupplyMissingGrenadesAndItems(int TimeSeconds)
 {
-    local int i, j;
+    local int i;
     local DHRoleInfo RI;
 
     RI = GetRoleInfo();
-    if (RI == None) return;
+    if (RI == none)
+    {
+        return;
+    }
 
-    NextResupplyGrenadesTime = TimeSeconds;
+    NextResupplyThrowablesTime = TimeSeconds;
 
     for (i = 0; i < arraycount(RI.Grenades); i++)
     {
-        if (RI.Grenades[i].Item != None)
+        if (RI.Grenades[i].Item != none)
         {
             ServerGiveWeapon(string(RI.Grenades[i].Item), false);
         }
@@ -7008,13 +7011,13 @@ exec function DebugShootAP(optional string APProjectileClassName)
     }
 }
 
-function ServerGiveWeapon(string WeaponClass, bool SwitchToIfPossible)
+function ServerGiveWeapon(string WeaponClass, bool bSwitchToIfPossible)
 {
     local Weapon NewWeapon;
 
     GiveWeapon(WeaponClass);
 
-    if (SwitchToIfPossible)
+    if (bSwitchToIfPossible)
     {
         NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
 
