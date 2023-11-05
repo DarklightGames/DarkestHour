@@ -58,7 +58,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     {
         if (CanResupplyType(SourceType, RT_Players))
         {
-            if (default.UpdateGrenadesTime < TimeSeconds - P.LastResupplyGrenadesTime)
+            if (default.UpdateGrenadesTime < TimeSeconds - P.NextResupplyThrowablesTime)
             {
                 bShouldResupplyGrenades = true;
             }
@@ -78,7 +78,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 
             if (bShouldResupplyGrenades)
             {
-                P.ResupplyMissingGrenades(TimeSeconds);
+                P.ResupplyMissingGrenadesAndItems(TimeSeconds);
             }
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
@@ -122,6 +122,6 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 defaultproperties
 {
     UpdateTime=2.5
-    UpdateGrenadesTime=20
+    UpdateGrenadesTime=30
     bGivesExtraAmmo=true
 }
