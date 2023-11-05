@@ -5685,7 +5685,7 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
     {
         if (RI.GivenItems[i] != "")
         {
-            ServerGiveWeapon(RI.GivenItems[i], true);
+            ServerGiveWeapon(RI.GivenItems[i], false);
         }
     }
 }
