@@ -192,7 +192,7 @@ var     array<SExitPosition> AbsoluteExitPositions;
 
 // Steering Animations
 var bool bUseSteeringAnimation;
-var struct SteeringAnimation
+var struct SSteeringAnimation
 {
     var int Channel;
     var name Bone;
