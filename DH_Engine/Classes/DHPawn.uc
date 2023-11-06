@@ -5373,6 +5373,33 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
+// Compute offset for drawing an inventory item
+//
+// Overriden to take into account the eye position on a server, as it's needed
+// for calculating the weapon location during leaning, going prone, etc.
+simulated function vector CalcDrawOffset(Inventory Inv)
+{
+	local vector DrawOffset;
+
+	if (Controller == none)
+    {
+		return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0,0,1);
+    }
+
+	DrawOffset = ((0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation());
+
+    DrawOffset += EyePosition();
+
+    if (IsLocallyControlled())
+    {
+        // Only relevant on a client
+        DrawOffset += WeaponBob(Inv.BobDamping);
+        DrawOffset += CameraShake();
+    }
+
+	return DrawOffset;
+}
+
 // Returns true if the player can switch the prone state - only valid on the client.
 // Modified to fix prone eye-height bug.
 simulated function bool CanProneTransition()
