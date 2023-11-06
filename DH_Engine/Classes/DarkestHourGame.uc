@@ -5312,26 +5312,7 @@ event PostLogin(PlayerController NewPlayer)
 
             if (S != none)
             {
-                PRI.Deaths = S.Deaths;
-                PRI.DHKills = S.Kills;
-                PRI.Score = S.TotalScore;
-                PRI.TotalScore = S.TotalScore;
-
-                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
-                {
-                    PRI.CategoryScores[i] = S.CategoryScores[i];
-                }
-
-                Teams[S.TeamIndex].AddToTeam(PC);
-
-                PC.LastKilledTime = S.LastKilledTime;
-                PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.NextChangeTeamTime = S.NextChangeTeamTime;
-
-                if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
-                {
-                    PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
-                }
+                S.Load(PC);
             }
         }
 
@@ -5348,9 +5329,10 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-    }
+        class'DHGeolocationService'.static.GetIpData(PC);
 
-    class'DHGeolocationService'.static.GetIpData(PC);
+        PC.OnPlayerLogin();
+    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5384,6 +5366,7 @@ function Logout(Controller Exiting)
         return;
     }
 
+    // Save the current session info
     if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
         O = new class'DHPlayerSession';
@@ -5394,24 +5377,7 @@ function Logout(Controller Exiting)
 
     if (S != none)
     {
-        S.Deaths = PRI.Deaths;
-        S.Kills = PRI.DHKills;
-        S.TotalScore = PRI.TotalScore;
-
-        for (i = 0; i < arraycount(S.CategoryScores); ++i)
-        {
-            S.CategoryScores[i] = PRI.CategoryScores[i];
-        }
-
-        S.LastKilledTime = PC.LastKilledTime;
-        S.WeaponUnlockTime = PC.WeaponUnlockTime;
-        S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.NextChangeTeamTime = PC.NextChangeTeamTime;
-
-        if (PRI.Team != none)
-        {
-            S.TeamIndex = PRI.Team.TeamIndex;
-        }
+        S.Save(PC);
     }
 }
 
