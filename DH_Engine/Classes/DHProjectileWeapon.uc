@@ -3095,6 +3095,8 @@ function PerformBarrelChange()
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
 simulated function SetBarrelSteamActive(bool bSteaming)
 {
+    local DHPlayer PC;
+
     bBarrelSteamActive = bSteaming;
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -3115,9 +3117,26 @@ simulated function SetBarrelSteamActive(bool bSteaming)
         {
             BarrelSteamEmitter.Trigger(self, Instigator);
         }
+
+        if (InstigatorIsLocallyControlled())
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            if (PC != none)
+            {
+                // "Your weapon's barrel is overheating! Overheated barrels will have reduced accuracy."
+                PC.QueueHint(62, true);
+
+                if (bHasSpareBarrel)
+                {
+                    // "You can swap the barrel of this weapon. Press %SWITCHFIREMODE% while deployed to change to your secondary barrel."
+                    PC.QueueHint(63, false);
+                }
+            }
+        }
     }
 
-    // Server calls a replicated server-to-client function to do the same on the owning net client
+    // Server calls a replicated server-to-client function to notify non-owning clients of the change.
     if ((Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer) && !InstigatorIsLocallyControlled())
     {
         ClientSetBarrelSteam(bBarrelSteamActive);
