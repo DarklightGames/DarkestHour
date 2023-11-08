@@ -359,7 +359,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
         if (C != none)
         {
-            VictimLocation = C.GetOptimalTraceLocation();
+            VictimLocation = C.GetExplosiveDamageTraceLocation();
         }
         else
         {
