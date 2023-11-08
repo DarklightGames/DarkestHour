@@ -310,8 +310,6 @@ simulated event PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        ScoreManager = new class'DHScoreManager';
-
         if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
         {
             IQManager = Spawn(class'DHIQManager', self);
@@ -349,6 +347,16 @@ simulated event PostNetBeginPlay()
         }
 
         ServerSetClientGUID(ClientGUID);
+    }
+}
+
+// Called by PostLogin event
+function OnPlayerLogin()
+{
+    // Create score manager if it wasn't recovered from a previous session
+    if (ScoreManager == none)
+    {
+        ScoreManager = new class'DHScoreManager';
     }
 }
 
@@ -3220,20 +3228,33 @@ function OnTeamChanged()
         }
     }
 
-    // Update the player's linked score manager to their new team's score manager.
-    if (ScoreManager != none)
-    {
-        TeamIndex = GetTeamNum();
+    LinkTeamScoreManager();
+}
 
-        if (TeamIndex >= 0 && TeamIndex < arraycount(G.TeamScoreManagers))
-        {
-            ScoreManager.NextScoreManager = G.TeamScoreManagers[TeamIndex];
-        }
-        else
-        {
-            // Player joined spectators, clear the next score manager.
-            ScoreManager.NextScoreManager = none;
-        }
+// Update the player's linked score manager to their new team's score manager
+function LinkTeamScoreManager()
+{
+    local DarkestHourGame G;
+    local int TeamIndex;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || ScoreManager == none)
+    {
+        Log("Failed to link team score manager");
+        return;
+    }
+
+    TeamIndex = GetTeamNum();
+
+    if (TeamIndex >= 0 && TeamIndex < arraycount(G.TeamScoreManagers))
+    {
+        ScoreManager.NextScoreManager = G.TeamScoreManagers[TeamIndex];
+    }
+    else
+    {
+        // Player joined spectators, clear the next score manager
+        ScoreManager.NextScoreManager = none;
     }
 }
 
