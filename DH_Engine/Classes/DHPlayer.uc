@@ -74,6 +74,7 @@ var     float                   DHSwayDampingFactor;
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
+var     globalconfig float      DHBipodTurnSpeedFactor;     // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 // Player flinch
@@ -1054,9 +1055,13 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         }
         else if (DHPwn != none)
         {
-            if (DHPwn.bIronSights || DHPwn.bBipodDeployed)
+            if (DHPwn.bBipodDeployed)
             {
-                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
+                TurnSpeedFactor *= DHBipodTurnSpeedFactor; // reduce if player is bipod deployed
+            }
+            else if (DHPwn.bIronSights)
+            {
+                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights
             }
         }
         else if (ROVeh != none && ROVeh.DriverPositions[ROVeh.DriverPositionIndex].bDrawOverlays && ROVeh.HUDOverlay == none
@@ -7874,6 +7879,7 @@ defaultproperties
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
     DHScopeTurnSpeedFactor=0.2
+    DHBipodTurnSpeedFactor=1.0
 
     // Max flinch offset for close snaps
     FlinchMaxOffset=450.0
