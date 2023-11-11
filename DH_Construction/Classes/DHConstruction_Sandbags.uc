@@ -17,6 +17,8 @@ defaultproperties
     bIsNeutral=true
     bAcceptsProjectors=false
 
+    bCanDieOfStagnation=false
+
     // Damage
     DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
     DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
