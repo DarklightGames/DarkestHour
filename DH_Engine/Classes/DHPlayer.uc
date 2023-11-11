@@ -7879,7 +7879,7 @@ defaultproperties
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
     DHScopeTurnSpeedFactor=0.2
-    DHBipodTurnSpeedFactor=1.0
+    DHBipodTurnSpeedFactor=0.5
 
     // Max flinch offset for close snaps
     FlinchMaxOffset=450.0
