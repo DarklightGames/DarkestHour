@@ -261,7 +261,7 @@ simulated function CreateBipodPhysicsSimulation()
     }
 }
 
-event WeaponTick(float DeltaTime)
+simulated event WeaponTick(float DeltaTime)
 {
     super.WeaponTick(DeltaTime);
 
