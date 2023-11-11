@@ -165,6 +165,10 @@ var(DHDangerZone) float BaseInfluenceModifier;
 var(DHDangerZone) float AxisInfluenceModifier;
 var(DHDangerZone) float AlliesInfluenceModifier;
 var(DHDangerZone) float NeutralInfluenceModifier;
+var private float InitialBaseInfluenceModifier;
+var private float InitialAxisInfluenceModifier;
+var private float InitialAlliesInfluenceModifier;
+var private float InitialNeutralInfluenceModifier;
 var private int         OldInfluenceReplicationCounter;
 var private int         InfluenceReplicationCounter;
 
@@ -221,6 +225,12 @@ simulated function PostBeginPlay()
 
         bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
         bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Set the initial influence modifiers
+        InitialBaseInfluenceModifier = BaseInfluenceModifier;
+        InitialAxisInfluenceModifier = AxisInfluenceModifier;
+        InitialAlliesInfluenceModifier = AlliesInfluenceModifier;
+        InitialNeutralInfluenceModifier = NeutralInfluenceModifier;
 
         G = DarkestHourGame(Level.Game);
 
@@ -283,6 +293,11 @@ function Reset()
 
     bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
     bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+    BaseInfluenceModifier = InitialBaseInfluenceModifier;
+    AxisInfluenceModifier = InitialAxisInfluenceModifier;
+    AlliesInfluenceModifier = InitialAlliesInfluenceModifier;
+    NeutralInfluenceModifier = InitialNeutralInfluenceModifier;
 }
 
 function SetActive(bool bActiveStatus)
