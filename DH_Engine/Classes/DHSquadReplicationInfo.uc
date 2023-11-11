@@ -3177,6 +3177,14 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
     SenderPC = DHPlayer(SenderPRI.Owner);
     RecipientPC = DHPlayer(RecipientPRI.Owner);
 
+    if (DHBot(RecipientPRI.Owner) != none)
+    {
+        // Automatically accept the request & make the bot the squad leader.
+        CommandeerSquad(RecipientPRI, TeamIndex, SquadIndex);
+
+        return SPPR_Sent;
+    }
+
     if (SenderPC == none || RecipientPC == none)
     {
         return SPPR_Fatal;
