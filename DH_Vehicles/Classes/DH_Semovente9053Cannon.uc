@@ -97,10 +97,10 @@ defaultproperties
     ShootAnimBoneName="BARREL"
 
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=-1.0,RotationAxis=AXIS_Y)
-    GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
-    GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
-    GunWheels(3)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=32.0,RotationAxis=AXIS_Y)
-    GunWheels(4)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_L",Scale=64.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL_R",Scale=64.0,RotationAxis=AXIS_Y)
+    GunWheels(3)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_L",Scale=64.0,RotationAxis=AXIS_Y)
+    GunWheels(4)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL_R",Scale=64.0,RotationAxis=AXIS_Y)
 
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
