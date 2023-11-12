@@ -25,4 +25,9 @@ defaultproperties
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     CameraBone="camera_gun"
+
+    bHasDriverYawAnim=true
+    DriverYawAnim=(Sequence="cannone4732_gunner_yaw")
+
+    DrivePos=(Z=28.0)
 }

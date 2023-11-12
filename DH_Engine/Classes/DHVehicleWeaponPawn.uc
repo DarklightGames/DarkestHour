@@ -35,6 +35,17 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
+// Driver yaw animations
+// These are used to animate the driver's body based on the yaw of the weapon.
+var     bool        bHasDriverYawAnim;
+struct SDriverAnim
+{
+    var int Channel;
+    var name BoneName;
+    var name Sequence;
+};
+var     SDriverAnim DriverYawAnim;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -718,6 +729,11 @@ function KDriverEnter(Pawn P)
         {
             BinocularsClass = BinocularsItem.Class;
         }
+    }
+
+    if (bHasDriverYawAnim)
+    {
+        SetupDriverYawAnim(Driver);
     }
 }
 
@@ -1425,6 +1441,11 @@ function DriverLeft()
         VehWep.NetUpdateFrequency = VehWep.default.NetUpdateFrequency;
         VehWep.NetPriority = VehWep.default.NetPriority;
         VehWep.PauseAnyReloads();
+    }
+
+    if (bHasDriverYawAnim)
+    {
+        ClearDriverYawAnim(Driver);
     }
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
@@ -2430,6 +2451,65 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
         Canvas.SetDrawColor(255, 0, 0);
         Canvas.DrawText(DebugInfo);
         DebugInfo = "";
+    }
+}
+
+simulated function SetupDriverYawAnim(Pawn Driver)
+{
+    if (Driver == none || !bHasDriverYawAnim)
+    {
+        return;
+    }
+
+    if (DriverYawAnim.Channel != 0)
+    {
+        Driver.AnimBlendParams(DriverYawAnim.Channel, 1.0, 0.0, 0.0, DriverYawAnim.BoneName);
+    }
+
+    Driver.PlayAnim(DriverYawAnim.Sequence, 0.0, 0.0, DriverYawAnim.Channel);
+    Driver.FreezeAnimAt(0.0, DriverYawAnim.Channel);
+}
+
+simulated function UpdateDriverYawAnim(Pawn Driver)
+{
+    local float YawFactor;
+
+    if (Driver == none || !bHasDriverYawAnim)
+    {
+        return;
+    }
+
+    // Get the current yaw of the weapon compared to the min and max, with 0.0 being all the way to the left, and 1.0 being all the way to the right.
+    YawFactor = (GetGunYaw() - Gun.YawStartConstraint) / (Gun.YawEndConstraint - Gun.YawStartConstraint);
+
+    // Log("YawFactor" @ YawFactor @ "Gun.CurrentAim.Yaw" @ Gun.CurrentAim.Yaw);
+    
+    Driver.SetAnimFrame(YawFactor, DriverYawAnim.Channel);
+}
+
+simulated function ClearDriverYawAnim(Pawn Driver)
+{
+    if (Driver == none || !bHasDriverYawAnim)
+    {
+        return;
+    }
+
+    if (DriverYawAnim.Channel == 0)
+    {
+        return;
+    }
+
+    // Clear the animation channel that we made earlier.
+}
+
+// Modified to update the driver yaw animation.
+simulated function Tick(float DeltaTime)
+{
+    super.Tick(DeltaTime);
+
+    if (Driver != none)
+    {
+        UpdateDriverYawAnim(Driver);
     }
 }
 
