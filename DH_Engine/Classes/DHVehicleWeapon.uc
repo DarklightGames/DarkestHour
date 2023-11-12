@@ -1150,7 +1150,7 @@ simulated function InitializeVehicleAndWeaponPawn()
 
 // Modified to always use rotation relative to vehicle (bPCRelativeFPRotation), to use yaw limits from DriverPositions in multi position weapon, & not to limit view yaw in behind view
 // Also to ignore yaw restrictions for commander's periscope or binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers) - but see note below
-simulated function int LimitYaw(int yaw)
+simulated function int LimitYaw(int Yaw)
 {
     local int CurrentPosition;
 
@@ -1160,14 +1160,14 @@ simulated function int LimitYaw(int yaw)
     // bLimitYaw should not be used here - the view yaw limits should be based on ViewNegativeYawLimit & ViewPositiveYawLimit in DriverPositions
     if (!bLimitYaw)
     {
-        return yaw;
+        return Yaw;
     }
 
     if (WeaponPawn != none)
     {
         if (WeaponPawn.IsHumanControlled() && PlayerController(WeaponPawn.Controller).bBehindView)
         {
-            return yaw;
+            return Yaw;
         }
 
         if (WeaponPawn.DriverPositions.Length > 0)
@@ -1176,14 +1176,14 @@ simulated function int LimitYaw(int yaw)
 
             if (WeaponPawn.IsA('DHVehicleCannonPawn') && CurrentPosition >= DHVehicleCannonPawn(WeaponPawn).PeriscopePositionIndex)
             {
-                return yaw;
+                return Yaw;
             }
 
-            return Clamp(yaw, WeaponPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, WeaponPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+            return Clamp(Yaw, WeaponPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, WeaponPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
         }
     }
 
-    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+    return Clamp(Yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
 // New function to start a hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
