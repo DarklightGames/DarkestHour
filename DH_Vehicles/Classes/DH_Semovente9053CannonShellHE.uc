@@ -43,29 +43,6 @@ defaultproperties
     DHPenetrationTable(8)=2.3
     DHPenetrationTable(9)=1.9
     DHPenetrationTable(10)=1.5
-    
-    // This is used for the optical range table for the gunner
-    bOpticalAiming=true
-    OpticalRanges(0)=(Range=100,RangeValue=0.5)
-    OpticalRanges(1)=(Range=200,RangeValue=0.523)
-    OpticalRanges(2)=(Range=300,RangeValue=0.532)
-    OpticalRanges(3)=(Range=400,RangeValue=0.542)
-    OpticalRanges(4)=(Range=500,RangeValue=0.554)
-    OpticalRanges(5)=(Range=600,RangeValue=0.567)
-    OpticalRanges(6)=(Range=700,RangeValue=0.580)
-    OpticalRanges(7)=(Range=800,RangeValue=0.593)
-    OpticalRanges(8)=(Range=900,RangeValue=0.607)
-    OpticalRanges(9)=(Range=1000,RangeValue=0.619)
-    OpticalRanges(10)=(Range=1100,RangeValue=0.635)
-    OpticalRanges(11)=(Range=1200,RangeValue=0.652)
-    OpticalRanges(12)=(Range=1300,RangeValue=0.667)
-    OpticalRanges(13)=(Range=1400,RangeValue=0.683)
-    OpticalRanges(14)=(Range=1500,RangeValue=0.702)
-    OpticalRanges(15)=(Range=1600,RangeValue=0.717)
-    OpticalRanges(16)=(Range=1700,RangeValue=0.734)
-    OpticalRanges(17)=(Range=1800,RangeValue=0.752)
-    OpticalRanges(18)=(Range=1900,RangeValue=0.770)
-    OpticalRanges(19)=(Range=2000,RangeValue=0.789)
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=100,RangeValue=0)

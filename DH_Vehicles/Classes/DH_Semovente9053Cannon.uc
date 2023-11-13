@@ -40,6 +40,7 @@ defaultproperties
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Semovente9053CannonShellHE'
+    TertiaryProjectileClass=none
 
     nProjectileDescriptions(0)="Granata Perforante da 90"
     nProjectileDescriptions(1)="Granata da 90"
@@ -49,6 +50,7 @@ defaultproperties
 
     MaxPrimaryAmmo=7
     MaxSecondaryAmmo=2
+    
     SecondarySpread=0.00127
 
     // Weapon fire

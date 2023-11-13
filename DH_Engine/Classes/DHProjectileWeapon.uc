@@ -2204,8 +2204,6 @@ simulated state Reloading extends WeaponBusy
             {
                 NextMagAmmoCount += 1;
             }
-
-            Log("NextMagAmmoCount" @ NextMagAmmoCount);
         }
 
         PlayReload();
