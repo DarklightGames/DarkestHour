@@ -5680,12 +5680,15 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
         }
     }
 
-    //Resupplying of satchels etc
+    //Resupplying of thrown items, satchels etc
     for (i = 0; i < RI.GivenItems.Length; i++)
     {
         if (RI.GivenItems[i] != "")
         {
-            ServerGiveWeapon(RI.GivenItems[i], false);
+	    WeaponClass = class<Weapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+            if (WeaponClass != none && WeaponClass.default.bCanThrow) {
+                ServerGiveWeapon(RI.GivenItems[i], false);
+            }
         }
     }
 }
