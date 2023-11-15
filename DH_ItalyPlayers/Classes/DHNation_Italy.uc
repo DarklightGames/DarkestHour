@@ -31,4 +31,6 @@ defaultproperties
     DefaultSquadNames(5)="Firenze"
     DefaultSquadNames(6)="Genova"
     DefaultSquadNames(7)="Acca"
+
+    RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Italy_Start'
 }
