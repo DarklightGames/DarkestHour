@@ -30,5 +30,6 @@ defaultproperties
     DefaultSquadNames(5)="Fritz"
     DefaultSquadNames(6)="Gustav"
     DefaultSquadNames(7)="Heinrich"
-    RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
+    RoundStartSound=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_OpelBlitzSupport'
 }

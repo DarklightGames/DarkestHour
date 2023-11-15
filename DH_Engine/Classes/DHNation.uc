@@ -43,6 +43,9 @@ var string                      DefaultSquadNames[8];
 
 var Sound                       RoundStartSound;
 
+// Supply
+var class<DHVehicle>            SupplyTruckClass;
+
 defaultproperties
 {
     PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.flags_01_blank'

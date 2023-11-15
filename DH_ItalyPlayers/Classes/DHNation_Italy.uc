@@ -33,4 +33,5 @@ defaultproperties
     DefaultSquadNames(7)="Acca"
 
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Italy_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_Fiat626TruckSupport'
 }

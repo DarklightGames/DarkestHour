@@ -6855,14 +6855,13 @@ exec function SetFlySpeed(float NewSpeed)
 
 exec function GimmeSupplies()
 {
-    switch (GetTeamNum())
+    local DH_LevelInfo LI;
+    
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none)
     {
-        case AXIS_TEAM_INDEX:
-            SpawnVehicle("opellogi");
-            break;
-        case ALLIES_TEAM_INDEX:
-            SpawnVehicle("gmclogi");
-            break;
+        SpawnVehicle(string(LI.GetTeamNationClass(GetTeamNum()).default.SupplyTruckClass));
     }
 }
 

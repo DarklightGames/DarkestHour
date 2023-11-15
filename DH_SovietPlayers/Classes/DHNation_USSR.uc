@@ -29,5 +29,6 @@ defaultproperties
     DefaultSquadNames(5)="Yenisey"
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
-    RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
+    RoundStartSound=Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
 }

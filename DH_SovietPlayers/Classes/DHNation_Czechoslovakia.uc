@@ -30,4 +30,5 @@ defaultproperties
     DefaultSquadNames(6)="Gustav"
     DefaultSquadNames(7)="Helena"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
 }

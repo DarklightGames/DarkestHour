@@ -30,4 +30,5 @@ defaultproperties
     DefaultSquadNames(6)="George"
     DefaultSquadNames(7)="How"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
 }

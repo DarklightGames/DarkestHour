@@ -31,4 +31,5 @@ defaultproperties
     DefaultSquadNames(6)="Genowefa"
     DefaultSquadNames(7)="Henryk"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
 }

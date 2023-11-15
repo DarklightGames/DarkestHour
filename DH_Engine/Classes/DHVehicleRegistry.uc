@@ -231,7 +231,10 @@ defaultproperties
     Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 
     // Italian
-    Records(100)=(VehicleNames=("semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
+    Records(100)=(VehicleNames=("semo","semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
     Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert"),(ClassName="DH_Guns.DH_Cannone4732Gun_DesertCamo",VariantName="desertcamo"),(ClassName="DH_Guns.DH_Cannone4732Gun_Winter",VariantName="winter"),(ClassName="DH_Guns.DH_Cannone4732Gun_NoWheels",VariantName="static")))
-    Records(102)=(VehicleNames=("fiat626"),Variants=((ClassName="DH_Vehicles.DH_Fiat626TruckTransport")))
+    Records(102)=(VehicleNames=("fiat626"),Variants=((ClassName="DH_Vehicles.DH_Fiat626TruckTransport"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport",VariantName="logi")))
+    // AB
+    // Fiat L6
+    // Liat L3/33
 }

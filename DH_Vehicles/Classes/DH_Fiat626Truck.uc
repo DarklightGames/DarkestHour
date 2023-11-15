@@ -2,19 +2,19 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Exit Positions
-// [ ] Fix wheel bone origins
-// [ ] move driver camera forward a little bit more
-// [ ] figure out why passenger 1 is facing the wrong way
-// [ ] Exhaust
-// [ ] Hit points (engine etc.)
 // [ ] Sounds
 // [ ] Fire effect locations
 // [ ] HUD
-// [ ] Investigate wonky suspension
+// [ ] Investigate wonky suspension (high SuspTravel makes it worse, keep it low and the shuddering will be minimal)
+//     * perhaps the suspension bones need to be inline or in the same plane as the wheel bones?
+//       the willy's jeep is extremely stable and its's supension bones are all 
+//       facing the same direction and are colinear with the wheels
 // [ ] Bullet collision mesh
 // [ ] Destroyed mesh
-// [ ] Passengers
+// [~] Exit Positions
+// [x] move driver camera forward/up a little bit more
+// [x] Hit points (engine etc.)
+// [x] Passengers
 //==============================================================================
 
 class DH_Fiat626Truck extends DHVehicle
@@ -64,9 +64,9 @@ defaultproperties
     WheelPenOffset=0.010000
     WheelRestitution=0.100000
     WheelInertia=0.100000
-    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
+    WheelLongFrictionFunc=(Points=((),(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
     WheelLongSlip=0.001000
-    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
+    WheelLatSlipFunc=(Points=((),(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
     WheelLongFrictionScale=1.100000
     WheelLatFrictionScale=1.55
     WheelHandbrakeSlip=0.010000
@@ -85,15 +85,9 @@ defaultproperties
     LSDFactor=1.000000
     CenterSpringForce="SpringONSSRV"
 
-    //MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
     MaxBrakeTorque=20.0 //10.0
     bHasHandbrake=true
     MaxCriticalSpeed=1077.0 // 64 kph
-
-    // Physics wheels properties
-    //WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
-    //WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
-    //WheelLatFrictionScale=1.0
 
     // Damage
     Health=1500
@@ -101,14 +95,8 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
 
-    // VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    // VehHitpoints(1)=(PointRadius=24.0,PointBone="wheel.F.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    // VehHitpoints(2)=(PointRadius=24.0,PointBone="Wheel.F.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    // VehHitpoints(3)=(PointRadius=12.0,PointBone="Wheel.M.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(4)=(PointRadius=12.0,PointBone="Wheel.M.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(5)=(PointRadius=12.0,PointBone="Wheel.B.R",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    // VehHitpoints(6)=(PointRadius=12.0,PointBone="Wheel.B.L",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=126,Z=56),DamageMultiplier=1.0,HitPointType=HP_Engine)
+
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0
@@ -124,8 +112,10 @@ defaultproperties
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
-    ExitPositions(0)=(X=65.0,Y=137.0,Z=25.0)  // driver
-    ExitPositions(1)=(X=57.0,Y=-132.0,Z=25.0) // front passenger
+    ExitPositions(0)=(X=116.0,Y=128.0,Z=48.0)  // driver
+    ExitPositions(1)=(X=116.0,Y=-128.0,Z=48.0) // front passenger
+    ExitPositions(2)=(X=-240.0,Y=-28.0,Z=48.0) // rear left passengers
+    ExitPositions(3)=(X=-240.0,Y=28.0,Z=48.0)  // rear right passengers
 
     // Sounds
     SoundPitch=32.0
@@ -137,7 +127,7 @@ defaultproperties
     RumbleSoundBone="body"
 
     // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-163.2,y=50.3,Z=29.7),ExhaustRotation=(Yaw=-16384))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-163.2,y=50.3,Z=29.7),ExhaustRotation=(Yaw=16384))
 
     ShadowZOffset=40.0
 
@@ -204,7 +194,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.3)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.75)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
