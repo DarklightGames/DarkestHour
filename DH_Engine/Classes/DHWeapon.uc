@@ -34,6 +34,7 @@ var     bool            bHasBeenDrawn;
 
 var     float           ResupplyInterval;
 var     int             LastResupplyTimestamp;
+var     bool            bCanResupplyWhenEmpty;
 
 // For some absolutely fucked reason, RO sets their sprint animation rates at 1.5x by default.
 // We allow ourselves the ability to override this nonsense.
@@ -1107,7 +1108,7 @@ defaultproperties
     bCanHaveInitialNumMagsChanged=true
 
     bUsesIronsightFOV=true
-
+    bCanResupplyWhenEmpty=true
     ResupplyInterval=2.5
 
     SprintStartAnimRate=1.5

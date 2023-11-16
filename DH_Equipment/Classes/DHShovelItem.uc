@@ -94,6 +94,7 @@ defaultproperties
 
     DisplayFOV=80.0
     bCanSway=false
+    bCanResupplyWhenEmpty=false
 
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
