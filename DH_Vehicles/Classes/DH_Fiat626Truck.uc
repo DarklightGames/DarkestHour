@@ -3,18 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Sounds
-// [ ] Fire effect locations
+// [ ] Fire/smoke effect locations
 // [ ] HUD
-// [ ] Investigate wonky suspension (high SuspTravel makes it worse, keep it low and the shuddering will be minimal)
-//     * perhaps the suspension bones need to be inline or in the same plane as the wheel bones?
-//       the willy's jeep is extremely stable and its's supension bones are all 
-//       facing the same direction and are colinear with the wheels
-// [ ] Bullet collision mesh
 // [ ] Destroyed mesh
-// [~] Exit Positions
-// [x] move driver camera forward/up a little bit more
-// [x] Hit points (engine etc.)
-// [x] Passengers
+// [ ] Adjust driving characteristics to be more realistic
+// [~] Exit Positions (might need a few more for safety)
 //==============================================================================
 
 class DH_Fiat626Truck extends DHVehicle
