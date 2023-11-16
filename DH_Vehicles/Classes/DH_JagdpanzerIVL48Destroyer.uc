@@ -50,9 +50,6 @@ defaultproperties
     FrontLeftAngle=332.0
     RearLeftAngle=208.0
 
-    // Movement
-    MaxCriticalSpeed=730.0 // 44 kph
-
     // Damage
 	// note: 4 men crew
 	// cons: petrol fuel

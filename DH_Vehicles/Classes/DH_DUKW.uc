@@ -254,7 +254,6 @@ defaultproperties
     //MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
     MaxBrakeTorque=20.0 //10.0
     bHasHandbrake=true
-    MaxCriticalSpeed=1077.0 // 64 kph
 
     // Physics wheels properties
     //WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))

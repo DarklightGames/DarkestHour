@@ -2547,7 +2547,6 @@ defaultproperties
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
     // Driving & steering
-    MaxCriticalSpeed=700.0 // approx 42 kph
     TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO

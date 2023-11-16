@@ -80,7 +80,6 @@ defaultproperties
 
     MaxBrakeTorque=20.0 //10.0
     bHasHandbrake=true
-    MaxCriticalSpeed=1077.0 // 64 kph
 
     // Damage
     Health=1500

@@ -57,7 +57,6 @@ defaultproperties
     RearLeftAngle=210.0
 
     // Movement
-    MaxCriticalSpeed=729.0 // 43 kph
 
     // Damage
 	// cons: petrol fuel;

@@ -62,7 +62,6 @@ defaultproperties
     HUDOverlayFOV=81.0
 
     // Movement
-    MaxCriticalSpeed=875.0 // 52 kph
     TransRatio=0.145
     TorqueCurve=(Points=((InVal=0.0,OutVal=11.0),(InVal=200.0,OutVal=1.25),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
     TurnDamping=50.0

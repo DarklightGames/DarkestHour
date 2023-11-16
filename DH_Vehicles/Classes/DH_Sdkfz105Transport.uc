@@ -56,7 +56,6 @@ defaultproperties
     DriveAnim="Vhalftrack_driver_idle"
 
     // Movement
-    MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5

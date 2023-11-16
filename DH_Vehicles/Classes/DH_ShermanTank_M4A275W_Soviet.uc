@@ -28,7 +28,6 @@ defaultproperties
 
     // Movement
 	//different diesel engine
-    MaxCriticalSpeed=777.0 // 45 kph
     GearRatios(1)=0.19
     GearRatios(3)=0.62
     GearRatios(4)=0.76

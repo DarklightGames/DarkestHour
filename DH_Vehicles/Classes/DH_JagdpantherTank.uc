@@ -63,7 +63,6 @@ defaultproperties
     TransRatio=0.1
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
-    MaxCriticalSpeed=1002.0 // 60 kph
 
     // Damage
     // pros: 5 men crew

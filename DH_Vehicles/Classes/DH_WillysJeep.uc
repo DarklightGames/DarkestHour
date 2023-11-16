@@ -54,7 +54,6 @@ defaultproperties
     bHasHandbrake=true
     HandbrakeThresh=100.0
     EngineRPMSoundRange=6000.0
-    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.3),(InVal=800.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -192,7 +191,7 @@ defaultproperties
         bKNonSphericalInertia=true
         bHighDetailOnly=false
         bClientOnly=false
-        bKDoubleTickRate=true
+        bKDoubleTickRate=false
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
         KFriction=0.5

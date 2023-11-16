@@ -58,7 +58,6 @@ defaultproperties
     RearLeftAngle=202.0
 
     // Movement
-    MaxCriticalSpeed=1039.0 // 62 kph
     GearRatios(0)=-0.35
     GearRatios(3)=0.6
     GearRatios(4)=0.75
