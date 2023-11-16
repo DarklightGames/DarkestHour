@@ -64,6 +64,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 {
     local DHPawn P;
     local DH_ConstructionWeapon CW;
+    local class<DHWeapon> WeaponClass;
     local class<DHConstruction> ConstructionClass;
     local DHConstructionProxy CP;
 
@@ -113,8 +114,10 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
             // construction class on the client upon instantiation.
             class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
 
+            WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'Class'));
+
             // Tell the server to give us the construction weapon.
-            P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon", true);
+            P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon", WeaponClass, true);
         }
 
         Interaction.Hide();

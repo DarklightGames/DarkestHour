@@ -148,8 +148,8 @@ var     class<DHBackpack>   BackpackClass;
 var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
 
-// Resupply Grenades
-var     int                NextResupplyThrowablesTime;
+// Resupply empty items
+var     int                NextResupplyGivenItemsTime;
 
 replication
 {
@@ -197,7 +197,7 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
-    NextResupplyThrowablesTime = Level.TimeSeconds - 1.0;
+    NextResupplyGivenItemsTime = Level.TimeSeconds - 1.0;
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
@@ -5671,24 +5671,43 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
         return;
     }
 
-    NextResupplyThrowablesTime = TimeSeconds;
+    NextResupplyGivenItemsTime = TimeSeconds;
 
+    //Secondary weapons - mappers sometimes set these as explosives
+    for (i = 0; i < arraycount(RI.SecondaryWeapons); i++)
+    {
+        if (RI.SecondaryWeapons[i].Item != none)
+        {
+            WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.SecondaryWeapons[i].Item), class'Class'));
+            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
+            {
+                ServerGiveWeapon(string(RI.SecondaryWeapons[i].Item), WeaponClass, false);
+            }
+        }
+    }
+
+    //Grenades
     for (i = 0; i < arraycount(RI.Grenades); i++)
     {
         if (RI.Grenades[i].Item != none)
         {
-            ServerGiveWeapon(string(RI.Grenades[i].Item), false);
+            WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.Grenades[i].Item), class'Class'));
+            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
+            {
+                ServerGiveWeapon(string(RI.Grenades[i].Item), WeaponClass, false);
+            }
         }
     }
 
-    //Resupplying of thrown items, satchels etc
+    //GivenItems
     for (i = 0; i < RI.GivenItems.Length; i++)
     {
         if (RI.GivenItems[i] != "")
         {
 	        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
-            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty) {
-                ServerGiveWeapon(RI.GivenItems[i], false);
+            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
+            {
+                ServerGiveWeapon(RI.GivenItems[i], WeaponClass, false);
             }
         }
     }
@@ -7015,15 +7034,15 @@ exec function DebugShootAP(optional string APProjectileClassName)
     }
 }
 
-function ServerGiveWeapon(string WeaponClass, bool bSwitchToIfPossible)
+function ServerGiveWeapon(string aClassName, Class<DHWeapon> WeaponClass, bool bSwitchToIfPossible)
 {
     local Weapon NewWeapon;
 
-    GiveWeapon(WeaponClass);
+    GiveWeapon(aClassName);
 
     if (bSwitchToIfPossible)
     {
-        NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
+        NewWeapon = Weapon(FindInventoryType(WeaponClass));
 
         if (NewWeapon != none)
         {
@@ -7331,9 +7350,12 @@ simulated function class<DHVoicePack> GetVoicePack()
 
 function EnterATRotation(DHATGun Gun)
 {
-    GunToRotate = Gun;
+    local class<DHWeapon> WeaponClass;
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", true);
+    GunToRotate = Gun;
+    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
+
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
 }
 
 function ServerExitATRotation()
@@ -7375,6 +7397,7 @@ simulated function ClientExitATRotation()
 exec function RotateAT()
 {
     local DHATGun Gun;
+    local class<DHWeapon> WeaponClass;
 
     foreach RadiusActors(class'DHATGun', Gun, 256.0)
     {
@@ -7390,8 +7413,9 @@ exec function RotateAT()
     }
 
     GunToRotate = Gun;
+    WeaponClass = class<DHWeapon>(DynamicLoadObject("DH_Weapons.DH_ATGunRotateWeapon", class'Class'));
 
-    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", true);
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon", WeaponClass, true);
 }
 
 exec simulated function IronSightDisplayFOV(float FOV)
