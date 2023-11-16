@@ -14,7 +14,7 @@ enum EResupplyType
 };
 
 var float   UpdateTime;
-var float   UpdateGrenadesTime;
+var float   UpdateGivenItemsTime;
 var bool    bGivesExtraAmmo;
 
 delegate OnPawnResupplied(Pawn P); // Called for every pawn that is resupplied
@@ -58,7 +58,7 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     {
         if (CanResupplyType(SourceType, RT_Players))
         {
-            if (default.UpdateGrenadesTime < TimeSeconds - P.NextResupplyThrowablesTime)
+            if (default.UpdateGivenItemsTime < TimeSeconds - P.NextResupplyGivenItemsTime)
             {
                 bShouldResupplyGrenades = true;
             }
@@ -122,6 +122,6 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 defaultproperties
 {
     UpdateTime=2.5
-    UpdateGrenadesTime=30
+    UpdateGivenItemsTime=30
     bGivesExtraAmmo=true
 }
