@@ -5663,6 +5663,7 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
 {
     local int i;
     local DHRoleInfo RI;
+    local class<DHWeapon> WeaponClass;
 
     RI = GetRoleInfo();
     if (RI == none)
@@ -5685,8 +5686,8 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
     {
         if (RI.GivenItems[i] != "")
         {
-	    WeaponClass = class<Weapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
-            if (WeaponClass != none && WeaponClass.default.bCanThrow) {
+	        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty) {
                 ServerGiveWeapon(RI.GivenItems[i], false);
             }
         }

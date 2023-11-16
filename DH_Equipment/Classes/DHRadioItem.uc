@@ -127,5 +127,6 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
     AttachBoneName="hip"
     RadioClass=class'DH_Engine.DHInfantryRadio'
     bCanThrow=false
+    bCanResupplyWhenEmpty=false
     bCanSway=false
 }
