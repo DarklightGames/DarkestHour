@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Sounds
-// [ ] Fire/smoke effect locations
-// [ ] HUD
+// [ ] Engine Sounds
 // [ ] Destroyed mesh
 // [ ] Adjust driving characteristics to be more realistic
-// [~] Exit Positions (might need a few more for safety)
+// [ ] finalize texture
+// [ ] color/camo variants
+// [x] add glass
 //==============================================================================
 
 class DH_Fiat626Truck extends DHVehicle
