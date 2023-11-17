@@ -128,13 +128,13 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=Texture'DH_Fiat626_tex.interface.fiat626_body_icon'
     VehicleHudEngineY=0.25
-    VehicleHudOccupantsX(0)=0.45
-    VehicleHudOccupantsY(0)=0.4
-    VehicleHudOccupantsX(1)=0.55
-    VehicleHudOccupantsY(1)=0.4
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
+    VehicleHudOccupantsX(0)=0.55
+    VehicleHudOccupantsY(0)=0.25
+    VehicleHudOccupantsX(1)=0.45
+    VehicleHudOccupantsY(1)=0.25
+    SpawnOverlay(0)=Material'DH_Fiat626_tex.interface.fiat626_profile_icon'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
