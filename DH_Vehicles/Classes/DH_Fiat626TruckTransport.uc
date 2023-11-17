@@ -7,7 +7,7 @@ class DH_Fiat626TruckTransport extends DH_Fiat626Truck;
 
 defaultproperties
 {
-    VehicleNameString="Fiat 626 Truck (Transport)"
+    VehicleNameString="Fiat 626 (Transport)"
 
     // Passengers
 

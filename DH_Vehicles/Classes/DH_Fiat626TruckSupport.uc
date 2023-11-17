@@ -7,7 +7,7 @@ class DH_Fiat626TruckSupport extends DH_Fiat626Truck;
 
 defaultproperties
 {
-    VehicleNameString="Fiat 626 Truck (Logistics)"
+    VehicleNameString="Fiat 626 (Logistics)"
 
     // TODO: logi related stuff
 
