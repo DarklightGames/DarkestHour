@@ -9,8 +9,6 @@ defaultproperties
 {
     VehicleNameString="Fiat 626 (Logistics)"
 
-    // TODO: logi related stuff
-
     // Passengers
     PassengerPawns(1)=(AttachBone="passenger_06",DriveAnim="fiat626_passenger_bl",DrivePos=(Z=58),DriveRot=(Yaw=-16384))
     PassengerPawns(2)=(AttachBone="passenger_11",DriveAnim="fiat626_passenger_br",DrivePos=(Z=58),DriveRot=(Yaw=-16384))
@@ -19,4 +17,13 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.825
     VehicleHudOccupantsX(3)=0.575
     VehicleHudOccupantsY(3)=0.825
+
+    // Logistics
+    SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentBone="body"
+    ResupplyAttachmentBone="body"   // TODO: set these up
+    bRequiresDriverLicense=true
+    FriendlyResetDistance=15000.0  // 250 meters
+    // TODO: add ammo store hitpoint
+    //VehHitpoints(1)=(PointRadius=60.0,PointBone="body",PointOffset=(X=-60.0,Y=0.0,Z=100.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 }

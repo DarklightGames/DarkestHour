@@ -5,9 +5,8 @@
 // [ ] Engine Sounds
 // [ ] Destroyed mesh
 // [ ] Adjust driving characteristics to be more realistic
-// [ ] finalize texture
-// [ ] color/camo variants
-// [x] add glass
+// [ ] Finalize texture
+// [ ] Color/camo variants
 //==============================================================================
 
 class DH_Fiat626Truck extends DHVehicle
@@ -41,49 +40,60 @@ defaultproperties
 
     // Engine/Transmission
     // TODO: these are just copypaste from the GMC
-    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=3.0),(InVal=2000.0,OutVal=0.5)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=500.0,OutVal=5.0),(InVal=600.0,OutVal=1.25),(InVal=1200.0,OutVal=1.0),(InVal=2500.0,OutVal=0)))
     GearRatios(0)=-0.3
-    GearRatios(1)=0.4  //0.2
-    GearRatios(2)=0.65   //0.350000
-    GearRatios(3)=0.85    //0.6
-    GearRatios(4)=1.1    //0.98
-    TransRatio=0.18
-    ChangeUpPoint=1990.0
+    GearRatios(1)=0.4
+    GearRatios(2)=0.6
+    GearRatios(3)=0.8
+    GearRatios(4)=1.0
+    TransRatio=0.19
+    ChangeUpPoint=2000
     ChangeDownPoint=1000.0
+    EngineBrakeRPMScale=0.000001
+    EngineBrakeFactor=0.000001
+    EngineInertia=0.005 // lowering this makes the vehicle not immediately stop once the gas is released
 
-    // Vehicle properties
+    // Wheel Properties
     WheelSoftness=0.025000
     WheelPenScale=1.200000
     WheelPenOffset=0.010000
     WheelRestitution=0.100000
     WheelInertia=0.100000
+
+    // Wheel Friction
     WheelLongFrictionFunc=(Points=((),(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
     WheelLongSlip=0.001000
     WheelLatSlipFunc=(Points=((),(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
-    WheelLongFrictionScale=1.100000
-    WheelLatFrictionScale=1.55
-    WheelHandbrakeSlip=0.010000
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=2.0
-    WheelSuspensionMaxRenderTravel=2.0
-    WheelSuspensionOffset=-4.0
-    FTScale=0.030000
-    ChassisTorqueScale=0.095
-    MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
-    SteerSpeed=70.0
+    WheelLongFrictionScale=1.0
+    WheelLatFrictionScale=1.0
+
+    // Suspension
+    WheelSuspensionTravel=8.0
+    WheelSuspensionMaxRenderTravel=8.0
+    WheelSuspensionOffset=-8.0
+
+    FTScale=0.012500
+    ChassisTorqueScale=0.25
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=400.0,OutVal=20.0),(InVal=800.0,OutVal=8.0),(InVal=1000000000.0,OutVal=0.0)))
+    SteerSpeed=50.0
     TurnDamping=25.0
     StopThreshold=100.000000
-    HandbrakeThresh=100.0 //200.000000
     LSDFactor=1.000000
     CenterSpringForce="SpringONSSRV"
 
-    MaxBrakeTorque=20.0 //10.0
+    // Braking
+    MaxBrakeTorque=25.0
+    MinBrakeFriction=4.0
+
+    //  Handbrake
+    HandbrakeThresh=50.0
     bHasHandbrake=true
+    WheelHandbrakeSlip=0.6
+    WheelHandbrakeFriction=0.6
 
     // Damage
-    Health=1500
-    HealthMax=1500.0
+    Health=1000
+    HealthMax=1000
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
 
@@ -186,7 +196,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.75)
+        KCOMOffset=(X=0.125,Y=0.0,Z=0.675)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
