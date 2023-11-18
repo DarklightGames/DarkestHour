@@ -2351,6 +2351,32 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
     return Result;
 }
 
+simulated function int GetTeamMainSupplyCount(int TeamIndex)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(SupplyPoints); ++i)
+    {
+        if (SupplyPoints[i].ActorClass == none)
+        {
+            continue;
+        }
+
+        // Find the main cache for the team
+        if (SupplyPoints[i].ActorClass.default.bIsMainSupplyCache && SupplyPoints[i].TeamIndex == TeamIndex)
+        {
+            if (SupplyPoints[i].Actor != none)
+            {
+                 // Calculate the supply we can give
+                return SupplyPoints[i].Actor.GetSupplyCount();
+            }
+        }
+    }
+
+    // We did not find a main cache
+    return 0;
+}
+
 function AddKillForTeam(int TeamIndex)
 {
     if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))

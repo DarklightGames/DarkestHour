@@ -19,6 +19,7 @@ var int MaxPlayersListedPerSide;
 var int MyTeamIndex;
 
 var localized string MunitionPercentageText;
+var localized string SupplyText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
@@ -688,6 +689,9 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         // Add the munition percentage
         TeamInfoString $= LargeTabSpaces $ MunitionPercentageText $ ":" @ int(DHGRI.TeamMunitionPercentages[TeamIndex]) $ "%";
 
+        // Add the supplies text
+        TeamInfoString $= LargeTabSpaces $ SupplyText $ ":" @ DHGRI.GetTeamMainSupplyCount(TeamIndex);
+
         // Add the team scale if needed
         if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
         {
@@ -1139,6 +1143,7 @@ defaultproperties
     PlayersText="Players"
     TickHealthText="Tick: "
     NetHealthText="Loss: "
+    SupplyText="Supplies"
     MunitionPercentageText="Munitions"
     PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Lead'
     PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Bronze'
