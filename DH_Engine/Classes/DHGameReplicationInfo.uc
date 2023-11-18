@@ -2351,6 +2351,29 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
     return Result;
 }
 
+simulated function int GetTeamOffMapFireSupportCount(int TeamIndex)
+{
+    local int i, FireSupportCount;
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
+    {
+        if (LI.ArtilleryTypes[i].TeamIndex == TeamIndex && ArtilleryTypeInfos[i].bIsAvailable)
+        {
+            FireSupportCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+        }
+    }
+
+    return FireSupportCount;
+}
+
 function AddKillForTeam(int TeamIndex)
 {
     if (TeamIndex >= 0 && TeamIndex < arraycount(TeamScores))
