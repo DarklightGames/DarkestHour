@@ -494,12 +494,13 @@ function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
 // This function returns all objectives (via array of indices) which meets objective spawn criteria
 function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
-    local int i;
+    local int i, ObjIndex;
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
     local array<int> ObjectiveIndices, RejectedObjectiveIndices;
     local UComparator_int Comparator;
     local int Depth, MinDepth;
+    local bool bWasRejected;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
@@ -509,6 +510,8 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         {
             continue;
         }
+
+        ObjectiveIndices.Length = 0;
 
         // Root objectives are those that are active
         if (Obj.IsActive())
@@ -532,15 +535,20 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     MinDepth = GetMinRequiredDepth();
     for (i = Indices.Length - 1; i >= 0; --i)
     {
-        if (class'UArray'.static.IIndexOf(RejectedObjectiveIndices, Indices[i] & 0xFFFF) != -1)
+        ObjIndex = Indices[i] & 0xFFFF;
+        bWasRejected = class'UArray'.static.IIndexOf(RejectedObjectiveIndices, ObjIndex) != -1;
+
+        if (bWasRejected)
         {
+            // If the objective was rejected, remove it.
             Indices.Remove(i, 1);
             continue;
         }
-
-        if ((Indices[i] >> 16) < MinDepth)
+        else if ((Indices[i] >> 16) < MinDepth)
         {
+            // If the objective is below the minimum depth, remove it.
             Indices.Remove(i, 1);
+            continue;
         }
     }
 
@@ -571,7 +579,6 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     local int i;
     local bool bIsFarEnoughAway;
     local bool bNodeHasHints;
-    local bool bAlreadyAdded;
     local bool bIsActive;
     local DH_LevelInfo LI;
 
@@ -587,21 +594,23 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
         return;
     }
 
-    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
-    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
-    bIsActive = Node.Objective.IsActive();
-
-    if (bNodeHasHints && bAlreadyAdded && !bIsActive)
+    if (Root != Node)
     {
-        bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
+        bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+        bIsActive = Node.Objective.IsActive();
 
-        if (bIsFarEnoughAway)
+        if (bNodeHasHints && !bIsActive)
         {
-            ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
-        }
-        else
-        {
-            class'UArray'.static.IAddUnique(RejectedObjectiveIndices, Node.Objective.ObjNum);
+            bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
+
+            if (bIsFarEnoughAway)
+            {
+                class'UArray'.static.IAddUnique(ObjectiveIndices, (Depth << 16) | Node.Objective.ObjNum);
+            }
+            else
+            {
+                class'UArray'.static.IAddUnique(RejectedObjectiveIndices, Node.Objective.ObjNum);
+            }
         }
     }
 
