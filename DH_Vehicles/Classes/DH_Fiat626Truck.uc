@@ -2,11 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Engine Sounds
+// [ ] Engine Sounds (Napoleon)
 // [ ] Destroyed mesh
-// [ ] Adjust driving characteristics to be more realistic
-// [ ] Finalize texture
-// [ ] Color/camo variants
+// [ ] Color/camo variants (finalize the camo variant)
+// [ ] Supply Cache for Italians (needs a bone etc.)
+// [ ] Add hitpoint for the supply cache on the support version
 //==============================================================================
 
 class DH_Fiat626Truck extends DHVehicle
@@ -23,8 +23,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat626_anm.fiat626_body_ext'
-    //Skins(0)=Texture'DH_GMC_tex.GMC.GMC_USOD'
-    //Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas'
+    Skins(0)=Texture'DH_Fiat626_tex.fiat626.fiat626_exterior_green'
+    Skins(1)=Texture'DH_Fiat626_tex.fiat626.fiat626_interior_green'
+    Skins(2)=Texture'DH_Fiat626_tex.fiat626.fiat626_canvas'
+    Skins(3)=FinalBlend'DH_Fiat626_tex.fiat626.fiat626_windows_fb'
     BeginningIdleAnim="" // override unwanted inherited value, as GMC has no animations
 
     // Passengers
@@ -39,7 +41,6 @@ defaultproperties
     DriveAnim="fiat626_driver"
 
     // Engine/Transmission
-    // TODO: these are just copypaste from the GMC
     TorqueCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=500.0,OutVal=5.0),(InVal=600.0,OutVal=1.25),(InVal=1200.0,OutVal=1.0),(InVal=2500.0,OutVal=0)))
     GearRatios(0)=-0.3
     GearRatios(1)=0.4
@@ -51,7 +52,7 @@ defaultproperties
     ChangeDownPoint=1000.0
     EngineBrakeRPMScale=0.000001
     EngineBrakeFactor=0.000001
-    EngineInertia=0.005 // lowering this makes the vehicle not immediately stop once the gas is released
+    EngineInertia=0.005 // Lowering this makes the vehicle not immediately stop once the gas is released.
 
     // Wheel Properties
     WheelSoftness=0.025000
@@ -96,12 +97,13 @@ defaultproperties
     HealthMax=1000
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=20
-
-    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=126,Z=56),DamageMultiplier=1.0,HitPointType=HP_Engine)
-
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0
+
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=126,Z=56),DamageMultiplier=1.0,HitPointType=HP_Engine)
+
+    // Effects
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'    // TODO: replace
