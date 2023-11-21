@@ -5322,10 +5322,7 @@ event PostLogin(PlayerController NewPlayer)
                     PRI.CategoryScores[i] = S.CategoryScores[i];
                 }
 
-                if (S.TeamIndex < arraycount(Teams))
-                {
-                    Teams[S.TeamIndex].AddToTeam(PC);
-                }
+                Teams[S.TeamIndex].AddToTeam(PC);
 
                 PC.LastKilledTime = S.LastKilledTime;
                 PC.WeaponLockViolations = S.WeaponLockViolations;
@@ -5414,10 +5411,6 @@ function Logout(Controller Exiting)
         if (PRI.Team != none)
         {
             S.TeamIndex = PRI.Team.TeamIndex;
-        }
-        else
-        {
-            S.TeamIndex = 255;
         }
     }
 }

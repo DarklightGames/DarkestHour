@@ -14,4 +14,5 @@ var int         TotalScore;
 var int         CategoryScores[2];
 var int         Deaths;
 var int         NextChangeTeamTime;
-var byte        TeamIndex;  // 0 - axis, 1 - allies, 255 - none
+var byte        TeamIndex;
+
