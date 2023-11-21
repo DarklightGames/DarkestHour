@@ -7522,7 +7522,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {
             return true;
         }
