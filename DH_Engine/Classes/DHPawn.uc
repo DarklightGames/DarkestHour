@@ -2953,7 +2953,7 @@ simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
     // an the overlay material is applied..
     for (i = 0; i < Skins.Length; ++i)
     {
-        if (Skins[i].IsA('Combiner'))
+        if (Skins[i] != none && Skins[i].IsA('Combiner'))
         {
             FB = new class'FinalBlend';
             FB.Material = Skins[i];
