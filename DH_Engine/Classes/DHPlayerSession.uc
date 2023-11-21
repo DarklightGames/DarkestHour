@@ -52,6 +52,10 @@ function Save(DHPlayer PC)
     {
         TeamIndex = PRI.Team.TeamIndex;
     }
+    else
+    {
+        TeamIndex = 255;
+    }
 }
 
 function Load(DHPlayer PC)
@@ -114,8 +118,11 @@ function Load(DHPlayer PC)
 
     if (DHG != none)
     {
-        // Add player back to the old team
-        DHG.Teams[TeamIndex].AddToTeam(PC);
+        if (TeamIndex < arraycount(DHG.Teams))
+        {
+            // Add player back to the old team
+            DHG.Teams[TeamIndex].AddToTeam(PC);
+        }
     }
     else
     {
