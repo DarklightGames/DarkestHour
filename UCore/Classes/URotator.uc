@@ -42,3 +42,14 @@ static function string ToString(rotator R)
 {
     return "(" $ R.Pitch $ "," $ R.Yaw $ "," $ R.Roll $ ")";
 }
+
+// Check whether two rotators are close to each other within given tolerance.
+final static function bool IsClose(rotator LHS, rotator RHS, int Tolerance)
+{
+    LHS = Normalize(LHS);
+    RHS = Normalize(RHS);
+
+    return Abs(LHS.Pitch - RHS.Pitch) <= Abs(Tolerance) &&
+           Abs(LHS.Yaw - RHS.Yaw) <= Abs(Tolerance) &&
+           Abs(LHS.Roll - RHS.Roll) <= Abs(Tolerance);
+}
