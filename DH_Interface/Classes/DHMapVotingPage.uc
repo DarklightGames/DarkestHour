@@ -9,6 +9,10 @@ var localized string                            lmsgMapOutOfBounds;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
+var automated GUIImage  i_MapPreview;
+
+var CacheManager.MapRecord LoadingMapRecord;
+
 
 function InternalOnOpen()
 {
@@ -56,6 +60,9 @@ function SendVote(GUIComponent Sender)
         if (MapIndex > -1)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
+            // LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
+            // i_MapListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
+            // i_MapCountListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
 
             if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
             {
@@ -71,7 +78,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                // MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
             {
@@ -86,15 +93,30 @@ function SendVote(GUIComponent Sender)
         if (MapIndex > -1)
         {
             GameConfigIndex = int(co_GameType.GetExtra());
+            // LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
+            // i_MapListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
+            // i_MapCountListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                // MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
             {
                 PlayerOwner().ClientMessage(lmsgMapDisabled);
             }
+        }
+
+        PlayerOwner().ClientMessage("MapIndex: " @ MapIndex @ " - Mapname: " @ MVRI.MapList[MapIndex].MapName);
+
+        LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
+
+        if (MapIndex > -1)
+        {
+            i_MapPreview.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
+            PlayerOwner().ClientMessage("img: " @ i_MapListBackground.Image);
+            i_MapPreview.SetVisibility( true);
+
         }
     }
 }
@@ -128,7 +150,7 @@ defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
 
-    lmsgMode(0)="Majority Wins"
+    lmsgMode(0)="Majority Wins!!"
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
@@ -182,6 +204,7 @@ defaultproperties
     End Object
     i_MapCountListBackground=GUIImage'DH_Interface.DHMapVotingPage.MapCountListBackground'
 
+
     Begin Object class=moEditBox Name=FilterEditbox
         WinWidth=0.86
         WinHeight=0.12
@@ -210,6 +233,18 @@ defaultproperties
         bScaleToParent=true
     End Object
     b_FilterClear=FilterClearButton
+
+    Begin Object Class=GUIImage Name=MapPreviewImage
+		WinWidth=0.372002
+		WinHeight=0.357480
+		WinLeft=0.562668
+		WinTop=0.107691
+        ImageColor=(R=255,G=255,B=255,A=255)
+        ImageStyle=ISTY_Scaled
+        ImageRenderStyle=MSTY_Normal
+        RenderWeight=0.2
+    End Object
+    i_MapPreview=MapPreviewImage
 
     f_Chat=none
 }
