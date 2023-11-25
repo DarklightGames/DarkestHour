@@ -764,7 +764,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
         // This makes LocalWeaponAim drift every time it's reset, so we only reset it when it's not current.
         if (Gun != none && !class'URotator'.static.IsClose(LocalWeaponAim, Gun.CurrentAim, 8))
         {
-            LocalWeaponAim = Gun.CurrentAim;
+            LocalWeaponAim = Normalize(Gun.CurrentAim);
         }
     }
 
