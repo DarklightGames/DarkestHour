@@ -243,10 +243,10 @@ function string GetSortString(int i)
 defaultproperties
 {
     // Map Name | Allied Nation | Game Type | Map Size
-    ColumnHeadings(0)="Map Name"
-    ColumnHeadings(1)="Allied Nation"
-    ColumnHeadings(2)="Game Type"
-    ColumnHeadings(3)="Map Size"
+    ColumnHeadings(0)="Name"
+    ColumnHeadings(1)="Allies"
+    ColumnHeadings(2)="Type"
+    ColumnHeadings(3)="Size"
 
     InitColumnPerc(0)=0.35
     InitColumnPerc(1)=0.20

@@ -118,6 +118,7 @@ struct ArtilleryResponse
 // Overridden to make new clamp of MaxPlayers and force AccessControlType
 event InitGame(string Options, out string Error)
 {
+    class'DHVotingReplicationInfo'.default.bEnableSinglePlayerVoting = true;
     super.InitGame(Options, Error);
 
     if (bIgnore32PlayerLimit)

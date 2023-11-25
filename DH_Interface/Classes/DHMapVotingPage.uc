@@ -9,7 +9,12 @@ var localized string                            lmsgMapOutOfBounds;
 
 var automated moEditBox ed_Filter;
 var automated GUIButton b_FilterClear;
-var automated GUIImage  i_MapPreview;
+var automated GUILabel  l_MapPreviewTitle;
+var automated GUIImage  i_MapPreviewImage;
+var automated GUILabel  l_MapPreviewName;
+var automated GUILabel  l_MapPreviewAllies, l_MapPreviewAxis;
+var automated GUILabel  l_MapPreviewType, l_MapPreviewSize;
+var automated GUIScrollTextBox lb_MapPreviewDesc;
 
 var CacheManager.MapRecord LoadingMapRecord;
 
@@ -30,6 +35,40 @@ function bool AlignBK(Canvas C)
     i_MapCountListBackground.WinTop    = lb_VoteCountListbox.MyList.ActualTop();
 
     return false;
+}
+
+function UpdatePreview(GUIComponent Sender, int MapIndex, DHMapDatabase.SMapInfo MI)
+{
+    local string mDesc;
+    local VotingHandler.MapVoteMapList MapInfo;
+
+    PlayerOwner().ClientMessage("MapIndex: " @ MapIndex @ " - Mapname: " @ MVRI.MapList[MapIndex].MapName);
+
+	MapInfo = class'DH_Engine.DHVotingHandler'.static.GetMapList(MapIndex);
+
+    LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
+
+    if (MapIndex > -1)
+    {
+        i_MapPreviewImage.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
+
+        l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
+        lb_MapPreviewDesc.SetContent( LoadingMapRecord.Description );
+
+        l_MapPreviewAllies.Caption = "Allies: " @ class'DHMapDatabase'.static.GetAlliedNationString(MI.AlliedNation);
+        l_MapPreviewAxis.Caption = "Axis: " @ "Germany";
+
+        l_MapPreviewType.Caption = "Type: " @ class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
+        l_MapPreviewSize.Caption = "Size: " @ class'DHMapDatabase'.static.GetMapSizeString(MI.Size);
+
+        PlayerOwner().ClientMessage("Desc 1: " @ LoadingMapRecord.ExtraInfo);
+        // PlayerOwner().ClientMessage("Desc 2: " @ Maprecord[MapIndex].Description);
+        // lb_MapPreviewDesc.SetContent( Maprecord[MapIndex].Description );
+
+        // mDesc = MapRecord.Find
+        // lb_MapPreviewDesc.SetContent(lb_MapDesc);
+        // i_MapPreview.SetVisibility( true);
+    }
 }
 
 function SendVote(GUIComponent Sender)
@@ -60,9 +99,6 @@ function SendVote(GUIComponent Sender)
         if (MapIndex > -1)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
-            // LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
-            // i_MapListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
-            // i_MapCountListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
 
             if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
             {
@@ -78,6 +114,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
+                UpdatePreview(Sender, MapIndex, MI);
                 // MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
@@ -93,30 +130,19 @@ function SendVote(GUIComponent Sender)
         if (MapIndex > -1)
         {
             GameConfigIndex = int(co_GameType.GetExtra());
-            // LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
-            // i_MapListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
-            // i_MapCountListBackground.Image = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
+                if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
+                {
+                    UpdatePreview(Sender, MapIndex, MI);
+                }
                 // MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
             {
                 PlayerOwner().ClientMessage(lmsgMapDisabled);
             }
-        }
-
-        PlayerOwner().ClientMessage("MapIndex: " @ MapIndex @ " - Mapname: " @ MVRI.MapList[MapIndex].MapName);
-
-        LoadingMapRecord = class'CacheManager'.static.GetMapRecord(MVRI.MapList[MapIndex].MapName);
-
-        if (MapIndex > -1)
-        {
-            i_MapPreview.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
-            PlayerOwner().ClientMessage("img: " @ i_MapListBackground.Image);
-            i_MapPreview.SetVisibility( true);
-
         }
     }
 }
@@ -149,11 +175,10 @@ delegate OnFilterClear()
 defaultproperties
 {
     lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
-
-    lmsgMode(0)="Majority Wins!!"
+    lmsgMode(0)="Majority Wins"
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
-        WinWidth=0.96
+        WinWidth=0.5
         WinHeight=0.50
         WinLeft=0.02
         WinTop=0.371020
@@ -162,24 +187,24 @@ defaultproperties
         bScaleToParent=true
         bBoundToParent=true
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.40 // Map Name
-        HeaderColumnPerc(1)=0.20 // Country
+        HeaderColumnPerc(0)=0.40 // Name
+        HeaderColumnPerc(1)=0.20 // Allies
         HeaderColumnPerc(2)=0.20 // Type
-        HeaderColumnPerc(3)=0.20 // Player Range
+        HeaderColumnPerc(3)=0.20 // Size
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
 
     Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4 // Nominated Maps
         HeaderColumnPerc(1)=0.3 // Votes
-        HeaderColumnPerc(2)=0.3 // Player Range
+        HeaderColumnPerc(2)=0.3 // Size
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
         bVisibleWhenEmpty=true
         OnCreateComponent=VoteCountListBox.InternalOnCreateComponent
         StyleName="ServerBrowserGrid"
         WinTop=0.077369
         WinLeft=0.02
-        WinWidth=0.96
+        WinWidth=0.5
         WinHeight=0.26752
         bBoundToParent=true
         bScaleToParent=true
@@ -234,17 +259,106 @@ defaultproperties
     End Object
     b_FilterClear=FilterClearButton
 
+    Begin Object Class=GUILabel Name=MapPreviewTitle
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.13
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+        Caption="Nominated"
+    End Object
+    l_MapPreviewTitle=MapPreviewTitle
+
     Begin Object Class=GUIImage Name=MapPreviewImage
-		WinWidth=0.372002
-		WinHeight=0.357480
-		WinLeft=0.562668
-		WinTop=0.107691
+		WinWidth=0.352002
+		WinHeight=0.337480
+		WinLeft=0.53
+		WinTop=0.2
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Normal
         RenderWeight=0.2
     End Object
-    i_MapPreview=MapPreviewImage
+    i_MapPreviewImage=MapPreviewImage
+
+    Begin Object Class=GUILabel Name=MapPreviewName
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.515
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+        Caption="Name"
+    End Object
+    l_MapPreviewName=MapPreviewName
+
+    Begin Object Class=DHGUIScrollTextBox Name=MapPreviewDesc
+        bNoTeletype=true
+        CharDelay=0.0025
+        EOLDelay=0.5
+        OnCreateComponent=MapPreviewDesc.InternalOnCreateComponent
+        FontScale=FNS_Small
+        StyleName="DHSmallText"
+        WinWidth=0.379993
+        WinHeight=0.26841
+        WinLeft=0.54
+        WinTop=0.65
+        bTabStop=false
+        bNeverFocus=true
+    End Object
+    lb_MapPreviewDesc=MapPreviewDesc
+
+    //Description
+    Begin Object Class=GUILabel Name=MapPreviewAllies
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.55
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHLargeFont"
+        Caption="Allies: "
+    End Object
+    l_MapPreviewAllies=MapPreviewAllies
+
+    Begin Object Class=GUILabel Name=MapPreviewAxis
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.58
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHLargeFont"
+        Caption="Axis: "
+    End Object
+    l_MapPreviewAxis=MapPreviewAxis
+
+    Begin Object Class=GUILabel Name=MapPreviewType
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.61
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHLargeFont"
+        Caption="Type: "
+    End Object
+    l_MapPreviewType=MapPreviewType
+
+    Begin Object Class=GUILabel Name=MapPreviewSize
+        WinWidth=0.35
+        WinHeight=0.1
+        WinLeft=0.53
+        WinTop=0.64
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHLargeFont"
+        Caption="Size: "
+    End Object
+    l_MapPreviewSize=MapPreviewSize
 
     f_Chat=none
 }
