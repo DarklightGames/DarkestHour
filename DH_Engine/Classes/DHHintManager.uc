@@ -12,7 +12,7 @@ struct HintInfo
     var localized string    Text;  // hint display text
 };
 
-const                   HINT_COUNT = 65;
+const                   HINT_COUNT = 71;
 
 var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
 var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
@@ -215,5 +215,7 @@ defaultproperties
     Hints(66)=(Title="Supply System",Text="To construct, you will need supplies which are given from supply depots and logistic trucks. Press %ScoreToggle% to see how much supplies the main supply cache has.")
     Hints(67)=(Title="Constructing",Text="Constructions are built using your shovel. Press %FIRE% to build, press %AltFire% to deconstruct.")
     Hints(68)=(Title="Green Map Icons",Text="Squad leaders can mark construction suggestions on the minimap. Be sure to keep up to date to what your squad needs.")
+    Hints(69)=(Title="Friendly Fire",Text="Watch your fire, you just killed a friendly soldier.")
+    Hints(70)=(Title="Watch Your Fire!",Text="Be careful! Excessive friendly fire will lead to a ban.")
 }
 
