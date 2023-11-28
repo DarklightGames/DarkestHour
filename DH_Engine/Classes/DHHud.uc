@@ -5672,6 +5672,10 @@ function DrawRallyPointStatus(Canvas C)
         case ERROR_None:
             ErrorIcon = default.RallyPointIconKey;
             ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor("Press [%PLACERALLYPOINT%]", PC);
+            //Squad leader specific hints
+            PC.QueueHint(62, false);
+            PC.QueueHint(63, false);
+            PC.QueueHint(64, false);
             break;
         default:
             break;

@@ -2143,6 +2143,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                         FFPenalty = 1.0;
                     }
                 }
+                DHKiller.QueueHint(69, true); //Friendly Fire
 
                 if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo) != none)
                 {
@@ -2163,6 +2164,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                         {
                             // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
                             DHKiller.WeaponLockViolations++;
+                            DHKiller.QueueHint(70, false); //Watch Your Fire!
 
                             // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
                             DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));

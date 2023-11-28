@@ -12,7 +12,7 @@ struct HintInfo
     var localized string    Text;  // hint display text
 };
 
-const                   HINT_COUNT = 64;
+const                   HINT_COUNT = 71;
 
 var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
 var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
@@ -207,6 +207,15 @@ defaultproperties
     Hints(54)=(Title="Find a Radio",Text="You have marked a target for long-range fire support. Find a radio so that you can call it in!")
 
     Hints(60)=(Title="Firing Range",Text="This weapon has an adjustable sight! Press %SWITCHFIREMODE% to change the range of the sight.")
-    Hints(61)=(Title="Desperate measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Don't waste your shots!")
+    Hints(61)=(Title="Desperate Measures",Text="This weapon uses non-standard ammunition that cannot be resupplied. Don't waste your shots!")
+    Hints(62)=(Title="Squad Rally",Text="Squad leaders can place down squad rally points for their squad. Press %PLACERALLYPOINT% to place down a squad rally point that your squad members can spawn from.")
+    Hints(63)=(Title="Smoke Grenades",Text="Squad leaders are equipped with Smoke Grenades. Press %SwitchWeapon 4% and throw them to provide cover for your squad.")
+    Hints(64)=(Title="Fire Support",Text="Squad leaders can mark down fire support and mortar targets. Press %SwitchWeapon 6% to equip your binoculars.")
+    Hints(65)=(Title="Assistant Squad Leader",Text="You've been given the ASL role. Press %ShowOrderMenu% to support your squad by marking targets and placing constructions.")
+    Hints(66)=(Title="Supply System",Text="To construct, you will need supplies which are given from supply depots and logistic trucks. Press %ScoreToggle% to see how much supplies the main supply cache has.")
+    Hints(67)=(Title="Constructing",Text="Constructions are built using your shovel. Press %FIRE% to build, press %AltFire% to deconstruct.")
+    Hints(68)=(Title="Green Map Icons",Text="Squad leaders can mark construction suggestions on the minimap. Be sure to keep up to date to what your squad needs.")
+    Hints(69)=(Title="Friendly Fire",Text="Watch your fire, you just killed a friendly soldier.")
+    Hints(70)=(Title="Watch Your Fire!",Text="Be careful! Excessive friendly fire will lead to a ban.")
 }
 
