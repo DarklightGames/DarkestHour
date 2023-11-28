@@ -5943,6 +5943,9 @@ function ServerSquadMakeAssistant(DHPlayerReplicationInfo NewAssistant)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
+        QueueHint(65, false); //Assistant Squad Leader
+        QueueHint(66, false); //Supply System
+
         SquadReplicationInfo.SetAssistantSquadLeader(GetTeamNum(), GetSquadIndex(), NewAssistant);
     }
 }

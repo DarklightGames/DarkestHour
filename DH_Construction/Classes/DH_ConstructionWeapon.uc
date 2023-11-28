@@ -212,6 +212,16 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
             C.SetTeamIndex(Instigator.GetTeamNum());
         }
 
+        if (Context.PlayerController != none)
+        {
+            Context.PlayerController.QueueHint(67, true); //Constructing
+
+            if (Context.PlayerController.IsASL())
+            {
+                Context.PlayerController.QueueHint(68, false); //Green Map Icons
+            }
+        }
+
         C.UpdateAppearance();
         C.OnSpawnedByPlayer();
     }

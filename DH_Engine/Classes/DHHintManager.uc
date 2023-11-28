@@ -211,5 +211,9 @@ defaultproperties
     Hints(62)=(Title="Squad Rally",Text="Squad leaders can place down squad rally points for their squad. Press %PLACERALLYPOINT% to place down a squad rally point that your squad members can spawn from.")
     Hints(63)=(Title="Smoke Grenades",Text="Squad leaders are equipped with Smoke Grenades. Press %SwitchWeapon 4% and throw them to provide cover for your squad.")
     Hints(64)=(Title="Fire Support",Text="Squad leaders can mark down fire support and mortar targets. Press %SwitchWeapon 6% to equip your binoculars.")
+    Hints(65)=(Title="Assistant Squad Leader",Text="You've been given the ASL role. Press %ShowOrderMenu% to support your squad by marking targets and placing constructions.")
+    Hints(66)=(Title="Supply System",Text="To construct, you will need supplies which are given from supply depots and logistic trucks. Press %ScoreToggle% to see how much supplies the main supply cache has.")
+    Hints(67)=(Title="Constructing",Text="Constructions are built using your shovel. Press %FIRE% to build, press %AltFire% to deconstruct.")
+    Hints(68)=(Title="Green Map Icons",Text="Squad leaders can mark construction suggestions on the minimap. Be sure to keep up to date to what your squad needs.")
 }
 
