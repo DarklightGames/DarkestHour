@@ -157,6 +157,11 @@ static function string GetHumanReadableMapName(string MapName)
     return Repl(Repl(Repl(MapName, "_", " "), ".rom", ""), "DH-", "");
 }
 
+static function string GetMapNameForCache(string MapName)
+{
+    return Repl(MapName, ".rom", "");
+}
+
 defaultproperties
 {
     MapInfos(0)=(Name="DH-St_Marie_du_Mont_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
