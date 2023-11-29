@@ -35,14 +35,19 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
-function bool UpdatePreview(GUIComponent Sender)
+function UpdatePreview(GUIComponent Sender)
 {
     local int MapIndex;
     local string mMapName;
 
-    MapIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedMapIndex();
-    // PlayerOwner().ClientMessage("Index: " @ Index);
-    PlayerOwner().ClientMessage("MapIndex: " @ MapIndex);
+    if (Sender == lb_VoteCountListBox.List)
+    {
+        MapIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedMapIndex();
+    }
+    else
+    {
+        MapIndex = MapVoteMultiColumnList(lb_MapListBox.List).GetSelectedMapIndex();
+    }
 
     if (MapIndex > -1)
     {
@@ -53,11 +58,7 @@ function bool UpdatePreview(GUIComponent Sender)
         LoadingMapRecord = class'CacheManager'.static.GetMapRecord(mMapName); //DH-Armored_La_Fueille_Advance
 
         lb_MapPreviewDesc.SetContent( LoadingMapRecord.Description );
-
-        // lb_MapPreviewDesc.SetContent(lb_MapDesc);
-        // i_MapPreview.SetVisibility( true);
     }
-    return true;
 }
 
 function SendVote(GUIComponent Sender)
@@ -103,8 +104,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                UpdatePreview(Sender);
-                // MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
             {
@@ -124,9 +124,9 @@ function SendVote(GUIComponent Sender)
             {
                 if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
                 {
-                    // UpdatePreview(Sender, MapIndex);
+                    UpdatePreview(Sender);
                 }
-                // MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
             {
@@ -184,7 +184,6 @@ defaultproperties
         HeaderColumnPerc(1)=0.20 // Allies
         HeaderColumnPerc(2)=0.20 // Type
         HeaderColumnPerc(3)=0.20 // Size
-        OnClick=InternalOnClick
         OnChange=UpdatePreview
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'

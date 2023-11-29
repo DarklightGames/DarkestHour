@@ -5,6 +5,12 @@
 
 class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
 
+function InitBaseList(GUIListBase ListBase)
+{
+    super.InitBaseList(ListBase);
+
+    ListBase.OnChange = OnChange;
+}
 function LoadList(VotingReplicationInfo LoadVRI)
 {
     local int i, g;
