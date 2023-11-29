@@ -126,6 +126,7 @@ var     localized string    CanReloadText;
 var     localized string    ConnectedObjectivesNotSecuredText;
 var     localized string    NeedsClearedText;
 var     localized string    BlackoutText;
+var     localized string    PlaceRallyPointText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -5671,7 +5672,7 @@ function DrawRallyPointStatus(Canvas C)
             break;
         case ERROR_None:
             ErrorIcon = default.RallyPointIconKey;
-            ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor("Press [%PLACERALLYPOINT%]", PC);
+            ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.PlaceRallyPointText, PC);
             break;
         default:
             break;
@@ -5984,6 +5985,7 @@ defaultproperties
     NeedReloadText="Needs reloading"
     CanReloadText="Press %THROWMGAMMO% to assist reload"
     TeamMessagePrefix="[TEAM] "
+    PlaceRallyPointText="Press [%PLACERALLYPOINT%]"
 
     // Deploying text
     JoinTeamText="Press [ESC] to join a team"
