@@ -2,11 +2,31 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Exaust positions
+// [ ] Add the hatch to the MG position
+// [ ] MG position animations
+// [ ] Figure out what to do to get both machine guns working (effects & projectiles, seprate firing & reloading?)
+// [ ] Gunsight overlay texture
+// [ ] Destroyed mesh
+// [ ] Figure out how to draw the high res interior mesh while in the MG position
+// [ ] Hitpoints
+// [ ] Tweak vehicle handling & stats
+// [ ] Armor values (WOLFkraut)
+// [ ] Destroyed tread mesh
+// [ ] Finalize texture
+// [ ] Add camo variants
+// [ ] Collision meshes (body & turret)
+// [ ] Fix camera limits
+// [ ] Driver & gunner player animations
+// [ ] Levers
+//==============================================================================
 
 class DH_CV33MGPawn extends DHVehicleMGPawn;
 
 function bool CanFire()
 {
+    // Ugly, but this stops the gun from firing and uses the normal CameraBone on other positions.
+    // TODO: Having these two concepts tied together is dumb, perhaps we can fix this in the future.
     return DriverPositionIndex == 0;
 }
 
@@ -17,8 +37,9 @@ defaultproperties
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bDrawOverlays=true,bExposed=false)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bExposed=true)
+    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bExposed=false)
     UnbuttonedPositionIndex=1
     bDrawDriverInTP=true
     DriveRot=(Pitch=0,Roll=0,Yaw=16384)
