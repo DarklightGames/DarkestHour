@@ -122,10 +122,6 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                if (MDB.GetMapInfo(MVRI.MapList[MapIndex].MapName, MI))
-                {
-                    UpdatePreview(Sender);
-                }
                 MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
             else
@@ -202,6 +198,7 @@ defaultproperties
         WinHeight=0.26752
         bBoundToParent=true
         bScaleToParent=true
+        OnChange=UpdatePreview
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
