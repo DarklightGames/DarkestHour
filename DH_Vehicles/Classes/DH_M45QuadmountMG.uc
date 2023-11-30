@@ -6,9 +6,15 @@
 class DH_M45QuadmountMG extends DHVehicleMG;
 
 var     byte                        FiringBarrelIndex;        // barrel no. that is due to fire next, so SpawnProjectile() can get location of barrel bone
-var     name                        BarrelBones[4];           // bone names for 4 barrels
-var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
-var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
+
+struct DHBarrel
+{
+    var     name                        MuzzleBone;             // bone name for this barrel
+    var     WeaponAmbientEmitter        EffectEmitter;          // separate emitter for this barrel, for muzzle flash & ejected shell cases
+    var     class<WeaponAmbientEmitter> EffectEmitterClass;     // class for the barrel firing effect emitters
+};
+
+var array<DHBarrel> Barrels;
 
 // Modified to reduce the allowed gun depression if mounted on an M16 halftrack, to stop it shooting its own vehicle
 // Using this little hack just saves having separate M16 MG & MG pawn classes just for this
@@ -33,7 +39,7 @@ function Fire(Controller C)
     TracerBarrelIndex = VolleysFired % TracerFrequency;
 
     // Spawn a projectile from each barrel
-    for (FiringBarrelIndex = 0; FiringBarrelIndex < arraycount(BarrelBones); ++FiringBarrelIndex)
+    for (FiringBarrelIndex = 0; FiringBarrelIndex < Barrels.Length; ++FiringBarrelIndex)
     {
         if (FiringBarrelIndex == TracerBarrelIndex) // spawn tracer bullet if this barrel is the one that's due to fire a tracer
         {
@@ -53,7 +59,7 @@ function Fire(Controller C)
 // Modified to get the firing location for the barrel that is next to fire
 function vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
-    return GetBoneCoords(BarrelBones[FiringBarrelIndex]).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
+    return GetBoneCoords(Barrels[FiringBarrelIndex].MuzzleBone).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
 }
 
 // Modified to pass damage on to vehicle base, same as a vehicle cannon
@@ -79,32 +85,35 @@ simulated function InitEffects()
 
     super.InitEffects();
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode == NM_DedicatedServer)
     {
-        for (i = 0; i < arraycount(BarrelBones); ++i)
+        return;
+    }
+
+    for (i = 0; i < Barrels.Length; ++i)
+    {
+        if (Barrels[i].EffectEmitter == none && Barrels[i].EffectEmitterClass != none)
         {
-            if (BarrelEffectEmitter[i] == none && BarrelEffectEmitterClass != none)
+            Barrels[i].EffectEmitter = Spawn(Barrels[i].EffectEmitterClass, self);
+
+            if (Barrels[i].EffectEmitter != none)
             {
-                BarrelEffectEmitter[i] = Spawn(BarrelEffectEmitterClass, self);
+                AttachToBone(Barrels[i].EffectEmitter, Barrels[i].MuzzleBone);
 
-                if (BarrelEffectEmitter[i] != none)
+                Barrels[i].EffectEmitter.SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
+
+                // A little hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
+                if (i == 0 || i == 2) // left side guns
                 {
-                    AttachToBone(BarrelEffectEmitter[i], BarrelBones[i]);
-                    BarrelEffectEmitter[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
-
-                    // A little hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
-                    if (i == 0 || i == 2) // left side guns
-                    {
-                        BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, 4.0, 2.0);
-                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = 0.0;
-                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 10.0;
-                    }
-                    else // right side guns
-                    {
-                        BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, -4.0, 2.0);
-                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = -10.0;
-                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 0.0;
-                    }
+                    Barrels[i].EffectEmitter.Emitters[0].StartLocationOffset = vect(-77.0, 4.0, 2.0);
+                    Barrels[i].EffectEmitter.Emitters[0].StartVelocityRange.Y.Min = 0.0;
+                    Barrels[i].EffectEmitter.Emitters[0].StartVelocityRange.Y.Max = 10.0;
+                }
+                else // right side guns
+                {
+                    Barrels[i].EffectEmitter.Emitters[0].StartLocationOffset = vect(-77.0, -4.0, 2.0);
+                    Barrels[i].EffectEmitter.Emitters[0].StartVelocityRange.Y.Min = -10.0;
+                    Barrels[i].EffectEmitter.Emitters[0].StartVelocityRange.Y.Max = 0.0;
                 }
             }
         }
@@ -120,11 +129,11 @@ simulated function DestroyEffects()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < arraycount(BarrelEffectEmitter); ++i)
+        for (i = 0; i < Barrels.Length; ++i)
         {
-            if (BarrelEffectEmitter[i] != none)
+            if (Barrels[i].EffectEmitter != none)
             {
-                BarrelEffectEmitter[i].Destroy();
+                Barrels[i].EffectEmitter.Destroy();
             }
         }
     }
@@ -173,16 +182,17 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel_TL" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
-    BarrelBones(0)="Barrel_TL"
-    BarrelBones(1)="Barrel_TR"
-    BarrelBones(2)="Barrel_BL"
-    BarrelBones(3)="Barrel_BR"
+
+    Barrels(0)=(MuzzleBone="Barrel_TL",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
+    Barrels(1)=(MuzzleBone="Barrel_TR",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
+    Barrels(2)=(MuzzleBone="Barrel_BL",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
+    Barrels(3)=(MuzzleBone="Barrel_BR",EffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter')
+
     WeaponFireOffset=0.0
     bDoOffsetTrace=false
 
     // Firing effects
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_M45QuadmountEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
-    BarrelEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'      // this is the real emitter class
     FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0

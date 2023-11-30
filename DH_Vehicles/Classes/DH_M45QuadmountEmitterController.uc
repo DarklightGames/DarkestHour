@@ -18,11 +18,11 @@ simulated function SetEmitterStatus(bool bEnabled)
 
     if (M45 != none)
     {
-        for (i = 0; i < arraycount(M45.BarrelEffectEmitter); ++i)
+        for (i = 0; i < M45.Barrels.Length; ++i)
         {
-            if (M45.BarrelEffectEmitter[i] != none)
+            if (M45.Barrels[i].EffectEmitter != none)
             {
-                M45.BarrelEffectEmitter[i].SetEmitterStatus(bEnabled);
+                M45.Barrels[i].EffectEmitter.SetEmitterStatus(bEnabled);
             }
         }
     }
