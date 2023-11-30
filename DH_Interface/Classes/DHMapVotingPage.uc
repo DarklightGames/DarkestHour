@@ -14,7 +14,7 @@ var automated GUIImage  i_MapPreviewImage;
 
 var automated GUIScrollTextBox lb_MapPreviewDesc;
 
-var CacheManager.MapRecord LoadingMapRecord;
+var CacheManager.MapRecord mapRecord;
 
 
 function InternalOnOpen()
@@ -51,13 +51,12 @@ function UpdatePreview(GUIComponent Sender)
 
     if (MapIndex > -1)
     {
-        i_MapPreviewImage.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
-        l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
-
         mMapName = class'DHMapDatabase'.static.GetMapNameForCache(MVRI.MapList[MapIndex].MapName);
-        LoadingMapRecord = class'CacheManager'.static.GetMapRecord(mMapName); //DH-Armored_La_Fueille_Advance
+        mapRecord = class'CacheManager'.static.GetMapRecord(mMapName); //DH-Armored_La_Fueille_Advance
 
-        lb_MapPreviewDesc.SetContent( LoadingMapRecord.Description );
+        i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
+        l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
+        lb_MapPreviewDesc.SetContent( mapRecord.Description );
     }
 }
 
