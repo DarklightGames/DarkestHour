@@ -108,6 +108,7 @@ simulated function string StripPrefix(string S)
 simulated function SetImage()
 {
     local Material M;
+    local string mMapName;
 
     M = Material'MenuBlack';
 
@@ -117,11 +118,19 @@ simulated function SetImage()
 
     if (M == none)
     {
-        M = DLOTexture(Backgrounds[0]);
+        mMapName = class'DHMapDatabase'.static.GetMapNameForCache(MapName);
 
-        // If using default background, the borders should be blacked out
-        DrawOpImage(Operations[1]).Image = Material'MenuBlack';
-        DrawOpImage(Operations[2]).Image = Material'MenuBlack';
+        //Use Preview image as a backup instead
+        M = Material(DynamicLoadObject(LoadingMapRecord.ScreenshotRef, class'Material'));
+
+        if (M == none)
+        {
+            M = DLOTexture(Backgrounds[0]);
+
+            // If using default background, the borders should be blacked out
+            DrawOpImage(Operations[1]).Image = Material'MenuBlack';
+            DrawOpImage(Operations[2]).Image = Material'MenuBlack';
+        }
     }
     else
     {
