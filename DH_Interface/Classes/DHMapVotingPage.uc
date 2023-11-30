@@ -38,7 +38,8 @@ function bool AlignBK(Canvas C)
 function UpdatePreview(GUIComponent Sender)
 {
     local int MapIndex;
-    local string mMapName;
+    local string MapName;
+    local string MapDesc;
 
     if (Sender == lb_VoteCountListBox.List)
     {
@@ -51,18 +52,23 @@ function UpdatePreview(GUIComponent Sender)
 
     if (MapIndex > -1)
     {
-        mMapName = class'DHMapDatabase'.static.GetMapNameForCache(MVRI.MapList[MapIndex].MapName);
-        mapRecord = class'CacheManager'.static.GetMapRecord(mMapName); //DH-Armored_La_Fueille_Advance
 
-        i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
-
-        if (i_MapPreviewImage.Image == none)
-        {
-            i_MapPreviewImage.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
-        }
+        MapName = class'DHMapDatabase'.static.GetMapNameForCache(MVRI.MapList[MapIndex].MapName);
+        mapRecord = class'CacheManager'.static.GetMapRecord(MapName); //DH-Armored_La_Fueille_Advance
 
         l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
-        lb_MapPreviewDesc.SetContent( mapRecord.Description );
+        i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
+        MapDesc = mapRecord.Description;
+
+        if (MapDesc != "")
+        {
+            lb_MapPreviewDesc.SetContent(MapDesc);
+        }
+        else
+        {
+            lb_MapPreviewDesc.SetContent("No description available.");
+
+        }
     }
 }
 
@@ -109,7 +115,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex, GameConfigIndex);
             }
             else
             {
@@ -127,7 +133,7 @@ function SendVote(GUIComponent Sender)
 
             if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
-                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+                MVRI.SendMapVote(MapIndex, GameConfigIndex);
             }
             else
             {
