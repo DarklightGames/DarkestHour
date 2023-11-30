@@ -55,6 +55,12 @@ function UpdatePreview(GUIComponent Sender)
         mapRecord = class'CacheManager'.static.GetMapRecord(mMapName); //DH-Armored_La_Fueille_Advance
 
         i_MapPreviewImage.Image = Material(DynamicLoadObject(mapRecord.ScreenshotRef, class'Material'));
+
+        if (i_MapPreviewImage.Image == none)
+        {
+            i_MapPreviewImage.Image = material(DynamicLoadObject(MVRI.MapList[MapIndex].MapName $ ".GUI.LoadingScreen", class'Material'));
+        }
+
         l_MapPreviewName.Caption = class'DHMapDatabase'.static.GetHumanReadableMapName(MVRI.MapList[MapIndex].MapName);
         lb_MapPreviewDesc.SetContent( mapRecord.Description );
     }
