@@ -550,8 +550,6 @@ function PlayFiring()
 
                 if (W != none)
                 {
-                    Log("unmuting slide driver");
-
                     // If the weapon has a slide, unmute the slide animation driver
                     // so that the slide locks back after the last round is fired.
                     W.UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
