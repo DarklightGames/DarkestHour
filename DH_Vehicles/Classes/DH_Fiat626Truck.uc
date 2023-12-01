@@ -3,8 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Engine Sounds (Napoleon)
-// [ ] Destroyed mesh
-// [ ] Color/camo variants (finalize the camo variant)
 // [ ] Supply Cache for Italians (needs a bone etc.)
 // [ ] Add hitpoint for the supply cache on the support version
 //==============================================================================
@@ -106,7 +104,7 @@ defaultproperties
     // Effects
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'    // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_Fiat626_stc.Destroyed.fiat626_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
