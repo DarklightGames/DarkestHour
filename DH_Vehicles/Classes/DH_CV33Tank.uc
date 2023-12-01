@@ -2,10 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [~] Collision meshes (body & turret)
 // [~] MG position animations
-// [ ] Fix orientation of the mesh/armature
-// [ ] Steering levers
+// [ ] turret collision meshes
+// [ ] collision attachments for hatches
 // [ ] Fix camera limits
 // [ ] Gunsight overlay texture
 // [ ] Destroyed mesh
@@ -21,6 +20,7 @@
 // [ ] Don't allow reloading of the MG if turned out
 // [ ] UI elements (clock &  spawn menu icon)
 // [ ] tweak reloading of the MG to account for double MG
+// [ ] engine, track, MG sounds
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -140,9 +140,10 @@ defaultproperties
     // Exhaust
     ExhaustPipes(0)=(ExhaustPosition=(X=-91.0,Y=34.0,Z=47.0),ExhaustRotation=(Pitch=32768))
     ExhaustPipes(1)=(ExhaustPosition=(X=-91.0,Y=-34.0,Z=47.0),ExhaustRotation=(Pitch=32768))
-    
-    // Steering
-    SteerBoneName="Steering"
+
+    // Levers
+    LeftLeverBoneName="LEVER_L"
+    RightLeverBoneName="LEVER_R"
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'   // REPLACE
