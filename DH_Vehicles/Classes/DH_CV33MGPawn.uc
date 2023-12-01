@@ -39,8 +39,8 @@ defaultproperties
     bHideMuzzleFlashAboveSights=true
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'
 
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
-    GunsightSize=0.381 // 18 degrees visible FOV at 1.8x magnification (KFZ2 sight)
+    GunsightOverlay=Texture'DH_CV33_tex.cv33_gunsight'
+    GunsightSize=0.6
 
     GunsightCameraBone="GUNSIGHT_CAMERA"
     CameraBone="GUNNER_CAMERA"
