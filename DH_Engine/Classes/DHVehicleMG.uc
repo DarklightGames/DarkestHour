@@ -246,6 +246,23 @@ simulated function DestroyBarrelEffects()
     }
 }
 
+// Modified to pass damage on to vehicle base, same as a vehicle cannon
+// TODO: should we just put this in the base class?
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
+
+    if (Base != none)
+    {
+        if (DamageType.default.bDelayedDamage && InstigatedBy != none)
+        {
+            Base.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
+        }
+
+        Base.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
+}
+
 defaultproperties
 {
     // Movement
@@ -284,4 +301,8 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
+
+    // Collision Attachments
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_pitch_collision',AttachBone="mg_pitch")
 }

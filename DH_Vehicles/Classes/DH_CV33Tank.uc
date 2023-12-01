@@ -3,8 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [~] MG position animations
-// [ ] turret collision meshes
-// [ ] collision attachments for hatches
 // [ ] Fix camera limits
 // [ ] Gunsight overlay texture
 // [ ] Destroyed mesh
@@ -181,6 +179,10 @@ defaultproperties
 
     // Shadow
     ShadowZOffset=20.0
+
+    // Collision Attachments
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_hatch_collision',AttachBone="hatch")
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_vision_port_collision',AttachBone="vision_port")
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering

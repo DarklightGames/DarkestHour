@@ -39,4 +39,18 @@ defaultproperties
     Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter')    // TODO: replace emitter with a correctly timed one
     Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter')
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleMGMultiBarrelEmitterController'
+
+    // Collision
+    // NOTE: Normally on vehicle MGs, these values are not set, but the CV33 has a collision mesh
+    //      that is not the same as the visual mesh, so we need to set these values because the
+    //      collision mesh actors use the collision settings of the weapon.
+    bCollideActors=true
+    bBlockActors=true
+    bProjTarget=true
+    bBlockNonZeroExtentTraces=true
+    bBlockZeroExtentTraces=true
+
+    // Collision Attachments
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_pitch_collision',AttachBone="mg_pitch")
 }
