@@ -2,6 +2,26 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [~] Collision meshes (body & turret)
+// [~] MG position animations
+// [ ] Fix orientation of the mesh/armature
+// [ ] Steering levers
+// [ ] Fix camera limits
+// [ ] Gunsight overlay texture
+// [ ] Destroyed mesh
+// [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
+// [ ] Tweak vehicle handling & stats
+// [ ] Armor values (WOLFkraut)
+// [ ] Destroyed tread mesh
+// [ ] Finalize texture (Red)
+// [ ] Add camo variants
+// [ ] Driver & gunner player animations (waiting on finalized interior, especially for gunner)
+// [ ] Fix bug where MG hatch stays open after swapping positions
+// [ ] hatch opening/closing sounds in the animations
+// [ ] Don't allow reloading of the MG if turned out
+// [ ] UI elements (clock &  spawn menu icon)
+// [ ] tweak reloading of the MG to account for double MG
+//==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
 
@@ -36,7 +56,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=false)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_vision_open",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
-    DriveAnim="VUC_driver_idle_close"
+    DriveAnim="cv33_driver_closed_idle"
     PlayerCameraBone="camera_driver"
 
     // Movement
@@ -62,8 +82,8 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.05
     DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=2.0
-    VehHitpoints(0)=(PointRadius=25.0,PointBone="body",PointOffset=(X=-5.0,Y=-3.0,Z=20.0),DamageMultiplier=2.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=12.0,PointBone="body",PointOffset=(X=-50.0,Y=-28.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_AmmoStore) // fuel tank
+
+    VehHitpoints(0)=(PointRadius=24.0,PointBone="ENGINE",DamageMultiplier=1.0,HitPointType=HP_Engine)
 
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
@@ -103,9 +123,9 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
     StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
     ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
-    //LeftTrackSoundBone="Wheel_T_L_3"  // REPLACE
+    LeftTrackSoundBone="TRACK_L"
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    //RightTrackSoundBone="Wheel_T_R_3" // REPLACE
+    RightTrackSoundBone="TRACK_R"
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
 
@@ -118,8 +138,8 @@ defaultproperties
     WheelRotationScale=40000.0
 
     // Exhaust
-    ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-91.0,Y=34.0,Z=47.0),ExhaustRotation=(Pitch=32768))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-91.0,Y=-34.0,Z=47.0),ExhaustRotation=(Pitch=32768))
     
     // Steering
     SteerBoneName="Steering"

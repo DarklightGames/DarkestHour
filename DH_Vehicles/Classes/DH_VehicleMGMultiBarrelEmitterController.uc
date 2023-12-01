@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_M45QuadmountEmitterController extends WeaponAmbientEmitter;
+class DH_VehicleMGMultiBarrelEmitterController extends WeaponAmbientEmitter;
 
 // Modified so this class acts as a master controller for 4 separate BarrelEffectEmitters
 // Necessary as appears that AmbientEffectEmitter is only disabled for non-owning net clients by VehicleWeapon's native PostNetReceive() event (from zeroed FlashCount)
@@ -11,18 +11,18 @@ class DH_M45QuadmountEmitterController extends WeaponAmbientEmitter;
 // But if we spawn this actor as a master controller, the native functionality will work on this class & we'll use this to control the real emitters
 simulated function SetEmitterStatus(bool bEnabled)
 {
-    local DH_M45QuadmountMG M45;
-    local int               i;
+    local DHVehicleMG   MG;
+    local int           i;
 
-    M45 = DH_M45QuadmountMG(Owner);
+    MG = DHVehicleMG(Owner);
 
-    if (M45 != none)
+    if (MG != none)
     {
-        for (i = 0; i < M45.Barrels.Length; ++i)
+        for (i = 0; i < MG.Barrels.Length; ++i)
         {
-            if (M45.Barrels[i].EffectEmitter != none)
+            if (MG.Barrels[i].EffectEmitter != none)
             {
-                M45.Barrels[i].EffectEmitter.SetEmitterStatus(bEnabled);
+                MG.Barrels[i].EffectEmitter.SetEmitterStatus(bEnabled);
             }
         }
     }
