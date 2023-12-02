@@ -2,23 +2,32 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [~] MG position animations
-// [ ] Fix camera limits
-// [ ] Gunsight overlay texture
-// [ ] Destroyed mesh
-// [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
+// CV33 Tank
+//
+// Code
 // [ ] Tweak vehicle handling & stats
+// [ ] Tweak reloading of the MG to account for double MG
+// [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
+// [ ] Engine, track, MG sounds
+// [ ] Fix camera limits
 // [ ] Armor values (WOLFkraut)
-// [ ] Destroyed tread mesh
-// [ ] Finalize texture (Red)
-// [ ] Add camo variants
+//
+// Bugs
+// [ ] MG hatch stays open after swapping positions
+//
+// Audio (Colin)
+// [ ] Hatch opening/closing sounds in the animations
+//
+// Art (Colin)
+// [~] MG position animations
 // [ ] Driver & gunner player animations (waiting on finalized interior, especially for gunner)
-// [ ] Fix bug where MG hatch stays open after swapping positions
-// [ ] hatch opening/closing sounds in the animations
-// [ ] Don't allow reloading of the MG if turned out
 // [ ] UI elements (clock &  spawn menu icon)
-// [ ] tweak reloading of the MG to account for double MG
-// [ ] engine, track, MG sounds
+//
+// Art (Red)
+// [ ] Finalize texturing
+// [ ] Destroyed mesh
+// [ ] Destroyed tread mesh
+// [ ] Camo variants
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -51,8 +60,8 @@ defaultproperties
 
     // Driver
     InitialPositionIndex=1
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=false)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_vision_open",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_vision_open",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=8192,ViewPitchDownLimit=59000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriveAnim="cv33_driver_closed_idle"
     PlayerCameraBone="camera_driver"
