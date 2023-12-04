@@ -10,6 +10,8 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext'
 
+    BeginningIdleAnim="cv33_turret_idle_close"
+
     FireAttachBone="GUN"
     FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // TODO: replace, put it on the hatch
 
