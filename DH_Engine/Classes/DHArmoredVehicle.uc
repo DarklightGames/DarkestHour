@@ -6,10 +6,6 @@
 class DHArmoredVehicle extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-
 struct ArmorSection
 {
     var     float   Thickness;         // in cm
