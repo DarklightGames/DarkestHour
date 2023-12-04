@@ -25,10 +25,11 @@ defaultproperties
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="cv33_turret_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,bDrawOverlays=true)
+    // All positions are exposed because the driver may have his hatch open.
+    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',DriverTransitionAnim="VUC_com_close",bExposed=true,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="cv33_turret_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,bDrawOverlays=true)
     UnbuttonedPositionIndex=2
     BinocPositionIndex=3
     bDrawDriverInTP=true
