@@ -2291,6 +2291,15 @@ simulated function bool IsRadioman()
     return RI != none && RI.bCarriesRadio;
 }
 
+simulated function bool IsLogisticCrew()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(GetRoleInfo());
+
+    return RI != none && RI.bIsLogiCrew;
+}
+
 function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, class<ROCriticalMessage> Message, int MessageIndex, optional Object OptionalObject)
 {
     local int                     TeamIndex, SquadIndex;
@@ -6469,6 +6478,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     else if (PRI.bIsSquadAssistant)
     {
         MenuClassName = "DH_Engine.DHCommandMenu_SquadAssistant";
+        return true;
+    }
+    else if (PRI.IsLogisticCrew())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_SquadLogisticCrew";
         return true;
     }
     else if (!PRI.IsInSquad())
