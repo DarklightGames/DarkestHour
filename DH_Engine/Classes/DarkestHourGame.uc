@@ -6,6 +6,8 @@
 class DarkestHourGame extends ROTeamGame
   dependson(DHActorProxy);
 
+#exec OBJ LOAD FILE=../Textures/DH_VehiclesGE_tex2.utx
+
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;

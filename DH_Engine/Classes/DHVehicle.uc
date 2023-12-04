@@ -8,8 +8,6 @@
 class DHVehicle extends ROWheeledVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
-
 // Structs
 struct PassengerPawn
 {
@@ -202,6 +200,8 @@ var struct SSteeringAnimation
 
 // Debugging
 var     bool        bDebuggingText;
+
+var Sound BuzzSound;
 
 replication
 {
@@ -2109,7 +2109,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Inform the instigator they are doing something wrong
                 if (PlayerController(InstigatorController) != none)
                 {
-                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
+                    PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
                 }
 
                 // If no one has ever entered the vehicle, then don't allow team damage
@@ -4401,4 +4401,6 @@ defaultproperties
 
     //bDebuggingText=true
     ResupplyInterval=2.5
+
+    BuzzSound=Sound'DHMenuSounds.BuzzBuzz'
 }
