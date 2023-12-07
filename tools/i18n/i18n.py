@@ -1,330 +1,147 @@
+import glob
 import os
-import re
-import sys
-import argparse
-import ConfigParser
-from collections import OrderedDict
-from xlsxwriter import Workbook
-from xlsxwriter.utility import xl_rowcol_to_cell
-from openpyxl import load_workbook
-from openpyxl.utils import get_column_letter
+from configparser import RawConfigParser
+from pathlib import Path
 
-# TODO: handle an array with object-like items
-# TODO: this array parsing code is a god damned mess. either clean this up or use PLY or some other tokenizer.
-def parse_array(s, i):
-    if s[i] != '(':
-        raise RuntimeError('invalid array syntax')
-    i += 1
-    items = []
-    while True:
-        r = parse_array_item(s, i)
-        if r is None:
-            print('Array parse failure for in string "{}"'.format(s))
-            break
-        i, item = r
-        items.append(item)
-        if s[i] == ',':
-            i += 1
-            while s[i] == ',':
-                i += 1
-                items.append('')
-            if s[i] == ')':
-                # end of list
-                break
-            continue
-        for j, c in enumerate(s[i:]):
-            # skip whitespace
-            if c != ' ':
-                i += j
-                break
-        if s[i] == ')':
-            # end of the list
-            break
-        i += 1
-    return items
+from parsimonious.exceptions import IncompleteParseError
+from parsimonious.grammar import Grammar
+from parsimonious.nodes import NodeVisitor
+
+grammar = Grammar(
+    """
+    value = string / name / array / struct
+    string = ~'"[^\"]+"'
+    name = ~"[A-Z_0-9]+"i
+    comma = ","
+    empty_value = ","
+    array_values = (comma / value)*
+    array = "(" array_values? ")"
+    struct_key = ~"[A-Z0-9]*"i
+    struct_value = struct_key '=' value
+    struct_values = struct_value (',' struct_value)* 
+    struct = '(' struct_values? ')'
+    """
+)
 
 
-def parse_array_item(s, i):
-    if s[i] == '\"':
-        i += 1
-        st = ''
-        j = 0
-        for j, c in enumerate(s[i:]):
-            if c == '\"':
-                # string ended, break out
-                break
-            else:
-                st += c
-        return i + j + 1, st
-    elif s[i] == '(':
-        # TODO: parse structure
-        # return len(s) - 1, s[i + 1:]
-        return None
-    else:
+class ValueVisitor(NodeVisitor):
+
+    def visit_value(self, node, visited_children):
+        return visited_children[0]
+
+    def visit_name(self, node, visited_children):
+        return node.text
+
+    def visit_comma(self, node, visited_children):
         return None
 
-def read_localization_file(sections, language, path):
-    config = ConfigParser.ConfigParser()
+    def visit_array_values(self, node, visited_children):
+        values = []
+        last_value = None
+        for child in visited_children:
+            value = child[0]
+            if value is None:   # comma
+                values.append(last_value)
+            last_value = value
+        values.append(last_value)
+        return values
+
+    def visit_array(self, node, visited_children):
+        if len(visited_children) == 3:
+            return visited_children[1][0]
+        return []
+
+    def visit_struct(self, node, visited_children):
+        if len(visited_children) == 3:
+            return visited_children[1][0]
+        return dict()
+
+    def visit_string(self, node, visited_children):
+        return node.text.lstrip('"').rstrip('"')
+
+    def visit_struct_value(self, node, visited_children):
+        return (visited_children[0], visited_children[2])
+
+    def visit_struct_values(self, node, visited_children):
+        struct_values = []
+        struct_values.append(visited_children[0])
+        for child in visited_children[1]:
+            struct_values.append(child[1])
+        return {k: v for k, v in struct_values}
+
+    def visit_struct_key(self, node, visited_children):
+        return node.text
+
+    def generic_visit(self, node, visited_children):
+        return visited_children or node
+
+
+dir = r'C:\dev\RedOrchestra\DarkestHourDev\System'
+
+count = 0
+
+for path in glob.glob(os.path.join(dir, '*.int')):
+
+    print(path)
+
+    config = RawConfigParser()
     config.optionxform = str
     config.read(path)
-    # iterate over sections
-    for section_name in config.sections():
-        # add section if it doesn't already exist
-        if section_name not in sections:
-            sections[section_name] = OrderedDict()
-        section = sections[section_name]
-        # add key if it doesn't already exist
-        for item in config.items(section_name):
-            key, value = item
-            if key not in section:
-                section[key] = dict()
-            # update key language value
-            match = re.match(r'^\"(.+)\"$', value)
-            if match is not None:
-                value = [match.group(1)]
-            else:
-                match = re.match(r'^\((.+)\)$', value)
-                # TODO: split these
-                if match is None:
-                    pass
-                else:
-                    value = parse_array(value, 0)
-            if value is not None:
-                values = section[key]
-                values[language] = value
-    return sections
 
+    basename = os.path.basename(path)
+    filename = os.path.splitext(basename)[0]
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('dir', default='.', help='root directory')
-    parser.add_argument('-mod', required=True, help='mod name')
-    parser.add_argument('-digest', action='store_true', required=False, default=False)  # TODO: turn into options
-    parser.add_argument('-output', action='store_true', required=False, default=False)
-    args = parser.parse_args()
+    contents = ''
+    contents += "msgid \"\"\n"
+    contents += "msgstr \"\"\n"
+    contents += "\"Language: en\"\n"
+    contents += "\"MIME-Version: 1.0\"\n"
+    contents += "\"Content-Type: text/plain\"\n"
+    contents += "\"Content-Transfer-Encoding: 8bit\"\n"
+    contents += "\n"
 
-    '''
-    # do a clean recompile of the project and run dumpint
-    if subprocess.call(['python', os.path.join(args.dir, 'tools', 'make', 'make.py'), '-dumpint', '-clean', '-mod', 'DarkestHourDev', args.dir]) != 0:
-        raise RuntimeError
-    '''
+    key_value_pairs = []
 
-    args.dir = os.path.abspath(args.dir)
+    for section in config.sections():
+        for key in config[section]:
 
-    if not os.path.isdir(args.dir):
-        print('error: "{}" is not a directory'.format(args.dir))
-        sys.exit(1)
+            value = config[section][key]
 
-    # system directory
-    sys_dir = os.path.join(args.dir, 'System')
+            visitor = ValueVisitor()
+            try:
+                value = visitor.visit(grammar.parse(value))
+            except IncompleteParseError:
+                print('IncompleteParseError', value)
+                print(value)
+                continue
 
-    if not os.path.isdir(sys_dir):
-        print('error: could not resolve System directory')
-        sys.exit(1)
+            id = f'{section}.{key}'
 
-    # mod directory
-    mod_dir = os.path.join(args.dir, args.mod)
+            def add_key_value_pairs_recursive(id, value):
+                if type(value) == str:
+                    key_value_pairs.append((id, value))
+                elif type(value) == list:
+                    for i, item in enumerate(value):
+                        add_key_value_pairs_recursive(f'{id}[{i}]', item)
+                elif type(value) == dict:
+                    for k, v in value.items():
+                        id =f'{id}.{k}'
+                        add_key_value_pairs_recursive(id, v)
 
-    if not os.path.isdir(mod_dir):
-        print('error: could not resolve mod directory')
-        sys.exit(1)
+            add_key_value_pairs_recursive(id, value)
 
-    # mod system directory
-    mod_sys_dir = os.path.join(mod_dir, 'System')
+    count += len(key_value_pairs)
 
-    if not os.path.isdir(mod_sys_dir):
-        print('error could not resolve mod system directory')
-        sys.exit(1)
+    for key, value in key_value_pairs:
+        contents += f'msgid "{key}"\n'
+        contents += f'msgstr "{value}"\n'
+        contents += '\n'
 
-    workbook_name = '.'.join([args.mod, 'xlsx'])
+    # Encode to UTF-8
+    contents = contents.encode('utf-8')
 
-    if args.output:
-        # TODO: write to mod folder
-        workbook = Workbook(workbook_name)
+    # Write the file with the name {filename}.en.po
+    os.makedirs(filename, exist_ok=True)
 
-        # TODO: set up formats
-        section_format = workbook.add_format({'bg_color': '#808080', 'font_color': '#ffffff'})
-        value_format = workbook.add_format({'text_wrap': True})
-        languages_format = workbook.add_format({'locked': True, 'bg_color': '#000000', 'font_color': '#ffffff', 'bold': True})
-        key_format = workbook.add_format({'locked': True, 'bold': True, 'bg_color': '#c0c0c0'})
-        int_value_format = workbook.add_format({'bg_color': '#ffffe0', 'text_wrap': True})
-        no_data_format = workbook.add_format({'bg_color': '#ffcccb', 'text_wrap': True})
-        data_format = workbook.add_format({'bg_color': '#ccffcb', 'text_wrap': True})
-
-        # read i18n configuration file
-        with open(os.path.join(mod_dir, '.i18n')) as f:
-            languages = f.read().splitlines()
-
-        default_language = languages[0]
-
-        # gather default language files
-        packages = filter(lambda x: x.endswith('.{0}'.format(default_language)), os.listdir(mod_sys_dir))
-        for package in packages:
-            # read localization files
-            sections = OrderedDict()
-            for language in languages:
-                path = os.path.join(mod_sys_dir, os.path.splitext(package)[0] + '.' + language)
-                sections = read_localization_file(sections, language, path)
-            # strip sections files down
-            sections_to_remove = []
-            for section in sections.keys():
-                # go through keys
-                keys_to_delete = []
-                for key in sections[section].keys():
-                    values = sections[section][key]
-                    if default_language not in values.keys():
-                        keys_to_delete.append(key)
-                for key in keys_to_delete:
-                    del sections[section][key]
-                if len(sections[section]) == 0:
-                    sections_to_remove.append(section)
-            for section in sections_to_remove:
-                del sections[section]
-
-            worksheet = workbook.add_worksheet(os.path.splitext(package)[0])
-            worksheet.freeze_panes(1, 0)
-            worksheet.freeze_panes(0, 2)
-            worksheet.set_column('A:A', 32)
-            worksheet.set_column('B:Z', 64, value_format)
-            col = 1
-            # TODO: go through all the languages, write them starting at column 2
-            for lang in languages:
-                worksheet.write(0, col, lang, languages_format)
-                col += 1
-            row = 1
-            for section in sections.keys():
-                col = 0
-                worksheet.set_row(row, None, section_format)
-                worksheet.write(row, col, section)
-                row += 1
-                for key in sections[section].keys():
-                    col = 0
-                    # TODO: split into multiple records depending on formatting
-                    if default_language in sections[section][key].keys():
-                        # write the key name
-                        worksheet.write(row, col, key, key_format)
-
-                        # TODO; go through through the values of the BASE one, iterate row, do look-ups (left-to-right) for other languages
-                        for i, value in enumerate(sections[section][key][default_language]):
-                            col = 1
-                            worksheet.write(row, col, value.decode('cp1252'), int_value_format)
-                            for language in languages[1:]:
-                                col += 1
-                                if language not in sections[section][key]:
-                                    # TODO: no value, mark red
-                                    pass
-                                else:
-                                    vals = sections[section][key][language]
-                                    if i >= 0 and i < len(vals):
-                                        worksheet.write(row, col, vals[i].decode('cp1252'))
-                                cell = xl_rowcol_to_cell(row, col)
-                                worksheet.conditional_format(cell, {'type': 'blanks', 'format': no_data_format})
-                                worksheet.conditional_format(cell, {'type': 'no_blanks', 'format': data_format})
-                            row += 1
-        workbook.close()
-
-    if args.digest:
-        print('Loading workbook {0}...'.format(workbook_name))
-
-        workbook = load_workbook(workbook_name)
-
-        print('Workbook loaded!')
-
-        for sheet_name in workbook.get_sheet_names():
-            sheet = workbook.get_sheet_by_name(sheet_name)
-            # gather up languages in the file
-            col = 2
-            row = 1
-            languages = []
-            while True:
-                cell = '{0}{1}'.format(get_column_letter(col), row)
-                if sheet[cell].value is None:
-                    break
-                languages.append(sheet[cell].value)
-                col += 1
-            # TODO: go down the rows, find the first section:
-            # sections are ones where the first column is filled, but there's nothing in the `int` column
-            row += 1
-            sections = OrderedDict()
-            section = None
-            key = None
-            while True:
-                cell = 'A{0}'.format(row)
-                cell2 = 'B{0}'.format(row)
-                if sheet[cell].value is None and sheet[cell2].value is None:
-                    # EOF, basically
-                    break
-                if sheet[cell].value is not None and sheet[cell2].value is None:
-                    # new section, add it!
-                    section = OrderedDict()
-                    sections[sheet[cell].value] = section
-                else:
-                    # we got a key/value row on our hands here
-                    if sheet[cell].value is not None:
-                        key = sheet[cell].value
-                    col = 2
-                    for language in languages:
-                        # go searching for the translations across the rows, do a look-up for the cell
-                        cell = '{0}{1}'.format(get_column_letter(col), row)
-                        if key not in section:
-                            # add key to section
-                            section[key] = dict()
-                        if language not in section[key]:
-                            section[key][language] = list()
-
-                        value = sheet[cell].value
-                        section[key][language].append(value)
-                        col += 1
-                row += 1
-            # now write out translations to their respective files
-            for language in languages[1:]:
-                file_path = os.path.join(mod_sys_dir, sheet_name + '.' + language)
-                with open(file_path, 'wb') as f:
-                    # iterate over each section
-                    for section_name in sections.keys():
-                        # we keep a list of key-value pairs to write out, we can query
-                        # the length of the list later on and decide whether to write
-                        # the section out at all
-                        key_values = []
-                        for key in sections[section_name].keys():
-                            # make sure present language has anything for this key
-                            if language in sections[section_name][key]:
-                                # fetch the translated values
-                                values = sections[section_name][key][language]
-                                # fetch the original values
-                                original_values = sections[section_name][key]['int']    # TODO: remove magic string
-                                # check length of values, parse depending on size
-                                if len(values) == 1 and values[0] is not None:
-                                    key_values.append((key, '"' + match_whitespace(original_values[0], values[0]).encode('cp1252') + '"'))
-                                else:
-                                    # trasform the values to string representations; `None`s become empty strings
-                                    strings = map(lambda x: '"' + x.encode('cp1252') + '"' if x is not None else '', values)
-                                    # trim rightside of empty strings, as it is redundant to write out joining commas for empty values
-                                    j = -1
-                                    for i in xrange(len(strings) - 1, -1, -1):
-                                        if strings[i] != '':
-                                            j = i
-                                            break
-                                    strings = strings[0:j + 1]
-                                    if len(strings) > 0:
-                                        key_values.append((key, '(' + ','.join(strings) + ')'))
-                        if len(key_values) == 0:
-                            continue
-                        f.write('[{0}]\r\n'.format(section_name))
-                        for key, value in key_values:
-                            f.write('{0}={1}\r\n'.format(key, value))
-                        f.write('\r\n')
-                if os.stat(file_path).st_size == 0:
-                    os.remove(file_path)
-
-
-def match_whitespace(original, translated):
-    trailing = len(original) - len(original.lstrip(' '))
-    if len(original.strip(' ')) > 0:
-        leading = len(original) - len(original.rstrip(' '))
-    else:
-        leading = 0
-    return (' ' * trailing) + translated.strip(' ') + (' ' * leading)
-
-if __name__ == "__main__":
-    main()
+    with open(Path(f'{filename}/{filename}.en.po'), 'wb') as file:
+        file.write(contents)
