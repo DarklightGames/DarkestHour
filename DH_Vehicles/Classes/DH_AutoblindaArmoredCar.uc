@@ -17,8 +17,7 @@ defaultproperties
     ReinforcementCost=3
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
-    //Mesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext'
+    Mesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext'
     // Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Autoblinda_body_dunk'
     // Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Autoblinda_wheels_dunk'
     // Skins(2)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Autoblinda_extras_dunk'
@@ -27,16 +26,16 @@ defaultproperties
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
-    //PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Autoblinda',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
     // PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=80.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     // PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
     // PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     // PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
     UnbuttonedPositionIndex=3 // can't unbutton, no exit hatch for driver
     DrivePos=(X=4.0,Y=-2.0,Z=0.0)
     DriveAnim="VBA64_driver_idle_close"
@@ -139,97 +138,55 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
 
     // Physics wheels
-    Begin Object Class=SVehicleWheel Name=RFWheel
+    Begin Object Class=SVehicleWheel Name=FRWheel
         SteerType=VST_Steered
-        BoneName="wheel_FR"
+        BoneName="WHEEL_F_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=11.0)
+        //BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        SupportBoneName="Axel_RF"
-        SupportBoneAxis=AXIS_X
+        //SupportBoneName="Axel_RF"
+        //SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.RFWheel'
-    Begin Object Class=SVehicleWheel Name=LFWheel
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FRWheel'
+    Begin Object Class=SVehicleWheel Name=FLWheel
         SteerType=VST_Steered
-        BoneName="wheel_FL"
+        BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-11.0)
+        // BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        SupportBoneName="Axel_LF"
-        SupportBoneAxis=AXIS_X
+        //SupportBoneName="Axel_LF"
+        //SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.LFWheel'
-    Begin Object Class=SVehicleWheel Name=MFRWheel
-        bPoweredWheel=true
-        BoneName="Wheel_R_1"
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FLWheel'
+    Begin Object Class=SVehicleWheel Name=BRWheel
+        SteerType=VST_Inverted
+        BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=11.0)
+        // BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        SupportBoneName="Axel_R_1"
-        SupportBoneAxis=AXIS_X
+        //SupportBoneName="Axel_RF"
+        //SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.MFRWheel'
-    Begin Object Class=SVehicleWheel Name=MFLWheel
-        bPoweredWheel=true
-        BoneName="Wheel_L_1"
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BRWheel'
+    Begin Object Class=SVehicleWheel Name=BLWheel
+        SteerType=VST_Inverted
+        BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-11.0)
+        //BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        SupportBoneName="Axel_L_1"
-        SupportBoneAxis=AXIS_X
+        //SupportBoneName="Axel_LF"
+        //SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.MFLWheel'
-    Begin Object Class=SVehicleWheel Name=MRRWheel
-        bPoweredWheel=true
-        BoneName="Wheel_R_2"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=11.0)
-        WheelRadius=32.0
-        SupportBoneName="Axel_R_2"
-        SupportBoneAxis=AXIS_X
-    End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.MRRWheel'
-    Begin Object Class=SVehicleWheel Name=MRLWheel
-        bPoweredWheel=true
-        BoneName="Wheel_L_2"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-11.0)
-        WheelRadius=32.0
-        SupportBoneName="Axel_R_2"
-        SupportBoneAxis=AXIS_X
-        bLeftTrack=true
-    End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.MRLWheel'
-    Begin Object Class=SVehicleWheel Name=RRWheel
-        bPoweredWheel=true
-        BoneName="wheel_RR"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=11.0)
-        WheelRadius=32.0
-        SupportBoneName="Axel_RR"
-        SupportBoneAxis=AXIS_X
-    End Object
-    Wheels(6)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.RRWheel'
-    Begin Object Class=SVehicleWheel Name=RLWheel
-        bPoweredWheel=true
-        BoneName="Wheel_RL"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-11.0)
-        WheelRadius=32.0
-        SupportBoneName="Axel_LR"
-        SupportBoneAxis=AXIS_X
-        bLeftTrack=true
-    End Object
-    Wheels(7)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.RLWheel'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BLWheel'
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.3 // default is 1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.3,Z=-0.525) // default is X=0.0, Z=-0.5
+        KCOMOffset=(X=0.0,Z=0.65)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -243,4 +200,6 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_AutoblindaArmoredCar.KParams0'
+
+    ShadowZOffset=40.0
 }

@@ -9,7 +9,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Autoblinda 41"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Autoblinda41CannonPawn',WeaponBone="turret_placement")
+    //PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Autoblinda41CannonPawn',WeaponBone="turret_placement")
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_dest'   // TODO: replace
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_look'
