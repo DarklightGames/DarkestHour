@@ -13,7 +13,7 @@ defaultproperties
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false
-    VehicleMass=5.0
+    VehicleMass=4.0
     ReinforcementCost=3
 
     // Hull mesh
@@ -27,18 +27,20 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
+    // TODO: add some cool passengers
     // PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=80.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     // PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
     // PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     // PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
-    UnbuttonedPositionIndex=3 // can't unbutton, no exit hatch for driver
-    DrivePos=(X=4.0,Y=-2.0,Z=0.0)
-    DriveAnim="VBA64_driver_idle_close"
+    UnbuttonedPositionIndex=3 // can't unbutton, no exit hatch for driver (maybe the side doors???)
+    DrivePos=(Z=58.0)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VBA64_driver_idle_close" // default driver anim
 
     // Hull armor   // TODO: get all this
     FrontArmor(0)=(Thickness=3.0,Slope=-41.0,MaxRelativeHeight=40.0,LocationName="lower nose") // assumed 30mm to all front & 8mm elsewhere; measured all the slopes in the hull mesh
@@ -76,6 +78,7 @@ defaultproperties
     SteerSpeed=75.0
     TurnDamping=100.0
 
+    // TODO: revisit all of hte damage stuff
     // Damage
 	// pros: diesel fuel; 20mm ammo is very unlikely to detonate;
 	// 4 men crew
@@ -88,8 +91,8 @@ defaultproperties
 	PlayerFireDamagePer2Secs=12.0 // reduced from 15 for all diesels
     FireDetonationChance=0.045  //reduced from 0.07 for all diesels
     DisintegrationHealth=-1200.0 //diesel
-    VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="engine",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    // TODO: add ammo store hitpoint
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-150.0,Y=0.0,Z=65.0)
     DriverKillChance=900.0
@@ -112,9 +115,7 @@ defaultproperties
     ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
 
     // Visual effects
-    // TODO: replace this
-    ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=-68.0,Z=45.0),ExhaustRotation=(Pitch=36000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=69.0,Z=45.0),ExhaustRotation=(Pitch=36000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-140.85,Y=50.59,Z=33.88),ExhaustRotation=(Roll=0,Pitch=4354,Yaw=23546))
     SteerBoneName="steering_wheel"
     SteeringScaleFactor=2.0
 

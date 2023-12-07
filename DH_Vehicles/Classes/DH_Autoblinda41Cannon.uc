@@ -8,9 +8,9 @@ class DH_Autoblinda41Cannon extends DHVehicleCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll')
+    Mesh=SkeletalMesh'DH_Autoblinda_anm.ab41_turret_ext'
+    //Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
+    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll')
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor
@@ -55,15 +55,6 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     TracerFrequency=7
 
-    // Smoke launcher
-    SmokeLauncherClass=class'DH_Vehicles.DH_ExternalSmokeCandleDischarger'
-    SmokeLauncherFireOffset(0)=(X=38.0,Y=-39.0,Z=35.0)
-    SmokeLauncherFireOffset(1)=(X=38.0,Y=37.0,Z=35.0)
-    SmokeLauncherFireOffset(2)=(X=37.0,Y=-45.0,Z=29.0)
-    SmokeLauncherFireOffset(3)=(X=37.0,Y=43.0,Z=29.0)
-    SmokeLauncherFireOffset(4)=(X=40.0,Y=-46.0,Z=23.0)
-    SmokeLauncherFireOffset(5)=(X=40.0,Y=44.0,Z=23.0)
-
     // Weapon fire
     WeaponFireOffset=-2.0
     AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
@@ -100,4 +91,7 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
+
+    YawBone="gun_yaw"
+    PitchBone="gun_pitch"
 }
