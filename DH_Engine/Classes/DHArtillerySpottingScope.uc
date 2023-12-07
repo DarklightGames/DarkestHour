@@ -118,9 +118,10 @@ struct STargetWidgetLayout
 
 var     STargetWidgetLayout TargetWidgetLayout;
 
-var     string              TargetToggleHint;
-var     string              SelectTargetHint;
-var     string              NoTargetsHint;
+var     localized string    TargetToggleHint;
+var     localized string    SelectTargetHint;
+var     localized string    NoTargetsHint;
+var     string              ToggleButtonText;
 
 function CreateRenderTable(Canvas C)
 {
@@ -619,6 +620,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
     {
         // The player hasn't chosen anything from the available requests
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+        Label = Repl(Label, "{0}", ToggleButtonText);
         // Flash the label to get the player's attention
         LabelColor = class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
     }
@@ -628,6 +630,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         {
             // The player has selected an available marker but there are more to toggle between
             Label = Repl(TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+            Label = Repl(Label, "{0}", ToggleButtonText);
             LabelColor = class'UColor'.default.Green;
         }
         else
@@ -1061,8 +1064,9 @@ defaultproperties
     Red=(R=255,G=0,B=0,A=255)
 
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
-    TargetToggleHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets"
-    SelectTargetHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
+    TargetToggleHint="Press {0} to toggle between artillery targets"
+    SelectTargetHint="Press {0} to select an artillery target"
+    ToggleButtonText="[%TOGGLESELECTEDARTILLERYTARGET%]"
     NoTargetsHint="No targets available"
 
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees

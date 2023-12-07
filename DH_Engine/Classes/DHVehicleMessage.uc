@@ -34,6 +34,8 @@ var localized string UnbuttonToReload;
 var localized string VehicleScuttleInitiated;
 var localized string UnbuttonHatchToChangePosition;
 
+var string NextWeaponButtonString;
+
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
@@ -60,7 +62,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
 //      case 6, 7 & 8 LEFT SPARE
         case 9:
-            S = default.OpenHatchToExit;
+            S = Repl(default.OpenHatchToExit, "{0}", default.NextWeaponButtonString);
             break;
         case 10:
             S = default.ExitCommandersHatch;
@@ -76,7 +78,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
 //      case 14 & 15 LEFT SPARE
         case 16:
-            S = default.UnbuttonToReload;
+            S = Repl(default.UnbuttonToReload, "{0}", default.NextWeaponButtonString);
             break;
 //      case 17, 18 & 19 LEFT SPARE
         case 20:
@@ -110,7 +112,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.VehicleScuttleInitiated;
             break;
         case 30:
-            S = default.UnbuttonHatchToChangePosition;
+            S = Repl(default.UnbuttonHatchToChangePosition, "{0}", default.NextWeaponButtonString);
             break;
         default:
             break;
@@ -133,13 +135,13 @@ defaultproperties
     AllRiderPositionsFull="All rider positions are occupied"
     NoRiderPositions="Cannot ride on this vehicle"
     VehicleBurning="Vehicle is on fire!"
-    OpenHatchToExit="You must unbutton the hatch [%NEXTWEAPON%] to exit"
-    UnbuttonHatchToChangePosition="You must unbutton the hatch [%NEXTWEAPON%] to change position"
+    OpenHatchToExit="You must unbutton the hatch {0} to exit"
+    UnbuttonHatchToChangePosition="You must unbutton the hatch {0} to change position"
     ExitCommandersHatch="You must exit through commander's hatch"
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
     CantFindExitPosition="No exit location can be found"
-    UnbuttonToReload="You must unbutton the hatch [%NEXTWEAPON%] to reload"
+    UnbuttonToReload="You must unbutton the hatch {0} to reload"
     VehicleNowLocked="Tank crew positions in this vehicle have now been locked"
     VehicleNowUnlocked="Tank crew positions in this vehicle have now been unlocked"
     AbandonedVehicleUnlocked="You left your locked vehicle for too long and it's now unlocked"
@@ -150,4 +152,6 @@ defaultproperties
     CanOnlyLockFromCrewPosition="Can only lock or unlock vehicle if you are in a tank crew position"
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
     VehicleScuttleInitiated="currently deprecated"
+
+    NextWeaponButtonString="[%NEXTWEAPON%]"
 }
