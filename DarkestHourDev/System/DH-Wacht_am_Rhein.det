@@ -5,32 +5,32 @@ AxisUnitDescription="Von: HQ 6. Panzer-Armee||An: 1. Panzerdivision ||Erstellen 
 AlliesUnitDescription="Von: HQ XVIII Airborne Corps||An: CG 7th US Armored Division||Große Einheiten der 6. Panzer-Armee formieren sich südlich von Ihrer Position bei Bois de Bellevaux.||Rechnen Sie mit einem unmittelbar bevorstehenden Angriff. Es gibt im Moment keine Luftunterstützung.||Verteidigen Sie unsere Hauptnachschublinie nördlich von Ihrer Position; Sie müssen die Linie halten oder viele unserer Divisionen werden vom bereits geringen Nachschub abgeschnitten.||Sie haben Artillerieunterstützung von höchster Priorität.||Viel Glück!"
 
 [DH_ObjTerritory0]
-objName="B3 "Bois de Stalons""
+objName="B3 'Bois de Stalons'"
 AttackerDescription="Position einnehmen B3"
 DefenderDescription="Position verteidigen B3"
 
 [DH_ObjTerritory1]
-objName="A1 "Sur la Bouheye""
+objName="A1 'Sur la Bouheye'"
 AttackerDescription="Position einnehmen A1"
 DefenderDescription="Position verteidigen A1"
 
 [DH_ObjTerritory2]
-objName="B1 "l'Abreuvoir""
+objName="B1 'l'Abreuvoir'"
 AttackerDescription="Position einnehmen B1"
 DefenderDescription="Position verteidigen B1"
 
 [DH_ObjTerritory3]
-objName="B2 "Bois de Bassenge, Ost""
+objName="B2 'Bois de Bassenge, Ost'"
 AttackerDescription="Position einnehmen B2"
 DefenderDescription="Position verteidigen B2"
 
 [DH_ObjTerritory4]
-objName="A2 "Bois de Bassenge, West""
+objName="A2 'Bois de Bassenge, West'"
 AttackerDescription="Position einnehmen A2"
 DefenderDescription="Position verteidigen A2"
 
 [DH_ObjTerritory5]
-objName="A3 "Trou du Ruy""
+objName="A3 'Trou du Ruy'"
 AttackerDescription="Position einnehmen A3"
 DefenderDescription="Position verteidigen A3"
 

@@ -2,7 +2,7 @@
 Axis.UnitName="1. Bataillon, Fallschirmjäger-Regiment 6"
 Allies.UnitName="506th PIR, 101st Airborne Division"
 AxisUnitDescription="An: Bn. 1, Fallschirmjägerregiment 6||Von: HQ Fallschirmjägerregiment 6||Achtung: Weiterhin Meldungen über amerikanische Fallschirmjäger Aktivität in Ihrem Gebiet. Angriffe feindlicher Infanterie sind möglich.||Ihre Einheit ist verantwortlich für die Sicherheit der Kanonenstellungen des 90. Infantrieregiments. Es ist äußerst wichtig das diese Kanonen intakt bleiben, da sie für den Widerstand gegen die Invasion dringend benötigt werden.||Halten Sie die Stellung!"
-AlliesUnitDescription="An: CO, E Company||Von: 2nd Bn., 506th PIR||"Entlang den Hecken haben wir Kanonenfeuer gesichtet. Kümmern Sie sich darum! "
+AlliesUnitDescription="An: CO, E Company||Von: 2nd Bn., 506th PIR||Entlang den Hecken haben wir Kanonenfeuer gesichtet. Kümmern Sie sich darum!"
 
 [DH_ObjSatchel0]
 objName="Kanone1"

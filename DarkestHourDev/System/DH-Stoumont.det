@@ -7,8 +7,8 @@ Message="Die 2. Welle der Panzer ist angekommen"
 [DH_LevelInfo0]
 Axis.UnitName="KG Peiper, unterstützt von einer Einheit FJR 6"
 Allies.UnitName="30th ID, 119th Regiment, 3rd Battalion"
-AxisUnitDescription="Von: Kampfgruppe Peiper||An: HQ||"Wir haben erfolgreich La Gleize und Cheneux eingenommen und müssen nun Stoumont nehmen. Es gibt Zeichen dafür, dass die Amerikaner die Stoumont verteidigen nicht sonderlich gut vorbereitet sind.||Wir werden mit aller Wucht und Schnelligkeit ihre Verteidigungen durchbrechen. Nichts wird uns aufhalten!""
-AlliesUnitDescription="Von: 3rd Bn., 119th Infantry Regt.||An: HQ 30th US Infantry Division||"Flüchtende Soldaten erzählen von einer großen deutschen Einheit die im Wald zwischen Stoumont und La Gleize die Nacht verbracht hat.||Es ist nur eine Frage der Zeit bevor sie ihren Angriff starten. Wir sind auf solch eine Attacke nicht vorbereitet und müssen die Stellung halten bis Panzerunterstützung eintrifft."||Maj. McCowen"
+AxisUnitDescription="Von: Kampfgruppe Peiper||An: HQ||'Wir haben erfolgreich La Gleize und Cheneux eingenommen und müssen nun Stoumont nehmen. Es gibt Zeichen dafür, dass die Amerikaner die Stoumont verteidigen nicht sonderlich gut vorbereitet sind.||Wir werden mit aller Wucht und Schnelligkeit ihre Verteidigungen durchbrechen. Nichts wird uns aufhalten!'"
+AlliesUnitDescription="Von: 3rd Bn., 119th Infantry Regt.||An: HQ 30th US Infantry Division||'Flüchtende Soldaten erzählen von einer großen deutschen Einheit die im Wald zwischen Stoumont und La Gleize die Nacht verbracht hat.||Es ist nur eine Frage der Zeit bevor sie ihren Angriff starten. Wir sind auf solch eine Attacke nicht vorbereitet und müssen die Stellung halten bis Panzerunterstützung eintrifft.'||Maj. McCowen"
 
 [DH_ObjTerritory0]
 objName="Emile Servais Bauernhof"

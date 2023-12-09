@@ -2,7 +2,7 @@
 Axis.UnitName="352. Infanteriedivision"
 Allies.UnitName="US 2nd Ranger Battalion."
 AxisUnitDescription="Von: 1. Kompanie, Füsilier Bataillon||An: HQ 352. Infanteriedivision||Einheiten der amerikanischen 29. Infanteriedivision stoßen in bataillonstärke weiterhin in Richtung unseres Sektors vor.||Wir haben bestätigte Berichte von Sichtungen von Rangereinheiten, die sich in Richtung der Stellungen Gletchers bewegen; es wurden jedoch keine Panzer ausgemacht. Feindliche Einheiten befinden sich jetzt weniger als 1km entfernt.||Kontakt mit dem Feind steht unmittelbar bevor."
-AlliesUnitDescription="Von: HQ 29th US Infantry Division||An: 2nd US Ranger Battalion||"Verstanden, machen Sie weiter und führen Sie den Vorstoß der Division auf St. Lo an. Nehmen Sie Hügel 108 ein.||Viel Glück!"
+AlliesUnitDescription="Von: HQ 29th US Infantry Division||An: 2nd US Ranger Battalion||Verstanden, machen Sie weiter und führen Sie den Vorstoß der Division auf St. Lo an. Nehmen Sie Hügel 108 ein.||Viel Glück!"
 
 [DH_ObjTerritory0]
 objName="Der Bauernhof"

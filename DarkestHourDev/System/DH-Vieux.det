@@ -1,7 +1,7 @@
 [DH_LevelInfo2]
 Axis.UnitName="10. SS-Panzerdivision"
-AxisUnitDescription="Von: HQ II. Panzerkorps||An: HQ 10. Panzerdivision||Bilden sie sofort eine Kampfgruppe um die Brücken und strategischen Ortschaften entlang des Westufers des Orne Flusses auf der Vieux-Haut-Maltot Linie zu sichern.|Wir erwarten eine große feindliche Panzereinheit aus dem Nordwesten.|Sie werden den Alliierten die Benutzung der Brücken mit aller Macht verweigern.|Um die britischen Panzer in der Region ein für allemal auszuschalten werden Sie Kontrolle über eine große Anzahl der Reserveeinheiten des Panzerkorps erhalten. Benutzen Sie diese gewissenhaft und überlegt!"
-AlliesUnitDescription="Von: HQ 12th Corps||An: OC 7th Armoured Division||Nehmen und halten Sie die Brücken entlang des Westufers des Orne Flusses zwischen Pont de Orne und Pont Guigne.|Desweiteren werden Sie die Dörfer in der Gegend südlich von Ihrer Ausgangsposition Richtung Vieux einnehmen und sichern.||Vernichten Sie alle Feindeinheiten denen Sie begegnen. Sie erhalten Artillerieunterstützung von höchster Priorität.|Dies sollte Ihnen von Nutzen sein, da wie von der Aufklärung Informationen erhalten haben die schwere Feindpanzer in der Gegend vermuten lassen.|Rechnen Sie mit hartnäckigen Widerstand der deutschen Truppen, insbesondere deren Panzereinheiten.|Nutzen Sie das Gelände als Deckung so gut es geht und machen Sie Gebrauch von der Artillerie wenn nötig. Viel Glück!"
+AxisUnitDescription="Von: HQ II. Panzerkorps||An: HQ 10. Panzerdivision||Bilden sie sofort eine Kampfgruppe um die Brï¿½cken und strategischen Ortschaften entlang des Westufers des Orne Flusses auf der Vieux-Haut-Maltot Linie zu sichern.|Wir erwarten eine groï¿½e feindliche Panzereinheit aus dem Nordwesten.|Sie werden den Alliierten die Benutzung der Brï¿½cken mit aller Macht verweigern.|Um die britischen Panzer in der Region ein fï¿½r allemal auszuschalten werden Sie Kontrolle ï¿½ber eine groï¿½e Anzahl der Reserveeinheiten des Panzerkorps erhalten. Benutzen Sie diese gewissenhaft und ï¿½berlegt!"
+AlliesUnitDescription="Von: HQ 12th Corps||An: OC 7th Armoured Division||Nehmen und halten Sie die Brï¿½cken entlang des Westufers des Orne Flusses zwischen Pont de Orne und Pont Guigne.|Desweiteren werden Sie die Dï¿½rfer in der Gegend sï¿½dlich von Ihrer Ausgangsposition Richtung Vieux einnehmen und sichern.||Vernichten Sie alle Feindeinheiten denen Sie begegnen. Sie erhalten Artillerieunterstï¿½tzung von hï¿½chster Prioritï¿½t.|Dies sollte Ihnen von Nutzen sein, da wie von der Aufklï¿½rung Informationen erhalten haben die schwere Feindpanzer in der Gegend vermuten lassen.|Rechnen Sie mit hartnï¿½ckigen Widerstand der deutschen Truppen, insbesondere deren Panzereinheiten.|Nutzen Sie das Gelï¿½nde als Deckung so gut es geht und machen Sie Gebrauch von der Artillerie wenn nï¿½tig. Viel Glï¿½ck!"
 
 [DH_ObjTerritory0]
 objName="Maltot"
@@ -15,9 +15,9 @@ AttackerDescription="Hauptziel Route de Caen"
 DefenderDescription="Hauptziel Route de Caen"
 
 [DH_ObjTerritory2]
-objName="Hügel 102"
-AttackerDescription="Hauptziel Hügel 102"
-DefenderDescription="Hauptziel Hügel 102"
+objName="Hï¿½gel 102"
+AttackerDescription="Hauptziel Hï¿½gel 102"
+DefenderDescription="Hauptziel Hï¿½gel 102"
 
 [DH_ObjTerritory3]
 objName="Route des Colleville"
@@ -26,8 +26,8 @@ DefenderDescription="Hauptziel Colleville"
 
 [DH_ObjTerritory4]
 objName="Pont de Orne"
-AttackerDescription="Hauptziel Orne Brücke"
-DefenderDescription="Hauptziel Orne Brücke"
+AttackerDescription="Hauptziel Orne Brï¿½cke"
+DefenderDescription="Hauptziel Orne Brï¿½cke"
 
 [DH_ObjTerritory5]
 objName="Ford"
@@ -54,4 +54,4 @@ Title="Vieux"
 
 [LevelSummary]
 Title="Vieux"
-Description="This is a fictional "What-if?" scenario.||It allows us to fight a meeting engagement between the very best equipped heavy tank forces from the British Army and the PanzerWaffe. Set in the Summer days following the successful establishment of the beacheads of D-Day, the question is: Which force can wrest control of this important supply route in the French countryside?||Expect to be firing at distances ranging anywhere from over a kilometre down to "Point Blank". The side that best understands the strengths and weaknesses of their equipment will be the likely winner."
+Description="This is a fictional 'what-if?' scenario.||It allows us to fight a meeting engagement between the very best equipped heavy tank forces from the British Army and the PanzerWaffe. Set in the Summer days following the successful establishment of the beacheads of D-Day, the question is: Which force can wrest control of this important supply route in the French countryside?||Expect to be firing at distances ranging anywhere from over a kilometre down to 'point blank'. The side that best understands the strengths and weaknesses of their equipment will be the likely winner."

@@ -7,7 +7,7 @@ MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_12thSSAssault]
 MyName="Stosstrupp"
@@ -18,7 +18,7 @@ InfoText="Stosstrupp - Schwierigkeitsgrad: Einfach||Die Deutschen benutzten sowo
 
 [DH_12thSSCombatEngineer]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
@@ -155,7 +155,7 @@ MyName="Fallschirmjäger Stosstrupp"
 AltName="FJ Stosstrupp"
 Article="ein "
 PluralName="Fallschirmjäger Stosstrupps"
-InfoText="Fallschirmjäger Stosstrupp"Schwierigkeitsgrad: Einfach||Die Deutschen benutzten sowohl normale Infanterie als auch Pioniere im Stosstrupp. Die Hauptaufgabe eines Stosstrupps lag darin, stark verteidigte Feindstellungen einzunehmen. Ihre Ausrüstung erlaubt es ihnen, starkes Feuer aus mittlerer Entfernung zu eröffnen, obwohl der Stosstrupp gerade in dieser Reichweite potentiell verwundbar ist. Dies war einer der Gründe für die Einführung des Sturmgewehrs, mit seiner Kombination aus Reichweite und Feuerkraft."
+InfoText="Fallschirmjäger Stosstrupp - Schwierigkeitsgrad: Einfach||Die Deutschen benutzten sowohl normale Infanterie als auch Pioniere im Stosstrupp. Die Hauptaufgabe eines Stosstrupps lag darin, stark verteidigte Feindstellungen einzunehmen. Ihre Ausrüstung erlaubt es ihnen, starkes Feuer aus mittlerer Entfernung zu eröffnen, obwohl der Stosstrupp gerade in dieser Reichweite potentiell verwundbar ist. Dies war einer der Gründe für die Einführung des Sturmgewehrs, mit seiner Kombination aus Reichweite und Feuerkraft."
 
 [DH_FJCombatEngineer]
 MyName="Fallschirmjäger Sturmpionier"
@@ -253,28 +253,28 @@ MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WHAntiTankC]
 MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WHAntiTank_Autumn]
 MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WHAntiTank_Snow]
 MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WHArtilleryGunner]
 MyName="Artillerie Schütze"
@@ -320,28 +320,28 @@ InfoText="Stosstrupp - Schwierigkeitsgrad: Einfach||Die Deutschen benutzten sowo
 
 [DH_WHCombatEngineer]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
 
 [DH_WHCombatEngineerC]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
 
 [DH_WHCombatEngineer_Autumn]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
 
 [DH_WHCombatEngineer_Snow]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
@@ -548,7 +548,7 @@ MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WKGunner]
 MyName="MG-Schütze"
@@ -591,21 +591,21 @@ MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WSSAntiTank_Autumn]
 MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WSSAntiTank_Snow]
 MyName="Panzerabwehrsoldat"
 AltName="PaK-Soldat"
 Article="ein "
 PluralName="Panzerabwehrsoldaten"
-InfoText="="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
+InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Der Panzerschreck wurde von den Deutschen basierend auf den Entwürfen der amerikanischen Bazookas entwickelt. Mit ihrer 88mm Rakete war der Panzerschreck eine ernstzunehmende Bedrohung für alle alliierten Panzer."
 
 [DH_WSSAssault]
 MyName="Stosstrupp"
@@ -630,21 +630,21 @@ InfoText="Stosstrupp - Schwierigkeitsgrad: Einfach||Die Deutschen benutzten sowo
 
 [DH_WSSCombatEngineer]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
 
 [DH_WSSCombatEngineer_Autumn]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
 
 [DH_WSSCombatEngineer_Snow]
 MyName="Sturmpionier"
-AltName="Sturmpionier""
+AltName="Sturmpionier"
 Article="ein "
 PluralName="Sturmpioniere"
 InfoText="Sturmpionier - Schwierigkeitsgrad: Fortgeschritten||Pioniere waren Infanteriesoldaten die eine zusätzliche Konstrukteurausbildung erhalten haben. Pioniere unterstützten die Truppen mit dem Legen von Sprengsätzen und Minen, mit Angriffen auf stark befestigte Stellungen und dem Errichten von Fallen. Weiterhin halfen sie beim Finden und Bergen feindlicher Minen, dem Bau von Notbrücken und behelfsmäßigen Flußueberquerungsmöglichkeiten."
