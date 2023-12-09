@@ -2,6 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Hitpoints
+// [ ] Exit positions
+// [ ] Destroyed mesh
+// [ ] Armor values (wolfkraut)
+// [ ] Add proper turret (once completed)
+// [ ] Fix wheel suspension in the rig
+// [ ] Fix collision area for the driver's hatch on the body
+// [ ] Driver animations
+// [ ] UI elements
+// [ ] Set up projectiles for AB41 & 43
+// [ ] Calibrate range for shells
+//==============================================================================
 
 class DH_AutoblindaArmoredCar extends DHArmoredVehicle
     abstract;
@@ -26,7 +38,7 @@ defaultproperties
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
     // TODO: add some cool passengers
     // PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=80.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     // PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
@@ -116,8 +128,12 @@ defaultproperties
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.85,Y=50.59,Z=33.88),ExhaustRotation=(Roll=0,Pitch=4354,Yaw=23546))
+    ShadowZOffset=40.0
     SteerBoneName="steering_wheel"
     SteeringScaleFactor=2.0
+
+    // Collision Attachments
+    //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Autoblinda_stc.autoblinda_vision_port_collision',AttachBone=VISION_PORT)
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'  // TODO: replace all this
@@ -201,6 +217,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_AutoblindaArmoredCar.KParams0'
-
-    ShadowZOffset=40.0
 }

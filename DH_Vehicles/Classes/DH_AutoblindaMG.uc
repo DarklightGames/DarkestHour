@@ -35,4 +35,10 @@ defaultproperties
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 
     GunnerAttachmentBone="GUNNER_ATTACHMENT"
+
+    // Yaw and pitch limits
+    MaxNegativeYaw=29028
+    MaxPositiveYaw=36508
+    CustomPitchUpLimit=3640
+    CustomPitchDownLimit=61895
 }
