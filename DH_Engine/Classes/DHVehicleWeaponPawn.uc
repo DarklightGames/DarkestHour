@@ -2267,6 +2267,19 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
     }
 }
 
+// New debug exec to adjust the rotation limits for the gun. Note that this is not the same as the view limits, which are set by SetViewLimits().
+exec function SetRotationLimits(int MinNegYaw, int MaxPosYaw, int MinPitch, int MaxPitch)
+{
+    // If debug is allowed:
+    if (IsDebugModeAllowed())
+    {
+        Gun.MaxNegativeYaw = MinNegYaw;
+        Gun.MaxPositiveYaw = MaxPosYaw;
+        Gun.PitchUpLimit = MinPitch;
+        Gun.PitchDownLimit = MaxPitch;
+    }`
+}
+
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
