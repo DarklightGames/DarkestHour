@@ -5,7 +5,7 @@ from configparser import RawConfigParser
 from pathlib import Path
 from collections import OrderedDict
 import re
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import iso639
 
@@ -213,14 +213,17 @@ def po_to_unt(contents: str) -> str:
         else:
             raise Exception(f'Unknown type: {type(value)}')
 
+    lines = []
+
     for section_name, section in sections.items():
-        print(f'[{section_name}]')
+        lines.append(f'[{section_name}]')
 
         for key, value in section.items():
-            print(f'{key}={write_value(value)}')
+            lines.append(f'{key}={write_value(value)}')
 
-        print('')
+        lines.append('')
 
+    return '\n'.join(lines)
 
 def command_import(args):
     with open(args.input_path, 'r') as file:
@@ -246,7 +249,7 @@ def command_export(args):
 
     # Look up the language code in the ISO 639-1 table.
     try:
-        language = Language.from_part1(language_code)
+        Language.from_part1(language_code)
     except LanguageNotFoundError:
         print(f'Unknown language code {language_code} for file {basename}')
         return
@@ -261,30 +264,125 @@ def command_export(args):
         write_po(args.output_path, key_value_pairs, language_code)
 
 
-def command_export_directory(args):
+def get_language_from_unt_extension(extension: str) -> Optional[Language]:
+    # Make sure the extension is 4 characters long (e.g., ".int")
+    if len(extension) != 4:
+        raise LanguageNotFoundError(f'Invalid file extension "{extension}"')
+
+    # Get the first 2 characters of the extension and map it to an ISO 639-1 language code.
+    language_code = extension[1:3]
+
+    if language_code == 'in':
+        # Unreal Tournament uses "in" to mean "international", which in practice means English.
+        language_code = 'en'
+
+    # Look up the language code in the ISO 639-1 table.
+    return Language.from_part1(language_code)
+
+
+def command_import_directory(args):
+    """
+    Convert all .po files in a directory to Unreal translation files (.int, .det, etc.).
+    """
     input_path = args.input_path
 
-    for filename in glob.glob(f'{input_path}/*.*t'):
-        filename = os.path.relpath(filename, input_path)
+    # Make sure the input path is a directory.
+    if not os.path.isdir(input_path):
+        print(f'"{input_path}" is not a directory')
+        return
 
-        basename, extension = os.path.splitext(filename)
+    count = 0
+    pattern = f'{input_path}\\*\\*.po'
 
-        # Make sure the extension is 4 characters long (e.g., ".int")
-        if len(extension) != 4:
+    for filename in glob.glob(pattern, recursive=True):
+        basename = os.path.basename(filename)
+
+        # Get the language code from the filename.
+        regex = r'([^\.]+)\.([a-z]{2})\.po$'
+        match = re.search(regex, basename)
+
+        if match is None:
+            print(f'Failed to parse language code from filename "{basename}"')
             continue
 
-        # Get the first 2 characters of the extension and map it to an ISO 639-1 language code.
-        language_code = extension[1:3]
-
-        if language_code == 'in':
-            # Unreal Tournament uses "in" to mean "international", which in practice means English.
-            language_code = 'en'
+        basename = match.group(1)
+        language_code = match.group(2)
 
         # Look up the language code in the ISO 639-1 table.
         try:
             language = Language.from_part1(language_code)
         except LanguageNotFoundError:
             print(f'Unknown language code {language_code} for file {filename}')
+            continue
+
+        # Skip this file if the language code doesn't match the one we're looking for.
+        if args.language_code is not None and args.language_code != language_code:
+            if args.verbose:
+                print(f'Skipping {filename}, language code {language_code} does not match {args.language_code}')
+            continue
+
+        if language_code == 'en':
+            # In Unreal, English is "international", or "in".
+            language_code = 'in'
+
+        if args.verbose:
+            print(f'Processing {filename} - {language.name} ({language_code})')
+
+        input_filename = os.path.join(input_path, filename)
+
+        with open(input_filename, 'r', encoding='utf-8') as file:
+            try:
+                # Parse the Unreal translation file to a list of key-value pairs.
+                unt_contents = po_to_unt(file.read())
+            except RuntimeError as e:
+                print(f'Failed to parse file {filename}: {e}')
+                continue
+
+            output_path = args.output_path
+            output_path = output_path.replace('{l}', language_code)
+            output_path = output_path.replace('{f}', basename)
+
+            if not args.dry:
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+                if args.verbose:
+                    print(f'Writing to {output_path}')
+
+                # Note: we use utf-8-sig to write the file because Unreal Tournament expects the file to be encoded with
+                # utf-8 with a BOM (byte order mark).
+                with open(output_path, 'w', encoding='utf-8-sig') as output_file:
+                    output_file.write(unt_contents)
+
+                count += 1
+
+    print(f'Imported {count} file(s)')
+
+
+def command_export_directory(args):
+    input_path = args.input_path
+
+    # Make sure the input path is a directory.
+    if not os.path.isdir(input_path):
+        print(f'"{input_path}" is not a directory')
+        return
+
+    count = 0
+
+    for filename in glob.glob(f'{input_path}/*.*t'):
+        filename = os.path.relpath(filename, input_path)
+        basename, extension = os.path.splitext(filename)
+
+        # Look up the language code in the ISO 639-1 table.
+        try:
+            language = get_language_from_unt_extension(extension)
+        except LanguageNotFoundError:
+            print(f'Unknown language code {language_code} for file {filename}')
+            continue
+
+        # Skip this file if the language code doesn't match the one we're looking for.
+        if args.language_code is not None and args.language_code != language.part1:
+            if args.verbose:
+                print(f'Skipping {filename}, language code {language.part1} does not match {args.language_code}')
             continue
 
         if args.verbose:
@@ -294,6 +392,7 @@ def command_export_directory(args):
 
         with open(input_filename, 'r') as file:
             try:
+                # Parse the Unreal translation file to a list of key-value pairs.
                 key_value_pairs = parse_unt(file.read())
             except RuntimeError as e:
                 print(f'Failed to parse file {filename}: {e}')
@@ -306,12 +405,18 @@ def command_export_directory(args):
             output_path = output_path.replace('{l}', language.part1)
             output_path = output_path.replace('{f}', basename)
 
-            if args.verbose:
-                print(f'Writing to {os.path.abspath(output_path)}')
-
             if not args.dry:
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
-                write_po(output_path, key_value_pairs, language_code)
+
+                if args.verbose:
+                    print(f'Writing to {output_path}')
+
+                write_po(output_path, key_value_pairs, language.part1)
+
+                count += 1
+
+    print(f'Exported {count} file(s)')
+
 
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
@@ -345,6 +450,21 @@ export_directory_parser.add_argument('-l', '--language_code', help='The language
 export_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
 export_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 export_directory_parser.set_defaults(func=command_export_directory)
+
+import_directory_parser = subparsers.add_parser('import_directory', help='Import all .po files in a directory to Unreal Tournament translation files')
+import_directory_parser.add_argument('input_path',
+                                     help='The directory to search for .po files'
+                                     )
+import_directory_parser.add_argument('-o', '--output_path',
+                                        help='The pattern to use for the output path. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
+                                        default='{f}.{l}',
+                                        required=False
+                                        )
+import_directory_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+import_directory_parser.add_argument('-l', '--language_code', help='The language to import (ISO 639-1 codes)', required=False)
+import_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
+import_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
+import_directory_parser.set_defaults(func=command_import_directory)
 
 if __name__ == '__main__':
     args = argparse.parse_args()
