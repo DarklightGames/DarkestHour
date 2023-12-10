@@ -1,20 +1,16 @@
-import configparser
-import glob
-import os
-from configparser import RawConfigParser
-from pathlib import Path
-from collections import OrderedDict
-import re
-from typing import List, Tuple, Optional
-
-import iso639
-
 import argparse
+from configparser import RawConfigParser, MissingSectionHeaderError
+from collections import OrderedDict
+import glob
 
+import polib
 from iso639 import LanguageNotFoundError, Language
+import os
 from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
+import re
+from typing import List, Tuple, Optional
 
 
 def parse_unt(contents: str) -> List[Tuple[str, str]]:
@@ -96,7 +92,7 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
 
     try:
         config.read_string(contents)
-    except configparser.MissingSectionHeaderError as e:
+    except MissingSectionHeaderError as e:
         raise RuntimeError(f'Failed to parse file: {e}')
 
     key_value_pairs: List[Tuple[str, str]] = []
@@ -137,10 +133,10 @@ def write_po(path: str, key_value_pairs: list, language_code: str):
         lines = [
             "msgid \"\"",
             "msgstr \"\"",
-            f"\"Language: {language_code}\"",
-            "\"MIME-Version: 1.0\"",
-            "\"Content-Type: text/plain\"",
-            "\"Content-Transfer-Encoding: 8bit; charset=UTF-8\"",
+            f"\"Language: {language_code}\\n\"",
+            "\"MIME-Version: 1.0\\n\"",
+            "\"Content-Type: text/plain\\n\"",
+            "\"Content-Transfer-Encoding: 8bit; charset=UTF-8\\n\"",
             ""
         ]
 
@@ -358,6 +354,72 @@ def command_import_directory(args):
     print(f'Imported {count} file(s)')
 
 
+def update_keys(args, source_language_code: str = 'en'):
+    """
+    This function was made for the purpose of fixing the key format in the .po files for dynamic arrays.
+    In the original export, dynamic arrays were indistinguishable from static arrays, so re-ingested .po files would
+    result in the loss of dynamic array data.
+
+    This does a simple key substitution where it converts each msgid to a regex pattern, substituting square brackets
+    for angle brackets. Then, it searches for each pattern in the output file and replaces it with the updated msgid
+    from the input file.
+    """
+    input_directory = args.input_directory
+    output_directory = args.output_directory
+
+    # Read each .po file, recursively, in the input directory.
+    # Match it to a file in the output directory with the same relative path.
+    # Assume the order is the same, and update the msgid in the output file with the msgid in the input file.
+    input_glob_pathname = f'{input_directory}/**/*.{source_language_code}.po'
+
+    for input_filename in glob.glob(input_glob_pathname, recursive=True):
+        relative_input_filename = os.path.relpath(input_filename, input_directory)
+
+        # Get the base name of the file and separate out the language code.
+        basename = os.path.basename(input_filename)
+        regex = r'([^\.]+)\.([a-z]{2})\.po$'
+        match = re.search(regex, basename)
+        basename = match.group(1)
+
+        print(basename)
+
+        with open(input_filename, 'r') as input_file:
+            input_contents = input_file.read()
+            po = polib.pofile(input_contents)
+
+            # Turn each string into a regex pattern, and make it so that square and angle brackets are interchangeable.
+            msgid_patterns = list()
+            for entry in po:
+                pattern = entry.msgid.replace('<', '[').replace('>', ']')
+                pattern = re.escape(pattern).replace('\[', '[\[<]').replace('\]', '[\]>]')
+                # Surround the pattern with ^ and $ to make sure it matches the entire string.
+                pattern = f'^{pattern}$'
+                msgid_patterns.append((entry.msgid, pattern))
+
+            output_glob_pathname = f'{output_directory}/{basename}/{basename}.??.po'
+
+            # Iterate over each language file that matches the input file's relative path.
+            for output_filename in glob.glob(output_glob_pathname, recursive=True):
+                print(output_filename)
+                output_msgid_patterns = msgid_patterns.copy()
+                with open(output_filename, 'r', encoding='utf-8') as output_file:
+                    output_contents = output_file.read()
+                    output_po = polib.pofile(output_contents, encoding='utf-8')
+
+                for output_entry in output_po:
+                    for msgid_index, (msgid, pattern) in enumerate(output_msgid_patterns):
+                        match = re.match(pattern, output_entry.msgid)
+                        if msgid != output_entry.msgid and match:
+                            print(f'{output_entry.msgid} -> {msgid}')
+                            output_entry.msgid = msgid
+                            # Remove the pattern from the list so that we don't match it again.
+                            del output_msgid_patterns[msgid_index]
+                            break
+
+                if not args.dry:
+                    output_po.save(output_filename)
+
+
 def command_export_directory(args):
     input_path = args.input_path
 
@@ -376,7 +438,7 @@ def command_export_directory(args):
         try:
             language = get_language_from_unt_extension(extension)
         except LanguageNotFoundError:
-            print(f'Unknown language code {language_code} for file {filename}')
+            print(f'Unknown language code for file {filename}')
             continue
 
         # Skip this file if the language code doesn't match the one we're looking for.
@@ -465,6 +527,12 @@ import_directory_parser.add_argument('-l', '--language_code', help='The language
 import_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
 import_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 import_directory_parser.set_defaults(func=command_import_directory)
+
+update_keys_parser = subparsers.add_parser('update_keys', help='Update the keys in a directory of .po files to match the keys in another directory of .po files.')
+update_keys_parser.add_argument('input_directory', help='The directory to read the keys from.')
+update_keys_parser.add_argument('output_directory', help='The directory to write the keys to.')
+update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+update_keys_parser.set_defaults(func=update_keys)
 
 if __name__ == '__main__':
     args = argparse.parse_args()
