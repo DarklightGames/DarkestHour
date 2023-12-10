@@ -14,10 +14,10 @@ defaultproperties
     //  FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // positions fire on co-driver's hatch // TODO: replace
 
     // Movement
-    MaxPositiveYaw=2560 // +/- 20 degrees
-    MaxNegativeYaw=-2560
-    CustomPitchUpLimit=2560
-    CustomPitchDownLimit=62976
+    MaxNegativeYaw=29028
+    MaxPositiveYaw=36508
+    CustomPitchUpLimit=3640
+    CustomPitchDownLimit=61895
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // TODO: replace
@@ -35,10 +35,4 @@ defaultproperties
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 
     GunnerAttachmentBone="GUNNER_ATTACHMENT"
-
-    // Yaw and pitch limits
-    MaxNegativeYaw=29028
-    MaxPositiveYaw=36508
-    CustomPitchUpLimit=3640
-    CustomPitchDownLimit=61895
 }
