@@ -102,7 +102,7 @@ defaultproperties
     FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="passenger_l_2"
     FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
-    EngineToHullFireChance=0.55 //engine of the Uni Carrier is in the middle of the hull/passenger compartment
+    EngineToHullFireChance=0.5  // There is no firewall between the engine and the crew compartment, so the engine fire can spread to the crew compartment quite easily.
     AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
     FireDetonationChance=0.05
     PlayerFireDamagePer2Secs=10.0 //kills a little more slowly than tanks since halftracks are open vehicles, also gives infantry a little more time to reach safety before bailing
