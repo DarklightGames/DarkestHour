@@ -2277,7 +2277,7 @@ exec function SetRotationLimits(int MinNegYaw, int MaxPosYaw, int MinPitch, int 
         Gun.MaxPositiveYaw = MaxPosYaw;
         Gun.PitchUpLimit = MinPitch;
         Gun.PitchDownLimit = MaxPitch;
-    }`
+    }
 }
 
 // New debug exec to toggles showing any collision static mesh actor
