@@ -45,7 +45,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_CV33_anm.cv33_body_ext'
-    // Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
+    Skins(0)=Texture'DH_CV33_tex.cv33.cv33_body_ext'
     // HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     // bUseHighDetailOverlayIndex=true
     // HighDetailOverlayIndex=3
