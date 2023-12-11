@@ -486,34 +486,33 @@ def generate_font_scripts(args):
     import yaml
     with open(args.input_path, 'r') as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
+        default_font_style = data['default_font_style']
         font_styles = data['font_styles']
         languages = data['languages']
-
-        # Get the unicode range for English, as this will be included in every language.
-        basic_unicode_ranges = languages['en']['unicode_ranges']
-
+        default_unicode_ranges = data['default_unicode_ranges']
+        fonts_package_name = data['package_name']
         lines = []
-
-        fonts_package_name = 'DHFonts'
 
         def int_to_hex(i: int) -> str:
             return hex(i)[2:].upper()
 
         for language_code, language in languages.items():
-
             if args.language_code is not None and args.language_code != language_code:
                 continue
 
             package_name = fonts_package_name
-            unicode_ranges = language['unicode_ranges']
+            unicode_ranges = default_unicode_ranges + language.get('unicode_ranges', [])
 
             if language_code != 'en':
                 package_name = f'{fonts_package_name}_{language_code}t'
-                unicode_ranges = basic_unicode_ranges + language['unicode_ranges']
 
             lines.append(f'; {language["name"]} ({language_code})')
 
             for font_style_name, font_style in font_styles.items():
+
+                # Merge the default font style with the language's font style.
+                font_style = {**default_font_style, **font_style}
+
                 font = font_style['font']
                 font_substitutions = language.get('font_substitutions', {})
 
@@ -522,8 +521,14 @@ def generate_font_scripts(args):
                     font = font_substitutions[font]
 
                 size = font_style['size']
+                padding = font_style.get('padding', {'x': 1, 'y': 1})
+                margin = font_style.get('margin', {})
                 anti_alias = int(font_style.get('anti_alias', 1))
-                drop_shadow = int(font_style.get('drop_shadow', 0))
+                drop_shadow = font_style.get('drop_shadow', {})
+                kerning = int(font_style.get('kerning', 0))
+                weight = int(font_style.get('weight', 500))
+                italic = bool(font_style.get('italic', False))
+                texture_size = font_style.get('texture_size', 256)
 
                 def get_unicode_ranges_string(unicode_ranges):
                     unicode_ranges_parts = []
@@ -546,11 +551,21 @@ def generate_font_scripts(args):
                              f'NAME={font_style_name} '
                              f'FONTNAME="{font}" '
                              f'HEIGHT={size} '
-                             f'CHARACTERS_PER_PAGE={256} '
                              f'UNICODERANGE="{unicode_ranges_string}" '
                              f'ANTIALIAS={anti_alias} '
-                             f'DROPSHADOWX={drop_shadow} '
-                             f'DROPSHADOWY={drop_shadow} '
+                             f'DROPSHADOWX={drop_shadow.get("x", 0)} '
+                             f'DROPSHADOWY={drop_shadow.get("y", 0)} '
+                             f'USIZE={texture_size.get("x", 256)} '
+                             f'VSIZE={texture_size.get("y", 256)} '
+                             f'XPAD={padding.get("x", 0)} '
+                             f'YPAD={padding.get("y", 0)} '
+                             f'EXTENDBOTTOM={margin.get("bottom", 0)} '
+                             f'EXTENDTOP={margin.get("top", 0)} '
+                             f'EXTENDLEFT={margin.get("left", 0)} '
+                             f'EXTENDRIGHT={margin.get("right", 0)} '
+                             f'KERNING={kerning} '
+                             f'WEIGHT={weight} '
+                             f'ITALIC={int(italic)} '
                              )
 
             lines.append(F'OBJ SAVEPACKAGE PACKAGE={package_name} FILE="..\\DarkestHourDev\\Textures\\{package_name}.utx"')
