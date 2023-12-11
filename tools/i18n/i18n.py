@@ -3,6 +3,8 @@ from configparser import RawConfigParser, MissingSectionHeaderError
 from collections import OrderedDict
 import glob
 
+from pprint import pprint
+
 import polib
 from iso639 import LanguageNotFoundError, Language
 import os
@@ -479,6 +481,90 @@ def command_export_directory(args):
 
     print(f'Exported {count} file(s)')
 
+def generate_font_scripts(args):
+    # Load the YAML file
+    import yaml
+    with open(args.input_path, 'r') as file:
+        data = yaml.load(file, Loader=yaml.FullLoader)
+        font_styles = data['font_styles']
+        languages = data['languages']
+
+        # Get the unicode range for English, as this will be included in every language.
+        basic_unicode_ranges = languages['en']['unicode_ranges']
+
+        lines = []
+
+        fonts_package_name = 'DHFonts'
+
+        def int_to_hex(i: int) -> str:
+            return hex(i)[2:].upper()
+
+        for language_code, language in languages.items():
+
+            if args.language_code is not None and args.language_code != language_code:
+                continue
+
+            package_name = fonts_package_name
+            unicode_ranges = language['unicode_ranges']
+
+            if language_code != 'en':
+                package_name = f'{fonts_package_name}_{language_code}t'
+                unicode_ranges = basic_unicode_ranges + language['unicode_ranges']
+
+            lines.append(f'; {language["name"]} ({language_code})')
+
+            for font_style_name, font_style in font_styles.items():
+                font = font_style['font']
+                font_substitutions = language.get('font_substitutions', {})
+
+                if font in font_substitutions:
+                    # Use the language's font substitution, if it exists.
+                    font = font_substitutions[font]
+
+                size = font_style['size']
+                anti_alias = int(font_style.get('anti_alias', 1))
+                drop_shadow = int(font_style.get('drop_shadow', 0))
+
+                def get_unicode_ranges_string(unicode_ranges):
+                    unicode_ranges_parts = []
+                    for unicode_range in unicode_ranges:
+                        if type(unicode_range) == int:
+                            unicode_ranges_parts.append(f'{int_to_hex(unicode_range)}')
+                        if type(unicode_range) == list:
+                            # Make sure it's a range of two numbers.
+                            if len(unicode_range) != 2:
+                                raise Exception(f'Invalid unicode range: {unicode_range}')
+                            unicode_ranges_parts.append(f'{int_to_hex(unicode_range[0])}-{int_to_hex(unicode_range[1])}')
+                    unicode_ranges_string = ','.join(unicode_ranges_parts)
+                    return unicode_ranges_string
+
+                unicode_ranges_string = get_unicode_ranges_string(unicode_ranges)
+
+                lines.append(f'NEW TRUETYPEFONTFACTORY '
+                             f'PACKAGE={package_name} '
+                             f'GROUP={font_style_name} '
+                             f'NAME={font_style_name} '
+                             f'FONTNAME="{font}" '
+                             f'HEIGHT={size} '
+                             f'CHARACTERS_PER_PAGE={256} '
+                             f'UNICODERANGE="{unicode_ranges_string}" '
+                             f'ANTIALIAS={anti_alias} '
+                             f'DROPSHADOWX={drop_shadow} '
+                             f'DROPSHADOWY={drop_shadow} '
+                             )
+
+            lines.append(F'OBJ SAVEPACKAGE PACKAGE={package_name} FILE="..\\DarkestHourDev\\Textures\\{package_name}.utx"')
+            lines.append('')
+
+        lines.append('; Execute this with the following command:')
+        lines.append(f'; EXEC "{os.path.abspath(args.output_path)}"')
+
+        for line in lines:
+            print(line)
+
+        with open(args.output_path, 'w') as file:
+            file.write('\n'.join(lines))
+
 
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
@@ -533,6 +619,12 @@ update_keys_parser.add_argument('input_directory', help='The directory to read t
 update_keys_parser.add_argument('output_directory', help='The directory to write the keys to.')
 update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 update_keys_parser.set_defaults(func=update_keys)
+
+generate_font_scripts_parser = subparsers.add_parser('generate_font_scripts', help='Generate font scripts from a YAML file.')
+generate_font_scripts_parser.add_argument('input_path', help='The YAML file to read.')
+generate_font_scripts_parser.add_argument('output_path', help='The directory to write the font scripts to.')
+generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
+generate_font_scripts_parser.set_defaults(func=generate_font_scripts)
 
 if __name__ == '__main__':
     args = argparse.parse_args()
