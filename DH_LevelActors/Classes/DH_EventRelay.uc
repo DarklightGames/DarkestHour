@@ -7,8 +7,8 @@ class DH_EventRelay extends DH_LevelActors;
 
 struct EventDelay
 {
-    var name EventName;
-    var float Delay;
+    var() name EventName;
+    var() float Delay;
 };
 
 var()   array<EventDelay>   Events;
