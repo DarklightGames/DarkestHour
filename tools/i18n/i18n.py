@@ -180,7 +180,6 @@ def po_to_unt(contents: str) -> str:
 
             if is_dynamic_array:
                 # Array
-                print(f'array {key} {entry.msgid}')
                 key = match['id']
                 if key in target:
                     if not isinstance(target[key], list):
