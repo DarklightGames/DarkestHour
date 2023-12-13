@@ -14,6 +14,13 @@ from parsimonious.nodes import NodeVisitor
 import re
 from typing import List, Tuple, Optional
 
+import tempfile
+import shutil
+import git
+import sys
+import fnmatch
+import yaml
+
 
 def parse_unt(contents: str) -> List[Tuple[str, str]]:
     """
@@ -249,11 +256,6 @@ def po_to_unt(contents: str) -> str:
         lines.append('')
 
     return '\n'.join(lines)
-
-def command_import(args):
-    with open(args.input_path, 'r') as file:
-        # TODO: fill this in
-        po_to_unt(file.read())
 
 
 def command_export(args):
@@ -510,10 +512,21 @@ def command_export_directory(args):
 
     print(f'Exported {count} file(s)')
 
+
 def generate_font_scripts(args):
     # Load the YAML file
-    import yaml
-    with open(args.input_path, 'r') as file:
+    mod = args.mod
+
+    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+    print(f'root path: {root_path}')
+
+    mod_path = os.path.join(root_path, mod)
+    fonts_path = os.path.join(mod_path, 'Fonts')
+    fonts_config_path = os.path.join(fonts_path, 'fonts.yml')
+    output_path = os.path.join(fonts_path, 'ImportFonts.exec.txt')
+
+    with open(fonts_config_path, 'r') as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
         default_font_style = data['default_font_style']
         font_styles = data['font_styles']
@@ -593,7 +606,7 @@ def generate_font_scripts(args):
                              f'EXTENDLEFT={margin.get("left", 0)} '
                              f'EXTENDRIGHT={margin.get("right", 0)} '
                              f'KERNING={kerning} '
-                             f'WEIGHT={weight} '
+                             f'STYLE={weight} '
                              f'ITALIC={int(italic)} '
                              )
 
@@ -601,28 +614,27 @@ def generate_font_scripts(args):
             lines.append('')
 
         lines.append('; Execute this with the following command:')
-        lines.append(f'; EXEC "{os.path.abspath(args.output_path)}"')
+        lines.append(f'; EXEC "{os.path.abspath(output_path)}"')
 
         for line in lines:
             print(line)
 
-        with open(args.output_path, 'w') as file:
+        with open(output_path, 'w') as file:
             file.write('\n'.join(lines))
 
 
 def sync(args):
     # Clone the repository to a temporary directory.
-    import tempfile
-    import shutil
-    import git
-    import sys
-    import fnmatch
+    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    i18n_config_path = os.path.join(root_path, args.mod, 'i18n.yml')  # TODO: lazy
+    i18n_config = yaml.load(open(i18n_config_path, 'r'), Loader=yaml.FullLoader)
 
     temp_dir = tempfile.mkdtemp()
+    repository = i18n_config['repository']
 
     print('Cloning repository...')
 
-    git.Repo.clone_from(args.repository_url, temp_dir)
+    git.Repo.clone_from(repository['url'], temp_dir)
 
     print('Done.')
 
@@ -655,13 +667,22 @@ def sync(args):
         if args.verbose:
             print(f'Processing {filename} - {language.name} ({language.part1})')
 
+        print(f'Processing {filename} - {language.name} ({language.part1})')
+
         # Convert the .po file to a .unt file.
         with open(filename, 'r', encoding='utf-8') as file:
             unt_contents = po_to_unt(file.read())
 
         if not args.dry:
+            # Unreal has different extensions for different languages, so map the ISO 639-1 code to the extension.
+            language_extension = {
+                'deu': 'det',
+                'eng': 'int',
+            }
+
             # Write the .unt file to the mod's System folder.
-            output_path = os.path.join(args.mod, 'System', f'{basename}.{language.part3}')
+            extension = language_extension.get(language.part3, language.part3)
+            output_path = os.path.join(root_path, args.mod, 'System', f'{basename}.{extension}')
 
             if args.verbose:
                 print(f'Writing to {output_path}')
@@ -680,12 +701,6 @@ argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament l
 
 # Make two commands with subparsers: import and export
 subparsers = argparse.add_subparsers(dest='command', required=True)
-
-# Add the import command
-import_parser = subparsers.add_parser('import', help='Import a .po file to an Unreal Tournament translation file')
-import_parser.add_argument('input_path')
-import_parser.add_argument('output_path')
-import_parser.set_defaults(func=command_import)
 
 # Add the export command
 export_parser = subparsers.add_parser('export', help='Export an Unreal Tournament translation file to a .po file')
@@ -730,13 +745,11 @@ update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, ac
 update_keys_parser.set_defaults(func=update_keys)
 
 generate_font_scripts_parser = subparsers.add_parser('generate_font_scripts', help='Generate font scripts from a YAML file.')
-generate_font_scripts_parser.add_argument('input_path', help='The YAML file to read.')
-generate_font_scripts_parser.add_argument('output_path', help='The directory to write the font scripts to.')
+generate_font_scripts_parser.add_argument('-m', '--mod', help='The name of the mod to generate font scripts for.', required=True)
 generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
 generate_font_scripts_parser.set_defaults(func=generate_font_scripts)
 
 sync_parser = subparsers.add_parser('sync', help='Sync a Git repository with a directory of .po files.')
-sync_parser.add_argument('repository_url', help='The URL of the Git repository to sync.')
 sync_parser.add_argument('-m', '--mod', help='The name of the mod to sync.', required=True)
 sync_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 sync_parser.add_argument('-l', '--language_code', help='The language to sync (ISO 639-1 codes)', required=False)

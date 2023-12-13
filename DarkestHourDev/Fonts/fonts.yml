@@ -26,7 +26,6 @@ default_font_style:
   padding:
     x: 1
     y: 1
-  style: 500
 font_styles:
   DHConsoleFont:
     size: 12
@@ -36,13 +35,15 @@ font_styles:
     font: Noto Sans Mono
   DHButtonFont:
     size: 20
-    font: Sofia Sans Condensed #DINCondensedC
+    font: Sofia Sans Condensed
+    weight: 1000
   DHButtonFontDS:
     size: 20
     drop_shadow:
       x: 1
       y: 1
     font: Sofia Sans Condensed
+    weight: 1000
   DHHugeButtonFont:
     size: 24
     font: Sofia Sans Condensed
@@ -58,9 +59,11 @@ font_styles:
   DHMenuFont:
     size: 22
     font: Sofia Sans Condensed
+    weight: 1000
   DHMenuFontDS:
     size: 22
     font: Sofia Sans Condensed
+    weight: 1000
     drop_shadow:
       x: 1
       y: 1
@@ -76,18 +79,12 @@ font_styles:
 languages:
   en:
     name: English, French, German, Italian, Spanish
-  po:
-    name: Polish
-  ru:
-    name: Russian
-  uk:
-    name: Ukrainian
-  jp:
-    name: Japanese
-    font_substitutions:
-      Arial: NSimSun Regular
-    unicode_ranges:
-      - [0x3041, 0x309F]
-      - [0x30A0, 0x30FF]
-      - [0x31F0, 0x31FF]
-      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
+#  jp:
+#    name: Japanese
+#    font_substitutions:
+#      Arial: NSimSun Regular
+#    unicode_ranges:
+#      - [0x3041, 0x309F]
+#      - [0x30A0, 0x30FF]
+#      - [0x31F0, 0x31FF]
+#      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)

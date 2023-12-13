@@ -1,2 +1,5 @@
 parsimonious
 polib
+PyYAML
+GitPython
+python-iso639
