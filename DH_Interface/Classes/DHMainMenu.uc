@@ -540,7 +540,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         bVisible=false
     End Object
-    i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
+    i_Overlay=OverlayBackground
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
         Image=Texture'Engine.BlackTexture' // Removed reference, this variable could probably be deleted unless we use it for something
@@ -556,7 +556,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         bVisible=false
     End Object
-    i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
+    i_Announcement=AnnouncementImage
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
         Image=Texture'DHEngine_Tex.Transparency.Trans_50'
@@ -569,7 +569,7 @@ defaultproperties
         WinHeight=1.0
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
-    sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
+    sb_MainMenu=sbSection1
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=SocialSection
         WinTop=0.9125
@@ -593,7 +593,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=ServerButton.InternalOnKeyEvent
     End Object
-    b_MultiPlayer=GUIButton'DH_Interface.DHMainMenu.ServerButton'
+    b_MultiPlayer=ServerButton
 
     Begin Object Class=GUIButton Name=InstantActionButton
         CaptionAlign=TXTA_Left
@@ -607,7 +607,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=InstantActionButton.InternalOnKeyEvent
     End Object
-    b_Practice=GUIButton'DH_Interface.DHMainMenu.InstantActionButton'
+    b_Practice=InstantActionButton
 
     Begin Object Class=GUIButton Name=SettingsButton
         CaptionAlign=TXTA_Left
@@ -621,7 +621,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=SettingsButton.InternalOnKeyEvent
     End Object
-    b_Settings=GUIButton'DH_Interface.DHMainMenu.SettingsButton'
+    b_Settings=SettingsButton
 
     Begin Object Class=GUIButton Name=CreditsButton
         CaptionAlign=TXTA_Left
@@ -635,7 +635,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
     End Object
-    b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
+    b_Credits=CreditsButton
 
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
@@ -649,7 +649,7 @@ defaultproperties
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=QuitButton.InternalOnKeyEvent
     End Object
-    b_Quit=GUIButton'DH_Interface.DHMainMenu.QuitButton'
+    b_Quit=QuitButton
 
     Begin Object class=ROGUIContainerNoSkinAlt Name=sbSection2
         WinTop=0.624
@@ -658,7 +658,7 @@ defaultproperties
         WinHeight=0.2355
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
-    sb_HelpMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection2'
+    sb_HelpMenu=sbSection2
 
     Begin Object Class=GUIButton Name=MOTDTitleButton
         CaptionAlign=TXTA_Left
@@ -760,7 +760,7 @@ defaultproperties
         WinTop=0.185657
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
-    sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
+    sb_ShowVersion=sbSection3
 
     Begin Object class=GUILabel Name=VersionNum
         StyleName="DHSmallText"
@@ -771,7 +771,7 @@ defaultproperties
         WinTop=0.0
         RenderWeight=20.7
     End Object
-    l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
+    l_Version=VersionNum
 
     Begin Object class=GUIImage Name=LogoImage
         Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
@@ -814,7 +814,7 @@ defaultproperties
         TabOrder=1
         bNeverFocus=true
     End Object
-    tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
+    tb_MOTDContent=MyMOTDText
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
         Image=Texture'DHEngine_Tex.Transparency.Trans_50'
