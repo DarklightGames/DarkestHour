@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DH_ProjectileShooter extends DH_LevelActors
+    showcategories(Sound)
     placeable;
 
 var() enum ETargetMode
