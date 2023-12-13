@@ -523,7 +523,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 
 // Modified to correct bug that sometimes screwed up layout of critical message,
 // resulting in very long text lines going outside of message background
-// and  sometimes off screen
+// and sometimes off screen
 function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
 {
     local  array<string>  Lines;
