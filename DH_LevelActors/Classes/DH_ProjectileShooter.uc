@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_ProjectileShooter extends Actor
+class DH_ProjectileShooter extends DH_LevelActors
     placeable;
 
 var() enum ETargetMode
@@ -133,4 +133,5 @@ defaultproperties
     MaxProjectiles=1
     Role=ROLE_Authority
     FireInterval=0.1
+    bDirectional=true
 }
