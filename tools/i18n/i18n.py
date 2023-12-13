@@ -168,15 +168,19 @@ def po_to_unt(contents: str) -> str:
         target = section
         target_key = None
 
-        while parts:
+        while len(parts) > 0:
             key = parts.pop(0)
 
-            # Check if this is an array of the form Name[Index] with regex.
+            # Check if this is an array of the form Name<Index> with regex.
             regex = r"^(?P<id>[A-Za-z0-9_]+)\<(?P<index>\d+)\>$"
             match = re.match(regex, key)
+            has_more_parts = len(parts) > 0
 
-            if match:
+            is_dynamic_array = match is not None
+
+            if is_dynamic_array:
                 # Array
+                print(f'array {key} {entry.msgid}')
                 key = match['id']
                 if key in target:
                     if not isinstance(target[key], list):
@@ -189,22 +193,49 @@ def po_to_unt(contents: str) -> str:
                 while len(target) <= index:
                     target.append(None)
                 target_key = index
-            elif target is not section:
-                # Struct
-                target[target_key] = OrderedDict()
-                target = target[target_key]
-                target_key = key
             else:
-                target_key = key
+                if has_more_parts:
+                    if isinstance(target, list):
+                        # Target is a list, so add a struct to it.
+                        target[target_key] = OrderedDict()
+                        target = target[target_key]
+                        target_key = key
+                    else:
+                        # Struct
+                        if key not in target:
+                            # TODO: Doesn't work if the target is a list.
+                            target[key] = OrderedDict()
+                        target = target[key]
+                        # target_key = key
+
+            if not is_dynamic_array:
+                if isinstance(target, list):
+                    # This is a list of structs, so add the struct if it doesn't exist.
+                    # TODO: this is incorrect, this can just be a list of strings. How do we detect that?
+                    target[target_key] = OrderedDict()
+                    target = target[target_key]
+                    target_key = key
+                else:
+                    target_key = key
 
         target[target_key] = entry.msgstr
+
+    def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
+        for key, value in key_value_pairs:
+            if isinstance(value, OrderedDict):
+                write_key_value_pairs_recursive(value.items(), key)
+            else:
+                written_key = key
+                if parent_key is not None:
+                    written_key = f'{parent_key}.{key}'
+                lines.append(f'{written_key}={write_value(value)}')
 
     def write_value(value):
         if isinstance(value, str):
             return f'"{value}"'
         elif isinstance(value, list):
             return '(' + ','.join(map(write_value, value)) + ')'
-        elif isinstance(value, dict):
+        elif isinstance(value, dict) or isinstance(value, OrderedDict):
             return '(' + ','.join(f'{k}={write_value(v)}' for k, v in value.items()) + ')'
         elif value is None:
             return ''
@@ -215,10 +246,7 @@ def po_to_unt(contents: str) -> str:
 
     for section_name, section in sections.items():
         lines.append(f'[{section_name}]')
-
-        for key, value in section.items():
-            lines.append(f'{key}={write_value(value)}')
-
+        write_key_value_pairs_recursive(section.items())
         lines.append('')
 
     return '\n'.join(lines)
@@ -348,8 +376,10 @@ def command_import_directory(args):
 
                 # Note: we use utf-8-sig to write the file because Unreal Tournament expects the file to be encoded with
                 # utf-8 with a BOM (byte order mark).
-                with open(output_path, 'w', encoding='utf-8-sig') as output_file:
-                    output_file.write(unt_contents)
+                with open(output_path, 'wb') as output_file:
+                    # Write the BOM.
+                    output_file.write(b'\xff\xfe')
+                    output_file.write(unt_contents.encode('utf-16-le'))
 
                 count += 1
 
@@ -504,7 +534,7 @@ def generate_font_scripts(args):
             unicode_ranges = default_unicode_ranges + language.get('unicode_ranges', [])
 
             if language_code != 'en':
-                package_name = f'{fonts_package_name}_{language_code}t'
+                package_name = f'{fonts_package_name}_{Language.from_part1(language_code).part3}'
 
             lines.append(f'; {language["name"]} ({language_code})')
 
@@ -581,6 +611,71 @@ def generate_font_scripts(args):
             file.write('\n'.join(lines))
 
 
+def sync(args):
+    # Clone the repository to a temporary directory.
+    import tempfile
+    import shutil
+    import git
+    import sys
+    import fnmatch
+
+    temp_dir = tempfile.mkdtemp()
+
+    print('Cloning repository...')
+
+    git.Repo.clone_from(args.repository_url, temp_dir)
+
+    print('Done.')
+
+    # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
+    pattern = f'{temp_dir}\\**\\*.po'
+
+    for filename in glob.glob(pattern, recursive=True):
+
+        if args.filter is not None and not fnmatch.fnmatch(filename, args.filter):
+            continue
+
+        # Get the base name of the file and separate out the language code.
+        basename = os.path.basename(filename)
+        regex = r'([^\.]+)\.([a-z]{2})\.po$'
+        match = re.search(regex, basename)
+        basename = match.group(1)
+        language_code = match.group(2)
+
+        # Look up the language code in the ISO 639-1 table.
+        try:
+            language = Language.from_part1(language_code)
+        except LanguageNotFoundError:
+            print(f'Unknown language code for file {filename}')
+            continue
+
+        # Skip this file if the language code doesn't match the one we're looking for.
+        if args.language_code is not None and args.language_code != language.part1:
+            continue
+
+        if args.verbose:
+            print(f'Processing {filename} - {language.name} ({language.part1})')
+
+        # Convert the .po file to a .unt file.
+        with open(filename, 'r', encoding='utf-8') as file:
+            unt_contents = po_to_unt(file.read())
+
+        if not args.dry:
+            # Write the .unt file to the mod's System folder.
+            output_path = os.path.join(args.mod, 'System', f'{basename}.{language.part3}')
+
+            if args.verbose:
+                print(f'Writing to {output_path}')
+
+            with open(output_path, 'wb') as output_file:
+                output_file.write(b'\xff\xfe')  # Byte-order-mark.
+                output_file.write(unt_contents.encode('utf-16-le'))
+
+    # Delete the temporary directory.
+    if not args.dry:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
 
@@ -640,6 +735,16 @@ generate_font_scripts_parser.add_argument('input_path', help='The YAML file to r
 generate_font_scripts_parser.add_argument('output_path', help='The directory to write the font scripts to.')
 generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
 generate_font_scripts_parser.set_defaults(func=generate_font_scripts)
+
+sync_parser = subparsers.add_parser('sync', help='Sync a Git repository with a directory of .po files.')
+sync_parser.add_argument('repository_url', help='The URL of the Git repository to sync.')
+sync_parser.add_argument('-m', '--mod', help='The name of the mod to sync.', required=True)
+sync_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+sync_parser.add_argument('-l', '--language_code', help='The language to sync (ISO 639-1 codes)', required=False)
+sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
+sync_parser.add_argument('-f', '--filter', help='Filter the files to sync by a glob pattern', required=False)
+sync_parser.set_defaults(func=sync)
+
 
 if __name__ == '__main__':
     args = argparse.parse_args()
