@@ -13,6 +13,7 @@
 // [ ] UI elements
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
+// [ ] Passenger animations
 //==============================================================================
 
 class DH_AutoblindaArmoredCar extends DHArmoredVehicle
@@ -39,11 +40,8 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AutoblindaMGPawn',WeaponBone="mg_attachment")
-    // TODO: add some cool passengers
-    // PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=80.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    // PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-77.5,Y=0.0,Z=91.25),DriveRot=(Yaw=32768),DriveAnim="VUC_rider1_idle")
-    // PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=60.0,Z=80.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
-    // PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(0)=(AttachBone="PASSENGER_L",DrivePos=(Z=58),DriveRot=(Yaw=16384),DriveAnim="autoblinda_passenger_l")
+    PassengerPawns(1)=(AttachBone="PASSENGER_R",DrivePos=(Z=58),DriveRot=(Yaw=16384),DriveAnim="autoblinda_passenger_r")
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bDrawOverlays=true)
