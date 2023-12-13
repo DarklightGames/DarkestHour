@@ -27,10 +27,7 @@ var     string                  PatreonURL;
 var     string                  DiscordURL;
 var     string                  ResetINIGuideURL;
 
-var     localized string        JoinTestServerString;
-var     localized string        ConnectingString;
 var     localized string        SteamMustBeRunningText;
-var     localized string        SinglePlayerDisabledText;
 var     localized string        MOTDErrorString;
 
 var     localized string        ControlsChangedMessage;
@@ -202,16 +199,9 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_Practice:
-            if (class'LevelInfo'.static.IsDemoBuild())
-            {
-                Controller.ShowQuestionDialog(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
-            }
-            else
-            {
-                Profile("InstantAction");
-                Controller.OpenMenu(Controller.GetInstantActionPage());
-                Profile("InstantAction");
-            }
+            Profile("InstantAction");
+            Controller.OpenMenu(Controller.GetInstantActionPage());
+            Profile("InstantAction");
             break;
 
         case b_MultiPlayer:
@@ -520,10 +510,6 @@ defaultproperties
     // Render Entry.rom instead of background
     bRenderWorld=true
 
-    // IP variables
-    JoinTestServerString="Join Test Server"
-    ConnectingString="Joining"
-
     // Menu variables
     Begin Object Class=FloatingImage Name=OverlayBackground
         Image=Texture'Engine.BlackTexture'
@@ -805,7 +791,7 @@ defaultproperties
         EOLDelay=0.1
         bVisibleWhenEmpty=true
         OnCreateComponent=MyMOTDText.InternalOnCreateComponent
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.1
         WinLeft=0.0
         WinWidth=1.0
@@ -827,7 +813,6 @@ defaultproperties
     c_MOTD=sbSection4
 
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
-    SinglePlayerDisabledText="Practice mode is only available in the full version."
     MenuSong="DH_Menu_Music"
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
