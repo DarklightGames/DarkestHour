@@ -13,14 +13,38 @@ var() enum ETargetMode
     TM_Random,
 } TargetMode;
 
+var() enum EProjectileMode
+{
+    PM_Sequential,
+    PM_Random,
+} ProjectileMode;
+
 var() name TargetTag;
-var() class<Projectile> ProjectileClass;
+var() array<class<Projectile> > ProjectileClasses;
 var() int MaxProjectiles;
 var() float FireInterval;
-var() float FireDelay;
+var() Range FireDelayRange;
+var() float ProjectileOffset;
+
+var() enum EFiringSoundType
+{
+    FST_None,
+    FST_Looping,
+    FST_Single,
+} FiringSoundType;
+
+var() Sound LoopingFireSound;
+var() Sound SingleFireSound;
 
 var array<Actor> TargetActors;
 var int FireCount;
+
+function Reset()
+{
+    super.Reset();
+
+    FireCount = 0;
+}
 
 simulated event PostBeginPlay()
 {
@@ -44,7 +68,33 @@ simulated function FindTargetActors()
 
 simulated event Trigger(Actor Other, Pawn EventInstigator)
 {
-    GotoState('Firing');
+    if (Role == ROLE_Authority)
+    {
+        GotoState('Firing');
+    }
+}
+
+simulated function class<Projectile> GetProjectileClass()
+{
+    local int i;
+
+    if (ProjectileClasses.Length == 0)
+    {
+        return none;
+    }
+
+    switch (ProjectileMode)
+    {
+        case PM_Sequential:
+            i = FireCount % ProjectileClasses.Length;
+            break;
+
+        case PM_Random:
+            i = Rand(ProjectileClasses.Length);
+            break;
+    }
+
+    return ProjectileClasses[i];
 }
 
 state Firing
@@ -52,12 +102,25 @@ state Firing
     function BeginState()
     {
         local float FireTime;
+        local float FireDelay;
 
         super.BeginState();
 
-        SetTimer(FireDelay, false);
+        FireDelay = FireDelayRange.Min + FRand() * (FireDelayRange.Max - FireDelayRange.Min);
 
-        Level.Game.Broadcast(self, "Firing started");
+        if (FireDelay <= 0.0)
+        {
+            Timer();
+        }
+        else
+        {
+            SetTimer(FireDelay, false);
+        }
+
+        if (FiringSoundType == FST_Looping)
+        {
+            AmbientSound = LoopingFireSound;
+        }
     }
 
     function Timer()
@@ -72,6 +135,11 @@ state Firing
 
         SpawnProjectile();
 
+        if (FiringSoundType == FST_Single)
+        {
+            PlaySound(SingleFireSound);
+        }
+
         FireCount++;
 
         SetTimer(FireInterval, false);
@@ -80,6 +148,11 @@ state Firing
     function EndState()
     {
         super.EndState();
+
+        if (FiringSoundType == FST_Looping)
+        {
+            AmbientSound = none;
+        }
 
         Level.Game.Broadcast(self, "Firing ended");
     }
@@ -112,26 +185,24 @@ simulated function Rotator GetProjectileRotation()
     return Rotator(TargetLocation - Location);
 }
 
-simulated function SpawnProjectile()
+simulated function Projectile SpawnProjectile()
 {
     local Projectile Projectile;
     local Rotator ProjectileRotation;
-
-    if (ProjectileClass == none)
-    {
-        return;
-    }
+    local Vector ProjectileLocation;
 
     ProjectileRotation = GetProjectileRotation();
-    Projectile = Spawn(ProjectileClass,,, Location, ProjectileRotation);
-    // TODO: optionally remove gravity from the projectile.
+    ProjectileLocation = Location + vector(Rotation) * ProjectileOffset;
+    
+    return Spawn(GetProjectileClass(),,, Location, ProjectileRotation);
 }
 
 defaultproperties
 {
     bHidden=true
     MaxProjectiles=1
-    Role=ROLE_Authority
+    Role=ROLE_SimulatedProxy
     FireInterval=0.1
     bDirectional=true
+    ProjectileOffset=32.0
 }
