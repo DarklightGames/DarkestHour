@@ -336,8 +336,9 @@ defaultproperties
     MapInfos(162)=(Name="DH-Maupertus_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(163)=(Name="DH-Jurques_Dusk_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(164)=(Name="DH-Bremoy_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
-    MapInfos(165)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
-    MapInfos(166)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
-    MapInfos(167)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
-    MapInfos(168)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
+    MapInfos(165)=(Name="DH-Armored_Wacht_am_Rhein_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
+    MapInfos(166)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
+    MapInfos(167)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
+    MapInfos(168)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
+    MapInfos(169)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
 }

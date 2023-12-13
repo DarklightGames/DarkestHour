@@ -52,7 +52,7 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
     MagPartialReloadAnims(0)="reload_half"
 
-    PreReloadHalfAnim="reload_start_cocked"
+    PreReloadCockedAnim="reload_start_cocked"
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end_scope"
     SingleReloadAnim="reload_single"

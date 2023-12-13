@@ -2582,5 +2582,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
-    bDebuggingText=true
+    bDebuggingText=false
 }

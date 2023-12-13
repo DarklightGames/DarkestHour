@@ -18,9 +18,9 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
 
-    nProjectileDescriptions(0)="Sprgr.Patr."
+    nProjectileDescriptions(0)="F.H.Gr."
     nProjectileDescriptions(1)="F.H.Gr.Nb."
-    nProjectileDescriptions(2)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Gr.39 Hl/C"
 
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=5

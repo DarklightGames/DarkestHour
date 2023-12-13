@@ -3764,6 +3764,7 @@ event CheckReset()
 {
     local Controller C;
     local float      Distance;
+    local ROVehicleFactory VF;
 
     // Do nothing if vehicle is a spawn vehicle or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
@@ -3773,10 +3774,12 @@ event CheckReset()
         return;
     }
 
+    VF = ROVehicleFactory(ParentFactory);
+
     // Do nothing if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
     // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
     if (IsFactorysLastVehicle() &&
-        !(ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive))
+        !(VF != none && !VF.bFactoryActive && VF.bDestroyVehicleWhenInactive))
     {
         return;
     }
