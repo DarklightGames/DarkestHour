@@ -1,0 +1,93 @@
+# This file is used to generate the fonts for the game.
+# All fonts must be installed before executing the script.
+package_name: DHFonts
+default_unicode_ranges: # These unicode ranges are always included for each language.
+  - [ 0x0000, 0x007F ] # Basic Latin
+  - [ 0x0080, 0x00FF ] # Latin-1 Supplement
+  - [ 0x0180, 0x024F ] # Latin Extended-B
+  - [ 0x0400, 0x04FF ] # Cyrillic
+  - [ 0x0500, 0x052F ] # Cyrillic Supplement
+  - [ 0x2DE0, 0x2DFF ] # Cyrillic Extended-A
+  - [ 0xA640, 0xA69F ] # Cyrillic Extended-B
+  - [ 0x1C80, 0x1C8F ] # Cyrillic Extended-C
+  - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
+  - 0x1D2B
+  - 0x1D78
+  - [ 0xFE2E, 0xFE2F ]
+default_font_style:
+  texture_size: # Maximum size of each texture atlas.
+    x: 512
+    y: 512
+  margin: # Margin around each character
+    bottom: 1
+    top: 1
+    left: 1
+    right: 1
+  padding:
+    x: 1
+    y: 1
+  style: 500
+font_styles:
+  DHConsoleFont:
+    size: 12
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Noto Sans Mono
+  DHButtonFont:
+    size: 20
+    font: Sofia Sans Condensed #DINCondensedC
+  DHButtonFontDS:
+    size: 20
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Sofia Sans Condensed
+  DHHugeButtonFont:
+    size: 24
+    font: Sofia Sans Condensed
+  DHLargeFont:
+    size: 16
+    font: Arial
+  DHLargeFontDS:
+    size: 16
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Arial
+  DHMenuFont:
+    size: 22
+    font: Sofia Sans Condensed
+  DHMenuFontDS:
+    size: 22
+    font: Sofia Sans Condensed
+    drop_shadow:
+      x: 1
+      y: 1
+  DHSmallFont:
+    size: 14
+    font: Arial
+  DHSmallFontDS:
+    size: 14
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Arial
+languages:
+  en:
+    name: English, French, German, Italian, Spanish
+  po:
+    name: Polish
+  ru:
+    name: Russian
+  uk:
+    name: Ukrainian
+  jp:
+    name: Japanese
+    font_substitutions:
+      Arial: NSimSun Regular
+    unicode_ranges:
+      - [0x3041, 0x309F]
+      - [0x30A0, 0x30FF]
+      - [0x31F0, 0x31FF]
+      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
