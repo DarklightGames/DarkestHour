@@ -37,8 +37,32 @@ var() enum EFiringSoundType
 var() Sound LoopingFireSound;
 var() Sound SingleFireSound;
 
+var() class<WeaponAmbientEmitter> WeaponAmbientEmitterClass;
+var WeaponAmbientEmitter WeaponAmbientEmitter;
+
 var array<Actor> TargetActors;
 var int FireCount;
+var bool bIsFiring;
+var bool bOldIsFiring;
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsFiring;
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bIsFiring != bOldIsFiring)
+    {
+        // Update the emitter status to reflect the firing state.
+        WeaponAmbientEmitter.SetEmitterStatus(bIsFiring);
+    }
+
+    bOldIsFiring = bIsFiring;
+}
 
 function Reset()
 {
@@ -50,6 +74,12 @@ function Reset()
 simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        WeaponAmbientEmitter = Spawn(WeaponAmbientEmitterClass,,, Location, Rotation);
+        WeaponAmbientEmitter.Attach(self);
+    }
 
     FindTargetActors();
 }
@@ -106,6 +136,9 @@ state Firing
         local float FireDelay;
 
         super.BeginState();
+
+        // Set the firing flag so that the client can update the emitter status.
+        bIsFiring = true;
 
         FireDelay = FireDelayRange.Min + FRand() * (FireDelayRange.Max - FireDelayRange.Min);
 
@@ -202,7 +235,7 @@ defaultproperties
 {
     bHidden=true
     MaxProjectiles=1
-    Role=ROLE_SimulatedProxy
+    RemoteRole=ROLE_SimulatedProxy
     FireInterval=0.1
     bDirectional=true
     ProjectileOffset=32.0
