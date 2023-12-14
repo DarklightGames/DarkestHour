@@ -122,15 +122,14 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
             id = f'{section}.{key}'
 
             def add_key_value_pairs_recursive(id: str, value):
-                if type(value) == str:
+                if isinstance(value, str):
                     key_value_pairs.append((id, str(value)))
-                elif type(value) == list:
+                elif isinstance(value, list):
                     for i, item in enumerate(value):
                         add_key_value_pairs_recursive(f'{id}<{i}>', item)
-                elif type(value) == dict:
+                elif isinstance(value, dict):
                     for k, v in value.items():
-                        id = f'{id}.{k}'
-                        add_key_value_pairs_recursive(id, v)
+                        add_key_value_pairs_recursive(f'{id}.{k}', v)
 
             add_key_value_pairs_recursive(id, value)
 
@@ -159,72 +158,81 @@ def write_po(path: str, key_value_pairs: list, language_code: str):
         f.write(contents.encode('utf-8'))
 
 
-def po_to_unt(contents: str) -> str:
-    import polib
-    po = polib.pofile(contents)
-    sections = OrderedDict()
+def add_entry(msgid: str, msgstr: str, sections):
+    parts = msgid.split('.')
+    section = parts.pop(0)
 
-    for entry in po:
-        parts = entry.msgid.split('.')
-        section = parts.pop(0)
+    if section not in sections:
+        sections[section] = OrderedDict()
 
-        if section not in sections:
-            sections[section] = OrderedDict()
+    section = sections[section]
+    target = section
+    target_key = None
 
-        section = sections[section]
-        target = section
-        target_key = None
+    while len(parts) > 0:
+        key = parts.pop(0)
 
-        while len(parts) > 0:
-            key = parts.pop(0)
+        # Check if this is an array of the form Name<Index> with regex.
+        regex = r"^(?P<id>[A-Za-z0-9_]+)\<(?P<index>\d+)\>$"
+        match = re.match(regex, key)
+        has_more_parts = len(parts) > 0
 
-            # Check if this is an array of the form Name<Index> with regex.
-            regex = r"^(?P<id>[A-Za-z0-9_]+)\<(?P<index>\d+)\>$"
-            match = re.match(regex, key)
-            has_more_parts = len(parts) > 0
+        is_dynamic_array = match is not None
 
-            is_dynamic_array = match is not None
-
-            if is_dynamic_array:
-                # Array
-                key = match['id']
-                if key in target:
-                    if not isinstance(target[key], list):
-                        raise Exception(f'Expected {key} to be a list (found {type(target[key])})')
-                else:
-                    target[match['id']] = []
-                target = target[match['id']]
-                index = int(match['index'])
-                # Ensure that the list is long enough.
-                while len(target) <= index:
-                    target.append(None)
-                target_key = index
+        if is_dynamic_array:
+            # Array
+            key = match['id']
+            if key in target:
+                if not isinstance(target[key], list):
+                    raise Exception(f'Expected {key} to be a list (found {type(target[key])})')
             else:
-                if has_more_parts:
-                    if isinstance(target, list):
-                        # Target is a list, so add a struct to it.
-                        target[target_key] = OrderedDict()
-                        target = target[target_key]
-                        target_key = key
-                    else:
-                        # Struct
-                        if key not in target:
-                            # TODO: Doesn't work if the target is a list.
-                            target[key] = OrderedDict()
-                        target = target[key]
-                        # target_key = key
-
-            if not is_dynamic_array:
+                target[match['id']] = []
+            target = target[match['id']]
+            index = int(match['index'])
+            # Ensure that the list is long enough.
+            while len(target) <= index:
+                target.append(None)
+            target_key = index
+        else:
+            if has_more_parts:
                 if isinstance(target, list):
-                    # This is a list of structs, so add the struct if it doesn't exist.
-                    # TODO: this is incorrect, this can just be a list of strings. How do we detect that?
+                    # Target is a list, so add a struct to it.
                     target[target_key] = OrderedDict()
                     target = target[target_key]
                     target_key = key
                 else:
-                    target_key = key
+                    # Struct
+                    if key not in target:
+                        # TODO: Doesn't work if the target is a list.
+                        target[key] = OrderedDict()
+                    target = target[key]
+                    # target_key = key
 
-        target[target_key] = entry.msgstr
+        if not is_dynamic_array:
+            if isinstance(target, list):
+                # This is a list of structs, so add the struct if it doesn't exist.
+                # TODO: this is incorrect, this can just be a list of strings. How do we detect that?
+                target[target_key] = OrderedDict()
+                target = target[target_key]
+                target_key = key
+            else:
+                target_key = key
+
+    target[target_key] = msgstr
+
+
+def po_to_unt(contents: str) -> str:
+    import polib
+    po = polib.pofile(contents)
+
+    sections = OrderedDict()
+
+    # Add each entry.
+    for entry in po:
+        try:
+            add_entry(entry.msgid, entry.msgstr, sections)
+        except Exception as e:
+            print(f'Failed to add entry {entry.msgid}: {e}')
 
     def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
         for key, value in key_value_pairs:
@@ -467,6 +475,9 @@ def command_export_directory(args):
         filename = os.path.relpath(filename, input_path)
         basename, extension = os.path.splitext(filename)
 
+        if args.filter is not None and not fnmatch.fnmatch(filename, args.filter):
+            continue
+
         # Look up the language code in the ISO 639-1 table.
         try:
             language = get_language_from_unt_extension(extension)
@@ -678,6 +689,8 @@ def sync(args):
             language_extension = {
                 'deu': 'det',
                 'eng': 'int',
+                'fra': 'frt',
+                'spa': 'est',
             }
 
             # Write the .unt file to the mod's System folder.
@@ -694,6 +707,18 @@ def sync(args):
     # Delete the temporary directory.
     if not args.dry:
         shutil.rmtree(temp_dir, ignore_errors=True)
+
+
+def debug_keys(args):
+    sections = OrderedDict()
+    while True:
+        key = input('Key: ')
+        if key == 'quit':
+            break
+        elif key == 'dump':
+            pprint(sections)
+        add_entry(key, 'My Value', sections)
+    pprint(sections)
 
 
 # Create the top-level parser
@@ -721,6 +746,7 @@ export_directory_parser.add_argument('-d', '--dry', help='Dry run', default=Fals
 export_directory_parser.add_argument('-l', '--language_code', help='The language to export (ISO 639-1 codes)', required=False)
 export_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
 export_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
+export_directory_parser.add_argument('-f', '--filter', help='Filter the files to export by a glob pattern', required=False)
 export_directory_parser.set_defaults(func=command_export_directory)
 
 import_directory_parser = subparsers.add_parser('import_directory', help='Import all .po files in a directory to Unreal Tournament translation files')
@@ -756,6 +782,9 @@ sync_parser.add_argument('-l', '--language_code', help='The language to sync (IS
 sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 sync_parser.add_argument('-f', '--filter', help='Filter the files to sync by a glob pattern', required=False)
 sync_parser.set_defaults(func=sync)
+
+debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
+debug_key_parser.set_defaults(func=debug_keys)
 
 
 if __name__ == '__main__':
