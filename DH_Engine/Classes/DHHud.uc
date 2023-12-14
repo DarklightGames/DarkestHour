@@ -2070,16 +2070,12 @@ function DrawSignals(Canvas C)
 
         if (PC.Signals[i].SignalClass.default.bShouldShowDistance)
         {
-            // Draw distance text (with drop shadow)
+            // Draw distance text
             Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
             DistanceText = string(Distance) @ "m";
             C.TextSize(DistanceText, XL, YL);
             X = ScreenLocation.X - (XL / 2);
             Y = ScreenLocation.Y + (SignalIconSize / 2);
-            C.DrawColor = class'UColor'.default.Black;
-            C.DrawColor.A = SignalColor.A;
-            C.SetPos(X + 1, Y + 1);
-            C.DrawText(DistanceText);
             C.DrawColor = SignalColor;
             C.SetPos(X, Y);
             C.DrawText(DistanceText);

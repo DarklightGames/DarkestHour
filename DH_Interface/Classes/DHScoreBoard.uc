@@ -536,15 +536,12 @@ function UpdateScoreBoard(Canvas C)
 
     Y = CalcY(0.25, C);
 
-    // Draw our round/server info line, with a drop shadow
-    C.SetDrawColor(0, 0, 0, 128);
+    // Draw our round/server info line
     X = BaseXPos[0];
-    C.SetPos(X + 1, Y + 1);
-    C.DrawTextClipped(S); // this is the dark 'drop shadow' text, slightly offset from the actual text
 
     C.DrawColor = HUD.default.WhiteColor;
     C.SetPos(X, Y);
-    C.DrawTextClipped(S); // this is the actual text, drawn over the drop shadow
+    C.DrawTextClipped(S);
 
     MaxTeamYPos = 0.0;
 
@@ -1095,10 +1092,6 @@ function DHDrawCell(Canvas C, coerce string Text, byte Align, float XPos, float 
 
     if (Text != "")
     {
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = 128;
-        C.DrawTextJustified(Text, Align, XPos + 1, YPos + 1, C.ClipX, C.ClipY);
-
         C.DrawColor = F;
         C.DrawTextJustified(Text, Align, XPos, YPos, C.ClipX, C.ClipY);
     }
