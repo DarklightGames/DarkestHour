@@ -17,9 +17,20 @@ from typing import List, Tuple, Optional
 import tempfile
 import shutil
 import git
-import sys
 import fnmatch
 import yaml
+
+
+# Unreal has different extensions for different languages, so map the ISO 639-1 code to the extension.
+iso639_to_language_extension = {
+    'deu': 'det',  # German
+    'eng': 'int',  # English
+    'fra': 'frt',  # French
+    'spa': 'est',  # Spanish
+    'ita': 'itt',  # Italian
+    'nld': 'dut',  # Dutch
+    'jpn': 'jap',  # Japanese
+}
 
 
 def parse_unt(contents: str) -> List[Tuple[str, str]]:
@@ -556,8 +567,58 @@ def generate_font_scripts(args):
             package_name = fonts_package_name
             unicode_ranges = default_unicode_ranges + language.get('unicode_ranges', [])
 
+            language_suffix = 'int'
+
             if language_code != 'en':
-                package_name = f'{fonts_package_name}_{Language.from_part1(language_code).part3}'
+                part3 = Language.from_part1(language_code).part3
+                language_suffix = iso639_to_language_extension.get(part3, part3)
+                package_name = f'{fonts_package_name}_{language_suffix}'
+
+            # Go through each of the Unreal translation files for this language and get the characters that are used.
+            pattern = f'{mod_path}\\System\\*.{language_suffix}'
+
+            print('pattern', pattern)
+
+            ensure_all_characters = language.get('ensure_all_characters', False)
+
+            if ensure_all_characters:
+                characters = set()
+                for filename in glob.glob(pattern):
+                    # Load the config file.
+                    print(filename)
+                    with open(filename, 'r', encoding='utf-16-le') as file:
+                        file.seek(2)  # Skip the BOM.
+                        contents = file.read()
+                        key_value_pairs = parse_unt(contents)
+
+                        for _, value in key_value_pairs:
+                            for character in value:
+                                characters.add(ord(character))
+
+                # For each of the characters, see if it's in the unicode ranges.
+                # If it's not, add it to the unicode ranges.
+                added_characters = set()
+                for character in characters:
+                    found = False
+                    for unicode_range in unicode_ranges:
+                        if type(unicode_range) == int:
+                            if character == unicode_range:
+                                found = True
+                        if type(unicode_range) == list:
+                            # Make sure it's a range of two numbers.
+                            if len(unicode_range) != 2:
+                                raise Exception(f'Invalid unicode range: {unicode_range}')
+                            if character >= unicode_range[0] and character <= unicode_range[1]:
+                                found = True
+                    if not found:
+                        added_characters.add(character)
+                        # There is (surprise), a bug in Unreal where it appears to support having a single character
+                        # in the UNICODERANGE string (e.g., 0-FF,1234,1235). However, it doesn't actually work, so we
+                        # have to add the character to the unicode ranges as a range of two numbers.
+                        unicode_ranges.append([character, character])
+
+                if len(added_characters) > 0:
+                    print(f'Added {len(added_characters)} characters to unicode ranges for language {language["name"]} ({language_code}): {[hex(c) for c in added_characters]}')
 
             lines.append(f'; {language["name"]} ({language_code})')
 
@@ -685,16 +746,8 @@ def sync(args):
             unt_contents = po_to_unt(file.read())
 
         if not args.dry:
-            # Unreal has different extensions for different languages, so map the ISO 639-1 code to the extension.
-            language_extension = {
-                'deu': 'det',
-                'eng': 'int',
-                'fra': 'frt',
-                'spa': 'est',
-            }
-
             # Write the .unt file to the mod's System folder.
-            extension = language_extension.get(language.part3, language.part3)
+            extension = iso639_to_language_extension.get(language.part3, language.part3)
             output_path = os.path.join(root_path, args.mod, 'System', f'{basename}.{extension}')
 
             if args.verbose:
