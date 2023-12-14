@@ -13,7 +13,7 @@ defaultproperties
         WinLeft=0.647884
         WinTop=0.685424
         Caption="Ignore Voice Commands"
-        Hint="Do not receive any voice commands, such as \"Take cover!\" from this player"
+        Hint="Do not receive any voice commands, such as 'Take cover!' from this player"
         OnChange=InternalOnChange
         TabOrder=3
         MenuState=MSAT_Disabled
