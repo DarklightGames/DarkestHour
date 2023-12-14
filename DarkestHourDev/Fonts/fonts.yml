@@ -79,12 +79,13 @@ font_styles:
 languages:
   en:
     name: English, French, German, Italian, Spanish
-#  jp:
-#    name: Japanese
-#    font_substitutions:
-#      Arial: NSimSun Regular
-#    unicode_ranges:
-#      - [0x3041, 0x309F]
-#      - [0x30A0, 0x30FF]
-#      - [0x31F0, 0x31FF]
+  ja:
+    name: Japanese
+    font_substitutions:
+      Sofia Sans Condensed: BIZ UDGothic
+    ensure_all_characters: true
+    unicode_ranges:
+      - [0x3041, 0x309F]
+      - [0x30A0, 0x30FF]
+      - [0x31F0, 0x31FF]
 #      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
