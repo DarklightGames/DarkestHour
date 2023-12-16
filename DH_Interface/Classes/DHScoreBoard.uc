@@ -484,7 +484,7 @@ function UpdateScoreBoard(Canvas C)
     // Set standard font & line height
     C.Font = HUD.static.GetConsoleFont(C);
     C.TextSize("Text", XL, BaseLineHeight);
-    LineHeight = BaseLineHeight * 1.25;
+    LineHeight = BaseLineHeight * 1.125;
 
     // Construct a line with various information about the round & the server (start with "time remaining")
     S = class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.TimeRemainingText;                          // Label
@@ -769,7 +769,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             SRI.GetMembers(TeamIndex, SquadIndex, SquadMembers);
 
             // Reset the base line height
-            LineHeight = BaseLineHeight * 1.25;
+            LineHeight = BaseLineHeight * 1.125;
 
             if (Y + LineHeight > C.ClipY)
             {
@@ -836,7 +836,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         if (bHasUnassigned)
         {
             // Reset the base line height
-            LineHeight = BaseLineHeight * 1.25;
+            LineHeight = BaseLineHeight * 1.125;
 
             // Reset the X position
             X = BaseXPos[TeamIndex];

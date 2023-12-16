@@ -634,7 +634,11 @@ def generate_font_scripts(args):
                     # Use the language's font substitution, if it exists.
                     font = font_substitutions[font]
 
-                size = font_style['size']
+                sizes = font_style['sizes']
+
+                if type(sizes) == int:
+                    sizes = [sizes]
+
                 padding = font_style.get('padding', {'x': 1, 'y': 1})
                 margin = font_style.get('margin', {})
                 anti_alias = int(font_style.get('anti_alias', 1))
@@ -658,28 +662,34 @@ def generate_font_scripts(args):
                     return unicode_ranges_string
 
                 unicode_ranges_string = get_unicode_ranges_string(unicode_ranges)
+                has_multiple_sizes = len(sizes) > 1
 
-                lines.append(f'NEW TRUETYPEFONTFACTORY '
-                             f'PACKAGE={package_name} '
-                             f'GROUP={font_style_name} '
-                             f'NAME={font_style_name} '
-                             f'FONTNAME="{font}" '
-                             f'HEIGHT={size} '
-                             f'UNICODERANGE="{unicode_ranges_string}" '
-                             f'ANTIALIAS={anti_alias} '
-                             f'DROPSHADOWX={drop_shadow.get("x", 0)} '
-                             f'DROPSHADOWY={drop_shadow.get("y", 0)} '
-                             f'USIZE={texture_size.get("x", 256)} '
-                             f'VSIZE={texture_size.get("y", 256)} '
-                             f'XPAD={padding.get("x", 0)} '
-                             f'YPAD={padding.get("y", 0)} '
-                             f'EXTENDBOTTOM={margin.get("bottom", 0)} '
-                             f'EXTENDTOP={margin.get("top", 0)} '
-                             f'EXTENDLEFT={margin.get("left", 0)} '
-                             f'EXTENDRIGHT={margin.get("right", 0)} '
-                             f'KERNING={kerning} '
-                             f'STYLE={weight} '
-                             f'ITALIC={int(italic)} '
+                for size in sizes:
+                    if has_multiple_sizes:
+                        name = f'{font_style_name}{size}'
+                    else:
+                        name = font_style_name
+                    lines.append(f'NEW TRUETYPEFONTFACTORY '
+                                 f'PACKAGE={package_name} '
+                                 f'GROUP={font_style_name} '
+                                 f'NAME={name} '
+                                 f'FONTNAME="{font}" '
+                                 f'HEIGHT={size} '
+                                 f'UNICODERANGE="{unicode_ranges_string}" '
+                                 f'ANTIALIAS={anti_alias} '
+                                 f'DROPSHADOWX={drop_shadow.get("x", 0)} '
+                                 f'DROPSHADOWY={drop_shadow.get("y", 0)} '
+                                 f'USIZE={texture_size.get("x", 256)} '
+                                 f'VSIZE={texture_size.get("y", 256)} '
+                                 f'XPAD={padding.get("x", 0)} '
+                                 f'YPAD={padding.get("y", 0)} '
+                                 f'EXTENDBOTTOM={margin.get("bottom", 0)} '
+                                 f'EXTENDTOP={margin.get("top", 0)} '
+                                 f'EXTENDLEFT={margin.get("left", 0)} '
+                                 f'EXTENDRIGHT={margin.get("right", 0)} '
+                                 f'KERNING={kerning} '
+                                 f'STYLE={weight} '
+                                 f'ITALIC={int(italic)} '
                              )
 
             lines.append(F'OBJ SAVEPACKAGE PACKAGE={package_name} FILE="..\\DarkestHourDev\\Textures\\{package_name}.utx"')

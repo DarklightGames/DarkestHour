@@ -6154,4 +6154,40 @@ defaultproperties
     // IQ
     IQIconWidget=(/*WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',*/RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
     IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=-55,OffsetY=-118)
+
+	SmallFontArrayNames(0)="DHFonts.DHConsoleFontDS24"
+	SmallFontArrayNames(1)="DHFonts.DHConsoleFontDS24"
+	SmallFontArrayNames(2)="DHFonts.DHConsoleFontDS22"
+	SmallFontArrayNames(3)="DHFonts.DHConsoleFontDS22"
+	SmallFontArrayNames(4)="DHFonts.DHConsoleFontDS18"
+	SmallFontArrayNames(5)="DHFonts.DHConsoleFontDS14"
+	SmallFontArrayNames(6)="DHFonts.DHConsoleFontDS12"
+	SmallFontArrayNames(7)="DHFonts.DHConsoleFontDS9"
+	SmallFontArrayNames(8)="DHFonts.DHConsoleFontDS7"
+    
+	FontArrayNames(0)="DHFonts.DHConsoleFontDS28"
+	FontArrayNames(1)="DHFonts.DHConsoleFontDS26"
+	FontArrayNames(2)="DHFonts.DHConsoleFontDS24"
+	FontArrayNames(3)="DHFonts.DHConsoleFontDS22"
+	FontArrayNames(4)="DHFonts.DHConsoleFontDS18"
+	FontArrayNames(5)="DHFonts.DHConsoleFontDS16"
+	FontArrayNames(6)="DHFonts.DHConsoleFontDS14"
+	FontArrayNames(7)="DHFonts.DHConsoleFontDS12"
+	FontArrayNames(8)="DHFonts.DHConsoleFontDS9"
+
+	MenuFontArrayNames(0)="DHFonts.DHConsoleFontDS18"
+	MenuFontArrayNames(1)="DHFonts.DHConsoleFontDS14"
+	MenuFontArrayNames(2)="DHFonts.DHConsoleFontDS12"
+	MenuFontArrayNames(3)="DHFonts.DHConsoleFontDS9"
+	MenuFontArrayNames(4)="DHFonts.DHConsoleFontDS7"
+
+	CriticalMsgFontArrayNames(0)="DHFonts.DHConsoleFont28"
+	CriticalMsgFontArrayNames(1)="DHFonts.DHConsoleFont26"
+	CriticalMsgFontArrayNames(2)="DHFonts.DHConsoleFont24"
+	CriticalMsgFontArrayNames(3)="DHFonts.DHConsoleFont22"
+	CriticalMsgFontArrayNames(4)="DHFonts.DHConsoleFont18"
+	CriticalMsgFontArrayNames(5)="DHFonts.DHConsoleFont16"
+	CriticalMsgFontArrayNames(6)="DHFonts.DHConsoleFont14"
+	CriticalMsgFontArrayNames(7)="DHFonts.DHConsoleFont12"
+	CriticalMsgFontArrayNames(8)="DHFonts.DHConsoleFont9"
 }

@@ -943,6 +943,53 @@ function bool CanUseVehicleCommands()
     return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn'));
 }
 
+state ConsoleVisible
+{
+    // Modified to change the font, since it's hard-coded in the parent class.
+    function PostRender(Canvas Canvas)
+	{
+		local float FW, FH;
+		local float YClip, Y;
+		local int Index;
+
+		Canvas.Font = class'DHHud'.static.GetConsoleFont(Canvas);
+		YClip = Canvas.ClipY * 0.5;
+		Canvas.StrLen("X", FW, FH);
+
+		Canvas.SetPos(0, 0);
+		Canvas.SetDrawColor(255, 255, 255, 200);
+		Canvas.Style = 4;
+        
+        Canvas.DrawTileStretched(Texture'InterfaceArt_tex.HUD.console_background',Canvas.ClipX,yClip);
+		Canvas.Style = 1;
+
+		Canvas.SetPos(0, YClip - 1);
+		Canvas.SetDrawColor(255, 255, 255, 255);
+        Canvas.DrawTile(Texture'InterfaceArt_tex.Menu.RODisplay', Canvas.ClipX, 2, 0, 0, 64, 2);
+		Canvas.SetDrawColor(255, 255, 255, 255);
+		Canvas.SetPos(0, YClip - 5 - FH);
+		Canvas.DrawTextClipped("(>" @ Left(TypedStr, TypedStrPos) $ Chr(4) $ Eval(TypedStrPos < Len(TypedStr), Mid(TypedStr, TypedStrPos), "_"), true);
+
+		Index = SBHead - SBPos;
+		Y = YClip - Y - 5 - (FH * 2);
+
+		if (ScrollBack.Length == 0)
+        {
+			return;
+        }
+
+		Canvas.SetDrawColor(255, 255, 255, 255);
+
+		while (Y > FH && Index >= 0)
+		{
+			Canvas.SetPos(0, Y);
+			Canvas.DrawText(Scrollback[Index], false);
+			Index--;
+			Y -= FH;
+		}
+	}
+}
+
 defaultproperties
 {
     NeedPasswordMenuClass="DH_Engine.DHGetPassword" // lol this doesn't even work, had to replace the reference to this with a direct string
