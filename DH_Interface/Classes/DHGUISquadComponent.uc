@@ -227,7 +227,7 @@ defaultproperties
     End Object
     i_Background=BackgroundImage
 
-    Begin Object Class=GUIContextMenu Name=MembersListContextMenu
+    Begin Object Class=DHGUIContextMenu Name=MembersListContextMenu
         OnSelect=DHGUISquadComponent.MembersListContextMenuSelect
         OnOpen=DHGUISquadComponent.MembersListContextMenuOpen
         OnClose=DHGUISquadComponent.MembersListContextMenuClose
