@@ -10,9 +10,6 @@ class DHServerLoading extends UT2K4ServerLoading;
 var localized string DeployingText;
 var localized string AuthorText;
 var localized string UnspecifiedText;
-var localized string EnabledText;
-var localized string DisabledText;
-var localized string GameTypeText;
 
 var Material DHTextLogo;
 var Material DefaultControlsImage;
@@ -135,9 +132,6 @@ simulated function SetImage()
 
 defaultproperties
 {
-    GameTypeText="Game Type: {0}"
-    EnabledText="Enabled"
-    DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
 
@@ -151,7 +145,7 @@ defaultproperties
         Lft=0.0
         Width=1.0
         Height=0.09
-        DrawColor=(R=255,B=255,G=255,A=255)
+        DrawColor=(R=0,B=0,G=0,A=255)
     End Object
     Operations(1)=OpTopBorder
 
@@ -162,7 +156,7 @@ defaultproperties
         Lft=0.0
         Width=1.0
         Height=0.09
-        DrawColor=(R=255,B=255,G=255,A=255)
+        DrawColor=(R=0,B=0,G=0,A=255)
     End Object
     Operations(2)=OpBottomBorder
 
@@ -178,24 +172,23 @@ defaultproperties
     Operations(3)=OpDHTextLogoImg
 
     Begin Object class=DrawOpText Name=OpLoading
-        Top=0.93
+        Top=0.92
         Lft=0.05
         Height=0.05
         Width=0.9
-        Justification=0
-        FontName="ROInterface.fntROMainMenu"
+        Justification=2
+        FontName="DH_Interface.DHHugeButtonFont"
         bWrapText=false
     End Object
     Operations(4)=OpLoading
 
-    Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
+    Begin Object class=DrawOpText Name=OpMapAuthorText
         Top=0.02
         Lft=0.05
         Height=0.05
-        Width=0.32
-        Justification=0
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
+        Width=0.9
+        Justification=2
+        FontName="DH_Interface.DHHugeButtonFont"
     End Object
     Operations(5)=OpMapAuthorText
 }

@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHGUITabButton extends GUITabButton;
+class DHGUIGFXButton extends GUIGFXButton;
 
 defaultproperties
 {
-    StyleName="DHTabTextButtonStyle"
     Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
     End Object
     ToolTip=GUIButtonToolTip

@@ -664,7 +664,7 @@ defaultproperties
     End Object
     b_MOTDTitle=MOTDTitleButton
 
-    Begin Object Class=GUIGFXButton Name=FacebookButton
+    Begin Object Class=DHGUIGFXButton Name=FacebookButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
@@ -679,7 +679,7 @@ defaultproperties
     End Object
     b_Facebook=FacebookButton
 
-    Begin Object Class=GUIGFXButton Name=GitHubButton
+    Begin Object Class=DHGUIGFXButton Name=GitHubButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
@@ -694,7 +694,7 @@ defaultproperties
     End Object
     b_GitHub=GitHubButton
 
-    Begin Object Class=GUIGFXButton Name=SteamCommunityButton
+    Begin Object Class=DHGUIGFXButton Name=SteamCommunityButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
@@ -709,7 +709,7 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
-    Begin Object Class=GUIGFXButton Name=PatreonButton
+    Begin Object Class=DHGUIGFXButton Name=PatreonButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
@@ -724,7 +724,7 @@ defaultproperties
     End Object
     b_Patreon=PatreonButton
 
-    Begin Object Class=GUIGFXButton Name=DiscordButton
+    Begin Object Class=DHGUIGFXButton Name=DiscordButton
         WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875

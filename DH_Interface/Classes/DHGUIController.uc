@@ -431,6 +431,7 @@ defaultproperties
     DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
     DefaultStyleNames(95)="DH_Interface.DHStyle_ListSelectionGrey"
     DefaultStyleNames(96)="DH_Interface.DHStyle_ObjectiveSpawnButton"
+    DefaultStyleNames(97)="DH_Interface.DHStyle_MouseOverLabel"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

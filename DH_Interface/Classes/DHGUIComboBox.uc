@@ -15,14 +15,14 @@ defaultproperties
         OnKeyType=EditBox1.InternalOnKeyType
         OnKeyEvent=EditBox1.InternalOnKeyEvent
     End Object
-    Edit=GUIEditBox'DH_Interface.DHGUIComboBox.EditBox1'
+    Edit=EditBox1
     Begin Object Class=GUIComboButton Name=ShowList
         StyleName="DHGripButton"
         RenderWeight=0.6
         bNeverScale=true
         OnKeyEvent=ShowList.InternalOnKeyEvent
     End Object
-    MyShowListBtn=GUIComboButton'DH_Interface.DHGUIComboBox.ShowList'
+    MyShowListBtn=ShowList
     Begin Object Class=GUIListBox Name=ListBox1
         SelectedStyleName="DHListSelectionStyle"
         OnCreateComponent=ListBox1.InternalOnCreateComponent
@@ -32,9 +32,9 @@ defaultproperties
         bVisible=false
         bNeverScale=true
     End Object
-    MyListBox=GUIListBox'DH_Interface.DHGUIComboBox.ListBox1'
+    MyListBox=ListBox1
     Begin Object Class=GUIToolTip Name=GUIComboBoxToolTip
     End Object
-    ToolTip=GUIToolTip'DH_Interface.DHGUIComboBox.GUIComboBoxToolTip'
+    ToolTip=GUIComboBoxToolTip
     OnKeyEvent=DHGUIComboBox.InternalOnKeyEvent
 }
