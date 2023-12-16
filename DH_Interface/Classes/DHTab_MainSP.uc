@@ -48,6 +48,7 @@ function ShowPanel(bool bShow)
     {
         co_Difficulty.SetVisibility(false);
         sb_options2.SetVisibility(false);
+        b_Maplist.SetVisibility(false);
     }
 }
 
@@ -234,7 +235,7 @@ defaultproperties
         WinTop=0.018125
         WinLeft=0.016993
         WinWidth=0.482149
-        WinHeight=0.6
+        WinHeight=0.942417
         OnPreDraw=SelectionGroup.InternalPreDraw
     End Object
     sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
@@ -284,7 +285,7 @@ defaultproperties
         WinTop=0.169272
         WinLeft=0.045671
         WinWidth=0.422481
-        WinHeight=0.44987
+        WinHeight=0.775
         TabOrder=0
         OnChange=DHTab_MainSP.MapListChange
     End Object
@@ -344,4 +345,6 @@ defaultproperties
 
     LastSelectedMap="DH-Brecourt"
     ch_OfficialMapsOnly=none
+
+    bHideDifficultyControl=true
 }
