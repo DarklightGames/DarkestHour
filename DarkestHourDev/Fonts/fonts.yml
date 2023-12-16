@@ -28,50 +28,53 @@ default_font_style:
     y: 1
 font_styles:
   DHConsoleFont:
-    size: 12
+    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
+    font: Inter
+  DHConsoleFontDS:
+    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
     drop_shadow:
       x: 1
       y: 1
-    font: Noto Sans Mono
+    font: Inter
   DHButtonFont:
-    size: 20
+    sizes: 20
     font: Sofia Sans Condensed
     weight: 1000
   DHButtonFontDS:
-    size: 20
+    sizes: 20
     drop_shadow:
       x: 1
       y: 1
     font: Sofia Sans Condensed
     weight: 1000
   DHHugeButtonFont:
-    size: 24
+    sizes: 24
     font: Sofia Sans Condensed
   DHLargeFont:
-    size: 16
+    sizes: 16
     font: Arial
   DHLargeFontDS:
-    size: 16
+    sizes: 16
     drop_shadow:
       x: 1
       y: 1
     font: Arial
   DHMenuFont:
-    size: 22
+    sizes: 22
     font: Sofia Sans Condensed
     weight: 1000
   DHMenuFontDS:
-    size: 22
+    sizes: 22
     font: Sofia Sans Condensed
     weight: 1000
     drop_shadow:
       x: 1
       y: 1
   DHSmallFont:
-    size: 14
+    sizes: 14
     font: Arial
   DHSmallFontDS:
-    size: 14
+    sizes: 14
     drop_shadow:
       x: 1
       y: 1
@@ -79,13 +82,13 @@ font_styles:
 languages:
   en:
     name: English, French, German, Italian, Spanish
-  ja:
-    name: Japanese
-    font_substitutions:
-      Sofia Sans Condensed: BIZ UDGothic
-    ensure_all_characters: true
-    unicode_ranges:
-      - [0x3041, 0x309F]
-      - [0x30A0, 0x30FF]
-      - [0x31F0, 0x31FF]
-#      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
+#  ja:
+#    name: Japanese
+#    font_substitutions:
+#      Sofia Sans Condensed: BIZ UDGothic
+#    ensure_all_characters: true
+#    unicode_ranges:
+#      - [0x3041, 0x309F]
+#      - [0x30A0, 0x30FF]
+#      - [0x31F0, 0x31FF]
+##      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
