@@ -6,6 +6,7 @@
 // [ ] Shell attachments updating when rounds are fired/reloaded
 // [ ] Check radio attachment in MP
 // [ ] UI textures for shells
+// [ ] Fix initial animation issue on the turret (camera starts above the turret)
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
