@@ -17,7 +17,6 @@
 // Art (Colin)
 // [~] MG position animations
 // [ ] Driver & gunner player animations (waiting on finalized interior, especially for gunner)
-// [ ] UI elements (clock &  spawn menu icon)
 //
 // Art (Red)
 // [ ] Finalize texturing
@@ -46,6 +45,8 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_CV33_anm.cv33_body_ext'
     Skins(0)=Texture'DH_CV33_tex.cv33.cv33_body_ext'
+    Skins(1)=Texture'DH_CV33_tex.cv33.cv33_treads'
+    Skins(2)=Texture'DH_CV33_tex.cv33.cv33_treads'
     // HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     // bUseHighDetailOverlayIndex=true
     // HighDetailOverlayIndex=3
@@ -139,8 +140,8 @@ defaultproperties
     // Visual effects
     LeftTreadIndex=1
     RightTreadIndex=2
-    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    LeftTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
     TreadVelocityScale=80.0
     WheelRotationScale=40000.0
 
@@ -153,17 +154,19 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'   // REPLACE
+    VehicleHudImage=Texture'DH_CV33_tex.interface.cv33_body'
+    VehicleHudTurret=TexRotator'DH_CV33_tex.interface.cv33_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_CV33_tex.interface.cv33_turret_look'
     VehicleHudEngineY=0.75
-    VehicleHudTreadsPosX(0)=0.37
-    VehicleHudTreadsPosX(1)=0.66
-    VehicleHudTreadsPosY=0.47
-    VehicleHudTreadsScale=0.65
-    VehicleHudOccupantsX(0)=0.58
-    VehicleHudOccupantsX(1)=0.
-    VehicleHudOccupantsY(0)=0.35
-    VehicleHudOccupantsY(1)=0.3
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'  // REPLACE
+    VehicleHudTreadsPosX(0)=0.345
+    VehicleHudTreadsPosX(1)=0.655
+    VehicleHudTreadsPosY=0.5
+    VehicleHudTreadsScale=0.675
+    VehicleHudOccupantsX(0)=0.57
+    VehicleHudOccupantsY(0)=0.56
+    VehicleHudOccupantsX(1)=0.43
+    VehicleHudOccupantsY(1)=0.56
+    SpawnOverlay(0)=Material'DH_CV33_tex.interface.cv33_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_1_L"
