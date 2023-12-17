@@ -42,14 +42,17 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return RelatedPRI_1.OldName @ default.GlobalNameChange @ RelatedPRI_1.PlayerName;
+            S = default.GlobalNameChange;
+            S = Repl(S, "{old_name}", RelatedPRI_1.OldName);
+            S = Repl(S, "{new_name}", RelatedPRI_1.PlayerName);
+            return S;
         case 3:
             if (RelatedPRI_1 == none || OptionalObject == none)
             {
                 return "";
             }
 
-            return RelatedPRI_1.PlayerName @ default.NewTeamMessageRussian;
+            return Repl(default.NewTeamMessageRussian, "{name}", RelatedPRI_1.PlayerName);
         case 4:
             if (RelatedPRI_1 == none)
             {
@@ -66,7 +69,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 8:
             return default.NoNameChange;
         case 9:
-            return RelatedPRI_1.PlayerName @ default.VoteStarted;
+            return Repl(default.VoteStarted, "{name}", RelatedPRI_1.PlayerName);
         case 10:
             return default.VotePassed;
         case 11:
@@ -78,7 +81,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return RelatedPRI_1.PlayerName @ default.NewTeamMessageGerman;
+            return Repl(default.NewTeamMessageGerman, "{name}", RelatedPRI_1.PlayerName);
         // FF kill message
         case 13:
             if (RelatedPRI_1 == none)
@@ -86,8 +89,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return RelatedPRI_1.PlayerName @ default.FFKillMessage;
-            break;
+            return Repl(default.FFKillMessage, "{name}", RelatedPRI_1.PlayerName);
         // FF boot message
         case 14:
             if (RelatedPRI_1 == none)
@@ -95,7 +97,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return default.FFViolationMessage @ RelatedPRI_1.PlayerName @ default.FFViolationMessageTrailer;
+            return Repl(default.FFViolationMessage, "{name}", RelatedPRI_1.PlayerName);
         // FF damage message
         case 15:
             return default.FFDamageMessage;
@@ -103,7 +105,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 16:
             if (RI != none)
             {
-                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RI.GetDisplayName();
+                S = default.RoleChangeMsg;
+                S = Repl(S, "{article}", RORoleInfo(OptionalObject).default.Article);
+                S = Repl(S, "{role}", RI.GetDisplayName());
+                return S;
             }
 
             break;
@@ -111,11 +116,12 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 17:
             if (RI != none)
             {
-                return default.MaxRoleMsg $ RI.GetDisplayName();
+                return Repl(default.MaxRoleMsg, "{role}", RI.GetDisplayName());
             }
             break;
         // To forgive type "np" or "forgive" message
         case 18:
+            // NOTE: This is no longer used.
             if (RelatedPRI_1 == none)
             {
                 return "Someone" @ default.TypeForgiveMessage;
@@ -131,7 +137,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return RelatedPRI_2.PlayerName @ default.HasForgivenMessage @ RelatedPRI_1.PlayerName;
+            S = default.HasForgivenMessage;
+            S = Repl(S, "{victim}", RelatedPRI_2.PlayerName);
+            S = Repl(S, "{killer}", RelatedPRI_1.PlayerName);
+            return S;
         // You have logged in as an admin message(used for AdminLoginSilent)
         case 20:
             return default.YouHaveLoggedInAsAdminMsg;
@@ -205,8 +214,18 @@ defaultproperties
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
     VehicleTeamKilledMessage="{0} killed a friendly {1}."
-
     NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
     RoleInvalidatedMessage="You are no longer qualified to be {article}{name}."
+
+    // These are Red Ochestra strings that needed to be overriden because they were sentence fragments.
+    NewTeamMessageRussian="{name} has joined the Allied forces."
+    NewTeamMessageGerman="{name} has joined the Axis forces."
+    GlobalNameChange="{old_name} has changed their name to {new_name}."
+    FFKillMessage="{name} killed a friendly soldier."
+    VoteStarted="{name} started a vote."
+    FFViolationMessage="Removing {name} due to a friendly fire violation."
+	RoleChangeMsg="You will attempt to respawn as {article}{role}."
+    MaxRoleMsg="Unable to change to {role}."
+    HasForgivenMessage="{victim} has forgiven {killer}."
 }
 
