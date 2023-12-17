@@ -2072,7 +2072,7 @@ function DrawSignals(Canvas C)
         {
             // Draw distance text
             Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
-            DistanceText = string(Distance) @ "m";
+            DistanceText = string(Distance) $ class'DHUnits'.default.MetersSymbol;
             C.TextSize(DistanceText, XL, YL);
             X = ScreenLocation.X - (XL / 2);
             Y = ScreenLocation.Y + (SignalIconSize / 2);
@@ -5660,7 +5660,7 @@ function DrawRallyPointStatus(Canvas C)
             break;
         case ERROR_TooCloseToOtherRallyPoint:
             ErrorIcon = default.RallyPointIconDistance;
-            ErrorString = Result.Error.OptionalInt $ "m";
+            ErrorString = Result.Error.OptionalInt $ class'DHUnits'.default.MetersSymbol;
             break;
         case ERROR_MissingSquadmate:
             ErrorIcon = default.RallyPointIconMissingSquadmate;

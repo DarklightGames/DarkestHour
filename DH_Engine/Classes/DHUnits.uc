@@ -6,6 +6,26 @@
 class DHUnits extends Object
     abstract;
 
+enum EDistanceUnit
+{
+    DU_Unreal,
+    DU_Meters,
+};
+
+var localized string UnrealDistanceSymbol;
+var localized string MetersSymbol;
+
+final static function string GetDistanceUnitString(EDistanceUnit Unit)
+{
+    switch (Unit)
+    {
+        case DU_Unreal:
+            return default.UnrealDistanceSymbol;
+        case DU_Meters:
+            return default.MetersSymbol;
+    }
+}
+
 final static function float MetersToUnreal(coerce float Meters)
 {
     return Meters * 60.352;
@@ -26,3 +46,8 @@ final static function float UnrealToInches(coerce float Unreal)
     return Unreal * 0.65234126458112407211028632025448;
 }
 
+defaultproperties
+{
+    UnrealDistanceSymbol="uu"
+    MetersSymbol="m"
+}
