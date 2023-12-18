@@ -33,8 +33,8 @@ defaultproperties
         bNeverScale=true
     End Object
     MyListBox=ListBox1
-    Begin Object Class=GUIToolTip Name=GUIComboBoxToolTip
+    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
     End Object
-    ToolTip=GUIComboBoxToolTip
+    ToolTip=GUIButtonToolTip
     OnKeyEvent=DHGUIComboBox.InternalOnKeyEvent
 }
