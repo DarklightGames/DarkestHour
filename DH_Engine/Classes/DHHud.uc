@@ -127,6 +127,8 @@ var     localized string    ConnectedObjectivesNotSecuredText;
 var     localized string    NeedsClearedText;
 var     localized string    BlackoutText;
 var     localized string    PlaceRallyPointText;
+var     localized string    SayTypeConsoleText;
+var     localized string    SayTypeAllText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -5921,12 +5923,12 @@ function DHDrawTypingPrompt(Canvas C)
         // We have to handle the admin menu mutator functionality "gracefully",
         // so here ya go.
         SayTypeColor = class'UColor'.default.White;
-        SayTypeText = "[CONSOLE]";
+        SayTypeText = default.SayTypeConsoleText;
     }
     else if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
     {
         SayTypeColor = class'UColor'.default.White;
-        SayTypeText = "[ALL]";
+        SayTypeText = default.SayTypeAllText;
     }
     else
     {
@@ -6190,4 +6192,7 @@ defaultproperties
 	CriticalMsgFontArrayNames(6)="DHFonts.DHConsoleFont14"
 	CriticalMsgFontArrayNames(7)="DHFonts.DHConsoleFont12"
 	CriticalMsgFontArrayNames(8)="DHFonts.DHConsoleFont9"
+
+    SayTypeConsoleText="[CONSOLE]"
+    SayTypeAllText="[ALL]"
 }
