@@ -153,6 +153,9 @@ var     rotator             BackpackRotationOffset;
 // Health Figure
 var     class<DHHealthFigure>   HealthFigureClass;
 
+// Localized strings
+var     localized string    AdminSpawnedVehicleText;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -6901,7 +6904,7 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
     local rotator           SpawnDirection;
     local int               Distance;
     local float             Degrees;
-    local string            VehicleClassName;
+    local string            VehicleClassName, S;
 
     VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
 
@@ -6924,7 +6927,11 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
             SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
-            Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
+
+            S = default.AdminSpawnedVehicleText;
+            S = Repl(S, "{name}", GetHumanReadableName());
+            S = Repl(S, "{vehicle}", V.GetHumanReadableName());
+            Level.Game.Broadcast(self, S);
         }
     }
 }
@@ -7698,4 +7705,6 @@ defaultproperties
     LimpAnims(5)=""
     LimpAnims(6)=""
     LimpAnims(7)=""
+
+    AdminSpawnedVehicleText="Admin {name} spawned a {vehicle}"
 }
