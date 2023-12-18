@@ -35,7 +35,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return default.NewPlayerMessage;
             }
 
-            return RelatedPRI_1.PlayerName $ default.EnteredMessage;
+            return Repl(default.EnteredMessage, "{name}", RelatedPRI_1.PlayerName);
         case 2:
             if (RelatedPRI_1 == none)
             {
@@ -59,7 +59,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            return RelatedPRI_1.PlayerName $ default.LeftMessage;
+            return Repl(default.LeftMessage, "{name}", RelatedPRI_1.PlayerName);
         case 5:
             return default.SwitchLevelMessage;
         case 6:
@@ -227,5 +227,7 @@ defaultproperties
 	RoleChangeMsg="You will attempt to respawn as {article}{role}."
     MaxRoleMsg="Unable to change to {role}."
     HasForgivenMessage="{victim} has forgiven {killer}."
+    EnteredMessage="{name} has entered the battlefield."
+    LeftMessage="{name} left the battlefield."
 }
 

@@ -22,6 +22,7 @@ var localized string MunitionPercentageText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
+var localized string NoPlayersText;
 
 var string TabSpaces;
 var string LargeTabSpaces;
@@ -127,7 +128,7 @@ function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out C
     {
         case COLUMN_PlayerName:
             CRI.TextColor = class'UColor'.default.White;
-            CRI.Text = "No players";
+            CRI.Text = NoPlayersText;
             break;
         default:
             CRI.Text = "";
@@ -1130,6 +1131,7 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     PlayersText="Players"
+    NoPlayersText="No players"
     TickHealthText="Tick: "
     NetHealthText="Loss: "
     MunitionPercentageText="Munitions"
