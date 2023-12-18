@@ -226,8 +226,10 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
     {
         case 0:
             S = Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            break;
         case 1:
             S = Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            break;
     }
 
     return Repl(S, "{1}", "[%USE%]");
