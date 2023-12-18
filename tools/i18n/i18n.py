@@ -44,7 +44,7 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
         """
         value = string / name / array / struct
         string = ~'"[^\"]*"'
-        name = ~"[A-Z_0-9]+"i
+        name = ~"[A-Z_0-9\.]+"i
         comma = ","
         empty_value = ","
         array_values = (comma / value)*
@@ -107,7 +107,7 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
         def generic_visit(self, node, visited_children):
             return visited_children or node
 
-    config = RawConfigParser()
+    config = RawConfigParser(strict=False)
     config.optionxform = str
 
     try:
@@ -507,10 +507,23 @@ def command_export_directory(args):
 
         input_filename = os.path.join(input_path, filename)
 
-        with open(input_filename, 'r') as file:
+        # This is a bit of a hack, but our .int files are windows-1252, and all others are supposed to be utf-16-le.
+        with open(input_filename, 'rb') as file:
             try:
+                # Look for the BOM.
+                bom = file.read(2)
+
+                if bom == b'\xff\xfe':
+                    # utf-16-le
+                    file.seek(2)
+                    unt_contents = file.read().decode('utf-16-le')
+                else:
+                    # windows-1252
+                    file.seek(0)
+                    unt_contents = file.read().decode('windows-1252')
+
                 # Parse the Unreal translation file to a list of key-value pairs.
-                key_value_pairs = parse_unt(file.read())
+                key_value_pairs = parse_unt(unt_contents)
             except RuntimeError as e:
                 print(f'Failed to parse file {filename}: {e}')
                 continue
@@ -576,8 +589,6 @@ def generate_font_scripts(args):
 
             # Go through each of the Unreal translation files for this language and get the characters that are used.
             pattern = f'{mod_path}\\System\\*.{language_suffix}'
-
-            print('pattern', pattern)
 
             ensure_all_characters = language.get('ensure_all_characters', False)
 
