@@ -72,13 +72,13 @@ font_styles:
       y: 1
   DHSmallFont:
     sizes: 14
-    font: Arial
+    font: Inter
   DHSmallFontDS:
     sizes: 14
     drop_shadow:
       x: 1
       y: 1
-    font: Arial
+    font: Inter
 languages:
   en:
     name: English, French, German, Italian, Spanish
