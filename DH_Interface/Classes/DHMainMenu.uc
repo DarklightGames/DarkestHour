@@ -83,6 +83,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         PlayerOwner().ConsoleCommand("SetName" @ Repl(PlayerOwner().GetUrlOption("Name"), "�", "_"));
     }
+    
+    // The default near-clip is 2.0, which is needlessly close and causes
+    // severe z-fighting. Doubling the near-clip to 4.0 alleviates (but does
+    // not completely fix) the issue. This value can be increased so long as
+    // it does not cause clipping issues.
+    PlayerOwner().ConsoleCommand("NearClip 4");
 }
 
 function ShowBadConfigMessage()
