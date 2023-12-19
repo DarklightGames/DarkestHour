@@ -649,6 +649,8 @@ def generate_font_scripts(args):
 
                 if type(sizes) == int:
                     sizes = [sizes]
+                elif type(sizes) != list:
+                    raise Exception(f'Invalid sizes for font style {font_style_name}: {sizes}')
 
                 padding = font_style.get('padding', {'x': 1, 'y': 1})
                 margin = font_style.get('margin', {})
