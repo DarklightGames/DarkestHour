@@ -68,7 +68,7 @@ function ServerToggleSplashGuard()
     SplashGuard.Toggle();
 }
 
-simulated exec function ROMGOperation()
+exec simulated function ROMGOperation()
 {
     ServerToggleSplashGuard();
 }

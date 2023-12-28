@@ -5394,7 +5394,7 @@ simulated function vector CalcDrawOffset(Inventory Inv)
 		return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0,0,1);
     }
 
-	DrawOffset = ((0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation());
+	DrawOffset = (0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation();
 
     DrawOffset += EyePosition();
 

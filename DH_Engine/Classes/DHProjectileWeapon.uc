@@ -3478,7 +3478,7 @@ simulated function float GetMagazinePercent()
 }
 
 // Returns the animation time (i.e. frame) for a given component and theta value.
-simulated private function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
+private simulated function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
 {
     switch (WeaponComponentAnimations[ComponentIndex].DriverType)
     {
@@ -3493,7 +3493,7 @@ simulated private function float GetWeaponComponentAnimationTime(int ComponentIn
 }
 
 // The theta value is a percentage (0.0 - 1.0) of how far along the animation should be.
-simulated private function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
+private simulated function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
 {
     switch (DriverType)
     {

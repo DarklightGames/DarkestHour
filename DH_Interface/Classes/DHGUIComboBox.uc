@@ -7,7 +7,7 @@ class DHGUIComboBox extends GUIComboBox;
 
 defaultproperties
 {
-    Begin Object Class=GUIEditBox Name=EditBox1
+    Begin Object Class=DHGUIEditBox Name=EditBox1
         StyleName="DHEditBox"
         bNeverScale=true
         OnActivate=EditBox1.InternalActivate
@@ -23,7 +23,7 @@ defaultproperties
         OnKeyEvent=ShowList.InternalOnKeyEvent
     End Object
     MyShowListBtn=ShowList
-    Begin Object Class=GUIListBox Name=ListBox1
+    Begin Object Class=DHGUIListBox Name=ListBox1
         SelectedStyleName="DHListSelectionStyle"
         OnCreateComponent=ListBox1.InternalOnCreateComponent
         StyleName="DHComboListBox"

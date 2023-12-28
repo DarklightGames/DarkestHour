@@ -7856,7 +7856,7 @@ simulated static function string GetInventoryName(class<Inventory> InventoryClas
     return InventoryClass.default.ItemName;
 }
 
-simulated exec function ListVehicles()
+exec simulated function ListVehicles()
 {
     class'DHVehicleRegistry'.static.DumpToLog(self);
 }

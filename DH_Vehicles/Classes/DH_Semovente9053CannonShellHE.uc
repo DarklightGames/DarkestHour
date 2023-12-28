@@ -65,3 +65,4 @@ defaultproperties
     MechanicalRanges(17)=(Range=1800,RangeValue=172)
     MechanicalRanges(18)=(Range=1900,RangeValue=184)
     MechanicalRanges(19)=(Range=2000,RangeValue=193)
+}
