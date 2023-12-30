@@ -188,9 +188,10 @@ defaultproperties
         bBoundToParent=true
         FontScale=FNS_Small
         HeaderColumnPerc(0)=0.40 // Name
-        HeaderColumnPerc(1)=0.20 // Allies
-        HeaderColumnPerc(2)=0.20 // Type
-        HeaderColumnPerc(3)=0.20 // Size
+        HeaderColumnPerc(1)=0.15 // Allies
+        HeaderColumnPerc(2)=0.15 // Axis
+        HeaderColumnPerc(3)=0.15 // Type
+        HeaderColumnPerc(4)=0.15 // Size
         OnChange=UpdatePreview
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
