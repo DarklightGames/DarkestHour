@@ -8,4 +8,7 @@ class DHGUITabButton extends GUITabButton;
 defaultproperties
 {
     StyleName="DHTabTextButtonStyle"
+    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
+    End Object
+    ToolTip=GUIButtonToolTip
 }

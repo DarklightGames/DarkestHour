@@ -11,8 +11,7 @@ var localized string    Label_AimedPlayer,
                         Label_RealismMenu,
                         Label_ServerMenu;                     // menu labels for the options for 'player in your sights' & the realism/testing menu
 
-var localized EInputKey KeyForRealismMenu,
-                        KeyForServerMenu;                    // localized to allow default R key to be changed to suit a different language
+var EInputKey           KeyForRealismMenu, KeyForServerMenu;
 
 exec function Menu()
 {

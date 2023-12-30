@@ -347,7 +347,7 @@ defaultproperties
         WinHeight=0.958
         OnPreDraw=InputBK1.InternalPreDraw
     End Object
-    i_BG1=DHGUIProportionalContainer'DH_Interface.DHTab_Controls.InputBK1'
+    i_BG1=InputBK1
 
     Begin Object Class=GUILabel Name=HintLabel
         TextAlign=TXTA_Center
@@ -360,7 +360,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    l_Hint=GUILabel'DH_Interface.DHTab_Controls.HintLabel'
+    l_Hint=HintLabel
 
     Begin Object Class=DHGUIMultiColumnListBox Name=BindListBox
         HeaderColumnPerc(0)=0.5
@@ -375,7 +375,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    lb_Binds=DHGUIMultiColumnListBox'DH_Interface.DHTab_Controls.BindListBox'
+    lb_Binds=BindListBox
 
     Begin Object Class=DHmoComboBox Name=ControlProfilesComboBox
         bReadOnly=true
@@ -390,7 +390,7 @@ defaultproperties
         CaptionWidth=0.2
         OnChange=DHTab_Controls.InternalOnChange
     End Object
-    co_ControlProfiles=DHmoComboBox'DH_Interface.DHTab_Controls.ControlProfilesComboBox'
+    co_ControlProfiles=ControlProfilesComboBox
 
     //******************
     // Profile Bindings

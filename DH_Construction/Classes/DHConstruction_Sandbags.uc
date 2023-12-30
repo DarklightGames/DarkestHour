@@ -14,10 +14,9 @@ defaultproperties
     StartRotationMax=(Yaw=16384)
     bShouldAlignToGround=false
     bCanTakeImpactDamage=true
+    bCanDieOfStagnation=false
     bIsNeutral=true
     bAcceptsProjectors=false
-
-    bCanDieOfStagnation=false
 
     // Damage
     DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact

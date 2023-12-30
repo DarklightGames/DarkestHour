@@ -6,10 +6,6 @@
 class DHArmoredVehicle extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-
 struct ArmorSection
 {
     var     float   Thickness;         // in cm
@@ -38,6 +34,7 @@ struct NewHitpoint
 
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
+var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
@@ -57,12 +54,19 @@ var     bool        bVehicleHit;                // A simple check used in TakeDa
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
+var     float       TurretPenetrationHullDamageChanceModifier; // chance modifier for hull damage when a turret penetration occurs
+var     float       HullPenetrationTurretDamageChanceModifier; // chance modifier for turret damage when a hull penetration occurs
+var     float       TurretPenetrationDamageModifier; // damage modifier for incoming damage when a turret penetration occurs
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
 var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points (new DH types) that may be hit & damaged
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
+var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
+
+// The naming on these are extremely deceptive.
+// These are not "chances", but are damage thresholds that, when reached, will have a base 100% chance of doing damage to the thing in question.
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
 var     float       DriverKillChance;           // chance that shrapnel will kill driver
 var     float       CommanderKillChance;        // chance that shrapnel will kill commander
@@ -70,7 +74,6 @@ var     float       GunnerKillChance;           // chance that shrapnel will kil
 var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
-var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
@@ -181,6 +184,27 @@ simulated function PostNetReceive()
     {
         SetEngineFireEffects();
     }
+}
+
+simulated function bool IsUnbuttoned()
+{
+    return DriverPositionIndex >= UnbuttonedPositionIndex && !IsInState('ViewTransition');
+}
+
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    if (!super.CanSwitchToVehiclePosition(F))
+    {
+        return false;
+    }
+
+    if (bMustBeUnbuttonedToChangePositions && !IsUnbuttoned())
+    {
+        DisplayVehicleMessage(30,, true);
+        return false;
+    }
+
+    return true;
 }
 
 // Modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
@@ -1833,13 +1857,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bTurretPenetration)
                     {
-                        HullChanceModifier = 0.25;   // 25% usual chance of damage to things in the hull
+                        HullChanceModifier = TurretPenetrationHullDamageChanceModifier;
                         TurretChanceModifier = 1.0;
+                        Damage *= TurretPenetrationDamageModifier;
                     }
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier = 0.35; // 35% usual chance of damage to things in the turret
+                        TurretChanceModifier = HullPenetrationTurretDamageChanceModifier;
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
@@ -2440,6 +2465,9 @@ defaultproperties
     TurretDetonationThreshold=1750.0
     // above values are misleading: the greater the number, the lower the chance is
     AmmoIgnitionProbability=0.75
+    TurretPenetrationHullDamageChanceModifier=0.25
+    HullPenetrationTurretDamageChanceModifier=0.35
+    TurretPenetrationDamageModifier=1.0
 
     // Vehicle fires
     bEnableHatchFires=true
@@ -2515,7 +2543,6 @@ defaultproperties
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
     // Driving & steering
-    MaxCriticalSpeed=700.0 // approx 42 kph
     TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO
@@ -2555,5 +2582,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
-    bDebuggingText=true
+    bDebuggingText=false
 }

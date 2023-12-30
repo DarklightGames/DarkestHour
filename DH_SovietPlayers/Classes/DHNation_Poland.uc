@@ -30,6 +30,6 @@ defaultproperties
     DefaultSquadNames(5)="Franciszek"
     DefaultSquadNames(6)="Genowefa"
     DefaultSquadNames(7)="Henryk"
-    HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
+    SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'
 }

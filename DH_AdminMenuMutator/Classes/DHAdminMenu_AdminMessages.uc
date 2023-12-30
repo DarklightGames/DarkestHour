@@ -138,7 +138,7 @@ defaultproperties
     ConfirmSwitchToAlliesRole="Press enter to confirm you want to SWITCH this player to a new ALLIES role"
     ConfirmSwitchToAxisRole="Press enter to confirm you want to SWITCH this player to a new AXIS role"
     ConfirmDropAtObjective="Press enter to confirm you want to PARADROP this player at the chosen objective"
-    EnterGridLocation="Please specify a grid location (example: for grid E2 keypad 5, enter \"e25\")"
+    EnterGridLocation="Please specify a grid location (example: for grid E2 keypad 5, enter 'e25')"
     ConfirmDropAtCurrentLocation="Press enter to confirm you want to PARADROP this player at their CURRENT location"
     ConfirmEnableRealism="Press enter to confirm you want to ENABLE realism mode"
     ConfirmDisableRealism="Press enter to confirm you want to DISABLE realism mode"

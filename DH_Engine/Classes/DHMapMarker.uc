@@ -252,7 +252,7 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
 
     Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
 
-    return (Distance / 5) * 5 $ "m";
+    return (Distance / 5) * 5 $ class'DHUnits'.default.MetersSymbol;
 }
 
 defaultproperties

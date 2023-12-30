@@ -35,4 +35,6 @@ defaultproperties
     BinocsClass=class'DH_Equipment.DHBinocularsItemGerman'
     SmokeGrenadeClass=class'DH_Equipment.DH_NebelGranate39Weapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_OrangeSmokeWeapon'
+
+    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
 }

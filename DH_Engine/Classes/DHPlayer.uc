@@ -5148,7 +5148,7 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
 }
 
 // New debug exec to adjust the position of a vehicle's shadow so it looks right by adjusting the vertical position offset (ShadowZOffset) of attached ShadowProjector
-exec function SetVehShadowHeight(float NewValue)
+exec function SetShadowZOffset(float NewValue)
 {
     local DHVehicle V;
 
@@ -6397,8 +6397,8 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+    TraceStart = CalcViewLocation;
+    TraceEnd = TraceStart + (vector(CalcViewRotation) * Pawn.Region.Zone.DistanceFogEnd);
 
     foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
@@ -7856,7 +7856,7 @@ simulated static function string GetInventoryName(class<Inventory> InventoryClas
     return InventoryClass.default.ItemName;
 }
 
-simulated exec function ListVehicles()
+exec simulated function ListVehicles()
 {
     class'DHVehicleRegistry'.static.DumpToLog(self);
 }

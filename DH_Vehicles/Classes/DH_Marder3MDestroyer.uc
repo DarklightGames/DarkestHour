@@ -53,7 +53,6 @@ defaultproperties
     RearLeftAngle=210.0
 
     // Movement
-    MaxCriticalSpeed=729.0 // 43 kph
     GearRatios(4)=0.72
     TransRatio=0.1
 
@@ -67,9 +66,9 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-5.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
@@ -212,4 +211,11 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Marder3MDestroyer.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
+
+    // Because the turret is completely disconnected from the hull, there should be no chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.0
+    HullPenetrationTurretDamageChanceModifier=0.0
+    TurretPenetrationDamageModifier=0.25
 }

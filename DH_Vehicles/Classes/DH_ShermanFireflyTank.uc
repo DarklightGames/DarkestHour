@@ -50,7 +50,6 @@ defaultproperties
     RearLeftAngle=203.0
 
     // Movement
-    MaxCriticalSpeed=693.0 // 41 kph
     GearRatios(1)=0.19
     GearRatios(3)=0.62
     GearRatios(4)=0.76
@@ -63,10 +62,10 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=32.0,PointOffset=(X=-120.0,Y=0.0,Z=5.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=30.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=70.15
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_right'

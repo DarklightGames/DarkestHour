@@ -6,6 +6,7 @@
 class DHATGunTouchMessage extends DHVehicleTouchMessage
     abstract;
 
+var string ButtonString;
 var localized string RotateHintString;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -33,7 +34,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
         if (ATGunClass.default.bCanBeRotated)
         {
-            S @= "(" $ default.RotateHintString $ ")";
+            S @= "(" $ Repl(default.RotateHintString, "{0}", default.ButtonString) $ ")";
         }
     }
 
@@ -42,5 +43,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    RotateHintString="hold [%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%] to rotate"
+    ButtonString="[%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%]"
+    RotateHintString="hold {0} to rotate"
 }

@@ -19,7 +19,7 @@ defaultproperties
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="cache_attachment"
     ResupplyAttachmentBone="resupply"
-    VehHitpoints(7)=(PointRadius=60.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=0.0,Z=100.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(7)=(PointRadius=60.0,PointBone="body",PointOffset=(X=-60.0,Y=0.0,Z=100.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'

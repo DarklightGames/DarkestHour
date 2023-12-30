@@ -90,7 +90,6 @@ defaultproperties
     RearLeftAngle=203.0
 
     // Movement
-    MaxCriticalSpeed=587.0 // 35 kph
     TransRatio=0.078 // gives top speed on the flat of 15 mph (approx 24 kph) // TODO: may need to reduce this slightly for the Mk.VII as think it was a little slower
 
     // Damage
@@ -103,9 +102,9 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Y=0.0,Z=65.0))
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
-    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
+    VehHitpoints(2)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
+    VehHitpoints(3)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
     NewVehHitpoints(0)=(PointRadius=15.0,PointBone="Turret",PointOffset=(X=48.0,Y=0.0,Z=19.0),NewHitPointType=NHP_GunPitch)
     TreadHitMaxHeight=37.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_Churchill_stc.Churchill_DamagedTrack_left'

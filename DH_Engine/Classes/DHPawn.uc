@@ -102,9 +102,10 @@ var     vector  NewAcceleration;     // acceleration which is checked by PlayerM
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
 var     sound   MantleSound;
 
-// Diggin
+// Digging
 var     bool    bCanDig;
 
+// Mantling
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
@@ -140,13 +141,20 @@ var float                   LastStartCrouchTime; // Stores the last time that St
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
-// (not) DUMB SHIT
+// Gun Rotation
 var     DHATGun             GunToRotate;
 
+// Backpacks
 var     DHBackpack          Backpack;
 var     class<DHBackpack>   BackpackClass;
 var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
+
+// Health Figure
+var     class<DHHealthFigure>   HealthFigureClass;
+
+// Localized strings
+var     localized string    AdminSpawnedVehicleText;
 
 replication
 {
@@ -2953,7 +2961,7 @@ simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
     // an the overlay material is applied..
     for (i = 0; i < Skins.Length; ++i)
     {
-        if (Skins[i].IsA('Combiner'))
+        if (Skins[i] != none && Skins[i].IsA('Combiner'))
         {
             FB = new class'FinalBlend';
             FB.Material = Skins[i];
@@ -5386,7 +5394,7 @@ simulated function vector CalcDrawOffset(Inventory Inv)
 		return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0,0,1);
     }
 
-	DrawOffset = ((0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation());
+	DrawOffset = (0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation();
 
     DrawOffset += EyePosition();
 
@@ -6877,14 +6885,13 @@ exec function SetFlySpeed(float NewSpeed)
 
 exec function GimmeSupplies()
 {
-    switch (GetTeamNum())
+    local DH_LevelInfo LI;
+    
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none)
     {
-        case AXIS_TEAM_INDEX:
-            SpawnVehicle("opellogi");
-            break;
-        case ALLIES_TEAM_INDEX:
-            SpawnVehicle("gmclogi");
-            break;
+        SpawnVehicle(string(LI.GetTeamNationClass(GetTeamNum()).default.SupplyTruckClass));
     }
 }
 
@@ -6897,7 +6904,7 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
     local rotator           SpawnDirection;
     local int               Distance;
     local float             Degrees;
-    local string            VehicleClassName;
+    local string            VehicleClassName, S;
 
     VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
 
@@ -6920,7 +6927,11 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
             SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
-            Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
+
+            S = default.AdminSpawnedVehicleText;
+            S = Repl(S, "{name}", GetHumanReadableName());
+            S = Repl(S, "{vehicle}", V.GetHumanReadableName());
+            Level.Game.Broadcast(self, S);
         }
     }
 }
@@ -7522,7 +7533,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {
             return true;
         }
@@ -7694,4 +7705,6 @@ defaultproperties
     LimpAnims(5)=""
     LimpAnims(6)=""
     LimpAnims(7)=""
+
+    AdminSpawnedVehicleText="Admin {name} spawned a {vehicle}"
 }

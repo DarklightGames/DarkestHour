@@ -14,6 +14,8 @@ struct RangePoint
 
 var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
 var()   array<RangePoint>   MechanicalRanges;     // the range setting values for tank cannons that do mechanical pitch adjustments for aiming
+
+// DEPRECATED: Use the DHGunOptics system instead from now on!
 var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
 var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
 

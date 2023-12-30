@@ -41,7 +41,7 @@ simulated function SetBoltMode(EBoltMode BoltMode)
 }
 
 // This hides & shows the correct bolt bones depending on the bolt mode.
-simulated private function UpdateBolt()
+private simulated function UpdateBolt()
 {
     if (BoltMode == BM_Closed)
     {
@@ -107,7 +107,6 @@ defaultproperties
 
     // Bolt operation
     BoltMode=BM_Closed
-    BoltOpenSlot=0
     BoltClosedSlot=1
     BoltOpenBoneName="bolt_open"
     BoltClosedBoneName="bolt_closed"

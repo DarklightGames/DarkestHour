@@ -1,1 +1,0 @@
-python i18n.py -mod DarkestHourDev ../.. -digest

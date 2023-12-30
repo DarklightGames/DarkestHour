@@ -776,7 +776,7 @@ defaultproperties
 
     OnDraw=InternalOnDraw
 
-    Begin Object Class=GUIContextMenu Name=SRPContextMenu
+    Begin Object Class=DHGUIContextMenu Name=SRPContextMenu
         OnOpen=DHGUIMapComponent.MyContextOpen
         OnClose=DHGUIMapComponent.MyContextClose
         OnSelect=DHGUIMapComponent.MyContextSelect
@@ -802,7 +802,7 @@ defaultproperties
         GetOverlayMaterial=MyGetOverlayMaterial
     End Object
 
-    Begin Object Class=GUIContextMenu Name=MapMarkerMenu
+    Begin Object Class=DHGUIContextMenu Name=MapMarkerMenu
         OnOpen=InternalOnOpen
         OnClose=InternalOnClose
         OnSelect=InternalOnSelect

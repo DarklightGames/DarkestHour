@@ -26,4 +26,6 @@ defaultproperties
     bAlwaysSeverBodyparts=true
 
     Hitpoints(1)=(DamageMultiplier=4.0) // head
+
+    HealthFigureClass=class'DH_GerPlayers.DHHealthFigure_Germany'
 }

@@ -8,9 +8,9 @@ class DHLargeFont extends GUIFont;
 defaultproperties
 {
     KeyName="DHLargeFont"
-    FontArrayNames(0)="DHFonts.DHFont14"
-    FontArrayNames(1)="DHFonts.DHFont14"
-    FontArrayNames(2)="DHFonts.DHFont14"
-    FontArrayNames(3)="DHFonts.DHFont14"
-    FontArrayNames(4)="DHFonts.DHFont14"
+    FontArrayNames(0)="DHFonts.DHLargeFont"
+    FontArrayNames(1)="DHFonts.DHLargeFont"
+    FontArrayNames(2)="DHFonts.DHLargeFont"
+    FontArrayNames(3)="DHFonts.DHLargeFont"
+    FontArrayNames(4)="DHFonts.DHLargeFont"
 }

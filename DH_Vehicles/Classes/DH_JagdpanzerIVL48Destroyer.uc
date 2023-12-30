@@ -50,9 +50,6 @@ defaultproperties
     FrontLeftAngle=332.0
     RearLeftAngle=208.0
 
-    // Movement
-    MaxCriticalSpeed=730.0 // 44 kph
-
     // Damage
 	// note: 4 men crew
 	// cons: petrol fuel
@@ -63,9 +60,9 @@ defaultproperties
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Z=10.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(Y=-50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     NewVehHitpoints(0)=(PointRadius=5.0,PointBone="body",PointOffset=(X=40.0,Y=10.5,Z=65.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_GunPitch)

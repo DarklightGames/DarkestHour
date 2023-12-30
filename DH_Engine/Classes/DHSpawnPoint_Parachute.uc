@@ -26,8 +26,7 @@ simulated function int GetDesirability()
 
 defaultproperties
 {
-    SpawnPointStyle="DHParatroopersButtonStyle"
-
+    bAirborneSpawn=true
     SpawnLocationOffset=(Z=10000)
     SpawnRadius=1024.0
 }

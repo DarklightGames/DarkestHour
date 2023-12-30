@@ -5,6 +5,11 @@
 class UUnits extends Object
     abstract;
 
+var localized string UnrealAngleSymbol;
+var localized string DegreesSymbol;
+var localized string MilsSymbol;
+var localized string RadiansSymbol;
+
 enum EAngleUnit
 {
     AU_Unreal,
@@ -18,13 +23,13 @@ final static function string GetAngleUnitString(EAngleUnit Unit)
     switch (Unit)
     {
         case AU_Unreal:
-            return "u";
+            return default.UnrealAngleSymbol;
         case AU_Degrees:
-            return "°";
+            return default.DegreesSymbol;
         case AU_Milliradians:
-            return "mils";
+            return default.MilsSymbol;
         case AU_Radians:
-            return "rad";
+            return default.RadiansSymbol;
         default:
             return "";
     }
@@ -108,3 +113,10 @@ final static function float MilsToUnreal(coerce float Mils)
     return RadiansToUnreal(Mils * 0.001);
 }
 
+defaultproperties
+{
+    UnrealAngleSymbol = "u";
+    DegreesSymbol = "°";
+    MilsSymbol = "mils";
+    RadiansSymbol = "rad";
+}

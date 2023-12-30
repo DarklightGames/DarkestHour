@@ -30,6 +30,7 @@ struct SMapInfo
     var EMapSize Size;
     var EMapGameType GameType;
     var DH_LevelInfo.EAlliedNation AlliedNation;
+    var DH_LevelInfo.EAxisNation AxisNation;
 };
 
 var array<SMapInfo>         MapInfos;
@@ -92,6 +93,17 @@ static function string GetAlliedNationString(DH_LevelInfo.EAlliedNation AlliedNa
             return "USSR";
         case NATION_Poland:
             return "Poland";
+    }
+}
+
+static function string GetAxisNationString(DH_LevelInfo.EAxisNation AxisNation)
+{
+    switch (AxisNation)
+    {
+        case NATION_Germany:
+            return "Germany";
+        case NATION_Italy:
+            return "Italy";
     }
 }
 
@@ -239,7 +251,7 @@ defaultproperties
     MapInfos(72)=(Name="DH-Riga_Docks_Push",AlliedNation=NATION_USSR,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(73)=(Name="DH-Rhine_River_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(74)=(Name="DH-Salaca_River_Clash",AlliedNation=NATION_USSR,GameType=GAMETYPE_Clash,Size=SIZE_Medium)
-    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(75)=(Name="DH-San_Valentino_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(76)=(Name="DH-Schijndel_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(77)=(Name="DH-Smolensk_Advance",AlliedNation=NATION_USSR,GameType=GAMETYPE_Advance,Size=SIZE_Small)
     MapInfos(78)=(Name="DH-Turqueville_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
@@ -330,4 +342,8 @@ defaultproperties
     MapInfos(163)=(Name="DH-Jurques_Dusk_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(164)=(Name="DH-Bremoy_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
     MapInfos(165)=(Name="DH-Armored_Wacht_am_Rhein_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
+    MapInfos(166)=(Name="DH-Niscemi_Outskirts_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)    // TODO: Set size
+    MapInfos(167)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance) // ^
+    MapInfos(168)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Defence)        // ^
+    MapInfos(169)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameType=GAMETYPE_Advance)                 // ^
 }

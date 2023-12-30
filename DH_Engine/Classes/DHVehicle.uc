@@ -2,11 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// Useful Reference for SCars: https://docs.unrealengine.com/udk/Two/SCarReference.html
+// ==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
     abstract;
-
-#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
 struct PassengerPawn
@@ -54,12 +54,12 @@ var     int         PreventTeamChangeForTK;      // Number of seconds a player c
 // Driver & driving
 var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
-var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
-                                                 // ... calculated as (desired kph * 1000 * 60.352 / 3600)
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
+var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
+var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
 
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
@@ -188,8 +188,20 @@ struct SExitPosition
 };
 var     array<SExitPosition> AbsoluteExitPositions;
 
+// Steering Animations
+var bool bUseSteeringAnimation;
+var struct SSteeringAnimation
+{
+    var int Channel;
+    var name Bone;
+    var name Sequence;  // 0.0 = full left, 0.5 = center, 1.0 = full right
+    var int FrameCount;
+} SteeringAnimation;
+
 // Debugging
 var     bool        bDebuggingText;
+
+var Sound BuzzSound;
 
 replication
 {
@@ -210,6 +222,11 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+simulated function name GetIdleAnim()
+{
+    return BeginningIdleAnim;
+}
+
 // Modified to create passenger pawn classes from PassengerWeapons array, to make net clients show empty rider positions on HUD vehicle icon,
 // to match position indexes to initial position, to set bDriverAlreadyEntered in single player, to avoid setting initial timer RO's 'waiting for crew' system is deprecated,
 // and to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
@@ -220,9 +237,9 @@ simulated function PostBeginPlay()
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     // Play neutral idle animation
-    if (HasAnim(BeginningIdleAnim))
+    if (HasAnim(GetIdleAnim()))
     {
-        PlayAnim(BeginningIdleAnim);
+        PlayAnim(GetIdleAnim());
     }
 
     // Create passenger pawn classes from the PassengerWeapons array
@@ -265,6 +282,12 @@ simulated function PostBeginPlay()
         // Set up new NotifyParameters object
         NotifyParameters = new class'TreeMap_string_Object';
         NotifyParameters.Put("VehicleClass", Class);
+    }
+
+    if (DriverAnimationChannelBone != '')
+    {
+        // Separate animation channel for driver camera.
+        AnimBlendParams(DriverAnimationChannel, 1.0,,, DriverAnimationChannelBone);
     }
 }
 
@@ -565,16 +588,6 @@ simulated function Tick(float DeltaTime)
         // Vehicle is moving
         if (VehicleSpeed > 0.1)
         {
-            // Force player to pull back on throttle if over max speed
-            if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-            {
-                PlayerController(Controller).aForward = -32768.0;
-            }
-            else if (bWheelsAreDamaged && (VehicleSpeed >= MaxCriticalSpeed * DamagedWheelSpeedFactor) && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-            {
-                PlayerController(Controller).aForward = -32768.0;
-            }
-
             // Update tread, interior rumble & engine sound volumes, based on speed
             MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
             UpdateMovementSound(MotionSoundVolume);
@@ -638,6 +651,11 @@ simulated function Tick(float DeltaTime)
         }
     }
 
+    if (bUseSteeringAnimation && IsLocallyControlled())
+    {
+        UpdateSteeringAnimation();
+    }
+    
     super.Tick(DeltaTime);
 
     // Disable Tick if vehicle isn't moving & has no driver
@@ -645,6 +663,25 @@ simulated function Tick(float DeltaTime)
     {
         Disable('Tick');
     }
+}
+
+simulated function InitializeSteeringAnimation()
+{
+    AnimBlendParams(SteeringAnimation.Channel, 1.0, 0.0,, SteeringAnimation.Bone);
+}
+
+simulated function float GetSteeringAnimationTime()
+{
+    local float F;
+    
+    F = (Steering + 1.0) / 2.0;
+
+    return F * (SteeringAnimation.FrameCount - 1);
+}
+
+simulated function UpdateSteeringAnimation()
+{
+    FreezeAnimAt(GetSteeringAnimationTime(), SteeringAnimation.Channel);
 }
 
 // Modified to remove RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as DH doesn't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
@@ -1238,9 +1275,9 @@ simulated state EnteringVehicle
     {
         SwitchMesh(InitialPositionIndex);
 
-        if (HasAnim(BeginningIdleAnim))
+        if (HasAnim(GetIdleAnim()))
         {
-            PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
+            PlayAnim(GetIdleAnim()); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
         SetViewFOV(InitialPositionIndex);
@@ -1257,9 +1294,9 @@ simulated event DrivingStatusChanged()
     {
         Enable('Tick'); // necessary even if engine is off, if we have a driver, to prevent vehicle from being driven
     }
-    else if (HasAnim(BeginningIdleAnim))
+    else if (HasAnim(GetIdleAnim()))
     {
-        PlayAnim(BeginningIdleAnim);
+        PlayAnim(GetIdleAnim());
     }
 }
 
@@ -1367,13 +1404,13 @@ simulated state ViewTransition
         {
             if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
             {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim,,, DriverAnimationChannel);
                 ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
             }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim,,, DriverAnimationChannel);
             ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
         }
     }
@@ -1486,6 +1523,8 @@ function ServerChangeDriverPosition(byte F)
 // or a tank crew position he can't use, including in an armored vehicle that he's locked out of (although shouldn't be an issue as he's already in the driver position)
 simulated function bool CanSwitchToVehiclePosition(byte F)
 {
+    local VehicleWeaponPawn VWP;
+
     F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
 
     // Can't switch if player has selected an invalid weapon pawn position
@@ -1501,12 +1540,14 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         return false;
     }
 
+    VWP = WeaponPawns[F];
+
     // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
     // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
     // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
-    if (WeaponPawns[F] != none)
+    if (VWP != none)
     {
-        if (WeaponPawns[F].IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WeaponPawns[F]).bMustBeTankCrew)
+        if (VWP.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(VWP).bMustBeTankCrew)
         {
             // Can't switch if player has selected a tank crew position but isn't a tank crew role
             if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
@@ -1526,7 +1567,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
 
         // Can't switch if new vehicle position already has a human occupant
         // bDriving check is there to also catch 'LeaveBody' debug pawns, which won't have a PRI, stopping player switching into same position as one
-        if (WeaponPawns[F].bDriving && !(WeaponPawns[F].PlayerReplicationInfo != none && WeaponPawns[F].PlayerReplicationInfo.bBot))
+        if (VWP.bDriving && !(VWP.PlayerReplicationInfo != none && VWP.PlayerReplicationInfo.bBot))
         {
             return false;
         }
@@ -1775,6 +1816,17 @@ simulated function Fire(optional float F)
     }
 }
 
+// Override in sub-classes to have different start-up and shut down sounds depending on context (i.e., ambphibious vehicles)
+simulated function Sound GetStartUpSound()
+{
+    return StartUpSound;
+}
+
+simulated function Sound GetShutDownSound()
+{
+    return ShutDownSound;
+}
+
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
@@ -1805,15 +1857,20 @@ function ServerStartEngine()
             {
                 if (ShutDownSound != none)
                 {
-                    PlaySound(ShutDownSound, SLOT_None, 1.0);
+                    PlaySound(GetShutDownSound(), SLOT_None, 1.0);
                 }
             }
             else if (StartUpSound != none)
             {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
+                PlaySound(GetStartUpSound(), SLOT_None, 1.0);
             }
         }
     }
+}
+
+simulated function Sound GetIdleSound()
+{
+    return IdleSound;
 }
 
 // New function to set the engine properties & effects, based on whether engine is on & if it's damaged
@@ -1858,9 +1915,9 @@ simulated function SetEngine()
     // Engine on
     else
     {
-        if (IdleSound != none)
+        if (GetIdleSound() != none)
         {
-            AmbientSound = IdleSound;
+            AmbientSound = GetIdleSound();
         }
 
         if (!bEmittersOn)
@@ -2052,7 +2109,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Inform the instigator they are doing something wrong
                 if (PlayerController(InstigatorController) != none)
                 {
-                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
+                    PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
                 }
 
                 // If no one has ever entered the vehicle, then don't allow team damage
@@ -2631,7 +2688,7 @@ function bool IsPointShot(vector HitLocation, vector LineCheck, float Additional
     // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
     ClosestDistance = Sqrt(Difference dot Difference);
 
-    return ClosestDistance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
+    return ClosestDistance < (VehHitpoints[Index].PointRadius * AdditionalScale);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3060,8 +3117,8 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
         if (VehicleAnim != '' && HasAnim(VehicleAnim))
         {
-            PlayAnim(VehicleAnim);
-            SetAnimFrame(1.0);
+            PlayAnim(VehicleAnim,,, DriverAnimationChannel);  // TODO: needs to use the channel index!
+            SetAnimFrame(1.0, DriverAnimationChannel);
         }
 
         if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
@@ -3707,6 +3764,7 @@ event CheckReset()
 {
     local Controller C;
     local float      Distance;
+    local ROVehicleFactory VF;
 
     // Do nothing if vehicle is a spawn vehicle or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
@@ -3716,10 +3774,12 @@ event CheckReset()
         return;
     }
 
+    VF = ROVehicleFactory(ParentFactory);
+
     // Do nothing if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
     // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
     if (IsFactorysLastVehicle() &&
-        !(ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive))
+        !(VF != none && !VF.bFactoryActive && VF.bDestroyVehicleWhenInactive))
     {
         return;
     }
@@ -4226,7 +4286,7 @@ defaultproperties
     TrackHealth(0)=100
     TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    VehHitpoints(1)=(PointRadius=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
     SatchelResistance=1.0
@@ -4344,4 +4404,6 @@ defaultproperties
 
     //bDebuggingText=true
     ResupplyInterval=2.5
+
+    BuzzSound=Sound'DHMenuSounds.BuzzBuzz'
 }

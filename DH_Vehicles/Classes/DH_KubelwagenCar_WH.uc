@@ -48,7 +48,6 @@ defaultproperties
     EngineBrakeFactor=0.0003
     bHasHandbrake=true
     EngineRPMSoundRange=8000.0
-    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
     WheelPenScale=0.85
@@ -66,11 +65,11 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.95
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore) // ammo
-    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=24.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(5)=(PointRadius=24.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(1)=(PointRadius=24.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore) // ammo
+    VehHitpoints(2)=(PointRadius=24.0,PointBone="LeftFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=24.0,PointBone="RightFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=24.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(5)=(PointRadius=24.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.125
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5

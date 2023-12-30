@@ -50,7 +50,6 @@ defaultproperties
     RearLeftAngle=208.0
 
     // Movement
-    MaxCriticalSpeed=1077.0 // 64 kph
     GearRatios(3)=0.6
     GearRatios(4)=0.75
     WheelPenScale=1.2
@@ -120,6 +119,8 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
+
+    ShadowZOffset=30.0
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel

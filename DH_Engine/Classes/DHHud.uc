@@ -126,6 +126,9 @@ var     localized string    CanReloadText;
 var     localized string    ConnectedObjectivesNotSecuredText;
 var     localized string    NeedsClearedText;
 var     localized string    BlackoutText;
+var     localized string    PlaceRallyPointText;
+var     localized string    SayTypeConsoleText;
+var     localized string    SayTypeAllText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -218,16 +221,11 @@ function DrawDebugInformation(Canvas C)
     S @= class'DarkestHourGame'.default.Version.ToString();
 
     C.Style = ERenderStyle.STY_Alpha;
-    C.Font = C.TinyFont;
+    C.Font = GetTinyFont(C);
 
     C.TextSize(S, StrX, StrY);
     Y = C.ClipY - StrY;
     X = C.ClipX - StrX;
-
-    C.DrawColor = BlackColor;
-
-    C.SetPos(X + 1, Y + 1);
-    C.DrawTextClipped(S);
 
     C.DrawColor = WhiteColor;
 
@@ -523,7 +521,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 
 // Modified to correct bug that sometimes screwed up layout of critical message,
 // resulting in very long text lines going outside of message background
-// and  sometimes off screen
+// and sometimes off screen
 function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
 {
     local  array<string>  Lines;
@@ -596,51 +594,13 @@ static function Font GetPlayerNameFont(Canvas C)
 {
     local int FontSize;
 
-    if (default.OverrideConsoleFontName != "")
-    {
-        if (default.OverrideConsoleFont != none)
-        {
-            return default.OverrideConsoleFont;
-        }
-
-        default.OverrideConsoleFont = Font(DynamicLoadObject(default.OverrideConsoleFontName, class'Font'));
-
-        if (default.OverrideConsoleFont != none)
-        {
-            return default.OverrideConsoleFont;
-        }
-
-        Log("Warning: HUD couldn't dynamically load font" @ default.OverrideConsoleFontName);
-
-        default.OverrideConsoleFontName = "";
-    }
-
     FontSize = default.PlayerNameFontSize;
 
-    if (C.ClipX < 640.0)
-    {
-        FontSize++;
-    }
-
-    if (C.ClipX < 800.0)
-    {
-        FontSize++;
-    }
-
-    if (C.ClipX < 1024.0)
-    {
-        FontSize++;
-    }
-
-    if (C.ClipX < 1280.0)
-    {
-        FontSize++;
-    }
-
-    if (C.ClipX < 1600.0)
-    {
-        FontSize++;
-    }
+    if (C.ClipX < 640.0) { FontSize++; }
+    if (C.ClipX < 800.0) { FontSize++; }
+    if (C.ClipX < 1024.0) { FontSize++; }
+    if (C.ClipX < 1280.0) { FontSize++; }
+    if (C.ClipX < 1600.0) { FontSize++; }
 
     return LoadFontStatic(Min(8, FontSize));
 }
@@ -2050,7 +2010,7 @@ function DrawSignals(Canvas C)
         C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
         C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);
 
-        C.Font = C.TinyFont;
+        C.Font = GetTinyFont(C);
 
         if (PC.Signals[i].SignalClass.default.bShouldShowLabel && bIsNew)
         {
@@ -2058,10 +2018,6 @@ function DrawSignals(Canvas C)
             C.TextSize(LabelText, XL, YL);
             X = ScreenLocation.X - (XL / 2);
             Y = ScreenLocation.Y - (SignalIconSize / 2) - YL;
-            C.DrawColor = class'UColor'.default.Black;
-            C.DrawColor.A = SignalColor.A;
-            C.SetPos(X + 1, Y + 1);
-            C.DrawText(LabelText);
             C.DrawColor = SignalColor;
             C.SetPos(X, Y);
             C.DrawText(LabelText);
@@ -2069,16 +2025,12 @@ function DrawSignals(Canvas C)
 
         if (PC.Signals[i].SignalClass.default.bShouldShowDistance)
         {
-            // Draw distance text (with drop shadow)
+            // Draw distance text
             Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
-            DistanceText = string(Distance) @ "m";
+            DistanceText = string(Distance) $ class'DHUnits'.default.MetersSymbol;
             C.TextSize(DistanceText, XL, YL);
             X = ScreenLocation.X - (XL / 2);
             Y = ScreenLocation.Y + (SignalIconSize / 2);
-            C.DrawColor = class'UColor'.default.Black;
-            C.DrawColor.A = SignalColor.A;
-            C.SetPos(X + 1, Y + 1);
-            C.DrawText(DistanceText);
             C.DrawColor = SignalColor;
             C.SetPos(X, Y);
             C.DrawText(DistanceText);
@@ -2174,6 +2126,21 @@ function MouseInterfaceStopCapturing()
 {
     ROPlayer(PlayerOwner).bHudCapturesMouseInputs = false;
     MouseInterfaceUnlockPlayerRotation();
+}
+
+static function Font GetTinyFont(Canvas C)
+{
+    local int FontSize;
+
+    FontSize = 6;
+
+    if (C.ClipX < 640.0) { FontSize++; }
+    if (C.ClipX < 800.0) { FontSize++; }
+    if (C.ClipX < 1024.0) { FontSize++; }
+    if (C.ClipX < 1280.0) { FontSize++; }
+    if (C.ClipX < 1600.0) { FontSize++; }
+
+    return LoadSmallFontStatic(Min(8, FontSize));
 }
 
 // Modified to show names of friendly players within 25m if they are talking, are in our squad, or if we can resupply them or assist them with loading a rocket
@@ -2574,7 +2541,7 @@ function DrawPlayerNames(Canvas C)
         }
 
         C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y - 32.0);
-        DrawShadowedTextClipped(C, PlayerName);
+        C.DrawTextClipped(PlayerName);
 
         // TODO: SL icon!
 
@@ -2629,29 +2596,6 @@ function DrawPlayerNames(Canvas C)
 
     // Finally record the time this frame was drawn, so in future we can easily tell if a player has just become valid (his LastNameDrawTime would be prior to this time)
     HUDLastNameDrawTime = Now;
-}
-
-function DrawShadowedTextClipped(Canvas C, string Text)
-{
-    local color SavedDrawColor;
-
-    if (C != none)
-    {
-        SavedDrawColor = C.DrawColor;
-
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = SavedDrawColor.A;
-        C.CurX += 1;
-        C.CurY += 1;
-
-        C.DrawTextClipped(Text);
-
-        C.DrawColor = SavedDrawColor;
-        C.CurX -= 1;
-        C.CurY -= 1;
-
-        C.DrawTextClipped(Text);
-    }
 }
 
 // Modified to fix problem where compass failed to follow view rotation of player driving a vehicle
@@ -3083,7 +3027,7 @@ function DrawNetworkActors(Canvas C)
             }
 
             // Draw actor's name on screen (changed to use smallest font available)
-            C.Font = C.TinyFont;
+            C.Font = GetTinyFont(C);
             C.TextSize(ActorName, StrX, StrY);
             ScreenPos = C.WorldToScreen(A.Location);
             C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
@@ -3170,7 +3114,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
         Widget.TextureScale = 0.04;
         Widget.RenderStyle = STY_Normal;
 
-        C.Font = C.TinyFont; // changed to use smallest font available
+        C.Font = GetTinyFont(C); // changed to use smallest font available
 
         foreach DynamicActors(class'Actor', A)
         {
@@ -3258,7 +3202,7 @@ function DrawVehiclePointSphere()
                 C = GrayColor;
             }
 
-            V.DrawDebugSphere(HitPointLocation, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
+            V.DrawDebugSphere(HitPointLocation, V.VehHitpoints[i].PointRadius, 10, C.R, C.G, C.B);
         }
 
         AV = DHArmoredVehicle(V);
@@ -3440,7 +3384,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
 
     // Get smaller font to draw the map scale in
-    C.Font = C.TinyFont;
+    C.Font = GetTinyFont(C);
 
     // Set the font to be used to draw objective text
     C.Font = GetSmallMenuFont(C);
@@ -4161,7 +4105,7 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
         if (PlayerNumberText.PosX >= 0.0 && PlayerNumberText.PosX <= 1.0 && PlayerNumberText.PosY >= 0.0 && PlayerNumberText.PosY <= 1.0)
         {
-            C.Font = C.TinyFont;
+            C.Font = GetTinyFont(C);
             DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
         }
     }
@@ -4211,24 +4155,34 @@ function DrawObjectives(Canvas C)
 {
 }
 
-function DrawLocationHits(Canvas C, ROPawn P)
+// Returns the health figure class.
+function class<DHHealthFigure> GetHealthFigureClass()
 {
-    local int          Team, i;
-    local bool         bNewDrawHits;
-    local SpriteWidget Widget;
-    local DH_LevelInfo LI;
-    local class<DHHealthFigure> HealthFigureClass;
+    local DHPawn P;
 
-    if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
+    P = DHPawn(PawnOwner);
+
+    if (P == none)
     {
-        Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
+        return none;
     }
 
-    LI = class'DH_LevelInfo'.static.GetInstance(PawnOwner.Level);
+    return P.HealthFigureClass;
+}
 
-    if (LI != none)
+function DrawLocationHits(Canvas C, ROPawn P)
+{
+    local int          i;
+    local bool         bNewDrawHits;
+    local SpriteWidget Widget;
+    local class<DHHealthFigure> HealthFigureClass;
+    local DHPawn        DHP;
+
+    HealthFigureClass = GetHealthFigureClass();
+
+    if (HealthFigureClass == none)
     {
-        HealthFigureClass = LI.GetTeamNationClass(Team).default.HealthFigureClass;
+        return;
     }
 
     for (i = 0; i < arraycount(P.DamageList); ++i)
@@ -4255,7 +4209,6 @@ function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
-    local DH_LevelInfo LI;
     local class<DHHealthFigure> HealthFigureClass;
 
     if (PawnOwnerPRI != none)
@@ -4285,12 +4238,11 @@ function UpdateHud()
                 StanceIcon.WidgetTexture = StanceStanding;
             }
         }
+        
+        HealthFigureClass = GetHealthFigureClass();
 
-        if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
+        if (HealthFigureClass != none)
         {
-            LI = class'DH_LevelInfo'.static.GetInstance(PlayerOwner.Level);
-            HealthFigureClass = LI.GetTeamNationClass(PawnOwnerPRI.Team.TeamIndex).default.HealthFigureClass;
-            
             HealthFigure.WidgetTexture = HealthFigureClass.default.HealthFigure;
             HealthFigureBackground.WidgetTexture = HealthFigureClass.default.HealthFigureBackground;
 
@@ -5655,7 +5607,7 @@ function DrawRallyPointStatus(Canvas C)
             break;
         case ERROR_TooCloseToOtherRallyPoint:
             ErrorIcon = default.RallyPointIconDistance;
-            ErrorString = Result.Error.OptionalInt $ "m";
+            ErrorString = Result.Error.OptionalInt $ class'DHUnits'.default.MetersSymbol;
             break;
         case ERROR_MissingSquadmate:
             ErrorIcon = default.RallyPointIconMissingSquadmate;
@@ -5671,7 +5623,7 @@ function DrawRallyPointStatus(Canvas C)
             break;
         case ERROR_None:
             ErrorIcon = default.RallyPointIconKey;
-            ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor("Press [%PLACERALLYPOINT%]", PC);
+            ErrorString = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.PlaceRallyPointText, PC);
             break;
         default:
             break;
@@ -5683,7 +5635,7 @@ function DrawRallyPointStatus(Canvas C)
         // Time to display an error!
         if (HudScale < 0.60)
         {
-            C.Font = C.TinyFont;
+            C.Font = GetTinyFont(C);
         }
         else
         {
@@ -5737,7 +5689,7 @@ function DrawRallyPointStatus(Canvas C)
             X += IconXL + MarginX;
             Y = BaseY + (YL / 2) - (TextYL / 2) + OffsetY;
             C.SetPos(X, Y);
-            DrawShadowedTextClipped(C, ErrorString);
+            C.DrawTextClipped(ErrorString);
         }
     }
 
@@ -5916,12 +5868,12 @@ function DHDrawTypingPrompt(Canvas C)
         // We have to handle the admin menu mutator functionality "gracefully",
         // so here ya go.
         SayTypeColor = class'UColor'.default.White;
-        SayTypeText = "[CONSOLE]";
+        SayTypeText = default.SayTypeConsoleText;
     }
     else if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
     {
         SayTypeColor = class'UColor'.default.White;
-        SayTypeText = "[ALL]";
+        SayTypeText = default.SayTypeAllText;
     }
     else
     {
@@ -5949,8 +5901,7 @@ defaultproperties
 {
     // General
     MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.Menu.DHPointer')
-    PlayerNameFontSize=1
-    OverrideConsoleFontName="DHFonts.DHFont14"
+    PlayerNameFontSize=6
     SpacingText="      "
     ConsoleMessageCount=8
     ConsoleFontSize=6
@@ -5984,6 +5935,7 @@ defaultproperties
     NeedReloadText="Needs reloading"
     CanReloadText="Press %THROWMGAMMO% to assist reload"
     TeamMessagePrefix="[TEAM] "
+    PlaceRallyPointText="Press [%PLACERALLYPOINT%]"
 
     // Deploying text
     JoinTeamText="Press [ESC] to join a team"
@@ -6148,4 +6100,43 @@ defaultproperties
     // IQ
     IQIconWidget=(/*WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',*/RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
     IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=-55,OffsetY=-118)
+
+	SmallFontArrayNames(0)="DHFonts.DHConsoleFontDS24"
+	SmallFontArrayNames(1)="DHFonts.DHConsoleFontDS24"
+	SmallFontArrayNames(2)="DHFonts.DHConsoleFontDS22"
+	SmallFontArrayNames(3)="DHFonts.DHConsoleFontDS22"
+	SmallFontArrayNames(4)="DHFonts.DHConsoleFontDS18"
+	SmallFontArrayNames(5)="DHFonts.DHConsoleFontDS14"
+	SmallFontArrayNames(6)="DHFonts.DHConsoleFontDS12"
+	SmallFontArrayNames(7)="DHFonts.DHConsoleFontDS9"
+	SmallFontArrayNames(8)="DHFonts.DHConsoleFontDS7"
+    
+	FontArrayNames(0)="DHFonts.DHConsoleFontDS28"
+	FontArrayNames(1)="DHFonts.DHConsoleFontDS26"
+	FontArrayNames(2)="DHFonts.DHConsoleFontDS24"
+	FontArrayNames(3)="DHFonts.DHConsoleFontDS22"
+	FontArrayNames(4)="DHFonts.DHConsoleFontDS18"
+	FontArrayNames(5)="DHFonts.DHConsoleFontDS16"
+	FontArrayNames(6)="DHFonts.DHConsoleFontDS14"
+	FontArrayNames(7)="DHFonts.DHConsoleFontDS12"
+	FontArrayNames(8)="DHFonts.DHConsoleFontDS9"
+
+	MenuFontArrayNames(0)="DHFonts.DHConsoleFontDS18"
+	MenuFontArrayNames(1)="DHFonts.DHConsoleFontDS14"
+	MenuFontArrayNames(2)="DHFonts.DHConsoleFontDS12"
+	MenuFontArrayNames(3)="DHFonts.DHConsoleFontDS9"
+	MenuFontArrayNames(4)="DHFonts.DHConsoleFontDS7"
+
+	CriticalMsgFontArrayNames(0)="DHFonts.DHConsoleFont28"
+	CriticalMsgFontArrayNames(1)="DHFonts.DHConsoleFont26"
+	CriticalMsgFontArrayNames(2)="DHFonts.DHConsoleFont24"
+	CriticalMsgFontArrayNames(3)="DHFonts.DHConsoleFont22"
+	CriticalMsgFontArrayNames(4)="DHFonts.DHConsoleFont18"
+	CriticalMsgFontArrayNames(5)="DHFonts.DHConsoleFont16"
+	CriticalMsgFontArrayNames(6)="DHFonts.DHConsoleFont14"
+	CriticalMsgFontArrayNames(7)="DHFonts.DHConsoleFont12"
+	CriticalMsgFontArrayNames(8)="DHFonts.DHConsoleFont9"
+
+    SayTypeConsoleText="[CONSOLE]"
+    SayTypeAllText="[ALL]"
 }

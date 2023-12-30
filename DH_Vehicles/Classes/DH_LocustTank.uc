@@ -119,7 +119,6 @@ defaultproperties
     FrontLeftAngle=330.0
 
     // Movement
-    MaxCriticalSpeed=1057.0
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.14
@@ -135,7 +134,7 @@ defaultproperties
     DisintegrationHealth=-800.0 //petrol
     TurretDetonationThreshold=4000.0 // increased from 1750
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
-    VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=9.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=49.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_right'

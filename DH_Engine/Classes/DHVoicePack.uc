@@ -47,7 +47,7 @@ function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = OrderSound[1];
-    MessageString = OrderString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(OrderString[1], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -64,7 +64,7 @@ function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = SupportSound[1];
-    MessageString = SupportString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(SupportString[1], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -81,7 +81,7 @@ function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo R
     }
 
     MessageSound = AlertSound[8];
-    MessageString = AlertString[8] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(AlertString[8], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = DefendAnim;
 }
 
@@ -98,7 +98,7 @@ function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient,
     }
 
     MessageSound = VehicleDirectionSound[0];
-    MessageString = VehicleDirectionString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(VehicleDirectionString[0], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = '';
 }
 
@@ -115,7 +115,7 @@ function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipien
     }
 
     MessageSound = OrderSound[0];
-    MessageString = OrderString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
+    MessageString = Repl(OrderString[0], "{objective}", GRI.DHObjectives[MessageIndex].ObjName);
     MessageAnim = AttackAnim;
 }
 
@@ -197,7 +197,13 @@ function Timer()
 defaultproperties
 {
     bUseLocationalVoice=true
+
+    AlertString(8)="Under attack at {objective}"
+    OrderString(0)="Attack {objective}"
+    OrderString(1)="Defend {objective}"
     EnemyAbbrevAxis(3)="Pioneer"
+    SupportString(1)="Need help at {objective}"
+    VehicleDirectionString(0)="Go to {objective}"
 
     unitWhisperDistance=512.0
     unitShoutDistance=2048.0

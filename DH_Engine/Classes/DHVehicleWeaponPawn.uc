@@ -344,6 +344,12 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // It also facilitates the player having a customisable view FOV
 simulated function float GetViewFOV(int PositionIndex)
 {
+    if (PositionIndex == BinocPositionIndex && BinocularsClass != none)
+    {
+        // Use the binoculars' FOV if player is using binoculars.
+        return BinocularsClass.default.PlayerFOVZoom;
+    }
+
     if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
     {
         return DriverPositions[PositionIndex].ViewFOV;
@@ -739,20 +745,32 @@ function KDriverEnter(Pawn P)
     Fix is if we don't yet have VehicleBase actor, we flag that we need to set StoredVehicleRotatio as soon as PostNetReceive() detects we receive VehicleBase actor */
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Fix possible replication timing problems on a net client
-    if (Role < ROLE_Authority && PC != none)
+    if (Role < ROLE_Authority)
     {
-        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
-        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
-        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
-        Controller = PC;
-        SetOwner(PC);
-        Role = ROLE_AutonomousProxy;
-
-        // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into spawn vehicle
-        if (PC.IsInState('Spectating'))
+        if (PC != none)
         {
-            PC.GotoState('PlayerWalking');
+            // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+            // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+            // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
+            Controller = PC;
+            SetOwner(PC);
+            Role = ROLE_AutonomousProxy;
+
+            // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into spawn vehicle
+            if (PC.IsInState('Spectating'))
+            {
+                PC.GotoState('PlayerWalking');
+            }
+        }
+
+        // Reset local desired aim to the actual aim on the net client. This prevents the weapon from spontaneously rotating on entry
+        // because it was previously rotated by another client.
+        //
+        // HACK: CurrentAim is used because it's known and readily available, but it slightly differs (within 8 units) from LocalWeaponAim.
+        // This makes LocalWeaponAim drift every time it's reset, so we only reset it when it's not current.
+        if (Gun != none && !class'URotator'.static.IsClose(LocalWeaponAim, Gun.CurrentAim, 8))
+        {
+            LocalWeaponAim = Normalize(Gun.CurrentAim);
         }
     }
 
@@ -2258,6 +2276,19 @@ exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, i
         DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewPitchDown;
         DriverPositions[DriverPositionIndex].ViewPositiveYawLimit = NewYawRight;
         DriverPositions[DriverPositionIndex].ViewNegativeYawLimit = NewYawLeft;
+    }
+}
+
+// New debug exec to adjust the rotation limits for the gun. Note that this is not the same as the view limits, which are set by SetViewLimits().
+exec function SetRotationLimits(int MinNegYaw, int MaxPosYaw, int MinPitch, int MaxPitch)
+{
+    // If debug is allowed:
+    if (IsDebugModeAllowed())
+    {
+        Gun.MaxNegativeYaw = MinNegYaw;
+        Gun.MaxPositiveYaw = MaxPosYaw;
+        Gun.PitchUpLimit = MinPitch;
+        Gun.PitchDownLimit = MaxPitch;
     }
 }
 

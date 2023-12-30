@@ -6,8 +6,6 @@
 class DHVehicleCannon extends DHVehicleWeapon
     abstract;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_Vehicle_Reloads.uax
-
 // Armor penetration
 var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
 var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
@@ -34,9 +32,21 @@ var     int                 MaxTertiaryAmmo;
 
 // Firing effects
 var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
+
+// Firing animations
+// Note that this system is legacy and should not be used on new vehicles.
+// This is because it doesn't isolate the firing animation from the commander's animation,
+// so the commander's animation will be interrupted when the gun is fired, resulting
+// in a great many bugs. Instead, use the new system of firing animations below.
 var     name                ShootLoweredAnim;        // firing animation if player is in a lowered or closed animation position, i.e. buttoned up or crouching
 var     name                ShootIntermediateAnim;   // firing animation if player is in an intermediate animation position, i.e. between lowered/closed & raised/open positions
 var     name                ShootRaisedAnim;         // firing animation if player is in a raised or open animation position, i.e. unbuttoned or standing
+
+// Firing animations (new system)
+var     name                ShootAnim;
+var     int                 ShootAnimChannel;
+var     name                ShootAnimBoneName;
+
 var     class<Emitter>      CannonDustEmitterClass;  // emitter class for dust kicked up by the cannon firing
 var     Emitter             CannonDustEmitter;
 
@@ -129,6 +139,13 @@ simulated function PostBeginPlay()
     // Enforce that the starting projectile class is the primary one
     // to eliminate the possibility that these are set differently.
     ProjectileClass = PrimaryProjectileClass;
+
+    // New system for firing animations on the cannons, keeping the barrel isolated from any other animations
+    // such as the commander's camera movements etc.
+    if (ShootAnimBoneName != '')
+    {
+        AnimBlendParams(ShootAnimChannel, 1.0, 0.0, 0.0, ShootAnimBoneName);
+    }
 }
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
@@ -443,14 +460,48 @@ function rotator GetProjectileFireRotation(optional bool bAltFire)
     return FireRotation;
 }
 
+simulated function PlayShootAnim()
+{
+    local DHVehicleCannonPawn CannonPawn;
+
+    CannonPawn = DHVehicleCannonPawn(Instigator);
+
+    if (ShootAnimBoneName != '')
+    {
+        if (HasAnim(ShootAnim))
+        {
+            PlayAnim(ShootAnim, 1.0, 0.0, ShootAnimChannel);
+        }
+    }
+    else
+    {
+        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= CannonPawn.RaisedPositionIndex) // check against RaisedPositionIndex instead of whether position is bExposed
+        {
+            if (HasAnim(ShootRaisedAnim))
+            {
+                PlayAnim(ShootRaisedAnim);
+            }
+        }
+        else if (CannonPawn != none && CannonPawn.DriverPositionIndex == CannonPawn.IntermediatePositionIndex)
+        {
+            if (HasAnim(ShootIntermediateAnim))
+            {
+                PlayAnim(ShootIntermediateAnim);
+            }
+        }
+        else if (HasAnim(ShootLoweredAnim))
+        {
+            PlayAnim(ShootLoweredAnim);
+        }
+    }
+}
+
 // Modified (from ROTankCannon) to remove call to UpdateTracer (now we spawn either normal bullet OR tracer when we fire), & also to expand & improve cannon firing anims
 // Now check against RaisedPositionIndex instead of bExposed (allows lowered commander in open turret to be exposed), to play relevant firing animation
 // Also adds new option for 'intermediate' position with its own firing animation, e.g. some AT guns have open sight position, between optics (lowered) & raised head position
 // And we avoid playing shoot animations altogether on a server, as they serve no purpose there
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-    local DHVehicleCannonPawn CannonPawn;
-
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
@@ -482,26 +533,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             }
         }
 
-        CannonPawn = DHVehicleCannonPawn(Instigator);
-
-        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= CannonPawn.RaisedPositionIndex) // check against RaisedPositionIndex instead of whether position is bExposed
-        {
-            if (HasAnim(ShootRaisedAnim))
-            {
-                PlayAnim(ShootRaisedAnim);
-            }
-        }
-        else if (CannonPawn != none && CannonPawn.DriverPositionIndex == CannonPawn.IntermediatePositionIndex)
-        {
-            if (HasAnim(ShootIntermediateAnim))
-            {
-                PlayAnim(ShootIntermediateAnim);
-            }
-        }
-        else if (HasAnim(ShootLoweredAnim))
-        {
-            PlayAnim(ShootLoweredAnim);
-        }
+        PlayShootAnim();
     }
 }
 
@@ -1977,7 +2009,7 @@ function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
         // Or if debug projectile didn't hit target wall - most likely the shot was too low & hit ground before wall, so raise pitch a little & we'll try again
         else
         {
-            DebugPitchAdjustment += 1;
+            DebugPitchAdjustment += 10;
         }
     }
 
@@ -2160,4 +2192,6 @@ defaultproperties
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bDoOffsetTrace=false
     bAmbientAltFireSound=true
+
+    ShootAnimChannel=1
 }

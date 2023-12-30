@@ -6,6 +6,8 @@
 class DarkestHourGame extends ROTeamGame
   dependson(DHActorProxy);
 
+#exec OBJ LOAD FILE=../Textures/DH_VehiclesGE_tex2.utx
+
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
@@ -3129,7 +3131,7 @@ state ResetGameCountdown
             AS.Destroy();
         }
 
-        Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+        Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 10);
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
@@ -3156,14 +3158,14 @@ state ResetGameCountdown
                 SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
         {
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
 }
@@ -5828,10 +5830,10 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=11
-        Minor=6
-        Patch=4
-        Prerelease=""
+        Major=12
+        Minor=0
+        Patch=0
+        Prerelease="alpha"
     End Object
     Version=VersionObject
 

@@ -6,14 +6,14 @@
 class DH_TriggerSunlight extends Sunlight
     hidecategories(Emitter,Force,Karma,Corona);
 
-var()   color   OnColor;          // color when sunlight is on
-var()   color   OffColor;         // color when light is off
+var()   Color   OnColor;          // color when sunlight is on
+var()   Color   OffColor;         // color when light is off
 var()   float   ChangeTime;       // time light takes to change from on to off
 var()   float   ChangeTimeTwo;
 var()   bool    bInitiallyOn;     // whether it's initially on
 var()   bool    bInitiallyFading; // whether it's initially fading up or down
 
-var     color   CurrentColor;
+var     Color   CurrentColor;
 var     float   TimeSinceTriggered;
 var     float   SwapTime;
 var     bool    bIsOn;
@@ -92,9 +92,9 @@ function Tick(float DeltaTime)
     RGBSetColor(CurrentColor);
 }
 
-simulated function RGBSetColor(color inRGB)
+simulated function RGBSetColor(Color inRGB)
 {
-    local vector RGB, HLS;
+    local Vector RGB, HLS;
 
     RGB.X = inRGB.R / 255.0;
     RGB.Y = inRGB.G / 255.0;
@@ -107,10 +107,10 @@ simulated function RGBSetColor(color inRGB)
 }
 
 // Function ColorMap - code courtesy of DWeather by Mazerium, from the file DWParent.uc
-simulated function vector ColourMap(vector RGB)
+simulated function Vector ColourMap(Vector RGB)
 {
     local float  Min, Max, R, G, B, H, L, S;
-    local vector HLS;
+    local Vector HLS;
 
     RGB.X = FClamp(RGB.X, 0.0, 1.0);
     RGB.Y = FClamp(RGB.Y, 0.0, 1.0);

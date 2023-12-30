@@ -91,23 +91,28 @@ state Busy
 simulated function ERadioUsageError GetRadioUsageError(Pawn User)
 {
     local DHPawn P;
-    local DHRoleInfo RI;
     local DHPlayerReplicationInfo PRI;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
+    local VehicleWeaponPawn VWP;
 
     P = DHPawn(User);
+    VWP = VehicleWeaponPawn(User);
+
+    if (P == none && VWP != none)
+    {
+        P = DHPawn(VWP.Driver);
+    }
 
     if (P == none || P.Health <= 0 || Carrier == P)
     {
         return ERROR_Fatal;
     }
 
-    RI = P.GetRoleInfo();
-    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-    PC = DHPlayer(P.Controller);
+    PRI = DHPlayerReplicationInfo(User.PlayerReplicationInfo);
+    PC = DHPlayer(User.Controller);
 
-    if (RI == none || PRI == none || PC == none)
+    if (PRI == none || PC == none)
     {
         return ERROR_Fatal;
     }

@@ -220,7 +220,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
     local float        V;
     local array<int>   HitPoints;
-    local int          TraceWhizType, i;
+    local int          TraceWhizType, i, MyDamage;
 
     if (SavedTouchActor == Other) // immediate exit to prevent recurring touches on same actor
     {
@@ -404,7 +404,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
     }
 
-    // Do any damage
+    // Reduce the damage by up to 20 depending on how much velocity the bullet has lost.
+    MyDamage = Damage - 20.0 * (1.0 - V / default.Speed);
+
+    // Do damage to what we hit.
     if (!bHasDeflected && Role == ROLE_Authority && V > (MIN_PENETRATE_VELOCITY * ScaleFactor))
     {
         UpdateInstigator();
@@ -414,7 +417,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (!HitPlayer.bDeleteMe)
             {
-                HitPlayer.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * Direction, MyDamageType, HitPoints);
+                HitPlayer.ProcessLocationalDamage(MyDamage, Instigator, PawnHitLocation, MomentumTransfer * Direction, MyDamageType, HitPoints);
             }
 
             // If traced hit on destro mesh that won't stop bullet (e.g. glass) in front of player, need to damage it now as we're destroying bullet & it won't collide with destro mesh
@@ -422,14 +425,14 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (RODestroyableStaticMesh(SavedHitActors[i]) != none)
                 {
-                    SavedHitActors[i].TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, SavedHitActors[i].Location, MomentumTransfer * Direction, MyDamageType);
+                    SavedHitActors[i].TakeDamage(MyDamage, Instigator, SavedHitActors[i].Location, MomentumTransfer * Direction, MyDamageType);
                 }
             }
         }
         // Damage something else
         else
         {
-            Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * Direction, MyDamageType);
+            Other.TakeDamage(MyDamage, Instigator, HitLocation, MomentumTransfer * Direction, MyDamageType);
         }
     }
 

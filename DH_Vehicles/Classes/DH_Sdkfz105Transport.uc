@@ -56,7 +56,6 @@ defaultproperties
     DriveAnim="Vhalftrack_driver_idle"
 
     // Movement
-    MaxCriticalSpeed=674.0 // 40 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5
@@ -81,8 +80,8 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
-    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(1)=(PointRadius=22.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.125
     DamagedWheelSpeedFactor=0.4
     DirectHEImpactDamageMult=8.0

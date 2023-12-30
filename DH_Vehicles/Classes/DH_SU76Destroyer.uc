@@ -71,7 +71,6 @@ defaultproperties
     RearLeftAngle=197.0
 
     // Movement
-    MaxCriticalSpeed=870.0 // approximate; also something in between 140 and 170 horse power variants
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.12
@@ -84,9 +83,9 @@ defaultproperties
     EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
-    VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=driver_player,PointOffset=(X=-13.0,Y=-3.0,Z=-8.0),bPenetrationPoint=true,HitPointType=HP_Driver)
-    VehHitpoints(1)=(PointRadius=35.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=25.0,Y=45.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointScale=1.0,PointBone=body,PointOffset=(X=-80.0,Y=-40.0,Z=5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointBone=driver_player,PointOffset=(X=-13.0,Y=-3.0,Z=-8.0),bPenetrationPoint=true,HitPointType=HP_Driver)
+    VehHitpoints(1)=(PointRadius=35.0,PointHeight=0.0,PointBone=body,PointOffset=(X=25.0,Y=45.0,Z=-10.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(2)=(PointRadius=25.0,PointHeight=0.0,PointBone=body,PointOffset=(X=-80.0,Y=-40.0,Z=5.0),bPenetrationPoint=false,DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     //below is from isu152
     //TreadHitMaxHeight=-5.0
     //DamagedEffectOffset=(X=-210.0,Y=0.0,Z=40.0)
@@ -249,4 +248,11 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_SU76Destroyer.KParams0'
+
+    // Because the turret area is partially disconnected from the hull, we assign a smaller chance of
+    // hull components being damaged when the turret is penetrated and vice versa.
+    // Similarly, penetrating the turret should do significantly less points of damage to the vehicle.
+    TurretPenetrationHullDamageChanceModifier=0.5
+    HullPenetrationTurretDamageChanceModifier=0.10
+    TurretPenetrationDamageModifier=0.25
 }

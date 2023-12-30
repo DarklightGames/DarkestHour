@@ -27,6 +27,26 @@ struct SCollisionStaticMesh
 var     array<SCollisionStaticMesh> CollisionStaticMeshes;
 var     array<DHCollisionMeshActor> CollisionMeshActors;
 
+// Vehicle weapon attachments
+struct VehicleAttachment
+{
+    var class<Actor>    AttachClass;
+    var Actor           Actor;
+    var StaticMesh      StaticMesh;
+    var name            AttachBone;
+    var Vector          RelativeLocation;
+    var Rotator         RelativeRotation;
+    var float           RadioCollisionRadius;
+    var float           RadioCollisionHeight;
+    // TODO: have flag for whether this is server-only or client-only
+};
+var array<VehicleAttachment> VehicleAttachments;
+
+struct WeaponAttachments
+{
+    var StaticMesh StaticMesh;
+};
+
 // Weapon fire
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
@@ -102,6 +122,70 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     AttachCollisionMeshes();
+    SpawnVehicleAttachments();
+}
+
+// Spawns the vehicle attachments. This is only run for the client.
+simulated function SpawnVehicleAttachments()
+{
+    local int i;
+    local VehicleAttachment VA;
+    local DHRadio Radio;
+
+    for (i = 0; i < VehicleAttachments.Length; ++i)
+    {
+        VA = VehicleAttachments[i];
+        
+        if (VA.AttachClass == none)
+        {
+            VA.AttachClass = class'DHDecoAttachment';
+        }
+
+        VA.Actor = Spawn(VA.AttachClass, self);
+
+        if (VA.Actor == none)
+        {
+            Log("Failed to spawn attachment actor for " @ self @ " at " @ VA.AttachBone @ " with class " @ VA.AttachClass @ ".");
+            continue;
+        }
+
+        // Assign the radio to the correct team if we are attaching a radio.
+        if (VA.AttachClass == class'DHRadio')
+        {
+            Radio = DHRadio(VA.Actor);
+            Radio.TeamIndex = ROVehicle(Base).default.VehicleTeam;
+            Radio.SoundVolume = 64;
+
+            if (VA.RadioCollisionRadius == 0.0)
+            {
+                VA.RadioCollisionRadius = class'DHRadio'.default.CollisionRadius;
+            }
+
+            if (VA.RadioCollisionHeight == 0.0)
+            {
+                VA.RadioCollisionHeight = class'DHRadio'.default.CollisionHeight;
+            }
+            
+            Radio.SetCollisionSize(VA.RadioCollisionRadius, VA.RadioCollisionHeight);
+        }
+
+        if (VA.StaticMesh != none)
+        {
+            VA.Actor.SetStaticMesh(VA.StaticMesh);
+        }
+
+        if (VA.AttachBone == '')
+        {
+            VA.AttachBone = YawBone;
+        }
+
+        AttachToBone(VA.Actor, VA.AttachBone);
+
+        VA.Actor.SetRelativeLocation(VA.RelativeLocation);
+        VA.Actor.SetRelativeRotation(VA.RelativeRotation);
+
+        VehicleAttachments[i] = VA;
+    }
 }
 
 simulated function AttachCollisionMeshes()
@@ -1066,7 +1150,7 @@ simulated function InitializeVehicleAndWeaponPawn()
 
 // Modified to always use rotation relative to vehicle (bPCRelativeFPRotation), to use yaw limits from DriverPositions in multi position weapon, & not to limit view yaw in behind view
 // Also to ignore yaw restrictions for commander's periscope or binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers) - but see note below
-simulated function int LimitYaw(int yaw)
+simulated function int LimitYaw(int Yaw)
 {
     local int CurrentPosition;
 
@@ -1076,14 +1160,14 @@ simulated function int LimitYaw(int yaw)
     // bLimitYaw should not be used here - the view yaw limits should be based on ViewNegativeYawLimit & ViewPositiveYawLimit in DriverPositions
     if (!bLimitYaw)
     {
-        return yaw;
+        return Yaw;
     }
 
     if (WeaponPawn != none)
     {
         if (WeaponPawn.IsHumanControlled() && PlayerController(WeaponPawn.Controller).bBehindView)
         {
-            return yaw;
+            return Yaw;
         }
 
         if (WeaponPawn.DriverPositions.Length > 0)
@@ -1092,14 +1176,14 @@ simulated function int LimitYaw(int yaw)
 
             if (WeaponPawn.IsA('DHVehicleCannonPawn') && CurrentPosition >= DHVehicleCannonPawn(WeaponPawn).PeriscopePositionIndex)
             {
-                return yaw;
+                return Yaw;
             }
 
-            return Clamp(yaw, WeaponPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, WeaponPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+            return Clamp(Yaw, WeaponPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, WeaponPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
         }
     }
 
-    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+    return Clamp(Yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
 // New function to start a hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
@@ -1170,12 +1254,9 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
-// Modified to add extra stuff
-simulated function DestroyEffects()
+simulated function DestroyCollisionMeshActors()
 {
     local int i;
-
-    super.DestroyEffects();
 
     for (i = 0; i < CollisionMeshActors.Length; ++i)
     {
@@ -1184,6 +1265,30 @@ simulated function DestroyEffects()
             CollisionMeshActors[i].Destroy(); // not actually an effect, but convenient to add here
         }
     }
+}
+
+simulated function DestroyVehicleAttachmentActors()
+{
+    local int i;
+
+    for (i = 0; i < VehicleAttachments.Length; ++i)
+    {
+        if (VehicleAttachments[i].Actor != none)
+        {
+            VehicleAttachments[i].Actor.Destroy();
+        }
+    }
+}
+
+// Modified to add extra stuff
+simulated function DestroyEffects()
+{
+    local int i;
+
+    super.DestroyEffects();
+
+    DestroyCollisionMeshActors();
+    DestroyVehicleAttachmentActors();
 
     if (TurretFireEffect != none)
     {

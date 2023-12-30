@@ -31,12 +31,12 @@ var     bool                bIsPeriscopicGunsight;      // cannon uses a perisco
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
-var     sound       ManualRotateSound;
-var     sound       ManualPitchSound;
-var     sound       ManualRotateAndPitchSound;
-var     sound       PoweredRotateSound;
-var     sound       PoweredPitchSound;
-var     sound       PoweredRotateAndPitchSound;
+var     Sound       ManualRotateSound;
+var     Sound       ManualPitchSound;
+var     Sound       ManualRotateAndPitchSound;
+var     Sound       PoweredRotateSound;
+var     Sound       PoweredPitchSound;
+var     Sound       PoweredRotateAndPitchSound;
 var     float       ManualMinRotateThreshold;
 var     float       ManualMaxRotateThreshold;
 var     float       PoweredMinRotateThreshold;
@@ -46,10 +46,14 @@ var     float       PoweredMaxRotateThreshold;
 var     bool        bTurretRingDamaged;
 var     bool        bGunPivotDamaged;
 var     bool        bOpticsDamaged;
-var     texture     DestroyedGunsightOverlay;
+var     Texture     DestroyedGunsightOverlay;
 
 // Debug
 var     bool        bDebugSights; // shows centering cross in gunsight for testing purposes
+
+// Optics
+var     class<DHGunOptics>  GunOpticsClass;
+var     int                 ProjectileGunOpticRangeTableIndices[3]; // The index of what optical range table to use based on the projectile index.
 
 replication
 {
@@ -263,9 +267,31 @@ simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
     local float PosX, PosY;
+    local DHVehicleWeapon VW;
+    local int RangeTableIndex;
 
-    if (GunsightOverlay != none)
+    RangeTableIndex = -1;
+
+    if (GunOpticsClass != none)
     {
+        VW = DHVehicleWeapon(Gun);
+
+        if (VW != none)
+        {
+            RangeTableIndex = ProjectileGunOpticRangeTableIndices[VW.GetAmmoIndex()];
+            RangeTableIndex = Clamp(RangeTableIndex, 0, GunOpticsClass.default.OpticalRangeTables.Length - 1);
+        }
+
+        // Draw the gunsight using the optics class if it exists.
+        GunOpticsClass.static.DrawGunsightOverlay(C, Gun.GetRange(), RangeTableIndex);
+    }
+    else
+    {
+        if (GunsightOverlay == none)
+        {
+            return;
+        }
+
         // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
         // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
         // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
@@ -287,27 +313,27 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
+    }
 
-        DrawGunsightRangeSetting(C);
+    DrawGunsightRangeSetting(C);
 
-        // Debug - draw cross on center of screen to check sight overlay is properly centred
-        if (bDebugSights)
-        {
-            PosX = C.SizeX / 2.0;
-            PosY = C.SizeY / 2.0;
-            C.SetPos(0.0, 0.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, PosY + 3.0);
-            C.DrawVertical(PosX - 1.0, PosY - 3.0);
-            C.DrawVertical(PosX, PosY - 3.0);
-            C.SetPos(0.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-            C.SetPos(PosX + 3.0, 0.0);
-            C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-            C.DrawHorizontal(PosY, PosX - 3.0);
-        }
+    // Debug - draw cross on center of screen to check sight overlay is properly centred
+    if (bDebugSights)
+    {
+        PosX = C.SizeX / 2.0;
+        PosY = C.SizeY / 2.0;
+        C.SetPos(0.0, 0.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, PosY + 3.0);
+        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+        C.DrawVertical(PosX, PosY - 3.0);
+        C.SetPos(0.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
+        C.SetPos(PosX + 3.0, 0.0);
+        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+        C.DrawHorizontal(PosY, PosX - 3.0);
     }
 }
 
@@ -340,23 +366,24 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
-    if (PeriscopeOverlay != none)
+    if (PeriscopeOverlay == none)
     {
-        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
-        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
-        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
-        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(PeriscopeOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-
-        // Draw the periscope overlay
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        return;
     }
+    // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+    // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+    // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+    // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+    TextureSize = float(PeriscopeOverlay.MaterialUSize());
+    TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+    TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+    // Draw the periscope overlay
+    C.SetPos(0.0, 0.0);
+
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 }
 
 // Modified so player faces forwards if he's on the gunsight when switching to behind view
@@ -1020,6 +1047,22 @@ exec function DebugRange()
     {
         Cannon.bDebugRangeManually = !Cannon.bDebugRangeManually;
         Log(Cannon.Tag @ "bDebugRangeManually =" @ Cannon.bDebugRangeManually);
+    }
+}
+
+exec function DebugSpeed()
+{
+    local DHAntiVehicleProjectile Projectile;
+
+    if (IsDebugModeAllowed() && Cannon != none)
+    {
+        // Spawn a shell, then set it's bDebugSpeed to true.
+        Projectile = DHAntiVehicleProjectile(Cannon.SpawnProjectile(Cannon.ProjectileClass, false));
+
+        if (Projectile != none)
+        {
+            Projectile.bDebugSpeed = true;
+        }
     }
 }
 

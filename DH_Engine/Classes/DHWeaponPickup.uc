@@ -220,13 +220,19 @@ simulated function Tick(float DeltaTime)
 // Modified to work generically, using ItemName
 static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
 {
+    local string S;
+
     switch (Switch)
     {
         case 0:
-            return Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            S = Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            break;
         case 1:
-            return Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            S = Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
+            break;
     }
+
+    return Repl(S, "{1}", "[%USE%]");
 }
 
 // Modified to add the Controller to NotifyParameters object & pass that to screen message, allowing it to display both the use/pick up key & weapon name
@@ -245,7 +251,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     AmbientGlow=64
     PickupMessage="You got the {0}"
-    TouchMessage="Press [%USE%] to pick up {0}"
+    TouchMessage="Press {1} to pick up {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
