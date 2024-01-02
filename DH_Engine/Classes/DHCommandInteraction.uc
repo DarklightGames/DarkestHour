@@ -428,10 +428,6 @@ function PostRender(Canvas C)
 
         // Draw action text
         C.TextSize(ORI.OptionName, XL, YL);
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2) + 1, CenterY + 33);
-        C.DrawText(ORI.OptionName);
         C.DrawColor = class'UColor'.default.White;
         C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
@@ -443,10 +439,6 @@ function PostRender(Canvas C)
             if (ORI.InfoText[i] != "")
             {
                 C.TextSize(ORI.InfoText[i], XL, YL);
-                C.DrawColor = class'UColor'.default.Black;
-                C.DrawColor.A = byte(255 * MenuAlpha);
-                C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  (i + 1) * YL);
-                C.DrawText(ORI.InfoText[i]);
                 C.DrawColor = ORI.InfoColor;
                 C.DrawColor.A = byte(255 * MenuAlpha);
                 C.SetPos(CenterX - (XL / 2), CenterY - 32 - (i + 1) * YL);
@@ -470,10 +462,6 @@ function PostRender(Canvas C)
 
         // Draw description text
         C.TextSize(ORI.DescriptionText, XL, YL);
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 192 -  YL);
-        C.DrawText(ORI.DescriptionText);
         C.DrawColor = class'UColor'.default.White;
         C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY - 192 - YL);

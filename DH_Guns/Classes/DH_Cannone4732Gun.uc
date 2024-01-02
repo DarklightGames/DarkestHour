@@ -24,11 +24,11 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_Cannone4732_stc.Destroyed.cannone4732_destroyed'
     VehicleHudImage=Texture'DH_Cannone4732_tex.Interface.cannone4732_body_icon'
     VehicleHudTurret=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_look
+    //VehicleHudTurretLook=TexRotator'DH_Cannone4732_tex.Interface.cannone4732_turret_look'
     ExitPositions(0)=(X=-100,Y=+35.00,Z=50)
     ExitPositions(1)=(X=-100,Y=-35.00,Z=50)
-    ExitPositions(2)=(X=-200,Y=Z=50)
-    VehicleMass=11.0
+    ExitPositions(2)=(X=-200,Y=0,Z=50)
+    VehicleMass=3.0
     SupplyCost=700
     ConstructionPlacementOffset=(Z=10.0)
     bCanBeRotated=true

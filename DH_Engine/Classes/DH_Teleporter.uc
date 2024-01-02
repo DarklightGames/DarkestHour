@@ -21,9 +21,9 @@ var()   bool    bResetStamina;
 // Set timer for spawn protection
 simulated function bool Accept(Actor Incoming, Actor Source)
 {
-    local rotator NewRotation, OldRotation;
+    local Rotator NewRotation, OldRotation;
     local float Magnitude;
-    local vector OldDirection;
+    local Vector OldDirection;
     local Controller P;
     local DHPawn DHP;
 

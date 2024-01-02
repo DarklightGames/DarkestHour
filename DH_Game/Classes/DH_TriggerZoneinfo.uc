@@ -5,8 +5,8 @@
 
 class DH_TriggerZoneInfo extends ZoneInfo;
 
-var() color OnColor;       // Color when light is on
-var() color OffColor;      // Color when light is off
+var() Color OnColor;       // Color when light is on
+var() Color OffColor;      // Color when light is off
 
 var() float ChangeTime;        // Time light takes to change from on to off.
 var() bool  bInitiallyOn;      // Whether it's initially on.

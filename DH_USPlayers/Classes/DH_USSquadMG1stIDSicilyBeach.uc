@@ -7,7 +7,7 @@ class DH_USSquadMG1stIDSicilyBeach extends DHUSAutoRifleRoles;
 
 defaultproperties
 {
-    RolePawns(0)=PawnClass=class'DH_USPlayers.DH_US1stIDSicilyBeachPawn'
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US1stIDSicilyBeachPawn')
     
     SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_HBT_Light_sleeves'
 

@@ -3130,7 +3130,7 @@ state ResetGameCountdown
             AS.Destroy();
         }
 
-        Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+        Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 10);
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
@@ -3157,14 +3157,14 @@ state ResetGameCountdown
                 SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
         {
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
 }

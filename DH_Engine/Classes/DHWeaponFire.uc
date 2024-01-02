@@ -132,7 +132,7 @@ event ModeDoFire()
         }
         else
         {
-            SetTimer(DelayedRecoilTime, False);
+            SetTimer(DelayedRecoilTime, false);
         }
 
         ShakeView();

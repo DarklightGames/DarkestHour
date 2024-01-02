@@ -10,4 +10,7 @@ defaultproperties
     ComponentClassName="DH_Interface.DHGUICheckBoxButton"
     LabelStyleName="DHLargeText"
     StyleName="DHSmallText"
+    Begin Object Class=DHGUIToolTip Name=GUIButtonToolTip
+    End Object
+    ToolTip=GUIButtonToolTip
 }

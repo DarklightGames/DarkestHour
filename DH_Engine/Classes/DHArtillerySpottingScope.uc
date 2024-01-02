@@ -669,7 +669,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local array<int> TargetTickBuckets;
     local float CurvatureCoefficient, ShadingCoefficient;
     local string Label;
-    local color Color;
+    local Color Color;
     local DHGameReplicationInfo.MapMarker Marker;
 
     if (PC == none || C == none || VWP == none)
@@ -696,7 +696,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - YawDialSpan * 0.5);
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + YawDialSpan * 0.5);
 
-    C.Font = C.TinyFont;
+    C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
 
     // Start drawing scale ticks
@@ -921,7 +921,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - PitchDialSpan * 0.5);
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + PitchDialSpan * 0.5);
 
-    C.Font = C.TinyFont;
+    C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
     C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY);
 
