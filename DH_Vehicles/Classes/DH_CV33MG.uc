@@ -8,6 +8,7 @@ class DH_CV33MG extends DHVehicleMG;
 defaultproperties
 {
     // MG mesh
+    bMatchSkinToVehicle=true
     Mesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext'
 
     BeginningIdleAnim="cv33_turret_idle_close"
