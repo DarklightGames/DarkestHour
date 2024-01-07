@@ -13,6 +13,7 @@ default_unicode_ranges: # These unicode ranges are always included for each lang
   - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
   - 0x1D2B
   - 0x1D78
+  - 0x2116 # Numero sign (№)
   - [ 0xFE2E, 0xFE2F ]
 default_font_style:
   texture_size: # Maximum size of each texture atlas.
