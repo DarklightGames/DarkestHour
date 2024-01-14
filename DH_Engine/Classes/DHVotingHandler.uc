@@ -407,30 +407,31 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    if (!bIsReapplyingVotes && PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
-    {
-        TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
-        Level.Game.Broadcast(self, TextMessage);
-        Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
+    // Force the map if voter is an admin
+    // if (!bIsReapplyingVotes && PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
+    // {
+    //     TextMessage = lmsgAdminMapChange;
+    //     TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+    //     Level.Game.Broadcast(self, TextMessage);
+    //     Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
 
-        if (MapList[MapIndex].MapName == SwapAndRestartText)
-        {
-            ExitVoteAndSwap();
+    //     if (MapList[MapIndex].MapName == SwapAndRestartText)
+    //     {
+    //         ExitVoteAndSwap();
 
-            return;
-        }
+    //         return;
+    //     }
 
-        CloseAllVoteWindows();
-        bLevelSwitchPending = true;
-        MapInfo = History.PlayMap(MapList[MapIndex].MapName);
-        ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
-        Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
-        Level.ServerTravel(ServerTravelString, false); // change the map
-        SetTimer(1.0, true);
+    //     CloseAllVoteWindows();
+    //     bLevelSwitchPending = true;
+    //     MapInfo = History.PlayMap(MapList[MapIndex].MapName);
+    //     ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
+    //     Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
+    //     Level.ServerTravel(ServerTravelString, false); // change the map
+    //     SetTimer(1.0, true);
 
-        return;
-    }
+    //     return;
+    // }
 
     // Spectators cant vote
     if (PlayerController(Voter).PlayerReplicationInfo.bOnlySpectator)
