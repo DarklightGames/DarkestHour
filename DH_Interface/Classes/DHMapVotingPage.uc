@@ -28,6 +28,28 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
+function ForceMapVote(GUIComponent Sender)
+{
+    local int MapIndex, GameConfigIndex;
+    local DHVotingReplicationInfo DHVRI;
+
+    DHVRI = DHVotingReplicationInfo(MVRI);
+
+    if (DHVRI == none)
+    {
+        return;
+    }
+
+    MapIndex = MapVoteMultiColumnList(lb_MapListBox.List).GetSelectedMapIndex();
+
+    if (MapIndex > -1)
+    {
+        GameConfigIndex = int(co_GameType.GetExtra());
+
+        DHVRI.ServerForceMapVote(MapIndex,GameConfigIndex);
+    }
+}
+
 function SendVote(GUIComponent Sender)
 {
     local int MapIndex, GameConfigIndex;
