@@ -29,5 +29,5 @@ defaultproperties
     VehicleAttachments(0)=(StaticMesh=none) // remove windscreen attachment
     DriverPositions(0)=(TransitionUpAnim="Driver_out")  // to lean forward for a better view through vision slot in armoured shield
     DriverPositions(1)=(TransitionDownAnim="Driver_in") // for reference: camera moves X+25, Z-1
-
+    DamagedEffectHealthFireFactor=0.7
 }
