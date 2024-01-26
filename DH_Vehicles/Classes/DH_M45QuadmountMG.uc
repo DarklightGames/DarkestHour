@@ -44,6 +44,11 @@ function InitEffects()
     {
         Emitter = Barrels[i].EffectEmitter;
 
+        if (Emitter == none)
+        {
+            continue;
+        }
+
         // A little hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
         if (i == 0 || i == 2) // left side guns
         {
