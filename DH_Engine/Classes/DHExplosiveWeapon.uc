@@ -92,31 +92,29 @@ simulated function AltFire(float F)
 // Called on the client to arm the explosive & play the lever release sounds
 simulated function ArmExplosive()
 {
+    if (bPrimed)
+    {
+        // Already primed, so don't do anything.
+        return;
+    }
+
+    if (bHasReleaseLever)
+    {
+        PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
+    }
+
     if (Role == ROLE_Authority)
     {
-        if (!bPrimed)
-        {
-            bPrimed = true;
-
-            if (bHasReleaseLever)
-            {
-                PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
-            }
-        }
+        bPrimed = true;
     }
     else
     {
-        if (!bPrimed)
-        {
-            if (bHasReleaseLever)
-            {
-                PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
-            }
+        ServerArmExplosive();
+    }
 
-            ServerArmExplosive();
-
-            PlayFuzeBurningSound();
-        }
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PlayFuzeBurningSound();
     }
 }
 
