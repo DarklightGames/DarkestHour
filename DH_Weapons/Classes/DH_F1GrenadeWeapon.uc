@@ -24,6 +24,7 @@ defaultproperties
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
+    FuzeIgniteSound=Sound'DH_WeaponSounds.f1_grenade.f1_fuze_ignite'
     DisplayFOV=80.0
 
     GroupOffset=0

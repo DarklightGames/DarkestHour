@@ -231,8 +231,7 @@ defaultproperties
 
     AmbientSound=Sound'DH_WeaponSounds.satchel.SatchelFuzeBurn'
     SoundVolume=255
-    SoundRadius=100.0
-    bFullVolume=true
+    SoundRadius=25.0
     ExplosionSoundRadius=4000.0
     ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'

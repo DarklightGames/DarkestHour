@@ -15,10 +15,12 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_StielGranatePickup'
 
     DisplayFOV=80.0
-    Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
+    Mesh=SkeletalMesh'DH_Axis_Granate_1st.German-Grenade-Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.stiel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+
+    FuzeBurningSound=Sound'DH_WeaponSounds.Stielhandgranate.stieldhandgranate_fuze_burn'
 
     GroupOffset=3
 }

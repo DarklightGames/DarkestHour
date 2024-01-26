@@ -15,4 +15,8 @@ defaultproperties
     Damage=180.0
     DamageRadius=639.0
     bIsStickGrenade=true
+
+    AmbientSound=Sound'DH_WeaponSounds.stieldhandgranate.stieldhandgranate_fuze_burn'
+    SoundVolume=255
+    SoundRadius=25.0
 }
