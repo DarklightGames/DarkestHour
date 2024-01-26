@@ -7,6 +7,11 @@
 class UInterp extends Object
     abstract;
 
+final static function float MapRangeClamped(float Value, float InRangeA, float InRangeB, float OutRangeA, float OutRangeB)
+{
+    return OutRangeA + (OutRangeB - OutRangeA) * FClamp((Value - InRangeA) / (InRangeB - InRangeA), 0.0, 1.0);
+}
+
 final static function float Step(float T, float A, float B)
 {
     if (T < 0.5)
