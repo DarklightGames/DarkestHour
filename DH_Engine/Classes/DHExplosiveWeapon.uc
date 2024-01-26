@@ -21,10 +21,10 @@ var     float   LeverReleaseRadius;  // radius of the lever being released
 var     int     StartFireAmmoAmount; // little hack so we don't decrement ammo count client side if we've already received a net update from server after firing
 
 var     Sound   FuzeIgniteSound;        // Sound to play when the fuze is lit.
-var     Sound   FuzeIgniteVolume;
+var     float   FuzeIgniteVolume;
 var     Sound   FuzeBurningSound;       // Sound to play while the fuze is burning (looping).
 
-// Called from animations to play the sound of the fuze burning.
+// Called from the animations or when the release lever is released to play the sound of the fuze burning.
 simulated exec function PlayFuzeBurningSound()
 {
     if (FuzeIgniteSound != none)
