@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadePickup extends DHOneShotWeaponPickup;
+class DH_SRCMMod35GrenadeAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_SCRMMod35GrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    Mesh=SkeletalMesh'Weapons3rd_anm.F1Grenade'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.f1grenade_icon'
+    WA_Idle="idle_F1"
+    WA_Fire="idle_F1"
 }

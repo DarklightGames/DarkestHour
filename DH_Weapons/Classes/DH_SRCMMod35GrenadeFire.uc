@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
-    abstract;
+class DH_SRCMMod35GrenadeFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_SCRMMod35GrenadeWeapon'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
+    ProjectileClass=class'DH_Weapons.DH_SRCMMod35GrenadeProjectile'
+    AmmoClass=class'DH_Weapons.DH_SRCMMod35GrenadeAmmo'
 }

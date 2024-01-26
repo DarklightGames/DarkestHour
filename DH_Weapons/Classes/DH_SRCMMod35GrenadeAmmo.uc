@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadeAmmo extends DHAmmunition;
+class DH_SRCMMod35GrenadeAmmo extends DHAmmunition;
 
 defaultproperties
 {

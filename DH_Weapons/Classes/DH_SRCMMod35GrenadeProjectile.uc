@@ -3,14 +3,14 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadeProjectile extends DHGrenadeProjectile;
+class DH_SRCMMod35GrenadeProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
     // TODO: this is a tiny boy, so the damage probably needs to be reduced
     Damage=150.0
     DamageRadius=700.0
-    MyDamageType=class'DH_Weapons.DH_SCRMMod35GrenadeDamageType'
+    MyDamageType=class'DH_Weapons.DH_SRCMMod35GrenadeDamageType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1grenade-throw'    // TODO: replace
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'

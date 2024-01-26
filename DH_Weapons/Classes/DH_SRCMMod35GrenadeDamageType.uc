@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadeAttachment extends DHThrowableExplosiveAttachment;
+class DH_SRCMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
+    abstract;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.F1Grenade'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.f1grenade_icon'
-    WA_Idle="idle_F1"
-    WA_Fire="idle_F1"
+    WeaponClass=class'DH_Weapons.DH_SRCMMod35GrenadeWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
 }

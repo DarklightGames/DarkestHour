@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadeFire extends DHThrownExplosiveFire;
+class DH_SRCMMod35GrenadeTossFire extends DH_M1GrenadeTossFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_SCRMMod35GrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_SCRMMod35GrenadeAmmo'
+    ProjectileClass=class'DH_Weapons.DH_SRCMMod35GrenadeProjectile'
+    AmmoClass=class'DH_Weapons.DH_SRCMMod35GrenadeAmmo'
 }
