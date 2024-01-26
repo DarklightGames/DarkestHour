@@ -229,6 +229,10 @@ defaultproperties
 
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
+    AmbientSound=Sound'DH_WeaponSounds.satchel.SatchelFuzeBurn'
+    SoundVolume=255
+    SoundRadius=100.0
+    bFullVolume=true
     ExplosionSoundRadius=4000.0
     ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'

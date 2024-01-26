@@ -16,11 +16,13 @@ defaultproperties
     GroupOffset=2
     Priority=2
 
-    Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
+    Mesh=SkeletalMesh'DH_Common_Satchel_1st.Sachel_Charge'
     Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'
 
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
 
     FuzeLength=15.0
     PreFireHoldAnim="Weapon_Down"
+
+    FuzeBurningSound=Sound'DH_WeaponSounds.satchel.SatchelFuzeBurn'
 }

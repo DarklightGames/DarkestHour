@@ -20,6 +20,14 @@ var     float   LeverReleaseRadius;  // radius of the lever being released
 
 var     int     StartFireAmmoAmount; // little hack so we don't decrement ammo count client side if we've already received a net update from server after firing
 
+var     Sound   FuzeBurningSound;
+
+// Called from animations to play the sound of the fuze burning.
+simulated exec function PlayFuzeBurningSound()
+{
+    AmbientSound = FuzeBurningSound;
+}
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -99,6 +107,8 @@ simulated function ArmExplosive()
             }
 
             ServerArmExplosive();
+
+            PlayFuzeBurningSound();
         }
     }
 }
@@ -233,6 +243,9 @@ simulated state PostFiring
     simulated function BeginState()
     {
         SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
+
+        // Turn off the fuze burning sound, if it's still playing.
+        Ambientsound = none;
     }
 
     simulated function EndState()
