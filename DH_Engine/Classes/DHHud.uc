@@ -1929,7 +1929,7 @@ function DrawSignals(Canvas C)
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
     local material  SignalMaterial;
-    local float     Angle, XL, YL, X, Y, SignalIconSize, T;
+    local float     AngleDegrees, XL, YL, X, Y, SignalIconSize, T, Alpha, TimeRemaining, AlphaMin;
     local bool      bHasLOS, bIsNew;
     local string    DistanceText, LabelText;
     local color     SignalColor;
@@ -1963,10 +1963,11 @@ function DrawSignals(Canvas C)
 
         TraceEnd = PC.Signals[i].Location;
         Direction = Normal(TraceEnd - TraceStart);
-        Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
+        AngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Direction dot vector(PlayerOwner.CalcViewRotation)));
 
-        if (Angle < 0.0)
+        if (AngleDegrees > 180)
         {
+            // Facing the opposite direction, don't draw it.
             continue;
         }
 
@@ -1974,21 +1975,31 @@ function DrawSignals(Canvas C)
         SignalMaterial = PC.Signals[i].SignalClass.static.GetWorldIconMaterial(PC.Signals[i].OptionalObject);
         LabelText = PC.Signals[i].SignalClass.default.SignalName;
 
-        bIsNew = Level.TimeSeconds - PC.Signals[i].TimeSeconds < SignalNewTimeSeconds;
+        T = Level.TimeSeconds - PC.Signals[i].TimeSeconds;
+        bIsNew = T < SignalNewTimeSeconds;
         bHasLOS = FastTrace(TraceEnd, TraceStart);
 
-        if (!bIsNew && Angle >= 0.99)
+        Alpha = 1.0;
+
+        if (!bHasLOS)
         {
-            SignalColor.A = 48;
+            Alpha *= 0.5;
         }
-        else if (bHasLOS || bIsNew)
-        {
-            SignalColor.A = 255;
-        }
-        else
-        {
-            SignalColor.A = 48;
-        }
+        
+        // Fade the signal out based on the angle so that it doesn't obscure the view.
+        Alpha *= class'UInterp'.static.MapRangeClamped(AngleDegrees, 2.0, 5.0, 0.0, 1.0);
+
+        // Fade out the signal in the final moments.
+        TimeRemaining = PC.Signals[i].SignalClass.default.DurationSeconds - T;
+        const FADE_DURATION = 0.5;
+        Alpha *= class'UInterp'.static.MapRangeClamped(TimeRemaining, 0.0, FADE_DURATION, 0.0, 1.0);
+        
+        // Set the minimum alpha so that the signal is always visible for the first few moments.
+        AlphaMin = class'UInterp'.static.MapRangeClamped(T, SignalNewTimeSeconds, SignalNewTimeSeconds + FADE_DURATION, 1.0, 0.0);
+
+        Alpha = FMax(Alpha, AlphaMin);
+
+        SignalColor.A = Alpha * 255;
 
         C.DrawColor = SignalColor;
 
