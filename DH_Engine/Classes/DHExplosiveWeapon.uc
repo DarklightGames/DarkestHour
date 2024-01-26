@@ -258,12 +258,24 @@ simulated state RaisingWeapon
     simulated function BeginState()
     {
        local int i;
+       local class<DHThrowableExplosiveProjectile> ProjectileClass;
+       local DHPlayer PC;
 
         super.BeginState();
 
         for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
             FireMode[i].NextFireTime = Level.TimeSeconds;
+        }
+
+        ProjectileClass = class<DHThrowableExplosiveProjectile>(FireModeClass[0].default.ProjectileClass);
+
+        if (ProjectileClass != none && ProjectileClass.default.FuzeType == FT_Impact)
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            // Hint message about impact grenades.
+            PC.QueueHint(55, true);
         }
     }
 
