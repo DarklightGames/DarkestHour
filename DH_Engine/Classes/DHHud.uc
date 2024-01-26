@@ -2562,17 +2562,9 @@ function DrawPlayerNames(Canvas C)
                 IconMaterial = NeedAmmoIconMaterial;
             }
         }
-        else if (DHPawn(P) != none)
+        else
         {
-            if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
-            {
-                IconMaterial = NeedAmmoIconMaterial;
-            }
-            else if (DHPawn(P).bWeaponNeedsReload)
-            {
-                IconMaterial = NeedAssistIconMaterial;
-            }
-            else if (OtherPRI.IsSquadLeader())
+            if (OtherPRI.IsSquadLeader())
             {
                 IconMaterial = SquadLeaderIconMaterial;
                 IconMaterialColor = GetPlayerColor(OtherPRI);
@@ -2581,6 +2573,17 @@ function DrawPlayerNames(Canvas C)
             {
                 IconMaterial = AssistantIconMaterial;
                 IconMaterialColor = GetPlayerColor(OtherPRI);
+            }
+            else if (DHPawn(P) != none)
+            {
+                if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
+                {
+                    IconMaterial = NeedAmmoIconMaterial;
+                }
+                else if (DHPawn(P).bWeaponNeedsReload)
+                {
+                    IconMaterial = NeedAssistIconMaterial;
+                }
             }
         }
 
