@@ -25,8 +25,8 @@ defaultproperties
     TreadDamageMassThreshold=12.0
     TreadDamageRadius=64.0
     TreadDamageMax=120.0
-
-    FuzeLengthTimer=5.7 //doesnt seem to work here
+    
+    FuzeLengthRange=(Min=5.7,Max=5.7)
 
     BlurTime=4.0
     ShakeRotTime=2.0

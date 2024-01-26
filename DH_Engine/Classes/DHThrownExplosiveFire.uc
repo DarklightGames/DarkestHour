@@ -6,8 +6,6 @@
 class DHThrownExplosiveFire extends DHProjectileFire
     abstract;
 
-const   RANDOM_FUSE_TIME = 0.5;
-
 var     float   MinimumThrowSpeed;      // minimum speed the explosive will have if just clicking, with no hold time
 var     float   MaximumThrowSpeed;      // the maximum speed an explosive can have with holding (not including pawn speed)
 var     float   SpeedFromHoldingPerSec; // speed increase projectile will have for each second the fire button is held
@@ -143,8 +141,9 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
                     SetFuseTime = DHExplosiveWeapon(Weapon).CurrentFuzeTime;
                 }
 
-                SetFuseTime = FMax(0.1, SetFuseTime + RandRange(0.0, RANDOM_FUSE_TIME));
-                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
+                SetFuseTime = FMax(0.1, SetFuseTime);
+
+                DHThrowableExplosiveProjectile(SpawnedProjectile).SetFuzeLength(SetFuseTime);
             }
 
             // Have the grenade go in the direction the thrower was going, then exit
@@ -174,9 +173,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             SetFuseTime += AddedFuseTime;
         }
 
-        SetFuseTime += RandRange(0.0, RANDOM_FUSE_TIME);
-
-        DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
+        DHThrowableExplosiveProjectile(SpawnedProjectile).SetFuzeLength(SetFuseTime);
     }
 
     return SpawnedProjectile;
@@ -213,28 +210,31 @@ function ServerPlayFiring()
 // Implemented so explosive will blow up in player's hand if he holds a primed weapon too long
 event ModeTick(float DeltaTime)
 {
-    local DHExplosiveWeapon Exp;
+    local DHExplosiveWeapon ExplosiveWeapon;
 
-    if (Weapon.Role == ROLE_Authority)
+    ExplosiveWeapon = DHExplosiveWeapon(Weapon);
+
+    if (ExplosiveWeapon != none && ExplosiveWeapon.bPrimed && HoldTime > 0.0)
     {
-        Exp = DHExplosiveWeapon(Weapon);
-
-        if (Exp != none && Exp.bPrimed && HoldTime > 0.0)
+        if (ExplosiveWeapon.CurrentFuzeTime > (AddedFuseTime * -1.0))
         {
-            if (Exp.CurrentFuzeTime > (AddedFuseTime * -1.0))
+            ExplosiveWeapon.CurrentFuzeTime -= DeltaTime;
+        }
+        else if (!ExplosiveWeapon.bAlreadyExploded)
+        {
+            ExplosiveWeapon.bAlreadyExploded = true;
+            
+            if (Weapon.Role == ROLE_Authority)
             {
-                Exp.CurrentFuzeTime -= DeltaTime;
+                Weapon.ConsumeAmmo(ThisModeNum, Weapon.AmmoAmount(ThisModeNum));
+                DoFireEffect(); // Throws the actual grenade.
+                HoldTime = 0.0;
             }
-            else if (!Exp.bAlreadyExploded)
-            {
-                Exp.bAlreadyExploded = true;
 
-                if (!bIsSmokeGrenade) // added check so a smoke grenade doesn't blows up in player's hand
-                {
-                    Weapon.ConsumeAmmo(ThisModeNum, Weapon.AmmoAmount(ThisModeNum));
-                    DoFireEffect();
-                    HoldTime = 0.0;
-                }
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                Weapon.PostFire();
+                PlayFiring(); // Plays the firing animation.
             }
         }
     }
@@ -244,9 +244,13 @@ event ModeTick(float DeltaTime)
 // Also to set the 'hold' animations on the player's pawn
 event ModeHoldFire()
 {
-    if (Weapon != none && Weapon.Role == ROLE_Authority && !(DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bHasReleaseLever))
+    local DHExplosiveWeapon ExplosiveWeapon;
+
+    ExplosiveWeapon = DHExplosiveWeapon(Weapon);
+
+    if (Weapon != none && Weapon.Role == ROLE_Authority && !(ExplosiveWeapon != none && ExplosiveWeapon.bHasReleaseLever))
     {
-        DHExplosiveWeapon(Weapon).bPrimed = true;
+        ExplosiveWeapon.bPrimed = true;
     }
 
     if (ROPawn(Instigator) != none)

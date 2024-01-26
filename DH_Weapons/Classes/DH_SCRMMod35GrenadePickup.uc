@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_RDG1SmokeGrenadeProjectile extends DHGrenadeProjectile_Smoke;
+class DH_SCRMMod35GrenadePickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
-    SpinType=ST_Tumble
-    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
+    InventoryType=class'DH_Weapons.DH_SCRMMod35GrenadeWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
 }

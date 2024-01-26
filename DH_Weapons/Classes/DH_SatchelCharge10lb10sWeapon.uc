@@ -21,6 +21,6 @@ defaultproperties
 
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
 
-    FuzeLength=15.0
+    FuzeLengthRange=(Min=15.0,Max=15.0)
     PreFireHoldAnim="Weapon_Down"
 }

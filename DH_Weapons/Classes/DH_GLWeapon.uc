@@ -11,7 +11,7 @@ defaultproperties
     FireModeClass(0)=class'DH_Weapons.DH_GLFire'
     AttachmentClass=class'DH_Weapons.DH_GLAttachment'
     PickupClass=class'DH_Weapons.DH_GLPickup'
-    FuzeLength=6.0
+    FuzeLengthRange=(Min=6.0,Max=6.0)
 
     InventoryGroup=7
     GroupOffset=1

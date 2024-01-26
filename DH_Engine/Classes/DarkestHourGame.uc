@@ -5858,4 +5858,6 @@ defaultproperties
     SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
     SurrenderNominationsThresholdPercent=0.15
     SurrenderVotesThresholdPercent=0.5
+
+    GameDifficulty=4    // For arcane reasons, this has to be >3 so that self-inflicted damage isn't reduced.
 }

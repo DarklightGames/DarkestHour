@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_RDG1SmokeGrenadeProjectile extends DHGrenadeProjectile_Smoke;
+class DH_SCRMMod35GrenadeDamageType extends DHThrowableExplosiveDamageType
+    abstract;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
-    SpinType=ST_Tumble
-    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
+    WeaponClass=class'DH_Weapons.DH_SCRMMod35GrenadeWeapon'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
 }

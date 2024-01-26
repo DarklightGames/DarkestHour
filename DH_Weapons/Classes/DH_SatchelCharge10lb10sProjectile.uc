@@ -185,21 +185,6 @@ function HandleConstructions(vector HitLocation)
     }
 }
 
-// Implemented here to go to dynamic lighting for a split second, when satchel blows up // TODO: doesn't appear to do anything noticeable?
-simulated function WeaponLight()
-{
-    if (!Level.bDropDetail)
-    {
-        bDynamicLight = true;
-        SetTimer(0.15, false);
-    }
-}
-
-simulated function Timer()
-{
-    bDynamicLight = false;
-}
-
 defaultproperties
 {
     bAlwaysRelevant=true

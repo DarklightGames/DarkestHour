@@ -5,42 +5,6 @@
 
 class DHSmokeEffect_Grenade extends DHSmokeEffectBase;
 
-/*
-// March 2015: this was some testing work done by Theel on functionality to modify smoke brightness & wind direction/speed based on settings in DHLevelInfo
-// This class wouldn't compile if it were left in DH_Effects (it's natural package), as DH_Effects is compiled before DH_Engine & it would be dependant on DH_Engine.DH_LevelInfo
-// So if implemented it would need moving, say to either DH_Engine or to DH_Equipment (which is where Theel had it)
-simulated function PostBeginPlay()
-{
-    local color NewSmokeColor;
-    local byte  SmokeBrightnessValue;
-
-    super.PostBeginPlay();
-
-    // Let's change the smoke color if it's not set to default in DH_LevelInfo
-
-    // Set the brightness value to the override in the level
-    SmokeBrightnessValue = DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride;
-
-    // Create new smoke color based on new brightness
-    NewSmokeColor.B = SmokeBrightnessValue;
-    NewSmokeColor.G = SmokeBrightnessValue;
-    NewSmokeColor.R = SmokeBrightnessValue;
-    NewSmokeColor.A = 255; // alpha shouldn't change
-
-    // Sets the new smoke color (0-3 & each scale) - need to make this a loop
-    Emitters[0].ColorScale[0].Color = NewSmokeColor;
-    Emitters[0].ColorScale[1].Color = NewSmokeColor;
-    Emitters[1].ColorScale[0].Color = NewSmokeColor;
-    Emitters[1].ColorScale[1].Color = NewSmokeColor;
-    Emitters[2].ColorScale[0].color = NewSmokeColor;
-    Emitters[2].ColorScale[1].color = NewSmokeColor;
-    Emitters[3].ColorScale[0].Color = NewSmokeColor;
-    Emitters[3].ColorScale[1].Color = NewSmokeColor;
-
-    // Let's get the wind direction & speed & set the first sprite emitter accordingly
-}
-*/
-
 defaultproperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0

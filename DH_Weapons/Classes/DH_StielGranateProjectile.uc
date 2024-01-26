@@ -14,5 +14,5 @@ defaultproperties
     ExplosionSound(2)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode03'
     Damage=180.0
     DamageRadius=639.0
-    bIsStickGrenade=true
+    SpinType=ST_Tumble
 }
