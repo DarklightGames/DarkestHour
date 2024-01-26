@@ -57,8 +57,7 @@ defaultproperties
 
     // Driver
     InitialPositionIndex=1
-    // NOTE: all driver positions are exposed because the driver can be visible to shoot if the MG gunner is unbuttoned
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_vision_open",DriverTransitionAnim="cv33_driver_close",ViewPitchUpLimit=8192,ViewPitchDownLimit=59000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="cv33_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriveAnim="cv33_driver_closed_idle"
