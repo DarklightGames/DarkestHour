@@ -6,28 +6,25 @@
 class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporating ROGrenadeProjectile
     abstract;
 
-var     bool    bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
+var enum ESpinType
+{
+    ST_Normal,        // Normal spin for egg-shaped or canister grenades.
+    ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades.
+} SpinType;
 
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Role == ROLE_Authority)
+    switch (SpinType)
     {
-        // FuzeLengthTimer is set by the fire class after the projectile is spawned
-        // So though it randomizes the default here, it doesn't matter as the fireclass overrides it
-        // This means we will need to fireclass to handle the random fuze times
-        FuzeLengthTimer += FRand();
-    }
-
-    if (bIsStickGrenade)
-    {
-        RotationRate.Pitch = -(90000 + Rand(30000)); // end over end tumbling flight
-    }
-    else
-    {
-        RandSpin(100000.0); // normal random 3D spin for egg-shaped or canister grenades
+    case ST_Normal:
+        RandSpin(100000.0);
+        break;
+    case ST_Tumble:
+        RotationRate.Pitch = -(90000 + Rand(30000)); 
+        break;
     }
 }
 
@@ -51,7 +48,7 @@ function BlowUp(vector HitLocation)
     if (Role == ROLE_Authority)
     {
         // Check for any players so close that they must be on top of the grenade
-        foreach RadiusActors(class'DHPawn', DHP, 5.0)
+        foreach RadiusActors(class'DHPawn', DHP, 10.0)
         {
             // Make sure player is actually lying on the grenade, not just standing over it
             if (DHP.bIsCrawling)
@@ -67,7 +64,7 @@ function BlowUp(vector HitLocation)
 
 defaultproperties
 {
-    FuzeLengthTimer=4.5
+    FuzeLengthRange=(Min=4.5,Max=5.5)
     Speed=1100.0
     MyDamageType=class'DHThrowableExplosiveDamageType'
     ExplodeDirtEffectClass=class'GrenadeExplosion'

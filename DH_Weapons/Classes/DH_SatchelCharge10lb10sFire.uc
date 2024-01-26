@@ -13,7 +13,6 @@ defaultproperties
     AddedPitch=150
     MinimumThrowSpeed=200.0
     MaximumThrowSpeed=400.0
-    MaxHoldTime=6.0
     MinHoldTime=1.0
     SpeedFromHoldingPerSec=450.0
     PreFireAnim="Plant"

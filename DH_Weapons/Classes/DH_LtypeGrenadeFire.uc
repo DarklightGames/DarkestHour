@@ -9,7 +9,6 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_LTypeGrenadeProjectile'
     AmmoClass=class'DH_Weapons.DH_LTypeGrenadeAmmo'
-    MaxHoldTime=160.0
     MinHoldTime=1.0
     bSplashDamage=false
     bRecommendSplashDamage=false

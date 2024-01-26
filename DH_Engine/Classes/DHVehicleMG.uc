@@ -301,8 +301,4 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
-
-    // Collision Attachments
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_hatch_collision',AttachBone="hatch")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_turret_pitch_collision',AttachBone="mg_pitch")
 }

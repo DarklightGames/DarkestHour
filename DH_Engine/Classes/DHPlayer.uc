@@ -3220,7 +3220,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
 function OnTeamChanged()
 {
     local DarkestHourGame G;
-    local int TeamIndex;
 
     G = DarkestHourGame(Level.Game);
 
