@@ -23,20 +23,20 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_CV33MG'
     PositionInArray=0
     bMustBeTankCrew=false
-    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    bKeepDriverAuxCollision=true
     bMultiPosition=true
-    // All positions are technically exposed because the driver may have his hatch open, although
-    // because of the way that explosives work, we must say that the driver is not exposed so that
+    // Because of the way that explosives work, we must say that the driver is not exposed so that
     // he is not killed by explosives while buttoned up.
-    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',DriverTransitionAnim="VUC_com_close",bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="cv33_turret_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="cv33_gunner_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',TransitionDownAnim="cv33_turret_close",DriverTransitionAnim="cv33_gunner_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_ext',ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,bDrawOverlays=true)
     UnbuttonedPositionIndex=2
     BinocPositionIndex=3
     bDrawDriverInTP=true
+    DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Roll=0,Yaw=16384)
-    DriveAnim="VUC_com_idle_close"
+    DriveAnim="cv33_gunner_closed"
     
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=2.5
