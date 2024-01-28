@@ -22,7 +22,7 @@
 // [ ] Finalize texturing
 // [ ] Destroyed mesh
 // [ ] Destroyed tread mesh
-// [ ] Camo variants
+// [~] Camo variants
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -67,8 +67,8 @@ defaultproperties
     DriveRot=(Yaw=16384)
 
     // Movement
-    TransRatio=0.145
-    TorqueCurve=(Points=((InVal=0.0,OutVal=11.0),(InVal=200.0,OutVal=1.25),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
+    TransRatio=0.26
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=125.0,OutVal=5.0),(InVal=1500.0,OutVal=2.6),(InVal=2200.0,OutVal=0.0)))
     TurnDamping=50.0
     SteerSpeed=160.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
@@ -236,7 +236,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.25)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.2)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
