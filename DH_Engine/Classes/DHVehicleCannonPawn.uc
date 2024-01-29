@@ -355,7 +355,7 @@ function DrawGunsightRangeSetting(Canvas C)
     MapX = RangePositionX * C.ClipX;
     MapY = RangePositionY * C.ClipY;
     C.SetPos(MapX, MapY);
-    C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+    C.Font = class'DHHud'.static.GetSmallMenuFont(C);
     C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
     C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
     C.DrawColor = SavedColor;
