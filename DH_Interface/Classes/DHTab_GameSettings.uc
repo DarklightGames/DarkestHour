@@ -699,7 +699,7 @@ defaultproperties
 
     Begin Object class=GUILabel Name=PlayersROID
         Caption="You must first join a multiplayer game before your ID is displayed"
-        StyleName="TextLabel"
+        StyleName="DHSmallText"
         TextAlign=TXTA_Center
         RenderWeight=0.2
         IniOption="@Internal"
