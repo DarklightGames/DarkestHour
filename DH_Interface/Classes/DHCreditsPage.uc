@@ -16,12 +16,27 @@ var array<string> TextureArtists;
 var array<string> Artists;
 var array<string> LevelDesigners;
 var array<string> SoundArtists;
+var array<string> LocalizationTeam;
 var array<string> CommunityAdmins;
 var array<string> PastPatreonSupporters;
 var array<string> OtherContributors;
 var array<string> SpecialThanks;
 
 var array<string> CreditLines;
+
+var localized string ProjectLeadsText;
+var localized string ProgrammersText;
+var localized string AnimatorsText;
+var localized string ModelersText;
+var localized string TextureArtistsText;
+var localized string ArtistsText;
+var localized string LevelDesignersText;
+var localized string SoundArtistsText;
+var localized string LocalizationTeamText;
+var localized string CommunityAdminsText;
+var localized string PastPatreonSupportersText;
+var localized string OtherContributorsText;
+var localized string SpecialThanksText;
 
 function AddSystemMenu(){}
 
@@ -36,6 +51,20 @@ function AddHeader(string Header)
     AddCreditLine("");
 }
 
+function AddSection(string Header, array<string> Lines)
+{
+    local int i;
+
+    AddHeader("====" @ Header @ "====");
+
+    for (i = 0; i < Lines.Length; ++i)
+    {
+        AddCreditLine(Lines[i]);
+    }
+
+    AddCreditLine("");
+}
+
 function BuildCreditLines()
 {
     local int i;
@@ -44,111 +73,19 @@ function BuildCreditLines()
 
     AddHeader("DARKEST HOUR: EUROPE '44-'45");
 
-    AddHeader("Project Leads:");
-
-    for (i = 0; i < ProjectLeads.Length; ++i)
-    {
-        AddCreditLine(ProjectLeads[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Programmers:");
-
-    for (i = 0; i < Programmers.Length; ++i)
-    {
-        AddCreditLine(Programmers[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Animators:");
-
-    for (i = 0; i < Animators.Length; ++i)
-    {
-        AddCreditLine(Animators[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Modelers:");
-
-    for (i = 0; i < Modelers.Length; ++i)
-    {
-        AddCreditLine(Modelers[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Texture Artists:");
-
-    for (i = 0; i < TextureArtists.Length; ++i)
-    {
-        AddCreditLine(TextureArtists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Artists:");
-
-    for (i = 0; i < Artists.Length; ++i)
-    {
-        AddCreditLine(Artists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Level Designers:");
-
-    for (i = 0; i < LevelDesigners.Length; ++i)
-    {
-        AddCreditLine(LevelDesigners[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Sound Artists:");
-
-    for (i = 0; i < SoundArtists.Length; ++i)
-    {
-        AddCreditLine(SoundArtists[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Community Admins:");
-
-    for (i = 0; i < CommunityAdmins.Length; ++i)
-    {
-        AddCreditLine(CommunityAdmins[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Past Patreon Supporters:");
-
-    for (i = 0; i < PastPatreonSupporters.Length; ++i)
-    {
-        AddCreditLine(PastPatreonSupporters[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Other Contributors:");
-
-    for (i = 0; i < OtherContributors.Length; ++i)
-    {
-        AddCreditLine(OtherContributors[i]);
-    }
-
-    AddCreditLine("");
-
-    AddHeader("Special Thanks:");
-
-    for (i = 0; i < SpecialThanks.Length; ++i)
-    {
-        AddCreditLine(SpecialThanks[i]);
-    }
+    AddSection(ProjectLeadsText, ProjectLeads);
+    AddSection(ProgrammersText, Programmers);
+    AddSection(AnimatorsText, Animators);
+    AddSection(ModelersText, Modelers);
+    AddSection(TextureArtistsText, TextureArtists);
+    AddSection(ArtistsText, Artists);
+    AddSection(LevelDesignersText, LevelDesigners);
+    AddSection(SoundArtistsText, SoundArtists);
+    AddSection(LocalizationTeamText, LocalizationTeam);
+    AddSection(CommunityAdminsText, CommunityAdmins);
+    AddSection(PastPatreonSupportersText, PastPatreonSupporters);
+    AddSection(OtherContributorsText, OtherContributors);
+    AddSection(SpecialThanksText, SpecialThanks);
 }
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -356,6 +293,8 @@ defaultproperties
     SoundArtists(12)="Nathan B. Lewis"
     SoundArtists(13)="AAZ"
 
+    LocalizationTeam(0)="-Red-(Rus)- (Russian)"
+
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"
     CommunityAdmins(2)="Sugardust"
@@ -418,4 +357,18 @@ defaultproperties
     WinLeft=0.1
     WinWidth=0.8
     WinHeight=0.8
+
+    ProjectLeadsText="Project Leads"
+    ProgrammersText="Programmers"
+    AnimatorsText="Animators"
+    ModelersText="Modelers"
+    TextureArtistsText="Texture Artists"
+    ArtistsText="Artists"
+    LevelDesignersText="Level Designers"
+    SoundArtistsText="Sound Artists"
+    LocalizationTeamText="Localization Team"
+    CommunityAdminsText="Community Admins"
+    PastPatreonSupportersText="Past Patreon Supporters"
+    OtherContributorsText="Other Contributors"
+    SpecialThanksText="Special Thanks"
 }
