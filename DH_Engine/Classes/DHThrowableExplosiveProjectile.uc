@@ -461,6 +461,10 @@ simulated function Landed(vector HitNormal)
             {
                 GotoState('TripMine');
             }
+            else
+            {
+                Explode(Location, HitNormal);
+            }
         }
     }
     else
@@ -584,29 +588,31 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         if (ImpactMomentumTransfer >= ImpactFuzeMomentumThreshold)
         {
             Explode(Location, HitNormal);
-            return;
         }
     }
 
-    GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
-
-    Bounces--;
-
-    if (Bounces <= 0)
+    if (!bDeleteMe)
     {
-        bBounce = false;
-    }
-    else
-    {
-        // Reflect off Wall with damping
-        VNorm = (Velocity dot HitNormal) * HitNormal;
-        Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
-        Speed = VSize(Velocity);
-    }
+        GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
 
-    if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
-    {
-        PlaySound(ImpactSound, SLOT_Misc, 1.1);
+        Bounces--;
+
+        if (Bounces <= 0)
+        {
+            bBounce = false;
+        }
+        else
+        {
+            // Reflect off Wall with damping
+            VNorm = (Velocity dot HitNormal) * HitNormal;
+            Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
+            Speed = VSize(Velocity);
+        }
+
+        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+        {
+            PlaySound(ImpactSound, SLOT_Misc, 1.1);
+        }
     }
 }
 
