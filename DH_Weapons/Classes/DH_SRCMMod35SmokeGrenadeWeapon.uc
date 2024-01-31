@@ -12,8 +12,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadePickup'
-    Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
-    //Mesh=SkeletalMesh'DH_SRCMMod35_anm.SRCMMod35_1st'
+    Mesh=SkeletalMesh'DH_SRCMMod35_anm.srcm_1st'
     DisplayFOV=80.0
 
     InventoryGroup=4
