@@ -24,4 +24,7 @@ defaultproperties
     GroupOffset=0
     bHasReleaseLever=true
     PlayerViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    SprintStartAnim="sprint_start"
+    SprintLoopAnim="sprint_middle"
+    SprintEndAnim="sprint_end"
 }
