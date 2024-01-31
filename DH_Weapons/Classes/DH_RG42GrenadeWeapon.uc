@@ -17,6 +17,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_RG42_1st.RG42_Mesh'
 
     bUseHighDetailOverlayIndex=false
+    
+    HandNum=1
+    SleeveNum=0
 
     FuzeLength=4.0
     bHasReleaseLever=true
