@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] add smoke variant texture
-// [ ] add fidgeting fingers in idle
-// [ ] work on the keyframing for the pull tab action
+// [~] work on the keyframing for the pull tab action
 // [ ] add sound notifies
 // [ ] HUD elements
+// [ ] toss fire animation
 // [ ] sprint & crawl animations
+// [ ] third person models (pickup, projectile, attachment)
 //==============================================================================
 
 class DH_SRCMMod35GrenadeWeapon extends DHExplosiveWeapon;

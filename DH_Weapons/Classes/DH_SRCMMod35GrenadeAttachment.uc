@@ -8,7 +8,7 @@ class DH_SRCMMod35GrenadeAttachment extends DHThrowableExplosiveAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.F1Grenade'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.f1grenade_icon'
-    WA_Idle="idle_F1"
-    WA_Fire="idle_F1"
+    MenuImage=Texture'DH_SRCMMod35_tex.interface.srcm_frag_icon'
+    WA_Idle="idle_F1"   // TODO: replace
+    WA_Fire="idle_F1"   // TODO: replace
 }
