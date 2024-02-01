@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_NebelGranate39Attachment'
     ItemName="NB 39 Smoke Grenade"
     NativeItemName="Nebelhandgranate 39"
-    Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
+    Mesh=SkeletalMesh'DH_Axis_Granate_1st.German-Grenade-Mesh'
     Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
 
     InventoryGroup=4
