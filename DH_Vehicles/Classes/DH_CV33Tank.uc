@@ -22,7 +22,7 @@
 // [ ] Finalize texturing
 // [ ] Destroyed mesh
 // [ ] Destroyed tread mesh
-// [ ] Camo variants
+// [~] Camo variants
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -59,16 +59,16 @@ defaultproperties
     InitialPositionIndex=1
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_vision_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_vision_open",DriverTransitionAnim="cv33_driver_close",ViewPitchUpLimit=8192,ViewPitchDownLimit=59000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384,bExposed=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="cv33_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
-    DriveAnim="cv33_driver_closed_idle"
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="cv33_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriveAnim="cv33_driver_closed"
     PlayerCameraBone="camera_driver"
     DriverAttachmentBone="driver_attachment"
     DrivePos=(Z=58)
     DriveRot=(Yaw=16384)
 
     // Movement
-    TransRatio=0.145
-    TorqueCurve=(Points=((InVal=0.0,OutVal=11.0),(InVal=200.0,OutVal=1.25),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
+    TransRatio=0.26
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=125.0,OutVal=5.0),(InVal=1500.0,OutVal=2.6),(InVal=2200.0,OutVal=0.0)))
     TurnDamping=50.0
     SteerSpeed=160.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
@@ -236,7 +236,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.25)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.2)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

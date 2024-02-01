@@ -2417,7 +2417,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.75
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.0
         OnChange=InternalOnChange
@@ -2438,7 +2438,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.5
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.333334
         OnChange=InternalOnChange

@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SCRMMod35GrenadePickup extends DHOneShotWeaponPickup;
+class DH_SRCMMod35SmokeGrenadeTossFire extends DH_M1GrenadeTossFire;
 
 defaultproperties
 {
-    InventoryType=class'DH_Weapons.DH_SCRMMod35GrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    ProjectileClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeProjectile'
+    AmmoClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeAmmo'
 }

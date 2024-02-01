@@ -17,11 +17,27 @@ function SpawnSmokeAttachment()
 {
     local DHSmokeEffectAttachment SmokeAttachment;
 
-    if (SmokeAttachment != none)
+    if (SmokeAttachment == none)
     {
-        SmokeAttachment = Spawn(SmokeAttachmentClass, self);
+        SmokeAttachment = Spawn(SmokeAttachmentClass, self,, Location);
         SmokeAttachment.SetBase(self);
     }
+}
+
+state ReleasingSmoke
+{
+    function BeginState()
+    {
+        super.BeginState();
+
+        // Spawn smoke effect
+        SpawnSmokeAttachment();
+
+        // This actor will persist as long as the smoke sound, then stay inert on ground for an extra 10 secs & then auto-destroy.
+        LifeSpan = 30;
+    }
+
+    simulated function Explode(vector HitLocation, vector HitNormal);
 }
 
 // Modified to add smoke effects & to remove actor destruction on client
@@ -30,10 +46,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
-        SpawnSmokeAttachment();
-
-        // This actor will persist as long as the smoke sound, then stay inert on ground for an extra 10 secs & then auto-destroy.
-        LifeSpan = 30;
+        GotoState('ReleasingSmoke');
     }
 }
 

@@ -36,7 +36,7 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
 
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(1)="WP"
     ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="M1 HE-T"

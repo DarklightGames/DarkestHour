@@ -37,7 +37,7 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
 
 
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(2)="WP"
 
     nProjectileDescriptions(0)="M61 APC"
     nProjectileDescriptions(1)="M48 HE-T"

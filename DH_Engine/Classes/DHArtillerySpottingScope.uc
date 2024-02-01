@@ -137,7 +137,7 @@ function CreateRenderTable(Canvas C)
 
     RenderTable = new class'DHDataTable';
 
-    RenderTable.Font = C.MedFont;
+    RenderTable.Font = class'DHHud'.static.GetTinyFont(C);
     RenderTable.Columns.Insert(0, 2);
 
     RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ class'DHUnits'.static.GetDistanceUnitString(DistanceUnit) $ ")";
@@ -793,8 +793,8 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 0.5 * LargeSizeTickLength, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength);
-    C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength, 3 * LargeSizeTickLength, 0, 0, 256, 32);
+    C.SetPos(IndicatorTopLeftCornerX - (0.5 * LargeSizeTickLength) - 4, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength - (TextHeightFloat / 2));
+    C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength + 8, 3 * LargeSizeTickLength + (TextHeightFloat / 2), 0, 0, 256, 32);
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TargetTickBuckets.Insert(0, VisibleYawSegmentsNumber);
