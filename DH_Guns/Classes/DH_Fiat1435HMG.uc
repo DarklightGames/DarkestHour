@@ -3,12 +3,13 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_SRCMMod35SmokeGrenadeAttachment extends DHThrowableExplosiveAttachment;
+class DH_Fiat1435HMG extends DHATGun;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'Weapons3rd_anm.F1Grenade'
-    MenuImage=Texture'DH_SRCMMod35_tex.interface.srcm_smoke_icon'
-    WA_Idle="idle_F1"
-    WA_Fire="idle_F1"
+    VehicleNameString="Fiat Modello 14/35"
+    Mesh=SkeletalMesh'DH_Fiat1435_anm.fiat1435_tripod_world'
+    bCanBeRotated=true
+
+    CollisionRadius=50.0
 }

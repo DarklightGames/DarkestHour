@@ -2435,6 +2435,7 @@ defaultproperties
     ConstructionClassNames(11)="DH_Construction.DHConstruction_ATGun_HeavyEarly"
     ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(13)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(23)="DH_Construction.DHConstruction_HMG"
 
     // Defenses
     ConstructionClassNames(14)="DH_Construction.DHConstruction_Foxhole"
