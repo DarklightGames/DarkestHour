@@ -2,12 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [~] work on the keyframing for the pull tab action
-// [ ] add sound notifies
-// [ ] HUD elements
-// [ ] toss fire animation
-// [ ] sprint & crawl animations
-// [ ] third person models (pickup, projectile, attachment)
+// Animation
+// [~] Improve pull-tab action
+// [ ] Add sound notifies
+//
+// Art
+// [~] HUD elements
+// [ ] third person models (pickup, projectile, attachment) [matty]
+//
+// Code
+// [ ] Make the grenade throw distance a bit longer
+// [ ] Add a new sound for when the smoke grenade explodes (it's white phosphorus)
+// [ ] Add WP emitter effects when the smoke grenade explodes
 //==============================================================================
 
 class DH_SRCMMod35GrenadeWeapon extends DHExplosiveWeapon;
