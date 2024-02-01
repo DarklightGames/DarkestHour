@@ -28,8 +28,7 @@ defaultproperties
     ProjectileGunOpticRangeTableIndices(1)=1
     ProjectileGunOpticRangeTableIndices(2)=1
     
-    bHasDriverYawAnim=true
-    DriverYawAnim=(Sequence="cannone4732_gunner_yaw")
+    AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="cannone4732_gunner_yaw")
 
     DrivePos=(Z=28.0)
 }

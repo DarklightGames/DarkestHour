@@ -35,16 +35,34 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
-// Driver yaw animations
-// These are used to animate the driver's body based on the yaw of the weapon.
-var     bool        bHasDriverYawAnim;
-struct SDriverAnim
+// Animation Drivers
+// These are used to animate the occpants' body based on the yaw or pitch
+// of the weapon. In lieu of a proper IK system, this will suffice!
+var enum EAnimationDriverType
 {
+    ADT_Yaw,
+    ADT_Pitch,
+} Type;
+
+struct RangeInt
+{
+    var int Min;
+    var int Max;
+};
+
+struct SAnimationDriver
+{
+    var EAnimationDriverType Type;
+    var RangeInt DriverPositionIndexRange;  // Range is inclusive
     var int Channel;
     var name BoneName;
     var name Sequence;
+
+    // Runtime State
+    var bool bActive;
 };
-var     SDriverAnim DriverYawAnim;
+
+var array<SAnimationDriver> AnimationDrivers;
 
 replication
 {
@@ -93,6 +111,8 @@ simulated function PostNetBeginPlay()
             LastPositionIndex = DriverPositionIndex;
             PendingPositionIndex = DriverPositionIndex;
         }
+
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -730,11 +750,6 @@ function KDriverEnter(Pawn P)
             BinocularsClass = BinocularsItem.Class;
         }
     }
-
-    if (bHasDriverYawAnim)
-    {
-        SetupDriverYawAnim(Driver);
-    }
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, & to consolidate & optimise the Supers
@@ -924,6 +939,8 @@ simulated function NextViewPoint()
     {
         GotoState('ViewTransition');
     }
+
+    UpdateAnimationDriverStates();
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
@@ -1455,10 +1472,7 @@ function DriverLeft()
         VehWep.PauseAnyReloads();
     }
 
-    if (bHasDriverYawAnim)
-    {
-        ClearDriverYawAnim(Driver);
-    }
+    ClearAnimationDrivers(Driver);
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
 
@@ -1511,6 +1525,10 @@ simulated event DrivingStatusChanged()
         {
             BinocsAttachment.Destroy();
         }
+    }
+    else
+    {
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -2479,52 +2497,138 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     }
 }
 
-simulated function SetupDriverYawAnim(Pawn Driver)
+// Enabled and disables animation drivers based on current DriverPositionIndex.
+// Called on initialization or when the driver position changes.
+// This must be called on both the client & server so that the two animation
+// states are in sync.
+simulated function UpdateAnimationDriverStates()
 {
-    if (Driver == none || !bHasDriverYawAnim)
-    {
-        return;
-    }
+    local int i;
+    local bool bShouldBeActive;
 
-    if (DriverYawAnim.Channel != 0)
-    {
-        Driver.AnimBlendParams(DriverYawAnim.Channel, 1.0, 0.0, 0.0, DriverYawAnim.BoneName);
-    }
+    Log("UpdateAnimationDriverStates");
 
-    Driver.PlayAnim(DriverYawAnim.Sequence, 0.0, 0.0, DriverYawAnim.Channel);
-    Driver.FreezeAnimAt(0.0, DriverYawAnim.Channel);
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
+
+        if (bShouldBeActive && !AnimationDrivers[i].bActive)
+        {
+            SetAnimationDriverActive(i, true);
+        }
+        else if (!bShouldBeActive && AnimationDrivers[i].bActive)
+        {
+            SetAnimationDriverActive(i, false);
+        }
+    }
 }
 
-simulated function UpdateDriverYawAnim(Pawn Driver)
+private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bool bActive)
 {
-    local float YawFactor;
-
-    if (Driver == none || !bHasDriverYawAnim)
+    if (AnimationDrivers[AnimationDriverIndex].bActive == bActive)
     {
+        // No change in active state.
         return;
     }
 
-    // Get the current yaw of the weapon compared to the min and max, with 0.0 being all the way to the left, and 1.0 being all the way to the right.
-    YawFactor = (GetGunYaw() - Gun.YawStartConstraint) / (Gun.YawEndConstraint - Gun.YawStartConstraint);
+    if (bActive)
+    {
+        SetAnimationDriverBlendAlpha(AnimationDriverIndex, 1.0);
+        
+        Driver.PlayAnim(AnimationDrivers[AnimationDriverIndex].Sequence, 0.0, 0.0, AnimationDrivers[AnimationDriverIndex].Channel);
+        Driver.FreezeAnimAt(0.0, AnimationDrivers[AnimationDriverIndex].Channel);
 
-    // Log("YawFactor" @ YawFactor @ "Gun.CurrentAim.Yaw" @ Gun.CurrentAim.Yaw);
+        Log("Enabled animation driver" @ AnimationDriverIndex);
+    }
+    else
+    {
+        SetAnimationDriverBlendAlpha(AnimationDriverIndex, 0.0);
+
+        Log("Disabled animation driver" @ AnimationDriverIndex);
+    }
+
+    AnimationDrivers[AnimationDriverIndex].bActive = bActive;
+}
+
+private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex, float BlendAlpha)
+{
+    local SAnimationDriver AD;
+
+    AD = AnimationDrivers[AnimationDriverIndex];
     
-    Driver.SetAnimFrame(YawFactor, DriverYawAnim.Channel);
+    if (AD.Channel != 0)
+    {
+        Driver.AnimBlendParams(AD.Channel, BlendAlpha, 0.0, 0.0, AD.BoneName);
+    }
 }
 
-simulated function ClearDriverYawAnim(Pawn Driver)
+// Gets the theta value (0..1) that indicates what frame the associated sequence should
+// be at. Note that the theta vaule is normalized, where 0.0 is the beginning of the
+// sequence, and 1.0 is the end of the sequence.
+simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
 {
-    if (Driver == none || !bHasDriverYawAnim)
+    switch (Type)
+    {
+        case ADT_Yaw:
+            // 0.0 is full left, 1.0 is full right
+            return (GetGunYaw() - Gun.YawStartConstraint) / (Gun.YawEndConstraint - Gun.YawStartConstraint);
+        case ADT_Pitch:
+            return 0.5; // TODO: figure this out
+        default:
+            break;
+    }
+
+    return 0.5;
+}
+
+simulated function UpdateAnimationDrivers(Pawn Driver)
+{
+    local int i;
+    local float Theta;
+
+    if (Driver == none)
     {
         return;
     }
 
-    if (DriverYawAnim.Channel == 0)
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        if (!AnimationDrivers[i].bActive)
+        {
+            Log("driver" @ i @ "is inactive");
+            continue;
+        }
+
+        Theta = GetAnimationDriverTheta(AnimationDrivers[i].Type);
+
+        Driver.SetAnimFrame(Theta, AnimationDrivers[i].Channel);
+    }
+}
+
+simulated function bool IsAnimationDriverActiveForDriverPositionIndex(int AnimationDriverIndex, int InputDriverPositionIndex)
+{
+    return InputDriverPositionIndex >= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Min &&
+            InputDriverPositionIndex <= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Max;
+}
+
+simulated function ClearAnimationDrivers(Pawn Driver)
+{
+    local int i;
+
+    if (Driver == none)
     {
         return;
     }
 
-    // Clear the animation channel that we made earlier.
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        if (AnimationDrivers[i].Channel == 0)
+        {
+            return;
+        }
+
+        // Clear the animation channel that we made earlier.
+    }
 }
 
 // Modified to update the driver yaw animation.
@@ -2534,7 +2638,7 @@ simulated function Tick(float DeltaTime)
 
     if (Driver != none)
     {
-        UpdateDriverYawAnim(Driver);
+        UpdateAnimationDrivers(Driver);
     }
 }
 
