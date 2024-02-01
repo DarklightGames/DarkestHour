@@ -10,7 +10,7 @@ var localized string    SignalName;
 var Material            MenuIconMaterial;
 var Material            WorldIconMaterial;
 var float               DurationSeconds;
-var color               MyColor;
+var Color               MyColor;
 var bool                bIsUnique;
 var bool                bShouldShowLabel;
 var bool                bShouldShowDistance;
@@ -56,8 +56,8 @@ static function OnSent(DHPlayer PC, vector Location, optional Object OptionalObj
 defaultproperties
 {
     bShouldShowLabel=true
-    DurationSeconds=15.0
+    DurationSeconds=10.0
     WorldIconScale=1.0
-    SignalRadiusInMeters=50.0
+    SignalRadiusInMeters=25.0
     bSquadMembersOnly=false
 }

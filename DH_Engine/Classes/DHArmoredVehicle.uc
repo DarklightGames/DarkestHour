@@ -6,10 +6,6 @@
 class DHArmoredVehicle extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-
 struct ArmorSection
 {
     var     float   Thickness;         // in cm
@@ -2547,7 +2543,6 @@ defaultproperties
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
     // Driving & steering
-    MaxCriticalSpeed=700.0 // approx 42 kph
     TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO
@@ -2587,5 +2582,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
 
     EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
-    bDebuggingText=true
+    bDebuggingText=false
 }

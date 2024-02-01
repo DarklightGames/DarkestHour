@@ -328,6 +328,8 @@ def main():
 
     package_build_count = 0
 
+    print('Checking for out-of-date packages...')
+
     for package in packages:
         sys_package_path = os.path.join(sys_dir, package + '.u')
 

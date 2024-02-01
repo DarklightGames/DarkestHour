@@ -5,43 +5,7 @@
 
 class DH_Semovente9053CannonPawn extends DHAssaultGunCannonPawn;
 
-// TODO: This sucks, but will suffice for now.
-// We really ought to have a separate gunsight object and have the cannon pawn reference it.
-// There it can override the gunsight drawing function and do whatever it wants.
-simulated function DrawGunsightOverlay(Canvas C)
-{
-    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
-    local float GunsightWidthPixels;
-
-    if (GunsightOverlay != none)
-    {
-        // Draw the gunsight overlay.
-        TextureSize = float(GunsightOverlay.MaterialUSize());
-        TilePixelWidth = TextureSize / GunsightSize;
-        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
-        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
-
-        C.SetPos(0.0, 0.0);
-        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-
-        // Draw the gunsight aiming reticle or moving range indicator (different from DHVehicleCannonPawn)
-        if (CannonScopeCenter != none && Gun != none && Gun.ProjectileClass != none)
-        {
-            PosY = 0.5 - Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange());
-            GunsightWidthPixels = C.SizeX * GunsightSize;
-            // GunsightHeightPixels = C.SizeY * GunsightSize;
-            PosY = GunsightWidthPixels * PosY;
-
-            C.SetPos(0, PosY);
-            C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
-        }
-
-        DrawGunsightRangeSetting(C);
-    }
-}
-
-// New debug execs to adjust OpticalRanges values
+// New debug execs to adjust OpticalRanges values (why is this not in a parent?)
 exec function SetOpticalRange(float NewValue)
 {
     Log(Cannon.ProjectileClass @ "OpticalRanges[" $ Cannon.CurrentRangeIndex $ "]=" @ NewValue @
@@ -64,12 +28,13 @@ defaultproperties
     DriveAnim="semo9053_com_idle_close"
     bHasAltFire=false
     // Figure out what gunsight to use (also maybe refactor to have the gunsights be a separate class that can just be referenced and reused by multiple vehicles)
-    GunsightOverlay=Texture'DH_Semovente9053_tex.Interface.semovente9053_sight_background'
-    GunsightSize=0.4
+    
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     FireImpulse=(X=-110000)
     CameraBone="CAMERA_GUN"
 
-    CannonScopeCenter=Texture'DH_Semovente9053_tex.interface.semovente9053_sight_mover'
+    GunOpticsClass=class'DH_Vehicles.DHGunOptics_Italian'
+    ProjectileGunOpticRangeTableIndices(1)=1
+    ProjectileGunOpticRangeTableIndices(2)=1
 }

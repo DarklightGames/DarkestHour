@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [1] https://comandosupremo.com/forums/index.php?threads/italian-armor-piercing-ammunition-perforanti-effetto-pronto-and-ep-speciale.52
+//==============================================================================
 
 class DH_Cannone4732Cannon extends DHATGunCannon;
 
@@ -41,12 +43,13 @@ defaultproperties
     nProjectileDescriptions(1)="Granata da 47"
     nProjectileDescriptions(2)="Effeto Pronto da 47"
 
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=8
-    InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=15
-    MaxTertiaryAmmo=6
+    // Source [1] indicates that there was an even split of ammo types & that the maximum loadout of each gun was 60 rounds.
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=10
+    InitialTertiaryAmmo=10
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=20
+    MaxTertiaryAmmo=20
     SecondarySpread=0.00125
     TertiarySpread=0.00125
 

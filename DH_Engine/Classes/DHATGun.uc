@@ -684,7 +684,6 @@ defaultproperties
 
     // Miscellaneous
     TouchMessageClass=class'DHATGunTouchMessage'
-    TouchMessage="Use the "
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     MaxDesireability=1.9
     CollisionRadius=75.0

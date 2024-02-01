@@ -71,7 +71,6 @@ defaultproperties
     RearLeftAngle=197.0
 
     // Movement
-    MaxCriticalSpeed=870.0 // approximate; also something in between 140 and 170 horse power variants
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.12

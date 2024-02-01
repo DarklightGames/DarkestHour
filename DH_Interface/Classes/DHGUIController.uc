@@ -302,7 +302,7 @@ simulated static function string GetQuitPage()
 
 defaultproperties
 {
-    FONT_NUM=15
+    FONT_NUM=17
     FontStack(0)=fntUT2k4Menu'ROInterface.ROGUIController.GUIMenuFont'
     FontStack(1)=fntUT2k4Default'ROInterface.ROGUIController.GUIDefaultFont'
     FontStack(2)=fntUT2k4Large'ROInterface.ROGUIController.GUILargeFont'
@@ -329,6 +329,15 @@ defaultproperties
     Begin Object class=DHHugeButtonFont Name=fntDHHugeButtonFont
     End Object
     FontStack(15)=fntDHHugeButtonFont
+    Begin Object class=DHConsoleFont Name=fntDHConsoleFont
+    End Object
+    FontStack(16)=fntDHConsoleFont
+    Begin Object class=DHButtonFontDS Name=fntDHButtonFontDS
+    End Object
+    FontStack(17)=fntDHButtonFontDS
+    Begin Object class=DHSmallFontDS Name=fntDHSmallFontDS
+    End Object
+    FontStack(18)=fntDHSmallFontDS
     MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
     MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'
     MouseCursors(2)=Texture'InterfaceArt_tex.Cursors.ResizeSWNE'
@@ -422,6 +431,9 @@ defaultproperties
     DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
     DefaultStyleNames(95)="DH_Interface.DHStyle_ListSelectionGrey"
     DefaultStyleNames(96)="DH_Interface.DHStyle_ObjectiveSpawnButton"
+    DefaultStyleNames(97)="DH_Interface.DHStyle_MouseOverLabel"
+    DefaultStyleNames(98)="DH_Interface.DHStyle_ContextMenu"
+    DefaultStyleNames(99)="DH_Interface.DHStyle_ContextMenuSelection"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

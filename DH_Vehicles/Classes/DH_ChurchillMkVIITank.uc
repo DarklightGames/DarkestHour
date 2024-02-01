@@ -90,7 +90,6 @@ defaultproperties
     RearLeftAngle=203.0
 
     // Movement
-    MaxCriticalSpeed=587.0 // 35 kph
     TransRatio=0.078 // gives top speed on the flat of 15 mph (approx 24 kph) // TODO: may need to reduce this slightly for the Mk.VII as think it was a little slower
 
     // Damage

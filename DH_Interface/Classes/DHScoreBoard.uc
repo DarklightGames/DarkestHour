@@ -22,6 +22,7 @@ var localized string MunitionPercentageText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
+var localized string NoPlayersText;
 
 var string TabSpaces;
 var string LargeTabSpaces;
@@ -127,7 +128,7 @@ function GetScoreboardEmptyTeamColumnRenderInfo(int ScoreboardColumnIndex, out C
     {
         case COLUMN_PlayerName:
             CRI.TextColor = class'UColor'.default.White;
-            CRI.Text = "No players";
+            CRI.Text = NoPlayersText;
             break;
         default:
             CRI.Text = "";
@@ -193,36 +194,39 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 CRI.TextColor = class'DHColor'.default.SquadColor;
             }
 
-            if (PRI.bIsDeveloper)
+            if (!PRI.bIsIncognito)
             {
-                CRI.Icon = default.DeveloperIconMaterial;
-                CRI.U = 0;
-                CRI.V = 0;
-                CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
-                CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
-            }
-            else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
-            {
-                switch (PRI.PatronTier)
+                if (PRI.bIsDeveloper)
                 {
-                    case PATRON_Lead:
-                        CRI.Icon = default.PatronLeadMaterial;
-                        break;
-                    case PATRON_Bronze:
-                        CRI.Icon = default.PatronBronzeMaterial;
-                        break;
-                    case PATRON_Silver:
-                        CRI.Icon = default.PatronSilverMaterial;
-                        break;
-                    case PATRON_Gold:
-                        CRI.Icon = default.PatronGoldMaterial;
-                        break;
+                    CRI.Icon = default.DeveloperIconMaterial;
+                    CRI.U = 0;
+                    CRI.V = 0;
+                    CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
+                    CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
                 }
+                else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
+                {
+                    switch (PRI.PatronTier)
+                    {
+                        case PATRON_Lead:
+                            CRI.Icon = default.PatronLeadMaterial;
+                            break;
+                        case PATRON_Bronze:
+                            CRI.Icon = default.PatronBronzeMaterial;
+                            break;
+                        case PATRON_Silver:
+                            CRI.Icon = default.PatronSilverMaterial;
+                            break;
+                        case PATRON_Gold:
+                            CRI.Icon = default.PatronGoldMaterial;
+                            break;
+                    }
 
-                CRI.U = 0;
-                CRI.V = 0;
-                CRI.UL = CRI.Icon.MaterialUSize() - 1;
-                CRI.VL = CRI.Icon.MaterialVSize() - 1;
+                    CRI.U = 0;
+                    CRI.V = 0;
+                    CRI.UL = CRI.Icon.MaterialUSize() - 1;
+                    CRI.VL = CRI.Icon.MaterialVSize() - 1;
+                }
             }
             break;
         case COLUMN_Role:
@@ -481,7 +485,7 @@ function UpdateScoreBoard(Canvas C)
     // Set standard font & line height
     C.Font = HUD.static.GetConsoleFont(C);
     C.TextSize("Text", XL, BaseLineHeight);
-    LineHeight = BaseLineHeight * 1.25;
+    LineHeight = BaseLineHeight * 1.125;
 
     // Construct a line with various information about the round & the server (start with "time remaining")
     S = class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.TimeRemainingText;                          // Label
@@ -533,15 +537,12 @@ function UpdateScoreBoard(Canvas C)
 
     Y = CalcY(0.25, C);
 
-    // Draw our round/server info line, with a drop shadow
-    C.SetDrawColor(0, 0, 0, 128);
+    // Draw our round/server info line
     X = BaseXPos[0];
-    C.SetPos(X + 1, Y + 1);
-    C.DrawTextClipped(S); // this is the dark 'drop shadow' text, slightly offset from the actual text
 
     C.DrawColor = HUD.default.WhiteColor;
     C.SetPos(X, Y);
-    C.DrawTextClipped(S); // this is the actual text, drawn over the drop shadow
+    C.DrawTextClipped(S);
 
     MaxTeamYPos = 0.0;
 
@@ -769,7 +770,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
             SRI.GetMembers(TeamIndex, SquadIndex, SquadMembers);
 
             // Reset the base line height
-            LineHeight = BaseLineHeight * 1.25;
+            LineHeight = BaseLineHeight * 1.125;
 
             if (Y + LineHeight > C.ClipY)
             {
@@ -836,7 +837,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
         if (bHasUnassigned)
         {
             // Reset the base line height
-            LineHeight = BaseLineHeight * 1.25;
+            LineHeight = BaseLineHeight * 1.125;
 
             // Reset the X position
             X = BaseXPos[TeamIndex];
@@ -1092,10 +1093,6 @@ function DHDrawCell(Canvas C, coerce string Text, byte Align, float XPos, float 
 
     if (Text != "")
     {
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = 128;
-        C.DrawTextJustified(Text, Align, XPos + 1, YPos + 1, C.ClipX, C.ClipY);
-
         C.DrawColor = F;
         C.DrawTextJustified(Text, Align, XPos, YPos, C.ClipX, C.ClipY);
     }
@@ -1134,6 +1131,7 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     PlayersText="Players"
+    NoPlayersText="No players"
     TickHealthText="Tick: "
     NetHealthText="Loss: "
     MunitionPercentageText="Munitions"

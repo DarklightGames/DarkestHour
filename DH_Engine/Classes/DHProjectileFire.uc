@@ -327,7 +327,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     foreach Weapon.TraceActors(class'Actor', A, HitLocation, HitNormal, Start + (PreLaunchTraceDistance * Direction), Start)
     {
         // Ignore this traced actor, as it's not something that would trigger HitWall or ProcessTouch for a bullet (i.e. a possible hit)
-        if (!A.bWorldGeometry && A.Physics != PHYS_Karma && !((A.bBlockActors || A.bProjTarget) && A.bBlockHitPointTraces))
+        if (!A.bWorldGeometry && (A.Physics != PHYS_Karma && A.Physics != PHYS_MovingBrush) && !((A.bBlockActors || A.bProjTarget) && A.bBlockHitPointTraces))
         {
             continue;
         }
@@ -412,8 +412,9 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             }
 
             // We're primarily interested if we hit a player, but also need to check if hit an awkward collision or destroyable mesh that doesn't stop a bullet
-            if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet)
-                || (RODestroyableStaticMesh(A) != none && RODestroyableStaticMesh(A).bWontStopBullets))
+            if (DHPawn(A) != none || 
+                (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) ||
+                (RODestroyableStaticMesh(A) != none && RODestroyableStaticMesh(A).bWontStopBullets))
             {
                 // Only count hit if traced actor is within extent of bullet whip (we had to do an artificially long HitPointTrace, so may have traced something far away)
                 if (VSizeSquared(TempHitLocation - HitLocation) <= 180000.0) // 180k is square of max distance across whip 'diagonally'
@@ -455,6 +456,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             }
 
             Other = A;
+            
             break;
         }
     }
@@ -469,7 +471,9 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 
     // We hit a special collision mesh or destroyable mesh (e.g. glass) that doesn't stop bullets
     // These are very rare & cause too many complications to be worth handling in pre-launch trace, so we'll just exit & let bullet spawn & handle things
-    if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) || (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets))
+    if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) || 
+        (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets) ||
+        (DHThrowableExplosiveProjectile(Other) != none))
     {
         return false;
     }
@@ -487,7 +491,9 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     }
 
     // Update hit effect (not if we hit a player, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
-    if (HitPlayer == none && ROWeaponAttachment(Weapon.ThirdPersonActor) != none && (Other.bWorldGeometry || Other.IsA('Vehicle') || Other.IsA('VehicleWeapon')))
+    if (HitPlayer == none && 
+        ROWeaponAttachment(Weapon.ThirdPersonActor) != none && 
+        (Other.bWorldGeometry || Other.IsA('Vehicle') || Other.IsA('VehicleWeapon')) || Other.Physics == PHYS_MovingBrush)
     {
         ROWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
     }
@@ -550,8 +556,6 @@ function PlayFiring()
 
                 if (W != none)
                 {
-                    Log("unmuting slide driver");
-
                     // If the weapon has a slide, unmute the slide animation driver
                     // so that the slide locks back after the last round is fired.
                     W.UnmuteWeaponComponentAnimationChannelsWithDriverType(DRIVER_Slide);
@@ -575,7 +579,7 @@ function PlayFiring()
             }
             else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
                 {
                     Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
                 }
@@ -586,7 +590,7 @@ function PlayFiring()
             }
             else if (Weapon.HasAnim(FireAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
                 {
                     Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
                 }
@@ -620,6 +624,27 @@ function PlayFireEnd()
         {
             Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
         }
+    }
+}
+
+simulated function bool ShouldPlayFireLastAnim()
+{
+    local DHProjectileWeapon PW;
+
+    PW = DHProjectileWeapon(Weapon);
+
+    if (PW == none)
+    {
+        return false;
+    }
+
+    if (PW.bAmmoAmountNotReplicated)
+    {
+        return Weapon.AmmoAmount(ThisModeNum) == AmmoPerFire;
+    }
+    else
+    {
+        return Weapon.AmmoAmount(ThisModeNum) < AmmoPerFire;
     }
 }
 

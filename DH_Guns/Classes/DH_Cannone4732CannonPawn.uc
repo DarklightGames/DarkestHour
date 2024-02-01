@@ -20,12 +20,14 @@ defaultproperties
     BinocPositionIndex=3
 
     DriveAnim="crouch_idle_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.57mmGun_sight_background'
-    GunsightSize=0.369 // 10 degrees 27 minutes visible FOV at 3x magnification (M69C telescope)
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     CameraBone="camera_gun"
 
+    GunOpticsClass=class'DH_Vehicles.DHGunOptics_Italian'
+    ProjectileGunOpticRangeTableIndices(1)=1
+    ProjectileGunOpticRangeTableIndices(2)=1
+    
     bHasDriverYawAnim=true
     DriverYawAnim=(Sequence="cannone4732_gunner_yaw")
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2020
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHVehicleRegistry extends Object
@@ -96,7 +96,7 @@ defaultproperties
     Records(5)=(VehicleNames=("gmclogi","gmcsupply"),Variants=((ClassName="DH_Vehicles.DH_GMCTruckSupport"),(ClassName="DH_Vehicles.DH_GMCTruckSupport_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_GMCTruckSupport_LL",VariantName="LL"),(ClassName="DH_Vehicles.DH_GMCTruckSupport_LL_Snow",VariantName="LLsnow"),(ClassName="DH_Vehicles.DH_GMCTruckSupport_Halloween",VariantName="haloween")))
     Records(6)=(VehicleNames=("jeep","willysjeep"),Variants=((ClassName="DH_Vehicles.DH_WillysJeep"),(ClassName="DH_Vehicles.DH_WillysJeep_SovietRoof",VariantName="sovietroof"),(ClassName="DH_Vehicles.DH_WillysJeep_Soviet",VariantName="soviet"),(ClassName="DH_Vehicles.DH_WillysJeep_SnowRoof",VariantName="snowroof"),(ClassName="DH_Vehicles.DH_WillysJeep_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_WillysJeep_Roof",VariantName="roof"),(ClassName="DH_Vehicles.DH_WillysJeep_ItalyRoof",VariantName="italyroof"),(ClassName="DH_Vehicles.DH_WillysJeep_Italy",VariantName="italy"),(ClassName="DH_Vehicles.DH_WillysJeep_DesertRoof",VariantName="desertroof"),(ClassName="DH_Vehicles.DH_WillysJeep_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_WillysJeep_AirborneRoof",VariantName="airborneroof"),(ClassName="DH_Vehicles.DH_WillysJeep_Airborne",VariantName="airborne")))
     //German
-    Records(7)=(VehicleNames=("kubel","kubelwagen"),Variants=((ClassName="DH_Vehicles.DH_KubelwagenCar_WH.uc"),(ClassName="DH_Vehicles.DH_KubelwagenCar_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_KubelwagenCar_SS",VariantName="SS"),(ClassName="DH_Vehicles.DH_KubelwagenCarTwo_SS",VariantName="SStwo")))
+    Records(7)=(VehicleNames=("kubel","kubelwagen"),Variants=((ClassName="DH_Vehicles.DH_KubelwagenCar_WH"),(ClassName="DH_Vehicles.DH_KubelwagenCar_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_KubelwagenCar_SS",VariantName="SS"),(ClassName="DH_Vehicles.DH_KubelwagenCarTwo_SS",VariantName="SStwo")))
     Records(8)=(VehicleNames=("opel"),Variants=((ClassName="DH_Vehicles.DH_OpelBlitzTransport"),(ClassName="DH_Vehicles.DH_OpelBlitzTransport_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_OpelBlitzTransport_NoTarp",VariantName="notarp")))
     Records(9)=(VehicleNames=("opellogi"),Variants=((ClassName="DH_Vehicles.DH_OpelBlitzSupport"),(ClassName="DH_Vehicles.DH_OpelBlitzSupport_Snow",VariantName="snow"),(ClassName="DH_Vehicles.DH_OpelBlitzSupport_NoTarp",VariantName="notarp")))
     
@@ -231,8 +231,11 @@ defaultproperties
     Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 
     // Italian
-    Records(100)=(VehicleNames=("semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer")))
-
+    Records(100)=(VehicleNames=("semo","semovente","semovente90","semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Desert",VariantName="desert")))
     Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert"),(ClassName="DH_Guns.DH_Cannone4732Gun_DesertCamo",VariantName="desertcamo"),(ClassName="DH_Guns.DH_Cannone4732Gun_Winter",VariantName="winter"),(ClassName="DH_Guns.DH_Cannone4732Gun_NoWheels",VariantName="static")))
+    Records(102)=(VehicleNames=("fiat626"),Variants=((ClassName="DH_Vehicles.DH_Fiat626TruckTransport"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport",VariantName="logi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_Desert",VariantName="desertlogi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_DesertCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_DesertCamo",VariantName="camologi")))
+    Records(103)=(VehicleNames=("cv33","l3","l3/33"),Variants=((ClassName="DH_Vehicles.DH_CV33Tank"),(ClassName="DH_Vehicles.DH_CV33Tank_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo",VariantName="camo")))
+    Records(104)=(VehicleNames=("ab41","autoblinda41"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda41ArmoredCar")))
+    Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
+    // Fiat L6
 }
-

@@ -8,7 +8,7 @@ class DHNation extends Object
 
 // Name
 var localized string            NationName;
-var localized string            NativeNationName;
+var string                      NativeNationName;
 
 var Texture                     FlagIconTexture;        // The icon used for the nation on the map.
 var Texture                     TeamSelectTexture;      // TODO: set this up on the team select page!
@@ -42,6 +42,9 @@ var class<DHInventorySpawner>   GrenadeCrateClass;
 var string                      DefaultSquadNames[8];
 
 var Sound                       RoundStartSound;
+
+// Supply
+var class<DHVehicle>            SupplyTruckClass;
 
 defaultproperties
 {

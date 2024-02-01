@@ -97,7 +97,6 @@ defaultproperties
     SteerBoneAxis=AXIS_X
     SteeringScaleFactor=4.0
 
-    MaxCriticalSpeed=662.0 // 40 kph
     TorqueCurve=(Points=((InVal=0,OutVal=1.0),(InVal=1500,OutVal=2.0),(InVal=3000,OutVal=0.0)))
     GearRatios(0)=-0.12
     GearRatios(1)=0.12

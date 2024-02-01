@@ -153,6 +153,9 @@ var     rotator             BackpackRotationOffset;
 // Health Figure
 var     class<DHHealthFigure>   HealthFigureClass;
 
+// Localized strings
+var     localized string    AdminSpawnedVehicleText;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -2958,7 +2961,7 @@ simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
     // an the overlay material is applied..
     for (i = 0; i < Skins.Length; ++i)
     {
-        if (Skins[i].IsA('Combiner'))
+        if (Skins[i] != none && Skins[i].IsA('Combiner'))
         {
             FB = new class'FinalBlend';
             FB.Material = Skins[i];
@@ -5378,6 +5381,33 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
+// Compute offset for drawing an inventory item
+//
+// Overriden to take into account the eye position on a server, as it's needed
+// for calculating the weapon location during leaning, going prone, etc.
+simulated function vector CalcDrawOffset(Inventory Inv)
+{
+	local vector DrawOffset;
+
+	if (Controller == none)
+    {
+		return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0,0,1);
+    }
+
+	DrawOffset = (0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation();
+
+    DrawOffset += EyePosition();
+
+    if (IsLocallyControlled())
+    {
+        // Only relevant on a client
+        DrawOffset += WeaponBob(Inv.BobDamping);
+        DrawOffset += CameraShake();
+    }
+
+	return DrawOffset;
+}
+
 // Returns true if the player can switch the prone state - only valid on the client.
 // Modified to fix prone eye-height bug.
 simulated function bool CanProneTransition()
@@ -6855,14 +6885,13 @@ exec function SetFlySpeed(float NewSpeed)
 
 exec function GimmeSupplies()
 {
-    switch (GetTeamNum())
+    local DH_LevelInfo LI;
+    
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI != none)
     {
-        case AXIS_TEAM_INDEX:
-            SpawnVehicle("opellogi");
-            break;
-        case ALLIES_TEAM_INDEX:
-            SpawnVehicle("gmclogi");
-            break;
+        SpawnVehicle(string(LI.GetTeamNationClass(GetTeamNum()).default.SupplyTruckClass));
     }
 }
 
@@ -6875,7 +6904,7 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
     local rotator           SpawnDirection;
     local int               Distance;
     local float             Degrees;
-    local string            VehicleClassName;
+    local string            VehicleClassName, S;
 
     VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
 
@@ -6898,7 +6927,11 @@ exec function SpawnVehicle(string VehicleName, optional string VariantName)
             SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
-            Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
+
+            S = default.AdminSpawnedVehicleText;
+            S = Repl(S, "{name}", GetHumanReadableName());
+            S = Repl(S, "{vehicle}", V.GetHumanReadableName());
+            Level.Game.Broadcast(self, S);
         }
     }
 }
@@ -7500,7 +7533,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {
             return true;
         }
@@ -7672,4 +7705,6 @@ defaultproperties
     LimpAnims(5)=""
     LimpAnims(6)=""
     LimpAnims(7)=""
+
+    AdminSpawnedVehicleText="Admin {name} spawned a {vehicle}"
 }

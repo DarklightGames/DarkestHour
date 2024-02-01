@@ -40,7 +40,6 @@ defaultproperties
     DriveAnim="VUC_driver_idle_close"
 
     // Movement
-    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5

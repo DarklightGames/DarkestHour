@@ -11,7 +11,6 @@ defaultproperties
     VehicleNameString="Panzer IV Ausf.J"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn')
     bHasAddedSideArmor=true
-    MaxCriticalSpeed=793.0 // 47 kph
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_ext'

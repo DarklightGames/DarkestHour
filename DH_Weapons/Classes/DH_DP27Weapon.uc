@@ -23,7 +23,7 @@ simulated function ROIronSights()
     Deploy();
 }
 
-// Modified to update the magazine rotation.
+// Modified to hide the bullet bone (see below).
 simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);

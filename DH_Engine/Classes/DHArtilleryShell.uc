@@ -10,7 +10,6 @@ class DHArtilleryShell extends DHProjectile;
 var     byte                CloseSoundIndex;            // replaces SavedCloseSound as now only the server selects random CloseSound & replicates it to net clients
 var     bool                bAlreadyDroppedProjectile;  // renamed from bDroppedProjectileFirst
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
-var     AvoidMarker         Fear;                       // scare the bots away from this
 
 // Sounds & explosion effects
 var     sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
@@ -51,17 +50,6 @@ simulated function PostBeginPlay()
 
     PlaySound(DistantSound,, 2.0,, 50000.0); // volume reduced to 2 as that's the biggest multiplier on any transient sound (same with other sounds)
     SetTimer(GetSoundDuration(DistantSound) * 0.95, false);
-}
-
-// From deprecated ROArtilleryShell class
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (Fear != none)
-    {
-        Fear.Destroy();
-    }
 }
 
 // Based on deprecated ROArtilleryShell class, but with functionality moved into called functions
@@ -116,14 +104,6 @@ simulated function SetUpStrike()
         }
 
         SetTimer(NextTimerDuration, false);
-
-        // Scare bots away from the impact location
-        if (Role == ROLE_Authority)
-        {
-            Fear = Spawn(class'AvoidMarker',,, ImpactLocation);
-            Fear.SetCollisionSize(DamageRadius, 200.0);
-            Fear.StartleBots();
-        }
     }
     else
     {
@@ -319,6 +299,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
+    local DHConstruction C;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked;
@@ -363,15 +344,25 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
-        // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
-        // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
-        VictimLocation = Victim.Location;
-        V = DHVehicle(Victim);
+        // Before tracing the victim, we must adjust its location for certain types of actors
+        // Tracing to origin can be unreliable as it's usually located at the bottom and can sink under the terrain, blocking the blast damage
+        C = DHConstruction(Victim);
 
-        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+        if (C != none)
         {
-            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            VictimLocation = C.GetExplosiveDamageTraceLocation();
+        }
+        else
+        {
+            VictimLocation = Victim.Location;
+
+            V = DHVehicle(Victim);
+
+            if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+            {
+                // Raise the trace location to the cannon bone height
+                VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            }
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast

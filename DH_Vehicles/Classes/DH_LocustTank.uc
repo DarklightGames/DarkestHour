@@ -119,7 +119,6 @@ defaultproperties
     FrontLeftAngle=330.0
 
     // Movement
-    MaxCriticalSpeed=1057.0
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.14

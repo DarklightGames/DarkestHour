@@ -11,10 +11,10 @@ var     name    PreFireHoldAnim;     // animation for holding the arm back ready
 var     bool    bPrimed;             // the nade is primed
 var     bool    bHasReleaseLever;    // this explosive has a lever that must be released to arm the weapon
 var     bool    bAlreadyExploded;    // the nade already blew up in your hands
-var     float   FuzeLength;          // how long this grenade will take to go off
+var     Range   FuzeLengthRange;     // how long this grenade will take to go off
 var     float   CurrentFuzeTime;     // how much fuse time is left
 
-var     sound   LeverReleaseSound;   // sound of the lever being released on this weapon
+var     Sound   LeverReleaseSound;   // sound of the lever being released on this weapon
 var     float   LeverReleaseVolume;  // volume of the lever being released
 var     float   LeverReleaseRadius;  // radius of the lever being released
 
@@ -39,7 +39,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    CurrentFuzeTime = default.FuzeLength;
+    CurrentFuzeTime = RandRange(default.FuzeLengthRange.Min, default.FuzeLengthRange.Max);
 }
 
 function ServerCheckPawnCanFire()
@@ -206,7 +206,7 @@ simulated function bool StartFire(int Mode)
 simulated function PostFire()
 {
     bPrimed = false;
-    CurrentFuzeTime = default.FuzeLength;
+    CurrentFuzeTime = RandRange(default.FuzeLengthRange.Min, default.FuzeLengthRange.Max);
     bAlreadyExploded = false;
 
     GotoState('PostFiring');
@@ -258,12 +258,24 @@ simulated state RaisingWeapon
     simulated function BeginState()
     {
        local int i;
+       local class<DHThrowableExplosiveProjectile> ProjectileClass;
+       local DHPlayer PC;
 
         super.BeginState();
 
         for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
             FireMode[i].NextFireTime = Level.TimeSeconds;
+        }
+
+        ProjectileClass = class<DHThrowableExplosiveProjectile>(FireModeClass[0].default.ProjectileClass);
+
+        if (ProjectileClass != none && ProjectileClass.default.FuzeType == FT_Impact)
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            // Hint message about impact grenades.
+            PC.QueueHint(55, true);
         }
     }
 
@@ -504,7 +516,7 @@ defaultproperties
     Priority=3
     PlayerViewOffset=(X=5.0,Y=5.0,Z=0.0)
 
-    FuzeLength=5.0
+    FuzeLengthRange=(Min=5.0,Max=5.0)
     PreFireHoldAnim="pre_fire_idle"
 
     SelectAnim="Draw"

@@ -44,4 +44,6 @@ defaultproperties
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
     DisplayFOV=80.0
+
+    FuzeLengthRange=(Min=2.0,Max=2.0)
 }

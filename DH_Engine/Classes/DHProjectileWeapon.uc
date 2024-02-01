@@ -192,6 +192,8 @@ var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bu
 var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
 var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
 
+var     bool                    bAmmoAmountNotReplicated; // set on clients in multiplayer
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -264,7 +266,7 @@ simulated function CreateBipodPhysicsSimulation()
     }
 }
 
-event WeaponTick(float DeltaTime)
+simulated event WeaponTick(float DeltaTime)
 {
     super.WeaponTick(DeltaTime);
 
@@ -2204,8 +2206,6 @@ simulated state Reloading extends WeaponBusy
             {
                 NextMagAmmoCount += 1;
             }
-
-            Log("NextMagAmmoCount" @ NextMagAmmoCount);
         }
 
         PlayReload();
@@ -3478,7 +3478,7 @@ simulated function float GetMagazinePercent()
 }
 
 // Returns the animation time (i.e. frame) for a given component and theta value.
-simulated private function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
+private simulated function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
 {
     switch (WeaponComponentAnimations[ComponentIndex].DriverType)
     {
@@ -3493,7 +3493,7 @@ simulated private function float GetWeaponComponentAnimationTime(int ComponentIn
 }
 
 // The theta value is a percentage (0.0 - 1.0) of how far along the animation should be.
-simulated private function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
+private simulated function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
 {
     switch (DriverType)
     {
@@ -3600,9 +3600,15 @@ simulated function ForceUpdateAmmoBelt(int MyAmmoAmount)
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
 {
-    local int i;
+    local int i, AmmoAmountOffset;
 
-    for (i = Max(0, AmmoAmount(0)); i < MGBeltArray.Length; ++i)
+    if (bAmmoAmountNotReplicated)
+    {
+        // Offset ammo count to account for replication delay.
+        AmmoAmountOffset = FireMode[0].AmmoPerFire;
+    }
+
+    for (i = Max(0, AmmoAmount(0) - AmmoAmountOffset); i < MGBeltArray.Length; ++i)
     {
         if (MGBeltArray[i] != none)
         {
@@ -3756,6 +3762,16 @@ exec simulated function DebugAddedYaw(int AddedYaw)
         {
             DHProjectileFire(FireMode[0]).AddedYaw = AddedYaw;
         }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bAmmoAmountNotReplicated)
+    {
+        bAmmoAmountNotReplicated = false;
     }
 }
 

@@ -10,9 +10,9 @@ class DH_Semovente9053CannonShell extends DHItalianCannonShell;
 
 defaultproperties
 {
-    Speed=45746.816     //758m/s [2]
+    Speed=45746.816     // 758m/s [2]
     MaxSpeed=45746.816 
-    ShellDiameter=9.0   //90mm [1]
+    ShellDiameter=9.0   // 90mm [1]
     BallisticCoefficient=3.2   // TODO: Find real value, currently using the flak88 as a basis 
 
     //Damage
@@ -34,19 +34,6 @@ defaultproperties
     DHPenetrationTable(9)=8.5   //2500
     DHPenetrationTable(10)=7.3  //3000
 
-    bOpticalAiming=true
-    OpticalRanges(0)=(Range=0,RangeValue=0.5)
-    OpticalRanges(1)=(Range=200,RangeValue=0.520)
-    OpticalRanges(2)=(Range=400,RangeValue=0.536)
-    OpticalRanges(3)=(Range=600,RangeValue=0.552)
-    OpticalRanges(4)=(Range=800,RangeValue=0.568)
-    OpticalRanges(5)=(Range=1000,RangeValue=0.583)
-    OpticalRanges(6)=(Range=1200,RangeValue=0.601)
-    OpticalRanges(7)=(Range=1400,RangeValue=0.620)
-    OpticalRanges(8)=(Range=1600,RangeValue=0.638)
-    OpticalRanges(9)=(Range=1800,RangeValue=0.659)
-    OpticalRanges(10)=(Range=2000,RangeValue=0.678)
-
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=50)
     MechanicalRanges(1)=(Range=200,RangeValue=53)
@@ -59,5 +46,4 @@ defaultproperties
     MechanicalRanges(8)=(Range=1600,RangeValue=173)
     MechanicalRanges(9)=(Range=1800,RangeValue=197)
     MechanicalRanges(10)=(Range=2000,RangeValue=221)
-    
 }

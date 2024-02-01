@@ -1,0 +1,95 @@
+# This file is used to generate the fonts for the game.
+# All fonts must be installed before executing the script.
+package_name: DHFonts
+default_unicode_ranges: # These unicode ranges are always included for each language.
+  - [ 0x0000, 0x007F ] # Basic Latin
+  - [ 0x0080, 0x00FF ] # Latin-1 Supplement
+  - [ 0x0180, 0x024F ] # Latin Extended-B
+  - [ 0x0400, 0x04FF ] # Cyrillic
+  - [ 0x0500, 0x052F ] # Cyrillic Supplement
+  - [ 0x2DE0, 0x2DFF ] # Cyrillic Extended-A
+  - [ 0xA640, 0xA69F ] # Cyrillic Extended-B
+  - [ 0x1C80, 0x1C8F ] # Cyrillic Extended-C
+  - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
+  - 0x1D2B
+  - 0x1D78
+  - 0x2116 # Numero sign (№)
+  - [ 0xFE2E, 0xFE2F ]
+default_font_style:
+  texture_size: # Maximum size of each texture atlas.
+    x: 512
+    y: 512
+  margin: # Margin around each character
+    bottom: 1
+    top: 1
+    left: 1
+    right: 1
+  padding:
+    x: 1
+    y: 1
+font_styles:
+  DHConsoleFont:
+    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
+    font: Inter
+  DHConsoleFontDS:
+    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Inter
+  DHButtonFont:
+    sizes: 20
+    font: Sofia Sans Condensed
+    weight: 1000
+  DHButtonFontDS:
+    sizes: 20
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Sofia Sans Condensed
+    weight: 1000
+  DHHugeButtonFont:
+    sizes: 24
+    font: Sofia Sans Condensed
+  DHLargeFont:
+    sizes: 16
+    font: Arial
+  DHLargeFontDS:
+    sizes: 16
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Arial
+  DHMenuFont:
+    sizes: 22
+    font: Sofia Sans Condensed
+    weight: 1000
+  DHMenuFontDS:
+    sizes: 22
+    font: Sofia Sans Condensed
+    weight: 1000
+    drop_shadow:
+      x: 1
+      y: 1
+  DHSmallFont:
+    sizes: 14
+    font: Inter
+  DHSmallFontDS:
+    sizes: 14
+    drop_shadow:
+      x: 1
+      y: 1
+    font: Inter
+languages:
+  en:
+    name: English, French, German, Italian, Spanish
+#  ja:
+#    name: Japanese
+#    font_substitutions:
+#      Sofia Sans Condensed: BIZ UDGothic
+#    ensure_all_characters: true
+#    unicode_ranges:
+#      - [0x3041, 0x309F]
+#      - [0x30A0, 0x30FF]
+#      - [0x31F0, 0x31FF]
+##      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)

@@ -1971,7 +1971,7 @@ defaultproperties
     End Object
     c_Teams=TeamsContainerObject
 
-    Begin Object Class=GUIButton Name=AxisButtonObject
+    Begin Object Class=DHGUIButton Name=AxisButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.4
@@ -2004,7 +2004,7 @@ defaultproperties
     End Object
     l_Axis=AxisLabelObject
 
-    Begin Object Class=GUIButton Name=AlliesButtonObject
+    Begin Object Class=DHGUIButton Name=AlliesButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.4
@@ -2037,7 +2037,7 @@ defaultproperties
     End Object
     l_Allies=AlliesLabelObject
 
-    Begin Object Class=GUIButton Name=SpectateButtonObject
+    Begin Object Class=DHGUIButton Name=SpectateButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
         WinWidth=0.2
@@ -2187,7 +2187,7 @@ defaultproperties
     End Object
     MapSquadsTabContainer=MapSquadsTabContainerObject
 
-    Begin Object Class=GUIButton Name=EquipmentButtonObject
+    Begin Object Class=DHGUIButton Name=EquipmentButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2209,7 +2209,7 @@ defaultproperties
     End Object
     i_EquipmentButton=EquipmentButtonImageObject
 
-    Begin Object Class=GUIButton Name=VehicleButtonObject
+    Begin Object Class=DHGUIButton Name=VehicleButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2231,7 +2231,7 @@ defaultproperties
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
 
-    Begin Object Class=GUIButton Name=MapButtonObject
+    Begin Object Class=DHGUIButton Name=MapButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2253,7 +2253,7 @@ defaultproperties
     End Object
     i_MapButton=MapButtonImageObject
 
-    Begin Object Class=GUIButton Name=SquadsButtonObject
+    Begin Object Class=DHGUIButton Name=SquadsButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
@@ -2417,7 +2417,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.75
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.0
         OnChange=InternalOnChange
@@ -2438,7 +2438,7 @@ defaultproperties
         bReadOnly=true
         CaptionWidth=0
         ComponentWidth=-1
-        WinWidth=0.5
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.333334
         OnChange=InternalOnChange
@@ -2505,7 +2505,7 @@ defaultproperties
     End Object
     i_Vehicle=VehicleImageObject
 
-    Begin Object Class=GUIGFXButton Name=SpawnVehicleImageObject
+    Begin Object Class=DHGUIGFXButton Name=SpawnVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
@@ -2518,7 +2518,7 @@ defaultproperties
     End Object
     i_SpawnVehicle=SpawnVehicleImageObject
 
-    Begin Object Class=GUIGFXButton Name=ArtilleryVehicleImageObject
+    Begin Object Class=DHGUIGFXButton Name=ArtilleryVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
@@ -2531,7 +2531,7 @@ defaultproperties
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
 
-    Begin Object Class=GUIGFXButton Name=MaxVehiclesImageObject
+    Begin Object Class=DHGUIGFXButton Name=MaxVehiclesImageObject
         WinWidth=0.125
         WinHeight=0.125
         WinLeft=0.0
@@ -2555,7 +2555,7 @@ defaultproperties
     End Object
     l_MaxVehicles=MaxVehiclesLabelObject
 
-    Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
+    Begin Object Class=DHGUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.5

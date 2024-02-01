@@ -6,6 +6,8 @@
 class DarkestHourGame extends ROTeamGame
   dependson(DHActorProxy);
 
+#exec OBJ LOAD FILE=../Textures/DH_VehiclesGE_tex2.utx
+
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
@@ -3128,7 +3130,7 @@ state ResetGameCountdown
             AS.Destroy();
         }
 
-        Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+        Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 10);
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
@@ -3155,14 +3157,14 @@ state ResetGameCountdown
                 SquadReplicationInfo.ResetSquadRallyPoints();
             }
 
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
         {
-            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
+            Level.Game.BroadcastLocalized(none, class'DHResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
 }
@@ -5312,26 +5314,7 @@ event PostLogin(PlayerController NewPlayer)
 
             if (S != none)
             {
-                PRI.Deaths = S.Deaths;
-                PRI.DHKills = S.Kills;
-                PRI.Score = S.TotalScore;
-                PRI.TotalScore = S.TotalScore;
-
-                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
-                {
-                    PRI.CategoryScores[i] = S.CategoryScores[i];
-                }
-
-                Teams[S.TeamIndex].AddToTeam(PC);
-
-                PC.LastKilledTime = S.LastKilledTime;
-                PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.NextChangeTeamTime = S.NextChangeTeamTime;
-
-                if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
-                {
-                    PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
-                }
+                S.Load(PC);
             }
         }
 
@@ -5348,9 +5331,10 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-    }
+        class'DHGeolocationService'.static.GetIpData(PC);
 
-    class'DHGeolocationService'.static.GetIpData(PC);
+        PC.OnPlayerLogin();
+    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5384,6 +5368,7 @@ function Logout(Controller Exiting)
         return;
     }
 
+    // Save the current session info
     if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
         O = new class'DHPlayerSession';
@@ -5394,24 +5379,7 @@ function Logout(Controller Exiting)
 
     if (S != none)
     {
-        S.Deaths = PRI.Deaths;
-        S.Kills = PRI.DHKills;
-        S.TotalScore = PRI.TotalScore;
-
-        for (i = 0; i < arraycount(S.CategoryScores); ++i)
-        {
-            S.CategoryScores[i] = PRI.CategoryScores[i];
-        }
-
-        S.LastKilledTime = PC.LastKilledTime;
-        S.WeaponUnlockTime = PC.WeaponUnlockTime;
-        S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.NextChangeTeamTime = PC.NextChangeTeamTime;
-
-        if (PRI.Team != none)
-        {
-            S.TeamIndex = PRI.Team.TeamIndex;
-        }
+        S.Save(PC);
     }
 }
 
@@ -5812,7 +5780,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Gï¿½nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5821,10 +5789,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Mï¿½ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grï¿½schke"
-    GermanNames(12)="Wilhelm Krï¿½ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5890,4 +5858,6 @@ defaultproperties
     SurrenderReinforcementsRequiredPercent=1.0 // disabled by default
     SurrenderNominationsThresholdPercent=0.15
     SurrenderVotesThresholdPercent=0.5
+
+    GameDifficulty=4    // For arcane reasons, this has to be >3 so that self-inflicted damage isn't reduced.
 }

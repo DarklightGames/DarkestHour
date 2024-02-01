@@ -6,6 +6,12 @@
 class DHThrowableExplosiveProjectile extends DHProjectile
     abstract;
 
+var enum EFuzeType
+{
+    FT_Timed,   // Use FuzeLengthTimer to determine when to explode.
+    FT_Impact,  // Explode on impact.
+} FuzeType;
+
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeDirtEffectClass;
 var     class<Emitter>  ExplodeSnowEffectClass;
@@ -21,13 +27,14 @@ var     Pawn            SavedInstigator;
 //==============================================================================
 // Variables from deprecated ROThrowableExplosiveProjectile:
 
-var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
-var     float           FuzeLengthTimer;
-var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
+var     byte            ThrowerTeam;        // the team number of the person that threw this projectile
+var     Range           FuzeLengthRange;
+var     float           ImpactFuzeMomentumThreshold;    // The "momentum" (i.e. speed * surface modifier) the projectile must be going to explode on impact.
+var     float           DudChance;          // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
-var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
+var     float           DudLifeSpan;        // How long a dud lasts before it disappears.
+var     float           TripMineLifeSpan;   // How long a trip mine lasts before it disappears.
 var     sound           ExplosionSound[3];
-var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
 var     float           DampenFactor;
 var     float           DampenFactorParallel;
@@ -47,7 +54,12 @@ replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        FuzeLengthTimer, Bounces, bDud;
+        Bounces, bDud;
+}
+
+simulated function float GetRandomFuzeLength()
+{
+    return RandRange(FuzeLengthRange.Min, FuzeLengthRange.Max);
 }
 
 // From ROThrowableExplosiveProjectile & ROGrenadeProjectile, combined
@@ -64,9 +76,17 @@ simulated function PostBeginPlay()
             Velocity = 0.25 * Velocity;
         }
 
-        if (FRand() < FailureRate)
+        if (FRand() < DudChance)
         {
             bDud = true;
+            LifeSpan = DudLifeSpan;
+        }
+        else
+        {
+            if (FuzeType == FT_Timed)
+            {
+                SetFuzeLength(GetRandomFuzeLength());
+            }
         }
     }
 
@@ -75,6 +95,14 @@ simulated function PostBeginPlay()
     if (InstigatorController != none)
     {
         ThrowerTeam = InstigatorController.GetTeamNum();
+    }
+}
+
+function SetFuzeLength(float FuzeLength)
+{
+    if (FuzeType == FT_Timed)
+    {
+        SetTimer(FuzeLength, false);
     }
 }
 
@@ -103,12 +131,12 @@ simulated function Destroyed()
     if (EffectIsRelevant(Start, false))
     {
         // If the projectile is still moving we'll need to spawn a different explosion effect
-        if (Physics == PHYS_Falling)
+        if (Physics == PHYS_Falling && FuzeType == FT_Timed)
         {
             Spawn(ExplodeMidAirEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
         }
-        // If the projectile has stopped and is on the ground we'll spawn a ground explosion effect and spawn some dirt flying out
-        else if (Physics == PHYS_None)
+        // If the projectile has stopped and is on the ground (or is an impact fuze grenade) we'll spawn a ground explosion effect and spawn some dirt flying out
+        else if (Physics == PHYS_None || FuzeType == FT_Impact)
         {
             GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
 
@@ -142,30 +170,12 @@ simulated function Destroyed()
         }
     }
 
-    if (Fear != none)
-    {
-        Fear.Destroy();
-    }
-
     super.Destroyed();
 }
 
-// Modified from ROThrowableExplosiveProjectile to optimise
-simulated function Tick(float DeltaTime)
+simulated function Timer()
 {
-    if (!bAlreadyExploded)
-    {
-        FuzeLengthTimer -= DeltaTime;
-
-        // If it is a dud, then "explode" 10 seconds late
-        // This will make it so the explosive doesn't disappear for some time instead of right away
-        if ((bDud && FuzeLengthTimer <= -10.0) || (FuzeLengthTimer <= 0.0 && !bDud))
-        {
-            bAlreadyExploded = true;
-            Explode(Location, vect(0.0, 0.0, 1.0));
-            Disable('Tick'); // no point continuing to call Tick
-        }
-    }
+    Explode(Location, vect(0.0, 0.0, 1.0));
 }
 
 // Modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
@@ -176,6 +186,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 {
     local Actor         Victim, TraceActor;
     local DHVehicle     V;
+    local DHConstruction C;
     local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
     local bool          bAlreadyChecked;
@@ -226,15 +237,25 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
-        // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
-        // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
-        VictimLocation = Victim.Location;
-        V = DHVehicle(Victim);
+        // Before tracing the victim, we must adjust its location for certain types of actors
+        // Tracing to origin can be unreliable as it's usually located at the bottom and can sink under the terrain, blocking the blast damage
+        C = DHConstruction(Victim);
 
-        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+        if (C != none)
         {
-            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            VictimLocation = C.GetExplosiveDamageTraceLocation();
+        }
+        else
+        {
+            VictimLocation = Victim.Location;
+
+            V = DHVehicle(Victim);
+
+            if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
+            {
+                // Raise the trace location to the cannon bone height
+                VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
+            }
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
@@ -435,15 +456,85 @@ simulated function Landed(vector HitNormal)
         SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
 
         if (Role == ROLE_Authority)
-        {
-            Fear = Spawn(class'AvoidMarker');
-            Fear.SetCollisionSize(DamageRadius, 200.0);
-            Fear.StartleBots();
+        {            
+            if (FuzeType == FT_Impact && !bDud)
+            {
+                GotoState('TripMine');
+            }
+            else
+            {
+                Explode(Location, HitNormal);
+            }
         }
     }
     else
     {
         HitWall(HitNormal, none);
+    }
+}
+
+
+// A state for impact fuze explosives that have landed on the ground and not exploded.
+state TripMine
+{
+    function BeginState()
+    {
+        bBlockZeroExtentTraces = true;
+        bBlockNonZeroExtentTraces = true;
+        bBlockProjectiles = true;
+        bBlockHitPointTraces = true;    // Needed so that PLT will work on this!
+
+        SetCollision(true, false);
+        SetCollisionSize(8.0, 8.0);
+        SetPhysics(PHYS_None);
+        Velocity = vect(0, 0, 0);
+
+        SetTimer(TripMineLifeSpan, false);
+    }
+
+    event Touch(Actor Other)
+    {
+        // Impact grenades can be laying on the ground unexploded.
+        // If a any pawn walks or drives over it, it explodes!
+        if (Other.IsA('Pawn'))
+        {
+            Explode(Location, vect(0, 0, 1));
+        }
+    }
+
+    function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    {
+        // Any damage will cause this to explode.
+        Explode(Location, vect(0, 0, 1));
+    }
+
+    function Timer()
+    {
+        // Mark this as a dud, then set the lifetime so thatclients get the new state.
+        // This is so that clients do not play the explosion effect when the grenade is destroyed locally.
+        bDud = true;
+        SetDrawType(DT_None);
+        LifeSpan = 2.0;
+    }
+}
+
+// The amount of momentum transferred to the grenade on impact.
+// Used to determine if an impact grenade should explode on impact.
+simulated function float GetSurfaceTypeMomentumTransfer(ESurfaceTypes SurfaceType)
+{
+    switch (SurfaceType)
+    {
+        case EST_Dirt:
+            return 0.8;
+        case EST_Snow:
+            return 0.25;
+        case EST_Mud:
+        case EST_Cloth:
+            return 0.5;
+        case EST_Custom01:  // Sand
+            return 0.25;
+        default:
+            return 1.0;
     }
 }
 
@@ -455,6 +546,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local vector        VNorm;
     local ESurfaceTypes ST;
     local int           i;
+    local float         ImpactMomentumTransfer;
 
     DestroMesh = RODestroyableStaticMesh(Wall);
 
@@ -488,25 +580,39 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     GetHitSurfaceType(ST, HitNormal);
-    GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
 
-    Bounces--;
+    if (Role == ROLE_Authority && FuzeType == FT_Impact)
+    {
+        ImpactMomentumTransfer = GetSurfaceTypeMomentumTransfer(ST) * Speed;
 
-    if (Bounces <= 0)
-    {
-        bBounce = false;
-    }
-    else
-    {
-        // Reflect off Wall with damping
-        VNorm = (Velocity dot HitNormal) * HitNormal;
-        Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
-        Speed = VSize(Velocity);
+        if (ImpactMomentumTransfer >= ImpactFuzeMomentumThreshold)
+        {
+            Explode(Location, HitNormal);
+        }
     }
 
-    if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+    if (!bDeleteMe)
     {
-        PlaySound(ImpactSound, SLOT_Misc, 1.1);
+        GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
+
+        Bounces--;
+
+        if (Bounces <= 0)
+        {
+            bBounce = false;
+        }
+        else
+        {
+            // Reflect off Wall with damping
+            VNorm = (Velocity dot HitNormal) * HitNormal;
+            Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
+            Speed = VSize(Velocity);
+        }
+
+        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+        {
+            PlaySound(ImpactSound, SLOT_Misc, 1.1);
+        }
     }
 }
 
@@ -833,7 +939,7 @@ defaultproperties
     DampenFactor=0.05
     DampenFactorParallel=0.8
     bFixedRotationDir=true
-    FailureRate=0.001 // 1 in 1000
+    DudChance=0.001 // 1 in 1000
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
@@ -856,4 +962,7 @@ defaultproperties
     ShakeScale=2.25
     BlurTime=4.0
     BlurEffectScalar=1.35
+
+    ImpactFuzeMomentumThreshold=500.0
+    TripMineLifeSpan=300
 }

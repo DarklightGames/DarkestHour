@@ -10,7 +10,6 @@ defaultproperties
     ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
     AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
     bIsSmokeGrenade=true
-    MaxHoldTime=4.95
     bPullAnimCompensation=true
     AddedFuseTime=0.38
     bSplashDamage=false

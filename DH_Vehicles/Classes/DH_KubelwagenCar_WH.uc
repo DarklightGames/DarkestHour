@@ -48,7 +48,6 @@ defaultproperties
     EngineBrakeFactor=0.0003
     bHasHandbrake=true
     EngineRPMSoundRange=8000.0
-    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
     WheelPenScale=0.85

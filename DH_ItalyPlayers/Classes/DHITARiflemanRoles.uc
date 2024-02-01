@@ -14,7 +14,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=none,AssociatedAttachment=none)
     PrimaryWeapons(2)=(Item=none,AssociatedAttachment=none)
 
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon') // TODO: replcae with standard italian grenade
+    Grenades(0)=(Item=class'DH_Weapons.DH_SRCMMod35GrenadeWeapon')
 
     VoiceType="DH_ItalyPlayers.DHItalyVoice"
     AltVoiceType="DH_ItalyPlayers.DHItalyVoice"

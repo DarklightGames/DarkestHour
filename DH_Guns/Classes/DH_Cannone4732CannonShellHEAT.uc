@@ -20,7 +20,7 @@ defaultproperties
     DamageRadius=415.0
 
     //Effects
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'  // TODO: ?
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'  // TODO: white corna/shell trail
     ShellTrailClass=class'DH_Effects.DHShellTrail_YellowOrange'
 
     DHPenetrationTable(0)=5.5
@@ -43,5 +43,6 @@ defaultproperties
     MechanicalRanges(4)=(Range=400,RangeValue=359)
     MechanicalRanges(5)=(Range=500,RangeValue=532)
     // TODO: anything beyond this stretches credulity with how far the pitch of the projectile is from the gun itself
+
     bMechanicalAiming=true
 }

@@ -179,7 +179,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
         // Type
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType), FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MI.GameTypeClass.default.GameTypeName, FontScale);
 
         // Map Size
         GetCellLeftWidth(4, CellLeft, CellWidth);
@@ -235,7 +235,7 @@ function string GetSortString(int i)
         case 3: // Game Type
             if (bHasMapInfo)
             {
-                return class'DHMapDatabase'.static.GetMapGameTypeString(MI.GameType);
+                return MI.GameTypeClass.default.GameTypeName;
             }
         case 4: // Map Size
             if (bHasMapInfo)

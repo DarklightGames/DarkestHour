@@ -2,11 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// Useful Reference for SCars: https://docs.unrealengine.com/udk/Two/SCarReference.html
+// ==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
     abstract;
-
-#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
 struct PassengerPawn
@@ -54,8 +54,6 @@ var     int         PreventTeamChangeForTK;      // Number of seconds a player c
 // Driver & driving
 var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
-var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
-                                                 // ... calculated as (desired kph * 1000 * 60.352 / 3600)
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
@@ -202,6 +200,8 @@ var struct SSteeringAnimation
 
 // Debugging
 var     bool        bDebuggingText;
+
+var Sound BuzzSound;
 
 replication
 {
@@ -588,16 +588,6 @@ simulated function Tick(float DeltaTime)
         // Vehicle is moving
         if (VehicleSpeed > 0.1)
         {
-            // Force player to pull back on throttle if over max speed
-            if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-            {
-                PlayerController(Controller).aForward = -32768.0;
-            }
-            else if (bWheelsAreDamaged && (VehicleSpeed >= MaxCriticalSpeed * DamagedWheelSpeedFactor) && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-            {
-                PlayerController(Controller).aForward = -32768.0;
-            }
-
             // Update tread, interior rumble & engine sound volumes, based on speed
             MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
             UpdateMovementSound(MotionSoundVolume);
@@ -2119,7 +2109,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Inform the instigator they are doing something wrong
                 if (PlayerController(InstigatorController) != none)
                 {
-                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
+                    PlayerController(InstigatorController).ClientPlaySound(BuzzSound,,, SLOT_Interface);
                 }
 
                 // If no one has ever entered the vehicle, then don't allow team damage
@@ -3774,6 +3764,7 @@ event CheckReset()
 {
     local Controller C;
     local float      Distance;
+    local ROVehicleFactory VF;
 
     // Do nothing if vehicle is a spawn vehicle or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
@@ -3783,10 +3774,12 @@ event CheckReset()
         return;
     }
 
+    VF = ROVehicleFactory(ParentFactory);
+
     // Do nothing if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
     // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
     if (IsFactorysLastVehicle() &&
-        !(ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive))
+        !(VF != none && !VF.bFactoryActive && VF.bDestroyVehicleWhenInactive))
     {
         return;
     }
@@ -4411,4 +4404,6 @@ defaultproperties
 
     //bDebuggingText=true
     ResupplyInterval=2.5
+
+    BuzzSound=Sound'DHMenuSounds.BuzzBuzz'
 }

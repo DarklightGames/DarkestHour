@@ -55,7 +55,6 @@ defaultproperties
     HUDOverlayFOV=100.0
 
     // Movement & physics wheels properties
-    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(1)=0.3
     GearRatios(2)=0.5

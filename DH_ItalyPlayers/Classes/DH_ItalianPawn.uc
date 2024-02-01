@@ -32,7 +32,7 @@ defaultproperties
     // TODO: replace all this
     ShovelClass=class'DH_Equipment.DHShovelItem_Russian'
     BinocsClass=class'DH_Equipment.DHBinocularsItemSoviet'
-    SmokeGrenadeClass=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
+    SmokeGrenadeClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon'
 
     HealthFigureClass=class'DH_ItalyPlayers.DHHealthFigure_Italy'
 }

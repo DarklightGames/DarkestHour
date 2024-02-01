@@ -2,31 +2,46 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// States:
+// MSAT_Blurry,            // Component has no focus at all
+// MSAT_Watched,           // Component is being watched (ie: Mouse is hovering over, etc)
+// MSAT_Focused,           // Component is Focused (ie: selected)
+// MSAT_Pressed,           // Component is being pressed
+// MSAT_Disabled,          // Component is disabled.
+//==============================================================================
 
 class DHStyle_MenuTextButton extends GUIStyles;
 
 defaultproperties
 {
     KeyName="DHMenuTextButtonStyle"
-    FontNames(0)="DHButtonFont"
-    FontNames(1)="DHButtonFont"
-    FontNames(2)="DHButtonFont"
-    FontNames(3)="DHButtonFont"
-    FontNames(4)="DHButtonFont"
-    FontNames(5)="DHButtonFont"
-    FontNames(6)="DHButtonFont"
-    FontNames(7)="DHButtonFont"
-    FontNames(8)="DHButtonFont"
-    FontNames(9)="DHButtonFont"
-    FontNames(10)="DHButtonFont"
-    FontNames(11)="DHButtonFont"
-    FontNames(12)="DHButtonFont"
-    FontNames(13)="DHButtonFont"
-    FontNames(14)="DHButtonFont"
-    FontColors(0)=(B=0,G=0,R=0)
-    FontColors(2)=(B=255,G=255,R=255)
-    FontColors(3)=(B=20,G=20,R=20,A=200)
-    FontColors(4)=(B=20,G=20,R=20,A=100)
+    
+    // Small
+    FontNames(0)="DHButtonFont"     // Blurry
+    FontNames(1)="DHButtonFontDS"   // Watched
+    FontNames(2)="DHButtonFontDS"   // Focused
+    FontNames(3)="DHButtonFont"     // Pressed
+    FontNames(4)="DHButtonFont"     // Disabled
+
+    // Medium
+    FontNames(5)="DHButtonFont"     // Blurry
+    FontNames(6)="DHButtonFontDS"   // Watched
+    FontNames(7)="DHButtonFontDS"   // Focused
+    FontNames(8)="DHButtonFont"     // Pressed
+    FontNames(9)="DHButtonFont"     // Disabled
+
+    // Large
+    FontNames(10)="DHButtonFont"    // Blurry
+    FontNames(11)="DHButtonFontDS"  // Watched
+    FontNames(12)="DHButtonFontDS"  // Focused
+    FontNames(13)="DHButtonFont"    // Pressed
+    FontNames(14)="DHButtonFont"    // Disabled
+
+    FontColors(0)=(B=0,G=0,R=0)             // Blurry
+    FontColors(2)=(B=255,G=255,R=255)       // Focused
+    FontColors(3)=(B=20,G=20,R=20,A=200)    // Pressed
+    FontColors(4)=(B=20,G=20,R=20,A=100)    // Disabled
+
     BorderOffsets(0)=0
     BorderOffsets(1)=0
     BorderOffsets(2)=0

@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MillsBombPickup'
     Mesh=SkeletalMesh'DH_MillsBomb.MillsBomb'
     DisplayFOV=80.0
-    FuzeLength=4.0
+    FuzeLengthRange=(Min=4.0,Max=4.0)
     bHasReleaseLever=true
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0

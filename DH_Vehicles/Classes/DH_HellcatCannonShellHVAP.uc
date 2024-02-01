@@ -30,5 +30,4 @@ defaultproperties
     DHPenetrationTable(8)=12.4
     DHPenetrationTable(9)=10.1
     DHPenetrationTable(10)=7.6
-
-
+}

@@ -57,14 +57,13 @@ defaultproperties
     RearLeftAngle=210.0
 
     // Movement
-    MaxCriticalSpeed=729.0 // 43 kph
 
     // Damage
-	// cons: petrol fuel;
-	// 4 men crew
+    // cons: petrol fuel;
+    // 4 men crew
     Health=525
     HealthMax=525.0
-	EngineHealth=300
+    EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
     VehHitpoints(0)=(PointRadius=20.0,PointHeight=25.0,PointOffset=(X=-90.0)) // engine

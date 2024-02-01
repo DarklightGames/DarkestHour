@@ -16,15 +16,15 @@ defaultproperties
         BarStyleName="DHMultiColBar"
         StyleName="DHMultiColBar"
     End Object
-    Header=GUIMultiColumnListHeader'DH_Interface.DHBrowser_ServerListBox.MyHeader'
+    Header=MyHeader
 
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHBrowser_ServerListBox.TheScrollbar'
+    MyScrollBar=TheScrollbar
 
-    Begin Object Class=GUIContextMenu Name=RCMenu
+    Begin Object Class=DHGUIContextMenu Name=RCMenu
         ContextItems(0)="Join Server"
         ContextItems(1)="Join As Spectator"
         ContextItems(2)="-"
@@ -38,9 +38,9 @@ defaultproperties
         ContextItems(10)="Add To Favorites"
         ContextItems(11)="Copy server address"
         ContextItems(12)="Open IP"
-        OnOpen=DHBrowser_ServerListBox.InternalOnOpen
-        OnClose=DHBrowser_ServerListBox.InternalOnClose
-        OnSelect=DHBrowser_ServerListBox.InternalOnClick
+        OnOpen=InternalOnOpen
+        OnClose=InternalOnClose
+        OnSelect=InternalOnClick
     End Object
-    ContextMenu=GUIContextMenu'DH_Interface.DHBrowser_ServerListBox.RCMenu'
+    ContextMenu=RCMenu
 }

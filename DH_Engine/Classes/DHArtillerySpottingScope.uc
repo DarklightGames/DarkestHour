@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHArtillerySpottingScope extends Object
+    dependson(DHUnits)
     abstract;
 
 // Range table
@@ -29,6 +30,7 @@ struct STargetInfo
 };
 
 var UUnits.EAngleUnit PitchAngleUnit, YawAngleUnit;
+var DHUnits.EDistanceUnit DistanceUnit;
 
 enum EShapePrimitive
 {
@@ -52,6 +54,9 @@ var int                                   NumberOfPitchSegments;
 
 var     localized string    RangeString;
 var     localized string    ElevationString;
+var     localized string    LeftString, RightString;
+var     localized string    CorrectionString;
+var     localized string    DistanceString;
 var     texture             SpottingScopeOverlay;       // periscope overlay texture
 
 var     float               YawScaleStep;               // how quickly yaw indicator should traverse
@@ -59,8 +64,6 @@ var     float               PitchScaleStep;             // how quickly pitch ind
 var     int                 PitchIndicatorLength;       // [px], should be a multiple of number of visible pitch ticks
 var     int                 YawIndicatorLength;         // [px], should be a multiple of number of visible yaw ticks
 var     int                 StrikeThroughThickness;     // [px]
-
-var     string              DistanceUnit;
 
 var     int                 WidgetsPanelTopLeftX;
 var     int                 WidgetsPanelTopLeftY;
@@ -79,13 +82,13 @@ var     DHDataTable         RenderTable;
 var     localized string    RangeHeaderString;
 var     localized string    PitchHeaderString;
 
-var     color               Green;
-var     color               White;
-var     color               Orange;
-var     color               Red;
+var     Color               Green;
+var     Color               White;
+var     Color               Orange;
+var     Color               Red;
 
-var     texture             GradientOverlayX;           // used for dimming the dials
-var     texture             GradientOverlayY;           // used for dimming the dials
+var     Texture             GradientOverlayX;           // used for dimming the dials
+var     Texture             GradientOverlayY;           // used for dimming the dials
 
 // Those two fields determine what part of the dial's span will be used
 // to display the dial's scale. The span is equal to (0.5-SPAN/2, 0.5+SPAN/2) [rads].
@@ -118,9 +121,10 @@ struct STargetWidgetLayout
 
 var     STargetWidgetLayout TargetWidgetLayout;
 
-var     string              TargetToggleHint;
-var     string              SelectTargetHint;
-var     string              NoTargetsHint;
+var     localized string    TargetToggleHint;
+var     localized string    SelectTargetHint;
+var     localized string    NoTargetsHint;
+var     string              ToggleButtonText;
 
 function CreateRenderTable(Canvas C)
 {
@@ -133,10 +137,10 @@ function CreateRenderTable(Canvas C)
 
     RenderTable = new class'DHDataTable';
 
-    RenderTable.Font = C.MedFont;
+    RenderTable.Font = class'DHHud'.static.GetTinyFont(C);
     RenderTable.Columns.Insert(0, 2);
 
-    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ DistanceUnit $ ")";
+    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ class'DHUnits'.static.GetDistanceUnitString(DistanceUnit) $ ")";
     RenderTable.Columns[0].TextColor = class'UColor'.default.White;
     RenderTable.Columns[0].Width = 80;
     RenderTable.Columns[0].HeaderJustification = 2;
@@ -455,13 +459,13 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 break;
             case TWLT_Correction:
                 Deflection = TargetInfo.YawCorrection * YawScaleStep + CurrentYaw;
-                Labels[0] = "Correction: ";
+                Labels[0] = default.CorrectionString $ ": ";
 
                 if (TargetInfo.Marker.MapMarkerClass.static.IsMarkerActive(PC, TargetInfo.Marker))
                 {
                     if (Deflection > 0)
                     {
-                        Labels[1] = Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "left";
+                        Labels[1] = Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.LeftString;
 
                         if (CurrentYaw - Deflection < MinimumGunYaw)
                         {
@@ -481,7 +485,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                     }
                     else
                     {
-                        Labels[1] = -Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ "right";
+                        Labels[1] = -Deflection $ class'UUnits'.static.GetAngleUnitString(YawAngleUnit) @ default.RightString;
 
                         if (CurrentYaw - Deflection > MaximumGunYaw)
                         {
@@ -504,7 +508,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 break;
             case TWLT_Distance:
                 C.SetDrawColor(White.R, White.G, White.B, White.A);
-                Labels[0] = "Distance: ";
+                Labels[0] = default.DistanceString $ ": ";
                 if (TargetInfo.Marker.MapMarkerClass.static.IsMarkerActive(PC, TargetInfo.Marker))
                 {
                     Labels[1] = TargetInfo.Marker.MapMarkerClass.static.GetDistanceString(PC, TargetInfo.Marker);
@@ -619,6 +623,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
     {
         // The player hasn't chosen anything from the available requests
         Label = Repl(SelectTargetHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+        Label = Repl(Label, "{0}", ToggleButtonText);
         // Flash the label to get the player's attention
         LabelColor = class'UColor'.static.Interp((Sin(PC.Level.TimeSeconds * PI * 2) + 1) / 2, Green, White);
     }
@@ -628,6 +633,7 @@ function DrawTargets(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STarg
         {
             // The player has selected an available marker but there are more to toggle between
             Label = Repl(TargetToggleHint, "{ArtilleryMarkersLength}", ArtilleryMarkers.Length);
+            Label = Repl(Label, "{0}", ToggleButtonText);
             LabelColor = class'UColor'.default.Green;
         }
         else
@@ -663,7 +669,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local array<int> TargetTickBuckets;
     local float CurvatureCoefficient, ShadingCoefficient;
     local string Label;
-    local color Color;
+    local Color Color;
     local DHGameReplicationInfo.MapMarker Marker;
 
     if (PC == none || C == none || VWP == none)
@@ -690,7 +696,7 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - YawDialSpan * 0.5);
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + YawDialSpan * 0.5);
 
-    C.Font = C.TinyFont;
+    C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
 
     // Start drawing scale ticks
@@ -787,8 +793,8 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out
-    C.SetPos(IndicatorTopLeftCornerX - 0.5 * LargeSizeTickLength, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength);
-    C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength, 3 * LargeSizeTickLength, 0, 0, 256, 32);
+    C.SetPos(IndicatorTopLeftCornerX - (0.5 * LargeSizeTickLength) - 4, IndicatorTopLeftCornerY - 1.5 * LargeSizeTickLength - (TextHeightFloat / 2));
+    C.DrawTile(GradientOverlayX, YawIndicatorLength + LargeSizeTickLength + 8, 3 * LargeSizeTickLength + (TextHeightFloat / 2), 0, 0, 256, 32);
 
     // Prepare buckets for ticks so ticks don't get drawn on top of each other
     TargetTickBuckets.Insert(0, VisibleYawSegmentsNumber);
@@ -915,7 +921,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - PitchDialSpan * 0.5);
     TopDialBound = class'UInterp'.static.DialCurvature(0.5 + PitchDialSpan * 0.5);
 
-    C.Font = C.TinyFont;
+    C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
     C.SetPos(IndicatorTopLeftCornerX, IndicatorTopLeftCornerY);
 
@@ -1037,7 +1043,7 @@ defaultproperties
 
     PitchAngleUnit=AU_Milliradians
     YawAngleUnit=AU_Milliradians
-    DistanceUnit="m"
+    DistanceUnit=DU_Meters
 
     WidgetsPanelTopLeftX=60
     WidgetsPanelTopLeftY=100
@@ -1045,6 +1051,10 @@ defaultproperties
 
     RangeHeaderString="Range"
     PitchHeaderString="Pitch"
+    LeftString="Left"
+    RightString="Right"
+    CorrectionString="Correction"
+    DistanceString="Distance"
 
     LargeSizeTickLength=30.0
     MiddleSizeTickLength=15.0
@@ -1061,8 +1071,9 @@ defaultproperties
     Red=(R=255,G=0,B=0,A=255)
 
     TargetWidgetLayout=(LineHeight=15,HeaderOffsetX=50,IconOffsetX=45,IconOffsetY=20,LineConfig[0]=TWLT_Header,LineConfig[1]=TWLT_MarkerType,LineConfig[2]=TWLT_Correction,LineConfig[3]=TWLT_Distance,LineConfig[4]=TWLT_ExpiryTime)
-    TargetToggleHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to toggle between artillery targets"
-    SelectTargetHint="Press [%TOGGLESELECTEDARTILLERYTARGET%] to select an artillery target"
+    TargetToggleHint="Press {0} to toggle between artillery targets"
+    SelectTargetHint="Press {0} to select an artillery target"
+    ToggleButtonText="[%TOGGLESELECTEDARTILLERYTARGET%]"
     NoTargetsHint="No targets available"
 
     YawDialSpan=0.8   // 0.6rad ~= 60 degrees

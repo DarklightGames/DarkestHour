@@ -35,7 +35,6 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm' // TODO: replace with wacky italian 6.5×52mm Carcano
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)
-    bReverseShellSpawnDirection=true
     BipodDeployFireAnim="deploy_shoot"
     FireAnim="shoot"
 

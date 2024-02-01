@@ -8,9 +8,9 @@ class DHSmallFont extends GUIFont;
 defaultproperties
 {
     KeyName="DHSmallFont"
-    FontArrayNames(0)="DHFonts.DHFont12"
-    FontArrayNames(1)="DHFonts.DHFont12"
-    FontArrayNames(2)="DHFonts.DHFont12"
-    FontArrayNames(3)="DHFonts.DHFont12"
-    FontArrayNames(4)="DHFonts.DHFont12"
+    FontArrayNames(0)="DHFonts.DHSmallFont"
+    FontArrayNames(1)="DHFonts.DHSmallFont"
+    FontArrayNames(2)="DHFonts.DHSmallFont"
+    FontArrayNames(3)="DHFonts.DHSmallFont"
+    FontArrayNames(4)="DHFonts.DHSmallFont"
 }

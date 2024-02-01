@@ -6,8 +6,6 @@
 class DHVehicleCannon extends DHVehicleWeapon
     abstract;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_Vehicle_Reloads.uax
-
 // Armor penetration
 var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
 var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
