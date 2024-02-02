@@ -9,7 +9,6 @@
 // [ ] Tweak reloading of the MG to account for double MG
 // [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
 // [ ] Engine, track, MG sounds
-// [ ] hit points
 // [ ] Armor values (WOLFkraut)
 //
 // Audio (Colin)

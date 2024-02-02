@@ -49,4 +49,6 @@ defaultproperties
 
     GunsightCameraBone="GUNSIGHT_CAMERA"
     CameraBone="GUNNER_CAMERA"
+
+    AnimationDrivers(0)=(Sequence="cv33_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)
 }

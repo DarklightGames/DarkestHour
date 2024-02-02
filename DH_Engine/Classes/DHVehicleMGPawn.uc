@@ -559,6 +559,54 @@ exec function LogMG() // DEBUG (Matt: please use & report if you ever find you c
         @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
 }
 
+function Material CreateXRayMaterial()
+{
+    local FadeColor FC;
+    local FinalBlend FB;
+
+    FC = new class'FadeColor';
+    FC.Color1 = class'UColor'.default.White;
+    FC.Color1.A = 32;
+    FC.Color2 = class'UColor'.default.White;
+    FC.Color2.A = 16;
+    FC.FadePeriod = 0.25;
+    FC.ColorFadeType = FC_Sinusoidal;
+
+    FB = new class'FinalBlend';
+    FB.FrameBufferBlending = FB_AlphaBlend;
+    FB.ZWrite = false;
+    FB.ZTest = true;
+    FB.AlphaTest = true;
+    FB.TwoSided = false;
+    FB.Material = FC;
+
+    return FB;
+}
+
+exec function XRayVehicle(bool bHide)
+{
+    local int i;
+
+    if (IsDebugModeAllowed())
+    {
+        // Set all the material slots to a new very transparent material.
+        if (bHide)
+        {
+            for (i = 0; i < Gun.Base.Skins.Length; i++)
+            {
+                Gun.Base.Skins[i] = CreateXRayMaterial();
+            }
+        }
+        else
+        {
+            for (i = 0; i < Gun.Base.Skins.Length; i++)
+            {
+                Gun.Base.Skins[i] = Gun.Base.default.Skins[i];
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     bMustBeTankCrew=true

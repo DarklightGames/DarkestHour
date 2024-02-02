@@ -57,6 +57,7 @@ struct SAnimationDriver
     var int Channel;
     var name BoneName;
     var name Sequence;
+    var int FrameCount; // The number of frames in the animation.
 
     // Runtime State
     var bool bActive;
@@ -2583,18 +2584,21 @@ private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex
 // sequence, and 1.0 is the end of the sequence.
 simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
 {
+    local float Theta;
+
     switch (Type)
     {
         case ADT_Yaw:
             // 0.0 is full left, 1.0 is full right
-            return (GetGunYaw() - Gun.YawStartConstraint) / (Gun.YawEndConstraint - Gun.YawStartConstraint);
+            Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            break;
         case ADT_Pitch:
-            return 0.5; // TODO: figure this out
+            Theta = 0.5; // TODO: figure this out
         default:
             break;
     }
 
-    return 0.5;
+    return FClamp(Theta, 0.0, 1.0);
 }
 
 simulated function UpdateAnimationDrivers()
@@ -2610,6 +2614,11 @@ simulated function UpdateAnimationDrivers()
         }
 
         Theta = GetAnimationDriverTheta(AnimationDrivers[i].Type);
+
+        // The theta value must be normalized to the range of the sequence. A theta value of 1.0
+        // is not the end of the sequence, as you might expect, but is in fact the beginning of
+        // the sequence.
+        Theta *= float(AnimationDrivers[i].FrameCount - 1) / (AnimationDrivers[i].FrameCount);
 
         Driver.SetAnimFrame(Theta, AnimationDrivers[i].Channel);
     }
