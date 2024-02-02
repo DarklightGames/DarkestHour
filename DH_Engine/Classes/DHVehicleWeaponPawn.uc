@@ -1004,9 +1004,15 @@ simulated state ViewTransition
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
 
+            UpdateAnimationDriverStates();
+
             // Play any transition animation for the player
-            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+            if (IsFullBodyAnimDriverActive() == false &&
+                Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
+                Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
+                Log("Calling PlayAnim from HandleTransition() [" $ DriverPositions[DriverPositionIndex].DriverTransitionAnim $ "] at DriverPositionIndex = " $ string(DriverPositionIndex) $ ", LastPositionIndex = " $ string(LastPositionIndex));
+
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
                 // If moved to binocs, spawn binocs attachment & any other setup stuff
@@ -1119,6 +1125,8 @@ simulated function AnimateTransition()
         // Play any transition animation for the player & handle any moves onto or off binoculars
         if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
         {
+            Log("Calling PlayAnim from AnimateTransition()");
+
             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
             if (DriverPositionIndex == BinocPositionIndex)
@@ -1472,7 +1480,7 @@ function DriverLeft()
         VehWep.PauseAnyReloads();
     }
 
-    ClearAnimationDrivers(Driver);
+    DeactivateAllAnimationDrivers(Driver);
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
 
@@ -1514,6 +1522,8 @@ simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
+    Log("DrivingStatusChanged" @ bDriving);
+
     if (!bDriving)
     {
         if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
@@ -1525,6 +1535,8 @@ simulated event DrivingStatusChanged()
         {
             BinocsAttachment.Destroy();
         }
+
+        DeactivateAllAnimationDrivers(Driver);
     }
     else
     {
@@ -1966,6 +1978,8 @@ simulated function SetPlayerPosition()
                 DHPawn(Driver).bClientSkipDriveAnim = true;
             }
 
+            Log("Calling PlayAnim from SetPlayerPosition() on " @ Driver @ " with " @ PlayerAnim);
+
             Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
             Driver.PlayAnim(PlayerAnim);
             Driver.SetAnimFrame(1.0);
@@ -1975,6 +1989,8 @@ simulated function SetPlayerPosition()
                 HandleBinoculars(true);
             }
         }
+
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -2506,8 +2522,6 @@ simulated function UpdateAnimationDriverStates()
     local int i;
     local bool bShouldBeActive;
 
-    Log("UpdateAnimationDriverStates");
-
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
@@ -2531,9 +2545,13 @@ private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bo
         return;
     }
 
+    AnimationDrivers[AnimationDriverIndex].bActive = bActive;
+
     if (bActive)
     {
         SetAnimationDriverBlendAlpha(AnimationDriverIndex, 1.0);
+
+        Log("Playing" @ AnimationDrivers[AnimationDriverIndex].Sequence @ "on channel" @ AnimationDrivers[AnimationDriverIndex].Channel @ "for driver" @ Driver);
         
         Driver.PlayAnim(AnimationDrivers[AnimationDriverIndex].Sequence, 0.0, 0.0, AnimationDrivers[AnimationDriverIndex].Channel);
         Driver.FreezeAnimAt(0.0, AnimationDrivers[AnimationDriverIndex].Channel);
@@ -2546,8 +2564,6 @@ private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bo
 
         Log("Disabled animation driver" @ AnimationDriverIndex);
     }
-
-    AnimationDrivers[AnimationDriverIndex].bActive = bActive;
 }
 
 private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex, float BlendAlpha)
@@ -2581,21 +2597,15 @@ simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
     return 0.5;
 }
 
-simulated function UpdateAnimationDrivers(Pawn Driver)
+simulated function UpdateAnimationDrivers()
 {
     local int i;
     local float Theta;
-
-    if (Driver == none)
-    {
-        return;
-    }
 
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         if (!AnimationDrivers[i].bActive)
         {
-            Log("driver" @ i @ "is inactive");
             continue;
         }
 
@@ -2611,24 +2621,29 @@ simulated function bool IsAnimationDriverActiveForDriverPositionIndex(int Animat
             InputDriverPositionIndex <= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Max;
 }
 
-simulated function ClearAnimationDrivers(Pawn Driver)
+simulated function DeactivateAllAnimationDrivers(Pawn Driver)
 {
     local int i;
 
-    if (Driver == none)
+    for (i = 0; i < AnimationDrivers.Length; ++i)
     {
-        return;
+        AnimationDrivers[i].bActive = false;
     }
+}
+
+simulated function bool IsFullBodyAnimDriverActive()
+{
+    local int i;
 
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
-        if (AnimationDrivers[i].Channel == 0)
+        if (AnimationDrivers[i].bActive && AnimationDrivers[i].Channel == 0)
         {
-            return;
+            return true;
         }
-
-        // Clear the animation channel that we made earlier.
     }
+
+    return false;
 }
 
 // Modified to update the driver yaw animation.
@@ -2638,7 +2653,7 @@ simulated function Tick(float DeltaTime)
 
     if (Driver != none)
     {
-        UpdateAnimationDrivers(Driver);
+        UpdateAnimationDrivers();
     }
 }
 
