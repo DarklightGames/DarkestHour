@@ -940,8 +940,6 @@ simulated function NextViewPoint()
     {
         GotoState('ViewTransition');
     }
-
-    UpdateAnimationDriverStates();
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
@@ -1005,14 +1003,13 @@ simulated state ViewTransition
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
 
-            UpdateAnimationDriverStates();
-
             // Play any transition animation for the player
-            if (IsFullBodyAnimDriverActive() == false &&
-                Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
+            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
                 Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
-                Log("Calling PlayAnim from HandleTransition() [" $ DriverPositions[DriverPositionIndex].DriverTransitionAnim $ "] at DriverPositionIndex = " $ string(DriverPositionIndex) $ ", LastPositionIndex = " $ string(LastPositionIndex));
+                // Disable the animation drivers during the transition.
+                // The necessary drivers will be re-enabled once we exit this state.
+                DeactivateAllAnimationDrivers(Driver);
 
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
@@ -1080,6 +1077,8 @@ simulated state ViewTransition
         {
             ROPawn(Driver).ToggleAuxCollision(false);
         }
+
+        UpdateAnimationDriverStates();
     }
 
 Begin:
@@ -2636,7 +2635,7 @@ simulated function DeactivateAllAnimationDrivers(Pawn Driver)
 
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
-        AnimationDrivers[i].bActive = false;
+        SetAnimationDriverActive(i, false);
     }
 }
 
