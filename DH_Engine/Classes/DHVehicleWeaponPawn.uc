@@ -1125,8 +1125,6 @@ simulated function AnimateTransition()
         // Play any transition animation for the player & handle any moves onto or off binoculars
         if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
         {
-            Log("Calling PlayAnim from AnimateTransition()");
-
             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
             if (DriverPositionIndex == BinocPositionIndex)
@@ -1521,8 +1519,6 @@ simulated state LeavingVehicle
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
-
-    Log("DrivingStatusChanged" @ bDriving);
 
     if (!bDriving)
     {
@@ -1977,8 +1973,6 @@ simulated function SetPlayerPosition()
             {
                 DHPawn(Driver).bClientSkipDriveAnim = true;
             }
-
-            Log("Calling PlayAnim from SetPlayerPosition() on " @ Driver @ " with " @ PlayerAnim);
 
             Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
             Driver.PlayAnim(PlayerAnim);
@@ -2551,18 +2545,12 @@ private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bo
     {
         SetAnimationDriverBlendAlpha(AnimationDriverIndex, 1.0);
 
-        Log("Playing" @ AnimationDrivers[AnimationDriverIndex].Sequence @ "on channel" @ AnimationDrivers[AnimationDriverIndex].Channel @ "for driver" @ Driver);
-        
         Driver.PlayAnim(AnimationDrivers[AnimationDriverIndex].Sequence, 0.0, 0.0, AnimationDrivers[AnimationDriverIndex].Channel);
         Driver.FreezeAnimAt(0.0, AnimationDrivers[AnimationDriverIndex].Channel);
-
-        Log("Enabled animation driver" @ AnimationDriverIndex);
     }
     else
     {
         SetAnimationDriverBlendAlpha(AnimationDriverIndex, 0.0);
-
-        Log("Disabled animation driver" @ AnimationDriverIndex);
     }
 }
 
