@@ -9,7 +9,7 @@ class DHShellSmokeWPGasDamageType extends DHShellExplosionDamageType
 defaultproperties
 {
     HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
-    DeathString="%o was choked by white phosphorus that %k launched."
+    DeathString="%o was choked by %'s white phosphorus."
     MaleSuicide="%o choked himself to death on white phosphorus."
     FemaleSuicide="%o choked herself to death on white phosphorus."
     bLocationalHit=false

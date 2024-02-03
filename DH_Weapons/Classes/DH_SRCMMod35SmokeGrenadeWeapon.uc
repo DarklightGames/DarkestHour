@@ -14,12 +14,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadePickup'
     Mesh=SkeletalMesh'DH_SRCMMod35_anm.srcm_1st'
     DisplayFOV=80.0
-
     Skins(2)=Texture'DH_SRCMMod35_tex.SRCMMod35.SRCM35_Phosphorus'
-
     InventoryGroup=4
     GroupOffset=0
     Priority=2
-
     bHasReleaseLever=true
 }

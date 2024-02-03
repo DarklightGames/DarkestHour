@@ -50,6 +50,8 @@ var     vector          ShakeOffsetMag;   // max view offset vertically
 var     vector          ShakeOffsetRate;  // how fast to offset view vertically
 var     float           ShakeOffsetTime;  // how much time to offset view
 
+var     bool            bHasExploded;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -457,7 +459,7 @@ simulated function Landed(vector HitNormal)
 
         if (Role == ROLE_Authority)
         {            
-            if (FuzeType == FT_Impact && !bDud)
+            if (FuzeType == FT_Impact && !bDud && !bHasExploded)
             {
                 GotoState('TripMine');
             }
@@ -502,8 +504,14 @@ state TripMine
         }
     }
 
-    function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
+        if (!DamageType.default.bCausesBlood)
+        {
+            // HACK: stops gas damage types from triggering the projectile from exploding.
+            return;
+        }
+
         // Any damage will cause this to explode.
         Explode(Location, vect(0, 0, 1));
     }
@@ -693,6 +701,9 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 
     BlowUp(HitLocation);
+
+    bHasExploded = true;
+
     Destroy();
 }
 
