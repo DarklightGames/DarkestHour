@@ -9,6 +9,7 @@ class DHVehicleMGPawn extends DHVehicleWeaponPawn
 var     bool        bMustUnbuttonToReload;       // player must be unbuttoned to load MG
 var     Texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 var     Vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
+var     Rotator     BinocsDriveRot;              // this is a stupid hack made by someone because they didn't have a way to create new animations.
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
 var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
@@ -304,7 +305,12 @@ exec simulated function ROManualReload()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to exit to added state LeavingViewTransition, just to allow CanReload() functionality to work correctly
-// Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong, & a reloading hint
+// Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights
+// as it sometimes looks wrong, & a reloading hint.
+//
+// Based on discussions with some of the folks from the OldUnreal community,
+// for net clients, Timers and Latent functions are not called when Role is
+// ROLE_SimulatedProxy, so we need to use tick to change states on net clients.
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -345,6 +351,10 @@ simulated state ViewTransition
     }
 
 Begin:
+    // Note that this is only executed on the authority, since the client does not execute state
+    // code or timers when Role == ROLE_SimulatedProxy. The client handles via counting ticks,
+    // but we keep this around because it's likely cheaper than executing Tick functions
+    // on the server.
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('LeavingViewTransition'); // go to this added state very briefly, just so CanReload() doesn't return false due to being in state ViewTransition
@@ -427,7 +437,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
     {
         if (bMovingOntoBinocs)
         {
-            DesiredRelativeRotation = rot(0, 0, 0);
+            DesiredRelativeRotation = BinocsDriveRot;
         }
         else
         {

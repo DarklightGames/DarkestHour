@@ -65,6 +65,8 @@ struct SAnimationDriver
 
 var array<SAnimationDriver> AnimationDrivers;
 
+var     float       ClientViewTransitionEndTime; // time when client's view transition will end
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -934,7 +936,7 @@ simulated function NextViewPoint()
 {
     if (Level.NetMode == NM_Client && !IsLocallyControlled())
     {
-        AnimateTransition();
+        GotoState('ViewTransition');
     }
     else if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed)
     {
@@ -948,10 +950,39 @@ simulated function NextViewPoint()
 // to spawn or destroy a binoculars attachment, & to add a workaround for an RO bug where player may player wrong animation when moving off binocs
 simulated state ViewTransition
 {
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        if (Role < ROLE_Authority)
+        {
+            HandleTransition();
+
+            if (ViewTransitionDuration == 0)
+            {
+                GotoState('LeavingViewTransition');
+            }
+            else
+            {
+                ClientViewTransitionEndTime = Level.TimeSeconds + ViewTransitionDuration;
+            }
+        }
+    }
+
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        if (Role < ROLE_Authority && Level.TimeSeconds >= ClientViewTransitionEndTime)
+        {
+            GotoState('LeavingViewTransition');
+        }
+    }
+
     simulated function HandleTransition()
     {
         local PlayerController PC;
-
+        
         if (VehicleBase != none)
         {
             StoredVehicleRotation = VehicleBase.Rotation;
@@ -1028,6 +1059,7 @@ simulated state ViewTransition
         {
             if (LastPositionIndex < DriverPositionIndex)
             {
+                // Transition up
                 if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
                 {
                     Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
@@ -1036,6 +1068,7 @@ simulated state ViewTransition
             }
             else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
             {
+                // Transition down
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
             }
@@ -1082,6 +1115,8 @@ simulated state ViewTransition
     }
 
 Begin:
+    // Only executed on the authoritative actor since simulated proxy actors do not execute latent state
+    // code or timers. The client handles this in BeginState and by counting the ticks.
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('');
@@ -1093,66 +1128,6 @@ Begin:
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
     return DriverPositions[PositionIndex].bDrawOverlays && ((GunsightOverlay != none && PositionIndex == 0) || PositionIndex == BinocPositionIndex);
-}
-
-/*
-// TODO: possibly deprecate this function & always use state ViewTransition for all net modes, same as in the ROVehicle class
-// Everything in VT that's relevant to a other 3rd person players gets done here, & everything that's not relevant is excluded in VT anyway
-// So this function no longer appears to offer any advantage, while the transition Sleep timer in VT offers better timed handling of player's hit detection & binocs attachments
-*/
-// Modified to enable or disable player's hit detection when moving to or from an exposed position
-// Also to spawn or destroy a binoculars attachment, & to add a workaround for an RO bug where player may player wrong animation when moving off binocs
-simulated function AnimateTransition()
-{
-    if (Driver != none)
-    {
-        // Enable/disable the player's hit detection if he is moving to an exposed/unexposed position
-        if (ROPawn(Driver) != none)
-        {
-            if (DriverPositions[DriverPositionIndex].bExposed)
-            {
-                if (!DriverPositions[LastPositionIndex].bExposed)
-                {
-                    ROPawn(Driver).ToggleAuxCollision(true);
-                }
-            }
-            else if (DriverPositions[LastPositionIndex].bExposed)
-            {
-                ROPawn(Driver).ToggleAuxCollision(false);
-            }
-        }
-
-        // Play any transition animation for the player & handle any moves onto or off binoculars
-        if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-
-            if (DriverPositionIndex == BinocPositionIndex)
-            {
-                HandleBinoculars(true);
-            }
-            else if (LastPositionIndex == BinocPositionIndex)
-            {
-                HandleBinoculars(false);
-            }
-        }
-    }
-
-    // Play any transition animation for the weapon itself
-    if (Gun != none)
-    {
-        if (LastPositionIndex < DriverPositionIndex)
-        {
-            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
-            {
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-            }
-        }
-        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
-        {
-            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-        }
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2170,7 +2145,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
             {
                 BinocsAttachment = Spawn(class'DHDecoAttachment');
                 BinocsAttachment.SetDrawType(DT_Mesh);
-                BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger');
+                BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger'); // TODO: questionable hardcoding of the asset!
             }
 
             Driver.AttachToBone(BinocsAttachment, 'weapon_rhand');
