@@ -12,5 +12,6 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Wz35Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_LTypeGrenadeWeapon')
+    Grenades(1)=(Item=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon')
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'  // TODO: Add italian gloves
 }
