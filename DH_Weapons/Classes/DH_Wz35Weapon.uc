@@ -45,7 +45,7 @@ simulated function bool AllowReload()
 
 defaultproperties
 {
-    ItemName="Wz-35 Anti-Tank Rifle"
+    ItemName="Fucile Controcarro 35(P)"
     FireModeClass(0)=class'DH_Weapons.DH_Wz35Fire'
     AttachmentClass=class'DH_Weapons.DH_Wz35Attachment'
     PickupClass=class'DH_Weapons.DH_Wz35Pickup'

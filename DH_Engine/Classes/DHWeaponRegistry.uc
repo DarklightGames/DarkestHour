@@ -175,7 +175,7 @@ defaultproperties
     Records(114)=(ClassName="DH_Weapons.DH_CarcanoM91Weapon",WeaponNames=("carcano","m91"))
     Records(115)=(ClassName="DH_Weapons.DH_MAB42Weapon",WeaponNames=("mab42"))
     Records(116)=(ClassName="DH_Weapons.DH_LtypeGrenadeWeapon",WeaponNames=("Ltype"))
-    Records(117)=(ClassName="DH_Weapons.DH_Wz35Weapon",WeaponNames=("wz35", "wz"))
+    Records(117)=(ClassName="DH_Weapons.DH_Wz35Weapon",WeaponNames=("wz35", "wz", "fc35", "fc"))
     Records(118)=(ClassName="DH_Weapons.DH_BerettaM1934Weapon",WeaponNames=("beretta", "m34","m1934"))
     Records(119)=(ClassName="DH_Weapons.DH_SRCMMod35GrenadeWeapon",WeaponNames=("srcm","srcm35"))
     Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
