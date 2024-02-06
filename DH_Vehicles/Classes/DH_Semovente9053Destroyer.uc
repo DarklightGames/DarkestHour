@@ -4,7 +4,6 @@
 //==============================================================================
 // [ ] Add positional offset to turret angle calculations to fix hit detection issues
 // [ ] Shell attachments updating when rounds are fired/reloaded
-// [ ] Check radio attachment in MP
 // [ ] UI textures for shells
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;

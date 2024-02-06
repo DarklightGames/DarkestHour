@@ -43,7 +43,6 @@ defaultproperties
     FirstPersonGunShakeScale=2.5
     FirstPersonOffsetZScale=3.0
     bHideMuzzleFlashAboveSights=true
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'
 
     GunsightOverlay=Texture'DH_CV33_tex.cv33_gunsight'
     GunsightSize=0.6

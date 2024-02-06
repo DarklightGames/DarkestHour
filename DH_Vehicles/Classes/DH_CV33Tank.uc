@@ -7,13 +7,18 @@
 // Code
 // [~] Tweak vehicle handling & stats
 // [ ] Tweak reloading of the MG to account for double MG
-// [ ] Engine, track, MG sounds
 // [ ] Armor values (WOLFkraut)
+// [ ] Fix MG reload UI
+//
+// Audio
+// [ ] New MG sound for double Fiat 14/35
+//
+// Animation
+// [ ] Fix hatch-open end position on main body
 //
 // Art (Red)
 // [ ] Destroyed mesh
 // [ ] Destroyed tread mesh
-// [~] Camo variants
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -91,8 +96,8 @@ defaultproperties
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
     FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
-    FireAttachBone="passenger_l_2"
-    FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    FireAttachBone="driver_attachment"
+    FireEffectOffset=(X=0,Y=0,Z=50.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.5  // There is no firewall between the engine and the crew compartment, so the engine fire can spread to the crew compartment quite easily.
     AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
     FireDetonationChance=0.05

@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Fix muzzle emitter offset being a bit too far forward
+// [ ] Add correct projectile class
+//==============================================================================
 
 class DH_CV33MG extends DHVehicleMG;
 
@@ -14,7 +17,8 @@ defaultproperties
     BeginningIdleAnim="cv33_turret_idle_close"
 
     FireAttachBone="GUN"
-    FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // TODO: replace, put it on the hatch
+    FireEffectOffset=(X=-25.0,Y=0.0,Z=25.0)
+    FireEffectScale=0.75
 
     // Movement
     MaxPositiveYaw=2366         // 13 degrees
@@ -39,8 +43,8 @@ defaultproperties
     WeaponFireOffset=0
 
     bHasMultipleBarrels=true
-    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter')    // TODO: replace emitter with a correctly timed one
-    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter')
+    Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
+    Barrels(1)=(MuzzleBone="MUZZLE_R",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleMGMultiBarrelEmitterController'
 
     // Collision
