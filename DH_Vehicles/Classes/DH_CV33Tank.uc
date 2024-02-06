@@ -7,16 +7,8 @@
 // Code
 // [~] Tweak vehicle handling & stats
 // [ ] Tweak reloading of the MG to account for double MG
-// [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
 // [ ] Engine, track, MG sounds
 // [ ] Armor values (WOLFkraut)
-//
-// Audio (Colin)
-// [ ] Hatch opening/closing sounds in the animations
-//
-// Art (Colin)
-// [~] MG position animations
-// [~] Driver & gunner player animations (waiting on finalized interior, especially for gunner)
 //
 // Art (Red)
 // [ ] Destroyed mesh
