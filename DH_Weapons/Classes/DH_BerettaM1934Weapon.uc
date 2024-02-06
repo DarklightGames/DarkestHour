@@ -2,6 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Third person model & animations
+// [ ] Improve the specular mask
+// [ ] Brighten the HUD icon
+// [ ] Add specific ammo icon for the breda mag=
+//==============================================================================
 
 class DH_BerettaM1934Weapon extends DHPistolWeapon;
 
