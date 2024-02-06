@@ -64,7 +64,7 @@ function BlowUp(vector HitLocation)
 
 defaultproperties
 {
-    FuzeLengthRange=(Min=4.5,Max=5.5)
+    // FuzeLengthRange=(Min=4.5,Max=5.5)
     Speed=1100.0
     MyDamageType=class'DHThrowableExplosiveDamageType'
     ExplodeDirtEffectClass=class'GrenadeExplosion'
