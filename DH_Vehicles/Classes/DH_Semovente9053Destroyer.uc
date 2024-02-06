@@ -6,7 +6,6 @@
 // [ ] Shell attachments updating when rounds are fired/reloaded
 // [ ] Check radio attachment in MP
 // [ ] UI textures for shells
-// [ ] Fix initial animation issue on the turret (camera starts above the turret)
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -27,6 +26,8 @@ defaultproperties
     Skins(3)=Texture'DH_Semovente9053_tex.semovente9053_treads'
 
     bUsesCodedDestroyedSkins=false
+
+    BeginningIdleAnim="body_closed_idle"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
