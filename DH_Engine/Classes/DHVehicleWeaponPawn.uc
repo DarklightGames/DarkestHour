@@ -65,7 +65,8 @@ struct SAnimationDriver
 
 var array<SAnimationDriver> AnimationDrivers;
 
-var     float       ClientViewTransitionEndTime; // time when client's view transition will end
+var     float       ClientViewTransitionEndTime;    // Time when client's view transition will end, relative to Level.TimeSeconds
+var     bool        bUseInternalMeshForBaseVehicle; // If true, we use the internal mesh for the base vehicle as well.
 
 replication
 {
@@ -312,6 +313,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             // Switch to external vehicle mesh & unzoomed view
             SwitchMesh(-1, true); // -1 signifies switch to default external mesh
+            SetVehicleBaseMesh(false);
             PC.SetFOV(PC.DefaultFOV);
         }
 
@@ -349,6 +351,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             if (DriverPositions.Length > 0)
             {
                 SwitchMesh(DriverPositionIndex, true);
+                SetVehicleBaseMesh(true);
                 PC.SetFOV(GetViewFOV(DriverPositionIndex));
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
@@ -854,6 +857,7 @@ simulated state EnteringVehicle
     simulated function HandleEnter()
     {
         SwitchMesh(InitialPositionIndex);
+        SetVehicleBaseMesh(true);
 
         if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
         {
@@ -993,6 +997,7 @@ simulated state ViewTransition
         if (IsFirstPerson())
         {
             SwitchMesh(DriverPositionIndex);
+            SetVehicleBaseMesh(true);
             PC = PlayerController(Controller); // having PC reference now serves as a flag that we're locally controlled & in 1st person view
         }
 
@@ -1486,6 +1491,7 @@ simulated state LeavingVehicle
     simulated function HandleExit()
     {
         SwitchMesh(-1); // -1 signifies switch to default external mesh
+        SetVehicleBaseMesh(false);
     }
 }
 
@@ -2048,6 +2054,30 @@ simulated function bool GetArmoredVehicleBase(out DHArmoredVehicle AV)
     return AV != none;
 }
 
+simulated function SetVehicleBaseMesh(bool bInternalMesh)
+{
+    local Mesh M;
+
+    if (!bUseInternalMeshForBaseVehicle)
+    {
+        return;
+    }
+
+    if (bInternalMesh)
+    {
+        M = GetVehicleBaseInternalMesh();
+
+        if (M != none)
+        {
+            VehicleBase.LinkMesh(M);
+        }
+    }
+    else
+    {
+        VehicleBase.LinkMesh(VehicleBase.default.Mesh);
+    }
+}
+
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
@@ -2207,6 +2237,27 @@ exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "acces
 simulated function bool IsDebugModeAllowed()
 {
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
+// Gets the mesh to use for the base vehicle. Used for when we want to display the high-poly interior
+// mesh to the player on a weapon.
+simulated function Mesh GetVehicleBaseInternalMesh()
+{
+    local Mesh M;
+
+    if (VehicleBase == none || VehicleBase.DriverPositions.Length == 0)
+    {
+        return none;
+    }
+
+    M = VehicleBase.DriverPositions[0].PositionMesh;
+
+    if (M == none)
+    {
+        M = VehicleBase.Mesh;
+    }
+
+    return M;
 }
 
 // New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
