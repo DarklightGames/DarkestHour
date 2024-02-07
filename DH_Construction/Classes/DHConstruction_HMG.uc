@@ -15,7 +15,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
             switch (Context.LevelInfo.AxisNation)
             {
                 case NATION_Italy:
-                    return class'DH_Guns.DH_Fiat1435HMG';
+                    return class'DH_Guns.DH_Fiat1435Gun';
                 default:
                     return none;
             }
@@ -30,5 +30,6 @@ defaultproperties
 {
     MenuName="Heavy Machine Gun"
     GroupClass=class'DHConstructionGroup_Guns'
+    ProxyTraceDepthMeters=2.5
 }
 

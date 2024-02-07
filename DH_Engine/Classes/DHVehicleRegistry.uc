@@ -237,5 +237,6 @@ defaultproperties
     Records(103)=(VehicleNames=("cv33","l3","l3/33"),Variants=((ClassName="DH_Vehicles.DH_CV33Tank"),(ClassName="DH_Vehicles.DH_CV33Tank_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo1",VariantName="camo1"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo2",VariantName="camo2")))
     Records(104)=(VehicleNames=("ab41","autoblinda41"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda41ArmoredCar")))
     Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
+    Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
     // Fiat L6
 }
