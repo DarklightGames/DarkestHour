@@ -28,8 +28,8 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 
 defaultproperties
 {
-    MenuName="Heavy Machine Gun"
     GroupClass=class'DHConstructionGroup_Guns'
-    ProxyTraceDepthMeters=2.5
+    bCanOnlyPlaceOnTerrain=false
+    bCanPlaceIndoors=true
+    ArcLengthTraceIntervalInMeters=0.125
 }
-

@@ -21,13 +21,17 @@ simulated function bool ShouldSwitchToLastWeaponOnPlacement()
 
 simulated event Tick(float DeltaTime)
 {
+    local DHPawn P;
+
     super.Tick(DeltaTime);
 
     if (InstigatorIsLocallyControlled())
     {
-        if (Gun != none && DHPawn(Instigator).GunToRotate != none)
+        P = DHPawn(Instigator);
+
+        if (Gun != none && P.GunToRotate != none)
         {
-            Instigator.ReceiveLocalizedMessage(class'DHATGunRotateControlsMessage',,,, Instigator.Controller);
+            Instigator.ReceiveLocalizedMessage(class'DHATGunRotateControlsMessage',, Instigator.PlayerReplicationInfo,, P.GunToRotate);
         }
         else
         {
