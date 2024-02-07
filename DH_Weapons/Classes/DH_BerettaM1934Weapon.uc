@@ -3,9 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Third person model & animations
-// [ ] Improve the specular mask
-// [ ] Brighten the HUD icon
-// [ ] Add specific ammo icon for the breda mag=
 //==============================================================================
 
 class DH_BerettaM1934Weapon extends DHPistolWeapon;
@@ -20,9 +17,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BerettaM1934Pickup'
 
     Mesh=SkeletalMesh'DH_BerettaM1934_anm.Beretta_M1934_1st'
-    //HighDetailOverlay=Shader'Weapons1st_tex.Pistols.TT33_S'
-    //bUseHighDetailOverlayIndex=true
-    //HighDetailOverlayIndex=2
 
     BeltBulletClass=class'DH_Weapons.DH_BerettaM1934FPAmmoRound'
     MGBeltBones(0)="MAGAZINE_BULLET_07"
