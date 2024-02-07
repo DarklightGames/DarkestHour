@@ -130,6 +130,9 @@ struct SquadPromotionRequest
 var array<SquadPromotionRequest>    SquadPromotionRequests;
 var int                             NextSquadPromotionRequestID;
 
+var int                             JoinSquadNagMessageInterval;    // How often to nag unassigned players to join a squad.
+var int                             NextJoinSquadNagTime;           // The next time to nag unassigned players to join a squad.
+
 enum ERallyPointPlacementErrorType
 {
     ERROR_None,
@@ -202,11 +205,39 @@ function PostNetBeginPlay()
     }
 }
 
+private function SendJoinSquadNagMessage()
+{
+    local Controller C;
+    local DHPlayer PC;
+
+    for (C = Level.ControllerList; C != none; C = C.nextController)
+    {
+        PC = DHPlayer(C);
+        
+        if (PC != none && !PC.IsInSquad())
+        {
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
+            continue;
+        }
+    }
+
+    NextJoinSquadNagTime = Level.Game.GameReplicationInfo.ElapsedTime + JoinSquadNagMessageInterval;
+}
+
 function Timer()
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local Controller C;
+    local bool bShouldSendJoinSquadNagMessage;
+
+    // When appropriate, all unassigned players will be berated to join a squad at regular intervals.
+    bShouldSendJoinSquadNagMessage = bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime >= NextJoinSquadNagTime;
+
+    if (bShouldSendJoinSquadNagMessage)
+    {
+        SendJoinSquadNagMessage();
+    }
 
     for (C = Level.ControllerList; C != none; C = C.nextController)
     {
@@ -221,15 +252,6 @@ function Timer()
 
         if (PRI == none || PRI.Team == none)
         {
-            continue;
-        }
-
-        // All unassigned players will be berated to join a squad every 30 seconds.
-        if (bAreRallyPointsEnabled &&
-            !PRI.IsInSquad() &&
-            Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
-        {
-            PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
             continue;
         }
 
@@ -3399,4 +3421,6 @@ defaultproperties
     SquadPromotionRequestResultStrings(0)="An error occurred while sending the squad promotion request."
     SquadPromotionRequestResultStrings(1)="There is already an existing squad leader promotion request for this player."
     SquadPromotionRequestResultStrings(2)="Squad leader promotion request has been sent."
+
+    JoinSquadNagMessageInterval=30
 }
