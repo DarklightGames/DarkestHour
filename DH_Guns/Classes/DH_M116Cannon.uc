@@ -35,17 +35,22 @@ defaultproperties
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="HEAT"
+    ProjectileDescriptions(1)="SMOKE"
+    ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="HE M48"
-    nProjectileDescriptions(1)="HEAT M66"
+    nProjectileDescriptions(1)="WP M64"
+    nProjectileDescriptions(2)="HEAT M66"
 
     PrimaryProjectileClass=class'DH_Guns.DH_M116CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
+    SecondaryProjectileClass=class'DH_Guns.DH_M116CannonShellSmoke'
+    TertiaryProjectileClass=Class'DH_Guns.DH_LeIG18CannonShellHEAT'
     InitialPrimaryAmmo=30  // TODO: REPLACE
-    InitialSecondaryAmmo=5  // TODO: REPLACE
+    InitialSecondaryAmmo=2  //keeping the shells ammo count low as they are effectivley better in every way.
+    InitialTertiaryAmmo=5 
     MaxPrimaryAmmo=30
-    MaxSecondaryAmmo=5
+    MaxSecondaryAmmo=4  // four shells of smoke max should keep the overall ROF down.
+    MaxTertiaryAmmo=5   
 
     Spread=0.020
     SecondarySpread=0.00125

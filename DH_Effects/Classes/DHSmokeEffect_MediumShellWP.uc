@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHSmokeEffect_ShellWP extends DHSmokeEffectBase;
+class DHSmokeEffect_MediumShellWP extends DHSmokeEffectBase;
 
 defaultproperties
 {
-    DrawScale=0.2
+    lifespan=30
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=True
@@ -27,13 +27,11 @@ defaultproperties
         FadeInEndTime=0.480000
         MaxParticles=30
 
-        
-
-        StartLocationOffset=(Y=500.000000)
+        StartLocationOffset=(Y=100.000000)
         SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=6.000000)
-        StartSizeRange=(Z=(Min=75.000000,Max=75.000000))
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=3.0)
+        StartSizeRange=(Z=(Min=50.000000,Max=50.000000))
         InitialParticlesPerSecond=4.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
@@ -57,7 +55,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=1.0
-        FadeOutStartTime=45.000000
+        FadeOutStartTime=14.000000
         FadeInEndTime=1.0
         MaxParticles=5
         StartLocationRange=(X=(Min=-200.000000,Max=200.000000),Y=(Min=-200.000000,Max=200.000000),Z=(Min=100.000000,Max=200.000000))
@@ -67,11 +65,11 @@ defaultproperties
         SizeScale(0)=(RelativeSize=0.500000)
         SizeScale(1)=(RelativeTime=0.560000,RelativeSize=1.500000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
-        StartSizeRange=(X=(Min=600.000000,Max=800.000000),Y=(Min=600.000000,Max=800.000000),Z=(Min=400.000000,Max=500.000000))
+        StartSizeRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=300.000000,Max=600.000000),Z=(Min=300.000000,Max=500.000000))
         InitialParticlesPerSecond=2.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
-        LifetimeRange=(Min=45.000000,Max=50.000000)
+        LifetimeRange=(Min=15.000000,Max=20.000000)
         InitialDelayRange=(Min=2.000000,Max=2.000000)
         StartVelocityRange=(X=(Min=-20.000000,Max=20.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=10.000000,Max=20.000000))
         VelocityLossRange=(X=(Min=0.500000,Max=0.500000),Y=(Min=0.500000,Max=0.500000))
@@ -92,7 +90,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
         Opacity=0.85
-        FadeOutStartTime=50.400002
+        FadeOutStartTime=15.5
         FadeInEndTime=6.600000
         MaxParticles=5
 
@@ -102,11 +100,11 @@ defaultproperties
         SizeScale(0)=(RelativeSize=1.500000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.800000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
-        StartSizeRange=(X=(Min=600.000000,Max=800.000000),Y=(Min=600.000000,Max=800.000000),Z=(Min=400.000000,Max=500.000000))
+        StartSizeRange=(X=(Min=300.000000,Max=600.000000),Y=(Min=300.000000,Max=600.000000),Z=(Min=300.000000,Max=500.000000))
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.explosions.LSmoke1'
-        LifetimeRange=(Min=55.000000,Max=60.000000)
+        LifetimeRange=(Min=15.000000,Max=26.000000)
         InitialDelayRange=(Min=2.000000,Max=2.000000)
         StartVelocityRange=(Z=(Min=2.000000,Max=5.000000))
         VelocityLossRange=(X=(Min=0.500000,Max=0.500000),Y=(Min=0.500000,Max=0.500000))
