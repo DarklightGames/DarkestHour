@@ -7,17 +7,26 @@ class DHConstruction_ATGun_Heavy extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
-    if (Context.LevelInfo == none) return none;
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
 
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            switch (Context.LevelInfo.Season)
+            switch (Context.LevelInfo.AxisNation)
             {
-                case SEASON_Autumn:
-                    return class'DH_Guns.DH_Pak40ATGun_CamoOne';
+                case NATION_Germany:
+                    switch (Context.LevelInfo.Season)
+                    {
+                        case SEASON_Autumn:
+                            return class'DH_Guns.DH_Pak40ATGun_CamoOne';
+                        default:
+                            return class'DH_Guns.DH_Pak40ATGun';
+                    }
                 default:
-                    return class'DH_Guns.DH_Pak40ATGun';
+                    return None;
             }
         case ALLIES_TEAM_INDEX:
             switch (Context.LevelInfo.AlliedNation)

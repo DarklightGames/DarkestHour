@@ -7,13 +7,17 @@ class DHConstruction_ATGun_Medium extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
+
     switch (Context.TeamIndex)
     {
-        // case AXIS_TEAM_INDEX:
-        //     break;
+        case AXIS_TEAM_INDEX:
+            return none;
 
         case ALLIES_TEAM_INDEX:
-            if (Context.LevelInfo == none) break;
 
             switch (Context.LevelInfo.AlliedNation)
             {
