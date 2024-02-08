@@ -16,7 +16,7 @@ class DH_Cannone4732Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="Cannone 47/32"
+    VehicleNameString="Cannone da 47/32"
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body'
