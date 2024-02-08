@@ -29,6 +29,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                 default:
                     break;
             }
+            break;
         case ALLIES_TEAM_INDEX:
             if (Context.LevelInfo != none && Context.LevelInfo.AlliedNation == NATION_USA)
             {
