@@ -5694,16 +5694,17 @@ function bool ResupplyMortarAmmunition()
     return false;
 }
 
-function ResupplyMissingGrenadesAndItems(int TimeSeconds)
+function bool ResupplyMissingGrenadesAndItems(int TimeSeconds)
 {
     local int i;
     local DHRoleInfo RI;
     local class<DHWeapon> WeaponClass;
 
     RI = GetRoleInfo();
+
     if (RI == none)
     {
-        return;
+        return false;
     }
 
     NextResupplyGivenItemsTime = TimeSeconds;
@@ -5711,41 +5712,76 @@ function ResupplyMissingGrenadesAndItems(int TimeSeconds)
     //Secondary weapons - mappers sometimes set these as explosives
     for (i = 0; i < arraycount(RI.SecondaryWeapons); i++)
     {
-        if (RI.SecondaryWeapons[i].Item != none)
+        if (RI.SecondaryWeapons[i].Item == none)
         {
-            WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.SecondaryWeapons[i].Item), class'Class'));
-            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
-            {
-                ServerGiveWeapon(string(RI.SecondaryWeapons[i].Item), WeaponClass, false);
-            }
+            continue;
+        }
+        
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.SecondaryWeapons[i].Item), class'Class'));
+
+        if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
+        {
+            // We already have this weapon.
+            continue;
+        }
+        
+        if (WeaponClass.default.bCanResupplyWhenEmpty)
+        {
+            ServerGiveWeapon(string(RI.SecondaryWeapons[i].Item), WeaponClass, false);
+
+            return true;
         }
     }
 
     //Grenades
     for (i = 0; i < arraycount(RI.Grenades); i++)
     {
-        if (RI.Grenades[i].Item != none)
+        if (RI.Grenades[i].Item == none)
         {
-            WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.Grenades[i].Item), class'Class'));
-            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
-            {
-                ServerGiveWeapon(string(RI.Grenades[i].Item), WeaponClass, false);
-            }
+            continue;
+        }
+
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(string(RI.Grenades[i].Item), class'Class'));
+
+        if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
+        {
+            // We already have this weapon.
+            continue;
+        }
+
+        if (WeaponClass.default.bCanResupplyWhenEmpty)
+        {
+            ServerGiveWeapon(string(RI.Grenades[i].Item), WeaponClass, false);
+
+            return true;
         }
     }
 
     //GivenItems
     for (i = 0; i < RI.GivenItems.Length; i++)
     {
-        if (RI.GivenItems[i] != "")
+        if (RI.GivenItems[i] == "")
         {
-	        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
-            if (WeaponClass != none && WeaponClass.default.bCanResupplyWhenEmpty)
-            {
-                ServerGiveWeapon(RI.GivenItems[i], WeaponClass, false);
-            }
+            continue;
+        }
+
+        WeaponClass = class<DHWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+
+        if (WeaponClass != none && FindInventoryType(WeaponClass) != none)
+        {
+            // We already have this weapon.
+            continue;
+        }
+
+        if (WeaponClass.default.bCanResupplyWhenEmpty)
+        {
+            ServerGiveWeapon(RI.GivenItems[i], WeaponClass, false);
+
+            return true;
         }
     }
+
+    return false;
 }
 
 function CheckIfMortarCanBeResupplied()

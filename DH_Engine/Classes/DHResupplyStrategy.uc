@@ -78,7 +78,10 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 
             if (bShouldResupplyGrenades)
             {
-                P.ResupplyMissingGrenadesAndItems(TimeSeconds);
+                if (P.ResupplyMissingGrenadesAndItems(TimeSeconds))
+                {
+                    bResupplied = true;
+                }
             }
 
             if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
