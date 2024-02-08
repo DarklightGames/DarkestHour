@@ -7,17 +7,29 @@ class DHConstruction_AAGun_Light extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
+
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (Context.LevelInfo != none && Context.LevelInfo.Season == SEASON_Winter)
+            switch (Context.LevelInfo.AxisNation)
             {
-                return class'DH_Guns.DH_Flak38Gun_Snow';
+                case NATION_Germany:
+                    if (Context.LevelInfo.Season == SEASON_Winter)
+                    {
+                        return class'DH_Guns.DH_Flak38Gun_Snow';
+                    }
+                    else
+                    {
+                        return class'DH_Guns.DH_Flak38Gun';
+                    }
+                default:
+                    break;
             }
-            else
-            {
-                return class'DH_Guns.DH_Flak38Gun';
-            }
+            break;
         case ALLIES_TEAM_INDEX:
             if (Context.LevelInfo != none && Context.LevelInfo.AlliedNation == NATION_USA)
             {

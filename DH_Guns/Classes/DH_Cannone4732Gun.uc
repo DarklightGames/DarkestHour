@@ -2,21 +2,21 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Adjust COM
 // [ ] Projectiles
-// [ ] Gun calibration & sight
+// [ ] Gun calibration
+// [ ] Gun reticle
 // [ ] Third person animations
-// [ ] Add as option for Italians to build re: construction
 // [ ] UI elements for shells
 // [ ] New audio??
-// [ ] Add special vision bounding box on the base mesh so it doesn't disappear
+// [ ] Add special vision bounding box on the base mesh so it doesn't disappear (not sure if this is a problem)
+// [ ] Fix issue on construction where it's floating in the air
 //==============================================================================
 
 class DH_Cannone4732Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="Cannone 47/32"
+    VehicleNameString="Cannone da 47/32"
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Cannone4732CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_body'
@@ -38,7 +38,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.15,Z=0.75) // default is -0.5
+        KCOMOffset=(X=0,Y=0,Z=0) // default is -0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
