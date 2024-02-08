@@ -9,7 +9,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     if (Context.LevelInfo == none)
     {
-        break;
+        return none;
     }
 
     switch (Context.TeamIndex)
@@ -43,7 +43,7 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
             }
             break;
         case AXIS_TEAM_INDEX:
-            switch (Context.LevelInfo.AlliedNation)
+            switch (Context.LevelInfo.AxisNation)
             {
                 case NATION_Germany:
                     return class'DH_Guns.DH_LeIG18Gun';
