@@ -351,7 +351,7 @@ defaultproperties
     Priority=99 // super high value so mortar is always ranked as best/preferred weapon to bring up
     bCanThrow=false
     bCanSway=false
-
+    bCanResupplyWhenEmpty=false
     SelectAnim="Draw"
     PutDownAnim="putaway"
     DeployAnimation="Deploy"

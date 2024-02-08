@@ -14,4 +14,5 @@ defaultproperties
     PluralName="Combat Engineers"
     Limit=2
     bSpawnWithExtraAmmo=true
+    AddedRoleRespawnTime=15
 }
