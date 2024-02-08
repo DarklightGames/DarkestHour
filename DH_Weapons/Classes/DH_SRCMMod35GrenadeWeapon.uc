@@ -2,10 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// Art
-// [ ] third person models (pickup, projectile, attachment) [matty]
-//
-// Code
+// Effects
 // [ ] Add a new sound for when the smoke grenade explodes (it's white phosphorus)
 // [ ] Add WP emitter effects when the smoke grenade explodes
 //==============================================================================

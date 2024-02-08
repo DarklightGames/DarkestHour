@@ -11,7 +11,7 @@ defaultproperties
     Damage=150.0
     DamageRadius=700.0
     MyDamageType=class'DH_Weapons.DH_SRCMMod35GrenadeDamageType'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1grenade-throw'    // TODO: replace
+    StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_frag_projectile'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
