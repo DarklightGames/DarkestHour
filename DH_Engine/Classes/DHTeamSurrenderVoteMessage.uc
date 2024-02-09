@@ -55,12 +55,7 @@ static function string GetString(
 
             if (Bytes[0] > 0)
             {
-                if (Bytes[0] > 1)
-                {
-                    S = "s";
-                }
-
-                Output @= Repl(Repl(default.VoteNominationsRemainingText, "{0}", Bytes[0]), "{1}", S);
+                Output @= Repl(default.VoteNominationsRemainingText, "{0}", Bytes[0]);
             }
 
             return Output;
@@ -76,5 +71,5 @@ defaultproperties
     VoteFailedText="The vote to retreat has failed ({0})."
     VoteSummaryText="Yes: {0}, Needed: {1}"
     VoteNominatedText="{0} has nominated to retreat."
-    VoteNominationsRemainingText="Need {0} more nomination{1} to start the vote."
+    VoteNominationsRemainingText="Need {0} more nomination(s) to start the vote."
 }
