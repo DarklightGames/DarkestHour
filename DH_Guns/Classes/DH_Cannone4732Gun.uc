@@ -9,7 +9,6 @@
 // [ ] UI elements for shells
 // [ ] New audio??
 // [ ] Add special vision bounding box on the base mesh so it doesn't disappear (not sure if this is a problem)
-// [ ] Fix issue on construction where it's floating in the air
 //==============================================================================
 
 class DH_Cannone4732Gun extends DHATGun;
@@ -30,7 +29,7 @@ defaultproperties
     ExitPositions(2)=(X=-200,Y=0,Z=50)
     VehicleMass=3.0
     SupplyCost=700
-    ConstructionPlacementOffset=(Z=10.0)
+    ConstructionPlacementOffset=(Z=0.0)
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
     ShadowZOffset=10.0
