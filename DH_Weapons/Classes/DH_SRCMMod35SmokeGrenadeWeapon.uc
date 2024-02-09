@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Fix bug where throwing all smokes leaves the player in a state where they
+//     have a smoke in hand but 0 ammo.
+//==============================================================================
 
 class DH_SRCMMod35SmokeGrenadeWeapon extends DHExplosiveWeapon;
 
@@ -16,7 +19,7 @@ defaultproperties
     DisplayFOV=80.0
     Skins(2)=Shader'DH_SRCMMod35_tex.SRCMMod35.SRCM35_Phosphorous_S'
     InventoryGroup=4
-    GroupOffset=0
+    GroupOffset=5
     Priority=2
     bHasReleaseLever=true
 }
