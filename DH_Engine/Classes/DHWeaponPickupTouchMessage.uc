@@ -5,27 +5,28 @@
 
 class DHWeaponPickupTouchMessage extends ROTouchMessagePlus;
 
-// Provides weapon pick up screen message, relying on pickup's NotifyParameters being passed as OptionalObject, so we can display both the use/pick up key & weapon name
+var localized string TouchMessage;
+
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local PlayerController PC;
     local string S;
-    local DHWeaponPickupTouchMessageParameters P;
 
-    P = DHWeaponPickupTouchMessageParameters(OptionalObject);
-    S = class'DHWeaponPickup'.default.TouchMessage;
+    PC = RelatedPRI_1.Level.GetLocalPlayerController();
+    
+    S = default.TouchMessage;
 
-    if (P != none)
+    if (OptionalObject != none)
     {
-        if (P.PlayerController != none)
-        {
-            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, P.PlayerController);
-        }
-
-        if (P.InventoryClass != none)
-        {
-            S = Repl(S, "{0}", class'DHPlayer'.static.GetInventoryName(P.InventoryClass));
-        }
+        S = Repl(S, "{item}", class'DHPlayer'.static.GetInventoryName(class<Inventory>(OptionalObject)));
     }
 
-    return S;
+    S = Repl(S, "{input}", "[%USE%]");
+
+    return class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PC);
+}
+
+defaultproperties
+{
+    TouchMessage="Press {input} to pick up {item}"
 }

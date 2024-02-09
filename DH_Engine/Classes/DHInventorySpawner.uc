@@ -7,8 +7,6 @@ class DHInventorySpawner extends Actor
     abstract
     placeable;
 
-var DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
-
 var class<Weapon>       WeaponClass;
 
 enum ETeamOwner
@@ -87,9 +85,6 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
-        TouchMessageParameters.InventoryClass = WeaponClass;
-
         UpdateProxies();
     }
 }
@@ -286,8 +281,7 @@ simulated event NotifySelected(Pawn User)
     if (Level.NetMode == NM_DedicatedServer ||
         !CanBeUsedByPawn(User) ||
         PickupCount <= 0 ||
-        WeaponClass == none ||
-        TouchMessageParameters == none)
+        WeaponClass == none)
     {
         return;
     }
@@ -299,9 +293,7 @@ simulated event NotifySelected(Pawn User)
         return;
     }
 
-    TouchMessageParameters.PlayerController = PlayerController(User.Controller);
-
-    User.ReceiveLocalizedMessage(PickupClass.default.TouchMessageClass, 1,,, TouchMessageParameters);
+    User.ReceiveLocalizedMessage(PickupClass.default.TouchMessageClass, 1, User.PlayerReplicationInfo,, WeaponClass);
 }
 
 simulated function StaticMesh GetProxyStaticMesh()
@@ -362,11 +354,6 @@ simulated event Destroyed()
         }
 
         Proxies.Length = 0;
-    }
-
-    if (TouchMessageParameters != none)
-    {
-        TouchMessageParameters.PlayerController = none;
     }
 }
 
