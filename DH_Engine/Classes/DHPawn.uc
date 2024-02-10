@@ -1282,7 +1282,11 @@ simulated function ProcessHitFX()
 
         // If no gore is enabled we skip any effects for player being gibbed, blood spurting or severed limbs
         // Blood was previously subject to a separate NoBlood() check, but in RO/DH it serves no different purpose as gore setting gets forced to either full or no gore
-        if (!class'GameInfo'.static.UseLowGore())
+
+        // NOTE: When we did our molotov playtest ages ago, there was a crashing issue that
+        // we think had to do with players being gibbed while on fire. Therefore, we just
+        // make sure we don't gib players while they're on fire.
+        if (!class'GameInfo'.static.UseLowGore() && !bOnFire)
         {
             // A passed BoneName 'obliterate' causes player to be completely gibbed (& we go no further here)
             if (BoneName == 'obliterate')
