@@ -9,5 +9,5 @@ defaultproperties
 {
     Skins(0)=Texture'DH_CV33_tex.cv33_body_ext_camo2'
     CannonSkins(0)=Texture'DH_CV33_tex.cv33_body_ext_camo2'
-   // DestroyedMeshSkins(0)=Combiner'DH_CV33_tex.cv33_body_ext_desert'
+    DestroyedMeshSkins(0)=Combiner'DH_CV33_tex.cv33_body_ext_camo2_dest'
 }

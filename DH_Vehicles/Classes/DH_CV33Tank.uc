@@ -15,10 +15,6 @@
 //
 // Animation
 // [ ] Fix hatch-open end position on main body
-//
-// Art (Red)
-// [ ] Destroyed mesh
-// [ ] Destroyed tread mesh
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -78,8 +74,8 @@ defaultproperties
     WheelLatFrictionScale=3.0
 
     // Damage
-    Health=500.0
-    HealthMax=500.0
+    Health=250.0
+    HealthMax=250.0
     DamagedEffectHealthFireFactor=0.1
     EngineHealth=150.0
     EngineDamageFromGrenadeModifier=0.05
@@ -91,7 +87,7 @@ defaultproperties
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'   // REPLACE
+    DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.destroyed.cv33_destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
@@ -190,6 +186,10 @@ defaultproperties
     // Collision Attachments
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_hatch_collision',AttachBone="hatch")
     CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_vision_port_collision',AttachBone="vision_port")
+
+    // Destroyed Treads
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_CV33_stc.cv33_tread_dest_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_CV33_stc.cv33_tread_dest_R'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
