@@ -7,22 +7,14 @@
 // Code
 // [~] Tweak vehicle handling & stats
 // [ ] Tweak reloading of the MG to account for double MG
-// [ ] Figure out how to draw the high res interior mesh while in the MG position (wolf sent me a PR dirty was working on earlier)
-// [ ] Engine, track, MG sounds
-// [ ] hit points
 // [ ] Armor values (WOLFkraut)
+// [ ] Fix MG reload UI
 //
-// Audio (Colin)
-// [ ] Hatch opening/closing sounds in the animations
+// Audio
+// [ ] New MG sound for double Fiat 14/35
 //
-// Art (Colin)
-// [~] MG position animations
-// [~] Driver & gunner player animations (waiting on finalized interior, especially for gunner)
-//
-// Art (Red)
-// [ ] Destroyed mesh
-// [ ] Destroyed tread mesh
-// [~] Camo variants
+// Animation
+// [ ] Fix hatch-open end position on main body
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
@@ -82,8 +74,8 @@ defaultproperties
     WheelLatFrictionScale=3.0
 
     // Damage
-    Health=500.0
-    HealthMax=500.0
+    Health=250.0
+    HealthMax=250.0
     DamagedEffectHealthFireFactor=0.1
     EngineHealth=150.0
     EngineDamageFromGrenadeModifier=0.05
@@ -95,13 +87,13 @@ defaultproperties
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'   // REPLACE
+    DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.destroyed.cv33_destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     bEnableHatchFires=true
     FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
-    FireAttachBone="passenger_l_2"
-    FireEffectOffset=(X=5.0,Y=4.0,Z=10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
+    FireAttachBone="driver_attachment"
+    FireEffectOffset=(X=0,Y=0,Z=50.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
     EngineToHullFireChance=0.5  // There is no firewall between the engine and the crew compartment, so the engine fire can spread to the crew compartment quite easily.
     AmmoIgnitionProbability=0.0 // 0 as ammo hitpoints are meant to represent fuel, not explosive ammo
     FireDetonationChance=0.05
@@ -194,6 +186,10 @@ defaultproperties
     // Collision Attachments
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_hatch_collision',AttachBone="hatch")
     CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_CV33_stc.collision.cv33_body_vision_port_collision',AttachBone="vision_port")
+
+    // Destroyed Treads
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_CV33_stc.cv33_tread_dest_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_CV33_stc.cv33_tread_dest_R'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering

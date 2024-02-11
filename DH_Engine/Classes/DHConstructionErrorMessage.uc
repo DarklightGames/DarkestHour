@@ -48,10 +48,6 @@ static function RenderComplexMessage(
     X = Canvas.CurX;
     Y = Canvas.CurY;
 
-    Canvas.DrawColor = class'UColor'.default.Black;
-    Canvas.SetPos(X + 1.0, Y + 1.0);
-    Canvas.DrawText(MessageString);
-
     Canvas.DrawColor = default.DrawColor;
     Canvas.SetPos(X, Y);
     Canvas.DrawText(MessageString);

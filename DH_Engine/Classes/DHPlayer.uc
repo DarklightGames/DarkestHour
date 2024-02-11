@@ -3141,7 +3141,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
     // Team change event
-    if (NewTeam != OldTeamIndex)
+    if (NewTeam != 255 && NewTeam != OldTeamIndex)
     {
         OnTeamChanged();
     }

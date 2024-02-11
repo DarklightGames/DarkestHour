@@ -12,13 +12,27 @@ struct Control
     var localized string Text;
 };
 
+var Color KeyColor;
+
+var localized string HeaderText;
+var Color HeaderColor;
+
 var array<Control> Controls;
+
+// Override these functions to customize the message based on the context.
+static function string GetHeaderString(
+    optional PlayerReplicationInfo RelatedPRI_1, 
+    optional PlayerReplicationInfo RelatedPRI_2, 
+    optional Object OptionalObject
+    )
+{
+    return default.HeaderText;
+}
 
 static function RenderComplexMessage(Canvas Canvas,
                               out float XL,
                               out float YL,
-                              optional string
-                              MessageString,
+                              optional string MessageString,
                               optional int Switch,
                               optional PlayerReplicationInfo RelatedPRI_1,
                               optional PlayerReplicationInfo RelatedPRI_2,
@@ -30,18 +44,32 @@ static function RenderComplexMessage(Canvas Canvas,
     local int i, j;
     local array<string> Keys;
 
-    PC = PlayerController(OptionalObject);
+    PC = DHPlayer(RelatedPRI_1.Level.GetLocalPlayerController());
 
     X = Canvas.ClipX * default.PosX;
     Y = Canvas.ClipY * default.PosY;
 
+    // TODO: based the Y-size on the number of controls.
+
+    // Draw the header.
+    S = GetHeaderString(RelatedPRI_1, RelatedPRI_2, OptionalObject);
+
+    if (S != "")
+    {
+        Canvas.TextSize(S, XL, YL);
+        Canvas.SetDrawColor(255, 255, 255);
+        Canvas.DrawTextJustified(S, 1, 0, Y, Canvas.ClipX, Y + YL);
+        Y += YL;
+    }
+
+    // Draw the controls.
     for (i = 0; i < default.Controls.Length; ++i)
     {
         Keys.Length = 0;
 
         for (j = 0; j < default.Controls[i].Keys.Length; ++j)
         {
-            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(class'Canvas'.static.MakeColor(200, 200, 200)) $
+            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(default.KeyColor) $
                                 "[" $ class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
                                 class'GameInfo'.static.MakeColorCode(class'UColor'.default.White);
         }
@@ -49,8 +77,6 @@ static function RenderComplexMessage(Canvas Canvas,
         S = class'UString'.static.Join(" / ", Keys) @ default.Controls[i].Text;
 
         Canvas.TextSize(S, XL, YL);
-        Canvas.SetDrawColor(0, 0, 0);
-        Canvas.DrawTextJustified(class'UString'.static.StripColor(S), 1, 1, Y + 1, Canvas.ClipX + 1, Y + YL + 1);
         Canvas.SetDrawColor(255, 255, 255);
         Canvas.DrawTextJustified(S, 1, 0, Y, Canvas.ClipX, Y + YL);
         Y += YL;
@@ -65,6 +91,7 @@ defaultproperties
     bIsUnique=true
     bFadeMessage=false
     Lifetime=0.25
-    FontSize=-2
+    FontSize=0
+    KeyColor=(R=192,G=192,B=192,A=255)
 }
 

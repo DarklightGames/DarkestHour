@@ -3894,14 +3894,13 @@ function bool HasDamageableWheels()
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed or if it's an enemy vehicle
-// Also to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
+// Also to pass self as optional object to message, allowing it to display the vehicle name.
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && (User.GetTeamNum() == VehicleTeam || !bTeamLocked)
         && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
-        NotifyParameters.Put("Controller", User.Controller);
-        User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
+        User.ReceiveLocalizedMessage(TouchMessageClass, 0, User.PlayerReplicationInfo,, self);
         LastNotifyTime = Level.TimeSeconds;
     }
 }
@@ -4246,7 +4245,7 @@ defaultproperties
     CollisionRadius=175.0
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"
-    TouchMessageClass=class'DHVehicleTouchMessage'
+    TouchMessageClass=class'DHVehicleTouchControlsMessage'
     ResupplyAttachmentClass=class'DHResupplyAttachment_Vehicle'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1

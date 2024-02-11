@@ -9,28 +9,34 @@ class DHConstruction_ATGun_HeavyEarly extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
+
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (Context.LevelInfo == none) break;
-
-            if (Context.LevelInfo.Weather == WEATHER_Snowy)
+            switch (Context.LevelInfo.AxisNation)
             {
-                return class'DH_Guns.DH_Flak88Gun_Snow';
+                case NATION_Germany:
+                    if (Context.LevelInfo.Weather == WEATHER_Snowy)
+                    {
+                        return class'DH_Guns.DH_Flak88Gun_Snow';
+                    }
+
+                    switch (Context.LevelInfo.Season)
+                    {
+                        case SEASON_Spring:
+                            return class'DH_Guns.DH_Flak88Gun_Green';
+                        case SEASON_Autumn:
+                            return class'DH_Guns.DH_Flak88Gun_Tan';
+                        case SEASON_Winter:
+                            return class'DH_Guns.DH_Flak88Gun_Snow';
+                    }
+
+                    return class'DH_Guns.DH_Flak88Gun';
             }
-
-            switch (Context.LevelInfo.Season)
-            {
-                case SEASON_Spring:
-                    return class'DH_Guns.DH_Flak88Gun_Green';
-                case SEASON_Autumn:
-                    return class'DH_Guns.DH_Flak88Gun_Tan';
-                case SEASON_Winter:
-                    return class'DH_Guns.DH_Flak88Gun_Snow';
-            }
-
-            return class'DH_Guns.DH_Flak88Gun';
-
         // case ALLIES_TEAM_INDEX:
         //     break;
     }

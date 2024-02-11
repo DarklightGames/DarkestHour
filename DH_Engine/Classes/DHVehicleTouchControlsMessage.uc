@@ -2,8 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// Usage
+// RelatedPRI_1: The PRI of the local player (needed for PlayerController)
+// OptionalObject: The vehicle that the player is touching.
+//==============================================================================
 
-class DHATGunRotateControlsMessage extends DHControlsMessage
+class DHVehicleTouchControlsMessage extends DHControlsMessage
     abstract;
 
 static function string GetHeaderString(
@@ -16,6 +20,5 @@ static function string GetHeaderString(
 
 defaultproperties
 {
-    Controls(0)=(Keys=("FIRE","ROIRONSIGHTS"),Text="Finish rotating")
-    Controls(1)=(Keys=("LEANLEFT","LEANRIGHT"),Text="Rotate")
+    Controls(0)=(Keys=("USE"),Text="Enter")
 }

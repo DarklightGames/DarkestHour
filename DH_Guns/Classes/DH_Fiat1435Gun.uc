@@ -3,13 +3,18 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Fiat1435HMG extends DHATGun;
+class DH_Fiat1435Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="Fiat Modello 14/35"
+    VehicleNameString="Fiat-Revelli Modello 14/35"
     Mesh=SkeletalMesh'DH_Fiat1435_anm.fiat1435_tripod_world'
     bCanBeRotated=true
 
-    CollisionRadius=50.0
+    CollisionRadius=32.0
+    CollisionHeight=32.0
+
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Fiat1435MGPawn',WeaponBone=turret_placement)
+
+    RotationsPerSecond=0.25
 }

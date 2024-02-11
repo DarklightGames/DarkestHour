@@ -26,6 +26,8 @@ defaultproperties
     RearRightAngle=132.0
     RearLeftAngle=228.0
 
+    BeginningIdleAnim="com_closed"
+
     // Cannon movement
     bHasTurret=true
     ManualRotationsPerSecond=0.033

@@ -170,8 +170,7 @@ simulated event NotifySelected(Pawn User)
         if (P.GetRoleInfo() != none &&
             P.GetRoleInfo().bCanUseMortars)
         {
-            NotifyParameters.Put("Controller", User.Controller);
-            User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
+            User.ReceiveLocalizedMessage(TouchMessageClass, 0, User.PlayerReplicationInfo,, self);
             LastNotifyTime = Level.TimeSeconds;
         }
         else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && OwningPawn != P)
@@ -210,7 +209,6 @@ defaultproperties
     ExplosionDamage=0.0
     ExplosionRadius=0.0
     ExplosionMomentum=0.0
-    TouchMessageClass=class'DHVehicleTouchMessage'
     MaxDesireability=0.0
     GroundSpeed=0.0
     bOwnerNoSee=false

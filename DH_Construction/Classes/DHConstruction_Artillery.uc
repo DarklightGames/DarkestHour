@@ -7,14 +7,14 @@ class DHConstruction_Artillery extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
+
     switch (Context.TeamIndex)
     {
         case ALLIES_TEAM_INDEX:
-            if (Context.LevelInfo == none)
-            {
-                break;
-            }
-
             switch (Context.LevelInfo.AlliedNation)
             {
                 case NATION_Britain:
@@ -43,7 +43,13 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
             }
             break;
         case AXIS_TEAM_INDEX:
-            return class'DH_Guns.DH_LeIG18Gun';
+            switch (Context.LevelInfo.AxisNation)
+            {
+                case NATION_Germany:
+                    return class'DH_Guns.DH_LeIG18Gun';
+                default:
+                    break;
+            }
         default:
             break;
     }

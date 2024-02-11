@@ -7,13 +7,24 @@ class DHConstruction_ATGun_Light extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return None;
+    }
+
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return class'DH_Guns.DH_Pak38ATGun';
-
+            switch (Context.LevelInfo.AxisNation)
+            {
+                case NATION_Germany:
+                    return class'DH_Guns.DH_Pak38ATGun';
+                case NATION_Italy:
+                    return class'DH_Guns.DH_Cannone4732Gun';
+                default:
+                    return None;
+            }
         case ALLIES_TEAM_INDEX:
-            if (Context.LevelInfo == none) break;
 
             switch (Context.LevelInfo.AlliedNation)
             {

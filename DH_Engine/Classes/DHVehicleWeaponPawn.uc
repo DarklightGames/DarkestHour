@@ -35,6 +35,39 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the Gun actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
+// Animation Drivers
+// These are used to animate the occpants' body based on the yaw or pitch
+// of the weapon. In lieu of a proper IK system, this will suffice!
+var enum EAnimationDriverType
+{
+    ADT_Yaw,
+    ADT_Pitch,
+} Type;
+
+struct RangeInt
+{
+    var int Min;
+    var int Max;
+};
+
+struct SAnimationDriver
+{
+    var EAnimationDriverType Type;
+    var RangeInt DriverPositionIndexRange;  // Range is inclusive
+    var int Channel;
+    var name BoneName;
+    var name Sequence;
+    var int FrameCount; // The number of frames in the animation.
+
+    // Runtime State
+    var bool bActive;
+};
+
+var array<SAnimationDriver> AnimationDrivers;
+
+var     float       ClientViewTransitionEndTime;    // Time when client's view transition will end, relative to Level.TimeSeconds
+var     bool        bUseInternalMeshForBaseVehicle; // If true, we use the internal mesh for the base vehicle as well.
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -82,6 +115,8 @@ simulated function PostNetBeginPlay()
             LastPositionIndex = DriverPositionIndex;
             PendingPositionIndex = DriverPositionIndex;
         }
+
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -278,6 +313,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             // Switch to external vehicle mesh & unzoomed view
             SwitchMesh(-1, true); // -1 signifies switch to default external mesh
+            SetVehicleBaseMesh(false);
             PC.SetFOV(PC.DefaultFOV);
         }
 
@@ -315,6 +351,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             if (DriverPositions.Length > 0)
             {
                 SwitchMesh(DriverPositionIndex, true);
+                SetVehicleBaseMesh(true);
                 PC.SetFOV(GetViewFOV(DriverPositionIndex));
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
@@ -820,6 +857,7 @@ simulated state EnteringVehicle
     simulated function HandleEnter()
     {
         SwitchMesh(InitialPositionIndex);
+        SetVehicleBaseMesh(true);
 
         if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
         {
@@ -902,7 +940,7 @@ simulated function NextViewPoint()
 {
     if (Level.NetMode == NM_Client && !IsLocallyControlled())
     {
-        AnimateTransition();
+        GotoState('ViewTransition');
     }
     else if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed)
     {
@@ -916,10 +954,39 @@ simulated function NextViewPoint()
 // to spawn or destroy a binoculars attachment, & to add a workaround for an RO bug where player may player wrong animation when moving off binocs
 simulated state ViewTransition
 {
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        if (Role < ROLE_Authority)
+        {
+            HandleTransition();
+
+            if (ViewTransitionDuration == 0)
+            {
+                GotoState('LeavingViewTransition');
+            }
+            else
+            {
+                ClientViewTransitionEndTime = Level.TimeSeconds + ViewTransitionDuration;
+            }
+        }
+    }
+
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        if (Role < ROLE_Authority && Level.TimeSeconds >= ClientViewTransitionEndTime)
+        {
+            GotoState('LeavingViewTransition');
+        }
+    }
+
     simulated function HandleTransition()
     {
         local PlayerController PC;
-
+        
         if (VehicleBase != none)
         {
             StoredVehicleRotation = VehicleBase.Rotation;
@@ -930,6 +997,7 @@ simulated state ViewTransition
         if (IsFirstPerson())
         {
             SwitchMesh(DriverPositionIndex);
+            SetVehicleBaseMesh(true);
             PC = PlayerController(Controller); // having PC reference now serves as a flag that we're locally controlled & in 1st person view
         }
 
@@ -972,8 +1040,13 @@ simulated state ViewTransition
             }
 
             // Play any transition animation for the player
-            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
+                Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
+                // Disable the animation drivers during the transition.
+                // The necessary drivers will be re-enabled once we exit this state.
+                DeactivateAllAnimationDrivers(Driver);
+
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
                 // If moved to binocs, spawn binocs attachment & any other setup stuff
@@ -991,6 +1064,7 @@ simulated state ViewTransition
         {
             if (LastPositionIndex < DriverPositionIndex)
             {
+                // Transition up
                 if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
                 {
                     Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
@@ -999,6 +1073,7 @@ simulated state ViewTransition
             }
             else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
             {
+                // Transition down
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
             }
@@ -1040,9 +1115,13 @@ simulated state ViewTransition
         {
             ROPawn(Driver).ToggleAuxCollision(false);
         }
+
+        UpdateAnimationDriverStates();
     }
 
 Begin:
+    // Only executed on the authoritative actor since simulated proxy actors do not execute latent state
+    // code or timers. The client handles this in BeginState and by counting the ticks.
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('');
@@ -1054,66 +1133,6 @@ Begin:
 simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
 {
     return DriverPositions[PositionIndex].bDrawOverlays && ((GunsightOverlay != none && PositionIndex == 0) || PositionIndex == BinocPositionIndex);
-}
-
-/*
-// TODO: possibly deprecate this function & always use state ViewTransition for all net modes, same as in the ROVehicle class
-// Everything in VT that's relevant to a other 3rd person players gets done here, & everything that's not relevant is excluded in VT anyway
-// So this function no longer appears to offer any advantage, while the transition Sleep timer in VT offers better timed handling of player's hit detection & binocs attachments
-*/
-// Modified to enable or disable player's hit detection when moving to or from an exposed position
-// Also to spawn or destroy a binoculars attachment, & to add a workaround for an RO bug where player may player wrong animation when moving off binocs
-simulated function AnimateTransition()
-{
-    if (Driver != none)
-    {
-        // Enable/disable the player's hit detection if he is moving to an exposed/unexposed position
-        if (ROPawn(Driver) != none)
-        {
-            if (DriverPositions[DriverPositionIndex].bExposed)
-            {
-                if (!DriverPositions[LastPositionIndex].bExposed)
-                {
-                    ROPawn(Driver).ToggleAuxCollision(true);
-                }
-            }
-            else if (DriverPositions[LastPositionIndex].bExposed)
-            {
-                ROPawn(Driver).ToggleAuxCollision(false);
-            }
-        }
-
-        // Play any transition animation for the player & handle any moves onto or off binoculars
-        if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-
-            if (DriverPositionIndex == BinocPositionIndex)
-            {
-                HandleBinoculars(true);
-            }
-            else if (LastPositionIndex == BinocPositionIndex)
-            {
-                HandleBinoculars(false);
-            }
-        }
-    }
-
-    // Play any transition animation for the weapon itself
-    if (Gun != none)
-    {
-        if (LastPositionIndex < DriverPositionIndex)
-        {
-            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
-            {
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-            }
-        }
-        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
-        {
-            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-        }
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1439,6 +1458,8 @@ function DriverLeft()
         VehWep.PauseAnyReloads();
     }
 
+    DeactivateAllAnimationDrivers(Driver);
+
     SetRotatingStatus(0); // stop playing any turret rotation sound
 
     Level.Game.DriverLeftVehicle(self, Driver);
@@ -1470,6 +1491,7 @@ simulated state LeavingVehicle
     simulated function HandleExit()
     {
         SwitchMesh(-1); // -1 signifies switch to default external mesh
+        SetVehicleBaseMesh(false);
     }
 }
 
@@ -1490,6 +1512,12 @@ simulated event DrivingStatusChanged()
         {
             BinocsAttachment.Destroy();
         }
+
+        DeactivateAllAnimationDrivers(Driver);
+    }
+    else
+    {
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -1936,6 +1964,8 @@ simulated function SetPlayerPosition()
                 HandleBinoculars(true);
             }
         }
+
+        UpdateAnimationDriverStates();
     }
 }
 
@@ -2022,6 +2052,30 @@ simulated function bool GetArmoredVehicleBase(out DHArmoredVehicle AV)
     AV = DHArmoredVehicle(VehicleBase);
 
     return AV != none;
+}
+
+simulated function SetVehicleBaseMesh(bool bInternalMesh)
+{
+    local Mesh M;
+
+    if (!bUseInternalMeshForBaseVehicle)
+    {
+        return;
+    }
+
+    if (bInternalMesh)
+    {
+        M = GetVehicleBaseInternalMesh();
+
+        if (M != none)
+        {
+            VehicleBase.LinkMesh(M);
+        }
+    }
+    else
+    {
+        VehicleBase.LinkMesh(VehicleBase.default.Mesh);
+    }
 }
 
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
@@ -2121,7 +2175,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
             {
                 BinocsAttachment = Spawn(class'DHDecoAttachment');
                 BinocsAttachment.SetDrawType(DT_Mesh);
-                BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger');
+                BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger'); // TODO: questionable hardcoding of the asset!
             }
 
             Driver.AttachToBone(BinocsAttachment, 'weapon_rhand');
@@ -2183,6 +2237,27 @@ exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "acces
 simulated function bool IsDebugModeAllowed()
 {
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
+// Gets the mesh to use for the base vehicle. Used for when we want to display the high-poly interior
+// mesh to the player on a weapon.
+simulated function Mesh GetVehicleBaseInternalMesh()
+{
+    local Mesh M;
+
+    if (VehicleBase == none || VehicleBase.DriverPositions.Length == 0)
+    {
+        return none;
+    }
+
+    M = VehicleBase.DriverPositions[0].PositionMesh;
+
+    if (M == none)
+    {
+        M = VehicleBase.Mesh;
+    }
+
+    return M;
 }
 
 // New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
@@ -2455,6 +2530,152 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
         Canvas.SetDrawColor(255, 0, 0);
         Canvas.DrawText(DebugInfo);
         DebugInfo = "";
+    }
+}
+
+// Enabled and disables animation drivers based on current DriverPositionIndex.
+// Called on initialization or when the driver position changes.
+// This must be called on both the client & server so that the two animation
+// states are in sync.
+simulated function UpdateAnimationDriverStates()
+{
+    local int i;
+    local bool bShouldBeActive;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
+
+        if (bShouldBeActive && !AnimationDrivers[i].bActive)
+        {
+            SetAnimationDriverActive(i, true);
+        }
+        else if (!bShouldBeActive && AnimationDrivers[i].bActive)
+        {
+            SetAnimationDriverActive(i, false);
+        }
+    }
+}
+
+private simulated function SetAnimationDriverActive(int AnimationDriverIndex, bool bActive)
+{
+    if (AnimationDrivers[AnimationDriverIndex].bActive == bActive)
+    {
+        // No change in active state.
+        return;
+    }
+
+    AnimationDrivers[AnimationDriverIndex].bActive = bActive;
+
+    if (bActive)
+    {
+        SetAnimationDriverBlendAlpha(AnimationDriverIndex, 1.0);
+
+        Driver.PlayAnim(AnimationDrivers[AnimationDriverIndex].Sequence, 0.0, 0.0, AnimationDrivers[AnimationDriverIndex].Channel);
+        Driver.FreezeAnimAt(0.0, AnimationDrivers[AnimationDriverIndex].Channel);
+    }
+    else
+    {
+        SetAnimationDriverBlendAlpha(AnimationDriverIndex, 0.0);
+    }
+}
+
+private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex, float BlendAlpha)
+{
+    local SAnimationDriver AD;
+
+    AD = AnimationDrivers[AnimationDriverIndex];
+    
+    if (AD.Channel != 0)
+    {
+        Driver.AnimBlendParams(AD.Channel, BlendAlpha, 0.0, 0.0, AD.BoneName);
+    }
+}
+
+// Gets the theta value (0..1) that indicates what frame the associated sequence should
+// be at. Note that the theta vaule is normalized, where 0.0 is the beginning of the
+// sequence, and 1.0 is the end of the sequence.
+simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
+{
+    local float Theta;
+
+    switch (Type)
+    {
+        case ADT_Yaw:
+            // 0.0 is full left, 1.0 is full right
+            Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            break;
+        case ADT_Pitch:
+            Theta = 0.5; // TODO: figure this out
+        default:
+            break;
+    }
+
+    return FClamp(Theta, 0.0, 1.0);
+}
+
+simulated function UpdateAnimationDrivers()
+{
+    local int i;
+    local float Theta;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        if (!AnimationDrivers[i].bActive)
+        {
+            continue;
+        }
+
+        Theta = GetAnimationDriverTheta(AnimationDrivers[i].Type);
+
+        // The theta value must be normalized to the range of the sequence. A theta value of 1.0
+        // is not the end of the sequence, as you might expect, but is in fact the beginning of
+        // the sequence.
+        Theta *= float(AnimationDrivers[i].FrameCount - 1) / (AnimationDrivers[i].FrameCount);
+
+        Driver.SetAnimFrame(Theta, AnimationDrivers[i].Channel);
+    }
+}
+
+simulated function bool IsAnimationDriverActiveForDriverPositionIndex(int AnimationDriverIndex, int InputDriverPositionIndex)
+{
+    return InputDriverPositionIndex >= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Min &&
+            InputDriverPositionIndex <= AnimationDrivers[AnimationDriverIndex].DriverPositionIndexRange.Max;
+}
+
+simulated function DeactivateAllAnimationDrivers(Pawn Driver)
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        SetAnimationDriverActive(i, false);
+    }
+}
+
+simulated function bool IsFullBodyAnimDriverActive()
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        if (AnimationDrivers[i].bActive && AnimationDrivers[i].Channel == 0)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Modified to update the driver yaw animation.
+simulated function Tick(float DeltaTime)
+{
+    super.Tick(DeltaTime);
+
+    if (Driver != none)
+    {
+        UpdateAnimationDrivers();
     }
 }
 

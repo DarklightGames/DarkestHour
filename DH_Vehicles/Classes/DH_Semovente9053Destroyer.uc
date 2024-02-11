@@ -4,9 +4,7 @@
 //==============================================================================
 // [ ] Add positional offset to turret angle calculations to fix hit detection issues
 // [ ] Shell attachments updating when rounds are fired/reloaded
-// [ ] Check radio attachment in MP
 // [ ] UI textures for shells
-// [ ] Fix initial animation issue on the turret (camera starts above the turret)
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -27,6 +25,8 @@ defaultproperties
     Skins(3)=Texture'DH_Semovente9053_tex.semovente9053_treads'
 
     bUsesCodedDestroyedSkins=false
+
+    BeginningIdleAnim="body_closed_idle"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente9053CannonPawn',WeaponBone="Turret_placement")
@@ -216,7 +216,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.25,Z=1.25)
+        KCOMOffset=(Z=0.25)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

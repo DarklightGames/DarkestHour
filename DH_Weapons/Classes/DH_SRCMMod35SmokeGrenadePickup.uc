@@ -8,5 +8,5 @@ class DH_SRCMMod35SmokeGrenadePickup extends DHOneShotWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    StaticMesh=StaticMesh'DH_SRCMMod35_stc.srcm_smoke_pickup'
 }

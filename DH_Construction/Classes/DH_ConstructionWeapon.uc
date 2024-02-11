@@ -39,7 +39,7 @@ simulated function OnTick(float DeltaTime)
             }
             else
             {
-                Instigator.ReceiveLocalizedMessage(class'DHConstructionControlsMessage',,,, Instigator.Controller);
+                Instigator.ReceiveLocalizedMessage(class'DHConstructionControlsMessage', 0, Instigator.PlayerReplicationInfo,, CP);
             }
         }
     }

@@ -230,6 +230,7 @@ defaultproperties
     ZoomOutTime=0.2
     bUsesFreeAim=false
     bCanSway=false
+    bCanResupplyWhenEmpty=false
 
     SelectAnim="Draw" // TODO: rename anims to standard, inherited names & then delete these properties
     PutDownAnim="putaway"

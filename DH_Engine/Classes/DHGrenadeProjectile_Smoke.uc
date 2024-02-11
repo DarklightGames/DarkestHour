@@ -8,6 +8,40 @@ class DHGrenadeProjectile_Smoke extends DHGrenadeProjectile
 
 var() class<DHSmokeEffectAttachment> SmokeAttachmentClass;
 
+var enum ESmokeType
+{
+    ST_Hexachloroethane,
+    ST_WhitePhosphorus
+} SmokeType;
+
+// Gas damage for white phosphorus grenades.
+var() class<DamageType>   WhitePhosphorusGasDamageClass;
+var() float               WhitePhosphorusGasDamageAmount;
+var() float               WhitePhosphorusGasDamageRadius;
+var() float               WhitePhosphorusGasDamageLifeSpan;
+
+function SpawnGasHurtRadius()
+{
+    local DHHurtRadius HurtRadiusActor;
+
+    if (WhitePhosphorusGasDamageClass == none)
+    {
+        Warn("Cannot spawn white phosphorus hurt radius because no damage type is set");
+        return;
+    }
+
+    HurtRadiusActor = Spawn(class'DHHurtRadius', self,, Location);
+
+    if (HurtRadiusActor != none)
+    {
+        HurtRadiusActor.DamageAmount = WhitePhosphorusGasDamageAmount;
+        HurtRadiusActor.DamageRadius = WhitePhosphorusGasDamageRadius;
+        HurtRadiusActor.LifeSpan = WhitePhosphorusGasDamageLifeSpan;
+        HurtRadiusActor.DamageType = WhitePhosphorusGasDamageClass;
+        HurtRadiusActor.SetDamageTimerRate(2.0);
+    }
+}
+
 // Function emptied out to remove everything relating to explosion, as not an exploding grenade
 simulated function Destroyed()
 {
@@ -17,11 +51,8 @@ function SpawnSmokeAttachment()
 {
     local DHSmokeEffectAttachment SmokeAttachment;
 
-    if (SmokeAttachment == none)
-    {
-        SmokeAttachment = Spawn(SmokeAttachmentClass, self,, Location);
-        SmokeAttachment.SetBase(self);
-    }
+    SmokeAttachment = Spawn(SmokeAttachmentClass, self,, Location);
+    SmokeAttachment.SetBase(self);
 }
 
 state ReleasingSmoke
@@ -30,11 +61,19 @@ state ReleasingSmoke
     {
         super.BeginState();
 
+        bHasExploded = true;
+
         // Spawn smoke effect
         SpawnSmokeAttachment();
 
-        // This actor will persist as long as the smoke sound, then stay inert on ground for an extra 10 secs & then auto-destroy.
-        LifeSpan = 30;
+        if (SmokeType == ST_WhitePhosphorus)
+        {
+            SpawnGasHurtRadius();
+        }
+
+        // This actor will persist as long as the smoke sound, then stay inert on
+        // ground for an extra 10 secs & then auto-destroy.
+        LifeSpan = SmokeAttachmentClass.default.SmokeSoundDuration + 10.0;
     }
 
     simulated function Explode(vector HitLocation, vector HitNormal);
@@ -57,6 +96,8 @@ function BlowUp(vector HitLocation)
     {
         MakeNoise(1.0);
     }
+    
+    // TODO: add small WP explosion damage, if applicable
 }
 
 defaultproperties
@@ -68,4 +109,9 @@ defaultproperties
     SoundVolume=255
     SoundRadius=200.0
     SmokeAttachmentClass=class'DH_Effects.DHSmokeEffectAttachment'
+
+    WhitePhosphorusGasDamageAmount=5
+    WhitePhosphorusGasDamageClass=class'DHShellSmokeWPGasDamageType'
+    WhitePhosphorusGasDamageLifeSpan=30.0
+    WhitePhosphorusGasDamageRadius=180.0    // 3 meters
 }
