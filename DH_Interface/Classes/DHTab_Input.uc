@@ -296,7 +296,7 @@ defaultproperties
 
     Begin Object Class=DHGUISectionBackground Name=InputBK3
         Caption="Fine Tuning"
-        WinTop=0.22
+        WinTop=0.18036
         WinLeft=0.451289
         WinWidth=0.527812
         WinHeight=0.4
