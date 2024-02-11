@@ -9,6 +9,7 @@ var automated DHmoNumericEdit           nu_MousePollRate;
 var automated moFloatEdit               fl_IronSightFactor;
 var automated moFloatEdit               fl_BipodFactor;
 var automated moFloatEdit               fl_ScopedFactor;
+var automated moCheckbox                ch_AutoMoveWhenTyping;
 
 event InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -18,6 +19,7 @@ event InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG3.ManageComponent(fl_IronSightFactor);
     i_BG3.ManageComponent(fl_BipodFactor);
     i_BG3.ManageComponent(fl_ScopedFactor);
+    i_BG1.ManageComponent(ch_AutoMoveWhenTyping);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -44,6 +46,16 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case fl_ScopedFactor:
             fl_ScopedFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor")),true);
             break;
+        case ch_AutoMoveWhenTyping:
+            if (DHPlayer(PC) != none)
+            {
+                ch_AutoMoveWhenTyping.Checked(DHPlayer(PC).bAutoMoveWhenTyping);
+            }
+            else
+            {
+                ch_AutoMoveWhenTyping.Checked(class'DHPlayer'.default.bAutoMoveWhenTyping);
+            }
+            break;
       
         default:
             super.InternalOnLoadINI(Sender, s);
@@ -56,6 +68,7 @@ function ResetClicked()
     class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
     class'DHPlayer'.static.ResetConfig("DHBipodTurnSpeedFactor");
     class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
+    class'DHPlayer'.static.ResetConfig("bAutoMoveWhenTyping");
 
     super.ResetClicked();
 }
@@ -104,13 +117,27 @@ function OnInputChange(GUIComponent Sender)
             DHPlayer(PC).SaveConfig();
         }
     }
+    else if (Sender == ch_AutoMoveWhenTyping)
+    {
+        PC.ConsoleCommand("set DH_Engine.DHPlayer AutoMoveWhenTyping" @ ch_AutoMoveWhenTyping.IsChecked());
+
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).bAutoMoveWhenTyping = ch_AutoMoveWhenTyping.IsChecked();
+            DHPlayer(PC).SaveConfig();
+        }
+        else
+        {
+        }
+    }
 }
 
 // Override to fix Epic Games setting save bug
 function SaveSettings()
 {
     local PlayerController PC;
-    local bool bSave, bInputSave, bIForce;
+    local DHPlayer DHP;
+    local bool bSave, bPlayerSave, bInputSave, bIForce, bAutoMoveWhenTyping;
 
     super(Settings_Tabs).SaveSettings();
 
@@ -120,6 +147,27 @@ function SaveSettings()
     {
         Warn("No player controller detected! - Exiting -");
         return;
+    }
+
+    bAutoMoveWhenTyping = ch_AutoMoveWhenTyping.IsChecked();
+
+    DHP = DHPlayer(PC);
+
+    if (DHP != none)
+    {
+        if (DHP.bAutoMoveWhenTyping != bAutoMoveWhenTyping)
+        {
+            DHP.bAutoMoveWhenTyping = bAutoMoveWhenTyping;
+            bSave = true;
+        }
+    }
+    else
+    {
+        if (class'DHPlayer'.default.bAutoMoveWhenTyping != bAutoMoveWhenTyping)
+        {
+            class'DHPlayer'.default.bAutoMoveWhenTyping = bAutoMoveWhenTyping;
+            bPlayerSave = true;
+        }
     }
 
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick")) != bJoystick)
@@ -211,6 +259,11 @@ function SaveSettings()
         PC.SetSensitivity(fSens);
         PC.ConsoleCommand("set Engine.PlayerInput MouseSensitivity" @ fSens);
         bInputSave = true;
+    }
+
+    if (bPlayerSave)
+    {
+        class'Player'.static.StaticSaveConfig();
     }
 
     if (bInputSave)
@@ -315,6 +368,23 @@ defaultproperties
     End Object
     ch_Joystick=DHmoCheckBox'DH_Interface.DHTab_Input.InputUseJoystick'
 
+    Begin Object Class=DHmoCheckBox Name=AutoMoveWhenTyping
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Auto-Move When Typing"
+        OnCreateComponent=AutoMoveWhenTyping.InternalOnCreateComponent
+        IniOption="@Internal"
+        Hint="Enables automatic running if you open a chat while on the move."
+        WinTop=0.717552
+        WinLeft=0.060938
+        WinWidth=0.3
+        WinHeight=0.04
+        TabOrder=7
+        OnChange=DHTab_Input.InternalOnChange
+        OnLoadINI=DHTab_Input.InternalOnLoadINI
+    End Object
+
+    ch_AutoMoveWhenTyping=DHmoCheckBox'DH_Interface.DHTab_Input.AutoMoveWhenTyping'
     Begin Object Class=DHmoCheckBox Name=InputMouseLag
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9

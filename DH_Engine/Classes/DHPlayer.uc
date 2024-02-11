@@ -42,6 +42,10 @@ var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
 var     bool                    bIsGagged;           // player is gagged from chatting
 
+// Auto-move when typing
+var     globalconfig bool       bAutoMoveWhenTyping; // continue applying movement input when typing
+var     private      float      SavedForwardInputBeforeTyping;
+
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
 var     DHHintManager           DHHintManager;
@@ -1492,6 +1496,26 @@ state PlayerWalking
             else
             {
                 aForward = 5999.9; // If toggle run, then make aForward as close as possible to 6000.0, but not
+            }
+        }
+        else
+        {
+            // Auto-run when typing in chat
+            if (Player.Console.bTyping && bAutoMoveWhenTyping)
+            {
+                if (aForward != 0.0)
+                {
+                    SavedForwardInputBeforeTyping = aForward;
+                }
+
+                if (SavedForwardInputBeforeTyping != 0.0)
+                {
+                    aForward = SavedForwardInputBeforeTyping;
+                }
+            }
+            else if (SavedForwardInputBeforeTyping != 0.0)
+            {
+                SavedForwardInputBeforeTyping = 0.0;
             }
         }
 
@@ -7920,6 +7944,7 @@ defaultproperties
     VehiclePoolIndex=-1
     SpectateSpeed=+1200.0
     MinDesiredFPS=+60
+    bAutoMoveWhenTyping=true
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
