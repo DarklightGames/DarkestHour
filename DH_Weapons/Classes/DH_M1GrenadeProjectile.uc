@@ -15,4 +15,5 @@ defaultproperties
     Damage=140.0
     DamageRadius=785.0
     Speed=1000.0
+    SpoonProjectileClass=class'DH_Weapons.DH_M1GrenadeSpoonProjectile'
 }
