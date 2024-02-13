@@ -21,4 +21,5 @@ defaultproperties
     Controls(0)=(Keys=("FIRE"),Text="Confirm")
     Controls(1)=(Keys=("ROIRONSIGHTS"),Text="Cancel")
     Controls(2)=(Keys=("LEANLEFT","LEANRIGHT"),Text="Rotate")
+    Controls(3)=(Keys=("ROMANUALRELOAD"),Text="Reset Rotation")
 }
