@@ -14,4 +14,5 @@ defaultproperties
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
+    SpoonProjectileClass=class'DH_Weapons.DH_F1GrenadeSpoonProjectile'
 }
