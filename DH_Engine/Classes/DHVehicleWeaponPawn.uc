@@ -65,7 +65,12 @@ struct SAnimationDriver
 
 var array<SAnimationDriver> AnimationDrivers;
 
-var     float       ClientViewTransitionEndTime;    // Time when client's view transition will end, relative to Level.TimeSeconds
+// Client transitions
+var     bool        bDoAnimationDriverTransition;   // If true, we're transitioning between animation drivers.
+var     int         LastPositionAnimationDriverIndex, DriverPositionAnimationDriverIndex;
+var     float       ClientViewTransitionStartTime;  // Time when client's view transition will start and end, relative to Level.TimeSeconds
+var     float       ClientViewTransitionEndTime;
+
 var     bool        bUseInternalMeshForBaseVehicle; // If true, we use the internal mesh for the base vehicle as well.
 
 replication
@@ -848,6 +853,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
         bNeedToStoreVehicleRotation = true; // fix for problem where net client may not yet have VehicleBase actor when deploying into spawn vehicle
     }
 
+    UpdateAnimationDriverStates();
+
     super(Vehicle).ClientKDriverEnter(PC);
 }
 
@@ -966,16 +973,51 @@ simulated state ViewTransition
             {
                 GotoState('LeavingViewTransition');
             }
-            else
+        }
+    }
+
+    simulated function int GetAnimationDriverIndexForPosition(int PositionIndex)
+    {
+        local int i;
+
+        for (i = 0; i < AnimationDrivers.Length; i++)
+        {
+            if (PositionIndex >= AnimationDrivers[i].DriverPositionIndexRange.Min &&
+                PositionIndex <= AnimationDrivers[i].DriverPositionIndexRange.Max)
             {
-                ClientViewTransitionEndTime = Level.TimeSeconds + ViewTransitionDuration;
+                return i;
             }
         }
+
+        return -1;
+    }
+
+    simulated function TickAnimationDriverTransition()
+    {
+        local float Alpha;
+
+        if (LastPositionAnimationDriverIndex == -1 || DriverPositionAnimationDriverIndex == -1 ||
+            LastPositionAnimationDriverIndex == DriverPositionAnimationDriverIndex)
+        {
+            return;
+        }
+
+        Alpha = (Level.TimeSeconds  - ClientViewTransitionStartTime) / (ClientViewTransitionEndTime - ClientViewTransitionStartTime);
+        Alpha = FClamp(Alpha, 0.0, 1.0);
+
+        SetAnimationDriverBlendAlpha(LastPositionAnimationDriverIndex, 1.0 - Alpha);
+        SetAnimationDriverBlendAlpha(DriverPositionAnimationDriverIndex, Alpha);
     }
 
     simulated function Tick(float DeltaTime)
     {
-        super.Tick(DeltaTime);
+        if (bDoAnimationDriverTransition)
+        {
+            TickAnimationDriverTransition();
+        }
+
+        // Also update the frame so that we are still yawing or pitching with the gun.
+        UpdateAnimationDrivers();
 
         if (Role < ROLE_Authority && Level.TimeSeconds >= ClientViewTransitionEndTime)
         {
@@ -1030,33 +1072,7 @@ simulated state ViewTransition
 
             FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation; // note we set FPCamPos even in behind view so camera debugging works
         }
-
-        if (Driver != none)
-        {
-            // If moving to an exposed position, enable the player's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
-            {
-                ROPawn(Driver).ToggleAuxCollision(true);
-            }
-
-            // Play any transition animation for the player
-            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
-                Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-            {
-                // Disable the animation drivers during the transition.
-                // The necessary drivers will be re-enabled once we exit this state.
-                DeactivateAllAnimationDrivers(Driver);
-
-                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-
-                // If moved to binocs, spawn binocs attachment & any other setup stuff
-                if (DriverPositionIndex == BinocPositionIndex)
-                {
-                    HandleBinoculars(true);
-                }
-            }
-        }
-
+        
         // Play any transition animation for the weapon itself & set a duration to control when we exit this state
         ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
@@ -1076,6 +1092,62 @@ simulated state ViewTransition
                 // Transition down
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            }
+        }
+
+        if (Driver != none)
+        {
+            // If moving to an exposed position, enable the player's hit detection
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
+            {
+                ROPawn(Driver).ToggleAuxCollision(true);
+            }
+            
+            ClientViewTransitionStartTime = Level.TimeSeconds;
+            ClientViewTransitionEndTime = ClientViewTransitionStartTime + ViewTransitionDuration;
+
+            // If we are transitioning from between driver positions with different animation drivers, make the transition smooth.
+            if (HasAnimationDriverForPosition(DriverPositionIndex) &&
+                HasAnimationDriverForPosition(LastPositionIndex))
+            {
+                bDoAnimationDriverTransition = true;
+
+                LastPositionAnimationDriverIndex = GetAnimationDriverIndexForPosition(LastPositionIndex);
+                DriverPositionAnimationDriverIndex = GetAnimationDriverIndexForPosition(DriverPositionIndex);
+
+                // Activate both of the animation drivers and set the appropriate blend alpha.
+                SetAnimationDriverActive(LastPositionAnimationDriverIndex, true);
+                SetAnimationDriverBlendAlpha(LastPositionAnimationDriverIndex, 1.0);
+
+                if (LastPositionAnimationDriverIndex != DriverPositionAnimationDriverIndex)
+                {
+                    SetAnimationDriverActive(DriverPositionAnimationDriverIndex, true);
+                    SetAnimationDriverBlendAlpha(DriverPositionAnimationDriverIndex, 0.0);
+                }
+
+                // Explicitly update the animation drivers to make sure they're on the right frames.
+                UpdateAnimationDrivers();
+            }
+            else
+            {
+                bDoAnimationDriverTransition = false;
+
+                // Play any transition animation for the player
+                if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) &&
+                    Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+                {
+                    // Disable the animation drivers during the transition.
+                    // The necessary drivers will be re-enabled once we exit this state.
+                    DeactivateAllAnimationDrivers(Driver);
+
+                    Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+                }
+            }
+
+            // If moved to binocs, spawn binocs attachment & any other setup stuff
+            if (DriverPositionIndex == BinocPositionIndex)
+            {
+                HandleBinoculars(true);
             }
         }
     }
@@ -1124,7 +1196,16 @@ Begin:
     // code or timers. The client handles this in BeginState and by counting the ticks.
     HandleTransition();
     Sleep(ViewTransitionDuration);
-    GotoState('');
+    GotoState('LeavingViewTransition');
+}
+
+// This state does nothing here, but is used in the DHVehicleMGPawn.
+simulated state LeavingViewTransition
+{
+    simulated function BeginState()
+    {
+        GotoState('');
+    }
 }
 
 // New helper function to check whether a view position (i.e. one of the DriverPositions) should apply view 'snap' when moving onto or away from iter_swap
@@ -2542,6 +2623,11 @@ simulated function UpdateAnimationDriverStates()
     local int i;
     local bool bShouldBeActive;
 
+    if (Driver == none)
+    {
+        return;
+    }
+
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
@@ -2586,7 +2672,7 @@ private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex
 
     AD = AnimationDrivers[AnimationDriverIndex];
     
-    if (AD.Channel != 0)
+    if (Driver != none)
     {
         Driver.AnimBlendParams(AD.Channel, BlendAlpha, 0.0, 0.0, AD.BoneName);
     }
@@ -2635,6 +2721,22 @@ simulated function UpdateAnimationDrivers()
 
         Driver.SetAnimFrame(Theta, AnimationDrivers[i].Channel);
     }
+}
+
+simulated function bool HasAnimationDriverForPosition(int DriverPositionIndex)
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        if (DriverPositionIndex >= AnimationDrivers[i].DriverPositionIndexRange.Min &&
+            DriverPositionIndex <= AnimationDrivers[i].DriverPositionIndexRange.Max)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 simulated function bool IsAnimationDriverActiveForDriverPositionIndex(int AnimationDriverIndex, int InputDriverPositionIndex)
