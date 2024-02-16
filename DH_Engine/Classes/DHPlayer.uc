@@ -379,8 +379,18 @@ simulated function GenerateClientGUID()
 
 function ServerSetClientGUID(GUID ClientGUID)
 {
+    local DarkestHourGame G;
+
     // Send the client tag to the server.
     self.ClientGUID = ClientGUID;
+
+    // Send a metrics event.
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        G.Metrics.OnPlayerClientGUIDReceived(self, ClientGUID);
+    }
 }
 
 // Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
