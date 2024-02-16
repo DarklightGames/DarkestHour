@@ -5070,7 +5070,25 @@ function NotifyLogout(Controller Exiting)
         }
     }
 
+    NeutralizeAndDestroyThrowableExplosiveProjectiles(PC.PlayerReplicationInfo);
+
     super.Destroyed();
+}
+
+// Neutralize and destroy any active throwable projectiles from this player.
+// This is to prevent players from team-killing with throwables and then logging out to avoid punishment.
+function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo PRI)
+{
+    local DHThrowableExplosiveProjectile TEP;
+
+    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    {
+        if (TEP.SavedPRI == PRI)
+        {
+            TEP.bDud = true;
+            TEP.Destroy();
+        }
+    }
 }
 
 // Overriden to write out metrics data

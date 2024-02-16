@@ -3244,6 +3244,8 @@ function OnTeamChanged()
     }
 
     LinkTeamScoreManager();
+
+    G.NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo);
 }
 
 // Update the player's linked score manager to their new team's score manager
