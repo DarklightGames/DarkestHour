@@ -1908,7 +1908,7 @@ function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, 
         return;
     }
 
-    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);  // TODO: have this determined by the signal class
+    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);
 
     foreach Sender.Pawn.RadiusActors(class'Pawn', OtherPawn, Radius)
     {
