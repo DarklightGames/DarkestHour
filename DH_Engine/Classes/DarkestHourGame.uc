@@ -5185,7 +5185,6 @@ event PostLogin(PlayerController NewPlayer)
     local Object                  O;
     local DHPlayerSession         S;
     local string                  ROIDHash;
-    local int i;
 
     if (NewPlayer == none)
     {
@@ -5344,7 +5343,6 @@ function Logout(Controller Exiting)
     local DHPlayerReplicationInfo PRI;
     local Object O;
     local DHPlayerSession S;
-    local int i;
 
     super.Logout(Exiting);
 

@@ -45,8 +45,6 @@ simulated function SpawnSpoonProjectile()
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
-    local Projectile SpoonProjectile;
-
     super.PostBeginPlay();
 
     switch (SpinType)

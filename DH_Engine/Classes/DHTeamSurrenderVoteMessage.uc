@@ -20,7 +20,7 @@ static function string GetString(
     )
 {
     local byte Switch, Bytes[2];
-    local string Output, VoteSummary, S;
+    local string Output, VoteSummary;
 
     class'UInteger'.static.ToBytes(Data, Switch, Bytes[0], Bytes[1]);
 

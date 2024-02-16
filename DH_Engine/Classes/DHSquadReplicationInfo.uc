@@ -938,7 +938,6 @@ function bool ScoreComparatorFunction(Object LHS, Object RHS)
 // Called when the squad leader leaves their squad.
 private function OnSquadLeaderLeftSquad(int TeamIndex, int SquadIndex)
 {
-    local DHPlayerReplicationInfo Assistant;
     local array<DHPlayerReplicationInfo> Volunteers;
 
     // "The squad leader has left the squad."

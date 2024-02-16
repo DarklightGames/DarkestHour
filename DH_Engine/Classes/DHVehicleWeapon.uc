@@ -1283,8 +1283,6 @@ simulated function DestroyVehicleAttachmentActors()
 // Modified to add extra stuff
 simulated function DestroyEffects()
 {
-    local int i;
-
     super.DestroyEffects();
 
     DestroyCollisionMeshActors();

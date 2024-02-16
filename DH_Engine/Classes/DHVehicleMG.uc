@@ -223,8 +223,6 @@ function Fire(Controller C)
 // Modified to destroy multiple barrel effect emitters.
 simulated function DestroyEffects()
 {
-    local int i;
-
     super.DestroyEffects();
 
     if (Level.NetMode != NM_DedicatedServer)

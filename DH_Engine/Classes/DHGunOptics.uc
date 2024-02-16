@@ -15,8 +15,7 @@ var float OverlayCorrectionY;
 
 static function DrawGunsightOverlay(Canvas C, int Range, optional int RangeTableIndex)
 {
-    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
-    local float GunsightWidthPixels;
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
     if (default.GunsightOverlay == none)
     {
