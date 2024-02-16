@@ -238,5 +238,5 @@ defaultproperties
     Records(104)=(VehicleNames=("ab41","autoblinda41"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda41ArmoredCar")))
     Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
     Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
-    // Fiat L6
+    Records(107)=(VehicleNames=("fiatl640","l640"),Variants=((ClassName="DH_Vehicles.DH_FiatL640Tank")))
 }
