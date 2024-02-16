@@ -1564,6 +1564,11 @@ simulated function ClientKDriverLeave(PlayerController PC)
     {
         VehWep.PauseAnyReloads();
     }
+
+    if (Driver != none)
+    {
+        DeactivateAllAnimationDrivers(Driver);
+    }
 }
 
 // Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
@@ -2628,6 +2633,10 @@ simulated function UpdateAnimationDriverStates()
         return;
     }
 
+    // Disable the spine animation driver used by the pawn normally.
+    // TODO: Doesn't seem to be working!
+    Driver.AnimBlendParams(1, 0.0);
+
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
@@ -2672,7 +2681,7 @@ private simulated function SetAnimationDriverBlendAlpha(int AnimationDriverIndex
 
     AD = AnimationDrivers[AnimationDriverIndex];
     
-    if (Driver != none)
+    if (Driver != none && AD.Channel != 0)
     {
         Driver.AnimBlendParams(AD.Channel, BlendAlpha, 0.0, 0.0, AD.BoneName);
     }

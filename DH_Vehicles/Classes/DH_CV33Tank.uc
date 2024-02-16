@@ -7,14 +7,11 @@
 // Code
 // [~] Tweak vehicle handling & stats
 // [ ] Tweak reloading of the MG to account for double MG
-// [ ] Armor values (WOLFkraut)
 // [ ] Fix MG reload UI
+// [ ] Armor values (WOLFkraut)
 //
 // Audio
 // [ ] New MG sound for double Fiat 14/35
-//
-// Animation
-// [ ] Fix hatch-open end position on main body
 //==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;

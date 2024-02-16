@@ -1019,6 +1019,14 @@ simulated function StopDriving(Vehicle V)
 
     ToggleAuxCollision(true);
     SetAnimAction('ClearAnims');
+
+    // If a player leaves a vehicle while they are on a position that has an animation driver on a non-zero channel,
+    // the player will get stuck in the driven animation. This is the only way to deactivate the animation drivers
+    // on a remote client.
+    if (Role < ROLE_Authority && DHVehicleWeaponPawn(V) != none)
+    {
+        DHVehicleWeaponPawn(V).DeactivateAllAnimationDrivers(self);
+    }
 }
 
 // New function used by vehicle pawns to record their Controller (as SwitchingController) before a player switches vehicle position
