@@ -5083,7 +5083,7 @@ function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo
 
     foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
     {
-        if (TEP.SavedPRI == PRI)
+        if (PRI != none && TEP.SavedPRI == PRI)
         {
             TEP.bDud = true;
             TEP.Destroy();
