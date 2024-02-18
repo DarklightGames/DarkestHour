@@ -2,8 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// TODO
-// Fill this in later.
+// References:
+// - https://comandosupremo.com/fiat-l6-40/
+// - https://en.wikipedia.org/wiki/L6/40_tank
 //==============================================================================
 
 class DH_FiatL640Tank extends DHArmoredVehicle;
@@ -14,7 +15,7 @@ defaultproperties
     VehicleNameString="Carro Armato L6/40"
     VehicleTeam=0
     VehicleMass=6.8
-    ReinforcementCost=4
+    ReinforcementCost=2
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext'
@@ -24,15 +25,15 @@ defaultproperties
     // Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
 
     // Vehicle weapons & passengers
-    //PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Autoblinda41CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=1.0,Y=7.0,Z=-10.0)
     DriveAnim="VPanzer3_driver_idle_open"
 
