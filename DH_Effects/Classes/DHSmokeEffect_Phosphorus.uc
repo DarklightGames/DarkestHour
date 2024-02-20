@@ -8,6 +8,7 @@ class DHSmokeEffect_Phosphorus extends DHSmokeEffectBase;
 defaultproperties
 {
 
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true
@@ -133,6 +134,7 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.15,Max=0.15),Y=(Min=0.15,Max=0.15),Z=(Min=0.1,Max=0.1))
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter3'
+    
 
  //White phosphorus Flares and trails
     //Flares
@@ -260,5 +262,30 @@ defaultproperties
         GetVelocityDirectionFrom=PTVD_OwnerAndStartPosition
     End Object
     Emitters(7)=SpriteEmitter'SpriteEmitter7'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter8
+        FadeOut=true
+        RespawnDeadParticles=false
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
+        Acceleration=(Z=-75.0)
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        FadeOutStartTime=0.13
+        MaxParticles=2
+        StartSpinRange=(X=(Min=0.5,Max=0.5))
+        SizeScale(0)=(RelativeSize=0.5)
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=4.5)
+        StartSizeRange=(X=(Min=32.0,Max=32.0),Y=(Min=32.0,Max=32.0),Z=(Min=32.0,Max=32.0))
+        InitialParticlesPerSecond=100.0
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'Effects_Tex.explosions.explosion_1frame'
+        LifetimeRange=(Min=0.4,Max=0.5)
+        StartVelocityRange=(Z=(Min=300.0,Max=300.0))
+    End Object
+    Emitters(8)=SpriteEmitter'SpriteEmitter8'
     
 }
