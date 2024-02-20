@@ -457,16 +457,9 @@ simulated function Landed(vector HitNormal)
         SetPhysics(PHYS_None);
         SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
 
-        if (Role == ROLE_Authority)
-        {            
-            if (FuzeType == FT_Impact && !bDud && !bHasExploded)
-            {
-                GotoState('TripMine');
-            }
-            else
-            {
-                Explode(Location, HitNormal);
-            }
+        if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud && !bHasExploded)
+        {
+            GotoState('TripMine');
         }
     }
     else

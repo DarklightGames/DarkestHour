@@ -6,8 +6,6 @@
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
-var     DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
-
 // General
 var     int                     PlayerNearbyRadius;
 var     int                     PlayerNearbyRetryTime;
@@ -42,9 +40,6 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
-        TouchMessageParameters.InventoryClass = InventoryType;
-
         if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
         {
             bNetNotify = class<DHProjectileWeapon>(InventoryType).default.InitialBarrels > 0;
@@ -60,11 +55,6 @@ simulated function Destroyed()
     if (BarrelSteamEmitter != none)
     {
         BarrelSteamEmitter.Destroy();
-    }
-
-    if (TouchMessageParameters != none)
-    {
-        TouchMessageParameters.PlayerController = none;
     }
 }
 
@@ -217,31 +207,11 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Modified to work generically, using ItemName
-static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
-{
-    local string S;
-
-    switch (Switch)
-    {
-        case 0:
-            S = Repl(default.PickupMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
-            break;
-        case 1:
-            S = Repl(default.TouchMessage, "{0}", class'DHPlayer'.static.GetInventoryName(default.InventoryType));
-            break;
-    }
-
-    return Repl(S, "{1}", "[%USE%]");
-}
-
-// Modified to add the Controller to NotifyParameters object & pass that to screen message, allowing it to display both the use/pick up key & weapon name
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        TouchMessageParameters.PlayerController = PlayerController(User.Controller);
-        User.ReceiveLocalizedMessage(TouchMessageClass, 1,,, TouchMessageParameters);
+        User.ReceiveLocalizedMessage(TouchMessageClass, 1, User.PlayerReplicationInfo,, InventoryType);
         LastNotifyTime = Level.TimeSeconds;
     }
 }
@@ -251,7 +221,6 @@ defaultproperties
     DrawType=DT_StaticMesh
     AmbientGlow=64
     PickupMessage="You got the {0}"
-    TouchMessage="Press {1} to pick up {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0

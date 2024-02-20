@@ -12,6 +12,36 @@ var enum ESpinType
     ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades.
 } SpinType;
 
+// Client-side only projectile class to accompany a throw
+// (i.e., anything that comes flying off the grenade as it's thrown)
+var class<Projectile> SpoonProjectileClass;
+
+simulated function SpawnSpoonProjectile()
+{
+    local Projectile SpoonProjectile;
+    local Rotator SpoonDirection;
+
+    if (SpoonProjectileClass == none)
+    {
+        return;
+    }
+
+    SpoonProjectile = Spawn(SpoonProjectileClass,,, Location, Rotation);
+
+    if (SpoonProjectile == none)
+    {
+        return;
+    }
+
+    // Perturb the direction of the spoon projectile slightly.
+    SpoonDirection = Rotator(Velocity);
+    SpoonDirection.Yaw += class'UInterp'.static.Linear(FRand(), -300, 300);
+
+    SpoonProjectile.Velocity = Vector(SpoonDirection) * VSize(Velocity) * class'UInterp'.static.Linear(FRand(), 0.5, 0.75);
+    SpoonProjectile.RandSpin(100000);
+}
+
+// TODO: put this in the parent class?
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
@@ -25,6 +55,11 @@ simulated function PostBeginPlay()
     case ST_Tumble:
         RotationRate.Pitch = -(90000 + Rand(30000)); 
         break;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SpawnSpoonProjectile();
     }
 }
 

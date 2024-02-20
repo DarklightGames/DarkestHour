@@ -19,16 +19,15 @@ defaultproperties
     RaisedPositionIndex=2
     BinocPositionIndex=3
 
-    DriveAnim="crouch_idle_binoc"
+    DriveAnim=""    // HACK: This needs to be empty to prevent DHPawn from looping an animation from StartDriving.
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     CameraBone="camera_gun"
 
-    GunOpticsClass=class'DH_Vehicles.DHGunOptics_Italian'
-    ProjectileGunOpticRangeTableIndices(1)=1
-    ProjectileGunOpticRangeTableIndices(2)=1
+    GunOpticsClass=class'DH_Vehicles.DHGunOptics_ItalianPeriscopic'
     
-    AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="cannone4732_gunner_yaw",FrameCount=61)
+    AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="cannone4732_gunner_yaw",FrameCount=61,Channel=0)
+    AnimationDrivers(1)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=2,Max=2),Sequence="cannone4732_gunner_stand_yaw",FrameCount=61,Channel=2)
 
     DrivePos=(Z=28.0)
 }

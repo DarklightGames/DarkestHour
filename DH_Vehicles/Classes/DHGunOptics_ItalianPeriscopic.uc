@@ -3,7 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHWeaponPickupTouchMessageParameters extends Object;
+class DHGunOptics_ItalianPeriscopic extends DHGunOptics;
 
-var class<Inventory>    InventoryClass;
-var PlayerController    PlayerController;
+defaultproperties
+{
+    GunsightSize=0.4
+    GunsightOverlay=Texture'DH_Cannone4732_tex.Interface.cannone4732_sight'
+}

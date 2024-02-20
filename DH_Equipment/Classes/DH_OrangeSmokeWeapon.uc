@@ -32,6 +32,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
 
     InventoryGroup=4
-    GroupOffset=3
+    GroupOffset=4
     Priority=1
 }

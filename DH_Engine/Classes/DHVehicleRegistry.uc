@@ -231,12 +231,12 @@ defaultproperties
     Records(89)=(VehicleNames=("dukwlogi","ducklogi"),Variants=((ClassName="DH_Vehicles.DH_DUKWSupport")))
 
     // Italian
-    Records(100)=(VehicleNames=("semo","semovente","semovente90","semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Desert",VariantName="desert")))
+    Records(100)=(VehicleNames=("semo","semovente","semovente90","semovente9053"),Variants=((ClassName="DH_Vehicles.DH_Semovente9053Destroyer"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_Semovente9053Destroyer_Camo",VariantName="camo")))
     Records(101)=(VehicleNames=("cannone47", "cannone4732"),Variants=((ClassName="DH_Guns.DH_Cannone4732Gun"),(ClassName="DH_Guns.DH_Cannone4732Gun_Desert",VariantName="desert"),(ClassName="DH_Guns.DH_Cannone4732Gun_DesertCamo",VariantName="desertcamo"),(ClassName="DH_Guns.DH_Cannone4732Gun_Winter",VariantName="winter"),(ClassName="DH_Guns.DH_Cannone4732Gun_NoWheels",VariantName="static")))
     Records(102)=(VehicleNames=("fiat626"),Variants=((ClassName="DH_Vehicles.DH_Fiat626TruckTransport"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport",VariantName="logi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_Desert",VariantName="desertlogi"),(ClassName="DH_Vehicles.DH_Fiat626TruckTransport_DesertCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_Fiat626TruckSupport_DesertCamo",VariantName="camologi")))
     Records(103)=(VehicleNames=("cv33","l3","l3/33"),Variants=((ClassName="DH_Vehicles.DH_CV33Tank"),(ClassName="DH_Vehicles.DH_CV33Tank_Desert",VariantName="desert"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo1",VariantName="camo1"),(ClassName="DH_Vehicles.DH_CV33Tank_Camo2",VariantName="camo2")))
     Records(104)=(VehicleNames=("ab41","autoblinda41"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda41ArmoredCar")))
     Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
     Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
-    // Fiat L6
+    Records(107)=(VehicleNames=("fiatl640","l640"),Variants=((ClassName="DH_Vehicles.DH_FiatL640Tank")))
 }

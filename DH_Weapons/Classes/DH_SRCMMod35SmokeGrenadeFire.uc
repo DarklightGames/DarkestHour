@@ -8,5 +8,5 @@ class DH_SRCMMod35SmokeGrenadeFire extends DHThrownExplosiveFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_SRCMMod35GrenadeAmmo'
+    AmmoClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeAmmo'
 }

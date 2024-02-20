@@ -166,7 +166,6 @@ simulated function PostNetReceive()
 function bool ShouldPlayAutomaticVehicleAlerts()
 {
     local DHPlayer PC;
-    local bool bShouldPlayAlert;
     local Vehicle VehicleBase;
 
     if (Instigator == none) return false;

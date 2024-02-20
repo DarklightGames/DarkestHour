@@ -19,4 +19,5 @@ defaultproperties
     LifeSpan=600.0  // 5 minutes, since they can lay active on the ground if the impact doesn't detonate them.
     bProjTarget=true    // Projectiles can shoot this thing (needed so PLT will work!)
     Speed=1300.0    // Slighly faster than the standard grenade since it's smaller and lighter.
+    SpoonProjectileClass=class'DH_Weapons.DH_SRCMMod35SpoonProjectile'
 }

@@ -4190,7 +4190,6 @@ function DrawLocationHits(Canvas C, ROPawn P)
     local bool         bNewDrawHits;
     local SpriteWidget Widget;
     local class<DHHealthFigure> HealthFigureClass;
-    local DHPawn        DHP;
 
     HealthFigureClass = GetHealthFigureClass();
 
