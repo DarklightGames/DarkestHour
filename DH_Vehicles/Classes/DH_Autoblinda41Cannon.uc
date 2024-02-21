@@ -29,8 +29,8 @@ defaultproperties
 
     // Cannon movement
     ManualRotationsPerSecond=0.04
-    CustomPitchUpLimit=3640
-    CustomPitchDownLimit=63715
+    CustomPitchUpLimit=3640     // +20 degrees
+    CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
