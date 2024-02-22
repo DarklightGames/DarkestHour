@@ -33,80 +33,81 @@ iso639_to_language_extension = {
 }
 
 
+grammar = Grammar(
+    """
+    value = string / name / array / struct
+    string = ~'"[^\"]*"'
+    name = ~"[A-Z_0-9\.]+"i
+    comma = ","
+    empty_value = ","
+    array_values = (comma / value)*
+    array = "(" array_values? ")"
+    struct_key = ~"[A-Z0-9]*"i
+    struct_value = struct_key '=' value
+    struct_values = struct_value (',' struct_value)*
+    struct = '(' struct_values? ')'
+    """
+)
+
+
+class ValueVisitor(NodeVisitor):
+
+    def visit_value(self, node, visited_children):
+        return visited_children[0]
+
+    def visit_name(self, node, visited_children):
+        return node.text
+
+    def visit_comma(self, node, visited_children):
+        return None
+
+    def visit_array_values(self, node, visited_children):
+        values = []
+        last_value = None
+        for child in visited_children:
+            value = child[0]
+            if value is None:  # comma
+                values.append(last_value)
+            last_value = value
+        values.append(last_value)
+        return values
+
+    def visit_array(self, node, visited_children):
+        if len(visited_children) == 3:
+            return visited_children[1][0]
+        return []
+
+    def visit_struct(self, node, visited_children):
+        if len(visited_children) == 3:
+            return visited_children[1][0]
+        return dict()
+
+    def visit_string(self, node, visited_children):
+        return node.text.lstrip('"').rstrip('"')
+
+    def visit_struct_value(self, node, visited_children):
+        return (visited_children[0], visited_children[2])
+
+    def visit_struct_values(self, node, visited_children):
+        struct_values = []
+        struct_values.append(visited_children[0])
+        for child in visited_children[1]:
+            struct_values.append(child[1])
+        return {k: v for k, v in struct_values}
+
+    def visit_struct_key(self, node, visited_children):
+        return node.text
+
+    def generic_visit(self, node, visited_children):
+        return visited_children or node
+
+
 def parse_unt(contents: str) -> List[Tuple[str, str]]:
     """
     Parse an Unreal Tournament translation file.
     :param contents: The contents of the file.
     :return: A list of key-value pairs.
     """
-
-    grammar = Grammar(
-        """
-        value = string / name / array / struct
-        string = ~'"[^\"]*"'
-        name = ~"[A-Z_0-9\.]+"i
-        comma = ","
-        empty_value = ","
-        array_values = (comma / value)*
-        array = "(" array_values? ")"
-        struct_key = ~"[A-Z0-9]*"i
-        struct_value = struct_key '=' value
-        struct_values = struct_value (',' struct_value)* 
-        struct = '(' struct_values? ')'
-        """
-    )
-
-    class ValueVisitor(NodeVisitor):
-
-        def visit_value(self, node, visited_children):
-            return visited_children[0]
-
-        def visit_name(self, node, visited_children):
-            return node.text
-
-        def visit_comma(self, node, visited_children):
-            return None
-
-        def visit_array_values(self, node, visited_children):
-            values = []
-            last_value = None
-            for child in visited_children:
-                value = child[0]
-                if value is None:   # comma
-                    values.append(last_value)
-                last_value = value
-            values.append(last_value)
-            return values
-
-        def visit_array(self, node, visited_children):
-            if len(visited_children) == 3:
-                return visited_children[1][0]
-            return []
-
-        def visit_struct(self, node, visited_children):
-            if len(visited_children) == 3:
-                return visited_children[1][0]
-            return dict()
-
-        def visit_string(self, node, visited_children):
-            return node.text.lstrip('"').rstrip('"')
-
-        def visit_struct_value(self, node, visited_children):
-            return (visited_children[0], visited_children[2])
-
-        def visit_struct_values(self, node, visited_children):
-            struct_values = []
-            struct_values.append(visited_children[0])
-            for child in visited_children[1]:
-                struct_values.append(child[1])
-            return {k: v for k, v in struct_values}
-
-        def visit_struct_key(self, node, visited_children):
-            return node.text
-
-        def generic_visit(self, node, visited_children):
-            return visited_children or node
-
     config = RawConfigParser(strict=False)
     config.optionxform = str
 
@@ -124,11 +125,18 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
             try:
                 value = visitor.visit(grammar.parse(value))
             except IncompleteParseError:
-                print('IncompleteParseError', section, key, value)
-                continue
+                # This will handle the case where the strings are simply unquoted. The entirety of the value will be
+                # considered a string.
+                pass
             except ParseError:
-                print('ParseError', section, key, value)
-                continue
+                pass
+
+            if type(value) == str:
+                # We need to fix string values that are not quoted.
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1]
+                    # Escape quotes.
+                    value = value.replace('"', '\\"')
 
             id = f'{section}.{key}'
 
@@ -785,6 +793,23 @@ def sync(args):
         shutil.rmtree(temp_dir, ignore_errors=True)
 
 
+def debug_value(args):
+    while True:
+        line = input('Value: ')
+        if line == 'quit':
+            break
+        visitor = ValueVisitor()
+        try:
+            value = visitor.visit(grammar.parse(line))
+            print(value, type(value))
+        except IncompleteParseError as e:
+            print('IncompleteParseError', line)
+            print(e)
+            continue
+        except ParseError:
+            print('ParseError', line)
+            continue
+
 def debug_keys(args):
     sections = OrderedDict()
     while True:
@@ -861,6 +886,9 @@ sync_parser.set_defaults(func=sync)
 
 debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
 debug_key_parser.set_defaults(func=debug_keys)
+
+debug_key_parser = subparsers.add_parser('debug_value', help='Debug values')
+debug_key_parser.set_defaults(func=debug_value)
 
 
 if __name__ == '__main__':
