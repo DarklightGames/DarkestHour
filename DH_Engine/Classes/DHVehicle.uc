@@ -647,7 +647,7 @@ simulated function Tick(float DeltaTime)
 
         if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachment != none)
         {
-            PlayerController(Controller).ReceiveLocalizedMessage(class'DHSupplyVehicleMessage',,,, Controller);
+            PlayerController(Controller).ReceiveLocalizedMessage(class'DHSupplyVehicleMessage',, Controller.PlayerReplicationInfo,, self);
         }
     }
 

@@ -10,12 +10,18 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context C
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return class'DH_Weapons.DH_PanzerfaustSpawner';
-        case ALLIES_TEAM_INDEX:
-            return none;
+            switch (Context.LevelInfo.AxisNation)
+            {
+                case NATION_Germany:
+                    return class'DH_Weapons.DH_PanzerfaustSpawner';
+                default:
+                    break;
+            }
         default:
-            return none;
+            break;
     }
+    
+    return none;
 }
 
 defaultproperties

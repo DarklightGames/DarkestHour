@@ -332,7 +332,7 @@ function static UpdateProxy(DHActorProxy CP)
 
 defaultproperties
 {
-    MenuName="Platoon HQ"
+    MenuName="Command Post"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()

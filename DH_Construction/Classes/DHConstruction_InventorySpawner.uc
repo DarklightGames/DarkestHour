@@ -114,6 +114,11 @@ simulated function OnExhausted(DHInventorySpawner Spawner)
     }
 }
 
+static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
+{
+    return GetSpawnerClass(Context) != none;
+}
+
 defaultproperties
 {
     GroupClass=class'DHConstructionGroup_Ammunition'
