@@ -550,7 +550,7 @@ function PlayFiring()
     {
         if (Weapon.Mesh != none)
         {
-            if (Weapon.AmmoAmount(ThisModeNum) < 1)
+            if (ShouldPlayFireLastAnim())
             {
                 W = DHProjectileWeapon(Weapon);
 
