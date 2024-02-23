@@ -269,6 +269,7 @@ simulated function DrawGunsightOverlay(Canvas C)
     local float PosX, PosY;
     local DHVehicleWeapon VW;
     local int RangeTableIndex;
+    local PlayerController PC;
 
     RangeTableIndex = -1;
 
@@ -315,7 +316,12 @@ simulated function DrawGunsightOverlay(Canvas C)
         }
     }
 
-    DrawGunsightRangeSetting(C);
+    PC = PlayerController(Controller);
+
+    if (!PC.myHud.bHideHud)
+    {
+        DrawGunsightRangeSetting(C);
+    }
 
     // Debug - draw cross on center of screen to check sight overlay is properly centred
     if (bDebugSights)
