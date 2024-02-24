@@ -30,7 +30,7 @@ defaultproperties
     // FaceSkins(14)=Texture'DHItalianCharactersTex.Faces.ita_face15'
 
     // TODO: replace all this
-    ShovelClass=class'DH_Equipment.DHShovelItem_Russian'
+    ShovelClass=class'DH_Equipment.DHShovelItem_Italian'
     BinocsClass=class'DH_Equipment.DHBinocularsItemSoviet'
     SmokeGrenadeClass=class'DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon'
 

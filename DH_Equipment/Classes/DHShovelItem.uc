@@ -9,6 +9,7 @@ class DHShovelItem extends DHWeapon
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
 exec simulated function ROManualReload() { return; }
+simulated function bool ShouldUseFreeAim() { return true; }
 
 simulated function Fire(float F)
 {
@@ -96,9 +97,19 @@ defaultproperties
     bCanSway=false
     bCanResupplyWhenEmpty=false
 
+    SprintStartAnim="sprint_in"
+    SprintEndAnim="sprint_out"
+    SprintLoopAnim="sprint_middle"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
 
     AIRating=0.0
     CurrentRating=0.0
+
+    SprintStartAnimRate=1
+    SprintEndAnimRate=1
+    SprintLoopAnimRate=1
+
+    bUsesFreeAim=true
+    FreeAimRotationSpeed=2.0
 }
