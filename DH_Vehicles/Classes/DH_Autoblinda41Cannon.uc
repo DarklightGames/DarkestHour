@@ -8,9 +8,12 @@ class DH_Autoblinda41Cannon extends DHVehicleAutoCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Autoblinda_anm.ab41_turret_ext'
-    //Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll')
+    Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext'
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_collision',AttachBone="gun_yaw")
+    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_hatch_collision',AttachBone="hatch")
+    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
+
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor

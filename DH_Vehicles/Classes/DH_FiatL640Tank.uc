@@ -14,6 +14,7 @@
 // [ ] Passengers
 // [ ] Collsion meshes for hatch attachments
 // [ ] Exit positions
+// [ ] Fire/damaged effects
 //
 // Red:
 // [ ] Interior meshes
@@ -23,6 +24,7 @@
 // References:
 // - https://comandosupremo.com/fiat-l6-40/
 // - https://en.wikipedia.org/wiki/L6/40_tank
+// - https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
 //==============================================================================
 
 class DH_FiatL640Tank extends DHArmoredVehicle;
@@ -46,13 +48,12 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
-    DrivePos=(X=1.0,Y=7.0,Z=-10.0)
+    DrivePos=(X=0,Y=0,Z=0)
     DriveAnim="VPanzer3_driver_idle_open"
 
     // Hull armor
@@ -125,16 +126,23 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_look'
-    VehicleHudEngineX=0.51
-    VehicleHudTreadsPosX(0)=0.37
-    VehicleHudTreadsPosX(1)=0.63
-    VehicleHudTreadsPosY=0.51
-    VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsY(0)=0.35
+    VehicleHudImage=Texture'DH_FiatL640_tex.interface.fiatl640_body'
+    VehicleHudTurret=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_look'
+
+    VehicleHudEngineX=0.50
+
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
+    VehicleHudTreadsPosY=0.50
+    VehicleHudTreadsScale=0.7
+
+    VehicleHudOccupantsX(0)=0.55
+    VehicleHudOccupantsY(0)=0.2
+
+    VehicleHudOccupantsY(1)=0.45
+    VehicleHudOccupantsY(1)=0.475
+
     VehicleHudOccupantsY(2)=0.35
     VehicleHudOccupantsX(3)=0.35
     VehicleHudOccupantsY(3)=0.72
