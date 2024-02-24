@@ -232,7 +232,7 @@ function Timer()
     local bool bShouldSendJoinSquadNagMessage;
 
     // When appropriate, all unassigned players will be berated to join a squad at regular intervals.
-    bShouldSendJoinSquadNagMessage = bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime >= NextJoinSquadNagTime;
+    bShouldSendJoinSquadNagMessage = Level.NetMode != NM_Standalone && bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime >= NextJoinSquadNagTime;
 
     if (bShouldSendJoinSquadNagMessage)
     {
