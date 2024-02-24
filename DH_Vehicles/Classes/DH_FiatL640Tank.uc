@@ -138,11 +138,12 @@ defaultproperties
     VehicleHudTreadsScale=0.7
 
     VehicleHudOccupantsX(0)=0.55
-    VehicleHudOccupantsY(0)=0.2
+    VehicleHudOccupantsY(0)=0.2 // TODO: fix this
 
-    VehicleHudOccupantsY(1)=0.45
+    VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.475
 
+    // TODO: add 2 passengers, fix these
     VehicleHudOccupantsY(2)=0.35
     VehicleHudOccupantsX(3)=0.35
     VehicleHudOccupantsY(3)=0.72
@@ -150,7 +151,8 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.65
     VehicleHudOccupantsY(5)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+
+    SpawnOverlay(0)=Material'DH_FiatL640_tex.interace.fiatl640_icon'
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_01_L"
