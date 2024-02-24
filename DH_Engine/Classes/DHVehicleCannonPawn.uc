@@ -18,12 +18,12 @@ var     int         RaisedPositionIndex;         // lowest position where comman
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
-var     texture     PeriscopeOverlay;            // overlay for commander's periscope
+var     Texture     PeriscopeOverlay;            // overlay for commander's periscope
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
-var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
-var     texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
+var     Texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
 var     float               RangePositionY;
 var     localized string    RangeText;                  // metres or yards
@@ -54,6 +54,9 @@ var     bool        bDebugSights; // shows centering cross in gunsight for testi
 // Optics
 var     class<DHGunOptics>  GunOpticsClass;
 var     int                 ProjectileGunOpticRangeTableIndices[3]; // The index of what optical range table to use based on the projectile index.
+
+// Periscope
+var     name        PeriscopeCameraBone;
 
 replication
 {
@@ -154,6 +157,10 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         CameraLocation = VehWep.GetBoneCoords(CameraBone).Origin;
     }
     // Otherwise use PlayerCameraBone for camera location
+    else if (DriverPositionIndex == PeriscopePositionIndex && PeriscopeCameraBone != '')
+    {
+        CameraLocation = VehWep.GetBoneCoords(PeriscopeCameraBone).Origin;
+    }
     else
     {
         CameraLocation = VehWep.GetBoneCoords(PlayerCameraBone).Origin;
@@ -1214,6 +1221,15 @@ exec function SetPrimaryAmmo(int Value)
     {
         Cannon.MainAmmoChargeExtra[0] = Value;
         Log(Cannon.Tag @ ".MainAmmoChargeExtra[0] =" @ Cannon.MainAmmoChargeExtra[0]);
+    }
+}
+
+exec function SetPeriscopeSize(float NewValue)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(Tag @ "PeriscopeSize =" @ NewValue @ " (was" @ PeriscopeSize $ ")");
+        PeriscopeSize = NewValue;        
     }
 }
 

@@ -2546,8 +2546,11 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ, optional float NewScale)
 // New debug exec to adjust size of gunsight overlay
 exec function SetSightSize(float NewValue)
 {
-    Log(Tag @ "GunsightSize =" @ NewValue @ " (was" @ GunsightSize $ ")");
-    GunsightSize = NewValue;
+    if (IsDebugModeAllowed())
+    {
+        Log(Tag @ "GunsightSize =" @ NewValue @ " (was" @ GunsightSize $ ")");
+        GunsightSize = NewValue;
+    }
 }
 
 // New debug exec to adjust ambient sound radius
