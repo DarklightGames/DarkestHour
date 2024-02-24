@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Autoblinda41Cannon extends DHVehicleCannon;
+class DH_Autoblinda41Cannon extends DHVehicleAutoCannon;
 
 defaultproperties
 {
@@ -28,27 +28,33 @@ defaultproperties
     RearLeftAngle=209.0
 
     // Cannon movement
-    ManualRotationsPerSecond=0.04
+    ManualRotationsPerSecond=0.058  // 21 degrees per second
     CustomPitchUpLimit=3640     // +20 degrees
     CustomPitchDownLimit=63352  // -12 degrees
 
-    // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+    // Cannon ammo  // TODO: add correct L6/40 ammo types
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.38"
 
-    InitialPrimaryAmmo=35
-    InitialSecondaryAmmo=20
+    InitialPrimaryAmmo=8
+    InitialSecondaryAmmo=8
 
+    MaxPrimaryAmmo=8
+    MaxSecondaryAmmo=8
+    SecondarySpread=0.0013  // TODO: not needed
 
-    MaxPrimaryAmmo=35
-    MaxSecondaryAmmo=20
-    SecondarySpread=0.0013
+    // 35 total magazines (280 rounds) [TODO: figure out the distribution]
+    NumPrimaryMags=25
+    NumSecondaryMags=10
+
+    WeaponFireAttachmentBone="MUZZLE"
+    FireInterval=0.25   // 240 rounds per minute
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'  // TODO: 8mm breda
     InitialAltAmmo=150
     NumMGMags=10
     AltFireInterval=0.05
@@ -57,7 +63,9 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=-2.0
-    AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
+    
+    AltFireAttachmentBone="MG_MUZZLE"
+    AltFireOffset=(X=-8,Y=0,Z=0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
