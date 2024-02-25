@@ -69,7 +69,7 @@ defaultproperties
     End Object
     ch_Standard=DHmoCheckBox'DH_Interface.DHBrowser_Footer.OnlyStandardCheckBox'
 
-    Begin Object Class=GUITitleBar Name=BrowserStatus
+    Begin Object Class=GUITitleBar Name=BrowserStatus   // TODO: fix font here.
         bUseTextHeight=false
         Justification=TXTA_Right
         FontScale=FNS_Small
@@ -79,6 +79,7 @@ defaultproperties
         WinHeight=0.45
         bBoundToParent=true
         bScaleToParent=true
+        StyleName="DHSmallText"
     End Object
     t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
 
