@@ -323,4 +323,5 @@ defaultproperties
     MapInfos(167)=(Name="DH-Ponte_Olivo_Airfield_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=class'DHGameType_Advance',Size=SIZE_Large)
     MapInfos(168)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=class'DHGameType_Defence',Size=SIZE_Small)
     MapInfos(169)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=class'DHGameType_Advance',Size=SIZE_Medium)
+    MapInfos(170)=(Name="DH-Armored_La_Champagne_Advance",AlliedNation=NATION_Canada,GameTypeClass=class'DHGameType_Advance',Size=SIZE_Any)
 }

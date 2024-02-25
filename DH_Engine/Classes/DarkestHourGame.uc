@@ -5072,7 +5072,25 @@ function NotifyLogout(Controller Exiting)
         }
     }
 
+    NeutralizeAndDestroyThrowableExplosiveProjectiles(PC.PlayerReplicationInfo);
+
     super.Destroyed();
+}
+
+// Neutralize and destroy any active throwable projectiles from this player.
+// This is to prevent players from team-killing with throwables and then logging out to avoid punishment.
+function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo PRI)
+{
+    local DHThrowableExplosiveProjectile TEP;
+
+    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    {
+        if (PRI != none && TEP.SavedPRI == PRI)
+        {
+            TEP.bDud = true;
+            TEP.Destroy();
+        }
+    }
 }
 
 // Overriden to write out metrics data
@@ -5778,7 +5796,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="Gï¿½nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5787,10 +5805,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton Mï¿½ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans Grï¿½schke"
+    GermanNames(12)="Wilhelm Krï¿½ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"

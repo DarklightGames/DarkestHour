@@ -1925,14 +1925,14 @@ function DrawSignals(Canvas C)
     local int i, Distance;
     local DHPlayer PC;
     local DHProjectileWeapon MyProjWeapon;
-    local vector    Direction;
-    local vector    TraceStart, TraceEnd;
-    local vector    ScreenLocation;
-    local material  SignalMaterial;
+    local Vector    Direction, ViewDirection;
+    local Vector    TraceStart, TraceEnd;
+    local Vector    ScreenLocation;
+    local Material  SignalMaterial;
     local float     AngleDegrees, XL, YL, X, Y, SignalIconSize, T, Alpha, TimeRemaining, AlphaMin;
     local bool      bHasLOS, bIsNew;
     local string    DistanceText, LabelText;
-    local color     SignalColor;
+    local Color     SignalColor;
     local bool      bShouldShowDistance;
 
     PC = DHPlayer(PlayerOwner);
@@ -1953,6 +1953,7 @@ function DrawSignals(Canvas C)
     bShouldShowDistance = !PC.Pawn.IsA('VehicleCannonPawn');
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
+    ViewDirection = vector(PlayerOwner.CalcViewRotation);
 
     for (i = 0; i < arraycount(PC.Signals); ++i)
     {
@@ -1963,11 +1964,10 @@ function DrawSignals(Canvas C)
 
         TraceEnd = PC.Signals[i].Location;
         Direction = Normal(TraceEnd - TraceStart);
-        AngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Direction dot vector(PlayerOwner.CalcViewRotation)));
 
-        if (AngleDegrees > 180)
+        if (Direction dot ViewDirection < 0)
         {
-            // Facing the opposite direction, don't draw it.
+            // Behind us, don't draw it.
             continue;
         }
 
@@ -1987,6 +1987,7 @@ function DrawSignals(Canvas C)
         }
         
         // Fade the signal out based on the angle so that it doesn't obscure the view.
+        AngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Direction dot ViewDirection));
         Alpha *= class'UInterp'.static.MapRangeClamped(AngleDegrees, 2.0, 5.0, 0.0, 1.0);
 
         // Fade out the signal in the final moments.
