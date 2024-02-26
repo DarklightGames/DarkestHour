@@ -18,6 +18,8 @@ defaultproperties
     PlatoonHQUnpackedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked'   // TODO: replace
     PlatoonHQTatteredStaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent_light_destro'
 
+    GrenadeCrateClass=class'DH_Weapons.DH_SRCMMod35GrenadeSpawner'
+
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.ITA_backpack_established'
 
