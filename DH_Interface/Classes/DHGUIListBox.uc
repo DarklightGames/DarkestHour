@@ -23,7 +23,7 @@ defaultproperties
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
-    MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHGUIListBox.TheScrollbar'
+    MyScrollBar=TheScrollbar
 
     DefaultListClass="DH_Interface.DHGUIList"
 }
