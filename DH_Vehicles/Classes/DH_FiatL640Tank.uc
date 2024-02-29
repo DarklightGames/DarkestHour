@@ -3,18 +3,12 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // TODO:
-// [ ] Fix periscope position on the turret
-// [ ] Where is the gunsight?
+// [ ] What is the gunsight?
 // [ ] 8mm Breda coaxial MG stats/projectiles etc.
 // [ ] Exterior commander animations
 // [ ] Exterior driver animations
-// [ ] Fix the yaw of driver periscope position (it didn't rotate)
-// [ ] Projectile collision mesh
-// [ ] UI elements
-// [ ] Passengers
-// [ ] Collsion meshes for hatch attachments
-// [ ] Exit positions
 // [ ] Fire/damaged effects
+// [ ] Adjust engine to be a little less powerful (thing sucked)
 //
 // Red:
 // [ ] Interior meshes
@@ -45,28 +39,38 @@ defaultproperties
     Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext'
 
     // Vehicle weapons & passengers
+    BeginningIdleAnim=""    // TODO: add this
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01")
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionDownAnim="close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=0,Y=0,Z=0)
     DriveAnim="VPanzer3_driver_idle_open"
+    UnbuttonedPositionIndex=3
 
     // Hull armor
-    FrontArmor(0)=(Thickness=4.45,Slope=-23.0,MaxRelativeHeight=48.5,LocationName="lower")
-    FrontArmor(1)=(Thickness=2.86,Slope=48.0,LocationName="upper")
-    RightArmor(0)=(Thickness=2.7) // side armor was 1.125 inches front half & 1" back half, so split the difference (no upper/lower split as is same)
-    LeftArmor(0)=(Thickness=2.7)
-    RearArmor(0)=(Thickness=2.54,Slope=-17.0,MaxRelativeHeight=45.2,LocationName="lowest")
-    RearArmor(1)=(Thickness=2.54,MaxRelativeHeight=81.3) // this is the main lower and upper hull combined, as both are 1 inch & vertical
-    RearArmor(2)=(Thickness=2.54,Slope=49.0,LocationName="upper slope")
+    // https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
+    // "The front plates of the superstructure were 30 mm thick, while those of the gun shield and driver’s port were 40 mm thick.
+    // The front plates of the transmission cover and the side plates were 15 mm thick, as was the rear. The engine deck was 6 mm
+    // thick and the floor had 10 mm armor plates."
+    FrontArmor(0)=(Thickness=3.0,Slope=-65.84,MaxRelativeHeight=32.3213,LocationName="lower slope")
+    FrontArmor(1)=(Thickness=3.0,Slope=-15.27,MaxRelativeHeight=51.5188,LocationName="lower")
+    FrontArmor(2)=(Thickness=1.5,Slope=75.82,MaxRelativeHeight=65.4981,LocationName="transmission cover")
+    FrontArmor(3)=(Thickness=3.0,Slope=13.35,LocationName="upper")
+    RightArmor(0)=(Thickness=1.5,Slope=0.0,MaxRelativeHeight=59.0221,LocationName="lower")
+    RightArmor(1)=(Thickness=1.5,Slope=11.3,LocationName="upper")
+    LeftArmor(0)=(Thickness=1.5,Slope=0.0,MaxRelativeHeight=59.0221,LocationName="lower")
+    LeftArmor(1)=(Thickness=1.5,Slope=11.3,LocationName="upper")
+    RearArmor(0)=(Thickness=1.5,Slope=0)
 
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
+    FrontLeftAngle=330
+    FrontRightAngle=30
+    RearLeftAngle=208
+    RearRightAngle=153
 
     // Movement
     GearRatios(3)=0.65
@@ -88,7 +92,7 @@ defaultproperties
     VehHitpoints(0)=(PointBone="BODY",PointRadius=27.1584,PointOffset=(X=-68.1716,Z=49.7671),HitPointType=HP_Engine)
     VehHitpoints(1)=(PointBone="BODY",PointRadius=16,PointOffset=(X=-19.1348,Y=-38.7964,Z=68.5152),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 
-    TreadHitMaxHeight=59.0
+    TreadHitMaxHeight=55.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
     FireAttachBone="Player_Driver"
@@ -96,16 +100,15 @@ defaultproperties
     ShadowZOffset=20.0
 
     // Exit
-    ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
-    ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
-    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // hull MG hatch
-    ExitPositions(3)=(X=-75.0,Y=-125.0,Z=75.0) // left
-    ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
-    ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
-    ExitPositions(6)=(X=200.0,Y=0.0,Z=75.0)    // front
+    ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00) // Empty.001
+    ExitPositions(1)=(X=-85.00,Y=25.00,Z=150.00) // Empty.002
+    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00) // Empty.003
+    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00) // Empty.004
+    ExitPositions(4)=(X=-165.00,Y=-35.00,Z=55.00) // Empty.005
+    ExitPositions(5)=(X=-165.00,Y=35.00,Z=55.00) // Empty.006
 
     // Sounds
-    SoundPitch=32 // half normal pitch = 1 octave lower
+    SoundPitch=48
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
@@ -137,20 +140,14 @@ defaultproperties
     VehicleHudTreadsPosY=0.50
     VehicleHudTreadsScale=0.7
 
-    VehicleHudOccupantsX(0)=0.55
-    VehicleHudOccupantsY(0)=0.2 // TODO: fix this
-
+    VehicleHudOccupantsX(0)=0.545
+    VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.475
-
-    // TODO: add 2 passengers, fix these
-    VehicleHudOccupantsY(2)=0.35
+    VehicleHudOccupantsX(2)=0.65
+    VehicleHudOccupantsY(2)=0.65
     VehicleHudOccupantsX(3)=0.35
-    VehicleHudOccupantsY(3)=0.72
-    VehicleHudOccupantsX(4)=0.5
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.65
-    VehicleHudOccupantsY(5)=0.72
+    VehicleHudOccupantsY(3)=0.65
 
     SpawnOverlay(0)=Material'DH_FiatL640_tex.interace.fiatl640_icon'
 
