@@ -8,7 +8,6 @@
 // [~] Tweak vehicle handling & stats
 // [ ] Tweak reloading of the MG to account for double MG
 // [ ] Fix MG reload UI
-// [ ] Armor values (WOLFkraut)
 //
 // Audio
 // [ ] New MG sound for double Fiat 14/35
@@ -36,9 +35,6 @@ defaultproperties
     Skins(0)=Texture'DH_CV33_tex.cv33.cv33_body_ext'
     Skins(1)=Texture'DH_CV33_tex.cv33.cv33_treads'
     Skins(2)=Texture'DH_CV33_tex.cv33.cv33_treads'
-    // HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
-    // bUseHighDetailOverlayIndex=true
-    // HighDetailOverlayIndex=3
     BeginningIdleAnim="driver_closed_idle"
 
     // Vehicle weapons & passengers
@@ -81,7 +77,6 @@ defaultproperties
 
     VehHitpoints(0)=(PointRadius=24.0,PointBone="ENGINE",DamageMultiplier=1.0,HitPointType=HP_Engine)
 
-    TreadHitMaxHeight=7.0
     DamagedEffectScale=0.70
     DamagedEffectOffset=(X=-20,Y=-3.5,Z=18.0)
     DestroyedVehicleMesh=StaticMesh'DH_CV33_stc.destroyed.cv33_destroyed'
@@ -103,10 +98,28 @@ defaultproperties
     DestructionLinearMomentum=(Min=50.0,Max=100.0)
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
-    FrontRightAngle=20.0 // angles set specifically for tread hits
-    RearRightAngle=157.0
-    RearLeftAngle=203.5
-    FrontLeftAngle=339.5
+    FrontRightAngle=26.0
+    RearRightAngle=154.5
+    RearLeftAngle=205.5
+    FrontLeftAngle=334
+
+    TreadHitMaxHeight=42.6371
+
+    FrontArmor(0)=(Slope=-81.3,MaxRelativeHeight=16.4815,Thickness=1.2)
+    FrontArmor(1)=(Slope=-52.0,MaxRelativeHeight=25.7771,Thickness=1.2)
+    FrontArmor(2)=(Slope=-2.0,MaxRelativeHeight=38.1547,Thickness=1.2)
+    FrontArmor(3)=(Slope=81.5,MaxRelativeHeight=45.2354,Thickness=1.2)
+    FrontArmor(4)=(Slope=63.0,MaxRelativeHeight=57.6283,Thickness=1.2)
+    FrontArmor(5)=(Slope=19.0,Thickness=1.2)
+
+    LeftArmor(0)=(Slope=0.0,MaxRelativeHeight=57.6283,Thickness=1.2)
+    LeftArmor(1)=(Slope=19.0,Thickness=1.2)
+
+    RightArmor(0)=(Slope=0.0,MaxRelativeHeight=57.6283,Thickness=1.2)
+    RightArmor(1)=(Slope=19.0,Thickness=1.2)
+
+    RearArmor(0)=(Slope=0.0,MaxRelativeHeight=57.6283,Thickness=0.6)
+    RearArmor(1)=(Slope=19.0,Thickness=0.6)
 
     // Exit
     ExitPositions(0)=(X=-10,Y=95,Z=55)  // driver

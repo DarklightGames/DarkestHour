@@ -7,7 +7,7 @@ class DHGunOptics_Italian extends DHGunOptics;
 
 static function DrawGunsightOverlay(Canvas C, int Range, optional int RangeTableIndex)
 {
-    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosY;
     local float GunsightWidthPixels;
 
     if (default.GunsightOverlay == none)
