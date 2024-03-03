@@ -2,19 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// TODO:
 // [ ] What is the gunsight?
 // [ ] 8mm Breda coaxial MG stats/projectiles etc.
 // [ ] Exterior commander animations
 // [ ] Exterior driver animations
 // [ ] Fire/damaged effects
 // [ ] Adjust engine to be a little less powerful (thing sucked)
-//
+//==============================================================================
 // Red:
 // [ ] Interior meshes
-// [ ] Destroyed mesh
-// [ ] Destroyed treads
-// 
+//==============================================================================
 // References:
 // - https://comandosupremo.com/fiat-l6-40/
 // - https://en.wikipedia.org/wiki/L6/40_tank
@@ -96,16 +93,19 @@ defaultproperties
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
     FireAttachBone="Player_Driver"
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
+    DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.Destroyed.fiatl640_destroyed'
     ShadowZOffset=20.0
 
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_R'
+
     // Exit
-    ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00) // Empty.001
-    ExitPositions(1)=(X=-85.00,Y=25.00,Z=150.00) // Empty.002
-    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00) // Empty.003
-    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00) // Empty.004
-    ExitPositions(4)=(X=-165.00,Y=-35.00,Z=55.00) // Empty.005
-    ExitPositions(5)=(X=-165.00,Y=35.00,Z=55.00) // Empty.006
+    ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00)
+    ExitPositions(1)=(X=-85.00,Y=25.00,Z=150.00)
+    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00)
+    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00)
+    ExitPositions(4)=(X=-165.00,Y=-35.00,Z=55.00)
+    ExitPositions(5)=(X=-165.00,Y=35.00,Z=55.00)
 
     // Sounds
     SoundPitch=48
@@ -114,7 +114,7 @@ defaultproperties
     ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSoundBone="placeholder_int"   // fix this
+    RumbleSoundBone="placeholder_int"   // TODO: replace this
     RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
 
     // Visual effects
