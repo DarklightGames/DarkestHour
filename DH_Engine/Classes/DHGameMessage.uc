@@ -11,6 +11,8 @@ var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
 var localized string VehicleTeamKilledMessage;
 var localized string RoleInvalidatedMessage;
+var localized string RoleLockedMessage;
+var localized string RoleUnlockedMessage;
 
 var localized string NeedMoreFriendliesToDeconstructHQMessage;
 
@@ -172,6 +174,20 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return S;
             }
             break;
+        case 25:
+            if (RI != none)
+            {
+                S = Repl(default.RoleLockedMessage, "{role}", RI.GetDisplayName());
+                return S;
+            }
+            break;
+        case 26:
+            if (RI != none)
+            {
+                S = Repl(default.RoleUnlockedMessage, "{role}", RI.GetDisplayName());
+                return S;
+            }
+            break;
         default:
             break;
     }
@@ -229,5 +245,7 @@ defaultproperties
     HasForgivenMessage="{victim} has forgiven {killer}."
     EnteredMessage="{name} has entered the battlefield."
     LeftMessage="{name} left the battlefield."
+    RoleLockedMessage="{role} has been locked."
+    RoleUnlockedMessage="{role} has been unlocked."
 }
 

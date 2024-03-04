@@ -25,6 +25,7 @@ enum ERoleEnabledResult
     RER_SquadOnly,
     RER_SquadLeaderOnly,
     RER_NonSquadLeaderOnly,
+    RER_Locked,
 };
 
 enum EAutomaticVehicleAlerts
@@ -7822,6 +7823,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (RI == none || PRI == none || GRI == none) { return RER_Fatal; }
+
+    if (RI.bIsLocked)
+    {
+        return RER_Locked;
+    }
 
     GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 

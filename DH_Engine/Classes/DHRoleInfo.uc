@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
+    showcategories(Events)
     placeable
     abstract;
 
@@ -29,6 +30,8 @@ var     bool                bCanBeSquadLeader;      // squad leaders can take th
 
 var     int                 AddedRoleRespawnTime;   // extra time in seconds before re-spawning
 
+var()   bool                bStartsLocked;          // Role is locked at the start of the game.
+var     bool                bIsLocked;              // If true, role is locked and cannot be selected. Can be unlocked via DH_ModifyRole events.
 
 enum EHandType
 {
@@ -52,6 +55,19 @@ struct SBackpack
 };
 
 var array<SBackpack> Backpack;
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsLocked;
+}
+
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    bIsLocked = bStartsLocked;
+}
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -295,6 +311,13 @@ simulated function Material GetHandTexture(DH_LevelInfo LI)
     }
 
     return HandTexture;
+}
+
+simulated function Reset()
+{
+    super.Reset();
+
+    bIsLocked = bStartsLocked;
 }
 
 // New function to check whether a CharacterName for a player record is valid for this role

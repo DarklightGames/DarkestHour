@@ -98,7 +98,8 @@ var localized   string                      NoneText,
                                             SquadLeadershipOnlyText,
                                             RecommendJoiningSquadText,
                                             UnassignedPlayersCaptionText,
-                                            NonSquadLeaderOnlyText
+                                            NonSquadLeaderOnlyText,
+                                            RoleLockedText
                                             ;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
@@ -661,8 +662,11 @@ function UpdateRoles()
             case RER_SquadLeaderOnly:
                 S @= "*" $ SquadLeadershipOnlyText $ "*";
                 break;
-            CASE RER_NonSquadLeaderOnly:
+            case RER_NonSquadLeaderOnly:
                 S @= "*" $ NonSquadLeaderOnlyText $ "*";
+                break;
+             case RER_Locked:
+                S @= "*" $ RoleLockedText $ "*";
                 break;
         }
         
@@ -1908,6 +1912,7 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     NonSquadLeaderOnlyText="NON-LEADERS ONLY"
+    RoleLockedText="LOCKED"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 
