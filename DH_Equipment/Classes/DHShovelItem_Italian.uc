@@ -9,7 +9,11 @@ defaultproperties
 {
     AttachmentClass=class'DHShovelAttachment_German'
     Mesh=SkeletalMesh'DH_Shovel_1st.shovel_italian_1st'
-    //Skins(2)=Texture'DH_Equipment_tex.Shovels.German_shovel'
-    NativeItemName="Feldspaten"
+    NativeItemName="Pala Vanga"
     DisplayFOV=90.0
+
+    // TODO: put these in the parent class when we convert all the old shovels to the new animations
+    SprintStartAnim="sprint_in"
+    SprintEndAnim="sprint_out"
+    SprintLoopAnim="sprint_middle"
 }

@@ -97,9 +97,6 @@ defaultproperties
     bCanSway=false
     bCanResupplyWhenEmpty=false
 
-    SprintStartAnim="sprint_in"
-    SprintEndAnim="sprint_out"
-    SprintLoopAnim="sprint_middle"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
 
