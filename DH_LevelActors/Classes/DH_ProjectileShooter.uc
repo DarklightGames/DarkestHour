@@ -187,8 +187,6 @@ state Firing
         {
             AmbientSound = none;
         }
-
-        Level.Game.Broadcast(self, "Firing ended");
     }
 }
 

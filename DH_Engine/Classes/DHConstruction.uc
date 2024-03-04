@@ -27,7 +27,7 @@ enum EConstructionErrorType
     ERROR_NoSupplies,               // Not within range of any supply caches
     ERROR_InsufficientSupply,       // Not enough supplies to build this construction
     ERROR_BadSurface,               // Cannot construct on this surface type
-    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
+    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!0
     ERROR_RestrictedType,           // Restricted construction type (can't build on this map!)
     ERROR_SquadTooSmall,            // Not enough players in the squad!
     ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
@@ -80,8 +80,8 @@ var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     bool    bSnapRotation;
 var     int     RotationSnapAngle;
-var     rotator StartRotationMin;
-var     rotator StartRotationMax;
+var     Rotator StartRotationMin;
+var     Rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
@@ -90,7 +90,6 @@ var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in m
 var     float   ObjectiveDistanceMinMeters;             // The minimum distance, in meters, that this construction must be placed away from all objectives.
 var     float   EnemyObjectiveDistanceMinMeters;        // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
 var     bool    bShouldSwitchToLastWeaponOnPlacement;
-var     bool    bCanBePlacedWithControlPoints;
 var     bool    bCanBePlacedInDangerZone;
 
 struct ProximityRequirement
@@ -100,11 +99,6 @@ struct ProximityRequirement
 };
 
 var     array<ProximityRequirement> ProximityRequirements;
-
-var struct SControlPointParameters
-{
-    var float SpacingDistanceMeters;
-} ControlPointParameters;
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
@@ -243,6 +237,18 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
+}
+
+// Modify this to have this construction be a proxy for another construction
+// based on the context (e.g., the player's faction)
+static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
+{
+    return default.Class;
+}
+
+static function bool IsProxyClass(DHActorProxy.Context Context)
+{
+    return GetConstructionClass(Context) != default.Class;
 }
 
 simulated function OnConstructed();
@@ -1248,11 +1254,6 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     local DHConstruction.ConstructionError E;
 
     return E;
-}
-
-static function float GetPlacementDiameter()
-{
-    return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
 }
 
 static function bool IsArtillery()

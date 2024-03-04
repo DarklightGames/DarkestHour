@@ -15,12 +15,7 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
-// Platoon HQ
-var StaticMesh                  PlatoonHQConstructedStaticMesh;
-var StaticMesh                  PlatoonHQBrokenStaticMesh;
-var StaticMesh                  PlatoonHQUnpackedStaticMesh;
-var StaticMesh                  PlatoonHQTatteredStaticMesh;
-var Texture                     PlatoonHQFlagTexture;
+var class<DHConstruction>       PlatoonHQClass;
 
 // Supply Cache
 var StaticMesh                  SupplyCacheStaticMesh;
@@ -48,5 +43,4 @@ var class<DHVehicle>            SupplyTruckClass;
 
 defaultproperties
 {
-    PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.flags_01_blank'
 }

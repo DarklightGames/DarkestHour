@@ -11,13 +11,9 @@ defaultproperties
     NativeNationName="Regno d'Italia"
     VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
     SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'   // TODO: replace
-    PlatoonHQFlagTexture=Texture'DH_Construction_tex.Base.GER_flag_01'   // TODO: replace
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'   // TODO: replace
-    PlatoonHQConstructedStaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent'
-    PlatoonHQBrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed'   // TODO: replace
-    PlatoonHQUnpackedStaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked'   // TODO: replace
-    PlatoonHQTatteredStaticMesh=StaticMesh'DH_Construction_stc.Bases.ITA_HQ_tent_light_destro'
-
+    
+    PlatoonHQClass=class'DHConstruction_PlatoonHQ_Italy'
     GrenadeCrateClass=class'DH_Weapons.DH_SRCMMod35GrenadeSpawner'
 
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'

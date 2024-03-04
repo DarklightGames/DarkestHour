@@ -50,7 +50,7 @@ simulated function DHActorProxy CreateProxyCursor()
     local DHConstructionProxy Cursor;
 
     Cursor = Spawn(class'DHConstructionProxy', Instigator);
-    Cursor.SetConstructionClass(default.ConstructionClass);
+    Cursor.SetConstructionClass(default.ConstructionClass.static.GetConstructionClass(Cursor.GetContext()));
 
     return Cursor;
 }

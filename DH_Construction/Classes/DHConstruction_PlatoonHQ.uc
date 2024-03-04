@@ -8,6 +8,7 @@ class DHConstruction_PlatoonHQ extends DHConstruction
 
 var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
+var Material                        FlagMaterial;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
 var localized string                CustomErrorString;
@@ -17,8 +18,13 @@ var float                           PermittedFriendlyControlledDistanceMeters;  
 // Radio attachment
 var DHRadioHQAttachment        Radio;
 var class<DHRadioHQAttachment> RadioClass;
-var vector                     RadioLocationOffset;
-var rotator                    RadioRotationOffset;
+var Vector                     RadioLocationOffset;
+var Rotator                    RadioRotationOffset;
+
+static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
+{
+    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.PlatoonHQClass;
+}
 
 simulated state Dummy
 {
@@ -57,9 +63,9 @@ simulated state Constructed
             return true;
         }
 
-        // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
+            // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
             P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
         }
 
@@ -69,7 +75,7 @@ simulated state Constructed
 
 simulated function OnConstructed()
 {
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     super.OnConstructed();
 
@@ -165,62 +171,14 @@ simulated state Broken
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = Context.LevelInfo.GetTeamNationClass(Context.TeamIndex);
-
-    return NationClass.default.PlatoonHQConstructedStaticMesh;
-}
-
-function StaticMesh GetBrokenStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQBrokenStaticMesh;
-}
-
-function StaticMesh GetStageStaticMesh(int StageIndex)
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQUnpackedStaticMesh;
-}
-
-function StaticMesh GetTatteredStaticMesh()
-{
-    local class<DHNation> NationClass;
-
-    NationClass = LevelInfo.GetTeamNationClass(GetTeamIndex());
-
-    return NationClass.default.PlatoonHQTatteredStaticMesh;
-}
-
 simulated function OnTeamIndexChanged()
 {
-    local Material FlagMaterial;
-
     super.OnTeamIndexChanged();
 
-    if (FlagSkinIndex != -1)
+    if (FlagSkinIndex != -1 && FlagMaterial != none)
     {
-        FlagMaterial = GetFlagMaterial();
-
-        if (FlagMaterial != none)
-        {
-            Skins[FlagSkinIndex] = FlagMaterial;
-        }
+        Skins[FlagSkinIndex] = FlagMaterial;
     }
-}
-
-simulated function Material GetFlagMaterial()
-{
-    return LevelInfo.GetTeamNationClass(GetTeamIndex()).default.PlatoonHQFlagTexture;
 }
 
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
@@ -318,16 +276,9 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
 // Modified to put the correct nation flag on the flag skin.
 function static UpdateProxy(DHActorProxy CP)
 {
-    local class<DHNation> NationClass;
-
     super.UpdateProxy(CP);
-
-    NationClass = CP.GetContext().LevelInfo.GetTeamNationClass(CP.GetContext().TeamIndex);
-
-    if (NationClass != none)
-    {
-        CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(NationClass.default.PlatoonHQFlagTexture);
-    }
+    
+    CP.Skins[default.FlagSkinIndex] = CP.CreateProxyMaterial(default.FlagMaterial);
 }
 
 defaultproperties
