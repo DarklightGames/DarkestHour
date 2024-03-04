@@ -2669,7 +2669,7 @@ function bool CanRestartPlayer()
 
     NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, DHRoleInfo(GetRoleInfo()), VehiclePoolIndex);
 
-    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
+    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTimes[GetTeamNum()])
     {
         return false;
     }
@@ -7681,7 +7681,8 @@ exec function DebugStartRound()
             return;
         }
 
-        GRI.SpawningEnableTime = 0;
+        GRI.SpawningEnableTimes[0] = 0;
+        GRI.SpawningEnableTimes[1] = 0;
 
         foreach AllActors(class'DHSetupPhaseManager', SPM)
         {

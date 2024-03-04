@@ -86,7 +86,7 @@ var int                 AxisVictoryMusicIndex;
 
 var int                 RoundEndTime;       // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
 var int                 RoundOverTime;      // The time stamp at which the round is over
-var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
+var int                 SpawningEnableTimes[2]; // When spawning for the round should be enabled (default: 0)
 
 var int                 DHRoundLimit;       // Added this so that a changing round limit can be replicated to clients.
 var int                 DHRoundDuration;    // Added this so that a more flexible changing round duration can be replicated to clients (e.g change to unlimited)
@@ -249,7 +249,7 @@ replication
         GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
-        SpawningEnableTime,
+        SpawningEnableTimes,
         bIsInSetupPhase,
         bRoundIsOver,
         bAreConstructionsEnabled,

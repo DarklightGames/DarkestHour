@@ -14,6 +14,7 @@ struct TeamReinf
 
 var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
+var() int               TeamAddSpawningEnabledTime[2];      // Additional time to add for spawning to enable for each team (can be negative)
 
 var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
@@ -28,13 +29,14 @@ var bool                bSkipPreStart;                      // If true will over
 var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
-var int                 SpawningEnabledTimeActual;
+var int                 SpawningEnabledTimeActual[2];
 
 function ModifySetupPhaseDuration(int Seconds, optional bool bSetToValue);
 
 event PreBeginPlay()
 {
     local DarkestHourGame G;
+    local int i;
 
     G = DarkestHourGame(Level.Game);
 
@@ -51,7 +53,11 @@ event PreBeginPlay()
 
     // Handle more detailed timer
     SetupPhaseDurationActual = SetupPhaseDuration + 5;
-    SpawningEnabledTimeActual = SpawningEnabledTime + 5;
+
+    for (i = 0; i < 2; ++i)
+    {
+        SpawningEnabledTimeActual[i] = SpawningEnabledTime + TeamAddSpawningEnabledTime[i] + 5;
+    }
 
     super.PreBeginPlay();
 }
@@ -84,7 +90,8 @@ auto state Timing
         Level.Game.bAllowWeaponThrowing = false;
 
         // Set the time at which spawning is allowed
-        GRI.SpawningEnableTime = SpawningEnabledTimeActual;
+        GRI.SpawningEnableTimes[0] = SpawningEnabledTimeActual[0];
+        GRI.SpawningEnableTimes[1] = SpawningEnabledTimeActual[1];
 
         // Tell GRI that we are in setup phase (to prevent player mantling)
         GRI.bIsInSetupPhase = true;

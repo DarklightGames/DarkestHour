@@ -4838,11 +4838,11 @@ function DrawSpectatingHud(Canvas C)
             switch (PC.ClientLevelInfo.SpawnMode)
             {
                 case ESM_DarkestHour:
-                    if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
+                    if (DHGRI.SpawningEnableTimes[PRI.Team.TeamIndex] - DHGRI.ElapsedTime > 0)
                     {
                         // Spawning not enabled yet
                         s = default.NotReadyToSpawnText;
-                        s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTime - DHGRI.ElapsedTime));
+                        s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTimes[PRI.Team.TeamIndex] - DHGRI.ElapsedTime));
                         bShouldFlashText = true;
                     }
                     else if (Time == 0)
