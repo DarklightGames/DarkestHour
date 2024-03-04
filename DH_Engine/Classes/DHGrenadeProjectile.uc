@@ -41,6 +41,16 @@ simulated function SpawnSpoonProjectile()
     SpoonProjectile.RandSpin(100000);
 }
 
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SpawnSpoonProjectile();
+    }
+}
+
 // TODO: put this in the parent class?
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
@@ -55,11 +65,6 @@ simulated function PostBeginPlay()
     case ST_Tumble:
         RotationRate.Pitch = -(90000 + Rand(30000)); 
         break;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SpawnSpoonProjectile();
     }
 }
 
