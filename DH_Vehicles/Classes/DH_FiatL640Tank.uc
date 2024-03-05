@@ -6,8 +6,9 @@
 // [ ] 8mm Breda coaxial MG stats/projectiles etc.
 // [ ] Exterior commander animations
 // [ ] Exterior driver animations
-// [ ] Fire/damaged effects
-// [ ] Adjust engine to be a little less powerful (thing sucked)
+// [ ] Fire/damaged effect locations
+// [ ] Adjust handling & engine
+// [ ] Rumble sound bone
 //==============================================================================
 // Red:
 // [ ] Interior meshes
