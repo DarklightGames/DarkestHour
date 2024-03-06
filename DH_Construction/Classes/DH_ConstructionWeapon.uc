@@ -14,24 +14,42 @@ replication
         ServerCreateConstruction;
 }
 
+simulated function SetConstructionClass(class<DHConstruction> NewConstructionClass)
+{
+    local DHConstructionProxy CP;
+
+    ConstructionClass = NewConstructionClass;
+    
+    // We already have the construction weapon in our inventory, so let's
+    // simply update the construction class of the existing proxy cursor.
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP != none)
+    {
+        CP.SetConstructionClass(ConstructionClass);
+    }
+}
+
 simulated function OnTick(float DeltaTime)
 {
     local Actor HitActor;
-    local vector HitLocation, HitNormal;
+    local Vector HitLocation, HitNormal;
     local PlayerController PC;
     local DHConstructionProxy CP;
+    local int bLimitLocalRotation;
+    local Range LocalRotationYawRange;
 
     if (ProxyCursor != none)
     {
         PC = PlayerController(Instigator.Controller);
 
-        TraceFromPlayer(HitActor, HitLocation, HitNormal);
+        TraceFromPlayer(HitActor, HitLocation, HitNormal, bLimitLocalRotation, LocalRotationYawRange);
 
         CP = DHConstructionProxy(ProxyCursor);
 
         if (CP != none)
         {
-            CP.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal);
+            CP.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal, bool(bLimitLocalRotation), LocalRotationYawRange);
 
             if (CP.ProxyError.Type != ERROR_None)
             {
@@ -96,11 +114,20 @@ simulated function float GetLocalRotationRate()
     return ConstructionClass.default.LocalRotationRate;
 }
 
-simulated function TraceFromPlayer(out Actor HitActor, out vector HitLocation, out vector HitNormal)  // TODO: this needs to output a location and groundactor?
+simulated function TraceFromPlayer(
+    out Actor HitActor,
+    out Vector HitLocation,
+    out Vector HitNormal,
+    optional out int bLimitLocalRotation,
+    optional out Range LocalRotationYawRange
+    )
 {
     local PlayerController PC;
     local Actor TempHitActor;
-    local vector TraceStart, TraceEnd;
+    local Vector TraceStart, TraceEnd, X, Y, Z;
+    local DHConstructionSocket Socket;
+
+    bLimitLocalRotation = 0;
 
     if (Instigator == none)
     {
@@ -111,8 +138,31 @@ simulated function TraceFromPlayer(out Actor HitActor, out vector HitLocation, o
 
     // Trace out into the world and try and hit something static.
     TraceStart = Instigator.Location + Instigator.EyePosition();
-    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
+    TraceEnd = TraceStart + (Vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
 
+    // Trace for location hints.
+    foreach TraceActors(class'DHConstructionSocket', Socket, HitLocation, HitNormal, TraceStart, TraceEnd)
+    {
+        if (Socket == none)
+        {
+            continue;
+        }
+
+        // This is assumed to be in ascending order of distance, so this should
+        // return the nearest traced location hint.
+        if (Socket.IsForConstructionClass(ConstructionClass))
+        {
+            HitActor = Socket;
+            HitLocation = HitActor.Location;
+            GetAxes(HitActor.Rotation, X, Y, Z);
+            HitNormal = Z;
+            bLimitLocalRotation = int(Socket.bLimitLocalRotation);
+            LocalRotationYawRange = Socket.LocalRotationYawRange;
+            return;
+        }
+    }
+
+    // Trace static actors and (world geometry etc.)
     foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
         if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
@@ -146,7 +196,7 @@ simulated function TraceFromPlayer(out Actor HitActor, out vector HitLocation, o
 }
 
 // TODO: This hardly seems like the right place to put the construction supply extraction logic!
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, vector Location, rotator Rotation)
+function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation)
 {
     local DHConstruction C;
     local DHPawn P;
@@ -154,6 +204,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     local DHConstructionProxy TestProxy;
     local DHConstruction.ConstructionError Error;
     local array<DHConstructionSupplyAttachment.Withdrawal> Withdrawals;
+    local DHConstructionSocket Socket;
 
     if (Instigator == none)
     {
@@ -177,6 +228,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         return;
     }
 
+    TestProxy.GroundActor = Owner;
     TestProxy.SetConstructionClass(ConstructionClass);
     TestProxy.SetLocation(Location);
     TestProxy.SetRotation(Rotation);
@@ -203,9 +255,19 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     C = Spawn(ConstructionClass, Owner,, Location, Rotation);
 
+    Socket = DHConstructionSocket(Owner);
+
     if (C != none)
     {
         C.InstigatorController = DHPlayer(Instigator.Controller);
+
+        // If we are being placed into a socket, set the socket as occupied by the new construction.
+        Socket = DHConstructionSocket(Owner);
+
+        if (Socket != none)
+        {
+            Socket.Occupant = C;
+        }
 
         if (!C.bIsNeutral)
         {

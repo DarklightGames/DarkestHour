@@ -36,6 +36,7 @@ enum EConstructionErrorType
     ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
     ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Exhausted,                // Your team cannot place any more of these this round.
+    ERROR_SocketOccupied,           // The construction socket is already occupied.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -110,8 +111,8 @@ var     float   TerrainScaleMax;                // The maximum terrain scale all
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
-var private vector      PlacementOffset;        // 3D offset in the proxy's local-space during placement
-var     sound           PlacementSound;         // Sound to play when construction is first placed down
+var private Vector      PlacementOffset;        // 3D offset in the proxy's local-space during placement
+var     Sound           PlacementSound;         // Sound to play when construction is first placed down
 var     float           PlacementSoundRadius;
 var     float           PlacementSoundVolume;
 var     class<Emitter>  PlacementEmitterClass;  // Emitter to spawn when the construction is first placed down
@@ -120,7 +121,7 @@ var     float   FloatToleranceInMeters;             // The distance the construc
 var     float   DuplicateFriendlyDistanceInMeters;  // The distance required between identical constructions of the same type for FRIENDLY constructions.
 var     float   DuplicateEnemyDistanceInMeters;     // The distance required between identical constructions of the same type for ENEMY constructions.
 
-var     vector  ExplosionDamageTraceOffset;         // Optimal location for tracing this actor when dealing explosive damage (relative to origin)
+var     Vector  ExplosionDamageTraceOffset;         // Optimal location for tracing this actor when dealing explosive damage (relative to origin)
 
 // Construction
 var private int SupplyCost;                     // The amount of supply points this construction costs
@@ -178,7 +179,7 @@ var StaticMesh                  TatteredStaticMesh;
 // Cut
 var float                       CutDuration;                // Cut duration
 var StaticMesh                  CutStaticMesh;              // Static mesh to display when cut
-var sound                       CutSound;
+var Sound                       CutSound;
 var float                       CutSoundVolume;
 var float                       CutSoundRadius;
 
@@ -199,7 +200,7 @@ struct Stage
 {
     var int Progress;           // The progress level at which this stage is used.
     var StaticMesh StaticMesh;  // This can be overridden in GetStaticMesh
-    var sound Sound;
+    var Sound Sound;
     var Emitter Emitter;
 };
 
@@ -232,6 +233,19 @@ var int CompletionPointValue;
 
 // Artillery
 var bool bIsArtillery;
+
+// Construction Sockets
+struct SConstructionSocket
+{
+    var Vector Location;
+    var Rotator Rotation;
+    var bool bLimitLocalRotation;
+    var Range LocalRotationYawRange;
+    var array<class<DHConstruction> > IncludeClasses;
+    var array<class<DHConstruction> > ExcludeClasses;
+    var DHConstructionSocket SocketActor;
+};
+var array<SConstructionSocket> ConstructionSockets;
 
 replication
 {
@@ -277,7 +291,7 @@ final function SetTeamIndex(int TeamIndex)
 
 // Return a reliable location for tracing this actor by explosives, as tracing
 // origin can fail unexpectedly (for example, if it's sunk under the terrain)
-simulated function vector GetExplosiveDamageTraceLocation()
+simulated function Vector GetExplosiveDamageTraceLocation()
 {
     return Location + (ExplosionDamageTraceOffset >> Rotation);
 }
@@ -313,6 +327,56 @@ simulated function PostBeginPlay()
     else
     {
         Warn("Unable to find construction manager!");
+    }
+}
+
+simulated function SpawnConstructionSockets()
+{
+    local int i;
+    local DHConstructionSocket Socket;
+
+    if (Role != ROLE_Authority)
+    {
+        return;
+    }
+
+    for (i = 0; i < ConstructionSockets.Length; ++i)
+    {
+        if (ConstructionSockets[i].SocketActor != none)
+        {
+            // Socket actor is already spawned.
+            continue;
+        }
+
+        Socket = Spawn(class'DHConstructionSocket', self);
+
+        if (Socket == none)
+        {
+            Warn("Failed to spawn construction socket" @ i @ "for" @ self);
+            continue;
+        }
+
+        Socket.bLimitLocalRotation = ConstructionSockets[i].bLimitLocalRotation;
+        Socket.LocalRotationYawRange = ConstructionSockets[i].LocalRotationYawRange;
+        Socket.IncludeClasses = ConstructionSockets[i].IncludeClasses;
+        Socket.ExcludeClasses = ConstructionSockets[i].ExcludeClasses;
+        Socket.SetBase(self);
+        Socket.SetRelativeLocation(ConstructionSockets[i].Location);
+        Socket.SetRelativeRotation(ConstructionSockets[i].Rotation);
+        ConstructionSockets[i].SocketActor = Socket;
+    }
+}
+
+simulated function DestroyConstructionSockets()
+{
+    local int i;
+
+    for (i = 0; i < ConstructionSockets.Length; ++i)
+    {
+        if (ConstructionSockets[i].SocketActor != none)
+        {
+            ConstructionSockets[i].SocketActor.Destroy();
+        }
     }
 }
 
@@ -359,7 +423,7 @@ function OnSpawnedByPlayer()
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart, MyPlacementOffset;
+    local Vector HitLocation, HitNormal, TraceEnd, TraceStart, MyPlacementOffset;
 
     MyPlacementOffset = GetPlacementOffset(GetContext());
 
@@ -393,8 +457,15 @@ simulated function PokeTerrain(float Radius, float Depth)
 // govern the lifetime of this actor, for example.
 simulated state Dummy
 {
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        DestroyConstructionSockets();
+    }
+
     // Take no damage.
-    function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
+    function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex);
 
 Begin:
     if (Role == ROLE_Authority)
@@ -423,6 +494,8 @@ simulated event Destroyed()
 
         PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
     }
+
+    DestroyConstructionSockets();
 
     super.Destroyed();
 }
@@ -660,6 +733,8 @@ simulated state Constructed
                     InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
                 }
 
+                SpawnConstructionSockets();
+
                 bHasBeenConstructed = true;
             }
 
@@ -692,7 +767,7 @@ simulated state Constructed
         OnConstructed();
     }
 
-    function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
+    function KImpact(Actor Other, Vector Pos, Vector ImpactVel, Vector ImpactNorm)
     {
         local float Momentum;
         local int Damage;
@@ -843,7 +918,7 @@ simulated state Broken
         OnBroken();
     }
 
-    event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    event TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         // Do nothing, since we're broken already!
     }
@@ -1089,7 +1164,7 @@ function static StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
     return static.GetConstructedStaticMesh(Context);
 }
 
-function static vector GetPlacementOffset(DHActorProxy.Context Context)
+function static Vector GetPlacementOffset(DHActorProxy.Context Context)
 {
     return default.PlacementOffset;
 }
@@ -1127,7 +1202,7 @@ function CutConstruction(Pawn InstigatedBy);
 
 function TakeTearDownDamage(Pawn InstigatedBy);
 
-function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<DamageType> TearDownDamageType;
 

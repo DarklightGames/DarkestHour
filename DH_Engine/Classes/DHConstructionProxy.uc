@@ -8,9 +8,9 @@ class DHConstructionProxy extends DHActorProxy
 
 var class<DHConstruction>   ConstructionClass;
 
-var rotator                 Direction;
+var Rotator                 Direction;
 var Actor                   GroundActor;
-var vector                  GroundNormal;
+var Vector                  GroundNormal;
 
 var DHConstruction.ConstructionError    ProxyError;
 
@@ -65,8 +65,7 @@ function UpdateCollisionSize()
     SetCollisionSize(NewRadius, NewHeight);
 }
 
-
-function color GetProxyColor()
+function Color GetProxyColor()
 {
     switch (ProxyError.Type)
     {
@@ -112,7 +111,7 @@ function UpdateError()
     local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
 
     // An error may be thrown when determining the location, so store it here.
-    ProvisionalPositionError = GetProvisionalPosition();
+    ProvisionalPositionError = SetProvisionalLocationAndRotation();
     NewProxyError = ConstructionClass.static.GetPlayerError(GetContext());
 
     if (NewProxyError.Type == ERROR_None)
@@ -138,13 +137,12 @@ function UpdateError()
     UpdateProjector();
 }
 
-// This function gets the provisional location and rotation of the construction.
-
-// TODO: this function could simply be the function that *alters* the original position, and there could be.
-function DHConstruction.ConstructionError GetProvisionalPosition()
+// This function sets the provisional location and rotation of the construction, as well as
+// returning the error type.
+function DHConstruction.ConstructionError SetProvisionalLocationAndRotation()
 {
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Forward, Left, X, Y, Z, HitNormalAverage, BaseLocation;
-    local rotator R;
+    local Vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Forward, Left, X, Y, Z, HitNormalAverage, BaseLocation;
+    local Rotator R;
     local float GroundSlopeDegrees, AngleRadians, CircumferenceInMeters;
     local DHConstruction.ConstructionError E;
     local int i, ArcLengthTraceCount;
@@ -153,6 +151,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
     local bool bIsTerrainSurfaceTypeAllowed;
     local DHGameReplicationInfo GRI;
     local Actor HitActor;
+    local DHConstructionSocket Socket;
 
     GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
 
@@ -170,10 +169,18 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
         R = Direction;
         R.Pitch = 0;
         R.Roll = 0;
-        Forward = vector(R);
+        Forward = Vector(R);
+    }
+    else if (GroundActor.IsA('DHConstructionSocket'))
+    {
+        // The ground actor is a location hint, so just use the hint location & rotation.
+        BaseLocation = GroundActor.Location;
+        Forward = Vector(GroundActor.Rotation);
+        Socket = DHConstructionSocket(GroundActor);
     }
     else
     {
+        // Ground is some sort of static geometry.
         BaseLocation = Location;
 
         if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !GroundActor.IsA('TerrainInfo'))
@@ -258,7 +265,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
             HitNormal = vect(0, 0, 1);
         }
 
-        Forward = Normal(vector(Direction));
+        Forward = Normal(Vector(Direction));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
 
@@ -273,7 +280,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
 
         if (E.Type == ERROR_None)
         {
-            GetAxes(rotator(Forward), X, Y, Z);
+            GetAxes(Rotator(Forward), X, Y, Z);
 
             CircumferenceInMeters = class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
             ArcLengthTraceCount = (CircumferenceInMeters / ConstructionClass.default.ArcLengthTraceIntervalInMeters) / 2;
@@ -293,8 +300,8 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
                 TraceStart.X = -TraceEnd.X;
                 TraceStart.Y = -TraceEnd.Y;
 
-                TraceStart = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceStart);
-                TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
+                TraceStart = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceStart);
+                TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(Rotator(X)), TraceEnd);
 
                 // Trace across the diameter of the collision cylinder
                 HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, true);
@@ -355,18 +362,18 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
             HitNormal = HitNormalAverage;
         }
 
-        Forward = Normal(vector(Direction));
+        Forward = Normal(Vector(Direction));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
     }
 
-    SetLocation(BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << rotator(Forward)));
-    SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward)))));
+    SetLocation(BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << Rotator(Forward)));
+    SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(Rotator(Forward)))));
 
     return E;
 }
 
-// We separate this function from GetProvisionalPosition because we need to have
+// We separate this function from SetProvisionalLocationAndRotation because we need to have
 // the server do it's own check before attempting to spawn the construction.
 function DHConstruction.ConstructionError GetPositionError()
 {
@@ -381,10 +388,11 @@ function DHConstruction.ConstructionError GetPositionError()
     local DHGameReplicationInfo GRI;
     local int i, ObjectiveIndex;
     local DHConstruction.ConstructionError E;
-    local vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
+    local Vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
     local Actor HitActor;
     local DHConstructionProxy CP;
     local bool bDidSatisfyProximityRequirement;
+    local DHConstructionSocket Socket;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -529,16 +537,43 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
-    // Don't allow the construction to touch blocking actors.
-    foreach TouchingActors(class'Actor', TouchingActor)
+    // Don't allow the construction to be placed on a socket if it's occupied.
+    Socket = DHConstructionSocket(GroundActor);
+
+    if (Socket != none && Socket.Occupant != none)
     {
-        if (TouchingActor != none && TouchingActor.bBlockActors)
-        {
-            E.Type = ERROR_NoRoom;
-            return E;
-        }
+        E.Type = ERROR_SocketOccupied;
+        return E;
     }
 
+    // Don't allow the construction to touch blocking actors if we aren't on a socket.
+    if (Socket == none)
+    {
+        foreach TouchingActors(class'Actor', TouchingActor)
+        {
+            if (TouchingActor != none && TouchingActor.bBlockActors)
+            {
+                E.Type = ERROR_NoRoom;
+                return E;
+            }
+        }
+
+        // Don't allow constructions to have overlapping collision radii.
+        // NOTE: We are using a 25 meter radius here just to include the largest
+        // likely combined radius. Using AllActors would be incredibly slow, and
+        // keeping a separate list of constructions via replication or some other
+        // mechanism would probably be a bad idea.
+        foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
+        {
+            C.GetCollisionSize(C.GetContext(), OtherRadius, OtherHeight);
+
+            if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
+            {
+                E.Type = ERROR_NoRoom;
+                return E;
+            }
+        }
+    }
 
     if (!ConstructionClass.default.bCanPlaceIndoors)
     {
@@ -601,22 +636,6 @@ function DHConstruction.ConstructionError GetPositionError()
     {
         E.Type = ERROR_NearSpawnPoint;
         return E;
-    }
-
-    // Don't allow constructions to have overlapping collision radii.
-    // NOTE: We are using a 25 meter radius here just to include the largest
-    // likely combined radius. Using AllActors would be incredibly slow, and
-    // keeping a separate list of constructions via replication or some other
-    // mechanism would probably be a bad idea.
-    foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
-    {
-        C.GetCollisionSize(C.GetContext(), OtherRadius, OtherHeight);
-
-        if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
-        {
-            E.Type = ERROR_NoRoom;
-            return E;
-        }
     }
 
     // If a duplicate distance is specified, don't allow the construction to be
@@ -696,13 +715,14 @@ function DHConstruction.ConstructionError GetPositionError()
     return E;
 }
 
-function UpdateParameters(vector Location, rotator Direction, Actor GroundActor, vector GroundNormal)
+function UpdateParameters(Vector Location, Rotator Direction, Actor GroundActor, Vector GroundNormal, bool bLimitLocalRotation, Range LocalRotationYawRange)
 {
     self.Direction = Direction;
+    self.GroundNormal = GroundNormal;
+    self.bLimitLocalRotation = bLimitLocalRotation;
+    self.LocalRotationYawRange = LocalRotationYawRange;
 
     SetLocation(Location);
-
-    self.GroundNormal = GroundNormal;
 
     if (self.GroundActor != GroundActor)
     {
