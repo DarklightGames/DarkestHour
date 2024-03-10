@@ -23,7 +23,7 @@ if not os.path.exists(content_path):
     print('unable to find content directory ({})'.format(content_path))
     sys.exit(1)
 
-# delete everything in the content path
+# Delete everything in the content path.
 for fname in os.listdir(content_path):
     fpath = os.path.join(content_path, fname)
     try:
@@ -31,16 +31,14 @@ for fname in os.listdir(content_path):
     except OSError:
         os.remove(fpath)
 
-# find the .steaminclude file
+# Find the .steaminclude file
 steaminclude_path = os.path.join(args.dir, args.mod, '.steaminclude')
-
-print(steaminclude_path)
 
 if not os.path.exists(steaminclude_path):
     print('unable to find .steaminclude file')
     sys.exit(1)
 
-# read include and ignore patterns
+# Read include and ignore patterns.
 with open(steaminclude_path, 'rb') as f:
     include_patterns = []
     ignore_patterns = []
@@ -51,7 +49,7 @@ with open(steaminclude_path, 'rb') as f:
         else:
             include_patterns.append(line)
 
-# walk directory and move files to the content directory
+# Walk directory and move files to the content directory.
 for root, dirs, filenames in os.walk(args.dir):
     for filename in filenames:
         is_included = False
@@ -67,13 +65,13 @@ for root, dirs, filenames in os.walk(args.dir):
                 is_included = False
         if not is_included:
             continue
-        # make sure subdirectories exist
+        # Make sure subdirectories exist.
         if not os.path.exists(os.path.join(content_path, os.path.dirname(relpath))):
             os.makedirs(os.path.join(content_path, os.path.dirname(relpath)))
-        # copy file to content path
+        # Copy file to content path.
         shutil.copy(os.path.join(args.dir, relpath), os.path.join(content_path, relpath))
 
-# rename DarkestHourDev to DarkestHour in relevant places
+# Rename DarkestHourDev to DarkestHour in relevant places.
 for root, dirs, filenames in os.walk(content_path):
     for dir in filter(lambda x: x == 'DarkestHourDev', dirs):
         os.rename(os.path.join(root, dir), os.path.join(root, 'DarkestHour'))
@@ -86,8 +84,41 @@ for root, dirs, filenames in os.walk(content_path):
             f.truncate()
             f.write(c)
 
-# actually do the thing!
-args = ['steamcmd.exe', '+login', args.username, args.password, '+run_app_build', '../scripts/app_build_1280.vdf', '+run_app_build', '../scripts/app_build_1290.vdf', '+quit']
+# Get the git tag, branch and commit hash.
+def get_git_info():
+    p = subprocess.Popen(['git', 'describe', '--tags'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    tag, err = p.communicate()
+    tag = tag.decode().strip()
+    if p.returncode != 0:
+        print('unable to get git tag')
+        sys.exit(1)
+
+    p = subprocess.Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    branch, err = p.communicate()
+    branch = branch.decode().strip()
+    if p.returncode != 0:
+        print('unable to get git branch')
+        sys.exit(1)
+
+    p = subprocess.Popen(['git', 'rev-parse', '--short', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    commit, err = p.communicate()
+    commit = commit.decode().strip()
+    if p.returncode != 0:
+        print('unable to get git commit')
+        sys.exit(1)
+
+    return tag, branch, commit
+
+tag, branch, commit = get_git_info()
+
+build_description = f'{tag}-{branch}@{commit}'
+
+# Actually do the thing!
+args = ['steamcmd.exe',
+        '+login', args.username, args.password,
+        '+run_app_build', '../scripts/app_build_1280.vdf',
+        '+run_app_build', '../scripts/app_build_1290.vdf',
+        '+quit']
 
 p = subprocess.Popen(args, executable=steamcmd_path)
 p.wait()
