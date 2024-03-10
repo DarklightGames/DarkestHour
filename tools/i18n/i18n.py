@@ -1,24 +1,24 @@
 import argparse
 from configparser import RawConfigParser, MissingSectionHeaderError
 from collections import OrderedDict
+import fnmatch
+import git
 import glob
-
-from pprint import pprint
-
-import polib
 from iso639 import LanguageNotFoundError, Language
 import os
 from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
+import polib
+from pprint import pprint
 import re
-from typing import List, Tuple, Optional
-
-import tempfile
 import shutil
-import git
-import fnmatch
+import tempfile
+from typing import List, Tuple, Optional
 import yaml
+
+# TODO: This file is too big! Split this into separate files, the command line functions should be in the main file,
+#  while the rest of the library should be in a separate file.
 
 
 # Unreal has different extensions for different languages, so map the ISO 639-1 code to the extension.
@@ -102,68 +102,161 @@ class ValueVisitor(NodeVisitor):
         return visited_children or node
 
 
-def parse_unt(contents: str) -> List[Tuple[str, str]]:
-    """
-    Parse an Unreal Tournament translation file.
-    :param contents: The contents of the file.
-    :return: A list of key-value pairs.
-    """
-    config = RawConfigParser(strict=False)
-    config.optionxform = str
+class LocalizationDataVisitor:
+    def visit(self, localization_data: 'LocalizationData'):
+        for section, items in localization_data.sections.items():
+            self.visit_section(section, items)
 
-    try:
-        config.read_string(contents)
-    except MissingSectionHeaderError as e:
-        raise RuntimeError(f'Failed to parse file: {e}')
+    def visit_section(self, section: str, items: OrderedDict[str, str|list|dict]):
+        for key, value in items.items():
+            self.visit_key_value(section, key, value)
 
-    key_value_pairs: List[Tuple[str, str]] = []
+    def visit_key_value(self, section: str, key: str, value: str|list|dict):
+        if isinstance(value, str):
+            self.visit_string(section, key, value)
+        elif isinstance(value, list):
+            self.visit_array(section, key, value)
+        elif isinstance(value, dict):
+            self.visit_dict(section, key, value)
+        else:
+            raise Exception(f'Unknown type: {type(value)}')
 
-    for section in config.sections():
-        for key in config[section]:
-            value = config[section][key]
-            visitor = ValueVisitor()
-            try:
-                value = visitor.visit(grammar.parse(value))
-            except IncompleteParseError:
-                # This will handle the case where the strings are simply unquoted. The entirety of the value will be
-                # considered a string.
-                pass
-            except ParseError:
-                pass
+    def visit_string(self, section: str, key: str, value: str):
+        pass
 
-            if type(value) == str:
-                # We need to fix string values that are not quoted.
-                if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1]
-                    # Escape quotes.
-                    value = value.replace('"', '\\"')
+    def visit_array(self, section: str, key: str, value: list):
+        for i, item in enumerate(value):
+            self.visit_key_value(section, f'{key}<{i}>', item)
 
-            id = f'{section}.{key}'
+    def visit_dict(self, section: str, key: str, value: dict):
+        for k, v in value.items():
+            self.visit_key_value(section, f'{key}.{k}', v)
 
-            def add_key_value_pairs_recursive(id: str, value):
+class LocalizationData:
+    def __init__(self):
+        self.sections: OrderedDict[str, OrderedDict[str, str|list|dict]] = OrderedDict()
+
+    def add(self, section: str, key: str, value: str|list|dict):
+        if section not in self.sections:
+            self.sections[section] = OrderedDict()
+        self.sections[section][key] = value
+
+    @classmethod
+    def new_from_unt_contents(cls, contents: str) -> 'LocalizationData':
+        """
+        Parse an Unreal Tournament translation file.
+        :param contents: The contents of a UNT file.
+        :return: A new localization data object.
+        """
+        config = RawConfigParser(strict=False)
+        config.optionxform = str
+
+        try:
+            config.read_string(contents)
+        except MissingSectionHeaderError as e:
+            raise RuntimeError(f'Failed to parse file: {e}')
+
+        localization_data = LocalizationData()
+
+        for section in config.sections():
+            for key in config[section]:
+                value = config[section][key]
+                visitor = ValueVisitor()
+                try:
+                    value = visitor.visit(grammar.parse(value))
+                except IncompleteParseError:
+                    # This will handle the case where the strings are simply unquoted. The entirety of the value will be
+                    # considered a string.
+                    pass
+                except ParseError:
+                    pass
+
+                if type(value) == str:
+                    # We need to fix string values that are not quoted.
+                    if value.startswith('"') and value.endswith('"'):
+                        value = value[1:-1]
+                        # Escape quotes.
+                        value = value.replace('"', '\\"')
+
+                localization_data.add(section, key, value)
+
+        return localization_data
+
+    @staticmethod
+    def new_from_unt_file(filename: str) -> 'LocalizationData':
+        return LocalizationData.new_from_unt_contents(read_unt_contents(filename))
+
+    def remove_empty_dynamic_arrays(self) -> int:
+        """
+        Find and remove keys whose values are empty dynamic arrays.
+        This is required because the game engine does not properly parse empty dynamic arrays, interpreting them as
+        having one less element than they actually do (e.g., "(,,)" is interpreted as having 2 elements instead of 3).
+        """
+        def should_remove_value(value):
+            if isinstance(value, list):
+                # Check if this is an empty dynamic array or if it's a list of empty values.
+                return len(value) == 0 or all(x is None for x in value)
+            return False
+
+        # Do a recursive walk, and delete any keys whose value is an empty dynamic array.
+        def remove_empty_dynamic_arrays_recursive(data: str | dict | list) -> int:
+            count = 0
+            if isinstance(data, dict):
+                for key, value in data.items():
+                    if should_remove_value(value):
+                        count += 1
+                        del data[key]
+                    else:
+                        count += remove_empty_dynamic_arrays_recursive(value)
+            elif isinstance(data, list):
+                # Iterate backwards over the list so that we can remove items without affecting the iteration.
+                for i in range(len(data) - 1, -1, -1):
+                    item = data[i]
+                    if should_remove_value(item):
+                        count += 1
+                        del data[i]
+                    else:
+                        count += remove_empty_dynamic_arrays_recursive(item)
+            return count
+
+        count = 0
+
+        for section, keys in self.sections.items():
+            count += remove_empty_dynamic_arrays_recursive(keys)
+
+        return count
+
+
+    def to_po_contents(self, language_code: str) -> str:
+        def _get_po_key_value_pairs() -> List[Tuple[str, str]]:
+            po_key_value_pairs: List[Tuple[str, str]] = []
+
+            def add_po_key_value_pairs_recursive(id: str, value):
                 if isinstance(value, str):
-                    key_value_pairs.append((id, str(value)))
+                    po_key_value_pairs.append((id, str(value)))
                 elif isinstance(value, list):
                     for i, item in enumerate(value):
-                        add_key_value_pairs_recursive(f'{id}<{i}>', item)
+                        add_po_key_value_pairs_recursive(f'{id}<{i}>', item)
                 elif isinstance(value, dict):
                     for k, v in value.items():
-                        add_key_value_pairs_recursive(f'{id}.{k}', v)
+                        add_po_key_value_pairs_recursive(f'{id}.{k}', v)
 
-            add_key_value_pairs_recursive(id, value)
+            for section, keys in self.sections.items():
+                for key, value in keys.items():
+                    id = f'{section}.{key}'
+                    add_po_key_value_pairs_recursive(id, value)
 
-    return key_value_pairs
+            return po_key_value_pairs
 
+        key_value_pairs = _get_po_key_value_pairs()
 
-def write_po(path: str, key_value_pairs: list, language_code: str):
-    with open(path, 'wb') as f:
         lines = [
             "msgid \"\"",
             "msgstr \"\"",
             f"\"Language: {language_code}\\n\"",
             "\"MIME-Version: 1.0\\n\"",
-            "\"Content-Type: text/plain\\n\"",
-            "\"Content-Transfer-Encoding: 8bit; charset=UTF-8\\n\"",
+            "\"Content-Type: text/plain; charset=UTF-8\\n\"",
+            "\"Content-Transfer-Encoding: 8bit\\n\"",
             ""
         ]
 
@@ -172,117 +265,155 @@ def write_po(path: str, key_value_pairs: list, language_code: str):
             lines.append(f'msgstr "{value}"')
             lines.append('')
 
-        contents = '\n'.join(lines)
+        return '\n'.join(lines)
 
-        f.write(contents.encode('utf-8'))
+    def write_po(self, path: str, language_code: str):
+        with open(path, 'wb') as f:
+            f.write(self.to_po_contents(language_code).encode('utf-8'))
 
-
-def add_entry(msgid: str, msgstr: str, sections):
-    parts = msgid.split('.')
-    section = parts.pop(0)
-
-    if section not in sections:
-        sections[section] = OrderedDict()
-
-    section = sections[section]
-    target = section
-    target_key = None
-
-    while len(parts) > 0:
-        key = parts.pop(0)
-
-        # Check if this is an array of the form Name<Index> with regex.
-        regex = r"^(?P<id>[A-Za-z0-9_]+)\<(?P<index>\d+)\>$"
-        match = re.match(regex, key)
-        has_more_parts = len(parts) > 0
-
-        is_dynamic_array = match is not None
-
-        if is_dynamic_array:
-            # Array
-            key = match['id']
-            if key in target:
-                if not isinstance(target[key], list):
-                    raise Exception(f'Expected {key} to be a list (found {type(target[key])})')
-            else:
-                target[match['id']] = []
-            target = target[match['id']]
-            index = int(match['index'])
-            # Ensure that the list is long enough.
-            while len(target) <= index:
-                target.append(None)
-            target_key = index
-        else:
-            if has_more_parts:
-                if isinstance(target, list):
-                    # Target is a list, so add a struct to it.
-                    target[target_key] = OrderedDict()
-                    target = target[target_key]
-                    target_key = key
+    def to_unt_contents(self) -> str:
+        def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
+            for key, value in key_value_pairs:
+                if isinstance(value, OrderedDict):
+                    write_key_value_pairs_recursive(value.items(), key)
                 else:
-                    # Struct
-                    if key not in target:
-                        # TODO: Doesn't work if the target is a list.
-                        target[key] = OrderedDict()
-                    target = target[key]
-                    # target_key = key
+                    written_key = key
+                    if parent_key is not None:
+                        written_key = f'{parent_key}.{key}'
+                    lines.append(f'{written_key}={write_value(value)}')
 
-        if not is_dynamic_array:
-            if isinstance(target, list):
-                # This is a list of structs, so add the struct if it doesn't exist.
-                # TODO: this is incorrect, this can just be a list of strings. How do we detect that?
-                target[target_key] = OrderedDict()
-                target = target[target_key]
-                target_key = key
+        def write_value(value):
+            if isinstance(value, str):
+                return f'"{value}"'
+            elif isinstance(value, list):
+                return '(' + ','.join(map(write_value, value)) + ')'
+            elif isinstance(value, dict) or isinstance(value, OrderedDict):
+                return '(' + ','.join(f'{k}={write_value(v)}' for k, v in value.items()) + ')'
+            elif value is None:
+                return ''
             else:
-                target_key = key
+                raise Exception(f'Unknown type: {type(value)}')
 
-    target[target_key] = msgstr
+        lines = []
 
+        for section_name, section in self.sections.items():
+            lines.append(f'[{section_name}]')
+            write_key_value_pairs_recursive(section.items())
+            lines.append('')
 
-def po_to_unt(contents: str) -> str:
-    import polib
-    po = polib.pofile(contents)
+        return '\n'.join(lines)
 
-    sections = OrderedDict()
+    @staticmethod
+    def new_from_po_contents(contents: str) -> 'LocalizationData':
+        localization_data = LocalizationData()
 
-    # Add each entry.
-    for entry in po:
-        try:
-            add_entry(entry.msgid, entry.msgstr, sections)
-        except Exception as e:
-            print(f'Failed to add entry {entry.msgid}: {e}')
+        # TODO: this doesn't use the normal add method for historical reasons. It should be refactored.
+        def _add_entry(msgid: str, msgstr: str):
+            parts = msgid.split('.')
+            section_key = parts.pop(0)
 
-    def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
-        for key, value in key_value_pairs:
-            if isinstance(value, OrderedDict):
-                write_key_value_pairs_recursive(value.items(), key)
-            else:
-                written_key = key
-                if parent_key is not None:
-                    written_key = f'{parent_key}.{key}'
-                lines.append(f'{written_key}={write_value(value)}')
+            if section_key not in localization_data.sections:
+                localization_data.sections[section_key] = OrderedDict()
 
-    def write_value(value):
-        if isinstance(value, str):
-            return f'"{value}"'
-        elif isinstance(value, list):
-            return '(' + ','.join(map(write_value, value)) + ')'
-        elif isinstance(value, dict) or isinstance(value, OrderedDict):
-            return '(' + ','.join(f'{k}={write_value(v)}' for k, v in value.items()) + ')'
-        elif value is None:
-            return ''
-        else:
-            raise Exception(f'Unknown type: {type(value)}')
+            section = localization_data.sections[section_key]
+            target = section
+            target_key = None
 
-    lines = []
+            while len(parts) > 0:
+                key = parts.pop(0)
 
-    for section_name, section in sections.items():
-        lines.append(f'[{section_name}]')
-        write_key_value_pairs_recursive(section.items())
-        lines.append('')
+                # Check if this is an array of the form Name<Index> with regex.
+                regex = r"^(?P<id>[A-Za-z0-9_]+)\<(?P<index>\d+)\>$"
+                match = re.match(regex, key)
+                has_more_parts = len(parts) > 0
 
-    return '\n'.join(lines)
+                is_dynamic_array = match is not None
+
+                if is_dynamic_array:
+                    # Array
+                    key = match['id']
+                    if key in target:
+                        if not isinstance(target[key], list):
+                            raise Exception(f'Expected {key} to be a list (found {type(target[key])})')
+                    else:
+                        target[match['id']] = []
+                    target = target[match['id']]
+                    index = int(match['index'])
+                    # Ensure that the list is long enough.
+                    while len(target) <= index:
+                        target.append(None)
+                    target_key = index
+                else:
+                    if has_more_parts:
+                        if isinstance(target, list):
+                            # Target is a list, so add a struct to it.
+                            target[target_key] = OrderedDict()
+                            target = target[target_key]
+                            target_key = key
+                        else:
+                            # Struct
+                            if key not in target:
+                                # TODO: Doesn't work if the target is a list.
+                                target[key] = OrderedDict()
+                            target = target[key]
+                            # target_key = key
+
+                if not is_dynamic_array:
+                    if isinstance(target, list):
+                        # This is a list of structs, so add the struct if it doesn't exist.
+                        # TODO: this is incorrect, this can just be a list of strings. How do we detect that?
+                        target[target_key] = OrderedDict()
+                        target = target[target_key]
+                        target_key = key
+                    else:
+                        target_key = key
+
+            target[target_key] = msgstr
+
+        # Add each entry.
+        for entry in polib.pofile(contents):
+            try:
+                _add_entry(entry.msgid, entry.msgstr)
+            except Exception as e:
+                print(f'Failed to add entry {entry.msgid}: {e}')
+
+        return localization_data
+
+    def write_unt(self, output_path):
+        unt_contents = self.to_unt_contents()
+
+        # Note: we use utf-8-sig to write the file because Unreal Tournament expects the file to be encoded with
+        # utf-8 with a BOM (byte order mark).
+        with open(output_path, 'wb') as output_file:
+            # Write the BOM.
+            output_file.write(b'\xff\xfe')
+            output_file.write(unt_contents.encode('utf-16-le'))
+
+    @classmethod
+    def new_from_po_file(cls, filename) -> 'LocalizationData':
+        with open(filename, 'r', encoding='utf-8') as file:
+            return cls.new_from_po_contents(file.read())
+
+    def get_unique_characters(self) -> set[int]:
+        # TODO: Use visitor pattern so we don't have to keep re-implementing the data traversal.
+        unique_characters = set()
+        # Recursively walk the data and return a set of all the unique characters.
+        def get_unique_characters_recursive(data: str | dict | list):
+            if isinstance(data, str):
+                for character in data:
+                    unique_characters.add(ord(character))
+            elif isinstance(data, list):
+                for item in data:
+                    get_unique_characters_recursive(item)
+            elif isinstance(data, dict):
+                for value in data.values():
+                    get_unique_characters_recursive(value)
+
+        for section, keys in self.sections.items():
+            for key, value in keys.items():
+                get_unique_characters_recursive(value)
+
+        return unique_characters
 
 
 def command_export(args):
@@ -308,14 +439,11 @@ def command_export(args):
         print(f'Unknown language code {language_code} for file {basename}')
         return
 
-    with open(input_path, 'r') as file:
-        unt_contents = file.read()
-        key_value_pairs = parse_unt(unt_contents)
+    # Write the file with the name {filename}.en.po
+    os.makedirs(basename, exist_ok=True)
 
-        # Write the file with the name {filename}.en.po
-        os.makedirs(basename, exist_ok=True)
-
-        write_po(args.output_path, key_value_pairs, language_code)
+    localization_data = LocalizationData.new_from_unt_file(input_path)
+    localization_data.write_po(args.output_path, language_code)
 
 
 def get_language_from_unt_extension(extension: str) -> Optional[Language]:
@@ -386,8 +514,7 @@ def command_import_directory(args):
 
         with open(input_filename, 'r', encoding='utf-8') as file:
             try:
-                # Parse the Unreal translation file to a list of key-value pairs.
-                unt_contents = po_to_unt(file.read())
+                localization_data = LocalizationData.new_from_po_contents(file.read())
             except RuntimeError as e:
                 print(f'Failed to parse file {filename}: {e}')
                 continue
@@ -402,12 +529,7 @@ def command_import_directory(args):
                 if args.verbose:
                     print(f'Writing to {output_path}')
 
-                # Note: we use utf-8-sig to write the file because Unreal Tournament expects the file to be encoded with
-                # utf-8 with a BOM (byte order mark).
-                with open(output_path, 'wb') as output_file:
-                    # Write the BOM.
-                    output_file.write(b'\xff\xfe')
-                    output_file.write(unt_contents.encode('utf-16-le'))
+                localization_data.write_unt(output_path)
 
                 count += 1
 
@@ -480,6 +602,41 @@ def update_keys(args, source_language_code: str = 'en'):
                     output_po.save(output_filename)
 
 
+def fix_unt(args):
+    # Walk the directory and fix issues in the Unreal translation files.
+    input_directory = args.input_directory
+    extension = args.extension
+
+    for filename in glob.glob(f'{input_directory}/**/*.{extension}', recursive=True):
+        localization_data = LocalizationData.new_from_unt_file(filename)
+
+        count = localization_data.remove_empty_dynamic_arrays()
+
+        # TODO: report what was removed!
+        if count == 0:
+            print(f'No empty dynamic arrays found in {filename}')
+        else:
+            print(f'Removed {count} empty dynamic arrays from {filename}')
+
+        if not args.dry:
+            localization_data.write_unt(filename)
+
+
+def read_unt_contents(filename: str) -> str:
+    with open(filename, 'rb') as file:
+        # Look for the BOM.
+        bom = file.read(2)
+
+        if bom == b'\xff\xfe':
+            # utf-16-le
+            file.seek(2)
+            return file.read().decode('utf-16-le')
+        else:
+            # windows-1252
+            file.seek(0)
+            return file.read().decode('windows-1252')
+
+
 def command_export_directory(args):
     input_path = args.input_path
 
@@ -516,42 +673,24 @@ def command_export_directory(args):
         input_filename = os.path.join(input_path, filename)
 
         # This is a bit of a hack, but our .int files are windows-1252, and all others are supposed to be utf-16-le.
-        with open(input_filename, 'rb') as file:
-            try:
-                # Look for the BOM.
-                bom = file.read(2)
+        localization_data = LocalizationData.new_from_unt_file(input_filename)
 
-                if bom == b'\xff\xfe':
-                    # utf-16-le
-                    file.seek(2)
-                    unt_contents = file.read().decode('utf-16-le')
-                else:
-                    # windows-1252
-                    file.seek(0)
-                    unt_contents = file.read().decode('windows-1252')
+        if args.verbose:
+            print(f'Found {len(localization_data._get_po_key_value_pairs())} key-value pairs')
 
-                # Parse the Unreal translation file to a list of key-value pairs.
-                key_value_pairs = parse_unt(unt_contents)
-            except RuntimeError as e:
-                print(f'Failed to parse file {filename}: {e}')
-                continue
+        output_path = args.output_path
+        output_path = output_path.replace('{l}', language.part1)
+        output_path = output_path.replace('{f}', basename)
+
+        if not args.dry:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
             if args.verbose:
-                print(f'Found {len(key_value_pairs)} key-value pairs')
+                print(f'Writing to {output_path}')
 
-            output_path = args.output_path
-            output_path = output_path.replace('{l}', language.part1)
-            output_path = output_path.replace('{f}', basename)
+            localization_data.write_po(output_path, language.part1)
 
-            if not args.dry:
-                os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-                if args.verbose:
-                    print(f'Writing to {output_path}')
-
-                write_po(output_path, key_value_pairs, language.part1)
-
-                count += 1
+            count += 1
 
     print(f'Exported {count} file(s)')
 
@@ -561,8 +700,6 @@ def generate_font_scripts(args):
     mod = args.mod
 
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-    print(f'root path: {root_path}')
 
     mod_path = os.path.join(root_path, mod)
     fonts_path = os.path.join(mod_path, 'Fonts')
@@ -601,23 +738,15 @@ def generate_font_scripts(args):
             ensure_all_characters = language.get('ensure_all_characters', False)
 
             if ensure_all_characters:
-                characters = set()
+                unique_characters = set()
                 for filename in glob.glob(pattern):
                     # Load the config file.
-                    print(filename)
-                    with open(filename, 'r', encoding='utf-16-le') as file:
-                        file.seek(2)  # Skip the BOM.
-                        contents = file.read()
-                        key_value_pairs = parse_unt(contents)
-
-                        for _, value in key_value_pairs:
-                            for character in value:
-                                characters.add(ord(character))
+                    unique_characters |= LocalizationData.new_from_unt_file(filename).get_unique_characters()
 
                 # For each of the characters, see if it's in the unicode ranges.
                 # If it's not, add it to the unicode ranges.
                 added_characters = set()
-                for character in characters:
+                for character in unique_characters:
                     found = False
                     for unicode_range in unicode_ranges:
                         if type(unicode_range) == int:
@@ -773,8 +902,7 @@ def sync(args):
         print(f'Processing {filename} - {language.name} ({language.part1})')
 
         # Convert the .po file to a .unt file.
-        with open(filename, 'r', encoding='utf-8') as file:
-            unt_contents = po_to_unt(file.read())
+        localization_data = LocalizationData.new_from_po_file(filename)
 
         if not args.dry:
             # Write the .unt file to the mod's System folder.
@@ -784,9 +912,7 @@ def sync(args):
             if args.verbose:
                 print(f'Writing to {output_path}')
 
-            with open(output_path, 'wb') as output_file:
-                output_file.write(b'\xff\xfe')  # Byte-order-mark.
-                output_file.write(unt_contents.encode('utf-16-le'))
+            localization_data.write_unt(output_path)
 
     # Delete the temporary directory.
     if not args.dry:
@@ -810,16 +936,17 @@ def debug_value(args):
             print('ParseError', line)
             continue
 
-def debug_keys(args):
-    sections = OrderedDict()
-    while True:
-        key = input('Key: ')
-        if key == 'quit':
-            break
-        elif key == 'dump':
-            pprint(sections)
-        add_entry(key, 'My Value', sections)
-    pprint(sections)
+# TODO: add_entry was moved, so this no longer works.
+# def debug_keys(args):
+#     sections = OrderedDict()
+#     while True:
+#         key = input('Key: ')
+#         if key == 'quit':
+#             break
+#         elif key == 'dump':
+#             pprint(sections)
+#         add_entry(key, 'My Value', sections)
+#     pprint(sections)
 
 
 # Create the top-level parser
@@ -871,6 +998,12 @@ update_keys_parser.add_argument('output_directory', help='The directory to write
 update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 update_keys_parser.set_defaults(func=update_keys)
 
+fix_unt_parser = subparsers.add_parser('fix_unt', help='Fix errors in Unreal translation files.')
+fix_unt_parser.add_argument('input_directory', help='The directory to read the .int files from.')
+fix_unt_parser.add_argument('-e', '--extension', help='The extension of the files to read.', default='int', required=False)
+fix_unt_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+fix_unt_parser.set_defaults(func=fix_unt)
+
 generate_font_scripts_parser = subparsers.add_parser('generate_font_scripts', help='Generate font scripts from a YAML file.')
 generate_font_scripts_parser.add_argument('-m', '--mod', help='The name of the mod to generate font scripts for.', required=True)
 generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
@@ -884,8 +1017,8 @@ sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False
 sync_parser.add_argument('-f', '--filter', help='Filter the files to sync by a glob pattern', required=False)
 sync_parser.set_defaults(func=sync)
 
-debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
-debug_key_parser.set_defaults(func=debug_keys)
+# debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
+# debug_key_parser.set_defaults(func=debug_keys)
 
 debug_key_parser = subparsers.add_parser('debug_value', help='Debug values')
 debug_key_parser.set_defaults(func=debug_value)
