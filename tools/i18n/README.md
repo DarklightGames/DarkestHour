@@ -27,3 +27,12 @@ repository:
   url: https://github.com/your-weblate-repository.git
   branch: branch-name
 ```
+
+## Font Generation
+
+The `i18n` tool also has a `generate_font_scripts` command to generate a script file that can be executed within the SDK to generate fonts.
+
+1. Run `generate_fonts.bat` to generate the font scripts file.
+2. In the SDK, run `exec C:\path\to\font\script.txt` from the console.
+
+See the `fonts.yaml` file for how to the font configuration is handled.

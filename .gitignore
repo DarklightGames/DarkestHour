@@ -118,3 +118,4 @@ umodel.cfg
 *.nam
 *.til
 *.i64
+__pycache__

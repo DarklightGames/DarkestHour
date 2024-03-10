@@ -1,6 +1,6 @@
 # This file is used to generate the fonts for the game.
 # All fonts must be installed before executing the script.
-package_name: DHFonts
+package_name: DHFonts   # The name of the texture package to be generated.
 default_unicode_ranges: # These unicode ranges are always included for each language.
   - [ 0x0000, 0x007F ] # Basic Latin
   - [ 0x0080, 0x00FF ] # Latin-1 Supplement
@@ -87,9 +87,9 @@ languages:
 #    name: Japanese
 #    font_substitutions:
 #      Sofia Sans Condensed: BIZ UDGothic
-#    ensure_all_characters: true
+#    ensure_all_characters: true  # If true, the script will ensure that all characters in this language's translation files are included in the font.
 #    unicode_ranges:
 #      - [0x3041, 0x309F]
 #      - [0x30A0, 0x30FF]
 #      - [0x31F0, 0x31FF]
-##      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
+#      - # TODO: kanji (there are tens of thousands of them, so it is probably better to include them as needed, or by how common they are)
