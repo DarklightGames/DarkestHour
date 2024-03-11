@@ -307,9 +307,12 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
-    Options(1)=(OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
-    Options(2)=(OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
+    // HACK: Because engine doesn't handle arrays of emptry structs properly, we have to force the array to have at least one element, otherwise
+    //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
+    //  pass on the translation files.
+    Options(0)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
+    Options(1)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportSmoke')
+    Options(2)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.Artillery.FireSupportHE')
 
     UnavailableText="Unavailable"
     InvalidTargetText="Invalid target"
