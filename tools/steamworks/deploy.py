@@ -144,8 +144,8 @@ if __name__ == '__main__':
             'desc': build_description,
             'buildoutput': '../output/',
             'contentroot': '../content/',
-            'setlive': '0',
-            'preview': '',
+            'setlive': '',
+            'preview': '0',
             'local': '',
             'depots': {
                 '1281': 'depot_build_1281.vdf',
@@ -159,8 +159,8 @@ if __name__ == '__main__':
             'desc': build_description,
             'buildoutput': '../output/',
             'contentroot': '../content/',
-            'setlive': '0',
-            'preview': '',
+            'setlive': '',
+            'preview': '0',
             'local': '',
             'depots': {
                 '1291': 'depot_build_1291.vdf',
