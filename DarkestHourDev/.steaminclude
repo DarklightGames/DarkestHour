@@ -11,7 +11,7 @@ System/dh_server_launcher.bat
 !*.make
 !*.steaminclude
 !*.i18n
-!DarkestHourDev/i18n.yaml
+!DarkestHourDev/i18n.yml
 !DarkestHourDev/System/DarkestHourDev.ini
 !DarkestHourDev/System/DarkestHourDevUser.ini
 !tools
@@ -20,4 +20,4 @@ System/dh_server_launcher.bat
 !DarkestHourDev/Maps/DH-INCOMPLETE_*
 !DarkestHourDev/Maps/Incomplete
 !DarkestHourDev/Maps/Deprecated
-!DarkestHourDev/Fonts
+!DarkestHourDev/Fonts/*
