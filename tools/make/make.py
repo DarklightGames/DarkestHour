@@ -292,6 +292,13 @@ def main():
 
     manifest = Manifest()
 
+    if not args.clean:
+        # Load the manifest file.
+        try:
+            manifest = Manifest.load(manifest_path)
+        except FileNotFoundError:
+            pass
+
     if default_ini_crc != manifest.default_ini_crc:
         # Default configuration file has changed. This could mean that the EditPackages or ServerPackage have changed.
         # To be safe, we force a clean build if this happens so that the user doesn't need to fiddle around with their
@@ -300,13 +307,6 @@ def main():
         print('Detected change in Default.ini, forcing a clean build and localization dump!')
         args.clean = True
         args.dumpint = True
-
-    if not args.clean:
-        # Load the manifest file.
-        try:
-            manifest = Manifest.load(manifest_path)
-        except FileNotFoundError:
-            pass
 
     if args.clean and os.path.isfile(config_path):
         # Clean build deletes the existing mod config.
