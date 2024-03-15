@@ -5,6 +5,7 @@
 // [ ] Add positional offset to turret angle calculations to fix hit detection issues
 // [ ] Shell attachments updating when rounds are fired/reloaded
 // [ ] UI textures for shells
+//==============================================================================
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
 
@@ -53,7 +54,6 @@ defaultproperties
     LeftArmor(1)=(Thickness=1.5,Slope=75.0,LocationName="left side upper")
     RearArmor(0)=(Thickness=2.5,Slope=-16.0,LocationName="rear")
 
-    // What a fucking terrible system.
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
     RearRightAngle=152.0
@@ -87,12 +87,12 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_Semovente9053_stc.semovente9053_destroyed'
 
     // Exit Positions
-    ExitPositions(0)=(X=51.73,Y=-29.58,Z=139.28) // EXIT_POSITION.001
-    ExitPositions(1)=(X=-186.73,Y=-31.24,Z=59.66) // EXIT_POSITION.005
-    ExitPositions(2)=(X=51.73,Y=-102.06,Z=59.66) // EXIT_POSITION.002
-    ExitPositions(3)=(X=51.73,Y=31.24,Z=139.28) // EXIT_POSITION.003
-    ExitPositions(4)=(X=51.73,Y=102.06,Z=59.66) // EXIT_POSITION.004
-    ExitPositions(5)=(X=-186.73,Y=31.24,Z=59.66) // EXIT_POSITION.006
+    ExitPositions(0)=(X=51.73,Y=-29.58,Z=139.28)
+    ExitPositions(1)=(X=-186.73,Y=-31.24,Z=59.66)
+    ExitPositions(2)=(X=51.73,Y=-102.06,Z=59.66)
+    ExitPositions(3)=(X=51.73,Y=31.24,Z=139.28)
+    ExitPositions(4)=(X=51.73,Y=102.06,Z=59.66)
+    ExitPositions(5)=(X=-186.73,Y=31.24,Z=59.66)
 
     // Sounds
     MaxPitchSpeed=450.0
@@ -113,8 +113,8 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-110.64,Y=-68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=-23232))
     ExhaustPipes(1)=(ExhaustPosition=(X=-110.64,Y=68.79,Z=58.76),ExhaustRotation=(Roll=0,Pitch=1011,Yaw=23596))
 
-    LeftLeverBoneName="lever_L"
-    RightLeverBoneName="lever_R"
+    LeftLeverBoneName="LEVER_L"
+    RightLeverBoneName="LEVER_R"
 
     // HUD
     VehicleHudImage=Texture'DH_Semovente9053_tex.Tank_Hud.semo9053_body'

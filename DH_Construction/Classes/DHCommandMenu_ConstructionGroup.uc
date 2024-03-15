@@ -60,7 +60,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
 {
     local DHPawn P;
     local DH_ConstructionWeapon CW;
@@ -92,14 +92,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 
         if (CW != none)
         {
-            // We already have the construction weapon in our inventory, so let's
-            // simply update the construction class of the existing proxy cursor.
-            CP = DHConstructionProxy(CW.ProxyCursor);
-
-            if (CP != none)
-            {
-                CP.SetConstructionClass(ConstructionClass);
-            }
+            CW.SetConstructionClass(ConstructionClass);
         }
         else
         {

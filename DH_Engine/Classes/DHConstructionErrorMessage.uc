@@ -85,8 +85,8 @@ defaultproperties
     ErrorMessages(21)="You cannot {verb} a {name} while you are busy."
     ErrorMessages(22)="Too close to an objective ({string}), it must be {integer}m further away."
     ErrorMessages(23)="Too close to an uncontrolled objective ({string}), it must be {integer}m further away."
-    ErrorMessages(24)="You must {verb} a {name} within {integer}m of a friendly {string}";
-    ErrorMessages(25)="You cannot {verb} a {name} in enemy territory";
-    ErrorMessages(26)="There are no more {name} available";
+    ErrorMessages(24)="You must {verb} a {name} within {integer}m of a friendly {string}"
+    ErrorMessages(25)="You cannot {verb} a {name} in enemy territory"
+    ErrorMessages(26)="There are no more {name} available"
+    ErrorMessages(27)="This socket is already occupied"
 }
-
