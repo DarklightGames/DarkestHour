@@ -7,7 +7,9 @@ class DHBinocularsItemItalian extends DHBinocularsItem;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Binoc_anm.Italian_Binoculars'
+    Skins(2)=Texture'DH_Equipment_tex.Binocs.Binoc_italy'
     ItemName="Fratelli Koristka 7x50"
     PickupClass=class'DH_Equipment.DHBinocularsPickupItalian'
-    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'   // TODO: give this a proper texture
+    ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_Italian'
 }
