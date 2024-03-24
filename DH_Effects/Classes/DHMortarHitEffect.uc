@@ -31,7 +31,7 @@ defaultproperties
     //DH Custom impacts
     HitEffects(21)=(HitDecal=class'ArtilleryMarkSnow',HitEffect=class'DHMortarExplosion60mmSand',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')   // Sand EST_Custom01
     HitEffects(22)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHMortarExplosion60mmSand',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')   // Sand Bags EST_Custom02
-    HitEffects(23)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHBulletHitBrickEffect',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')      // Brick EST_Custom03
+    HitEffects(23)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHMortarExplosion60mmBrick',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')      // Brick EST_Custom03
     HitEffects(24)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHMortarExplosion60mm',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')       // Hedgerow-Bush EST_Custom04
 
     MinSoundRadius=5300.0

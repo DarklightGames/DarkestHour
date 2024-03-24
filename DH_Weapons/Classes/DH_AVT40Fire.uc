@@ -22,6 +22,7 @@ defaultproperties
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stNagant'
     FireSounds(0)=Sound'DH_WeaponSounds.svt.svtfire1'
     FireSounds(1)=Sound'DH_WeaponSounds.svt.svtfire2'
     FireSounds(2)=Sound'DH_WeaponSounds.svt.svtfire3'

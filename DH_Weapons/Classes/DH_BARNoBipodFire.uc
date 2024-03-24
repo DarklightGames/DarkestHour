@@ -36,13 +36,14 @@ defaultproperties
     //BipodDeployFireEndAnim="SightUp_iron_shoot_end"
     FireAnim=fire
     FireIronAnim=Iron_fire
-    ShellEmitBone=ejector3
 
     ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
+    ShellEmitBone=NagantStock
+    ShellHipOffset=(X=-0.75,Y=-3.5,Z=0.0)
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
-    bReverseShellSpawnDirection=true
+    //bReverseShellSpawnDirection=true
 
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)

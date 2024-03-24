@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMuzzleSmoke extends Emitter;
+class DHMuzzleSmokePPSH extends Emitter;
 
-var float VarOpacity;
+//var float VarOpacity;
 
+/*
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
     VarOpacity=FMax(0.25, 0.45);
@@ -14,14 +15,17 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     if (FRand()< 0.75)
     {
         Emitters[0].SpawnParticle(1);
+        Emitters[1].SpawnParticle(1);
     }
     else
     {
         Emitters[0].SpawnParticle(2);
+        Emitters[1].SpawnParticle(1);
     } 
 
     Emitters[0].Opacity=VarOpacity;
 }
+*/
 
 defaultproperties
 {
@@ -60,6 +64,26 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
+    Begin Object Class=BeamEmitter Name=BeamEmitter1
+        UseColorScale=false   
+        BeamDistanceRange=(Min=80.000000,Max=100.000000)
+        DetermineEndPointBy=PTEP_Distance
+        RotatingSheets=2
+        RespawnDeadParticles=False
+        AutomaticInitialSpawning=False
+        ColorScale(0)=(Color=(G=128,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
+        StartLocationOffset=(X=-2.000000)
+        Opacity=0.25
+        UseRotationFrom=PTRS_Actor
+        StartSizeRange=(X=(Min=60.000000,Max=80.000000),Y=(Min=60.000000,Max=80.000000),Z=(Min=60.000000,Max=80.000000))
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'DH_FX_Tex.Effects.Impact01'
+        LifetimeRange=(Min=0.1150000,Max=0.1150000)
+        StartVelocityRange=(Y=(Min=100.000000,Max=250.000000))
+    End Object
+    Emitters(1)=BeamEmitter'BeamEmitter1'
 
     Style=STY_Particle
     bUnlit=true

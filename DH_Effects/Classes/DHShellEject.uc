@@ -24,9 +24,7 @@ simulated function Destroyed()
 simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
-
-    RotationRate.Pitch = -(70000 + Rand(30000)); // end over end tumbling flight
-
+    
     //RandSpin(100000);
     
     if (Level.NetMode != NM_DedicatedServer && bHasCasingTrail)
@@ -40,7 +38,6 @@ defaultproperties
 {       
     CasingTrailClass=class'DH_Effects.DHCasingTrail'	
     bHasCasingTrail=true
-    //RotationRate=(Pitch=150000)
     bFixedRotationDir=true
     bRotateToDesired=false
 }

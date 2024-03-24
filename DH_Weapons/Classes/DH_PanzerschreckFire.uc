@@ -15,8 +15,9 @@ defaultproperties
     Spread=300.0
 
     MuzzleBone="muzzle" //"warhead1"
+    MuzzleOffset=(X=4.0)
 
     //** Effects **//
     FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stPanzerschreck'
-    SmokeEmitterClass = class'ROEffects.ROMuzzleSmoke'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmoke'
 }

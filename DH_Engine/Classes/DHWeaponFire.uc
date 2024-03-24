@@ -19,6 +19,10 @@ struct ShellEjector
     var Rotator             RotOffsetIron;
     var Rotator             RotOffsetHip;
 };
+
+var int ShellRotPitchMod;
+var int ShellRotYawMod;
+
 var array<ShellEjector> ShellEjectors;
 
 var bool bIgnoresWeaponLock;
@@ -149,9 +153,14 @@ simulated function EjectShell()
 			EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
+        //controls ejection trajectory randomisation
         EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange);
-        EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange; // - Rand(Shell.RandomPitchRange * 2);
+        EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
         EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange; // - Rand(Shell.RandomRollRange * 2);
+
+        //controls shell spin rate randomisation
+        Shell.RotationRate.Pitch = -(ShellRotPitchMod + Rand(1000));
+        Shell.RotationRate.Yaw = -(ShellRotYawMod + Rand(30000));
 
         Shell.Velocity = Vector(EjectRot) * class'UInterp'.static.Linear(FRand(), Shell.MinStartSpeed, Shell.MaxStartSpeed);
     }
@@ -160,4 +169,6 @@ simulated function EjectShell()
 defaultproperties
 {
     SpreadStyle=SS_Random // this is actually assumed & hard-coded into spread functionality
+    ShellRotPitchMod=200
+    ShellRotYawMod=-180000
 }

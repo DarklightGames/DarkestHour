@@ -25,7 +25,8 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.ppsh41.ppsh41_fire_single2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.ppsh41.ppsh41_fire_single3'
 
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
+    FlashEmitterClass=class'DH_Effects.DHMuzzleFlash1stPPSH'
+    SmokeEmitterClass=class'DH_Effects.DHMuzzleSmokePPSH'
     ShellEjectClass=class'DH_Effects.DHShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=11000)
 

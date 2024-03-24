@@ -38,11 +38,12 @@ defaultproperties
     FireIronAnim=Iron_fire
 
     ShellEjectClass=class'DH_Effects.DHShellEject1st762x54mm'
-    ShellEmitBone=ejector3
-    ShellRotOffsetHip=(Pitch=-10240)
+    ShellEmitBone=NagantStock
+    ShellHipOffset=(X=-0.75,Y=-3.5,Z=0.0)
+    ShellRotOffsetHip=(Pitch=1500,Yaw=24000)
     ShellIronSightOffset=(X=20.0,Y=0.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)
-    bReverseShellSpawnDirection=true
+    //bReverseShellSpawnDirection=true
     
     ShakeOffsetMag=(X=2.0,Y=1.0,Z=2.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)

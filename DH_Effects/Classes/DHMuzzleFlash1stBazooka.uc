@@ -8,12 +8,36 @@ class DHMuzzleFlash1stBazooka extends ROMuzzleFlash1st;
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
     Emitters[0].SpawnParticle(2);
-    Emitters[1].SpawnParticle(25);
-    //Emitters[2].SpawnParticle(20);
+    Emitters[1].SpawnParticle(10);
+
+    if (!Level.bDropDetail)
+    {
+        bDynamicLight = true;
+        SetTimer(0.15, false);
+    }
+
+    LightBrightness = RandRange(96, 150);
+}
+
+simulated function Timer()
+{
+    bDynamicLight = false;
 }
 
 defaultproperties
 {
+    //bDynamicLight=true
+    bMovable=true
+
+    LightEffect=LE_NonIncidence
+    LightType=LT_Steady
+    //LightBrightness = 96.0
+    LightRadius = 6.0
+    LightHue = 20
+    LightSaturation = 28
+    AmbientGlow = 254
+    LightCone = 8
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=False
         RespawnDeadParticles=False
@@ -30,8 +54,8 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         StartSpinRange=(X=(Min=-1.000000,Max=1.000000),Y=(Min=-1.000000,Max=1.000000),Z=(Min=-1.000000,Max=1.000000))
         SizeScale(0)=(RelativeSize=1.5)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=3.00000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.50000)
+        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=5.0000)
+        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.50000)
         StartSizeRange=(X=(Min=10.000000,Max=11.000000))
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.explosions.impact_2frame'
@@ -41,36 +65,38 @@ defaultproperties
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        UseDirectionAs=PTDU_Up
-        //Acceleration=(X=50.000000,Y=-50.000000,Z=1.000000)
-        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        FadeOutStartTime=0.056000
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter24
+        UseDirectionAs=PTDU_UpAndNormal
+        ProjectionNormal=(X=1.000000,Y=0.500000)
+        UseCollision=True
+        UseColorScale=True
         FadeOut=True
         RespawnDeadParticles=False
-        AutoDestroy=false
-        StartLocationShape=PTLS_Sphere
-        SphereRadiusRange=(Max=2.000000) //2.0
-        UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=0.500000,Max=1.500000),Y=(Min=0.500000,Max=1.500000),Z=(Min=0.500000,Max=1.500000))
-        SizeScale(0)=(RelativeSize=1.5)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=3.00000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.50000)
-        //InitialParticlesPerSecond=100.000000
+        SpinParticles=True
+        UseRegularSizeScale=False
+        UniformSize=True
         AutomaticInitialSpawning=False
-        DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.effects.dhweaponspark'
-        MaxParticles=5.00
-        LifetimeRange=(Min=0.150000,Max=0.4000) //(Min=0.010000,Max=0.15000)
-        StartVelocityRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-100.000000,Max=250.000000))
-        //ResetOnTrigger=true
-        //TriggerDisabled=false
-        //MustTickOnce=true
-        CoordinateSystem=PTCS_Relative
+        UseRandomSubdivision=True
+        Acceleration=(Y=10.000000,Z=-100.000000)
+        DampingFactorRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
+        ColorScaleRepeats=4.000000
+        FadeOutStartTime=2.75000
+        Name="sparks"
+        StartLocationOffset=(Z=20.000000)
+        SphereRadiusRange=(Min=20.000000,Max=50.000000)
+        SpinsPerSecondRange=(X=(Min=0.500000,Max=4.000000))
+        StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
+        StartSizeRange=(X=(Min=1.2500000,Max=2.500000))
+        //InitialParticlesPerSecond=1000.000000
+        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=4.000000,Max=4.500000)
+        InitialDelayRange=(Min=0.300000,Max=0.450000)
+        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-75.000000,Max=65.000000),Z=(Min=-85.000000,Max=75.000000))
+        VelocityLossRange=(Z=(Min=1.000000,Max=3.000000))
     End Object
-    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter24'
 }

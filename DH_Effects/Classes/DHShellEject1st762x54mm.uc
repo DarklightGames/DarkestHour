@@ -14,7 +14,7 @@ defaultproperties
     MaxStartSpeed=250
     
     //trajectory
-    RandomYawRange=0//2000
+    RandomYawRange=1000//2000
     RandomPitchRange=0//2500
     RandomRollRange=0//500
 }

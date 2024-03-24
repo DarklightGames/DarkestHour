@@ -10,14 +10,13 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[0].SpawnParticle(1);
     Emitters[1].SpawnParticle(1);
     Emitters[2].SpawnParticle(8);
-    Emitters[2].InitialParticlesPerSecond=100;
     Emitters[3].SpawnParticle(6);
 }
 
 defaultproperties
 {  
     Begin Object Class=BeamEmitter Name=BeamEmitter6
-        BeamDistanceRange=(Min=30.000000,Max=50.000000)
+        BeamDistanceRange=(Min=10.000000,Max=20.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=2
         FadeOut=True
@@ -37,7 +36,7 @@ defaultproperties
         SizeScale(0)=(RelativeSize=0.100000)
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=2.000000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=0.500000)
-        StartSizeRange=(X=(Min=5.000000,Max=8.000000),Y=(Min=5.000000,Max=8.000000),Z=(Min=30.000000))
+        StartSizeRange=(X=(Min=1.000000,Max=3.000000),Y=(Min=1.000000,Max=3.000000),Z=(Min=10.000000))
         InitialParticlesPerSecond=100.000000
         Texture=Texture'DH_FX_Tex.Weapons.50calmuzzleflash'
         LifetimeRange=(Min=0.150000,Max=0.200000)
@@ -50,8 +49,8 @@ defaultproperties
         BeamDistanceRange=(Min=40.000000,Max=75.000000)
         DetermineEndPointBy=PTEP_Distance
         RotatingSheets=2
-        RespawnDeadParticles=False
         UseSizeScale=True
+        RespawnDeadParticles=False
         AutomaticInitialSpawning=False
         ColorScale(0)=(Color=(B=200,G=200,R=200,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=200,G=200,R=200,A=255))
@@ -74,11 +73,11 @@ defaultproperties
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=True
-        RespawnDeadParticles=False
         SpinParticles=True
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
+        RespawnDeadParticles=False
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
         UseVelocityScale=True
@@ -133,4 +132,6 @@ defaultproperties
         StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-10.000000,Max=15.000000),Z=(Min=-15.000000,Max=10.000000))
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter80'
+
+    bOwnerNoSee = false;
 }

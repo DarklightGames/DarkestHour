@@ -200,6 +200,7 @@ defaultproperties
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter101
         UseDirectionAs=PTDU_Normal
+        ProjectionNormal=(X=1.000000,Z=0.000000)
         FadeOut=True
         FadeIn=True
         RespawnDeadParticles=False
