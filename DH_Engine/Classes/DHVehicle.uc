@@ -201,6 +201,13 @@ var struct SSteeringAnimation
 // Debugging
 var     bool        bDebuggingText;
 
+// Periscope
+var     int         PeriscopePositionIndex;     // index of the periscope position in the DriverPositions array
+var     name        PeriscopeCameraBone;        // bone to attach the camera to when looking through the periscope
+var     Texture     PeriscopeOverlay;           // driver's periscope overlay texture
+var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
+var     Texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
+
 var Sound BuzzSound;
 
 replication
@@ -715,7 +722,7 @@ function Timer()
 // Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local Quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -734,7 +741,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 
     // Get camera location & adjust for any offset positioning
-    CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
+    if (DriverPositionIndex == PeriscopePositionIndex && !IsInState('ViewTransition'))
+    {
+        CameraLocation = GetBoneCoords(PeriscopeCameraBone).Origin;
+    }
+    else
+    {
+        CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
+    }
 
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
@@ -4405,4 +4419,6 @@ defaultproperties
     ResupplyInterval=2.5
 
     BuzzSound=Sound'DHMenuSounds.BuzzBuzz'
+
+    PeriscopePositionIndex=-1
 }

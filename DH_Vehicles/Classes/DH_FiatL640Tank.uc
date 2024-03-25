@@ -29,6 +29,10 @@ defaultproperties
     VehicleMass=6.8
     ReinforcementCost=2
 
+    // Periscope
+    PeriscopePositionIndex=0
+    PeriscopeCameraBone="CAMERA_PERISCOPE"
+
     Skins(0)=Texture'DH_FiatL640_tex.fiatl640_body_ext'
     Skins(1)=Texture'DH_FiatL640_tex.fiatl640_treads'
     Skins(2)=Texture'DH_FiatL640_tex.fiatl640_treads'
@@ -37,15 +41,15 @@ defaultproperties
     Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext'
 
     // Vehicle weapons & passengers
-    BeginningIdleAnim=""    // TODO: add this
+    BeginningIdleAnim="closed"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext',TransitionDownAnim="close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DrivePos=(X=0,Y=0,Z=0)
     DriveAnim="VPanzer3_driver_idle_open"
     UnbuttonedPositionIndex=3

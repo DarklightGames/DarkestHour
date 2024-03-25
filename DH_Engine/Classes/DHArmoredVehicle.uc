@@ -36,9 +36,6 @@ struct NewHitpoint
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
 var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
-var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
-var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
-var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
 var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
 
 // Vehicle locking
@@ -415,18 +412,6 @@ simulated function DrawHUD(Canvas C)
 // New function to draw any textured driver's periscope overlay - updated in 2019 to add PeriscopeSize so that we can adjust FOV's
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
-    /*local float ScreenRatio;
-
-    if (PeriscopeOverlay != none)
-    {
-        ScreenRatio = float(C.SizeY) / float(C.SizeX);
-        C.SetPos(0.0, 0.0);
-
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
-            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
-            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
-    }
-    */
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
     if (PeriscopeOverlay != none)
