@@ -41,13 +41,13 @@ defaultproperties
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVGEarlyCannonShellHEAT'
 
     ProjectileDescriptions(2)="HEAT"
 
     nProjectileDescriptions(0)="PzGr.39"
     nProjectileDescriptions(1)="Sprgr.Patr.34"
-    nProjectileDescriptions(2)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Gr.38 Hl/B"
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=16

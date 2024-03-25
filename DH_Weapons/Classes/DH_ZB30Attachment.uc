@@ -98,7 +98,7 @@ defaultproperties
     PA_ProneTurnLeftAnim="prone_turnL_zb30"
     PA_StandToProneAnim="StandtoProne_kar"
     PA_CrouchToProneAnim="CrouchtoProne_zb30"
-    PA_ProneToStandAnim="PronetoStand_kar98"
+    PA_ProneToStandAnim="PronetoStand_zb30"
     PA_ProneToCrouchAnim="PronetoCrouch_zb30"
     PA_CrouchTurnRightAnim="crouch_turnR_zb30"
     PA_CrouchTurnLeftAnim="crouch_turnL_zb30"

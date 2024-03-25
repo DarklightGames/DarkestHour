@@ -72,7 +72,7 @@ simulated function OnConfirmPlacement()
 
     if (CP != none)
     {
-        ServerCreateConstruction(ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
+        ServerCreateConstruction(CP.ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
     }
 }
 

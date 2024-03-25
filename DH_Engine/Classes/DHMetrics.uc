@@ -105,6 +105,23 @@ function OnRoundEnd(int Winner)
     // manually write session endings?
 }
 
+function OnPlayerClientGUIDReceived(PlayerController PC, GUID ClientGUID)
+{
+    local Object O;
+    local DHMetricsPlayer P;
+
+    Players.Get(PC.GetPlayerIDHash(), O);
+
+    if (O == none)
+    {
+        return;
+    }
+
+    P = DHMetricsPlayer(O);
+
+    class'UArray'.static.SAddUnique(P.ClientGUIDs, Caps(class'MD5Hash'.static.GetHashString(ClientGUID)));
+}
+
 function OnPlayerLogin(PlayerController PC)
 {
     local Object O;

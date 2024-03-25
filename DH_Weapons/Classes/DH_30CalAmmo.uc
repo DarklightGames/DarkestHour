@@ -7,7 +7,7 @@ class DH_30CalAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=151
-    InitialAmount=150
+    MaxAmmo=201
+    InitialAmount=200
     IconMaterial=Texture'InterfaceArt_tex.HUD.mg42_ammo'
 }

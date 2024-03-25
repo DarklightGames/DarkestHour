@@ -46,9 +46,6 @@ function PlayFiring()
 {
     // TODO: there is a HUGE amount of redundancy here, we should be able to roll all of this into DHProjectileFire at some point
     local name Anim;
-    local bool bIsLastShot;
-
-    bIsLastShot = Weapon.AmmoAmount(ThisModeNum) < 1;
 
     if (Weapon != none)
     {
@@ -61,7 +58,7 @@ function PlayFiring()
                 {
                     if (IsInstigatorBipodDeployed())
                     {
-                        if (bIsLastShot && Weapon.HasAnim(BipodDeployFireLastAnim))
+                        if (ShouldPlayFireLastAnim() && Weapon.HasAnim(BipodDeployFireLastAnim))
                         {
                             Anim = BipodDeployFireLastAnim;
                         }
@@ -70,7 +67,7 @@ function PlayFiring()
                             Anim = BipodDeployFireLoopAnim;
                         }
                     }
-                    else if (bIsLastShot && Weapon.HasAnim(FireIronLastAnim))
+                    else if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
                     {
                         Anim = FireIronLastAnim;
                     }
@@ -81,7 +78,7 @@ function PlayFiring()
                 }
                 else
                 {
-                    if (bIsLastShot && Weapon.HasAnim(FireLastAnim))
+                    if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
                     {
                         Anim = FireLastAnim;
                     }
@@ -107,7 +104,7 @@ function PlayFiring()
                     {
                         Anim = BipodDeployFireAnim;
                     }
-                    else if (bIsLastShot && Weapon.HasAnim(FireIronLastAnim))
+                    else if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
                     {
                         Anim = FireIronLastAnim;
                     }
@@ -118,7 +115,7 @@ function PlayFiring()
                 }
                 else
                 {
-                    if (bIsLastShot && Weapon.HasAnim(FireLastAnim))
+                    if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
                     {
                         Anim = FireLastAnim;
                     }
@@ -150,14 +147,11 @@ function PlayFiring()
 function PlayFireEnd()
 {
     local name Anim;
-    local bool bIsLastShot;
 
     if (Weapon == none || Weapon.Mesh == none)
     {
         return;
     }
-
-    bIsLastShot = Weapon.AmmoAmount(ThisModeNum) < 1;
 
     if (Weapon.GetFireMode(ThisModeNum).bWaitForRelease)
     {
@@ -169,7 +163,7 @@ function PlayFireEnd()
     {
         if (IsInstigatorBipodDeployed())
         {
-            if (bIsLastShot && Weapon.HasAnim(BipodDeployFireLastAnim))
+            if (ShouldPlayFireLastAnim() && Weapon.HasAnim(BipodDeployFireLastAnim))
             {
                 Anim = BipodDeployFireLastAnim;
             }
@@ -178,7 +172,7 @@ function PlayFireEnd()
                 Anim = BipodDeployFireEndAnim;
             }
         }
-        else if (bIsLastShot && Weapon.HasAnim(FireIronLastAnim))
+        else if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
         {
             Anim = FireIronLastAnim;
         }
@@ -189,7 +183,7 @@ function PlayFireEnd()
     }
     else
     {
-        if (bIsLastShot && Weapon.HasAnim(FireLastAnim))
+        if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
         {
             Anim = FireLastAnim;
         }
@@ -197,7 +191,7 @@ function PlayFireEnd()
 
     if (Anim == '')
     {
-        if (bIsLastShot && Weapon.HasAnim(FireLastAnim))
+        if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
         {
             Anim = FireLastAnim;
         }

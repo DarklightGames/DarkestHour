@@ -2,13 +2,15 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [1] https://www.russianammo.org/Russian_Ammunition_Page_57mm.html
+//==============================================================================
 
 class DH_BT7CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=20218.0 // 335 m/s
-    MaxSpeed=20218.0
+    Speed=20700.0 // 343 m/s [1]
+    MaxSpeed=20700.0
     ShellDiameter=4.5
     BallisticCoefficient=0.6 // TODO: try to find an accurate BC (this is from AHZ)
 

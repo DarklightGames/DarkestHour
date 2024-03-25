@@ -559,7 +559,7 @@ function PlayFiring()
             }
             else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
+                if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireIronLastAnim))
                 {
                     Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
                 }
@@ -570,7 +570,7 @@ function PlayFiring()
             }
             else if (Weapon.HasAnim(FireAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
+                if (ShouldPlayFireLastAnim() && Weapon.HasAnim(FireLastAnim))
                 {
                     Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
                 }
@@ -604,6 +604,27 @@ function PlayFireEnd()
         {
             Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
         }
+    }
+}
+
+simulated function bool ShouldPlayFireLastAnim()
+{
+    local DHProjectileWeapon PW;
+
+    PW = DHProjectileWeapon(Weapon);
+
+    if (PW == none)
+    {
+        return false;
+    }
+
+    if (PW.bAmmoAmountNotReplicated)
+    {
+        return Weapon.AmmoAmount(ThisModeNum) == AmmoPerFire;
+    }
+    else
+    {
+        return Weapon.AmmoAmount(ThisModeNum) < AmmoPerFire;
     }
 }
 

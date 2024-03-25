@@ -13,11 +13,10 @@ defaultproperties
     BallisticCoefficient=0.675 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
 
     //Damage
-    ImpactDamage=120
     Damage=1000.0  //should leave no one alive, as even if it hits a limb, it should be ripped apart making victim uncapable of continuing fighting
     MyDamageType=class'DH_Weapons.DH_PTRDDamType'
-    HullFireChance=0.12  //although its just a bullet, it has a bit of incendiary part in it which should make it more likely to ignite or detonate something
-    EngineFireChance=0.2
+    HullFireChance=0.15  //although its just a bullet, it has a bit of incendiary part in it which should make it more likely to ignite or detonate something
+    EngineFireChance=0.23
 
     //adjusted penetration, my main source is this https://media.discordapp.net/attachments/339838693617565697/661960666399244320/5450cb284c38.png?width=883&height=621
     //Penetration

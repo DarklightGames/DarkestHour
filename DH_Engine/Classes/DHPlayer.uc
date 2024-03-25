@@ -57,6 +57,7 @@ var     globalconfig string     ROIDHash;            // client ROID hash (this g
 var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
 var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
 var 	config    	bool  		bUseNativeItemNames; // client option to display native item names instead of translated ones
+var     globalconfig bool       bIsIncognito;        // when true, patron & developer tags are not displayed on the scoreboard
 
 var     byte                    ArtillerySupportSquadIndex;
 
@@ -73,6 +74,7 @@ var     float                   DHSwayDampingFactor;
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
+var     globalconfig float      DHBipodTurnSpeedFactor;     // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 // Player flinch
@@ -225,7 +227,7 @@ replication
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSendSquadPromotionRequest, ServerAcceptSquadPromotionRequest, ServerDenySquadPromotionRequest,
-        ServerSquadVolunteerToAssist,
+        ServerSquadVolunteerToAssist, ServerSetIncognitoMode,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
@@ -309,8 +311,6 @@ simulated event PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        ScoreManager = new class'DHScoreManager';
-
         if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bBigBalloony)
         {
             IQManager = Spawn(class'DHIQManager', self);
@@ -351,6 +351,16 @@ simulated event PostNetBeginPlay()
     }
 }
 
+// Called by PostLogin event
+function OnPlayerLogin()
+{
+    // Create score manager if it wasn't recovered from a previous session
+    if (ScoreManager == none)
+    {
+        ScoreManager = new class'DHScoreManager';
+    }
+}
+
 simulated function bool HasClientGUID()
 {
     return ClientGUID.A != 0 || ClientGUID.B != 0 || ClientGUID.C != 0 || ClientGUID.D != 0;
@@ -369,8 +379,18 @@ simulated function GenerateClientGUID()
 
 function ServerSetClientGUID(GUID ClientGUID)
 {
+    local DarkestHourGame G;
+
     // Send the client tag to the server.
     self.ClientGUID = ClientGUID;
+
+    // Send a metrics event.
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        G.Metrics.OnPlayerClientGUIDReceived(self, ClientGUID);
+    }
 }
 
 // Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
@@ -1045,9 +1065,13 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         }
         else if (DHPwn != none)
         {
-            if (DHPwn.bIronSights || DHPwn.bBipodDeployed)
+            if (DHPwn.bBipodDeployed)
             {
-                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
+                TurnSpeedFactor *= DHBipodTurnSpeedFactor; // reduce if player is bipod deployed
+            }
+            else if (DHPwn.bIronSights)
+            {
+                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights
             }
         }
         else if (ROVeh != none && ROVeh.DriverPositions[ROVeh.DriverPositionIndex].bDrawOverlays && ROVeh.HUDOverlay == none
@@ -2742,7 +2766,7 @@ function ServerCutConstruction(DHConstruction C)
 // Keep this function as it's used as a control to show communication page allowing fast muting of players
 exec function CommunicationMenu()
 {
-    ClientReplaceMenu("ROInterface.ROCommunicationPage");
+    ClientReplaceMenu("DH_Interface.DHCommunicationPage");
 }
 
 // This function returns the time the player will be able to spawn next
@@ -3219,20 +3243,35 @@ function OnTeamChanged()
         }
     }
 
-    // Update the player's linked score manager to their new team's score manager.
-    if (ScoreManager != none)
-    {
-        TeamIndex = GetTeamNum();
+    LinkTeamScoreManager();
 
-        if (TeamIndex >= 0 && TeamIndex < arraycount(G.TeamScoreManagers))
-        {
-            ScoreManager.NextScoreManager = G.TeamScoreManagers[TeamIndex];
-        }
-        else
-        {
-            // Player joined spectators, clear the next score manager.
-            ScoreManager.NextScoreManager = none;
-        }
+    G.NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo);
+}
+
+// Update the player's linked score manager to their new team's score manager
+function LinkTeamScoreManager()
+{
+    local DarkestHourGame G;
+    local int TeamIndex;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || ScoreManager == none)
+    {
+        Log("Failed to link team score manager");
+        return;
+    }
+
+    TeamIndex = GetTeamNum();
+
+    if (TeamIndex >= 0 && TeamIndex < arraycount(G.TeamScoreManagers))
+    {
+        ScoreManager.NextScoreManager = G.TeamScoreManagers[TeamIndex];
+    }
+    else
+    {
+        // Player joined spectators, clear the next score manager
+        ScoreManager.NextScoreManager = none;
     }
 }
 
@@ -3610,8 +3649,7 @@ function ClientSaveROIDHash(string ROID)
     ROIDHash = ROID;
 
     SaveConfig();
-
-    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    
     PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
 
     // If we have script patron status, then set patron status on server
@@ -3628,6 +3666,8 @@ function ClientSaveROIDHash(string ROID)
         PatronRequest.OnResponse = PatronRequestOnResponse;
         PatronRequest.Send();
     }
+
+    ServerSetIncognitoMode(bIsIncognito);
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -6809,6 +6849,19 @@ function ServerSetPatronTier(string PatronTier)
     }
 }
 
+// Client-to-server function that reports the player's incognito mode to the server.
+function ServerSetIncognitoMode(bool bIsIncognito)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.bIsIncognito = bIsIncognito;
+    }
+}
+
 function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string Tier)
 {
     switch (Tier)
@@ -7302,6 +7355,12 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
 
         if (ROP != none)
         {
+            // Sender is banned by recipient
+            if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
+            {
+                continue;
+            }
+
             if (Pawn != none)
             {
                 // do we want people who are dead to hear voice commands? - Antarian
@@ -7374,6 +7433,36 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
         if (Pawn != none)
         {
             AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 3, Pawn.location);
+        }
+    }
+}
+
+function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
+                                 PlayerReplicationInfo Recipient,
+                                 name MessageType,
+                                 byte MessageID,
+                                 name BroadcastType)
+{
+    local ROPlayer ROP,P;
+    local int i;
+    local array<PlayerController> VehicleOccupants;
+
+    P = ROPlayer(Sender.Owner);
+    VehicleOccupants = GetVehicleOccupants(P);
+
+    for (i = 0; i < VehicleOccupants.Length; ++i)
+    {
+        ROP =  ROPlayer(VehicleOccupants[i]);
+
+        // Sender is banned by recipient
+        if (ROP.ChatManager != none && !ROP.ChatManager.AcceptSpeech(Sender))
+        {
+            continue;
+        }
+
+        if (ROP != None)
+        {
+            ROP.ClientLocationalVoiceMessage(Sender, Recipient, Messagetype, MessageID, Pawn);
         }
     }
 }
@@ -7802,6 +7891,7 @@ defaultproperties
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
     DHScopeTurnSpeedFactor=0.2
+    DHBipodTurnSpeedFactor=0.5
 
     // Max flinch offset for close snaps
     FlinchMaxOffset=450.0
