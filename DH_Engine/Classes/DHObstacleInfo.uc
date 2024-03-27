@@ -32,6 +32,11 @@ var     array<DHObstacleInstance>   Obstacles;
 
 simulated function StaticMesh GetIntactStaticMesh(int Index, bool bIsDefault)
 {
+    if (Index < 0 || Index >= Types.Length)
+    {
+        return none;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].IntactStaticMesh;
