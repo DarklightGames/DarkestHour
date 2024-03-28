@@ -156,11 +156,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         CameraLocation = VehWep.GetBoneCoords(CameraBone).Origin;
     }
-    // Otherwise use PlayerCameraBone for camera location
-    else if (DriverPositionIndex == PeriscopePositionIndex && PeriscopeCameraBone != '')
+    // Use periscope camera bone if player is on periscope and we're not in a view transition.
+    else if (DriverPositionIndex == PeriscopePositionIndex && PeriscopeCameraBone != '' && !IsInState('ViewTransition'))
     {
         CameraLocation = VehWep.GetBoneCoords(PeriscopeCameraBone).Origin;
     }
+    // Otherwise use PlayerCameraBone for camera location
     else
     {
         CameraLocation = VehWep.GetBoneCoords(PlayerCameraBone).Origin;
