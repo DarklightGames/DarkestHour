@@ -14,6 +14,10 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_hatch_collision',AttachBone="hatch")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
 
+    BeginningIdleAnim="closed"
+
+    GunnerAttachmentBone="gun_yaw"
+
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Turret armor

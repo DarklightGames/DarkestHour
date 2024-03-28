@@ -9,13 +9,14 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Autoblinda41Cannon'
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',ViewFOV=34.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',ViewFOV=40.0,TransitionUpAnim="com_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65536,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',ViewFOV=40.0,TransitionUpAnim="open",DriverTransitionAnim="fiatl640_gunner_close",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',TransitionDownAnim="close",DriverTransitionAnim="fiatl640_gunner_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext',ViewFOV=12.0,DriverTransitionAnim="fiatl640_gunner_binocs",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     
     bManualTraverseOnly=true
-    DrivePos=(X=0.0,Y=2.0,Z=-30.0)
-    DriveAnim="stand_idlehip_binoc"
+    DrivePos=(X=0.0,Y=0.0,Z=58.0)
+    DriveRot=(Yaw=16384)
+    DriveAnim="fiatl640_gunner_closed"
     bLockCameraDuringTransition=true
     CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification (TZF4b sight)
@@ -32,5 +33,4 @@ defaultproperties
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
     PeriscopeSize=0.65
     PeriscopePositionIndex=1
-
 }
