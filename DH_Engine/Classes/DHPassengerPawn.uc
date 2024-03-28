@@ -35,6 +35,8 @@ var     array<class<DHPassengerPawn> >  PassengerClasses;
 
 var     bool    bUseDriverHeadBoneCam; // use the driver's head bone for the camera location
 
+var     Rotator InitialViewRotationOffset;
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS  ***********  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -141,14 +143,15 @@ simulated function vector GetCameraLocationStart()
 simulated function SetInitialViewRotation()
 {
     local name    AttachBone;
-    local vector  FacingDirection;
-    local rotator NewRotation;
+    local Vector  FacingDirection;
+    local Rotator NewRotation;
 
     if (VehicleBase != none)
     {
         AttachBone = VehicleBase.PassengerWeapons[PositionInArray].WeaponBone;
-        FacingDirection = vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
-        NewRotation = rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
+        FacingDirection = Vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
+        FacingDirection = FacingDirection >> InitialViewRotationOffset;
+        NewRotation = Rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
         NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
         SetRotation(NewRotation);
     }
@@ -239,6 +242,7 @@ simulated function InitializeVehicleBase()
             DriveRot = V.PassengerPawns[Index].DriveRot;
             DriveAnim = V.PassengerPawns[Index].DriveAnim;
             FPCamPos = V.PassengerPawns[Index].FPCamPos;
+            InitialViewRotationOffset = V.PassengerPawns[Index].InitialViewRotationOffset;
         }
     }
 
