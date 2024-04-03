@@ -12,10 +12,11 @@ class DHVehicle extends ROWheeledVehicle
 struct PassengerPawn
 {
     var name    AttachBone;
-    var vector  DrivePos;
-    var rotator DriveRot;
+    var Vector  DrivePos;
+    var Rotator DriveRot;
     var name    DriveAnim;
-    var vector  FPCamPos;
+    var Vector  FPCamPos;
+    var Rotator InitialViewRotationOffset;
 };
 
 struct VehicleAttachment
