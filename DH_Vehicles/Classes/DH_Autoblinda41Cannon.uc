@@ -111,4 +111,7 @@ defaultproperties
 
     YawBone="gun_yaw"
     PitchBone="gun_pitch"
+    
+    ShootAnim="shoot"
+    ShootAnimBoneName="barrel"
 }

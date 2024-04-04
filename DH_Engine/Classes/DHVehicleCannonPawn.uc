@@ -522,12 +522,59 @@ exec function DecreaseSmokeLauncherSetting()
     }
 }
 
+simulated function bool HasPeriscopeCameraBone()
+{
+    return PeriscopeCameraBone != '';
+}
+
+simulated function bool CanFireFromPeriscope()
+{
+    local DHVehicleCannon Cannon;
+
+    Cannon = DHVehicleCannon(VehWep);
+    
+    return HasPeriscopeCameraBone() || (Cannon != none && Cannon.ShootAnimBoneName != '');
+}
+
 // Modified to prevent firing while player is on, or transitioning away from, periscope or binoculars
 function bool CanFire()
 {
-    return (DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex
-        && !(IsInState('ViewTransition') && (LastPositionIndex == PeriscopePositionIndex || LastPositionIndex == BinocPositionIndex)))
-        || !IsHumanControlled();
+    local bool bIsOnPeriscope;
+    local bool bIsOnBinoculars;
+    local bool bIsTransitioningFromPeriscope;
+    local bool bIsTransitioningFromBinoculars;
+
+    bIsOnPeriscope = DriverPositionIndex == PeriscopePositionIndex;
+    bIsOnBinoculars = DriverPositionIndex == BinocPositionIndex;
+    bIsTransitioningFromPeriscope = IsInState('ViewTransition') && LastPositionIndex == PeriscopePositionIndex;
+    bIsTransitioningFromBinoculars = IsInState('ViewTransition') && LastPositionIndex == BinocPositionIndex;
+
+    if (!IsHumanControlled())
+    {
+        // Bots can always fire.
+        return true;
+    }
+
+    if (bIsOnPeriscope && !CanFireFromPeriscope())
+    {
+        // For periscopes, only allow firing if the cannon has a shoot anim channel.
+        // Historically, firing while on the periscope was disallowed because the player
+        // camera bones and the cannon bones were all handled on the same channel, so
+        // when the player fired, the camera position would be driven by the fire animation.
+        return false;
+    }
+
+    if (bIsOnBinoculars)
+    {
+        return false;
+    }
+
+    if (bIsTransitioningFromPeriscope || bIsTransitioningFromBinoculars)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 // Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)
