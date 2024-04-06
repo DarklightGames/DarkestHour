@@ -8,5 +8,5 @@ class DH_FG42ScopedAttachment extends DH_FG42Attachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.ZFG42_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ZFG42_icon'
 }
