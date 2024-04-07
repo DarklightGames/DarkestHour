@@ -4065,6 +4065,10 @@ simulated static function DHVehicle GetDrivenVehicleBase(Pawn P)
     }
 }
 
+// Override in subclasses to handle the change in the number of rounds remaining.
+// We use this to hide ammo.
+simulated function OnTotalRoundsRemainingChanged(int Count);
+
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):
 simulated event StartDriving(Vehicle V);
 simulated event StopDriving(Vehicle V);

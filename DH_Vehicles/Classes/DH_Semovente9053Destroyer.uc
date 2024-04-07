@@ -2,12 +2,27 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Add positional offset to turret angle calculations to fix hit detection issues
-// [ ] Shell attachments updating when rounds are fired/reloaded
+// [ ] Add positional offset to turret angle calculations to fix hit detection
+//     issues (probably not worth it since there's almost no armor anyways)
 // [ ] UI textures for shells
 //==============================================================================
 
 class DH_Semovente9053Destroyer extends DHArmoredVehicle;
+
+// The Semovente 90/53 has an ammo rack in the hull. We show and hide the shells in the hull
+// based on the number of rounds remaining in the ammo rack.
+//
+// If we end up doing this on more vehicles, we can move this to the base class.
+simulated function OnTotalRoundsRemainingChanged(int Count)
+{
+    local int i;
+
+    for (i = 0; i < VehicleAttachments.Length; i++)
+    {
+        // We subtract 1 from the count because a loaded round is still counted.
+        VehicleAttachments[i].Actor.bHidden = i >= Count - 1;
+    }
+}
 
 defaultproperties
 {

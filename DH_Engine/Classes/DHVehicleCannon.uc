@@ -102,11 +102,21 @@ struct SGunWheel
 
 var array<SGunWheel> GunWheels;
 
+// This is a value replicated to clients so that they can update
+// effects based on the amount of rounds left (e.g., ammo cache
+// will empty as the rounds are fired).
+var int                 OldTotalRoundsRemaining;
+var int                 TotalRoundsRemaining;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         MainAmmoChargeExtra, NumSmokeLauncherRounds, SmokeLauncherAdjustmentSetting;
+    
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        TotalRoundsRemaining;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -161,6 +171,28 @@ simulated function PostNetReceive()
         LocalPendingAmmoIndex = GetAmmoIndex();
         ServerPendingAmmoIndex = LocalPendingAmmoIndex; // this is a record of last setting updated to server, so match it up
     }
+
+    if (OldTotalRoundsRemaining != TotalRoundsRemaining)
+    {
+        // Call a delegate function that can be registered.
+        OldTotalRoundsRemaining = TotalRoundsRemaining;
+
+        OnTotalRoundsRemainingChanged(TotalRoundsRemaining);
+    }
+}
+
+// Called when the total rounds remaining value changes on the client.
+// Used to trigger the updating of client-only effects.
+simulated function OnTotalRoundsRemainingChanged(int Count)
+{
+    local DHVehicle DHV;
+
+    DHV = DHVehicle(Base);
+
+    if (DHV != none)
+    {
+        DHV.OnTotalRoundsRemainingChanged(Count);
+    }
 }
 
 function bool ShouldPlayAutomaticVehicleAlerts()
@@ -186,6 +218,18 @@ function bool ShouldPlayAutomaticVehicleAlerts()
     }
 }
 
+function int UpdateTotalRoundsRemaining()
+{
+    TotalRoundsRemaining = MainAmmoChargeExtra[0] + MainAmmoChargeExtra[1] + MainAmmoChargeExtra[2];
+
+    if (Level.NetMode == NM_StandAlone)
+    {
+        OnTotalRoundsRemainingChanged(TotalRoundsRemaining);
+    }
+
+    return TotalRoundsRemaining;
+}
+
 function OnMainGunReloadFinished()
 {
     local PlayerController PC;
@@ -197,6 +241,8 @@ function OnMainGunReloadFinished()
         // "Shell loaded" alert.
         PC.ServerSpeech('VEH_ALERTS', 9, "");
     }
+
+    UpdateTotalRoundsRemaining();
 }
 
 // Modified to handle multi-stage coaxial MG or smoke launcher reload in the same way as cannon
@@ -944,6 +990,8 @@ function bool ResupplyAmmo()
 
     if (bDidResupply)
     {
+        UpdateTotalRoundsRemaining();
+
         LastResupplyTimestamp = Level.TimeSeconds;
     }
 
