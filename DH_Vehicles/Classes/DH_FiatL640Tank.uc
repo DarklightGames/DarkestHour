@@ -4,14 +4,11 @@
 //==============================================================================
 // [ ] What is the gunsight?
 // [ ] 8mm Breda coaxial MG stats/projectiles etc.
-// [ ] Exterior commander animations
-// [ ] Exterior driver animations
 // [ ] Fire/damaged effect locations
 // [ ] Adjust handling & engine
-// [ ] Rumble sound bone
 //==============================================================================
 // Red:
-// [ ] Interior meshes
+// [ ] Interior texture finalized
 //==============================================================================
 // References:
 // - https://comandosupremo.com/fiat-l6-40/
@@ -99,13 +96,16 @@ defaultproperties
 
     TreadHitMaxHeight=55.0
     TreadDamageThreshold=0.5
-    DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
-    FireAttachBone="Player_Driver"
+    DamagedEffectOffset=(X=-70,Y=0,Z=80)
+    DamagedEffectScale=1.0
+    FireAttachBone="body"
     DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.Destroyed.fiatl640_destroyed'
     ShadowZOffset=20.0
 
     DamagedTrackStaticMeshLeft=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_L'
     DamagedTrackStaticMeshRight=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_R'
+
+    FireEffectOffset=(X=40,Y=15,Z=60)
 
     // Exit
     ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00)
@@ -122,7 +122,7 @@ defaultproperties
     ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSoundBone="placeholder_int"   // TODO: replace this
+    RumbleSoundBone="body"
     RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
 
     // Visual effects
