@@ -303,6 +303,7 @@ defaultproperties
     SoundArtists(10)="jmoney"
     SoundArtists(11)="Nathan B. Lewis"
     SoundArtists(12)="AAZ"
+    SoundArtists(13)="Ariel Hansen"
 
     LocalizationTeam(0)="-Red-(Rus)- (Russian)"
 
