@@ -16,6 +16,7 @@ var array<string> TextureArtists;
 var array<string> Artists;
 var array<string> LevelDesigners;
 var array<string> SoundArtists;
+var array<string> VoiceActors;
 var array<string> LocalizationTeam;
 var array<string> CommunityAdmins;
 var array<string> PastPatreonSupporters;
@@ -32,6 +33,7 @@ var localized string TextureArtistsText;
 var localized string ArtistsText;
 var localized string LevelDesignersText;
 var localized string SoundArtistsText;
+var localized string VoiceActorsText;
 var localized string LocalizationTeamText;
 var localized string CommunityAdminsText;
 var localized string PastPatreonSupportersText;
@@ -80,6 +82,7 @@ function BuildCreditLines()
     AddSection(TextureArtistsText, TextureArtists);
     AddSection(ArtistsText, Artists);
     AddSection(LevelDesignersText, LevelDesigners);
+    AddSection(VoiceActorsText, VoiceActors);
     AddSection(SoundArtistsText, SoundArtists);
     AddSection(LocalizationTeamText, LocalizationTeam);
     AddSection(CommunityAdminsText, CommunityAdmins);
@@ -278,6 +281,10 @@ defaultproperties
     LevelDesigners(20)="Mad.Death.Hound"
     LevelDesigners(21)="John Davidson"
 
+    VoiceActors(0)="Logan Laidlaw (American & Canadian)"
+    VoiceActors(1)="602RAF_Puff (British)"
+    VoiceActors(2)="Ettore Fulvio (Italian)"
+
     SoundArtists(0)="Fennich_FJR6"
     SoundArtists(1)="Blitzkreig"
     SoundArtists(2)="Wiseq"
@@ -285,13 +292,12 @@ defaultproperties
     SoundArtists(4)="Demonizer"
     SoundArtists(5)="PsYcH0_Ch!cKeN"
     SoundArtists(6)="Shurek"
-    SoundArtists(7)="602RAF_Puff"
-    SoundArtists(8)="engineer"
-    SoundArtists(9)="pillam"
-    SoundArtists(10)="Logan Laidlaw"
-    SoundArtists(11)="jmoney"
-    SoundArtists(12)="Nathan B. Lewis"
-    SoundArtists(13)="AAZ"
+    SoundArtists(7)="engineer"
+    SoundArtists(8)="pillam"
+    SoundArtists(9)="Logan Laidlaw"
+    SoundArtists(10)="jmoney"
+    SoundArtists(11)="Nathan B. Lewis"
+    SoundArtists(12)="AAZ"
 
     LocalizationTeam(0)="-Red-(Rus)- (Russian)"
 
@@ -366,6 +372,7 @@ defaultproperties
     ArtistsText="Artists"
     LevelDesignersText="Level Designers"
     SoundArtistsText="Sound Artists"
+    VoiceActorsText="Voice Actors"
     LocalizationTeamText="Localization Team"
     CommunityAdminsText="Community Admins"
     PastPatreonSupportersText="Past Patreon Supporters"
