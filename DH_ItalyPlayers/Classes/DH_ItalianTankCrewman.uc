@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_LivornoTankCrewman extends DHDeprecated;
+class DH_ItalianTankCrewman extends DHITATankCrewmanRoles;
 
 defaultproperties
 {
-    Text="Use DHItalianTankCrewman instead"
+    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianTankCrewmanPawn',Weight=1.0)
 }
