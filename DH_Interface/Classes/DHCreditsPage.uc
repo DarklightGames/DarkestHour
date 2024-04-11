@@ -228,6 +228,7 @@ defaultproperties
     Modelers(22)="Napoleon Blownapart"
     Modelers(23)="Pvt.Winter"
     Modelers(24)="Emercom Camper"
+    Modelers(25)="-Red-(Rus)-"
 
     TextureArtists(0)="Protector"
     TextureArtists(1)="Aeneas2020"
@@ -240,6 +241,8 @@ defaultproperties
     TextureArtists(8)="Theel"
     TextureArtists(9)="Groundwaffe"
     TextureArtists(10)="Matty"
+    TextureArtists(11)="Napoleon Blownapart"
+    TextureArtists(12)="-Red-(Rus)-"
 
     Artists(0)="Der Landser"
     Artists(1)="Protector"
@@ -247,6 +250,7 @@ defaultproperties
     Artists(3)="Fennich_FJR6"
     Artists(4)="Patison"
     Artists(5)="Seven"
+    Artists(6)="Napoleon Blownapart"
     
     Animators(0)="Exocet"
     Animators(1)="Mike Munk (TWI)"
@@ -280,6 +284,7 @@ defaultproperties
     LevelDesigners(19)="Cpt.Caverne"
     LevelDesigners(20)="Mad.Death.Hound"
     LevelDesigners(21)="John Davidson"
+    LevelDesigners(22)="Soul$eek"
 
     VoiceActors(0)="Logan Laidlaw (American & Canadian)"
     VoiceActors(1)="602RAF_Puff (British)"
