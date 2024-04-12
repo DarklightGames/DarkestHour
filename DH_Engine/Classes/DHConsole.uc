@@ -1002,7 +1002,7 @@ function bool CanUseVehicleCommands()
 
     P = ViewportOwner.Actor.Pawn;
 
-    return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn'));
+    return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn')) && !P.IsA('DHPassengerPawn');
 }
 
 state ConsoleVisible
