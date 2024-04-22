@@ -21,6 +21,8 @@ var()   array<RangePoint>   OpticalRanges;        // the range setting values fo
 
 var()   class<DHMapMarker_ArtilleryHit>  HitMapMarkerClass;
 
+var()   float   HitSoundRadius;
+
 simulated function PostBeginPlay()
 {
     // Set a longer lifespan for the shell if there is a possibility of a very long range shot
@@ -250,7 +252,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Play impact sound (moved effect relevance check so only affects hit effect, as impact sound should play even if effect is skipped because it's not on player's screen)
     if (HitSound != none)
     {
-        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume, false, HitSoundRadius);
     }
 
     // Play random explosion sound if this shell has any
@@ -352,4 +354,6 @@ defaultproperties
     ForceType=FT_Constant
     ForceRadius=100.0
     ForceScale=5.0
+
+    HitSoundRadius=200
 }
