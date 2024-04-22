@@ -179,4 +179,5 @@ defaultproperties
     Records(118)=(ClassName="DH_Weapons.DH_BerettaM1934Weapon",WeaponNames=("beretta", "m34","m1934"))
     Records(119)=(ClassName="DH_Weapons.DH_SRCMMod35GrenadeWeapon",WeaponNames=("srcm","srcm35"))
     Records(120)=(ClassName="DH_Weapons.DH_SRCMMod35SmokeGrenadeWeapon",WeaponNames=("srcmsmoke","srcm35smoke"))
+    Records(121)=(ClassName="DH_Equipment.DHBinocularsItemItalian",WeaponNames=("binocs_ita"))
 }

@@ -42,11 +42,11 @@ defaultproperties
     CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo  // TODO: add correct L6/40 ammo types
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Breda2065CannonShellHE'
 
-    nProjectileDescriptions(0)="PzGr.39"
-    nProjectileDescriptions(1)="Sprgr.Patr.38"
+    nProjectileDescriptions(0)="Granata Perforante da 20"   // AP
+    nProjectileDescriptions(1)="Granata da 20"              // HE
 
     InitialPrimaryAmmo=8
     InitialSecondaryAmmo=8
@@ -63,11 +63,11 @@ defaultproperties
     FireInterval=0.25   // 240 rounds per minute
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'  // TODO: 8mm breda
-    InitialAltAmmo=150
+    AltFireProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    InitialAltAmmo=24
     NumMGMags=10
-    AltFireInterval=0.05
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    AltFireInterval=0.109  // 550 rounds per minute
+    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
@@ -76,12 +76,14 @@ defaultproperties
     AltFireAttachmentBone="MG_MUZZLE"
     AltFireOffset=(X=-8,Y=0,Z=0)
 
+    // TODO: get new sounds for all these!
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
+
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
@@ -114,4 +116,10 @@ defaultproperties
     
     ShootAnim="shoot"
     ShootAnimBoneName="barrel"
+
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=16.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_GEAR_02",Scale=16.0,RotationAxis=AXIS_Y)
+    GunWheels(2)=(RotationType=ROTATION_Yaw,BoneName="YAW_GEAR_03",Scale=-16.0,RotationAxis=AXIS_Y)
+    GunWheels(3)=(RotationType=ROTATION_Yaw,BoneName="YAW_GEAR_01",Scale=-16.0,RotationAxis=AXIS_Y)
+    GunWheels(4)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
 }
