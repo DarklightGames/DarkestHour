@@ -149,6 +149,27 @@ simulated function SpawnShells(float Frequency)
     }
 }
 
+simulated function WeaponLight()
+{
+    if ( (FlashCount > 0) && !Level.bDropDetail && (Instigator != None)
+		&& ((Level.TimeSeconds - LastRenderTime < 0.2) || (PlayerController(Instigator.Controller) != None)) )
+    {
+		if ( Instigator.IsFirstPerson() )
+		{
+			LitWeapon = Instigator.Weapon;
+			LitWeapon.bDynamicLight = true;
+            LitWeapon.LightHue = 20;
+            LitWeapon.LightSaturation = 28;
+		}
+		else
+			bDynamicLight = true;
+        LightBrightness=Rand(100);
+        SetTimer(0.13, false); //shorten the flash duration to avoid the weird "flashlight" phenomenon with autoweps
+    }
+    else
+		Timer();
+}
+
 // Modified to move functionality for spawning hit effects into a new SpawnHitEffect() function - on an authority role that's still called from here
 // But for net client it gets called by PostNetReceive() when it receives updated SpawnHitCount & mHitLocation, so it knows where to spawn the effect
 simulated event ThirdPersonEffects()
@@ -626,4 +647,13 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
 
     PA_StandToProneAnim="StandtoProne_kar"
+
+    bDynamicLight=false
+    LightBrightness=0
+	LightType=LT_Steady
+	LightEffect=LE_NonIncidence
+	LightPeriod=3
+    LightHue = 20
+    LightSaturation = 28
+	LightRadius=4.0
 }
