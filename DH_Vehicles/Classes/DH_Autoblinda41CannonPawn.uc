@@ -25,9 +25,9 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="fiatl640_gunner_closed"
     bLockCameraDuringTransition=true
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
-    GunsightSize=0.735 // 25 degrees visible FOV at 2.5x magnification (TZF4b sight)
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Italian.20mmBreda_sight_background'
+    GunsightSize=0.4
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made.
     BinocPositionIndex=4
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
