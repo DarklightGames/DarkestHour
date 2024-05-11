@@ -27,6 +27,7 @@ defaultproperties
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Italian.20mmBreda_sight_background'
     GunsightSize=0.4
+    OverlayCorrectionX=-4.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made.
     BinocPositionIndex=4
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
