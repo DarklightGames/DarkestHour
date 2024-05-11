@@ -2,55 +2,64 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Fire/damaged effect locations (didn't i already do this?)
-// [ ] Adjust handling & engine
-//==============================================================================
-// Red:
-// [ ] Interior texture finalized
-// [ ] Cannon gun texture
-//==============================================================================
 // References:
 // - https://comandosupremo.com/fiat-l6-40/
 // - https://en.wikipedia.org/wiki/L6/40_tank
 // - https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
+// - https://tanks-encyclopedia.com/ww2/italy/semovente_da_47-32.php
+//==============================================================================
+// TODO:
+// [ ] Destroyed mesh
+// [ ] Make collision mesh for body
+// [ ] Make collision meshes for turret
+// [ ] Camera animations
+// [ ] Gunner & driver animations
+// [ ] Passenger animations (re-adjust the hands)
+// [ ] Make sure to copy the new handling code from the L6/40
+// [ ] Re-adjust karma box?
+// [ ] Re-evaluated exit positions
+// [ ] UI icon for spawn menu
 //==============================================================================
 
-class DH_FiatL640Tank extends DHArmoredVehicle;
+class DH_Semovente4732Destroyer extends DHArmoredVehicle;
 
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Carro Armato L6/40"
+    VehicleNameString="Semovente L40 da 47/32"
     VehicleTeam=0
     VehicleMass=6.8
     ReinforcementCost=2
 
     // Periscope
     PeriscopePositionIndex=0
-    PeriscopeCameraBone="CAMERA_PERISCOPE"
+    PeriscopeCameraBone="SEMO_CAMERA_PERISCOPE"
 
-    Skins(0)=Texture'DH_FiatL640_tex.fiatl640_body_ext'
+    // Skins(0)=Texture'DH_Semovente4732_tex.semovente4732_body_ext'
     Skins(1)=Texture'DH_FiatL640_tex.fiatl640_treads'
     Skins(2)=Texture'DH_FiatL640_tex.fiatl640_treads'
+    Skins(3)=Texture'DH_FiatL640_tex.fiatl640_body_ext'
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_ext'
+    Mesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext'
 
     // Vehicle weapons & passengers
     BeginningIdleAnim="closed"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_FiatL640CannonPawn',WeaponBone="TURRET_PLACEMENT")
+    // TODO: probably need to slightly adjust the pose for the Semovente version
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente4732CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02",InitialViewRotationOffset=(Yaw=-16384))
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01",InitialViewRotationOffset=(Yaw=-16384))
 
+    // TODO: swap to INT
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_body_int',DriverTransitionAnim="fiatl640_driver_in",TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_in",TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Yaw=16384)
     DriveAnim="fiatl640_driver_closed"
     DriverAttachmentBone="driver_attachment"
-    UnbuttonedPositionIndex=3
+    UnbuttonedPositionIndex=0
     bLockCameraDuringTransition=false
 
     // Hull armor
@@ -79,25 +88,25 @@ defaultproperties
     TransRatio=0.13
 
     // Damage
-    // pros: 37mm ammo is less likely to explode;
-    // cons: tightly placed 4 men crew; petrol fuel;
     Health=420
     HealthMax=420.0
     EngineHealth=300
-    AmmoIgnitionProbability=0.27  // 0.75 default
+    AmmoIgnitionProbability=0.5  // 0.75 default
     TurretDetonationThreshold=4000.0 // increased from 1750
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
 
     // Hitpoints
     VehHitpoints(0)=(PointBone="BODY",PointRadius=27.1584,PointOffset=(X=-68.1716,Z=49.7671),HitPointType=HP_Engine)
-    VehHitpoints(1)=(PointBone="BODY",PointRadius=16,PointOffset=(X=-19.1348,Y=-38.7964,Z=68.5152),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointBone="BODY",PointRadius=16,PointOffset=(X=-19.1348,Y=38.7964,Z=68.5152),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointBone="BODY",PointRadius=16,PointOffset=(X=13.02052,Y=38.7964,Z=68.5152),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 
     TreadHitMaxHeight=55.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=-70,Y=0,Z=80)
     DamagedEffectScale=1.0
     FireAttachBone="body"
+    // TODO: add destroyed mesh
     DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.Destroyed.fiatl640_destroyed'
     ShadowZOffset=20.0
 
@@ -125,8 +134,8 @@ defaultproperties
     RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
 
     // Visual effects
-    LeftTreadIndex=1
-    RightTreadIndex=2
+    LeftTreadIndex=2
+    RightTreadIndex=1
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     TreadVelocityScale=100.0
@@ -136,9 +145,10 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    VehicleHudImage=Texture'DH_FiatL640_tex.interface.fiatl640_body'
-    VehicleHudTurret=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_FiatL640_tex.interface.fiatl640_turret_look'
+    // TODO: add HUD textures
+    //VehicleHudImage=Texture'DH_Semovente4732_tex.interface.semovente4732_body'
+    //VehicleHudTurret=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_rot'
+    //VehicleHudTurretLook=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_look'
 
     VehicleHudEngineX=0.50
 
