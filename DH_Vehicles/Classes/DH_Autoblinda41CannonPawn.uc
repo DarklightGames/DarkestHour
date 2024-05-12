@@ -28,10 +28,11 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Italian.20mmBreda_sight_background'
     GunsightSize=0.3
     OverlayCorrectionX=-4.0
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made.
+    OverlayCorrectionY=12.0
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made, or do it programmatically
     BinocPositionIndex=4
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
+    AmmoShellTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_icon'
+    AmmoShellReloadTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_reload'
     FireImpulse=(X=-7500.0)
     FPCamPos=(X=0,Y=0,Z=0)
     CameraBone="GUN_CAMERA"
