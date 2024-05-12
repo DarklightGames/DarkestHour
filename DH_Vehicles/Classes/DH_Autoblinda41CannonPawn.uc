@@ -10,7 +10,7 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Autoblinda41Cannon'
     
     // Gunsight
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=34.0,TransitionUpAnim="gunsight_out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=24.0,TransitionUpAnim="gunsight_out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     // Neutral
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=90.0,TransitionUpAnim="periscope_in",TransitionDownAnim="gunsight_in",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false)
     // Periscope
@@ -26,7 +26,7 @@ defaultproperties
     DriveAnim="fiatl640_gunner_closed"
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Italian.20mmBreda_sight_background'
-    GunsightSize=0.4
+    GunsightSize=0.3
     OverlayCorrectionX=-4.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made.
     BinocPositionIndex=4

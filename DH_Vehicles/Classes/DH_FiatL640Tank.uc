@@ -4,10 +4,7 @@
 //==============================================================================
 // [ ] Fire/damaged effect locations (didn't i already do this?)
 // [ ] Adjust handling & engine
-//==============================================================================
-// Red:
-// [ ] Interior texture finalized
-// [ ] Cannon gun texture
+// [ ] Fix default periscope rotation
 //==============================================================================
 // References:
 // - https://comandosupremo.com/fiat-l6-40/
