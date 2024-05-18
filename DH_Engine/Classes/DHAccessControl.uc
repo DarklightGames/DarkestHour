@@ -261,4 +261,18 @@ defaultproperties
     // 76561197995652829 alts
     GloballyBannedIDs(21)="76561197995652829"
     GloballyBannedIDs(22)="76561198201322109"
+
+    // 76561197970785714 alts
+    GloballyBannedIDs(23)="76561197970785714"
+    GloballyBannedIDs(24)="76561198136036249"
+    GloballyBannedIDs(25)="76561198137426794"
+    GloballyBannedIDs(26)="76561198938103072"
+    GloballyBannedIDs(27)="76561198962691652"
+    GloballyBannedIDs(28)="76561198968258660"
+    GloballyBannedIDs(29)="76561198982958390"
+    GloballyBannedIDs(30)="76561199011959093"
+    GloballyBannedIDs(31)="76561199027036100"
+    GloballyBannedIDs(32)="76561199043242733"
+    GloballyBannedIDs(33)="76561199070325442"
+    GloballyBannedIDs(34)="76561199072481619"
 }
