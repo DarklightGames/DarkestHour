@@ -25,6 +25,14 @@ var     name        WA_DeployedFire;
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
 
+var     name        PA_BarrelChangeStandAnim;
+var     name        PA_BarrelChangeCrouchAnim;
+var     name        PA_BarrelChangeProneAnim;
+
+var     name        WA_BarrelChangeStandAnim;
+var     name        WA_BarrelChangeCrouchAnim;
+var     name        WA_BarrelChangeProneAnim;
+
 var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;
@@ -416,11 +424,11 @@ simulated function PlayIdle()
         {
             if (bOutOfAmmo && WA_IdleEmpty != '')
             {
-            LoopAnim(WA_IdleEmpty);
+                LoopAnim(WA_IdleEmpty);
             }
             else if (WA_Idle != '')
             {
-            LoopAnim(WA_Idle);
+                LoopAnim(WA_Idle);
             }
         }
     }
@@ -462,6 +470,48 @@ simulated function name GetReloadPlayerAnim(DHPawn Pawn)
         {
             return PA_ReloadAnim;
         }
+    }
+}
+
+simulated function name GetBarrelChangePlayerAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (Pawn.bIsCrawling)
+    {
+        return PA_BarrelChangeProneAnim;
+    }
+    else if (Pawn.bIsCrouched)
+    {
+        return PA_BarrelChangeCrouchAnim;
+    }
+    else
+    {
+        return PA_BarrelChangeStandAnim;
+    }
+}
+
+simulated function name GetBarrelChangeWeaponAnim(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return '';
+    }
+
+    if (Pawn.bIsCrawling)
+    {
+        return WA_BarrelChangeProneAnim;
+    }
+    else if (Pawn.bIsCrouched)
+    {
+        return WA_BarrelChangeCrouchAnim;
+    }
+    else
+    {
+        return WA_BarrelChangeStandAnim;
     }
 }
 

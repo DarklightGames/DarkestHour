@@ -52,8 +52,8 @@ defaultproperties
     PA_TurnIronRightAnim="stand_turnRhip_breda"
     PA_TurnIronLeftAnim="stand_turnLhip_breda"
 
-    PA_ReloadAnim="reload_standing_breda"      // TODO: PLACEHOLDER
-    PA_ReloadEmptyAnim="reload_standing_breda" // TODO: PLACEHOLDER
+    PA_ReloadAnim="reload_standing_breda"
+    PA_ReloadEmptyAnim="reload_standing_breda"
 
     PA_MoveStandIronFire(0)="stand_shootFwalk_breda"
     PA_MoveStandIronFire(1)="stand_shootFwalk_breda"
@@ -138,8 +138,8 @@ defaultproperties
     PA_CrouchDeployedFire="crouch_shootiron_breda"
     PA_IdleDeployedCrouchAnim="crouch_idleiron_breda"
 
-    PA_CrouchReloadAnim="reload_crouch_breda"      // TODO: PLACEHOLDER
-    PA_CrouchReloadEmptyAnim="reload_crouch_breda" // TODO: PLACEHOLDER
+    PA_CrouchReloadAnim="reload_crouch_breda"
+    PA_CrouchReloadEmptyAnim="reload_crouch_breda"
 
     PA_CrouchAnims(0)="crouch_walkF_breda"
     PA_CrouchAnims(1)="crouch_walkB_breda"
@@ -178,8 +178,8 @@ defaultproperties
     PA_IdleDeployedProneAnim="prone_idle_breda"
     PA_ProneFireLastShot="prone_shoot_breda"
 
-    PA_ProneReloadAnim="reload_prone_breda"      // TODO: PLACEHOLDER
-    PA_ProneReloadEmptyAnim="reload_prone_breda" // TODO: PLACEHOLDER
+    PA_ProneReloadAnim="reload_prone_breda"
+    PA_ProneReloadEmptyAnim="reload_prone_breda"
 
     PA_ProneIdleRestAnim="prone_idle_breda"
     PA_ProneWeaponDeployAnim="prone_idle_breda"
@@ -226,4 +226,12 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_breda"
     PA_DodgeAnims(2)="jumpL_mid_breda"
     PA_DodgeAnims(3)="jumpR_mid_breda"
+
+    // Barrel Change
+    PA_BarrelChangeStandAnim="barrel_standing_breda"
+    PA_BarrelChangeCrouchAnim="barrel_crouch_breda"
+    PA_BarrelChangeProneAnim="barrel_prone_breda"
+    WA_BarrelChangeStandAnim="barrel_standing_breda"
+    WA_BarrelChangeCrouchAnim="barrel_crouch_breda"
+    WA_BarrelChangeProneAnim="barrel_prone_breda"
 }

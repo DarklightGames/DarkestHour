@@ -280,13 +280,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 
                 if (WeapAttach != none)
                 {
-                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65535.0, Start, true);
-
-                    if (Other != none)
-                    {
-                        Start = WeapAttach.GetBoneCoords(WeapAttach.MuzzleBoneName).Origin;
-                        Dir = rotator(Normal(HitLocation - Start));
-                    }
+                    Start = WeapAttach.GetBoneCoords(WeapAttach.MuzzleBoneName).Origin;
                 }
             }
 

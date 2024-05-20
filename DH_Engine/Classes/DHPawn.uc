@@ -1938,6 +1938,48 @@ simulated function PlayBoltAction()
     }
 }
 
+simulated function PlayBarrelChangeAction()
+{
+    local DHWeaponAttachment WA;
+    local name PlayerAnim;
+    local name ChannelRootBone;
+    local bool bGlobalPose;
+
+    WA = DHWeaponAttachment(WeaponAttachment);
+
+    if (WA == none)
+    {
+        return;
+    }
+
+    if (WA.bStaticReload)
+    {
+        ChannelRootBone = '';
+        bGlobalPose = true;
+    }
+    else
+    {
+        if (bIsCrawling)
+        {
+            ChannelRootBone = FireRootBone;
+        }
+        else
+        {
+            ChannelRootBone = SpineBone2;
+        }
+    }
+
+    PlayerAnim = WA.GetBarrelChangePlayerAnim(self);
+
+    AnimBlendParams(1, 1.0, 0.0, 0.2, ChannelRootBone, bGlobalPose);
+    PlayAnim(PlayerAnim,, 0.1, 1);
+
+    WA.PlayAnim(WA.GetBarrelChangeWeaponAnim(self),, 0.1);
+
+    AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
+    //WeaponState = GS_ReloadSingle;
+}
+
 // Modified to avoid errors if trying to play animations that don't exist
 simulated function PlayStopReloading()
 {
@@ -3921,6 +3963,11 @@ function HandleAssistedReload()
     SetAnimAction('DoAssistedReload');
 }
 
+function HandleBarrelChange()
+{
+    SetAnimAction('BarrelChange');
+}
+
 // Play an assisted reload on the client
 simulated function PlayAssistedReload()
 {
@@ -4295,6 +4342,15 @@ simulated event SetAnimAction(name NewAction)
         {
             bWaitForAnim = true;
             GotoState('ProningFromCrouch');
+        }
+        else if (UsedAction == 'BarrelChange')
+        {
+            bWaitForAnim = true;
+
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                PlayBarrelChangeAction();
+            }
         }
         // MANTLING
         else if (UsedAction == 'StartMantle')
