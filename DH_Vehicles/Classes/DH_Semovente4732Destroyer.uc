@@ -10,15 +10,13 @@
 //==============================================================================
 // TODO:
 // [ ] Destroyed mesh
-// [ ] Make collision mesh for body
-// [ ] Make collision meshes for turret
-// [ ] Camera animations
+// [ ] Driver camera animations
 // [ ] Gunner & driver animations
-// [ ] Passenger animations (re-adjust the hands)
 // [ ] Make sure to copy the new handling code from the L6/40
-// [ ] Re-adjust karma box?
-// [ ] Re-evaluated exit positions
 // [ ] UI icon for spawn menu
+// [ ] HUD textures
+// [ ] Finalize texturing & model
+// [ ] Projectile attachments
 //==============================================================================
 
 class DH_Semovente4732Destroyer extends DHArmoredVehicle;
@@ -52,8 +50,8 @@ defaultproperties
 
     // TODO: swap to INT
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=24576,ViewNegativeYawLimit=-24576,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_in",TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Yaw=16384)
@@ -116,12 +114,14 @@ defaultproperties
     FireEffectOffset=(X=40,Y=15,Z=60)
 
     // Exit
-    ExitPositions(0)=(X=-85.00,Y=-25.00,Z=150.00)
-    ExitPositions(1)=(X=-85.00,Y=25.00,Z=150.00)
-    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00)
-    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00)
-    ExitPositions(4)=(X=-165.00,Y=-35.00,Z=55.00)
-    ExitPositions(5)=(X=-165.00,Y=35.00,Z=55.00)
+    ExitPositions(0)=(X=-10.00,Y=96.00,Z=60.00)     // Driver
+    ExitPositions(1)=(X=-10.00,Y=-96.00,Z=60.00)    // Gunner
+    ExitPositions(2)=(X=-65.00,Y=-105.00,Z=55.00)   // Passenger Left
+    ExitPositions(3)=(X=-65.00,Y=105.00,Z=55.00)    // Passenger Right
+    ExitPositions(4)=(X=-85.00,Y=-25.00,Z=140.00)   // Engine Dock Left
+    ExitPositions(5)=(X=-85.00,Y=25.00,Z=140.00)    // Engine Dock Right
+    ExitPositions(6)=(X=-165.00,Y=-35.00,Z=55.00)   // Rear Left
+    ExitPositions(7)=(X=-165.00,Y=35.00,Z=55.00)    // Rear Right
 
     // Sounds
     SoundPitch=48

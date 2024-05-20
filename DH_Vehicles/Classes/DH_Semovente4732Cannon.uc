@@ -17,9 +17,7 @@ defaultproperties
     GunMantletArmorFactor=5.0
     GunMantletSlope=0.0
 
-    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_turret_yaw_collision',AttachBone="GUN_YAW")
-    // CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_turret_pitch_collision',AttachBone="GUN_PITCH")
-    // CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_turret_barrel_collision',AttachBone="BARREL")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_barrel_collision',AttachBone="BARREL")
 
     GunnerAttachmentBone="TURRET"
     
@@ -66,6 +64,7 @@ defaultproperties
     AddedPitch=-15
 
     // Sounds
+    // TODO: replace these with unique sounds!
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
@@ -99,8 +98,9 @@ defaultproperties
 
     WeaponFireAttachmentBone="MUZZLE"
 
-    //GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="yaw_wheel",Scale=-32.0,RotationAxis=AXIS_Y)
-    //GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="pitch_wheel",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_GEAR",Scale=8.0,RotationAxis=AXIS_Y)
 
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
