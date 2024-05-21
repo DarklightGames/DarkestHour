@@ -33,10 +33,10 @@ defaultproperties
     PeriscopePositionIndex=0
     PeriscopeCameraBone="SEMO_CAMERA_PERISCOPE"
 
-    // Skins(0)=Texture'DH_Semovente4732_tex.semovente4732_body_ext'
-    Skins(1)=Texture'DH_FiatL640_tex.fiatl640_treads'
+    Skins(0)=Texture'DH_Semovente4732_tex.semovente4732_body_ext'
+    //Skins(1)=Texture'DH_Semovente4732_tex.semovente4732_body_int'
     Skins(2)=Texture'DH_FiatL640_tex.fiatl640_treads'
-    Skins(3)=Texture'DH_FiatL640_tex.fiatl640_body_ext'
+    Skins(3)=Texture'DH_FiatL640_tex.fiatl640_treads'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext'
@@ -135,7 +135,7 @@ defaultproperties
 
     // Visual effects
     LeftTreadIndex=2
-    RightTreadIndex=1
+    RightTreadIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     TreadVelocityScale=100.0
