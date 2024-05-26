@@ -7879,6 +7879,42 @@ exec simulated function ListVehicles()
     class'DHVehicleRegistry'.static.DumpToLog(self);
 }
 
+exec function MapBoundsOffset(int X, int Y)
+{
+    local DHGameReplicationInfo GRI;
+    local ROMapBoundsNE NE;
+    local ROMapBoundsSW SW;
+    local Vector NorthEastBounds, SouthWestBounds, Offset;
+    
+    // Find the location of the map bounds
+    foreach AllActors(class'ROMapBoundsNE', NE)
+    {
+        NorthEastBounds = NE.Location;
+    }
+
+    foreach AllActors(class'ROMapBoundsSW', SW)
+    {
+        SouthWestBounds = SW.Location;
+    }
+
+    Offset.X = X;
+    Offset.Y = Y;
+
+    // Move the map bounds
+    NorthEastBounds += Offset;
+    SouthWestBounds += Offset;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.NorthEastBounds = NorthEastBounds;
+        GRI.SouthWestBounds = SouthWestBounds;
+    }
+
+    Level.Game.Broadcast(self, "(X: " $ NorthEastBounds.X $ ", Y: " $ SouthWestBounds.Y $ ")");
+}
+
 defaultproperties
 {
     CorpseStayTime=15
