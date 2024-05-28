@@ -148,9 +148,9 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.475
-    VehicleHudOccupantsX(2)=0.65
+    VehicleHudOccupantsX(2)=0.35
     VehicleHudOccupantsY(2)=0.65
-    VehicleHudOccupantsX(3)=0.35
+    VehicleHudOccupantsX(3)=0.65
     VehicleHudOccupantsY(3)=0.65
 
     SpawnOverlay(0)=Material'DH_FiatL640_tex.interace.fiatl640_icon'
@@ -178,6 +178,8 @@ defaultproperties
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
+
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering

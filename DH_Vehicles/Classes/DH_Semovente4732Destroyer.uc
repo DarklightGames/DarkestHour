@@ -9,13 +9,10 @@
 // - https://tanks-encyclopedia.com/ww2/italy/semovente_da_47-32.php
 //==============================================================================
 // TODO:
-// [ ] Destroyed mesh
+// [ ] Interior mesh import
 // [ ] Driver camera animations
-// [ ] Gunner & driver animations
+// [ ] Fix camera clipping on driver's camera (move camera forward or down a few units)
 // [ ] Make sure to copy the new handling code from the L6/40
-// [ ] UI icon for spawn menu
-// [ ] HUD textures
-// [ ] Finalize texturing & model
 // [ ] Projectile attachments
 //==============================================================================
 
@@ -33,8 +30,8 @@ defaultproperties
     PeriscopePositionIndex=0
     PeriscopeCameraBone="SEMO_CAMERA_PERISCOPE"
 
-    Skins(0)=Texture'DH_Semovente4732_tex.semovente4732_body_ext'
-    //Skins(1)=Texture'DH_Semovente4732_tex.semovente4732_body_int'
+    Skins(0)=Texture'DH_Semovente4732_tex.semo4732_body_ext'
+    //Skins(1)=Texture'DH_Semovente4732_tex.semo4732_turret_ext'
     Skins(2)=Texture'DH_FiatL640_tex.fiatl640_treads'
     Skins(3)=Texture'DH_FiatL640_tex.fiatl640_treads'
 
@@ -105,7 +102,7 @@ defaultproperties
     DamagedEffectScale=1.0
     FireAttachBone="body"
     // TODO: add destroyed mesh
-    DestroyedVehicleMesh=StaticMesh'DH_FiatL640_stc.Destroyed.fiatl640_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Semovente4732_stc.Destroyed.semovente4732_destroyed'
     ShadowZOffset=20.0
 
     DamagedTrackStaticMeshLeft=StaticMesh'DH_FiatL640_stc.fiatl640_tracks_dest_L'
@@ -145,28 +142,38 @@ defaultproperties
     RightLeverBoneName="LEVER_R"
 
     // HUD
-    // TODO: add HUD textures
-    //VehicleHudImage=Texture'DH_Semovente4732_tex.interface.semovente4732_body'
-    //VehicleHudTurret=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_rot'
-    //VehicleHudTurretLook=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_look'
+    VehicleHudImage=Texture'DH_Semovente4732_tex.interface.semovente4732_body'
+    VehicleHudTurret=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Semovente4732_tex.interface.semovente4732_turret_look'
 
     VehicleHudEngineX=0.50
 
-    VehicleHudTreadsPosX(0)=0.35
-    VehicleHudTreadsPosX(1)=0.65
+    VehicleHudTreadsPosX(0)=0.325
+    VehicleHudTreadsPosX(1)=0.675
     VehicleHudTreadsPosY=0.50
-    VehicleHudTreadsScale=0.7
+    VehicleHudTreadsScale=0.8
 
     VehicleHudOccupantsX(0)=0.545
     VehicleHudOccupantsY(0)=0.4
-    VehicleHudOccupantsX(1)=0.45
-    VehicleHudOccupantsY(1)=0.475
-    VehicleHudOccupantsX(2)=0.65
+    VehicleHudOccupantsX(1)=0.425
+    VehicleHudOccupantsY(1)=0.5
+    VehicleHudOccupantsX(2)=0.35
     VehicleHudOccupantsY(2)=0.65
-    VehicleHudOccupantsX(3)=0.35
+    VehicleHudOccupantsX(3)=0.65
     VehicleHudOccupantsY(3)=0.65
 
-    SpawnOverlay(0)=Material'DH_FiatL640_tex.interace.fiatl640_icon'
+    SpawnOverlay(0)=Material'DH_Semovente4732_tex.interace.semovente4732_icon'
+
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
+
+    // VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-31.8017,Z=46.0125))
+    // VehicleAttachments(1)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-21.5638,Z=46.0125))
+    // VehicleAttachments(2)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-26.7217,Z=37.901))
+    // VehicleAttachments(3)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-16.4839,Z=37.901))
+    // VehicleAttachments(4)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=21.542,Z=46.0125))
+    // VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
+    // VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
+    // VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
 
     // Visible wheels
     LeftWheelBones(0)="WHEEL_01_L"
