@@ -5,30 +5,37 @@
 // [1] https://comandosupremo.com/forums/index.php?threads/italian-armor-piercing-ammunition-perforanti-effetto-pronto-and-ep-speciale.52
 //==============================================================================
 
-class DH_Cannone4732Cannon extends DHATGunCannon;
+class DH_Semovente4732Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Cannone4732_anm.cannone4732_turret'
-    Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
+    Mesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_turret_ext'
+    //Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
 
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
-    CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
-    CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_barrel_collision',AttachBone="BARREL")
+    // Cannon armour (mantlet)
+    GunMantletArmorFactor=5.0
+    GunMantletSlope=0.0
+
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Semovente4732_stc.collision.semovente4732_barrel_collision',AttachBone="BARREL")
+
+    GunnerAttachmentBone="TURRET"
     
-    GunnerAttachmentBone="turret"
-    
-    ShootAnim="shoot"
-    ShootAnimBoneName="barrel"
+    ShootAnim="SHOOT"
+    ShootAnimBoneName="BARREL"
 
     // Turret movement
-    MaxPositiveYaw=6000
-    MaxNegativeYaw=-6000
+    PitchBone="GUN_PITCH"
+    YawBone="GUN_YAW"
+    bHasTurret=false
+    ManualRotationsPerSecond=0.05
+    bLimitYaw=true
+    MaxPositiveYaw=2457     // +13.5 degrees
+    MaxNegativeYaw=-2457    // -13.5 degrees
     YawStartConstraint=-7000.0
     YawEndConstraint=7000.0
-    CustomPitchUpLimit=10920    // 60 degrees
-    CustomPitchDownLimit=62806  // -15 degrees
+    CustomPitchUpLimit=3684     // +20 degrees
+    CustomPitchDownLimit=63352  // -12 degrees
 
     // Cannon ammo
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cannone4732CannonShell'
@@ -39,17 +46,17 @@ defaultproperties
     ProjectileDescriptions(1)="HE"
     ProjectileDescriptions(2)="HEAT"
 
-    nProjectileDescriptions(0)="Granata Perforante da 47"   // not sure if this is the right name or not!
+    nProjectileDescriptions(0)="Granata Perforante da 47"
     nProjectileDescriptions(1)="Granata da 47"
     nProjectileDescriptions(2)="Effeto Pronto da 47"
 
     // Source [1] indicates that there was an even split of ammo types & that the maximum loadout of each gun was 60 rounds.
-    InitialPrimaryAmmo=10
+    InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=10
-    MaxPrimaryAmmo=20
+    InitialTertiaryAmmo=5
+    MaxPrimaryAmmo=40
     MaxSecondaryAmmo=20
-    MaxTertiaryAmmo=20
+    MaxTertiaryAmmo=10
     SecondarySpread=0.00125
     TertiarySpread=0.00125
 
@@ -57,6 +64,7 @@ defaultproperties
     AddedPitch=-15
 
     // Sounds
+    // TODO: replace these with unique sounds!
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
@@ -88,11 +96,11 @@ defaultproperties
     RangeSettings(19)=1900
     RangeSettings(20)=2000
 
-    PitchBone="gun_pitch"
-    YawBone="gun_yaw"
+    WeaponFireAttachmentBone="MUZZLE"
 
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="yaw_wheel",Scale=-32.0,RotationAxis=AXIS_Y)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="pitch_wheel",Scale=32.0,RotationAxis=AXIS_Y)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-64.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=64.0,RotationAxis=AXIS_X)
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_GEAR",Scale=8.0,RotationAxis=AXIS_Y)
 
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)

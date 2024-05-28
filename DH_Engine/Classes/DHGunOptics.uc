@@ -10,10 +10,8 @@ var array<DHGunOpticsRangeTable> OpticalRangeTables;
 var Material GunsightOverlay;
 var Material CannonScopeCenter;
 var float GunsightSize;
-var float OverlayCorrectionX;
-var float OverlayCorrectionY;
 
-static function DrawGunsightOverlay(Canvas C, int Range, optional int RangeTableIndex)
+static function DrawGunsightOverlay(Canvas C, int Range, float OverlayCorrectionX, float OverlayCorrectionY, optional int RangeTableIndex)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
@@ -26,8 +24,8 @@ static function DrawGunsightOverlay(Canvas C, int Range, optional int RangeTable
     TextureSize = float(default.GunsightOverlay.MaterialUSize());
     TilePixelWidth = TextureSize / default.GunsightSize;
     TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
-    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - default.OverlayCorrectionX;
-    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - default.OverlayCorrectionY;
+    TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+    TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
 
     C.SetPos(0.0, 0.0);
     C.DrawTile(default.GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);

@@ -3000,6 +3000,7 @@ simulated state ChangingBarrels extends WeaponBusy
 
     simulated function BeginState()
     {
+        local DHPawn P;
         local float AnimTimer;
 
         ResetPlayerFOV();
@@ -3013,6 +3014,17 @@ simulated state ChangingBarrels extends WeaponBusy
             if (InstigatorIsLocallyControlled())
             {
                 PlayAnim(BarrelChangeAnim, 1.0, 0.1);
+            }
+            
+            if (Role == ROLE_Authority)
+            {
+                P = DHPawn(Instigator);
+
+                if (P != none)
+                {
+                    // Signal the client to play the third-person barrel change animation.
+                    P.HandleBarrelChange();
+                }
             }
 
             AnimTimer = GetAnimDuration(BarrelChangeAnim) + FastTweenTime;

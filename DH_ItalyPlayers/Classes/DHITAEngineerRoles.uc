@@ -8,7 +8,7 @@ class DHITAEngineerRoles extends DHAxisEngineerRoles
 
 defaultproperties
 {
-    AltName="Artiere"
+    AltName="Guastatori"
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_CarcanoM91Weapon')
 

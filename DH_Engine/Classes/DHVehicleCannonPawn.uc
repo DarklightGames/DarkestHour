@@ -292,7 +292,7 @@ simulated function DrawGunsightOverlay(Canvas C)
         }
 
         // Draw the gunsight using the optics class if it exists.
-        GunOpticsClass.static.DrawGunsightOverlay(C, Gun.GetRange(), RangeTableIndex);
+        GunOpticsClass.static.DrawGunsightOverlay(C, Gun.GetRange(), OverlayCorrectionX, OverlayCorrectionY, RangeTableIndex);
     }
     else
     {

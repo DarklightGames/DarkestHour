@@ -239,6 +239,7 @@ defaultproperties
     Records(105)=(VehicleNames=("ab43","autoblinda43"),Variants=((ClassName="DH_Vehicles.DH_Autoblinda43ArmoredCar")))
     Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
     Records(107)=(VehicleNames=("fiatl640","l640"),Variants=((ClassName="DH_Vehicles.DH_FiatL640Tank")))
+    Records(108)=(VehicleNames=("semo47","semovente4732"),Variants=((ClassName="DH_Vehicles.DH_Semovente4732Destroyer")))
     // Vehicles to be added in the near future:
     // Semovente da 47/32 (https://en.wikipedia.org/wiki/Semovente_da_47/32)
     // Semovente da 75/18 (https://en.wikipedia.org/wiki/Semovente_da_75/18)

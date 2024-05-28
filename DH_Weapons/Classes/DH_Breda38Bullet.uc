@@ -2,12 +2,15 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
+// [1] https://en.wikipedia.org/wiki/Breda_38
 //==============================================================================
 
-class DH_FiatL640Cannon extends DH_Autoblinda41Cannon;
+class DH_Breda38Bullet extends DHBullet;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_ext'
+    Speed=46471 // 770 m/s [1]
+    BallisticCoefficient=0.515
+    Damage=120.0
+    MyDamageType=class'DH_Weapons.DH_Breda38DamType'
 }

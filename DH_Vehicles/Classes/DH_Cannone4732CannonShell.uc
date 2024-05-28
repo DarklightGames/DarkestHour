@@ -28,7 +28,7 @@ defaultproperties
 
     //Damage
     ImpactDamage=325  // 18 gramms TNT filler // TODO: not sure what this should be, but the damage should be comparable to similar shells
-    ShellImpactDamage=class'DH_Guns.DH_Cannone4732CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_Cannone4732CannonShellDamageAP'
     HullFireChance=0.30
     EngineFireChance=0.55
 
