@@ -38,7 +38,7 @@ struct VehicleAttachment
     var Rotator         RelativeRotation;
     var float           RadioCollisionRadius;
     var float           RadioCollisionHeight;
-    // TODO: have flag for whether this is server-only or client-only
+    var bool            bServerOnly;
 };
 var array<VehicleAttachment> VehicleAttachments;
 
@@ -135,6 +135,11 @@ simulated function SpawnVehicleAttachments()
     for (i = 0; i < VehicleAttachments.Length; ++i)
     {
         VA = VehicleAttachments[i];
+
+        if (VA.bServerOnly && Role < ROLE_Authority)
+        {
+            continue;
+        }
         
         if (VA.AttachClass == none)
         {

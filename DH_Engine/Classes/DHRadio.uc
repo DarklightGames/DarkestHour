@@ -34,6 +34,7 @@ enum ERadioUsageError
     ERROR_NoTarget,
     ERROR_Busy,
     ERROR_TooFarAway,
+    ERROR_Calibrating,
     ERROR_Fatal
 };
 
@@ -135,9 +136,14 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NoTarget;
     }
 
-    if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
+    if (bIsBusy)
     {
         return ERROR_Busy;
+    }
+
+    if (GRI != none && GRI.bIsInSetupPhase)
+    {
+        return ERROR_Calibrating;
     }
 
     if (VSize(P.Location - Location) > class'DHUnits'.static.MetersToUnreal(UsageDistanceMaximumMeters))
@@ -353,6 +359,10 @@ simulated function NotifySelected(Pawn User)
         case ERROR_Busy:
             // "Radio is currently in use"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 4);
+            break;
+        case ERROR_Calibrating:
+            // "Radio is calibrating"
+            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
             break;
         case ERROR_Fatal:
             // For debugging purposes only!

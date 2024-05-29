@@ -2636,10 +2636,6 @@ simulated function UpdateAnimationDriverStates()
         return;
     }
 
-    // Disable the spine animation driver used by the pawn normally.
-    // TODO: Doesn't seem to be working!
-    Driver.AnimBlendParams(1, 0.0);
-
     for (i = 0; i < AnimationDrivers.Length; ++i)
     {
         bShouldBeActive = IsAnimationDriverActiveForDriverPositionIndex(i, DriverPositionIndex);
