@@ -6,7 +6,6 @@
 class DHRadioHQAttachment extends Actor;
 
 var byte           TeamIndex;
-var StaticMesh     TeamStaticMeshes[2];
 
 var DHRadio        Radio;
 var class<DHRadio> RadioClass;
@@ -28,8 +27,6 @@ function Setup()
         Radio.SetBase(self);
         Radio.SetRelativeLocation(RadioOffset);
         Radio.bShouldShowOnSituationMap = false;
-
-        SetStaticMesh(TeamStaticMeshes[TeamIndex]);
     }
     else
     {
@@ -95,8 +92,7 @@ defaultproperties
     bPathColliding=true
     bWorldGeometry=true
 
-    TeamStaticMeshes(0)=StaticMesh'DH_Construction_stc.Artillery.GER_Artillery_Radio'
-    TeamStaticMeshes(1)=StaticMesh'DH_Construction_stc.Artillery.USA_Artillery_Radio'
+    StaticMesh=StaticMesh'DH_Construction_stc.Artillery.GER_Artillery_Radio'
 
     RadioClass=Class'DH_Engine.DHRadio'
     RadioOffset=(Y=-10,Z=64)
