@@ -149,7 +149,6 @@ function bool SpawnPlayer(DHPlayer PC)
     local DHSpawnPointBase SP;
     local bool bResult;
     local DHPawn P;
-    local bool bCombatSpawn;
 
     if (PC == none)
     {
@@ -166,8 +165,6 @@ function bool SpawnPlayer(DHPlayer PC)
 
     // We store the value of bCombatSpawn here because the spawn point may destroy
     // itself when calling PerformSpawn, which would invalidate the reference.
-    bCombatSpawn = SP.bCombatSpawn;
-    
     bResult = SP.PerformSpawn(PC);
 
     if (!bResult)
