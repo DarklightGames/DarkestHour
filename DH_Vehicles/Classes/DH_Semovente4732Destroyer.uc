@@ -9,9 +9,6 @@
 // - https://tanks-encyclopedia.com/ww2/italy/semovente_da_47-32.php
 //==============================================================================
 // TODO:
-// [ ] Interior mesh import
-// [ ] Driver camera animations
-// [ ] Fix camera clipping on driver's camera (move camera forward or down a few units)
 // [ ] Make sure to copy the new handling code from the L6/40
 // [ ] Projectile attachments
 //==============================================================================
@@ -45,11 +42,10 @@ defaultproperties
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02",InitialViewRotationOffset=(Yaw=-16384))
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01",InitialViewRotationOffset=(Yaw=-16384))
 
-    // TODO: swap to INT
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=24576,ViewNegativeYawLimit=-24576,bExposed=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_ext',DriverTransitionAnim="fiatl640_driver_in",TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_int',TransitionUpAnim="overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_int',DriverTransitionAnim="fiatl640_driver_out",TransitionUpAnim="open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=24576,ViewNegativeYawLimit=-24576,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_body_int',DriverTransitionAnim="fiatl640_driver_in",TransitionDownAnim="close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Yaw=16384)
     DriveAnim="fiatl640_driver_closed"
