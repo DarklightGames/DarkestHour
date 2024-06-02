@@ -10,10 +10,23 @@
 //==============================================================================
 // TODO:
 // [ ] Make sure to copy the new handling code from the L6/40
-// [ ] Projectile attachments
 //==============================================================================
 
 class DH_Semovente4732Destroyer extends DHArmoredVehicle;
+
+// The Semovente 47/32 has an ammo rack in the fighting compartment.
+// We show and hide the shells in the hull based on the number of rounds
+// remaining.
+simulated function OnTotalRoundsRemainingChanged(int Count)
+{
+    local int i;
+
+    for (i = 0; i < VehicleAttachments.Length; i++)
+    {
+        // We subtract 1 from the count because a loaded round is still counted.
+        VehicleAttachments[i].Actor.bHidden = i >= Count - 1;
+    }
+}
 
 defaultproperties
 {
@@ -162,15 +175,37 @@ defaultproperties
 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
 
-    // VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-31.8017,Z=46.0125))
-    // VehicleAttachments(1)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-21.5638,Z=46.0125))
-    // VehicleAttachments(2)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-26.7217,Z=37.901))
-    // VehicleAttachments(3)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=-16.4839,Z=37.901))
-    // VehicleAttachments(4)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=21.542,Z=46.0125))
-    // VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=31.7799,Z=46.0125))
-    // VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=16.4621,Z=37.901))
-    // VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',Offset=(X=-116.391,Y=26.7,Z=37.901))
-
+    VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=11.88,Y=45.33,Z=60.54))
+    VehicleAttachments(1)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-17.32,Y=45.32,Z=58.93))
+    VehicleAttachments(2)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-21.49,Y=45.31,Z=58.7))
+    VehicleAttachments(3)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=11.95,Y=37.76,Z=59.45))
+    VehicleAttachments(4)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=7.773,Y=37.76,Z=59.22))
+    VehicleAttachments(5)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=3.601,Y=37.76,Z=58.99))
+    VehicleAttachments(6)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-0.5708,Y=37.76,Z=58.76))
+    VehicleAttachments(7)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-4.743,Y=37.76,Z=58.53))
+    VehicleAttachments(8)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-8.915,Y=37.75,Z=58.3))
+    VehicleAttachments(9)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-13.09,Y=37.75,Z=58.07))
+    VehicleAttachments(10)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-17.26,Y=37.75,Z=57.84))
+    VehicleAttachments(11)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-21.43,Y=37.75,Z=57.61))
+    VehicleAttachments(12)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-25.6,Y=37.75,Z=57.38))
+    VehicleAttachments(13)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=11.91,Y=41.55,Z=60.0))
+    VehicleAttachments(14)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=7.741,Y=41.55,Z=59.77))
+    VehicleAttachments(15)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=3.569,Y=41.54,Z=59.53))
+    VehicleAttachments(16)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-0.6026,Y=41.54,Z=59.3))
+    VehicleAttachments(17)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-4.775,Y=41.54,Z=59.07))
+    VehicleAttachments(18)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-8.947,Y=41.54,Z=58.84))
+    VehicleAttachments(19)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-13.12,Y=41.54,Z=58.61))
+    VehicleAttachments(20)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-17.29,Y=41.53,Z=58.38))
+    VehicleAttachments(21)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-21.46,Y=41.53,Z=58.15))
+    VehicleAttachments(22)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-25.63,Y=41.53,Z=57.92))
+    VehicleAttachments(23)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=7.71,Y=45.33,Z=60.31))
+    VehicleAttachments(24)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=3.538,Y=45.33,Z=60.08))
+    VehicleAttachments(25)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-0.6343,Y=45.32,Z=59.85))
+    VehicleAttachments(26)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-4.806,Y=45.32,Z=59.62))
+    VehicleAttachments(27)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-8.978,Y=45.32,Z=59.39))
+    VehicleAttachments(28)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-13.15,Y=45.32,Z=59.16))
+    VehicleAttachments(29)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_Cannone4732_stc.deco.cannone4732_shell',CullDistance=1024,Rotation=(Pitch=0,Roll=-1169,Yaw=-571),Offset=(X=-25.67,Y=45.31,Z=58.47))
+    
     // Visible wheels
     LeftWheelBones(0)="WHEEL_01_L"
     LeftWheelBones(1)="WHEEL_02_L"
