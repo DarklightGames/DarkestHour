@@ -25,9 +25,11 @@ struct VehicleAttachment
     var Actor           Actor;
     var StaticMesh      StaticMesh;
     var name            AttachBone;
-    var vector          Offset;
+    var Vector          Offset;
+    var Rotator         Rotation;
     var array<Material> Skins;
     var bool            bHasCollision;
+    var float           CullDistance;
 };
 
 struct RandomAttachOption
@@ -3011,7 +3013,7 @@ simulated function SpawnVehicleAttachments()
                 AttachClass = class'DHDecoAttachment';
             }
 
-            A = SpawnAttachment(AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset);
+            A = SpawnAttachment(AttachClass, VA.AttachBone, VA.StaticMesh, VA.Offset, VA.Rotation);
 
             // Apply any specified options for static mesh, attachment bone, offset, or collision
             if (A != none)
@@ -3030,6 +3032,8 @@ simulated function SpawnVehicleAttachments()
                     A.bWorldGeometry = true;    // means we get appropriate projectile impact effects, as if we'd hit a normal static mesh actor
                     // TODO - modify ProcessTouch() in projectiles to play hit effects on things other than VehicleWeapons & DHPawns, so we don't need to make this world geometry
                 }
+
+                A.CullDistance = VA.CullDistance;
 
                 VehicleAttachments[i].Actor = A; // save a reference to this actor in the VehicleAttachments slot
             }
