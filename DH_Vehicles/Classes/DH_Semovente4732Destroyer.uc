@@ -8,9 +8,6 @@
 // - https://tanks-encyclopedia.com/ww2/italy/carro_armato_l6_40.php
 // - https://tanks-encyclopedia.com/ww2/italy/semovente_da_47-32.php
 //==============================================================================
-// TODO:
-// [ ] Make sure to copy the new handling code from the L6/40
-//==============================================================================
 
 class DH_Semovente4732Destroyer extends DHArmoredVehicle;
 
@@ -50,7 +47,6 @@ defaultproperties
 
     // Vehicle weapons & passengers
     BeginningIdleAnim="closed"
-    // TODO: probably need to slightly adjust the pose for the Semovente version
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Semovente4732CannonPawn',WeaponBone="TURRET_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_02",InitialViewRotationOffset=(Yaw=-16384))
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=0,Y=0,Z=58),DriveRot=(Yaw=16384),DriveAnim="fiatl640_passenger_01",InitialViewRotationOffset=(Yaw=-16384))
@@ -86,11 +82,6 @@ defaultproperties
     RearLeftAngle=208
     RearRightAngle=153
 
-    // Movement
-    GearRatios(3)=0.65
-    GearRatios(4)=0.75
-    TransRatio=0.13
-
     // Damage
     Health=420
     HealthMax=420.0
@@ -110,7 +101,6 @@ defaultproperties
     DamagedEffectOffset=(X=-70,Y=0,Z=80)
     DamagedEffectScale=1.0
     FireAttachBone="body"
-    // TODO: add destroyed mesh
     DestroyedVehicleMesh=StaticMesh'DH_Semovente4732_stc.Destroyed.semovente4732_destroyed'
     ShadowZOffset=20.0
 
@@ -229,6 +219,35 @@ defaultproperties
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
+
+    // Movement
+    GearRatios(3)=0.65
+    GearRatios(4)=0.75
+    TransRatio=0.13
+    WheelLatFrictionScale=2.0
+    HandbrakeThresh=1000.000000
+    MaxBrakeTorque=10.0
+
+    // Karma properties
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.2)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+        KMaxAngularSpeed=1.0
+    End Object
+    KParams=KParams0
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
