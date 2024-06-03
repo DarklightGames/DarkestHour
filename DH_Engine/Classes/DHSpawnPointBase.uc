@@ -214,7 +214,29 @@ function bool PerformSpawn(DHPlayer PC)
 }
 
 // Called when a spawn is spawned from this spawn point.
-function OnPawnSpawned(Pawn P);
+function OnPawnSpawned(Pawn P)
+{
+    local DHPawn DHP;
+    local Vehicle V;
+
+    V = Vehicle(P);
+
+    if (V != none)
+    {
+        DHP = DHPawn(V.Driver);
+    }
+    else
+    {
+        DHP = DHPawn(P);
+    }
+
+    if (DHP != none)
+    {
+        DHP.bCombatSpawned = bCombatSpawn;
+        DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnKillProtectionTime;
+        DHP.SpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+    }
+}
 
 // Called when a pawn is spawn killed from this spawn point - override in child classes
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);

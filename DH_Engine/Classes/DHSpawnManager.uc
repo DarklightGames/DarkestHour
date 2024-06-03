@@ -149,7 +149,6 @@ function bool SpawnPlayer(DHPlayer PC)
     local DHSpawnPointBase SP;
     local bool bResult;
     local DHPawn P;
-    local bool bCombatSpawn;
 
     if (PC == none)
     {
@@ -166,20 +165,9 @@ function bool SpawnPlayer(DHPlayer PC)
 
     // We store the value of bCombatSpawn here because the spawn point may destroy
     // itself when calling PerformSpawn, which would invalidate the reference.
-    bCombatSpawn = SP.bCombatSpawn;
     bResult = SP.PerformSpawn(PC);
 
-    if (bResult)
-    {
-        P = DHPawn(PC.Pawn);
-
-        if (P != none)
-        {
-            P.SpawnPoint = SP;
-            P.bCombatSpawned = bCombatSpawn;
-        }
-    }
-    else
+    if (!bResult)
     {
         // It's possible that the user attempted to spawn a vehicle,
         // in which case we need to invalidate the spawn reservation.

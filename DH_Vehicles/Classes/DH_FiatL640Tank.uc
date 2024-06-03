@@ -70,11 +70,6 @@ defaultproperties
     RearLeftAngle=208
     RearRightAngle=153
 
-    // Movement
-    GearRatios(3)=0.65
-    GearRatios(4)=0.75
-    TransRatio=0.13
-
     // Damage
     // pros: 37mm ammo is less likely to explode;
     // cons: tightly placed 4 men crew; petrol fuel;
@@ -180,6 +175,35 @@ defaultproperties
     RightTrackSoundBone="DRIVE_WHEEL_R"
 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_driver_flap_collision',AttachBone="VISION_PORT")
+
+    // Movement
+    GearRatios(3)=0.65
+    GearRatios(4)=0.75
+    TransRatio=0.13
+    WheelLatFrictionScale=2.0
+    HandbrakeThresh=1000.000000
+    MaxBrakeTorque=10.0
+
+    // Karma properties
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.4)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+        KMaxAngularSpeed=1.0
+    End Object
+    KParams=KParams0
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
