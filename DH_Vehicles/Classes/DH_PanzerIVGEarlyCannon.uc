@@ -19,6 +19,7 @@ defaultproperties
 
     // Turret armor
     bHasAddedSideArmor=true
+    bHasAddedRearArmor=true
     FrontArmorFactor=5.0
     RightArmorFactor=3.1
     LeftArmorFactor=3.1

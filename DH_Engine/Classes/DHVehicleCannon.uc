@@ -14,7 +14,8 @@ var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, Re
 var     float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 var     float               GunMantletArmorFactor;  // used for mantlet hits for casemate-style vehicles without a turret
 var     float               GunMantletSlope;
-var     bool                bHasAddedSideArmor;     // has side skirts that will make a hit by a HEAT projectile ineffective
+var     bool                bHasAddedSideArmor;     // has side skirts (schurzen) which block AP bullets, small caliber HE shells and offer some protection against HEAT
+var     bool                bHasAddedRearArmor;     // has addon armor (schurzen) which also covers the rear of the turret
 
 // Cannon ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];  // current quantity of each round type (using byte for more efficient replication)
@@ -1423,6 +1424,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local string  HitSide, OppositeSide, DebugString1, DebugString2, DebugString3;
     local bool    bProjectilePenetrated;
+    local bool    bRearHit, bSideHit;
 
     AV = DHArmoredVehicle(Base);
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
@@ -1535,29 +1537,11 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     {
         ArmorThickness = RearArmorFactor;
         ArmorSlope = RearArmorSlope;
+        bRearHit = true;
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
     {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
-        {
-            if (bDebugPenetration && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            if (bLogDebugPenetration)
-            {
-                Log("Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            if (AV != none)
-            {
-                AV.ResetTakeDamageVariables();
-            }
-
-            return false;
-        }
+        bSideHit = true;
 
         if (HitSide ~= "right")
         {
@@ -1569,6 +1553,27 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             ArmorThickness = LeftArmorFactor;
             ArmorSlope = LeftArmorSlope;
         }
+    }
+
+    // No penetration if vehicle has addon armor that stops AP Bullet and HE projectiles, so exit here (after any debug options).
+    if ((bHasAddedSideArmor && bSideHit || bHasAddedRearArmor && bRearHit) && (P.RoundType == RT_APBULLET || (P.RoundType == RT_HE && P.ShellDiameter < 8.5)))
+    {
+        if (bDebugPenetration && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Hit turret" @ HitSide $ ": no penetration as addon side armor stops AP bullets and small HE shells");
+        }
+
+        if (bLogDebugPenetration)
+        {
+            Log("Hit turret" @ HitSide $ ": no penetration as addon armor stops AP bullets and small HE shells");
+        }
+
+        if (AV != none)
+        {
+            AV.ResetTakeDamageVariables();
+        }
+
+        return false;
     }
 
     // Calculate the effective armor thickness, factoring in projectile's angle of incidence, & compare to projectile's penetration capability
@@ -1588,6 +1593,27 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         {
             AngleOfIncidence = GunMantletSlope;
         }
+
+        //Addon armor (schurzen) defeats HEAT projectiles if angle of shot is above 45 degrees
+        if ((bHasAddedSideArmor && bSideHit || bHasAddedRearArmor && bRearHit) && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
+        {
+            if (bDebugPenetration && Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Hit turret" @ AngleOfIncidence $ ": no penetration as AOI causes HEAT projectile to bounce off addon armor");
+            }
+
+            if (bLogDebugPenetration)
+            {
+                Log("Hit turret" @ AngleOfIncidence $ ": no penetration as AOI causes HEAT projectile to bounce off addon armor");
+            }
+
+            if (AV != none)
+            {
+                AV.ResetTakeDamageVariables();
+            }
+
+            return false;
+        }        
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
