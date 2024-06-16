@@ -5,6 +5,17 @@
 
 class DH_M2MortarVehicleWeapon extends DHMortarVehicleWeapon;
 
+// HACK: Mortar has 2 shells modeled, but only one of them is utiziled in
+// animations, so we keep the other one hidden. Remove this when animations for
+// both shells are implemented.
+simulated event ShowShell()
+{
+    if (PrimaryShellBone != '')
+    {
+        SetBoneScale(0, 1.0, PrimaryShellBone);
+    }
+}
+
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
@@ -22,4 +33,6 @@ defaultproperties
     ElevationMaximum=85.0
     ElevationMinimum=40.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.M2Mortar_deployed'
+    PrimaryShellBone="shell2"
+    SecondaryShellBone="Shell"
 }
