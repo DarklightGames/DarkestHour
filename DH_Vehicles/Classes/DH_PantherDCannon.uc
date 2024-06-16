@@ -8,11 +8,12 @@ class DH_PantherDCannon extends DHVehicleCannon;
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll')
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    Mesh=SkeletalMesh'DH_Panther_anm.panther_d_turret_ext'
+    Skins(0)=Texture'DH_Panther_tex.panther_d.panther_d_ext'
+    //Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    // TODO: replace with new collision SM
+    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll')
+    //HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
@@ -66,8 +67,11 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    WeaponFireOffset=222.0
-    AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
+    WeaponFireAttachmentBone="MUZZLE"
+    AltFireAttachmentBone="MG_MUZZLE"
+    WeaponFireOffset=0.0
+    AltFireOffset=(X=-8,Y=0,Z=0)
+    AltFireSpawnOffsetX=20.0
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
@@ -106,4 +110,7 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
+
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
 }

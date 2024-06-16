@@ -24,18 +24,20 @@ defaultproperties
     ReinforcementCost=5
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    Mesh=SkeletalMesh'DH_Panther_anm.panther_d_body_ext'
+    Skins(0)=Texture'DH_Panther_tex.panther_d.panther_d_ext'
+    Skins(1)=Texture'DH_Panther_tex.tracks.panther_track'
+    Skins(2)=Texture'DH_Panther_tex.tracks.panther_track'
+    //Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    //HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
 
+    ShadowZOffset=50.0
+
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="TURRET_PLACEMENT")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="MG_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
@@ -113,9 +115,13 @@ defaultproperties
     // Visual effects
     TreadVelocityScale=225.0
     WheelRotationScale=81250.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
+    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    ExhaustPipes(0)=(ExhaustPosition=(X=-209.073,Y=-21.3373,Z=116.284),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-208.848,Y=+21.3373,Z=116.284),ExhaustRotation=(Pitch=22000))
     RandomAttachment=(AttachBone="body",Skins=(none)) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
+
+    // TODO: schurzen statics
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
     RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
@@ -144,84 +150,80 @@ defaultproperties
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panther'
 
     // Visible wheels
-    LeftWheelBones(0)="Wheel_L_1"
-    LeftWheelBones(1)="Wheel_L_2"
-    LeftWheelBones(2)="Wheel_L_3"
-    LeftWheelBones(3)="Wheel_L_4"
-    LeftWheelBones(4)="Wheel_L_5"
-    LeftWheelBones(5)="Wheel_L_6"
-    LeftWheelBones(6)="Wheel_L_7"
-    LeftWheelBones(7)="Wheel_L_8"
-    LeftWheelBones(8)="Wheel_L_9"
-    LeftWheelBones(9)="Wheel_L_10"
-    RightWheelBones(0)="Wheel_R_1"
-    RightWheelBones(1)="Wheel_R_2"
-    RightWheelBones(2)="Wheel_R_3"
-    RightWheelBones(3)="Wheel_R_4"
-    RightWheelBones(4)="Wheel_R_5"
-    RightWheelBones(5)="Wheel_R_6"
-    RightWheelBones(6)="Wheel_R_7"
-    RightWheelBones(7)="Wheel_R_8"
-    RightWheelBones(8)="Wheel_R_9"
-    RightWheelBones(9)="Wheel_R_10"
+    LeftWheelBones(0)="WHEEL_01_L"
+    LeftWheelBones(1)="WHEEL_02_L"
+    LeftWheelBones(2)="WHEEL_03_L"
+    LeftWheelBones(3)="WHEEL_04_L"
+    LeftWheelBones(4)="WHEEL_05_L"
+    LeftWheelBones(5)="WHEEL_06_L"
+    LeftWheelBones(6)="WHEEL_07_L"
+    LeftWheelBones(7)="WHEEL_08_L"
+    LeftWheelBones(8)="WHEEL_09_L"
+    LeftWheelBones(9)="WHEEL_10_L"
+    LeftWheelBones(10)="WHEEL_11_L"
+    RightWheelBones(0)="WHEEL_01_R"
+    RightWheelBones(1)="WHEEL_02_R"
+    RightWheelBones(2)="WHEEL_03_R"
+    RightWheelBones(3)="WHEEL_04_R"
+    RightWheelBones(4)="WHEEL_05_R"
+    RightWheelBones(5)="WHEEL_06_R"
+    RightWheelBones(6)="WHEEL_07_R"
+    RightWheelBones(7)="WHEEL_08_R"
+    RightWheelBones(8)="WHEEL_09_R"
+    RightWheelBones(9)="WHEEL_10_R"
+    RightWheelBones(10)="WHEEL_11_L"
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
-        BoneName="steer_wheel_LF"
+        BoneName="STEER_WHEEL_F_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=32.0,Y=-15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
-        BoneName="steer_wheel_RF"
+        BoneName="STEER_WHEEL_F_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=32.0,Y=15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
-        BoneName="steer_wheel_LR"
+        BoneName="STEER_WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-14.0,Y=-15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
-        BoneName="steer_wheel_RR"
+        BoneName="STEER_WHEEL_B_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-14.0,Y=15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
-        BoneName="drive_wheel_L"
+        BoneName="DRIVE_WHEEL_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         bHandbrakeWheel=true
-        BoneName="drive_wheel_R"
+        BoneName="DRIVE_WHEEL_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=15.0,Z=-1.0)
-        WheelRadius=33.0
+        WheelRadius=35.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -242,5 +244,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_PantherDTank.KParams0'
+    KParams=KParams0
 }
