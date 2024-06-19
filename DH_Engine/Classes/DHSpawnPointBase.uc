@@ -235,6 +235,7 @@ function OnPawnSpawned(Pawn P)
         DHP.bCombatSpawned = bCombatSpawn;
         DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnKillProtectionTime;
         DHP.SpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+        DHP.SpawnPoint = self;
     }
 }
 

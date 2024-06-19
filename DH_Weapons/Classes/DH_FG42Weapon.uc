@@ -97,6 +97,7 @@ defaultproperties
     BipodIdleAnim="deploy_idle"
     BipodMagEmptyReloadAnim="deploy_reload"
     BipodMagPartialReloadAnim="deploy_reload"
+    BipodDeployFOVDelay=2.0
 
     bCanBipodDeploy=true
     ZoomOutTime=0.1
