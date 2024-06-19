@@ -10,5 +10,7 @@ if %ERRORLEVEL% GEQ 1 (
 echo Resetting window positions...
 python ..\tools\scripts\clear-windowpositions.py ..\DarkestHourDev\System\DarkestHourDevUser.ini
 
+xcopy /y ./EditorSelectionFix/D3DDrv.dll ./D3DDrv.dll
+
 echo Launching DHEd...
 start ROEdLAA.exe %* -mod=DarkestHourDev -nogamma
