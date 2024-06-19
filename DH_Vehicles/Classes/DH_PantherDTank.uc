@@ -5,17 +5,6 @@
 
 class DH_PantherDTank extends DHArmoredVehicle;
 
-// Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
-simulated function SpawnVehicleAttachments()
-{
-    if (RandomAttachment.Skins[0] == none)
-    {
-        RandomAttachOptions.Length = 0;
-    }
-
-    super.SpawnVehicleAttachments();
-}
-
 defaultproperties
 {
     // Vehicle properties
@@ -37,19 +26,22 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="TURRET_PLACEMENT")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="MG_PLACEMENT")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDMountedMGPawn',WeaponBone="MG_PLACEMENT")
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-96.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_d_body_ext',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=4096,ViewNegativeYawLimit=-4096,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_d_body_ext',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
     DriveAnim="VPanther_driver_idle_close"
+
+    PeriscopePositionIndex=0
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
+    PeriscopeCameraBone="CAMERA_DRIVER_PERISCOPE"
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
@@ -117,16 +109,15 @@ defaultproperties
     WheelRotationScale=81250.0
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    ExhaustPipes(0)=(ExhaustPosition=(X=-209.073,Y=-21.3373,Z=116.284),ExhaustRotation=(Pitch=22000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-208.848,Y=+21.3373,Z=116.284),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-215.073,Y=-21.3373,Z=116.284),ExhaustRotation=(Yaw=32768))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-215.848,Y=+21.3373,Z=116.284),ExhaustRotation=(Yaw=32768))
     RandomAttachment=(AttachBone="body",Skins=(none)) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
 
-    // TODO: schurzen statics
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
-
+    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_Panther_stc.attachments.panther_d_skirts_01',PercentChance=30)
+    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_Panther_stc.attachments.panther_d_skirts_02',PercentChance=15)
+    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_Panther_stc.attachments.panther_d_skirts_03',PercentChance=10)
+    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_Panther_stc.attachments.panther_d_skirts_04',PercentChance=15)
+    
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
