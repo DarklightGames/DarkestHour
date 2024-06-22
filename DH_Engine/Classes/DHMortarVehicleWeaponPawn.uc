@@ -39,6 +39,9 @@ var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
 var     int         OverlaySleeveTexNum;
 var     int         OverlayHandTexNum;
+var     name        OverlayPrimaryShellBone;
+var     name        OverlaySecondaryShellBone;
+var     bool        bSwapShellBonesBasedOnSelectedAmmo;
 
 // HUD
 var     texture     HUDArcTexture;           // the elevation display
@@ -779,6 +782,7 @@ simulated state Firing extends Busy
     }
 
 Begin:
+    SetFirstPersonShellDisplay();
     PlayFirstPersonAnimation(OverlayFiringAnim);
     SetCurrentAnimationIndex(FIRING_ANIM_INDEX);
 
@@ -926,6 +930,28 @@ simulated function int GetGunPitchMax()
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************************  ANIMATIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// Display different shell models depending on the selected ammo type
+simulated function SetFirstPersonShellDisplay()
+{
+    if (!bSwapShellBonesBasedOnSelectedAmmo || VehWep == none || HUDOverlay == none)
+    {
+        return;
+    }
+
+    switch (VehWep.GetAmmoIndex())
+    {
+        case 0:
+            // Hide secondary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlaySecondaryShellBone);
+            break;
+        case 1:
+            // Hide primary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlayPrimaryShellBone);
+            break;
+        default:
+    }
+}
 
 // New function to set a new CurrentAnimationIndex & play the relevant animations, & for a net client to replicate the CurrentAnimationIndex to the server
 simulated function SetCurrentAnimationIndex(byte AnimIndex)

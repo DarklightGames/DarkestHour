@@ -570,17 +570,14 @@ simulated event AnimEnd(int Channel)
     local name  Anim;
     local float Frame, Rate;
 
-    WA = DHWeaponAttachment(WeaponAttachment);
-
     if (DrivenVehicle != none)
     {
-        if (HasAnim(DrivenVehicle.DriveAnim))
-        {
-            PlayAnim(DrivenVehicle.DriveAnim, 1.0,, 1);
-        }
+        return;
     }
     else if (Channel == 1 && WeaponState != GS_IgnoreAnimend)
     {
+        WA = DHWeaponAttachment(WeaponAttachment);
+
         if (WeaponState == GS_Ready)
         {
             AnimBlendToAlpha(1, 0.0, 0.12);
