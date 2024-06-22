@@ -5070,7 +5070,25 @@ function NotifyLogout(Controller Exiting)
         }
     }
 
+    NeutralizeAndDestroyThrowableExplosiveProjectiles(PC.PlayerReplicationInfo);
+
     super.Destroyed();
+}
+
+// Neutralize and destroy any active throwable projectiles from this player.
+// This is to prevent players from team-killing with throwables and then logging out to avoid punishment.
+function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo PRI)
+{
+    local DHThrowableExplosiveProjectile TEP;
+
+    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    {
+        if (PRI != none && TEP.SavedPRI == PRI)
+        {
+            TEP.bDud = true;
+            TEP.Destroy();
+        }
+    }
 }
 
 // Overriden to write out metrics data
@@ -5464,8 +5482,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
-
                 if (C.IQManager != none)
                 {
                     C.IQManager.OnSpawn();
@@ -5500,7 +5516,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.ClientSetRotation(C.Pawn.Rotation);
 
     AddDefaultInventory(C.Pawn);
-    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
 
     if (C.IQManager != none)
     {
@@ -5508,21 +5523,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     return C.Pawn;
-}
-
-function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
-{
-    local DHPawn P;
-
-    P = DHPawn(C.Pawn);
-
-    // Set proper spawn kill protection times
-    if (P != none && SP != none)
-    {
-        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        P.SpawnPoint = SP;
-    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5828,8 +5828,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=6
-        Patch=6
+        Minor=7
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject

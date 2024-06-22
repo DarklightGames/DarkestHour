@@ -38,6 +38,7 @@ var         name        BipodIdleAnim;
 var         name        BipodIdleEmptyAnim;
 var         name        BipodMagEmptyReloadAnim;
 var         name        BipodMagPartialReloadAnim;
+var         float       BipodDeployFOVDelay;        // delay before FOV changes when deploying bipod
 
 var         name        IronIdleAnim;               // anim for weapon idling while in iron sight view
 var         name        IronBringUp;                // anim for weapon being brought up to iron sight view
@@ -1507,6 +1508,7 @@ Begin:
         ZoomOut();
     }
     
+    Sleep(BipodDeployFOVDelay);
     SetPlayerFOV(PlayerDeployFOV);
 
     if (InstigatorIsLocalHuman())

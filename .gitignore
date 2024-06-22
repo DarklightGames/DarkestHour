@@ -111,3 +111,10 @@ UserLogs
 .vscode/
 *.log
 umodel.cfg
+
+# IDA
+*.bak
+*.id[0-2]
+*.nam
+*.til
+*.i64
