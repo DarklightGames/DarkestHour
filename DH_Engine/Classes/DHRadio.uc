@@ -364,10 +364,6 @@ simulated function NotifySelected(Pawn User)
             // "Radio is calibrating"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
             break;
-        case ERROR_Fatal:
-            // For debugging purposes only!
-            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
-            break;
         default:
             break;
     }
