@@ -505,6 +505,9 @@ state TripMine
             return;
         }
 
+        // Make sure the instigator is set to the controller of the pawn that caused the damage, not the person who threw the grenade.
+        InstigatorController = InstigatedBy.Controller;
+
         // Any damage will cause this to explode.
         Explode(Location, vect(0, 0, 1));
     }
