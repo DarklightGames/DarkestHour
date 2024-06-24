@@ -78,7 +78,7 @@ state ReleasingSmoke
 
         if (MyExplosionSound != none)
         {
-            PlaySound(MyExplosionSound,, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true);
+            PlaySound(MyExplosionSound, SLOT_NONE, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true);
         }
 
         // This actor will persist as long as the smoke sound, then stay inert on
