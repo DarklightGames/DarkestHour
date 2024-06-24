@@ -6776,10 +6776,10 @@ exec function BogeyMan()
     }
 }
 
-// New debug exec to make bots spawn
+// Debug exec to make bots spawn
 // Team is 0 for axis, 1 for allies, 2 for both
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
-exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
+exec function SpawnBots(int Team, optional int Num, optional int Distance)
 {
     local DarkestHourGame DHG;
     local Controller      C;
