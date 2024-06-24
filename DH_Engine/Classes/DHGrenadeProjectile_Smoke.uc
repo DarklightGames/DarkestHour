@@ -59,6 +59,8 @@ state ReleasingSmoke
 {
     function BeginState()
     {
+        local Sound MyExplosionSound;
+
         super.BeginState();
 
         bHasExploded = true;
@@ -71,10 +73,19 @@ state ReleasingSmoke
             SpawnGasHurtRadius();
         }
 
+        // Play explosion sound
+        MyExplosionSound = ExplosionSound[Rand(arraycount(ExplosionSound))];
+
+        if (MyExplosionSound != none)
+        {
+            PlaySound(MyExplosionSound,, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true);
+        }
+
         // This actor will persist as long as the smoke sound, then stay inert on
         // ground for an extra 10 secs & then auto-destroy.
         LifeSpan = SmokeAttachmentClass.default.SmokeSoundDuration + 10.0;
     }
+
 
     simulated function Explode(vector HitLocation, vector HitNormal);
 }
@@ -114,4 +125,8 @@ defaultproperties
     WhitePhosphorusGasDamageClass=class'DHShellSmokeWPGasDamageType'
     WhitePhosphorusGasDamageLifeSpan=30.0
     WhitePhosphorusGasDamageRadius=180.0    // 3 meters
+
+    ExplosionSound(0)=None
+    ExplosionSound(1)=None
+    ExplosionSound(2)=None
 }

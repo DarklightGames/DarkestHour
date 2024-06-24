@@ -12,6 +12,7 @@ var enum EFuzeType
     FT_Impact,  // Explode on impact.
 } FuzeType;
 
+var     float           ExplosionSoundVolume;
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeDirtEffectClass;
 var     class<Emitter>  ExplodeSnowEffectClass;
@@ -948,6 +949,7 @@ defaultproperties
     bFixedRotationDir=true
     DudChance=0.001 // 1 in 1000
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
+    ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
