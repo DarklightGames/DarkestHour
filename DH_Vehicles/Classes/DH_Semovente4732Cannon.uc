@@ -11,7 +11,6 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Semovente4732_anm.semovente4732_turret_ext'
-    //Skins(0)=Texture'DH_Cannone4732_tex.cannone4732_body_ext'
 
     // Cannon armour (mantlet)
     GunMantletArmorFactor=5.0
@@ -110,4 +109,6 @@ defaultproperties
     ShakeRotTime=7.0
 
     RotationsPerSecond=0.05
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }

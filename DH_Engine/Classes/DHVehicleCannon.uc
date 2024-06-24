@@ -108,6 +108,12 @@ var array<SGunWheel> GunWheels;
 var int                 OldTotalRoundsRemaining;
 var int                 TotalRoundsRemaining;
 
+// Projectile rotation mode.
+var enum EProjectileRotationMode {
+    PRM_CurrentAim,     // Use the `CurrentAim` to determine the rotation. Inaccurate, though this is the legacy behavior, but is kept for backwards compatibility reasons.
+    PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
+} ProjectileRotationMode;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -450,30 +456,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 }
 
 // Modified to handle any pitch adjustments for human players, & any secondary or tertiary projectile spread properties
-function rotator GetProjectileFireRotation(optional bool bAltFire)
+function Rotator GetProjectileFireRotation(optional bool bAltFire)
 {
-    local rotator FireRotation;
+    local Rotator FireRotation;
     local float   ProjectileSpread;
 
-    // Get base firing direction, including any pitch adjustments for human players
     FireRotation = WeaponFireRotation;
-
-    if (Instigator != none && Instigator.IsHumanControlled())
-    {
-        FireRotation.Pitch += AddedPitch; // aim/pitch adjustment affecting all ranges (allows correction of cannons with non-centred aim points)
-
-        if (!bAltFire)
-        {
-            if (bDebugRangeAutomatically) // we're in the middle of an automatic debug option to calibrate pitch adjustment for range
-            {
-                FireRotation.Pitch += DebugPitchAdjustment;
-            }
-            else if (RangeSettings.Length > 0) // range-specific pitch adjustment for gunsights with mechanically adjusted range setting
-            {
-                FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-            }
-        }
-    }
 
     // Get projectile spread, with handling for secondary & tertiary projectile spread properties
     if (bAltFire)
@@ -1811,10 +1799,13 @@ simulated function InitializeVehicleBase()
 // Modified to use the new optional AltFireSpawnOffsetX for coaxial MG fire, instead of irrelevant WeaponFireOffset for cannon
 // And to use the new AltFireAttachmentBone to get the location for coax MG fire
 // Generally re-factored a little & removed redundant dual fire stuff
+// Also adjusted to use the actual muzzle bone rotation for determining the projectile's rotation.
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
-    local name   WeaponFireAttachBone;
-    local vector CurrentFireOffset;
+    local name      WeaponFireAttachBone;
+    local Vector    CurrentFireOffset;
+    local Coords    MuzzleCoords;
+    local float     MyAddedPitch;
 
     // Get attachment bone & positional offset
     if (bWasAltFire)
@@ -1829,10 +1820,39 @@ simulated function CalcWeaponFire(bool bWasAltFire)
         CurrentFireOffset.X = WeaponFireOffset;
     }
 
-    // Calculate the world location & rotation to spawn a projectile
-    WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
-    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+    // Calculate the world location & rotation of the projectile.
+    if (Instigator != none && Instigator.IsHumanControlled())
+    {
+        MyAddedPitch += AddedPitch; // aim/pitch adjustment affecting all ranges (allows correction of cannons with non-centred aim points)
 
+        if (!bWasAltFire)
+        {
+            if (bDebugRangeAutomatically) // we're in the middle of an automatic debug option to calibrate pitch adjustment for range
+            {
+                MyAddedPitch += DebugPitchAdjustment;
+            }
+            else if (RangeSettings.Length > 0) // range-specific pitch adjustment for gunsights with mechanically adjusted range setting
+            {
+                MyAddedPitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+            }
+        }
+    }
+
+    MuzzleCoords = GetBoneCoords(WeaponFireAttachBone);
+
+    switch (ProjectileRotationMode)
+    {
+        case PRM_CurrentAim:
+            WeaponFireRotation = Rotator(Vector(CurrentAim) >> Rotation);
+            WeaponFireRotation.Pitch += MyAddedPitch;
+            break;
+        case PRM_MuzzleBone:
+            WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(-MuzzleCoords.YAxis, class'UUnits'.static.UnrealToRadians(MyAddedPitch)), MuzzleCoords.XAxis));
+            break;
+    }
+
+    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+    
     if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
         WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
