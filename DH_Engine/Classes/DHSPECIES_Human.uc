@@ -14,8 +14,11 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {
     local ROPawn                  ROP;
     local ROPlayerReplicationInfo PRI;
-    local mesh                    NewMesh;
-    local class<VoicePack>        VoiceClass;
+    local Mesh                    NewMesh;
+    local Class<VoicePack>        VoiceClass;
+    local Class<DHVoicePack>      DHVC;
+    local DH_LevelInfo            LI;
+    local int                     EnemyTeamIndex;
 
     ROP = ROPawn(P);
 
@@ -69,6 +72,15 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
         if (ROP.VoiceType != "")
         {
             VoiceClass = class<VoicePack>(DynamicLoadObject(ROP.VoiceType, class'Class'));
+        }
+
+        DHVC = class<DHVoicePack>(VoiceClass);
+
+        if (DHVC != none)
+        {
+            LI = class'DH_LevelInfo'.static.GetInstance(P.Level);
+            EnemyTeamIndex = int(!bool(P.GetTeamNum()));
+            VoiceClass = DHVC.static.GetVoicePackClass(LI.GetTeamNationClass(EnemyTeamIndex));
         }
 
         PRI.VoiceType = VoiceClass;

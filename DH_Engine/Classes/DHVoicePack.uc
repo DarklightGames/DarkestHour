@@ -10,6 +10,13 @@ var SoundGroup RadioRequestSound;
 var SoundGroup RadioResponseConfirmSound;
 var SoundGroup RadioResponseDenySound;
 
+// This function is called to get voice pack variant when facing a specific enemy nation.
+static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNationClass)
+{
+    return default.Class;
+}
+
+
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
     local vector MyLocation;
@@ -126,11 +133,6 @@ function Timer()
     CONST VOICEREPEATTIME = 0.0;
 
     PlayerOwner = PlayerController(Owner);
-
-    if (bDisplayPortrait && (PhraseNum == 0) && !(bIsFromDifferentTeam && bUseAxisStrings))
-    {
-        PlayerController(Owner).myHUD.DisplayPortrait(PortraitPRI);
-    }
 
     if ((Phrase[PhraseNum] != none) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
     {

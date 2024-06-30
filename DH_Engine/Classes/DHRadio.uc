@@ -373,7 +373,9 @@ simulated function NotifySelected(Pawn User)
 // and results in nonsense like this needing to be coded up.
 function class<DHVoicePack> GetVoicePack(int TeamIndex, DH_LevelInfo LI)
 {
-    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass;
+    return LI.GetTeamNationClass(TeamIndex).default.VoicePackClass.static.GetVoicePackClass(
+        LI.GetTeamNationClass(int(!bool(TeamIndex)))
+        );
 }
 
 function SoundGroup GetRequestSound(int TeamIndex, DH_LevelInfo LI)
