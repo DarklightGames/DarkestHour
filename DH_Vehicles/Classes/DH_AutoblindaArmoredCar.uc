@@ -6,14 +6,12 @@
 // [ ] Exit positions
 // [ ] Destroyed mesh
 // [ ] Armor values (wolfkraut)
-// [ ] Add proper turret (once completed)
 // [ ] Fix wheel suspension in the rig
 // [ ] Fix collision area for the driver's hatch on the body
 // [ ] Driver animations
-// [ ] UI elements
+// [x] UI elements
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
-// [ ] Passenger animations
 //==============================================================================
 
 class DH_AutoblindaArmoredCar extends DHArmoredVehicle
@@ -44,9 +42,9 @@ defaultproperties
     PassengerPawns(1)=(AttachBone="PASSENGER_R",DrivePos=(Z=58),DriveAnim="autoblinda_passenger_r")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_ext',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=4096,ViewPitchDownLimit=61439,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-8192)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=4096,ViewPitchDownLimit=61439,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-8192,bExposed=true)
     UnbuttonedPositionIndex=3 // can't unbutton, no exit hatch for driver (maybe the side doors???)
     DrivePos=(Z=58.0)
     DriveRot=(Yaw=16384)
@@ -87,6 +85,9 @@ defaultproperties
     ChangeDownPoint=1000.0
     SteerSpeed=75.0
     TurnDamping=100.0
+
+    PeriscopeCameraBone="PERISCOPE_CAMERA"
+    PeriscopePositionIndex=0
 
     // TODO: revisit all of hte damage stuff
     // Damage
@@ -134,9 +135,7 @@ defaultproperties
     //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Autoblinda_stc.autoblinda_vision_port_collision',AttachBone=VISION_PORT)
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'  // TODO: replace all this
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_look'
+    VehicleHudImage=Texture'DH_Autoblinda_tex.interface.ab41_body'
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.48
     VehicleHudOccupantsY(0)=0.32
@@ -150,7 +149,6 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.75
     VehicleHudOccupantsX(5)=0.5
     VehicleHudOccupantsY(5)=0.8
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=FRWheel

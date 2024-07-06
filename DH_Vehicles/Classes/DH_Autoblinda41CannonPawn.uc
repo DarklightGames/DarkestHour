@@ -33,7 +33,7 @@ defaultproperties
     BinocPositionIndex=4
     AmmoShellTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_icon'
     AmmoShellReloadTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_reload'
-    FireImpulse=(X=-7500.0)
+    FireImpulse=(X=-5000.0)
     FPCamPos=(X=0,Y=0,Z=0)
     CameraBone="GUN_CAMERA"
     UnbuttonedPositionIndex=3
