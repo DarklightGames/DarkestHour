@@ -29,6 +29,7 @@ We have tried to keep the original aesthetic of the fonts while making them more
 In addition, players who play at higher resolutions (e.g. 4K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 ## Vehicles
+This update sees the addition of 7 brand new vehicles to the game; 6 of which are unique to the Italian faction.
 
 ### DUKW
 The DUKW is a versatile amphibious vehicle used by the United States landing forces in the Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
@@ -92,9 +93,9 @@ This compact semi-automatic pistol was the standard sidearm of the Italian army.
 
 ## Maps
 
-The maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943.
+The Italy expansion sees the addition of 4 brand new maps, and a re-imaging of an existing map.
 
-The maps follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
+The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. The follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
 ### Gela
 Size: Medium
@@ -103,26 +104,27 @@ Size: Medium
 Size: Medium
 
 ### Ponte Olivo Airfield
-
 Size: Large
 
 ### Villa Cecila
 This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only with a focus on close-quarters combat in and around the villa.
 
-# Gameplay Changes
+### San Valentino
+This popular map has been re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
+[more]
+
+# Gameplay Changes
 * Vehicle passengers may no longer use the vehicle voice commands.
 
 # Vehicles
-
 * Vehicle cannons can now be fired while the commander is looking through the periscope. [not actually done yet, but needs to be added for all the existing vehicles!]
 
 # Miscellaneous
-
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 
 # SDK
-
 * A team-specific delay to spawning during the setup phase can be added using the neww `TeamAddSpawningEnabledTime` property in the `DHSetupPhaseManager`.
 * Roles can now be locked and unlocked by firing events to the new `DH_ModifyRole` actor.
-* 
+* Spawn points can now be set to only allow vehicles to spawn using the new `ESPT_VehicleOnly` spawn point type (previously, `ESPT_Vehicle` spawn points would allow tank crewmen to spawn on foot).
+* Spawn points can now be set to only spawn boat vehicles using the new `bBoatSpawn` spawn point property.
