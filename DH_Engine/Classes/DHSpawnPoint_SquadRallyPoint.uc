@@ -322,6 +322,8 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
 
 function OnPawnSpawned(Pawn P)
 {
+    super.OnPawnSpawned(P);
+
     SpawnsRemaining -= 1;
 
     if (InstigatorController != none &&
