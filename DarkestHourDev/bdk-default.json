@@ -1,0 +1,18 @@
+{
+    "repository": {
+        "rules": [
+            {
+                "pattern": "DarkestHourDev/Maps/DH-TEMPLATE*.rom",
+                "type": "EXCLUDE"
+            },
+            {
+                "pattern": "DarkestHourDev/Maps/DHIntro.rom",
+                "type": "EXCLUDE"
+            },
+            {
+                "pattern": "DarkestHourDev/Maps/Entry.rom",
+                "type": "EXCLUDE"
+            }
+        ]
+    }
+}
