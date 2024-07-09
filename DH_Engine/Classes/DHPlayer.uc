@@ -7242,6 +7242,7 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
     }
 
     PRI = ROPlayerReplicationInfo(Sender);
+    bIsTeamVoice = Level.GetLocalPlayerController().PlayerReplicationInfo.Team != none && Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex;
 
     if (PRI != none && PRI.RoleInfo != none)
     {
