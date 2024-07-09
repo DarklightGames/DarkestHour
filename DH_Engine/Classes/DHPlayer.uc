@@ -7260,10 +7260,6 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
         if (V != none)
         {
             V.bUseLocationalVoice = true;
-        }
-
-        if (V != none)
-        {
             V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
 
             if (bIsTeamVoice)
@@ -7369,14 +7365,7 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
 
                     if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
                     {
-                        if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, none, SenderLocation);
-                        }
-                        else
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
-                        }
+                        ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
                     }
                 }
                 else
