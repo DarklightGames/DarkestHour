@@ -123,6 +123,10 @@ This popular map has been re-imagined for the Italy expansion. The original map 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 
+# Bug Fixes
+* Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands will no longer continue to play after the player has died.
+
 # SDK
 * A team-specific delay to spawning during the setup phase can be added using the neww `TeamAddSpawningEnabledTime` property in the `DHSetupPhaseManager`.
 * Roles can now be locked and unlocked by firing events to the new `DH_ModifyRole` actor.
