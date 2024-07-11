@@ -321,6 +321,21 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     }
 }
 
+simulated function DestroyMGAmmoBelt()
+{
+    local int i;
+
+    for (i = 0; i < MGBeltArray.Length; ++i)
+    {
+        if (MGBeltArray[i] != none)
+        {
+            MGBeltArray[i].Destroy();
+        }
+    }
+
+    MGBeltArray.Remove(0, MGBeltArray.Length);
+}
+
 // Modified to update player's resupply status, destroy any barrel steam emitters,
 // and destroy scope textures.
 simulated function Destroyed()
@@ -358,6 +373,8 @@ simulated function Destroyed()
         Level.ObjectPool.FreeObject(ScopeScriptedShader);
         ScopeScriptedShader = none;
     }
+    
+    DestroyMGAmmoBelt();
 }
 
 // New state containing common function overrides from states that extend state Busy, so instead they extend WeaponBusy to reduce code repetition
