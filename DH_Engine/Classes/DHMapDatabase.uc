@@ -324,4 +324,5 @@ defaultproperties
     MapInfos(168)=(Name="DH-Villa_Cecilia_Defence",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=class'DHGameType_Defence',Size=SIZE_Small)
     MapInfos(169)=(Name="DH-Gela_Advance",AlliedNation=NATION_USA,AxisNation=NATION_Italy,GameTypeClass=class'DHGameType_Advance',Size=SIZE_Medium)
     MapInfos(170)=(Name="DH-Armored_La_Champagne_Advance",AlliedNation=NATION_Canada,GameTypeClass=class'DHGameType_Advance',Size=SIZE_Any)
+    MapInfos(171)=(Name="DH-Armored_Yaryshivka_Domination",AlliedNation=NATION_USSR,GameTypeClass=class'DHGameType_Domination',Size=SIZE_Any)
 }

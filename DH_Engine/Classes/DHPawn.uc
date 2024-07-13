@@ -159,6 +159,10 @@ var     class<DHHealthFigure>   HealthFigureClass;
 // Localized strings
 var     localized string    AdminSpawnedVehicleText;
 
+// Reference to the voice message effect that the player is currently playing.
+// Deleted when the player dies so that the player doesn't keep talking after death.
+var     ROVoiceMessageEffect VoiceMessageEffect;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -3002,6 +3006,19 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
     GotoState('Dying');
 
     PlayDyingAnimation(DamageType, HitLoc);
+
+    StopVoiceSound();
+}
+
+simulated function StopVoiceSound()
+{
+    // Destroy voice message effect actor, causing any sound it's playing to stop.
+    if (VoiceMessageEffect != none)
+    {
+        // NOTE: Destroying the sound does not stop the sound from playing.
+        // The dumb hack to work around this is to banish the sound actor to the shadow realm so that it can't be heard.
+        VoiceMessageEffect.SetRelativeLocation(vect(0,0,-65536));
+    }
 }
 
 simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)

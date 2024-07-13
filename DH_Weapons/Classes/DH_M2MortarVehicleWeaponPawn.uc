@@ -23,4 +23,8 @@ defaultproperties
     HUDSmokeTexture=Texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
     HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcA'
     ArtillerySpottingScopeClass=class'DH_Weapons.DHArtillerySpottingScope_AlliedMortar'
+
+    bSwapShellBonesBasedOnSelectedAmmo=true
+    OverlayPrimaryShellBone="Shell_HE"
+    OverlaySecondaryShellBone="Shell_WP"
 }
