@@ -2,16 +2,19 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Hitpoints
-// [ ] Exit positions
-// [ ] Destroyed mesh
+// [ ] Ammo hitpoint areas
+// [ ] Exit positions (allow driver/MG to exit from the side doors)
 // [ ] Armor values (wolfkraut)
 // [ ] Fix wheel suspension in the rig
 // [ ] Fix collision area for the driver's hatch on the body
-// [ ] Driver animations
-// [x] UI elements
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
+// [ ] Fix offset of rear MG muzzle flag
+// [ ] Fix occupantpositions on UI
+// ART
+// [ ] AB41-specific turret mesh/textures
+// [x] Destroyed mesh
+// [ ] Position driver correctly
 //==============================================================================
 
 class DH_AutoblindaArmoredCar extends DHArmoredVehicle
@@ -137,18 +140,16 @@ defaultproperties
     // HUD
     VehicleHudImage=Texture'DH_Autoblinda_tex.interface.ab41_body'
     VehicleHudEngineX=0.51
-    VehicleHudOccupantsX(0)=0.48
-    VehicleHudOccupantsY(0)=0.32
+    VehicleHudOccupantsX(0)=0.5
+    VehicleHudOccupantsY(0)=0.3
     VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.43
-    VehicleHudOccupantsX(2)=0.4
-    VehicleHudOccupantsY(2)=0.75
-    VehicleHudOccupantsX(3)=0.5
-    VehicleHudOccupantsY(3)=0.6
+    VehicleHudOccupantsY(1)=0.4
+    VehicleHudOccupantsX(2)=0.55
+    VehicleHudOccupantsY(2)=0.55
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsX(4)=0.6
-    VehicleHudOccupantsY(4)=0.75
-    VehicleHudOccupantsX(5)=0.5
-    VehicleHudOccupantsY(5)=0.8
+    VehicleHudOccupantsY(4)=0.65
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=FRWheel

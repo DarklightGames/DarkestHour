@@ -148,7 +148,6 @@ function bool SpawnPlayer(DHPlayer PC)
 {
     local DHSpawnPointBase SP;
     local bool bResult;
-    local DHPawn P;
 
     if (PC == none)
     {
