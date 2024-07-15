@@ -17,7 +17,7 @@ defaultproperties
     MaxNegativeYaw=29028
     MaxPositiveYaw=36508
     CustomPitchUpLimit=3640
-    CustomPitchDownLimit=61895
+    CustomPitchDownLimit=63767
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // TODO: replace

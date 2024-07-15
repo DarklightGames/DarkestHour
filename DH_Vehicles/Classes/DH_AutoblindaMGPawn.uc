@@ -12,6 +12,7 @@ defaultproperties
     GunsightSize=0.381 // 18 degrees visible FOV at 1.8x magnification (KFZ2 sight)
     GunsightCameraBone=GUNSIGHT_CAMERA
     WeaponFOV=60
+    UnbuttonedPositionIndex=0   // Can leave out the side-doors.
     //FPCamPos=(X=10.0,Y=-5.0,Z=1.0)
     //PitchUpLimit=3640
     //PitchDownLimit=63715
