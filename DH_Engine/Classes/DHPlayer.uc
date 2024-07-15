@@ -4799,6 +4799,18 @@ exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, str
     }
 }
 
+// New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
+exec function SetHudEnginePos(string NewPosX, string NewPosY, string NewScale)
+{
+    local DHVehicle V;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        V.VehicleHudEngineX = float(NewPosX);
+        V.VehicleHudEngineY = float(NewPosY);
+    }
+}
+
 // New debug exec to set a vehicle's exhaust emitter location
 exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {

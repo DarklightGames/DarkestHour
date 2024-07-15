@@ -2169,7 +2169,7 @@ simulated function DebugModifyOverlayCorrection(float Adjustment)
 simulated function UpdateGunWheels()
 {
     local int i;
-    local rotator BoneRotation;
+    local Rotator BoneRotation;
     local int Value;
 
     for (i = 0; i < GunWheels.Length; ++i)
