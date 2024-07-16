@@ -19,7 +19,6 @@ defaultproperties
     //Skins(1)=Texture'DH_Autoblinda_tex.ab41_turret_int'
 
     BeginningIdleAnim="closed"
-
     GunnerAttachmentBone="gun_yaw"
 
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
