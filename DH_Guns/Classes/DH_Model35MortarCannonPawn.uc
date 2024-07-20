@@ -80,7 +80,10 @@ simulated function UpdateGunAnimationDrivers()
         );
 
     Gun.FreezeAnimAt(Time, PitchAnimationDriver.Channel);
+
     // TODO: get the current pitch of the gun and convert it to a 0..1 value to be used to setting the animation frame.
+
+    // Calculate the correct bone rotation based on the yaw & pitch. (Yaw first, then pitch, then translate to local space).
 }
 
 simulated function Tick(float DeltaTime)
@@ -97,14 +100,14 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
-    PitchAnimationDriver=(Channel=1,BoneName="ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=60)
+    PitchAnimationDriver=(Channel=1,BoneName="PITCH_ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=30)
 
     GunClass=class'DH_Guns.DH_Model35MortarCannon'
 
     // spotting scope
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="optic_out",ViewFOV=40.0,ViewLocation=(X=10,Y=-16.0,Z=20.0),ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // kneeling
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="optic_in",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // standing
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // binoculars
@@ -129,7 +132,7 @@ defaultproperties
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Pak sight)
 
     OverlayCorrectionX=0
-    OverlayCorrectionY=50
+    OverlayCorrectionY=0
 
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'

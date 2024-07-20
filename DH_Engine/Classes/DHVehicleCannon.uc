@@ -95,13 +95,13 @@ enum ERotationType
 
 struct SGunWheel
 {
-    var ERotationType   RotationType;
-    var name            BoneName;
-    var float           Scale;
-    var EAxis           RotationAxis;
+    var() ERotationType   RotationType;
+    var() name            BoneName;
+    var() float           Scale;
+    var() EAxis           RotationAxis;
 };
 
-var array<SGunWheel> GunWheels;
+var() array<SGunWheel> GunWheels;
 
 // This is a value replicated to clients so that they can update
 // effects based on the amount of rounds left (e.g., ammo cache

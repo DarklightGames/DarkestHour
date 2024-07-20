@@ -3136,7 +3136,7 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
         if (VehicleAnim != '' && HasAnim(VehicleAnim))
         {
-            PlayAnim(VehicleAnim,,, DriverAnimationChannel);  // TODO: needs to use the channel index!
+            PlayAnim(VehicleAnim,,, DriverAnimationChannel);
             SetAnimFrame(1.0, DriverAnimationChannel);
         }
 

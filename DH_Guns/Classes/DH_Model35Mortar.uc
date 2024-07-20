@@ -15,4 +15,6 @@ defaultproperties
     bCanBeRotated=true
     bIsArtilleryVehicle=true
     bTeamLocked=false
+    CollisionRadius=16.0
+    CollisionHeight=8.0
 }

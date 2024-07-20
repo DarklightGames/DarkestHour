@@ -1035,6 +1035,7 @@ simulated state ViewTransition
     simulated function HandleTransition()
     {
         local PlayerController PC;
+        local int DriverAnimationChannel;
         
         if (VehicleBase != none)
         {
@@ -1085,19 +1086,25 @@ simulated state ViewTransition
 
         if (Gun != none)
         {
+            if (DHVehicleWeapon(Gun) != none)
+            {
+                DriverAnimationChannel = DHVehicleWeapon(Gun).DriverAnimationChannel;
+            }
+
             if (LastPositionIndex < DriverPositionIndex)
             {
+
                 // Transition up
                 if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
                 {
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim,,, DriverAnimationChannel);
                     ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 }
             }
             else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
             {
                 // Transition down
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim,,, DriverAnimationChannel);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
             }
         }

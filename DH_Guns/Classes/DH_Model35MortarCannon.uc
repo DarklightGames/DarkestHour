@@ -24,6 +24,7 @@ defaultproperties
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-128.0,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)
 
     // Turret movement
     ManualRotationsPerSecond=0.0125
@@ -70,4 +71,8 @@ defaultproperties
 
     // No 
     YawBone="YAW"
+    PitchBone="PITCH"
+
+    DriverAnimationChannelBone="CAMERA_COM"
+    DriverAnimationChannel=2    // 1 is used for the pitching driver
 }
