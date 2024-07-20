@@ -21,4 +21,5 @@ defaultproperties
     Elevation=80.0
     ElevationMaximum=88.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed'
+    PrimaryShellBone="Shell"
 }

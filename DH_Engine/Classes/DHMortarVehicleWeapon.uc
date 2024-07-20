@@ -27,6 +27,10 @@ var     bool        bDebug;
 var     bool        bDebugNoSpread;
 var     bool        bDebugCalibrate;
 
+// Animations
+var     name        PrimaryShellBone;
+var     name        SecondaryShellBone;
+
 replication
 {
     // Functions a client can call on the server
@@ -270,6 +274,34 @@ function bool ResupplyAmmo()
     }
 
     return false;
+}
+
+// Hide mortar shell in world animations
+simulated function HideShell()
+{
+    if (PrimaryShellBone != '')
+    {
+        SetBoneScale(0, 0.0, PrimaryShellBone);
+    }
+
+    if (SecondaryShellBone != '')
+    {
+        SetBoneScale(1, 0.0, SecondaryShellBone);
+    }
+}
+
+// Make mortar shell visible in world animations. May be called by animation notifies.
+simulated function ShowShell()
+{
+    if (PrimaryShellBone != '')
+    {
+        SetBoneScale(0, 1.0, PrimaryShellBone);
+    }
+
+    if (SecondaryShellBone != '')
+    {
+        SetBoneScale(1, 1.0, SecondaryShellBone);
+    }
 }
 
 // Functions emptied out as not relevant to a mortar as it doesn't reload or have burning effects
