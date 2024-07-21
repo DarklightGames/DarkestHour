@@ -16,7 +16,8 @@ enum ERotateError
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
     ERROR_Cooldown,
-    ERROR_TooFarAway
+    ERROR_TooFarAway,
+    ERROR_Busy,
 };
 
 var DHPawn            RotateControllerPawn;
@@ -222,6 +223,11 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
     if (Pawn == none)
     {
         return ERROR_Fatal;
+    }
+
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_Busy;
     }
 
     if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
