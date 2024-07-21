@@ -2,23 +2,17 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] make the gunsight camera always have zero roll
-// [ ] make sure gunsight camera calculation is correct (seems wrong!)
-// [ ] fix issue with pitch limits
 // [ ] replace mortar round names
 // [ ] calibrate range table
 // [ ] UI elements for clock image
-// [ ] replace pitch/yaw sounds with squeaking wheels
-// [ ] fix karma collision issue (aiming straight up kills the gun)
+// [ ] replace pitch/yaw sounds with squeaking wheels used on the other mortars
 // [ ] adjust yaw dials to be more precise
 // [ ] reduce spread of mortar rounds
 // [ ] replace firing effects
 // [ ] remove reloading sounds
-// [ ] add animation to look at gunsight
 // [ ] add mortar player idle animations
 // [ ] figure out a system for the firing animations
 // [ ] increase off-gun rotation speed
-// [ ] fix bug where you can start rotating an AT gun while reloading (causes bugs)
 //==============================================================================
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
@@ -37,24 +31,6 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     SetupGunAnimationDrivers();
-}
-
-function int CustomLimitPitch(int Pitch)
-{
-    // Limit the pitch to the range of the gun.
-    return Clamp(Pitch, GetGunPitchMin(), GetGunPitchMax());
-}
-
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    if (Role == ROLE_Authority)
-    {
-        // Put it right in the middle by default.
-        // DOESN'T DO SHIT
-        Gun.CurrentAim.Pitch = (GetGunPitchMin() + GetGunPitchMax()) / 2;
-    }
 }
 
 simulated function SetupGunAnimationDrivers()
@@ -98,6 +74,15 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+exec function SetProjectileSpeed(int Speed)
+{
+    if (Gun != none)
+    {
+        Gun.PrimaryProjectileClass.default.Speed = Speed;
+        Gun.PrimaryProjectileClass.default.MaxSpeed = Speed;
+    }
+}
+
 defaultproperties
 {
     PitchAnimationDriver=(Channel=1,BoneName="PITCH_ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=30)
@@ -134,4 +119,6 @@ defaultproperties
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
     ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
+
+    GunPitchOffset=7280 // +40 degrees
 }

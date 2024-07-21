@@ -5,6 +5,19 @@
 
 class DH_Model35MortarCannon extends DHATGunCannon;
 
+function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+{
+    local DHBallisticProjectile P;
+
+    P = DHBallisticProjectile(super.SpawnProjectile(ProjClass, bAltFire));
+
+    if (P != none)
+    {
+        P.bIsCalibrating = true;
+        P.LifeStart = Level.TimeSeconds;
+    }
+}
+
 defaultproperties
 {
     // Cannon mesh
@@ -32,8 +45,8 @@ defaultproperties
     MaxNegativeYaw=-782.6
     YawStartConstraint=-782.6
     YawEndConstraint=782.6
-    CustomPitchUpLimit=15470 // 85 degrees
-    CustomPitchDownLimit=7280 // +40 degrees
+    CustomPitchUpLimit=8190
+    CustomPitchDownLimit=65535
     RotationsPerSecond=0.0125
 
     // Cannon ammo
@@ -43,7 +56,7 @@ defaultproperties
     nProjectileDescriptions(0)="HE"
     nProjectileDescriptions(1)="Smoke"
 
-    PrimaryProjectileClass=class'DH_Weapons.DH_Kz8cmGrW42ProjectileHE'
+    PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Weapons.DH_Kz8cmGrW42ProjectileSmoke'
     InitialPrimaryAmmo=30  // TODO: REPLACE
     InitialSecondaryAmmo=5  // TODO: REPLACE
@@ -75,4 +88,6 @@ defaultproperties
 
     DriverAnimationChannelBone="CAMERA_COM"
     DriverAnimationChannel=2    // 1 is used for the pitching driver
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }
