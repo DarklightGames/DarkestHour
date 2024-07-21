@@ -11,10 +11,14 @@ defaultproperties
     VehicleNameString="81/14 Model 35 Mortar"
     Team=0
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
+    Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
     bCanBeRotated=true
     bIsArtilleryVehicle=true
     bTeamLocked=false
-    CollisionRadius=16.0
+    CollisionRadius=32.0
     CollisionHeight=8.0
+    // Reversed because the gunner uses index 1.
+    ExitPositions(0)=(X=-50.00,Y=35.0,Z=20)
+    ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
 }

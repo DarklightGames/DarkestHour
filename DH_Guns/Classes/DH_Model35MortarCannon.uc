@@ -9,18 +9,18 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext'
+    Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
 
-    WeaponFireAttachmentBone="muzzle"
+    WeaponFireAttachmentBone="MUZZLE"
     // Skins(0)=Texture'DH_M116_tex.M116.m116_body'
     // Skins(1)=Texture'DH_M116_tex.M116.m116_spring'
-    // GunnerAttachmentBone="com_player"
+    GunnerAttachmentBone="YAW"
 
     // Collision meshes
-    // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_gun_coll',AttachBone="Gun")
-    //CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_M116_stc.Collision.m116_turret_coll',AttachBone="Turret")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
 
     // Animation
-    ShootIntermediateAnim="shoot_close"
+    ShootIntermediateAnim="shoot_close" // TODO: this thing has no shoot animation
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-128.0,RotationAxis=AXIS_Y)
@@ -55,12 +55,12 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
-    AddedPitch=-15  // TODO: REPLACE
+    AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    //CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    //CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    //CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
+    CannonFireSound(0)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
+    CannonFireSound(1)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
+    CannonFireSound(2)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=2.0)
     ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=2.0)
     ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)

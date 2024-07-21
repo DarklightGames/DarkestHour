@@ -32,7 +32,7 @@ var     int                 MaxSecondaryAmmo;
 var     int                 MaxTertiaryAmmo;
 
 // Firing effects
-var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
+var     Sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
 
 // Firing animations
 // Note that this system is legacy and should not be used on new vehicles.
