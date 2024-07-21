@@ -9,9 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Autoblinda_anm.autoblinda_mg_ext'
-    //Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
     FireAttachBone="mg"
-    //  FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // positions fire on co-driver's hatch // TODO: replace
+    FireEffectOffset=(X=10,Y=40,Z=0)
 
     // Movement
     MaxNegativeYaw=29028
@@ -20,17 +19,17 @@ defaultproperties
     CustomPitchDownLimit=63767
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // TODO: replace
-    InitialPrimaryAmmo=150
-    NumMGMags=5
+    ProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
+    InitialPrimaryAmmo=24
+    NumMGMags=20
     FireInterval=0.08
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
     WeaponFireOffset=27.0
-    FireSoundClass=Sound'Inf_Weapons.mg34_p_fire_loop'
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 

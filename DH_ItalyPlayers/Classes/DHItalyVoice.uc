@@ -97,6 +97,8 @@ defaultproperties
     SupportStringAxis(5)="We need an anti-tank rifle!"
     SupportAbbrevAxis(5)="Need an Anti-Tank Rifle"
 
+    EnemyStringAxis(6)="Tank! Tank!"
+
     RadioRequestSound=SoundGroup'DH_voice_ita_artillery.artillery.request'
     RadioResponseConfirmSound=SoundGroup'DH_voice_ita_artillery.artillery.confirm'
     RadioResponseDenySound=SoundGroup'DH_voice_ita_artillery.artillery.deny'

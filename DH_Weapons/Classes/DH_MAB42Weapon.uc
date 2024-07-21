@@ -7,7 +7,8 @@ class DH_MAB42Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="Moschetto Automatico Beretta M1938/42"
+    ItemName="MAB 42"
+    NativeItemName="Moschetto Automatico Beretta M1938/42"
     FireModeClass(0)=class'DH_Weapons.DH_MAB42Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MAB42MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_MAB42Attachment'

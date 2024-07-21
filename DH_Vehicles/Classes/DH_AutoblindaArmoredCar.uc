@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Ammo hitpoint areas
-// [ ] Exit positions (allow driver/MG to exit from the side doors)
 // [ ] Armor values (wolfkraut)
 // [ ] Fix wheel suspension skinning in the rig
 // [ ] Fix collision area for the driver's hatch on the body
@@ -13,7 +12,6 @@
 // [ ] Damaged effect offsets
 // ART
 // [ ] AB41-specific turret mesh/textures
-// [ ] Position driver correctly
 //==============================================================================
 
 class DH_AutoblindaArmoredCar extends DHArmoredVehicle
