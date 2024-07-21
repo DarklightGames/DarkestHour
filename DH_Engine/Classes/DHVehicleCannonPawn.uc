@@ -796,25 +796,28 @@ simulated state ViewTransition
 
         super.EndState();
 
-        if (DriverPositionIndex == PeriscopePositionIndex)
+        if (IsFirstPerson())
         {
-            // If we transitioned into the periscope, have the camera yaw start at zero.
-            // TODO: Have the periscope retain it's rotation state.
-            Controller.SetRotation(rot(0, 0, 0));
-        }
-        else
-        {
-            if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0 && IsFirstPerson())
+            if (DriverPositionIndex == PeriscopePositionIndex)
             {
-                NewRotation = Rotator(Vector(VehWep.GetBoneRotation(PlayerCameraBone)) << VehWep.Rotation); // get camera bone rotation, made relative to vehicle
-
-                if (VehWep.bHasTurret) // if vehicle has a turret, remove turret's yaw from relative rotation
+                // If we transitioned into the periscope, have the camera yaw start at zero.
+                // TODO: Have the periscope retain it's rotation state.
+                Controller.SetRotation(rot(0, 0, 0));
+            }
+            else
+            {
+                if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0 && IsFirstPerson())
                 {
-                    NewRotation.Yaw -= VehWep.CurrentAim.Yaw;
-                }
+                    NewRotation = Rotator(Vector(VehWep.GetBoneRotation(PlayerCameraBone)) << VehWep.Rotation); // get camera bone rotation, made relative to vehicle
 
-                SetRotation(NewRotation); // note that an owning net client will update this back to the server
-                Controller.SetRotation(NewRotation); // also set controller rotation as that's what's relevant if player exited mid-transition & that caused us to leave this state
+                    if (VehWep.bHasTurret) // if vehicle has a turret, remove turret's yaw from relative rotation
+                    {
+                        NewRotation.Yaw -= VehWep.CurrentAim.Yaw;
+                    }
+
+                    SetRotation(NewRotation); // note that an owning net client will update this back to the server
+                    Controller.SetRotation(NewRotation); // also set controller rotation as that's what's relevant if player exited mid-transition & that caused us to leave this state
+                }
             }
         }
     }

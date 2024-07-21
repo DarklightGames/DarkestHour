@@ -14,11 +14,11 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_hatch_collision',AttachBone="hatch")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
 
+    // TODO: fix the skin ordering on interior/exterior to match (ext first, then int)
     //Skins(0)=Texture'DH_Autoblinda_tex.ab41_turret_ext'
     //Skins(1)=Texture'DH_Autoblinda_tex.ab41_turret_int'
 
     BeginningIdleAnim="closed"
-
     GunnerAttachmentBone="gun_yaw"
 
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)

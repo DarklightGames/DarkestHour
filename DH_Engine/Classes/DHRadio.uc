@@ -234,11 +234,11 @@ state Requesting extends Busy
 
         if (Request.Sender.Pawn != none)
         {
-            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+            Request.Sender.Pawn.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
         }
 
-        // Wait for duration of request sound plus delay, then move to Responding state.
-        SetTimer(GetSoundDuration(RequestSound) + ResponseDelaySeconds, false);
+        // Wait for the length of the response delay, then move to Responding state.
+        SetTimer(ResponseDelaySeconds, false);
     }
 
     function Timer()
@@ -413,7 +413,7 @@ defaultproperties
     TeamIndex=2 // NEUTRAL_TEAM_INDEX
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
-    ResponseDelaySeconds=2.0
+    ResponseDelaySeconds=10.0
     AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
 
     ResponseSoundRadius=100.0

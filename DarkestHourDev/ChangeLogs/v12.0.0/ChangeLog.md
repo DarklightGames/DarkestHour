@@ -71,7 +71,7 @@ The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of t
 ### Breda modello 30
 There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and bizarre loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
 
-> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see how many rounds are left in the magazine as it's empited. To our knowledge, this is the first time this has been accurately modeled in a video game.
+> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see the spring decompress and well as how many rounds are left in the magazine as it's emptied. To our knowledge, this is the first time this has been accurately modeled in a video game.
 
 ### Moschetto Automatico Beretta 38
 The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
@@ -89,7 +89,6 @@ Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bol
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
 
 ### L-Type Hand Grenade (`put the real name in here`)
-
 
 ## Maps
 
@@ -122,6 +121,7 @@ This popular map has been re-imagined for the Italy expansion. The original map 
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
+* The artillery response delay has been standardized to 10 seconds for all teams instead of relying on the length of the request sound effect.
 
 # Bug Fixes
 * Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
