@@ -79,6 +79,8 @@ function DrawTable(Canvas C, float X, float Y)
         X3 = X1 + Columns[i].Width - PaddingHorizontal;
         XL2 = X3 - X2;
 
+        // If the header is too long, we can afford to draw it outside the
+        // table if it's the first or last column.
         if (i == 0)
         {
             X2 -= Max(0, TX - XL2);
