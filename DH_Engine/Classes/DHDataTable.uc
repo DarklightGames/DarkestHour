@@ -57,7 +57,7 @@ function int GetHeight(Canvas C)
 function DrawTable(Canvas C, float X, float Y)
 {
     local int i, k;
-    local float X1, Y1, XL, YL;
+    local float X1, Y1, XL, YL, TX, TY, X2, X3, XL2;
     local int TableWidth, TableHeight;
 
     C.Font = Font;  // TODO: have font not enter into this at all, just use whatever is set
@@ -73,13 +73,28 @@ function DrawTable(Canvas C, float X, float Y)
     // Header
     for (i = 0; i < Columns.Length; ++i)
     {
+        C.TextSize(Columns[i].Header, TX, TY);
+
+        X2 = X1 + PaddingHorizontal;
+        X3 = X1 + Columns[i].Width - PaddingHorizontal;
+        XL2 = X3 - X2;
+
+        if (i == 0)
+        {
+            X2 -= Max(0, TX - XL2);
+        }
+        else if (i == Columns.Length - 1)
+        {
+            X3 += Max(0, TX - XL2);
+        }
+
         C.DrawColor = Columns[i].TextColor;
         C.DrawTextJustified(
             Columns[i].Header,
             Columns[i].HeaderJustification,
-            X1 + PaddingHorizontal,
+            X2,
             Y1 + PaddingVertical,
-            X1 + Columns[i].Width - PaddingHorizontal,
+            X3,
             Y1 + YL - PaddingVertical
         );
 
