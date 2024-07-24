@@ -1427,7 +1427,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
-                PlayerNumberText.text = string(i + 1);
+                PlayerNumberText.Text = string(i + 1);
+                // TODO: we need an EVEN TINIER font
                 Canvas.Font = Canvas.TinyFont;
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
@@ -4112,7 +4113,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
 function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, Box Viewport, float PlayerYaw, color Color, float TextureScale, optional string Text)
 {
-    local vector HUDLocation;
+    local Vector HUDLocation;
 
     MapPlayerIcon.TextureScale = TextureScale;
 

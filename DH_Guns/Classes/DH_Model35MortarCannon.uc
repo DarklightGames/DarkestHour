@@ -5,19 +5,6 @@
 
 class DH_Model35MortarCannon extends DHATGunCannon;
 
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
-{
-    local DHBallisticProjectile P;
-
-    P = DHBallisticProjectile(super.SpawnProjectile(ProjClass, bAltFire));
-
-    if (P != none)
-    {
-        P.bIsCalibrating = true;
-        P.LifeStart = Level.TimeSeconds;
-    }
-}
-
 defaultproperties
 {
     // Cannon mesh

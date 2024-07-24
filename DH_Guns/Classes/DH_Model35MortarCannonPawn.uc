@@ -26,12 +26,72 @@ struct SAnimationDriver
 
 var SAnimationDriver PitchAnimationDriver;
 
-simulated function PostBeginPlay()
+simulated function InitializeVehicleAndWeapon()
 {
-    super.PostBeginPlay();
+    super.InitializeVehicleAndWeapon();
 
-    SetupGunAnimationDrivers();
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupGunAnimationDrivers();
+        UpdateGunAnimationDrivers();
+    }
 }
+
+simulated function SuperFire(optional float F)
+{
+    super.Fire(F);
+}
+
+simulated function Fire(optional float F)
+{
+    // TODO: only if the player *CAN* fire.
+
+    GotoState('Firing');
+}
+
+// New state for the mortar to play the firing animation.
+simulated state Firing
+{
+    // Don't let the user move, leave, or change the round type while firing.
+    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
+    simulated function Fire(optional float F) { }
+    exec simulated function SwitchFireMode() { }
+    function bool KDriverLeave(bool bForceLeave) { return false; }
+    simulated function NextWeapon() { }
+    simulated function PrevWeapon() { }
+
+    simulated function BeginState()
+    {
+        // Turn off the audio of the pitch/yaw sounds.
+
+        Log("In Firing state");
+    }
+
+Begin:
+    Sleep(3.0);
+    if (Role == ROLE_Authority)
+    {
+        GotoState('ServerFire');
+    }
+    else
+    {
+        // Non-authoritative clients should just go back to the default state.
+        GotoState('');
+    }
+}
+
+simulated state ServerFire
+{
+    simulated function BeginState()
+    {
+        // Fire the round.
+        super.Fire();
+
+        GotoState('');
+    }
+}
+
+// TODO: add in functionality for firing the mortar to play the animation, then spawn the projectile.
 
 simulated function SetupGunAnimationDrivers()
 {
@@ -44,42 +104,25 @@ simulated function UpdateGunAnimationDrivers()
 {
     local float Time;
 
-    if (Gun == none)
+    if (Gun != none)
     {
-        return;
+        Time = class'UInterp'.static.MapRangeClamped(
+            GetGunPitch(),
+            GetGunPitchMin(), GetGunPitchMax(),
+            PitchAnimationDriver.SequenceFrameCount, 0.0
+            );
+
+        Gun.FreezeAnimAt(Time, PitchAnimationDriver.Channel);
     }
-
-    Time = class'UInterp'.static.MapRangeClamped(
-        GetGunPitch(),
-        GetGunPitchMin(), GetGunPitchMax(),
-        PitchAnimationDriver.SequenceFrameCount, 0.0
-        );
-
-    Gun.FreezeAnimAt(Time, PitchAnimationDriver.Channel);
-
-    // TODO: get the current pitch of the gun and convert it to a 0..1 value to be used to setting the animation frame.
-
-    // Calculate the correct bone rotation based on the yaw & pitch. (Yaw first, then pitch, then translate to local space).
 }
 
 simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    // Only do this for clients.
-    // The server will update the animation driver right before firing so that it gets the right firing position.
     if (Level.NetMode != NM_DedicatedServer)
     {
         UpdateGunAnimationDrivers();
-    }
-}
-
-exec function SetProjectileSpeed(int Speed)
-{
-    if (Gun != none)
-    {
-        Gun.PrimaryProjectileClass.default.Speed = Speed;
-        Gun.PrimaryProjectileClass.default.MaxSpeed = Speed;
     }
 }
 
