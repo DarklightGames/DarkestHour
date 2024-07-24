@@ -23,6 +23,7 @@ defaultproperties
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_unassembled',Sound=none,Emitter=none)
     ProgressMax=7
+    TakeDownProgressInterval=0.2187 // 32 hits
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
     bAcceptsProjectors=false
 
