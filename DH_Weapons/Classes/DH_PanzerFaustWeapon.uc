@@ -125,6 +125,7 @@ defaultproperties
     MaxNumPrimaryMags=1
     InitialNumPrimaryMags=1
     bCanBeResupplied=false
+    bCanResupplyWhenEmpty=true
 
     RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",IronFireAnim="shoot30")
     RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",IronFireAnim="shoot")
