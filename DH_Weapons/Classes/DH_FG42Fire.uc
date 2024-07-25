@@ -44,11 +44,14 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.06
-    MaxVerticalRecoilAngle=620
-    MaxHorizontalRecoilAngle=220
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=4.0,OutVal=1.0),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=340
+    MaxHorizontalRecoilAngle=150
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.55),(InVal=4.0,OutVal=0.9),(InVal=12.0,OutVal=1.1),(InVal=10000000000.0,OutVal=0.8)))
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
+    PctProneIronRecoil=0.50
+    PctRestDeployRecoil=0.55
+    PctBipodDeployRecoil=0.35
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
