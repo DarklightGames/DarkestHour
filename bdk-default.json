@@ -10,19 +10,7 @@
                 "type": "EXCLUDE"
             },
             {
-                "pattern": "Maps/*Intro.rom",
-                "type": "EXCLUDE"
-            },
-            {
-                "pattern": "Maps/Entry.rom",
-                "type": "EXCLUDE"
-            },
-            {
-                "pattern": "Maps/Auto*.rom",
-                "type": "EXCLUDE"
-            },
-            {
-                "pattern": "Maps/RO-Advanced*.rom",
+                "pattern": "Maps/*.rom",
                 "type": "EXCLUDE"
             },
             {
