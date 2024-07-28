@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [1] https://texashistory.unt.edu/ark:/67531/metapth46561/
+//==============================================================================
 
 class DH_Model35MortarCannon extends DHATGunCannon;
 
@@ -23,8 +25,9 @@ defaultproperties
     ShootIntermediateAnim="shoot_close" // TODO: this thing has no shoot animation
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-128.0,RotationAxis=AXIS_Y)
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
+    GunWheels(2)=(RotationType=ROTATION_PITCH,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
 
     // Turret movement
     ManualRotationsPerSecond=0.0125

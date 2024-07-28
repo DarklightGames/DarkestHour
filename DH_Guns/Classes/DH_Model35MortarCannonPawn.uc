@@ -16,6 +16,16 @@
 //==============================================================================
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
+var     float FiringStartTimeSeconds;       // The time at which the firing animation started, relative to Level.TimeSeconds.
+var     float OverlayFiringAnimDuration;    // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
+
+var()   name  FiringCameraBone;         // The name of the bone to use for the camera while firing.
+var()   int   FiringCameraBoneChannel;  // The channel to use for the firing camera bone.
+var()   name  GunFireAnim;              // The firing animation to play on the gun mesh.
+var()   name  OverlayFiringAnimName;    // The name of the firing animation on the overlay mesh.
+var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
+var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+
 struct SAnimationDriver
 {
     var int Channel;
@@ -32,6 +42,7 @@ simulated function InitializeVehicleAndWeapon()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
+        SetupFiringCameraChannel();
         SetupGunAnimationDrivers();
         UpdateGunAnimationDrivers();
     }
@@ -60,9 +71,83 @@ simulated state Firing
     simulated function NextWeapon() { }
     simulated function PrevWeapon() { }
 
+    simulated function DrawHUD(Canvas Canvas)
+    {
+        // TODO: add in the drawing of the HUDOverlay actor for the mortar.
+        super.DrawHUD(Canvas);
+    }
+
+    // Calculate the linear interpolation value for the camera position and rotation.
+    simulated function float GetCameraInterpolationTheta()
+    {
+        local float Theta;
+        local float FiringTimeSeconds, ZoomOutTime;
+
+        FiringTimeSeconds = Level.TimeSeconds - FiringStartTimeSeconds;
+        ZoomOutTime = OverlayFiringAnimDuration - FiringCameraOutTime;
+
+        if (FiringTimeSeconds < FiringCameraInTime)
+        {
+            Theta = FiringTimeSeconds / FiringCameraInTime;
+        }
+        else if (FiringTimeSeconds > ZoomOutTime)
+        {
+            Theta = 1.0 - ((FiringTimeSeconds - ZoomOutTime) / FiringCameraOutTime);
+        }
+        else
+        {
+            Theta = 1.0;
+        }
+
+        return Theta;
+    }
+
+    simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+    {
+        local float Theta;
+        local Vector NormalCameraLocation, FiringCameraLocation;
+        local Rotator NormalCameraRotation, FiringCameraRotation;
+        local Coords FiringCameraBoneCoords;
+
+        // TODO: calculate firing camera position and rotation.
+        FiringCameraBoneCoords = Gun.GetBoneCoords(FiringCameraBone);
+        FiringCameraLocation = FiringCameraBoneCoords.Origin;
+
+        // Convert the X, Y and Z axis from the bone coords to a quaternion.
+        FiringCameraRotation = QuatToRotator(
+            class'UQuaternion'.static.FromAxes(FiringCameraBoneCoords.XAxis, FiringCameraBoneCoords.YAxis, FiringCameraBoneCoords.ZAxis)
+            );
+
+        // Get the linear theta.
+        Theta = GetCameraInterpolationTheta();
+
+        // Perform a smoothstep on the theta.
+        Theta = class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
+
+        Log("Theta" @ Theta);
+
+        // Interpolate the camera position and rotation between the normal and firing camera positions.
+        global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
+
+        ViewActor = self;
+        CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
+        CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
+    }
+
     simulated function BeginState()
     {
-        // Turn off the audio of the pitch/yaw sounds.
+        if (IsLocallyControlled() && Gun != none)
+        {
+            Gun.PlayAnim(GunFireAnim, 1.0, 0.0, FiringCameraBoneChannel);
+        }
+
+        FiringStartTimeSeconds = Level.TimeSeconds;
+
+        // TODO: make sure the hudoverlay is created and set up properly.
+
+        OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
+
+        // ActivateOverlay?? (only on the controlling client), then deactivate overlay when done.
 
         Log("In Firing state");
     }
@@ -92,6 +177,11 @@ simulated state ServerFire
 }
 
 // TODO: add in functionality for firing the mortar to play the animation, then spawn the projectile.
+
+simulated function SetupFiringCameraChannel()
+{
+    Gun.AnimBlendParams(FiringCameraBoneChannel, 1.0, 0.0, 0.0, FiringCameraBone);
+}
 
 simulated function SetupGunAnimationDrivers()
 {
@@ -164,4 +254,10 @@ defaultproperties
     ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
 
     GunPitchOffset=7280 // +40 degrees
+
+    FiringCameraInTime=0.65
+    FiringCameraOutTime=0.65
+    FiringCameraBone="FIRING_CAMERA"
+    FiringCameraBoneChannel=3
+    GunFireAnim="FIRE"
 }
