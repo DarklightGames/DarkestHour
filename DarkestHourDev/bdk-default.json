@@ -12,6 +12,10 @@
             {
                 "pattern": "DarkestHourDev/Maps/Entry.rom",
                 "type": "EXCLUDE"
+            },
+            {
+                "pattern": "DarkestHourDev/Maps/DH-Danzig_Push.rom",
+                "type": "EXCLUDE"
             }
         ]
     }
