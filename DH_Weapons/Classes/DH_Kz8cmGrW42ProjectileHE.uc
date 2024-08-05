@@ -7,6 +7,8 @@ class DH_Kz8cmGrW42ProjectileHE extends DHMortarProjectileHE;
 
 defaultproperties
 {
+    ImpactEffect=class'DH_Effects.DHMortarHitEffect81mm'
+    
     Speed=3936.0
     MaxSpeed=3936.0
     Damage=300.0
