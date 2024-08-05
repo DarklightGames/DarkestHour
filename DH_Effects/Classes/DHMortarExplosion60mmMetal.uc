@@ -74,7 +74,7 @@ defaultproperties
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=64,G=128,R=255,A=255))
         ColorScaleRepeats=4.000000
-        MaxParticles=200
+        MaxParticles=75
         name="embers"
         StartLocationOffset=(Z=20.000000)
         AddLocationFromOtherEmitter=1
@@ -88,7 +88,7 @@ defaultproperties
         TextureVSubdivisions=2
         LifetimeRange=(Min=2.000000,Max=3.000000)
         InitialDelayRange=(Min=0.300000,Max=0.450000)
-        StartVelocityRange=(X=(Min=-160.000000,Max=150.000000),Y=(Min=-150.000000,Max=165.000000),Z=(Min=25.000000,Max=75.000000))
+        StartVelocityRange=(X=(Min=-160.000000,Max=150.000000),Y=(Min=-150.000000,Max=165.000000),Z=(Min=125.000000,Max=550.000000))
         VelocityLossRange=(Z=(Min=1.000000,Max=3.000000))
         GetVelocityDirectionFrom=PTVD_StartPositionAndOwner
     End Object
@@ -105,13 +105,13 @@ defaultproperties
         Acceleration=(Z=-450.000000)
         ColorScale(0)=(Color=(B=128,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(R=128,A=255))
-        MaxParticles=25
+        MaxParticles=100
         name="upward_sparks"
         StartSizeRange=(X=(Min=80.000000),Y=(Min=80.000000),Z=(Min=80.000000))
         InitialParticlesPerSecond=500.000000
         Texture=Texture'Effects_Tex.explosions.fire_quad'
         LifetimeRange=(Min=0.200000,Max=0.750000)
-        StartVelocityRange=(X=(Min=-500.000000,Max=550.000000),Y=(Min=-555.000000,Max=600.000000),Z=(Min=-500.000000,Max=800.000000))
+        StartVelocityRange=(X=(Min=-500.000000,Max=550.000000),Y=(Min=-555.000000,Max=600.000000),Z=(Min=-500.000000,Max=1500.000000))
         VelocityLossRange=(Z=(Min=1.000000,Max=3.000000))
     End Object
     Emitters(3)=SparkEmitter'SparkEmitter4'
@@ -121,7 +121,7 @@ defaultproperties
         FadeOut=True
         RespawnDeadParticles=False
         Disabled=false
-        Backup_Disabled=True
+        //Backup_Disabled=True
         SpinParticles=True
         UseSizeScale=True
         UseRegularSizeScale=False
@@ -154,7 +154,6 @@ defaultproperties
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        UseRandomSubdivision=True
         Acceleration=(X=30.000000,Y=10.000000,Z=-450.000000)
         ColorScale(0)=(Color=(B=98,G=98,R=98,A=255))
         ColorScale(1)=(RelativeTime=0.485714,Color=(B=128,G=128,R=128,A=255))
@@ -167,12 +166,10 @@ defaultproperties
         StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
         MaxParticles=8
         name="big_chunks"
-        StartSizeRange=(X=(Min=15.000000,Max=25.000000),Y=(Min=15.000000,Max=25.000000),Z=(Min=15.000000,Max=25.000000))
+        StartSizeRange=(X=(Min=5.000000,Max=15.000000),Y=(Min=5.000000,Max=15.000000),Z=(Min=5.000000,Max=15.000000))
         InitialParticlesPerSecond=100.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.BulletHits.stonechunksfinal'
-        TextureUSubdivisions=2
-        TextureVSubdivisions=2
+        Texture=Texture'DH_FX_tex.debris.shrapnel5'
         LifetimeRange=(Max=5.000000)
         StartVelocityRange=(X=(Min=-250.000000,Max=250.000000),Y=(Min=-250.000000,Max=250.000000),Z=(Min=300.000000,Max=600.000000))
     End Object
