@@ -2,18 +2,17 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] wheels should appear to be stationary while in water
-// [ ] have different driving characteristics when in water/on land
-// [ ] splash guard functionality
-// [ ] exit positions
-// [~] passengers
-// [ ] turn off wash sound when out of water
-// [ ] fx for propeller wash
-// [ ] fx for bow water spray
-// [ ] change sss
-// [ ] fix issue with wheel and suspension misalignment
-// [ ] add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
-// [ ] ADD ENGINE HITPOINT
+// [ ] Wheels should appear to be stationary while in water
+// [ ] Have different driving characteristics when in water/on land
+// [ ] Splash guard functionality
+// [ ] Exit positions
+// [ ] Turn off wash sound when out of water
+// [ ] Fix for propeller wash
+// [ ] Add bow water spray
+// [ ] Fix issue with wheel and suspension misalignment
+// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] Add engine hitpoint
+// [ ] Fix engine fire position
 //==============================================================================
 
 class DH_DUKW extends DHBoatVehicle;
@@ -37,6 +36,13 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerToggleSplashGuard;
+}
+
+simulated event DestroyAppearance()
+{
+    // Avoid calling the DHBoatVehicle's DestroyAppearance function since it does
+    // some weird shit we don't want to replicate.
+    super(DHVehicle).DestroyAppearance();
 }
 
 simulated function name GetIdleAnim()
