@@ -313,13 +313,34 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=Texture'DH_DUKW_tex.interface.DUKW_body_icon'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
+
+    VehicleHudOccupantsX(2)=0.56
+    VehicleHudOccupantsY(2)=0.5125
+    VehicleHudOccupantsX(3)=0.44
+    VehicleHudOccupantsY(3)=0.5125
+
+    VehicleHudOccupantsX(4)=0.56
+    VehicleHudOccupantsY(4)=0.6
+    VehicleHudOccupantsX(5)=0.44
+    VehicleHudOccupantsY(5)=0.6
+
+    VehicleHudOccupantsX(6)=0.56
+    VehicleHudOccupantsY(6)=0.6875
+    VehicleHudOccupantsX(7)=0.44
+    VehicleHudOccupantsY(7)=0.6875
+
+    VehicleHudOccupantsX(8)=0.56
+    VehicleHudOccupantsY(8)=0.775
+    VehicleHudOccupantsX(9)=0.44
+    VehicleHudOccupantsY(9)=0.775
+
+    SpawnOverlay(0)=Material'DH_DUKW_tex.interface.DUKW_icon'
 
     // Splashguard 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
