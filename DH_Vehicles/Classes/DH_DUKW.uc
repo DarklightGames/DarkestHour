@@ -278,7 +278,7 @@ defaultproperties
     DirectHEImpactDamageMult=9.0
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_DUKW_stc.DUKW_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -315,6 +315,8 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.4
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
 
+    // Splashguard 
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
 
     //================copypaste from gmc
 
