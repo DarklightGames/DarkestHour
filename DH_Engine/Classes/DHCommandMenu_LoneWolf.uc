@@ -24,7 +24,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
             PC.ServerSquadJoinAuto();
             break;
         case 1:
-            PC.ServerSquadCreate();
+            PC.ServerSquadCreate(-1);
             break;
     }
 

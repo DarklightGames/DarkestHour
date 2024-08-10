@@ -5888,13 +5888,13 @@ simulated function int GetRoleIndex()
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-function ServerSquadCreate()
+function ServerSquadCreate(int SquadIndex)
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadIndex);
 }
 
 function ServerSquadLeave()

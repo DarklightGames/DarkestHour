@@ -19,7 +19,9 @@ enum ERoleSelector
 {
     ERS_ALL,
     ERS_SL,
+    ERS_LOGI,
     ERS_ASL,
+    ERS_TANKER,
     ERS_SL_OR_ASL,
     ERS_ARTILLERY_OPERATOR,
     ERS_ARTILLERY_SPOTTER,
@@ -27,6 +29,8 @@ enum ERoleSelector
     ERS_ADMIN,
     ERS_PATRON
 };
+
+const SQUAD_INDEX_LOGI = 6;
 
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
@@ -45,8 +49,10 @@ var     bool                    bIsSquadAssistant;
 var     int                     TotalScore;
 var     int                     CategoryScores[2];
 
-var     localized string        SquadLeaderAbbreviation;
-var     localized string        AssistantAbbreviation;
+var     localized string        AbbreviationSquadLeader;
+var     localized string        AbbreviationAssistant;
+var     localized string        AbbreviationLogi;
+var     localized string        AbbreviationTanker;
 
 var     int                     CountryIndex;
 var     int                     PlayerIQ;
@@ -65,11 +71,11 @@ simulated function string GetNamePrefix()
 {
     if (IsSquadLeader())
     {
-        return default.SquadLeaderAbbreviation;
+        return default.AbbreviationSquadLeader;
     }
     else if (bIsSquadAssistant)
     {
-        return default.AssistantAbbreviation;
+        return default.AbbreviationAssistant;
     }
     else if (IsInSquad())
     {
@@ -113,6 +119,11 @@ simulated function bool IsSLorASL()
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
+simulated function bool IsLogi()
+{
+    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
 }
 
 simulated function bool HasSquadMembers(int MinCount)
@@ -191,9 +202,10 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
 }
 
+//Used by Logi trucks only
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
-    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsLogi();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -224,8 +236,12 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
             return true;
         case ERS_SL:
             return IsSL();
+        case ERS_LOGI:
+            return IsLogi();
         case ERS_ASL:
             return IsASL();
+        case ERS_TANKER:
+            return IsLogi();
         case ERS_ARTILLERY_SPOTTER:
             return IsArtillerySpotter();
         case ERS_ARTILLERY_OPERATOR:
@@ -263,7 +279,9 @@ defaultproperties
 {
     SquadIndex=-1
     SquadMemberIndex=-1
-    SquadLeaderAbbreviation="SL"
-    AssistantAbbreviation="A"
+    AbbreviationSquadLeader="SL"
+    AbbreviationAssistant="A"
+    AbbreviationLogi="L"
+    AbbreviationTanker="T"
     CountryIndex=-1
 }

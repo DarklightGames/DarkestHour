@@ -255,8 +255,17 @@ function Timer()
             continue;
         }
 
-        // SLs, ASLs and radio operators should know where all squad leaders are.
-        if (PRI.IsSLorASL() || PRI.IsRadioman())
+        // All unassigned players will be berated to join a squad every 30 seconds.
+        if (bAreRallyPointsEnabled &&
+            !PRI.IsInSquad() &&
+            Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
+        {
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
+            continue;
+        }
+
+        // SLs, ASLs, Logi and radio operators should know where all squad leaders are.
+        if (PRI.IsSLorASL()  || PRI.IsLogi() || PRI.IsRadioman())
         {
             UpdateSquadLeaderLocations(PC);
         }
@@ -632,16 +641,17 @@ simulated function int GetTeamSquadSize(int TeamIndex)
 simulated function int GetTeamSquadLimit(int TeamIndex)
 {
     local int TeamSquadSize;
+    return 8;
 
-    TeamSquadSize = GetTeamSquadSize(TeamIndex);
+    // TeamSquadSize = GetTeamSquadSize(TeamIndex);
 
-    // Avoid a divide-by-zero error.
-    if (TeamSquadSize <= 0)
-    {
-        return 0;
-    }
+    // // Avoid a divide-by-zero error.
+    // if (TeamSquadSize <= 0)
+    // {
+    //     return 0;
+    // }
 
-    return Min(TEAM_SQUADS_MAX, TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex));
+    // return Min(TEAM_SQUADS_MAX, TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex));
 }
 
 // Returns true when there are members in the squad.
@@ -761,12 +771,15 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
-function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
+function int CreateSquad(DHPlayerReplicationInfo PRI, int SquadIndex, optional string Name)
 {
     local int i;
     local int TeamIndex;
     local DHPlayer PC;
     local DHVoiceReplicationInfo VRI;
+
+    Log("----CreateSquad: " @ SquadIndex);
+
 
     if (PRI == none)
     {
@@ -787,43 +800,56 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
     TeamIndex = PC.GetTeamNum();
 
-    for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+    if (SquadIndex != -1)
     {
-        if (!IsSquadActive(TeamIndex, i))
+        i = SquadIndex;
+    }
+    else
+    {
+        //Auto create squad command menu, so let's find the index
+        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
         {
-            SetName(TeamIndex, i, Name);
-
-            // Clear out the assistant squad leader role.
-            SetAssistantSquadLeader(TeamIndex, i, none);
-
-            SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
-
-            VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
-
-            if (VRI != none)
+            if (IsSquadActive(TeamIndex, i))
             {
-                VRI.JoinSquadChannel(PRI, TeamIndex, i);
-                PC.Speak("SQUAD");
+                break;
             }
-
-            // "You have created a squad."
-            PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
-
-            // Unlock the squad.
-            SetSquadLockedInternal(TeamIndex, i, false);
-
-            // Have a slight delay in placing rally points to dissuade players
-            // from trying to exploit the system.
-            SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
-
-            // New squad will have no rallies. Reset the no rally points time to now.
-            UpdateSquadLeaderNoRallyPointsTime(TeamIndex, i);
-
-            // This new squad leader may need to have their role invalidated.
-            MaybeInvalidateRole(PC);
-
-            return i;
         }
+    }
+    
+    if (!IsSquadActive(TeamIndex, i))
+    {
+        SetName(TeamIndex, i, Name);
+
+        // Clear out the assistant squad leader role.
+        SetAssistantSquadLeader(TeamIndex, i, none);
+
+        SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
+
+        VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
+
+        if (VRI != none)
+        {
+            VRI.JoinSquadChannel(PRI, TeamIndex, i);
+            PC.Speak("SQUAD");
+        }
+
+        // "You have created a squad."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
+
+        // Unlock the squad.
+        SetSquadLockedInternal(TeamIndex, i, false);
+
+        // Have a slight delay in placing rally points to dissuade players
+        // from trying to exploit the system.
+        SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
+
+        // New squad will have no rallies. Reset the no rally points time to now.
+        UpdateSquadLeaderNoRallyPointsTime(TeamIndex, i);
+
+        // This new squad leader may need to have their role invalidated.
+        MaybeInvalidateRole(PC);
+
+        return i;
     }
 
     return -1;

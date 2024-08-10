@@ -17,6 +17,8 @@ enum EMapMode
     MODE_Squads
 };
 
+const SQUAD_INDEX_LOGI = 6;
+
 var automated   FloatingImage               i_Background;
 var automated   ROGUIProportionalContainer  c_Teams;
 var automated   GUIButton                       b_Axis;
@@ -1682,13 +1684,16 @@ function UpdateSquads()
     // Go through the active squads
     for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
+        C = p_Squads.SquadComponents[i];
+        C.SquadIndex = i;
+
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
             continue;
         }
 
-        C = p_Squads.SquadComponents[j];
-        C.SquadIndex = i;
+        // C = p_Squads.SquadComponents[j];
+        // C.SquadIndex = i;
 
         SetVisible(C, true);
 
@@ -1804,8 +1809,12 @@ function UpdateSquads()
 
     while (j < p_Squads.SquadComponents.Length - 1)
     {
-        SetVisible(p_Squads.SquadComponents[j], false);
+        if (j != SQUAD_INDEX_LOGI)
+        {
+            SetVisible(p_Squads.SquadComponents[j], false);
+        }
         ++j;
+     
     }
 
     // Show the unassigned category

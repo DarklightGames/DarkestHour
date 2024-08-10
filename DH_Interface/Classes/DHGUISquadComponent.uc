@@ -7,6 +7,7 @@ class DHGUISquadComponent extends GUIPanel;
 
 var int SquadIndex;
 var bool bIsEditingName;
+const SQUAD_INDEX_LOGI = 6;
 
 var DHContextMenu_SquadMembers      MembersListContextMenuWrapper;
 
@@ -55,7 +56,7 @@ function bool OnClick(GUIComponent Sender)
     switch (Sender)
     {
         case b_CreateSquad:
-            PC.ServerSquadCreate();
+            PC.ServerSquadCreate(SquadIndex);
             return true;
         case b_JoinSquad:
             PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
