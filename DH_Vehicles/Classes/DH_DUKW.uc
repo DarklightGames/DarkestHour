@@ -13,6 +13,8 @@
 // [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
 // [ ] Add engine hitpoint
 // [ ] Fix engine fire position
+// [ ] Fix issue where vehicle is inoperable after changing positions
+// [ ] Maybe make the propeller spin cause it'd be fun
 //==============================================================================
 
 class DH_DUKW extends DHBoatVehicle;
