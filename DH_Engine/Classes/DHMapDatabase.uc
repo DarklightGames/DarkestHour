@@ -190,7 +190,7 @@ defaultproperties
     MapInfos(28)=(Name="DH-Watrange_Clash",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
     MapInfos(29)=(Name="DH-Watrange_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Large)
     MapInfos(30)=(Name="DH-Noville_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Medium)
-    MapInfos(31)=(Name="DH-Nuenen_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Clash,Size=SIZE_Large)
+    MapInfos(31)=(Name="DH-Nuenen_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(32)=(Name="DH-Oosterbeek_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(33)=(Name="DH-Poteau_Ambush_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(34)=(Name="DH-Putot-en-Bessin_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Large)
