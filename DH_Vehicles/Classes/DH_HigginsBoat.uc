@@ -88,6 +88,8 @@ function KDriverEnter(Pawn P)
 // Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local DHPlayer DHPC;
+
     if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
     {
         InitialPositionIndex = DriverPositionIndex;
@@ -96,6 +98,14 @@ simulated function ClientKDriverEnter(PlayerController PC)
     super.ClientKDriverEnter(PC);
 
     InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
+
+    DHPC = DHPlayer(PC);
+
+    if (DHPC != none)
+    {
+        // Send hint so the player is told how to raise and lower the ramp.
+        DHPC.QueueHint(42, false);
+    }
 }
 
 // Modified to to add ramp sounds // Matt: alternative would be to add these as notifies to the ramp animations
