@@ -3762,6 +3762,36 @@ exec function MidGameVote()
     }
 }
 
+exec function ResetAllInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Objectives
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] != none)
+        {
+            GRI.DHObjectives[i].ResetInfluenceModifiers();
+        }
+    }
+
+    // Spawn points
+    for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none)
+        {
+            GRI.SpawnPoints[i].BaseInfluenceModifier = GRI.SpawnPoints[i].InitialBaseInfluenceModifier;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
 // Debug function that changes Danger Zone influence for objectives AND
 // main spawns.
 //
