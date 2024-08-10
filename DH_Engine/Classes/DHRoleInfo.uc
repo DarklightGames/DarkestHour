@@ -25,6 +25,7 @@ var     bool                bCanPickupWeapons;
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
+var     bool                bRequiresLogi;          // player must be in the Logi squad to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 var     bool                bRequiresSL;
 var     bool                bCanBeSquadLeader;      // squad leaders can take this role (disabled for special weapon roles!)
 

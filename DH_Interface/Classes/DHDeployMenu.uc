@@ -101,7 +101,8 @@ var localized   string                      NoneText,
                                             RecommendJoiningSquadText,
                                             UnassignedPlayersCaptionText,
                                             NonSquadLeaderOnlyText,
-                                            RoleLockedText
+                                            RoleLockedText,
+                                            NonLogiSquadOnlyText
                                             ;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
@@ -667,8 +668,11 @@ function UpdateRoles()
             case RER_NonSquadLeaderOnly:
                 S @= "*" $ NonSquadLeaderOnlyText $ "*";
                 break;
-             case RER_Locked:
+            case RER_Locked:
                 S @= "*" $ RoleLockedText $ "*";
+                break;
+            case RER_LogiSquadOnly:
+                S @= "*" $ NonLogiSquadOnlyText $ "*";
                 break;
         }
         
@@ -1630,6 +1634,7 @@ function UpdateSquads()
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
+    local DHGUISquadComponent            CLogi;
     local int TeamIndex, SquadLimit, i, j, k;
     local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
 
@@ -1680,13 +1685,14 @@ function UpdateSquads()
 
     bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
+    Log("----SquadLimit: " @ SquadLimit);
 
     // Go through the active squads
     for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
         C = p_Squads.SquadComponents[i];
         C.SquadIndex = i;
-
+        
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
             continue;
@@ -1809,12 +1815,53 @@ function UpdateSquads()
 
     while (j < p_Squads.SquadComponents.Length - 1)
     {
-        if (j != SQUAD_INDEX_LOGI)
+        if (j == SQUAD_INDEX_LOGI)
+        {
+            CLogi = p_Squads.SquadComponents[j];
+            SetVisible(CLogi, true);
+            SetVisible(CLogi.l_SquadName, true);
+
+             if (SRI.IsSquadActive(TeamIndex, j))
+             {
+
+                // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+                // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
+                // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
+                // bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
+                // bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
+
+                SetVisible(CLogi.lb_Members, true);
+                SetVisible(CLogi.li_Members, true);
+                SetVisible(CLogi.l_SquadName, !CLogi.bIsEditingName);
+                SetVisible(CLogi.eb_SquadName, bIsSquadLeader);
+                SetVisible(CLogi.b_CreateSquad, false);
+                SetVisible(CLogi.b_JoinSquad, !bIsInSquad);
+                SetVisible(CLogi.b_LeaveSquad, bIsInSquad);
+                SetVisible(CLogi.b_LockSquad, bIsSquadLeader);
+                SetVisible(CLogi.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+                SetVisible(CLogi.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, j));
+
+             }
+             else
+             {
+                SetVisible(CLogi.b_CreateSquad, !bIsInSquad);
+                SetVisible(CLogi.l_SquadName, true);
+                 
+                SetVisible(CLogi.lb_Members, false);
+                SetVisible(CLogi.li_Members, false);
+                SetVisible(CLogi.b_JoinSquad, false);
+                SetVisible(CLogi.b_LeaveSquad, false);
+                SetVisible(CLogi.b_LockSquad, false);
+                SetVisible(CLogi.i_LockSquad, false);
+                SetVisible(CLogi.eb_SquadName, false);
+                SetVisible(CLogi.i_NoRallyPoints, false);
+             }
+        }
+        else
         {
             SetVisible(p_Squads.SquadComponents[j], false);
         }
         ++j;
-     
     }
 
     // Show the unassigned category

@@ -18,6 +18,7 @@ const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 20;
 
 const SQUAD_LEADER_INDEX = 0;
+const SQUAD_INDEX_LOGI = 6;
 
 const SQUAD_DISBAND_THRESHOLD = 2;
 const SQUAD_LEADER_DRAW_DURATION_SECONDS = 15;
@@ -265,7 +266,7 @@ function Timer()
         }
 
         // SLs, ASLs, Logi and radio operators should know where all squad leaders are.
-        if (PRI.IsSLorASL()  || PRI.IsLogi() || PRI.IsRadioman())
+        if (PRI.IsAllowedToBuild() || PRI.IsRadioman())
         {
             UpdateSquadLeaderLocations(PC);
         }
@@ -326,7 +327,8 @@ private function UpdateSquadLeaderLocations(DHPlayer PC)
     {
         PC.SquadLeaderLocations[i] = 0;
 
-        if (!IsSquadActive(PC.GetTeamNum(), i))
+        //Logi Squad leader shouldnt be visible on the map
+        if (i == SQUAD_INDEX_LOGI || !IsSquadActive(PC.GetTeamNum(), i))
         {
             continue;
         }
@@ -767,7 +769,7 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
         return "";
     }
 
-    return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
+    return SquadIndex @ ". " @ LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
@@ -1020,6 +1022,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     TeamIndex = PRI.Team.TeamIndex;
     SquadIndex = PRI.SquadIndex;
     SquadMemberIndex = PRI.SquadMemberIndex;
+
+    Log("----LeaveSquad: " @ SquadIndex);
+
 
     if (GetMember(TeamIndex, SquadIndex, SquadMemberIndex) != PRI)
     {
@@ -1915,13 +1920,20 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
     if (Name == "")
     {
         // Go through default names and choose a default squad name that hasn't yet been used.
-        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+        if (IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, SquadIndex)))
         {
-            if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
+            for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
             {
-                Name = GetDefaultSquadName(TeamIndex, i);
-                break;
+                if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
+                {
+                    Name = GetDefaultSquadName(TeamIndex, i);
+                    break;
+                }
             }
+        }
+        else
+        {
+            Name = GetDefaultSquadName(TeamIndex, SquadIndex);
         }
     }
 

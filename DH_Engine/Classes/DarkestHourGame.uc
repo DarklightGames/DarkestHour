@@ -5752,7 +5752,7 @@ function bool HandleDeath(ROPlayer Player)
 
     PC = DHPlayer(Player);
 
-    if (PC != none && (PC.IsSLorASL() || PC.HasLimitedRole()))
+    if (PC != none && (PC.IsAllowedToBuild() || PC.HasLimitedRole()))
     {
         return false;
     }

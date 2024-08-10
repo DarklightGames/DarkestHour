@@ -26,6 +26,8 @@ enum ERoleEnabledResult
     RER_SquadLeaderOnly,
     RER_NonSquadLeaderOnly,
     RER_Locked,
+    RER_LogiSquadOnly,
+
 };
 
 enum EAutomaticVehicleAlerts
@@ -1204,6 +1206,16 @@ simulated function bool IsInSquad()
 simulated function bool IsSLorASL()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
+}
+
+simulated function bool IsLogi()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsLogi();
+}
+
+simulated function bool IsAllowedToBuild()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsAllowedToBuild();
 }
 
 simulated function bool IsSL()
@@ -6485,7 +6497,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         }
     }
 
-    if (PRI.IsSquadLeader())
+    if (PRI.IsLogi())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Logi";
+        return true;
+    }
+    else if (PRI.IsSquadLeader())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
         return true;
@@ -7849,6 +7866,11 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         if (IsInSquad() && ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader())))
         {
             return RER_SquadLeaderOnly;
+        }
+
+        if (IsInSquad() && ((RI.bRequiresLogi && !IsLogi())))
+        {
+            return RER_LogiSquadOnly;
         }
 
         if (IsSquadLeader() && !RI.bCanBeSquadLeader)

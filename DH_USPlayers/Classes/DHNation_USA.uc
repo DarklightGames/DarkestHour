@@ -26,7 +26,7 @@ defaultproperties
     DefaultSquadNames(3)="Dog"
     DefaultSquadNames(4)="Easy"
     DefaultSquadNames(5)="Fox"
-    DefaultSquadNames(6)="George"
+    DefaultSquadNames(6)="Red Ball Express"
     DefaultSquadNames(7)="How"
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     SupplyTruckClass=class'DH_Vehicles.DH_GMCTruckSupport'

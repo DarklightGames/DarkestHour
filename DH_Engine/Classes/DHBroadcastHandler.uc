@@ -294,7 +294,7 @@ function BroadcastCommand(Controller Sender, coerce string Msg, optional name Ty
     DHSender  = DHPlayer(Sender);
 
     // Important check here to rule out non SLs and non ASLs
-    if (DHSender == none || !DHSender.IsSLorASL())
+    if (DHSender == none || !DHSender.IsAllowedToBuild())
     {
         return;
     }

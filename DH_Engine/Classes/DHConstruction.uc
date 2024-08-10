@@ -1035,7 +1035,7 @@ function static bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
 static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 {
-    return PRI.IsSLorASL();
+    return PRI.IsAllowedToBuild();
 }
 
 // This function is used for determining if a player is able to build this type

@@ -69,7 +69,11 @@ replication
 
 simulated function string GetNamePrefix()
 {
-    if (IsSquadLeader())
+    if (IsLogi())
+    {
+        return default.AbbreviationLogi;
+    }
+    else if (IsSquadLeader())
     {
         return default.AbbreviationSquadLeader;
     }
@@ -92,7 +96,7 @@ simulated function bool IsLoggedInAsAdmin()
 
 simulated function bool IsSquadLeader()
 {
-    return IsInSquad() && SquadMemberIndex == 0;
+    return IsInSquad() && SquadIndex != SQUAD_INDEX_LOGI && SquadMemberIndex == 0;
 }
 
 // TODO: GET RID OF THIS!
@@ -114,6 +118,11 @@ simulated function bool IsASL()
 simulated function bool IsSLorASL()
 {
     return IsSL() || IsASL();
+}
+
+simulated function bool IsAllowedToBuild()
+{
+    return IsSL() || IsASL() || IsLogi();
 }
 
 simulated function bool IsInSquad()
@@ -234,10 +243,10 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
     {
         case ERS_ALL:
             return true;
-        case ERS_SL:
-            return IsSL();
         case ERS_LOGI:
             return IsLogi();
+        case ERS_SL:
+            return IsSL();
         case ERS_ASL:
             return IsASL();
         case ERS_TANKER:
