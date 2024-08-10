@@ -70,7 +70,8 @@ var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
 
 // Danger zone
-var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone)   float BaseInfluenceModifier;
+var                 float InitialBaseInfluenceModifier;
 
 replication
 {
@@ -115,6 +116,18 @@ simulated event PostBeginPlay()
         {
             SetTimer(1.0, true);
         }
+
+        InitialBaseInfluenceModifier = BaseInfluenceModifier;
+    }
+}
+
+function Reset()
+{
+    super.Reset();
+
+    if (Role == ROLE_Authority)
+    {
+        BaseInfluenceModifier = InitialBaseInfluenceModifier;
     }
 }
 
