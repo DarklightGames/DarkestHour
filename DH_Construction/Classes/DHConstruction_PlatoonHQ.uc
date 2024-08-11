@@ -342,4 +342,6 @@ defaultproperties
     RadioClass=class'DHRadioHQAttachment'
     RadioLocationOffset=(X=65,Y=-115,Z=2)
     RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
+
+    FlagMaterial=Texture'DH_Construction_tex.Base.flags_01_blank'
 }
