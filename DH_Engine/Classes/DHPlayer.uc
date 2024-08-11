@@ -27,6 +27,7 @@ enum ERoleEnabledResult
     RER_NonSquadLeaderOnly,
     RER_Locked,
     RER_LogiSquadOnly,
+    RER_OnlyLogi,
 
 };
 
@@ -7856,28 +7857,45 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 
     bIsRoleLimitless = Limit == 255;
 
-    if (Level.NetMode != NM_Standalone && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly)
-    {
-        if (!IsInSquad() && !bIsRoleLimitless && !RI.bExemptSquadRequirement)
+// && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly
+    // if (Level.NetMode != NM_Standalone)
+    // {
+        
+        if (IsInSquad())
         {
-            return RER_SquadOnly;
-        }
+            if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
+            {
+                return RER_SquadLeaderOnly;
+            }
 
-        if (IsInSquad() && ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader())))
-        {
-            return RER_SquadLeaderOnly;
-        }
+            if (IsLogi())
+            {
+                if (!RI.bRequiresLogi) //Logi class only allowed to select the logi class
+                {
+                    return RER_OnlyLogi;
+                }
+            }
+            else
+            {
+                if (RI.bRequiresLogi)
+                {
+                    return RER_LogiSquadOnly;
+                }
+            }
 
-        if (IsInSquad() && ((RI.bRequiresLogi && !IsLogi())))
-        {
-            return RER_LogiSquadOnly;
+            if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+            {
+                return RER_NonSquadLeaderOnly;
+            }
         }
-
-        if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+        else
         {
-            return RER_NonSquadLeaderOnly;
+            if (!bIsRoleLimitless && !RI.bExemptSquadRequirement)
+            {
+                return RER_SquadOnly;
+            }
         }
-    }
+    // }
 
     return RER_Enabled;
 }
