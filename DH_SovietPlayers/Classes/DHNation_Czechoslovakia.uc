@@ -9,7 +9,7 @@ defaultproperties
 {
     NationName="Czechoslovakia"
     VoicePackClass=class'DH_SovietPlayers.DHCzechVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
+    SupplyCacheClass=class'DHConstruction_SupplyCache_Czecholovakia'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpac1ks.CS_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'

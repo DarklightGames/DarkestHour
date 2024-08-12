@@ -9,7 +9,7 @@ defaultproperties
 {
     NationName="Canada"
     VoicePackClass=class'DH_BritishPlayers.DHCanadianVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
+    SupplyCacheClass=class'DHConstruction_SupplyCache_Canada'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box'

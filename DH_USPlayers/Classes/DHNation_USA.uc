@@ -9,13 +9,13 @@ defaultproperties
 {
     NationName="United States of America"
     VoicePackClass=class'DH_USPlayers.DHUSVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
     
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
 
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_USA'
+    SupplyCacheClass=class'DHConstruction_SupplyCache_USA'
 
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_usa'
     GrenadeCrateClass=class'DH_Weapons.DH_M1GrenadeSpawner'

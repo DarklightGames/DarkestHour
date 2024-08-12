@@ -145,7 +145,7 @@ static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 
     if (LI != none)
     {
-        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheStaticMesh;
+        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheClass.default.StaticMesh;
     }
 
     return none;

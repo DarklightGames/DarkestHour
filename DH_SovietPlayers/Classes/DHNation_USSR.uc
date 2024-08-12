@@ -9,7 +9,7 @@ defaultproperties
 {
     NationName="Union of Soviet Socialist Republics"
     VoicePackClass=class'DH_SovietPlayers.DHSovietVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
+    SupplyCacheClass=class'DHConstruction_SupplyCache_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'

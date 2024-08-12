@@ -5,17 +5,20 @@
 
 class DHConstruction_SupplyCache extends DHConstruction;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
-
-var array<StaticMesh> StaticMeshes;
-var DHConstructionSupplyAttachment SupplyAttachment;
-var class<DHConstructionSupplyAttachment> SupplyAttachmentClass;
+var StaticMesh                              UnbuiltStaticMesh;
+var DHConstructionSupplyAttachment          SupplyAttachment;
+var class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 
 var() int InitialSupplyCount;
 var() int BonusSupplyGenerationRate;
 
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
+
+static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
+{
+    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.SupplyCacheClass;
+}
 
 simulated function PostBeginPlay()
 {
@@ -110,15 +113,7 @@ static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context
 
 function StaticMesh GetStageStaticMesh(int StageIndex)
 {
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Supply_Cache.GER_supply_cache_undeployed';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Supply_Cache.USA_supply_cache_undeployed';
-    }
-
-    return none;
+    return default.UnbuiltStaticMesh;
 }
 
 simulated state Constructed

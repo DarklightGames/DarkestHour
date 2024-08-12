@@ -10,7 +10,8 @@ defaultproperties
     NationName="Kingdom of Italy"
     NativeNationName="Regno d'Italia"
     VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'   // TODO: replace
+    SupplyCacheClass=class'DHConstruction_SupplyCache_Italy'
+
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'   // TODO: replace
     
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Italy'
