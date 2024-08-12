@@ -171,8 +171,8 @@ defaultproperties
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.15
         WinHeight=0.075
-        WinLeft=0.1
-        WinTop=0.05
+        WinLeft=0.78
+        WinTop=0.89
         OnClick=OnClick
     End Object
     b_LockSquad=LockSquadButton
@@ -180,8 +180,8 @@ defaultproperties
     Begin Object class=GUIImage Name=LockSquadImage
         WinWidth=0.15
         WinHeight=0.075
-        WinLeft=0.1
-        WinTop=0.05
+        WinLeft=0.78
+        WinTop=0.89
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha

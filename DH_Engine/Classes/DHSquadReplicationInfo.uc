@@ -631,19 +631,6 @@ function ResetSquadInfo()
 // Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 {
-    if (SquadIndex == SQUAD_INDEX_LOGI)
-    {
-        switch (TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                return AxisSquadLogiSize;
-            case ALLIES_TEAM_INDEX:
-                return AlliesSquadLogiSize;
-            default:
-                return 0;
-        }
-    }
-
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -653,6 +640,29 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
         default:
             return 0;
     }
+
+    // if (SquadIndex == SQUAD_INDEX_LOGI)
+    // {
+    //     switch (TeamIndex)
+    //     {
+    //         case AXIS_TEAM_INDEX:
+    //             return AxisSquadLogiSize;
+    //         case ALLIES_TEAM_INDEX:
+    //             return AlliesSquadLogiSize;
+    //         default:
+    //             return 0;
+    //     }
+    // }
+
+    // switch (TeamIndex)
+    // {
+    //     case AXIS_TEAM_INDEX:
+    //         return AxisSquadSize;
+    //     case ALLIES_TEAM_INDEX:
+    //         return AlliesSquadSize;
+    //     default:
+    //         return 0;
+    // }
     
 }
 

@@ -1820,9 +1820,12 @@ function UpdateSquads()
             CLogi = p_Squads.SquadComponents[j];
             SetVisible(CLogi, true);
             SetVisible(CLogi.l_SquadName, true);
+            SetVisible(CLogi.b_LockSquad, false);
+            SetVisible(CLogi.i_LockSquad, false);
+            SetVisible(CLogi.i_NoRallyPoints, false);
 
-             if (SRI.IsSquadActive(TeamIndex, j))
-             {
+            if (SRI.IsSquadActive(TeamIndex, j))
+            {
                 // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
                 // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
                 // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
@@ -1836,24 +1839,17 @@ function UpdateSquads()
                 SetVisible(CLogi.b_CreateSquad, false);
                 SetVisible(CLogi.b_JoinSquad, !bIsInSquad);
                 SetVisible(CLogi.b_LeaveSquad, bIsInSquad);
-                SetVisible(CLogi.b_LockSquad, bIsSquadLeader);
-                SetVisible(CLogi.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
-                SetVisible(CLogi.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, j));
-             }
-             else
-             {
+            }
+            else
+            {
                 SetVisible(CLogi.b_CreateSquad, !bIsInSquad);
-                SetVisible(CLogi.l_SquadName, true);
-                 
+                SetVisible(CLogi.l_SquadName, false);
                 SetVisible(CLogi.lb_Members, false);
                 SetVisible(CLogi.li_Members, false);
                 SetVisible(CLogi.b_JoinSquad, false);
                 SetVisible(CLogi.b_LeaveSquad, false);
-                SetVisible(CLogi.b_LockSquad, false);
-                SetVisible(CLogi.i_LockSquad, false);
                 SetVisible(CLogi.eb_SquadName, false);
-                SetVisible(CLogi.i_NoRallyPoints, false);
-             }
+            }
         }
         else
         {
