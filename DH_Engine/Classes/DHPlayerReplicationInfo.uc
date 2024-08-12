@@ -99,6 +99,11 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadIndex != SQUAD_INDEX_LOGI && SquadMemberIndex == 0;
 }
 
+simulated function bool IsAllowedToInviteToSquad()
+{
+    return IsInSquad() && (SquadMemberIndex == 0 || SquadIndex == SQUAD_INDEX_LOGI);
+}
+
 // TODO: GET RID OF THIS!
 simulated function bool IsSL()
 {

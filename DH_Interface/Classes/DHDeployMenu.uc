@@ -1689,21 +1689,17 @@ function UpdateSquads()
 
     bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
-    Log("----SquadLimit: " @ SquadLimit);
 
     // Go through the active squads
     for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
-        C = p_Squads.SquadComponents[i];
-        C.SquadIndex = i;
-        
+        p_Squads.SquadComponents[i].SquadIndex = i; //Need to set it so create squad button links correctly
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
             continue;
         }
 
-        // C = p_Squads.SquadComponents[j];
-        // C.SquadIndex = i;
+        C = p_Squads.SquadComponents[i];
 
         SetVisible(C, true);
 
@@ -1722,7 +1718,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
-        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
+        SetVisible(C.i_NoRallyPoints, i != SQUAD_INDEX_LOGI && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
 
         if (bIsSquadLeader)
         {
@@ -1827,7 +1823,6 @@ function UpdateSquads()
 
              if (SRI.IsSquadActive(TeamIndex, j))
              {
-
                 // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
                 // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
                 // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
@@ -1844,7 +1839,6 @@ function UpdateSquads()
                 SetVisible(CLogi.b_LockSquad, bIsSquadLeader);
                 SetVisible(CLogi.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
                 SetVisible(CLogi.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, j));
-
              }
              else
              {
@@ -1973,7 +1967,7 @@ defaultproperties
     SquadLeadershipOnlyText="LEADERS ONLY"
     NonSquadLeaderOnlyText="NON-LEADERS ONLY"
     RoleLockedText="LOCKED"
-    RoleLogiOnlyOneClass="ONLY LOGIC CLASS"
+    RoleLogiOnlyOneClass="--"
     RoleLogiSquadOnly="LOGIC SQUAD ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"

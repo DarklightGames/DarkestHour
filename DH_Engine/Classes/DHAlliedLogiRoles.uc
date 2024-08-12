@@ -13,6 +13,6 @@ defaultproperties
     AltName="Logistic Engineer"
     Article="a "
     PluralName="Logistic Engineers"
-    Limit=3
+    Limit=4
     bSpawnWithExtraAmmo=true
 }

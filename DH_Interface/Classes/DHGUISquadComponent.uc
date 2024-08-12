@@ -21,6 +21,8 @@ var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squ
 var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   GUIImage            i_NoRallyPoints;
+var automated   GUIImage            i_SquadType;
+var automated   GUILabel            l_SquadTypeName;
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
@@ -214,6 +216,43 @@ defaultproperties
     End Object
     i_NoRallyPoints=NoRallyPointsImage
 
+    Begin Object Class=GUIToolTip Name=SquadTypeImageTooltip
+    End Object
+
+    Begin Object class=GUIImage Name=SquadTypeImage
+        WinWidth=0.15
+        WinHeight=0.075
+        WinLeft=0.1
+        WinTop=0.89
+        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        ImageColor=(R=192,G=192,B=192,A=200)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+        bBoundToParent=true
+        bScaleToParent=true
+        bVisible=false
+        RenderWeight=10.0
+        bAcceptsInput=true
+        ToolTip=SquadTypeImageTooltip
+        Hint="Infantry, Vehicle or Supply Squad."
+    End Object
+    i_SquadType=SquadTypeImage
+
+
+    Begin Object Class=GUILabel Name=SquadTypeNameLabel
+        WinHeight=0.1
+        WinWidth=1.0
+        WinTop=0.88
+        WinLeft=0.00
+        TextAlign=TXTA_Center
+        VertAlign=TXTA_Center
+        TextColor=(R=192,G=192,B=192,A=255)
+        TextFont="DHMenuFont"
+    End Object
+    l_SquadTypeName=SquadTypeNameLabel
+ 
+
     Begin Object class=GUIImage Name=BackgroundImage
         WinWidth=1.0
         WinHeight=1.0
@@ -298,7 +337,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.80
+        WinTop=0.75
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
@@ -310,7 +349,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.80
+        WinTop=0.75
         OnClick=OnClick
     End Object
     b_JoinSquad=JoinSquadButton

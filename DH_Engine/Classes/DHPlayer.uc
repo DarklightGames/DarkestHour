@@ -5863,8 +5863,11 @@ simulated function int GetSquadIndex()
 
     if (PRI != none)
     {
+    Log("----GetSquadIndex: " @ PRI.SquadIndex);
+
         return PRI.SquadIndex;
     }
+    Log("----GetSquadIndex returns -1");
 
     return -1;
 }
@@ -5942,7 +5945,7 @@ function ServerSquadInvite(DHPlayerReplicationInfo Recipient)
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (SquadReplicationInfo != none && PRI != none && PRI.IsSquadLeader() && !Recipient.IsInSquad())
+    if (SquadReplicationInfo != none && PRI != none && PRI.IsAllowedToInviteToSquad() && !Recipient.IsInSquad())
     {
         SquadReplicationInfo.InviteToSquad(PRI, GetTeamNum(), PRI.SquadIndex, Recipient);
     }
@@ -6500,7 +6503,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
     if (PRI.IsLogi())
     {
-        MenuClassName = "DH_Engine.DHCommandMenu_Logi";
+        MenuClassName = "DH_Construction.DHCommandMenu_ConstructionGroups";
         return true;
     }
     else if (PRI.IsSquadLeader())

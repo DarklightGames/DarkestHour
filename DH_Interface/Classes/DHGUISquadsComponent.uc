@@ -7,6 +7,42 @@ class DHGUISquadsComponent extends GUIPanel;
 
 var automated array<DHGUISquadComponent> SquadComponents;
 
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    local int i;
+
+    super.InitComponent(MyController, MyOwner);
+
+    for (i = 0; i < SquadComponents.Length; ++i)
+    {
+        switch (i)
+        {
+            case 5:
+                SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.tank';
+                SquadComponents[i].i_SquadType.Hint = "Tank Squad";
+                SquadComponents[i].l_SquadTypeName.Caption = "Tanks";
+                break;
+
+            case 6:
+                SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.supply_cache';
+                SquadComponents[i].i_SquadType.Hint = "Constructs team buildings and transports supplies.";
+                SquadComponents[i].l_SquadTypeName.Caption = "Logistic";
+                break;
+
+            case 7:
+                SquadComponents[i].i_SquadType.SetVisibility(false);
+                SquadComponents[i].i_SquadType.Hint = "Invite these players to a squad.";
+                break;
+
+            default:
+                SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.infantry';
+                SquadComponents[i].i_SquadType.Hint = "Infantry Squad";
+                SquadComponents[i].l_SquadTypeName.Caption = "Infantry";
+                break;
+        }
+    }
+}
+
 function InternalOnShow()
 {
     local int i;
