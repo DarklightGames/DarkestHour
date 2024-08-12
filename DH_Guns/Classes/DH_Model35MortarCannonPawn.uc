@@ -11,8 +11,7 @@
 // [ ] replace firing effects
 // [ ] remove reloading sounds
 // [ ] add mortar player idle animations
-// [ ] figure out a system for the firing animations
-// [ ] increase off-gun rotation speed
+// [ ] when pressing the fire button, move the camera off the sight
 //==============================================================================
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
@@ -48,14 +47,12 @@ simulated function InitializeVehicleAndWeapon()
     }
 }
 
-simulated function SuperFire(optional float F)
-{
-    super.Fire(F);
-}
-
 simulated function Fire(optional float F)
 {
-    // TODO: only if the player *CAN* fire.
+    if (!CanFire() || ArePlayersWeaponsLocked() || !Gun.ReadyToFire(false))
+    {
+        return;
+    }
 
     GotoState('Firing');
 }
@@ -257,7 +254,7 @@ defaultproperties
 
     FiringCameraInTime=0.65
     FiringCameraOutTime=0.65
-    FiringCameraBone="FIRING_CAMERA"
+    FiringCameraBone="MY_COOL_CAMERA"
     FiringCameraBoneChannel=3
-    GunFireAnim="FIRE"
+    GunFireAnim="FIRINGCAMERA"
 }
