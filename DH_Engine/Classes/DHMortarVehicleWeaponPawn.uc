@@ -386,6 +386,16 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
+// Set the initial position of the player and the weapon
+simulated function SetPlayerPosition()
+{
+    super.SetPlayerPosition();
+
+    //  Hide the shell during inital setup because the inital idle animation is
+    //  not handled by PlayThirdPersonAnimations()
+    HideThirdPersonShell();
+}
+
 // Modified to match rotation to mortar's aimed direction, so player exits facing the same way as the mortar
 // Necessary because while on mortar, his view rotation is locked but his pawn/PC rotation can wander meaninglessly via mouse movement
 // Also to destroy the mortar if player just un-deployed it
@@ -971,9 +981,25 @@ simulated function ServerSetCurrentAnimationIndex(byte AnimIndex)
     CurrentAnimationIndex = AnimIndex;
 }
 
+simulated function HideThirdPersonShell()
+{
+    local DHMortarVehicleWeapon MVH;
+
+    MVH = DHMortarVehicleWeapon(Gun);
+
+    if (MVH != none)
+    {
+        MVH.HideShell();
+    }
+}
+
 // New function to play current 1st person animations for the mortar & the operator ('Driver')
 simulated function PlayThirdPersonAnimations()
 {
+    // Hide the shell for all animations, as it's expected to only appear when
+    // it's loaded into a tube. The shell is made visible via notifies.
+    HideThirdPersonShell();
+
     switch (CurrentAnimationIndex)
     {
         case IDLE_ANIM_INDEX:

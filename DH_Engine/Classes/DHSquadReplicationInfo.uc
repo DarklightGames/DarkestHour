@@ -830,6 +830,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 }
 
 // Changes the squad leader. Returns true if the squad leader was successfully changed.
+// NOTE: Duplicates functionality of `ComandeerSquad` function.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
     local DHBot Bot;
@@ -1138,6 +1139,10 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
         BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, PRI);
 
         UpdateSquadLeaderNoRallyPointsTime(PRI.Team.TeamIndex, PRI.SquadIndex);
+
+        // Reset the squad name to prevent squad leaders being blamed for
+        // unsavory names they can inherit.
+        SetName(TeamIndex, SquadIndex, "");
     }
 
     return bResult;

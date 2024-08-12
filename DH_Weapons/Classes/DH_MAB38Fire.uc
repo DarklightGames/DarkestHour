@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO:
+// [ ] The shells eject the wrong direction
+//==============================================================================
 
 class DH_MAB38Fire extends DHAutomaticFire;
 
