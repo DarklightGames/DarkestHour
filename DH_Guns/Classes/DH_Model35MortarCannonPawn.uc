@@ -12,6 +12,7 @@
 // [ ] remove reloading sounds
 // [ ] add mortar player idle animations
 // [ ] when pressing the fire button, move the camera off the sight
+// [ ] do not show the passenger list for AT guns and mortars
 //==============================================================================
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
@@ -24,6 +25,17 @@ var()   name  GunFireAnim;              // The firing animation to play on the g
 var()   name  OverlayFiringAnimName;    // The name of the firing animation on the overlay mesh.
 var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
 var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+
+// First person hands.
+var     DHMortarHandsActor  HandsActor;             // The first person hands actor.
+var     Mesh                HandsMesh;              // The first person hands mesh.
+var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
+var     StaticMesh          HandsProjectileStaticMesh;
+
+var()   Rotator             HandsRotationOffset;    // The rotation offset for the first person hands.
+var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
+var()   name                HandsProjectileBone;    // The bone to attach the first person projectile to.
+var()   array<name>         HandsFireAnims;         // The first person firing animations (selected randomly; make sure they are all the same length!).
 
 struct SAnimationDriver
 {
@@ -44,6 +56,54 @@ simulated function InitializeVehicleAndWeapon()
         SetupFiringCameraChannel();
         SetupGunAnimationDrivers();
         UpdateGunAnimationDrivers();
+    }
+}
+
+// TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
+simulated function InitializeHands()
+{
+    if (HandsActor != none)
+    {
+        HandsActor.Destroy();
+        HandsActor = none;
+    }
+
+    HandsActor = Spawn(class'DHMortarHandsActor', self);
+
+    if (HandsActor == none)
+    {
+        Warn("Failed to spawn hands actor for mortar cannon pawn!");
+        return;
+    }
+
+    HandsActor.LinkMesh(HandsMesh);
+    HandsActor.bHidden = false; // TODO: should be true.
+
+    if (Gun == none)
+    {
+        Warn("No gun found for mortar cannon pawn!");
+        return;
+    }
+    
+    Gun.AttachToBone(HandsActor, HandsAttachBone);
+    HandsActor.SetRelativeLocation(vect(0, 0, 0));
+    HandsActor.SetRelativeRotation(rot(0, 0, 0));
+
+    if (HandsProjectile != none)
+    {
+        HandsProjectile.Destroy();
+        HandsProjectile = none;
+    }
+
+    HandsProjectile = Spawn(class'DHDecoAttachment', self);
+
+    // Get the selected projectile & use it's static mesh.
+    if (HandsProjectile != none)
+    {
+        HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
+        HandsActor.AttachToBone(HandsProjectile, HandsProjectileBone);
+        HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
+        HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
     }
 }
 
@@ -121,10 +181,12 @@ simulated state Firing
         // Perform a smoothstep on the theta.
         Theta = class'UInterp'.static.SmoothStep(Theta, 0.0, 1.0);
 
-        Log("Theta" @ Theta);
-
         // Interpolate the camera position and rotation between the normal and firing camera positions.
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
+
+        // Hide the hands mesh if the camera is not fully in the firing position.
+        // TODO: also need to do the projectile mesh!)
+        HandsActor.bHidden = Theta < 1.0;
 
         ViewActor = self;
         CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
@@ -133,20 +195,22 @@ simulated state Firing
 
     simulated function BeginState()
     {
-        if (IsLocallyControlled() && Gun != none)
+        if (IsLocallyControlled())
         {
-            Gun.PlayAnim(GunFireAnim, 1.0, 0.0, FiringCameraBoneChannel);
+            if (Gun != none)
+            {
+                Gun.PlayAnim(GunFireAnim, 1.0, 0.0, FiringCameraBoneChannel);
+            }
+
+            if (HandsActor != none)
+            {
+                HandsActor.PlayAnim(HandsFireAnims[Rand(HandsFireAnims.Length)], 1.0, 0.0, 0);
+            }
         }
 
         FiringStartTimeSeconds = Level.TimeSeconds;
 
-        // TODO: make sure the hudoverlay is created and set up properly.
-
         OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
-
-        // ActivateOverlay?? (only on the controlling client), then deactivate overlay when done.
-
-        Log("In Firing state");
     }
 
 Begin:
@@ -213,6 +277,30 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    Log("ClientKDriverEnter" @ PC);
+    Log("IsLocallyControlled" @ IsLocallyControlled());
+
+    super.ClientKDriverEnter(PC);
+
+    if (IsLocallyControlled())
+    {
+        InitializeHands();
+    }
+}
+
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    super.ClientKDriverLeave(PC);
+
+    if (HandsActor != none)
+    {
+        HandsActor.Destroy();
+        HandsActor = none;
+    }
+}
+
 defaultproperties
 {
     PitchAnimationDriver=(Channel=1,BoneName="PITCH_ROOT",SequenceName="PITCH_DRIVER",SequenceFrameCount=30)
@@ -248,6 +336,10 @@ defaultproperties
 
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
+
+    AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON'
+    AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON'
+
     ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
 
     GunPitchOffset=7280 // +40 degrees
@@ -257,4 +349,11 @@ defaultproperties
     FiringCameraBone="MY_COOL_CAMERA"
     FiringCameraBoneChannel=3
     GunFireAnim="FIRINGCAMERA"
+
+    HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_hands'
+    HandsFireAnims=("FIRE_HANDS")
+    HandsAttachBone="PITCH"
+    HandsProjectileBone="PROJECTILE"
+    HandsRotationOffset=(Yaw=-16384)
+    HandsProjectileStaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_A'
 }

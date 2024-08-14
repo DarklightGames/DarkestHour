@@ -27,4 +27,6 @@ defaultproperties
     WaterExplosionSounds(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     WaterExplosionSounds(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     WaterExplosionSounds(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_HE_M110_3360'
 }

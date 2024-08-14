@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-// TODO: maybe make a mortar class that inherits from DHATGun.
 class DH_Model35Mortar extends DHATGun;
 
 defaultproperties
@@ -21,4 +20,8 @@ defaultproperties
     // Reversed because the gunner uses index 1.
     ExitPositions(0)=(X=-50.00,Y=35.0,Z=20)
     ExitPositions(1)=(X=-50.00,Y=-35.0,Z=20)
+
+    VehicleHudImage=Texture'DH_Model35Mortar_tex.interface.model35mortar_body_icon'
+    VehicleHudTurret=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_look'
 }

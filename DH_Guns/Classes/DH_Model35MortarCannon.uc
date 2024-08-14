@@ -26,8 +26,8 @@ defaultproperties
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
-    GunWheels(2)=(RotationType=ROTATION_PITCH,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
+    GunWheels(1)=(RotationType=ROTATION_PITCH,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
 
     // Turret movement
     ManualRotationsPerSecond=0.0125
@@ -47,7 +47,7 @@ defaultproperties
     nProjectileDescriptions(1)="Smoke"
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Weapons.DH_Kz8cmGrW42ProjectileSmoke'
+    SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
     InitialPrimaryAmmo=30  // TODO: REPLACE
     InitialSecondaryAmmo=5  // TODO: REPLACE
     MaxPrimaryAmmo=30
@@ -64,10 +64,7 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
     CannonFireSound(1)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
     CannonFireSound(2)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01',Duration=2.0)
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02',Duration=2.0)
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04',Duration=1.0)
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0
