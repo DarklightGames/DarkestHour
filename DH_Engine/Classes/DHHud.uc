@@ -1655,7 +1655,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         if (bShowWeaponInfo)
         {
             // Draw cannon ammo icon
-            VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
+            VehicleAmmoIcon.WidgetTexture = CannonPawn.GetAmmoShellTexture();
             DrawSpriteWidget(Canvas, VehicleAmmoIcon);
 
             // Draw reload progress (if needed)
@@ -1663,7 +1663,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             if (ProportionOfReloadRemaining > 0.0)
             {
-                VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
+                VehicleAmmoReloadIcon.WidgetTexture = CannonPawn.GetAmmoShellReloadTexture();
                 VehicleAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
             }
