@@ -42,9 +42,11 @@ defaultproperties
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(2)="Smoke (Large)"
 
     nProjectileDescriptions(0)="HE"
-    nProjectileDescriptions(1)="Smoke"
+    nProjectileDescriptions(1)="M110 Fumogeno"
+    nProjectileDescriptions(2)="M110 Fumogeno"
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'

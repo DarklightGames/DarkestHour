@@ -213,6 +213,8 @@ var     Texture     DamagedPeriscopeOverlay;    // periscope overlay to show if 
 
 var Sound BuzzSound;
 
+var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -3354,22 +3356,37 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
 // Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
+    local Combiner DestroyedSkin;
     local int i;
+
+    if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
+    {
+        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+        DestroyedSkin.Material1 = Skins[0];
+        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+        DestroyedSkin.FallbackMaterial = Skins[0];
+        DestroyedSkin.CombineOperation = CO_Multiply;
+
+        DestroyedMeshSkins[0] = DestroyedSkin;
+    }
 
     super.DestroyAppearance();
 
-    DestroyAttachments();
-
-    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+        if (DestroyedMeshSkins.Length > 0)
         {
-            if (DestroyedMeshSkins[i] != none)
+            for (i = 0; i < DestroyedMeshSkins.Length; ++i)
             {
-                Skins[i] = DestroyedMeshSkins[i];
+                if (DestroyedMeshSkins[i] != none)
+                {
+                    Skins[i] = DestroyedMeshSkins[i];
+                }
             }
         }
     }
+
+    DestroyAttachments();
 }
 
 // New function to destroy effects & attachments when the vehicle gets destroyed
