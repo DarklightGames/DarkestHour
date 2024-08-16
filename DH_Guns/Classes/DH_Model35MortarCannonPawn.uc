@@ -119,10 +119,18 @@ simulated function InitializeHands()
     // Get the selected projectile & use it's static mesh.
     if (HandsProjectile != none)
     {
-        HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
+        UpdateHandsProjectileStaticMesh();
         HandsActor.AttachToBone(HandsProjectile, HandsProjectileBone);
         HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
         HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
+    }
+}
+
+simulated function UpdateHandsProjectileStaticMesh()
+{
+    if (HandsProjectile != none && Gun != none && Gun.ProjectileClass != none)
+    {
+        HandsProjectile.SetStaticMesh(Gun.ProjectileClass.default.StaticMesh);
     }
 }
 
@@ -225,6 +233,9 @@ simulated state Firing
             {
                 HandsActor.PlayAnim(HandsFireAnims[Rand(HandsFireAnims.Length)], 1.0, 0.0, 0);
             }
+
+            // Update the hands projectile mesh to the round we are about to fire.
+            UpdateHandsProjectileStaticMesh();
         }
 
         FiringStartTimeSeconds = Level.TimeSeconds;
@@ -352,9 +363,11 @@ defaultproperties
 
     AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON'
     AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON'
+    AmmoShellTextures(2)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
 
     AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON_RELOAD'
     AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
+    AmmoShellReloadTextures(2)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
 
     ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
 

@@ -48,13 +48,17 @@ defaultproperties
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    InitialPrimaryAmmo=30  // TODO: REPLACE
+    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmokeBig'
+    InitialPrimaryAmmo=28  // TODO: REPLACE
     InitialSecondaryAmmo=5  // TODO: REPLACE
-    MaxPrimaryAmmo=30
+    InitialTertiaryAmmo=2
+    MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=2
 
-    Spread=0.020
+    Spread=0.00125
     SecondarySpread=0.00125
+    TertiarySpread=0.00125
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
@@ -64,6 +68,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
     CannonFireSound(1)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
     CannonFireSound(2)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
+
+    // TODO: figure out what to do with this.
     ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
