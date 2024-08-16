@@ -14,7 +14,9 @@ var DHContextMenu_SquadMembers      MembersListContextMenuWrapper;
 var automated   DHGUIListBox        lb_Members;
 var             DHGUIList           li_Members;
 var automated   GUILabel            l_SquadName;
-var automated   DHGUIButton         b_CreateSquad;  // Creates a squad. Only show if squad slot is empty.
+var automated   DHGUIButton         b_CreateSquadInfantry;  // Creates a squad. Only show if squad slot is empty.
+var automated   DHGUIButton         b_CreateSquadArmored;  // Creates a squad. Only show if squad slot is empty.
+var automated   DHGUIButton         b_CreateSquadLogistics;  // Creates a squad. Only show if squad slot is empty.
 var automated   DHGUIButton         b_JoinSquad;    // Joins the squad. Only show to non-members. Disable if squad is full or locked.
 var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only show to members of this squad.
 var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
@@ -57,8 +59,14 @@ function bool OnClick(GUIComponent Sender)
 
     switch (Sender)
     {
-        case b_CreateSquad:
-            PC.ServerSquadCreate(SquadIndex);
+        case b_CreateSquadInfantry:
+            PC.ServerSquadCreate(class'DHSquadTypeInfantry', SquadIndex);
+            return true;
+        case b_CreateSquadArmored:
+            PC.ServerSquadCreate(class'DHSquadTypeArmored', SquadIndex);
+            return true;
+        case b_CreateSquadLogistics:
+            PC.ServerSquadCreate(class'DHSquadTypeLogistics', SquadIndex);
             return true;
         case b_JoinSquad:
             PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
@@ -290,17 +298,41 @@ defaultproperties
     End Object
     lb_Members=MembersList
 
-    Begin Object Class=DHGUIButton Name=CreateSquadButton
-        Caption="Create Squad"
-        CaptionAlign=TXTA_Center
+    Begin Object Class=DHGUIButton Name=CreateSquadButtonInfantry
+        CaptionAlign=TXTA_Left
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
+        Caption="Inf"
+        WinWidth=0.25
         WinHeight=1.0
         WinLeft=0.0
-        WinTop=0.0
+        WinTop=0.5
         OnClick=OnClick
     End Object
-    b_CreateSquad=CreateSquadButton
+    b_CreateSquadInfantry=CreateSquadButtonInfantry
+
+        Begin Object Class=DHGUIButton Name=CreateSquadButtonArmored
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        Caption="Arm"
+        WinWidth=0.25
+        WinHeight=1.0
+        WinLeft=0.3
+        WinTop=0.5
+        OnClick=OnClick
+    End Object
+    b_CreateSquadArmored=CreateSquadButtonArmored
+
+        Begin Object Class=DHGUIButton Name=CreateSquadButtonLogistics
+        CaptionAlign=TXTA_Right
+        Caption="Logi"
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=0.25
+        WinHeight=1.0
+        WinLeft=0.75
+        WinTop=0.5
+        OnClick=OnClick
+    End Object
+    b_CreateSquadLogistics=CreateSquadButtonLogistics
 
     Begin Object Class=GUILabel Name=SquadNameLabel
         WinHeight=0.1

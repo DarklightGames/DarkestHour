@@ -57,6 +57,7 @@ var globalconfig private int        AxisSquadLogiSize;
 var globalconfig private int        AlliesSquadLogiSize;
 
 var class<LocalMessage>             SquadMessageClass;
+var class<DHSquadType>              SquadType;
 
 var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
@@ -800,7 +801,7 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
-function int CreateSquad(DHPlayerReplicationInfo PRI, int SquadIndex, optional string Name)
+function int CreateSquad(DHPlayerReplicationInfo PRI, class<DHSquadType> CreatedSquadType, int SquadIndex, optional string Name)
 {
     local int i;
     local int TeamIndex;
@@ -844,6 +845,8 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, int SquadIndex, optional s
             }
         }
     }
+
+    SquadType = CreatedSquadType;
     
     if (!IsSquadActive(TeamIndex, i))
     {

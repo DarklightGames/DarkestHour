@@ -69,7 +69,7 @@ replication
 
 simulated function string GetNamePrefix()
 {
-    if (IsLogi())
+    if (IsInSquadLogistics())
     {
         return default.AbbreviationLogi;
     }
@@ -127,7 +127,7 @@ simulated function bool IsSLorASL()
 
 simulated function bool IsAllowedToBuild()
 {
-    return IsSL() || IsASL() || IsLogi();
+    return IsSL() || IsASL() || IsInSquadLogistics();
 }
 
 simulated function bool IsInSquad()
@@ -135,7 +135,17 @@ simulated function bool IsInSquad()
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
 }
 
-simulated function bool IsLogi()
+simulated function bool IsInSquadInfantry()
+{
+    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
+}
+
+simulated function bool IsInSquadArmored()
+{
+    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
+}
+
+simulated function bool IsInSquadLogistics()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
 }
@@ -219,7 +229,7 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
 //Used by Logi trucks only
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
-    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsLogi();
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsInSquadLogistics();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -249,13 +259,13 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
         case ERS_ALL:
             return true;
         case ERS_LOGI:
-            return IsLogi();
+            return IsInSquadLogistics();
         case ERS_SL:
             return IsSL();
         case ERS_ASL:
             return IsASL();
         case ERS_TANKER:
-            return IsLogi();
+            return IsInSquadLogistics();
         case ERS_ARTILLERY_SPOTTER:
             return IsArtillerySpotter();
         case ERS_ARTILLERY_OPERATOR:

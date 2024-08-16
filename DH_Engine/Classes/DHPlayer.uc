@@ -26,9 +26,9 @@ enum ERoleEnabledResult
     RER_SquadLeaderOnly,
     RER_NonSquadLeaderOnly,
     RER_Locked,
-    RER_LogiSquadOnly,
-    RER_OnlyLogi,
-
+    RER_SquadTypeOnlyInfantry,
+    RER_SquadTypeOnlyArmored,
+    RER_SquadTypeOnlyLogistics,
 };
 
 enum EAutomaticVehicleAlerts
@@ -1211,7 +1211,7 @@ simulated function bool IsSLorASL()
 
 simulated function bool IsLogi()
 {
-    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsLogi();
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquadLogistics();
 }
 
 simulated function bool IsAllowedToBuild()
@@ -5904,13 +5904,13 @@ simulated function int GetRoleIndex()
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-function ServerSquadCreate(int SquadIndex)
+function ServerSquadCreate(class<DHSquadType> CreatedSquadType, int SquadIndex)
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadIndex);
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), CreatedSquadType, SquadIndex);
 }
 
 function ServerSquadLeave()
@@ -6501,7 +6501,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         }
     }
 
-    if (PRI.IsLogi())
+    if (PRI.IsInSquadLogistics())
     {
         MenuClassName = "DH_Construction.DHCommandMenu_ConstructionGroups";
         return true;
@@ -7863,44 +7863,71 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 // && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly
     // if (Level.NetMode != NM_Standalone)
     // {
-        
         if (IsInSquad())
         {
-            if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
+            if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
             {
-                return RER_SquadLeaderOnly;
-            }
-
-            if (IsLogi())
-            {
-                if (!RI.bRequiresLogi) //Logi class only allowed to select the logi class
+                if (SquadReplicationInfo.SquadType == class'DHSquadTypeInfantry')
                 {
-                    return RER_OnlyLogi;
+                    if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
+                    {
+                        return RER_SquadLeaderOnly;
+                    }
+
+                    if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+                    {
+                        return RER_NonSquadLeaderOnly;
+                    }
+
+                    return RER_Enabled;
+                }
+                else
+                {
+                    return RER_SquadTypeOnlyInfantry;
                 }
             }
-            else
+
+            if (RI.RequiredSquadType == class'DHSquadTypeArmored')
             {
-                if (RI.bRequiresLogi)
+                if (SquadReplicationInfo.SquadType == class'DHSquadTypeArmored')
                 {
-                    return RER_LogiSquadOnly;
+                    if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
+                    {
+                        return RER_SquadLeaderOnly;
+                    }
+
+                    if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+                    {
+                        return RER_NonSquadLeaderOnly;
+                    }
+                    return RER_Enabled;
+                }
+                else
+                {
+                    return RER_SquadTypeOnlyArmored;
                 }
             }
 
-            if (IsSquadLeader() && !RI.bCanBeSquadLeader)
+             if (RI.RequiredSquadType == class'DHSquadTypeLogistics')
             {
-                return RER_NonSquadLeaderOnly;
+                if (SquadReplicationInfo.SquadType == class'DHSquadTypeLogistics')
+                {
+                    return RER_Enabled;
+                }
+                else
+                {
+                    return RER_SquadTypeOnlyLogistics;
+                }
             }
         }
-        else
+        else if (RI.RequiredSquadType == class'DHSquadTypeNoSquad')
         {
-            if (!bIsRoleLimitless && !RI.bExemptSquadRequirement)
-            {
-                return RER_SquadOnly;
-            }
+            return RER_Enabled;
         }
+      
     // }
 
-    return RER_Enabled;
+    return RER_SquadOnly;
 }
 
 // Function for getting the correct inventory item name to display depending on settings.

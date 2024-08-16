@@ -102,7 +102,9 @@ var localized   string                      NoneText,
                                             UnassignedPlayersCaptionText,
                                             NonSquadLeaderOnlyText,
                                             RoleLockedText,
-                                            RoleLogiSquadOnly,
+                                            RoleSquadOnlyInfantry,
+                                            RoleSquadOnlyArmored,
+                                            RoleSquadOnlyLogistics,
                                             RoleLogiOnlyOneClass
                                             ;
 
@@ -672,11 +674,14 @@ function UpdateRoles()
             case RER_Locked:
                 S @= "*" $ RoleLockedText $ "*";
                 break;
-            case RER_LogiSquadOnly:
-                S @= "*" $ RoleLogiSquadOnly $ "*";
+            case RER_SquadTypeOnlyInfantry:
+                S @= "*" $ RoleSquadOnlyInfantry $ "*";
                 break;
-            case RER_OnlyLogi:
-                S @= "*" $ RoleLogiOnlyOneClass $ "*";
+            case RER_SquadTypeOnlyArmored:
+                S @= "*" $ RoleSquadOnlyArmored $ "*";
+                break;
+            case RER_SquadTypeOnlyLogistics:
+                    S @= "*" $ RoleSquadOnlyLogistics $ "*";
                 break;
         }
         
@@ -1638,7 +1643,6 @@ function UpdateSquads()
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
-    local DHGUISquadComponent            CLogi;
     local int TeamIndex, SquadLimit, i, j, k;
     local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
 
@@ -1654,7 +1658,9 @@ function UpdateSquads()
             SetVisible(C.lb_Members, false);
             SetVisible(C.li_Members, false);
             SetVisible(C.eb_SquadName, false);
-            SetVisible(C.b_CreateSquad, false);
+            SetVisible(C.b_CreateSquadInfantry, false);
+            SetVisible(C.b_CreateSquadArmored, false);
+            SetVisible(C.b_CreateSquadLogistics, false);
             SetVisible(C.b_JoinSquad, false);
             SetVisible(C.b_LeaveSquad, false);
             SetVisible(C.b_LockSquad, false);
@@ -1713,12 +1719,20 @@ function UpdateSquads()
         SetVisible(C.li_Members, true);
         SetVisible(C.l_SquadName, !C.bIsEditingName);
         SetVisible(C.eb_SquadName, bIsSquadLeader);
-        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_CreateSquadInfantry, false);
+        SetVisible(C.b_CreateSquadArmored, false);
+        SetVisible(C.b_CreateSquadLogistics, false);
+        SetVisible(C.i_SquadType, true);
+        SetVisible(C.l_SquadTypeName, true);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
         SetVisible(C.i_NoRallyPoints, i != SQUAD_INDEX_LOGI && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
+        
+        C.i_SquadType.Image = SRI.SquadType.default.Image;
+        C.l_SquadTypeName.Caption = SRI.SquadType.default.Caption;
+        C.i_SquadType.Hint = SRI.SquadType.default.Hint;
 
         if (bIsSquadLeader)
         {
@@ -1804,7 +1818,11 @@ function UpdateSquads()
         SetVisible(C.lb_Members, false);
         SetVisible(C.li_Members, false);
         SetVisible(C.l_SquadName, false);
-        SetVisible(C.b_CreateSquad, true);
+        SetVisible(C.b_CreateSquadInfantry, true);
+        SetVisible(C.b_CreateSquadArmored, true);
+        SetVisible(C.b_CreateSquadLogistics, true);
+        SetVisible(C.i_SquadType, false);
+        SetVisible(C.l_SquadTypeName, false);
         SetVisible(C.b_JoinSquad, false);
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
@@ -1815,46 +1833,50 @@ function UpdateSquads()
 
     while (j < p_Squads.SquadComponents.Length - 1)
     {
-        if (j == SQUAD_INDEX_LOGI)
-        {
-            CLogi = p_Squads.SquadComponents[j];
-            SetVisible(CLogi, true);
-            SetVisible(CLogi.l_SquadName, true);
-            SetVisible(CLogi.b_LockSquad, false);
-            SetVisible(CLogi.i_LockSquad, false);
-            SetVisible(CLogi.i_NoRallyPoints, false);
+        // if (j == SQUAD_INDEX_LOGI)
+        // {
+        //     CLogi = p_Squads.SquadComponents[j];
+        //     SetVisible(CLogi, true);
+        //     SetVisible(CLogi.l_SquadName, true);
+        //     SetVisible(CLogi.b_LockSquad, false);
+        //     SetVisible(CLogi.i_LockSquad, false);
+        //     SetVisible(CLogi.i_NoRallyPoints, false);
 
-            if (SRI.IsSquadActive(TeamIndex, j))
-            {
-                // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
-                // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
-                // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
-                // bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
-                // bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
+        //     if (SRI.IsSquadActive(TeamIndex, j))
+        //     {
+        //         // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+        //         // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
+        //         // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
+        //         // bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
+        //         // bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
 
-                SetVisible(CLogi.lb_Members, true);
-                SetVisible(CLogi.li_Members, true);
-                SetVisible(CLogi.l_SquadName, !CLogi.bIsEditingName);
-                SetVisible(CLogi.eb_SquadName, bIsSquadLeader);
-                SetVisible(CLogi.b_CreateSquad, false);
-                SetVisible(CLogi.b_JoinSquad, !bIsInSquad);
-                SetVisible(CLogi.b_LeaveSquad, bIsInSquad);
-            }
-            else
-            {
-                SetVisible(CLogi.b_CreateSquad, !bIsInSquad);
-                SetVisible(CLogi.l_SquadName, false);
-                SetVisible(CLogi.lb_Members, false);
-                SetVisible(CLogi.li_Members, false);
-                SetVisible(CLogi.b_JoinSquad, false);
-                SetVisible(CLogi.b_LeaveSquad, false);
-                SetVisible(CLogi.eb_SquadName, false);
-            }
-        }
-        else
-        {
-            SetVisible(p_Squads.SquadComponents[j], false);
-        }
+        //         SetVisible(CLogi.lb_Members, true);
+        //         SetVisible(CLogi.li_Members, true);
+        //         SetVisible(CLogi.l_SquadName, !CLogi.bIsEditingName);
+        //         SetVisible(CLogi.eb_SquadName, bIsSquadLeader);
+        //         SetVisible(C.b_CreateSquadInfantry, false);
+        //         SetVisible(C.b_CreateSquadArmored, false);
+        //         SetVisible(C.b_CreateSquadLogistics, false);
+        //         SetVisible(CLogi.b_JoinSquad, !bIsInSquad);
+        //         SetVisible(CLogi.b_LeaveSquad, bIsInSquad);
+        //     }
+        //     else
+        //     {
+        //         SetVisible(C.b_CreateSquadInfantry, !bIsInSquad);
+        //         SetVisible(C.b_CreateSquadArmored, !bIsInSquad);
+        //         SetVisible(C.b_CreateSquadLogistics, !bIsInSquad);
+        //         SetVisible(CLogi.l_SquadName, false);
+        //         SetVisible(CLogi.lb_Members, false);
+        //         SetVisible(CLogi.li_Members, false);
+        //         SetVisible(CLogi.b_JoinSquad, false);
+        //         SetVisible(CLogi.b_LeaveSquad, false);
+        //         SetVisible(CLogi.eb_SquadName, false);
+        //     }
+        // }
+        // else
+        // {
+        // }
+        SetVisible(p_Squads.SquadComponents[j], false);
         ++j;
     }
 
@@ -1877,7 +1899,9 @@ function UpdateSquads()
         SetVisible(C.li_Members, true);
         SetVisible(C.l_SquadName, true);
         SetVisible(C.eb_SquadName, false);
-        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_CreateSquadInfantry, false);
+        SetVisible(C.b_CreateSquadArmored, false);
+        SetVisible(C.b_CreateSquadLogistics, false);
         SetVisible(C.b_JoinSquad, false);
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
@@ -1959,12 +1983,14 @@ defaultproperties
     NoneText="None"
     LockedText="Locked"
     BotsText="BOTS"
-    SquadOnlyText="SQUADS ONLY"
-    SquadLeadershipOnlyText="LEADERS ONLY"
-    NonSquadLeaderOnlyText="NON-LEADERS ONLY"
+    SquadOnlyText="Squad"
+    SquadLeadershipOnlyText="LEADERS"
+    NonSquadLeaderOnlyText="NON-LEADERS"
     RoleLockedText="LOCKED"
     RoleLogiOnlyOneClass="--"
-    RoleLogiSquadOnly="LOGIC SQUAD ONLY"
+    RoleSquadOnlyInfantry="Infantry"
+    RoleSquadOnlyArmored="Armored"
+    RoleSquadOnlyLogistics="Logistics"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 

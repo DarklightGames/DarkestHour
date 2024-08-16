@@ -17,4 +17,5 @@ defaultproperties
     Limit=3
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=15
+    RequiredSquadType=class'DHSquadTypeArmored'
 }

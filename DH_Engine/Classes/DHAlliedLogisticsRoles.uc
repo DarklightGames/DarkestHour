@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHAlliedLogiRoles extends DHAlliedRoles
+class DHAlliedLogisticsRoles extends DHAlliedRoles
     abstract;
 
 defaultproperties
@@ -15,4 +15,5 @@ defaultproperties
     PluralName="Logistic Engineers"
     Limit=4
     bSpawnWithExtraAmmo=true
+    RequiredSquadType=class'DHSquadTypeLogistics'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHUSLogiRoles extends DHAlliedLogiRoles
+class DHUSLogiRoles extends DHAlliedLogisticsRoles
     abstract;
 
 defaultproperties
