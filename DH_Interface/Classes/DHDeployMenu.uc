@@ -1730,6 +1730,7 @@ function UpdateSquads()
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
         SetVisible(C.i_NoRallyPoints, i != SQUAD_INDEX_LOGI && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
         
+        //TODO: Fix this so it's not the player squad type
         C.i_SquadType.Image = SRI.SquadType.default.Image;
         C.l_SquadTypeName.Caption = SRI.SquadType.default.Caption;
         C.i_SquadType.Hint = SRI.SquadType.default.Hint;
