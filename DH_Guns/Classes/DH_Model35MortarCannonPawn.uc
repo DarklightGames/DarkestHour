@@ -31,6 +31,8 @@ var     DHMortarHandsActor  HandsActor;             // The first person hands ac
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
 var     StaticMesh          HandsProjectileStaticMesh;
+var     int                 HandsHandsSkinIndex;    // The skin index for the hand.
+var     int                 HandsSleeveSkinIndex;   // The skin index for the sleeves on the hands.
 
 var()   Rotator             HandsRotationOffset;    // The rotation offset for the first person hands.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
@@ -62,6 +64,9 @@ simulated function InitializeVehicleAndWeapon()
 // TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
 simulated function InitializeHands()
 {
+    local DHPlayer PC;
+    local DHRoleInfo RI;
+
     if (HandsActor != none)
     {
         HandsActor.Destroy();
@@ -77,7 +82,21 @@ simulated function InitializeHands()
     }
 
     HandsActor.LinkMesh(HandsMesh);
-    HandsActor.bHidden = false; // TODO: should be true.
+    HandsActor.bHidden = true;
+
+    // Apply the player's hands and sleeve texture texture to the hands mesh.
+    PC = DHPlayer(Controller);
+
+    if (PC != none)
+    {
+        RI = DHRoleInfo(PC.GetRoleInfo());
+    }
+
+    if (RI != none)
+    {
+        HandsActor.Skins[HandsHandsSkinIndex] = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
+        HandsActor.Skins[HandsSleeveSkinIndex] = RI.static.GetSleeveTexture();
+    }
 
     if (Gun == none)
     {
@@ -279,9 +298,6 @@ simulated function Tick(float DeltaTime)
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    Log("ClientKDriverEnter" @ PC);
-    Log("IsLocallyControlled" @ IsLocallyControlled());
-
     super.ClientKDriverEnter(PC);
 
     if (IsLocallyControlled())
@@ -307,13 +323,13 @@ defaultproperties
 
     GunClass=class'DH_Guns.DH_Model35MortarCannon'
 
-    // spotting scope
+    // Spotting Scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
-    // kneeling
+    // Kneeling
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    // standing
+    // tanding
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    // binoculars
+    // Binoculars
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
     PlayerCameraBone="CAMERA_COM"
@@ -334,11 +350,11 @@ defaultproperties
     OverlayCorrectionX=0
     OverlayCorrectionY=0
 
-    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'   // TODO: swap it out
-    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
-
     AmmoShellTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON'
     AmmoShellTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON'
+
+    AmmoShellReloadTextures(0)=Texture'DH_Model35Mortar_tex.interface.IT_HE_M110_3360_ICON_RELOAD'
+    AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
 
     ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
 
@@ -353,6 +369,7 @@ defaultproperties
     HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_hands'
     HandsFireAnims=("FIRE_HANDS")
     HandsAttachBone="PITCH"
+    HandsSleeveSkinIndex=1
     HandsProjectileBone="PROJECTILE"
     HandsRotationOffset=(Yaw=-16384)
     HandsProjectileStaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_A'
