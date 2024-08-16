@@ -9,4 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharactersUS_anm.US_GI_vest_Beach'
     Skins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_SargAssaultVest'
+
+    BodySkins(0)=Texture'DHUSCharactersTex.29thID.US_29thID_SargAssaultVest'
+    BodySkins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_SargAssaultVest'
 }
