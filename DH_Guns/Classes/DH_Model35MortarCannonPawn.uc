@@ -136,6 +136,13 @@ simulated function UpdateHandsProjectileStaticMesh()
 
 simulated function Fire(optional float F)
 {
+    // If the driver is in the spotting scope position, move down to the position where the mortar can be fired.
+    if (DriverPositionIndex == SpottingScopePositionIndex)
+    {
+        NextWeapon();
+        return;
+    }
+
     if (!CanFire() || ArePlayersWeaponsLocked() || !Gun.ReadyToFire(false))
     {
         return;
