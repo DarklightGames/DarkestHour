@@ -1870,8 +1870,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
     }
 
-    // Draw the names
-    if (Lines.Length > 0)
+    // Draw the names if we are not the sole occupant.
+    if (Lines.Length > 1)
     {
         Canvas.Font = GetPlayerNameFont(Canvas);
         VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * HudScale;
