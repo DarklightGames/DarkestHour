@@ -52,7 +52,36 @@ struct ArtilleryType
     var() int                   Limit;                      // The amount of these types of artillery strikes that are available.
     var() int                   ConfirmIntervalSeconds;     // The amount of seconds it will take until another request can be confirmed.
 };
+
+struct SquadSelection
+{
+    var() string                Name;
+    var() class<DHSquadType>    SquadType;                  // The Squad type class to use.
+    var() int                   Limit;                      // How many of this squad type there can be
+    var() class<DHRoleInfo>     Roles;                      // The Roles allowed within this class
+
+};
+
+
+
+struct SquadSelection2
+{
+    var() string                Name;
+    var() class<DHSquadType>    SquadType;                  // The Squad type class to use.
+    var() int                   NrOfSquads;                      // How many of this squad type there can be
+    var() int                   MaxSize;                      // How many of this squad type there can be
+    var() class<DHRoleInfo>             R1_Leader;                      // The Roles allowed within this class
+    var() class<DHRoleInfo>             R2_Asl;                      // The Roles allowed within this class
+    var() class<DHRoleInfo>             R3_Any;                      // The Roles allowed within this class
+    var() class<DHRoleInfo>             R4_Support;                      // The Roles allowed within this class
+    var() class<DHRoleInfo>             R5_Support;                      // The Roles allowed within this class
+    var() class<DHRoleInfo>             R6_Support;                      // The Roles allowed within this class
+};
+
+
 var(Artillery) array<ArtilleryType> ArtilleryTypes;
+var(SquadsAllies) array<SquadSelection> SquadsAllies;
+var(SquadsAxis) array<SquadSelection2> SquadsAxis;
 
 // These are used as hints for skinning dynamically placed objects.
 var(DH_Atmosphere) ESeason          Season;
