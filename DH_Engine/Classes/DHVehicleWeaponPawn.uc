@@ -1666,7 +1666,7 @@ simulated function bool CanExit()
 {
     if ((DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex)) && IsHumanControlled())
     {
-        if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
+        if (UnbuttonedPositionIndex > 0 && DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
             DisplayVehicleMessage(9,, true); // must unbutton the hatch
         }
