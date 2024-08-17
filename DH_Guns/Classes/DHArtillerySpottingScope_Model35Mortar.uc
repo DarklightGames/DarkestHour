@@ -43,13 +43,13 @@ defaultproperties
     PitchSegmentSchema(8)=(Shape=ShortTick)
     PitchSegmentSchema(9)=(Shape=ShortTick)
 
-    NumberOfYawSegments=1
+    NumberOfYawSegments=2
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)
     YawSegmentSchema(3)=(Shape=ShortTick)
     YawSegmentSchema(4)=(Shape=ShortTick)
-    YawSegmentSchema(5)=(Shape=ShortTick)
+    YawSegmentSchema(5)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(6)=(Shape=ShortTick)
     YawSegmentSchema(7)=(Shape=ShortTick)
     YawSegmentSchema(8)=(Shape=ShortTick)
