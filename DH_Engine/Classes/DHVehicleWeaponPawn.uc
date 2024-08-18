@@ -73,6 +73,13 @@ var     float       ClientViewTransitionEndTime;
 
 var     bool        bUseInternalMeshForBaseVehicle; // If true, we use the internal mesh for the base vehicle as well.
 
+// To work around the fact that weapons cannot have a positive minimum pitch,
+// we have to have a barrel rotation offset within the geometry of the model.
+// As a result, we need to offset the internal pitch of the weapon to match the
+// barrel's true pitch (e.g., the Model 35 mortar's lowest pitch is +40 degrees,
+// but internally the pitch is at 0 degrees).
+var     int         GunPitchOffset;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -289,24 +296,30 @@ simulated function int GetGunPitch()
         Pitch -= 65536;
     }
 
+    Pitch += GunPitchOffset;
+
     return Pitch;
 }
 
 simulated function int GetGunPitchMin()
 {
+    local int GunPitchMin;
+
     if (VehWep == none)
     {
         return 65535;
     }
-
+    
     if (VehWep.CustomPitchDownLimit >= 32768)
     {
-        return VehWep.CustomPitchDownLimit - 65535;
+        GunPitchMin = VehWep.CustomPitchDownLimit - 65535;
     }
     else
     {
-        return VehWep.CustomPitchDownLimit;
+        GunPitchMin = VehWep.CustomPitchDownLimit;
     }
+
+    return GunPitchMin + GunPitchOffset;
 }
 
 simulated function int GetGunPitchMax()
@@ -316,7 +329,7 @@ simulated function int GetGunPitchMax()
         return 0;
     }
 
-    return VehWep.CustomPitchUpLimit;
+    return VehWep.CustomPitchUpLimit + GunPitchOffset;
 }
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation
 // Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
@@ -1050,6 +1063,7 @@ simulated state ViewTransition
     simulated function HandleTransition()
     {
         local PlayerController PC;
+        local int DriverAnimationChannel;
         
         if (VehicleBase != none)
         {
@@ -1100,19 +1114,25 @@ simulated state ViewTransition
 
         if (Gun != none)
         {
+            if (DHVehicleWeapon(Gun) != none)
+            {
+                DriverAnimationChannel = DHVehicleWeapon(Gun).DriverAnimationChannel;
+            }
+
             if (LastPositionIndex < DriverPositionIndex)
             {
+
                 // Transition up
                 if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
                 {
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim,,, DriverAnimationChannel);
                     ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 }
             }
             else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
             {
                 // Transition down
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim,,, DriverAnimationChannel);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
             }
         }
@@ -1646,7 +1666,7 @@ simulated function bool CanExit()
 {
     if ((DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex)) && IsHumanControlled())
     {
-        if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
+        if (UnbuttonedPositionIndex > 0 && DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
             DisplayVehicleMessage(9,, true); // must unbutton the hatch
         }

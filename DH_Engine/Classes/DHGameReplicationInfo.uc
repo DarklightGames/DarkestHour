@@ -2449,6 +2449,10 @@ defaultproperties
     // Artillery
     ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"
 
+    // Mortars
+    ConstructionClassNames(24)="DH_Guns.DH_Model35MortarConstruction"
+    ConstructionClassNames(25)="DH_Guns.DH_M1MortarConstruction"
+
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"

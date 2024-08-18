@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHBinocularsPickupItalian extends DHBinocularsPickup;
+class DH_Model35MortarProjectileSmoke extends DHMortarProjectileSmoke;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DHBinocularsItemItalian'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
-    Skins(0)=Texture'DH_Equipment_tex.Binocs.Binoc_world_usa'
+    Speed=6500
+    MaxSpeed=6500
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_3360'
 }

@@ -12,4 +12,6 @@ defaultproperties
     ItemName="Fratelli Koristka 7x50"
     PickupClass=class'DH_Equipment.DHBinocularsPickupItalian'
     ScopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_Italian'
+    // Technically this is not "Allied", but it's the same color as the Allied binoculars so it's fine.
+    AttachmentClass=class'DH_Equipment.DHBinocularsAttachmentAllied'
 }

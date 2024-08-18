@@ -87,6 +87,10 @@ function static UpdateProxy(DHActorProxy AP)
             APA.SetDrawType(DT_Mesh);
             APA.LinkMesh(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
 
+            // HACK: Play an idle animation if it exists. This is needed because on some "vehicles", the gun needs to
+            // be displayed in a certain way (i.e. mortars).
+            APA.PlayAnim('idle');
+
             for (j = 0; j < VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins.Length; ++j)
             {
                 if (VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j] != none)
@@ -202,5 +206,5 @@ defaultproperties
     bCanBeDamaged=false
     DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
-    bCanOnlyPlaceOnTerrain=true
+    bCanOnlyPlaceOnTerrain=false
 }
