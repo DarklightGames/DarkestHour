@@ -213,7 +213,7 @@ var     Texture     DamagedPeriscopeOverlay;    // periscope overlay to show if 
 
 var Sound BuzzSound;
 
-var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
+var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package.
 
 replication
 {
@@ -3361,27 +3361,27 @@ simulated event DestroyAppearance()
 
     if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
     {
-        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-        DestroyedSkin.Material1 = Skins[0];
-        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-        DestroyedSkin.FallbackMaterial = Skins[0];
-        DestroyedSkin.CombineOperation = CO_Multiply;
-
-        DestroyedMeshSkins[0] = DestroyedSkin;
+        for (i = 0; i < Skins.Length; ++i)
+        {
+            DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+            DestroyedSkin.Material1 = Skins[i];
+            // TODO: Depending on the aspect ratio, we may need to use a different overlay.
+            DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+            DestroyedSkin.FallbackMaterial = Skins[i];
+            DestroyedSkin.CombineOperation = CO_Multiply;
+            DestroyedMeshSkins[i] = DestroyedSkin;
+        }
     }
 
     super.DestroyAppearance();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (DestroyedMeshSkins.Length > 0)
+        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
         {
-            for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+            if (DestroyedMeshSkins[i] != none)
             {
-                if (DestroyedMeshSkins[i] != none)
-                {
-                    Skins[i] = DestroyedMeshSkins[i];
-                }
+                Skins[i] = DestroyedMeshSkins[i];
             }
         }
     }

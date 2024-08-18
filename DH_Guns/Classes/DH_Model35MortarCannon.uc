@@ -14,8 +14,6 @@ defaultproperties
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
 
     WeaponFireAttachmentBone="MUZZLE"
-    // Skins(0)=Texture'DH_M116_tex.M116.m116_body'
-    // Skins(1)=Texture'DH_M116_tex.M116.m116_spring'
     GunnerAttachmentBone="YAW"
 
     // Collision meshes
@@ -35,7 +33,7 @@ defaultproperties
     MaxNegativeYaw=-782.6
     YawStartConstraint=-782.6
     YawEndConstraint=782.6
-    CustomPitchUpLimit=8190
+    CustomPitchUpLimit=9102
     CustomPitchDownLimit=65535
     RotationsPerSecond=0.0125
 
@@ -72,7 +70,7 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
 
     // TODO: figure out what to do with this.
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
+    // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
 
     bIsArtillery=true
     ResupplyInterval=12.0

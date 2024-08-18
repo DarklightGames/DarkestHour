@@ -2451,6 +2451,7 @@ defaultproperties
 
     // Mortars
     ConstructionClassNames(24)="DH_Guns.DH_Model35MortarConstruction"
+    ConstructionClassNames(25)="DH_Guns.DH_M1MortarConstruction"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

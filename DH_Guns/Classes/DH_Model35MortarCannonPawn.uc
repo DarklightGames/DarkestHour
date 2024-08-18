@@ -4,20 +4,17 @@
 //==============================================================================
 // [ ] replace mortar round names
 // [ ] calibrate range table
-// [ ] UI elements for clock image
 // [ ] replace pitch/yaw sounds with squeaking wheels used on the other mortars
 // [ ] adjust yaw dials to be more precise
 // [ ] reduce spread of mortar rounds
 // [ ] replace firing effects
 // [ ] remove reloading sounds
 // [ ] add mortar player idle animations
-// [ ] when pressing the fire button, move the camera off the sight
-// [ ] do not show the passenger list for AT guns and mortars
 //==============================================================================
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
-var     float FiringStartTimeSeconds;       // The time at which the firing animation started, relative to Level.TimeSeconds.
-var     float OverlayFiringAnimDuration;    // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
+var     float   FiringStartTimeSeconds;         // The time at which the firing animation started, relative to Level.TimeSeconds.
+var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
 
 var()   name  FiringCameraBone;         // The name of the bone to use for the camera while firing.
 var()   int   FiringCameraBoneChannel;  // The channel to use for the firing camera bone.
@@ -30,7 +27,6 @@ var()   float FiringCameraOutTime;      // How long it takes to interpolate the 
 var     DHMortarHandsActor  HandsActor;             // The first person hands actor.
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
-var     StaticMesh          HandsProjectileStaticMesh;
 var     int                 HandsHandsSkinIndex;    // The skin index for the hand.
 var     int                 HandsSleeveSkinIndex;   // The skin index for the sleeves on the hands.
 
@@ -304,6 +300,21 @@ simulated function UpdateGunAnimationDrivers()
     }
 }
 
+// Modified so that we call our special tick function here.
+// TODO: Just move this to the base class.
+simulated state ViewTransition
+{
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            UpdateGunAnimationDrivers();
+        }
+    }
+}
+
 simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
@@ -342,13 +353,13 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Model35MortarCannon'
 
     // Spotting Scope
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // Kneeling
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(1)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // tanding
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // Binoculars
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(3)=(DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
     PlayerCameraBone="CAMERA_COM"
     CameraBone="GUNSIGHT_CAMERA"
@@ -392,5 +403,4 @@ defaultproperties
     HandsSleeveSkinIndex=1
     HandsProjectileBone="PROJECTILE"
     HandsRotationOffset=(Yaw=-16384)
-    HandsProjectileStaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_A'
 }
