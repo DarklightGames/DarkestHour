@@ -10,9 +10,9 @@ defaultproperties
     NationName="Union of Soviet Socialist Republics"
     VoicePackClass=class'DH_SovietPlayers.DHSovietVoice'
     SupplyCacheClass=class'DHConstruction_SupplyCache_USSR'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_USSR'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_ussr'
     GrenadeCrateClass=class'DH_Weapons.DH_F1GrenadeSpawner'

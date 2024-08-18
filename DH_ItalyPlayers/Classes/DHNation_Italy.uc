@@ -11,8 +11,7 @@ defaultproperties
     NativeNationName="Regno d'Italia"
     VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
     SupplyCacheClass=class'DHConstruction_SupplyCache_Italy'
-
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'   // TODO: replace
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Italy'
     
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Italy'
     GrenadeCrateClass=class'DH_Weapons.DH_SRCMMod35GrenadeSpawner'

@@ -10,9 +10,9 @@ defaultproperties
     NationName="Canada"
     VoicePackClass=class'DH_BritishPlayers.DHCanadianVoice'
     SupplyCacheClass=class'DHConstruction_SupplyCache_Canada'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Britain'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box'
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Canada'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_canada'
     GrenadeCrateClass=class'DH_Weapons.DH_MillsBombSpawner'

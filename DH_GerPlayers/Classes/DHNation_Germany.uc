@@ -10,9 +10,9 @@ defaultproperties
     NationName="Germany"
     NativeNationName="Deutschland"
     VoicePackClass=class'DH_GerPlayers.DHGerVoice'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Germany'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box'
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Germany'
     SupplyCacheClass=class'DHConstruction_SupplyCache_Germany'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_germany'

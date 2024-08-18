@@ -11,9 +11,9 @@ defaultproperties
     NativeNationName="Ludowe Wojsko Polskie"
     VoicePackClass=class'DH_SovietPlayers.DHPolishVoice'
     SupplyCacheClass=class'DHConstruction_SupplyCache_Poland'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_USSR'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Poland'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_poland'
     GrenadeCrateClass=class'DH_Weapons.DH_F1GrenadeSpawner'
