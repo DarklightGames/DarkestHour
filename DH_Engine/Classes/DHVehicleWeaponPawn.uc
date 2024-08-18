@@ -277,6 +277,11 @@ simulated function int GetGunPitch()
 {
     local int Pitch;
 
+    if (VehWep == none)
+    {
+        return 0;
+    }
+
     Pitch = VehWep.CurrentAim.Pitch;
 
     if (Pitch >= 32768)
@@ -289,11 +294,28 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    return VehWep.CustomPitchDownLimit - 65535;
+    if (VehWep == none)
+    {
+        return 65535;
+    }
+
+    if (VehWep.CustomPitchDownLimit >= 32768)
+    {
+        return VehWep.CustomPitchDownLimit - 65535;
+    }
+    else
+    {
+        return VehWep.CustomPitchDownLimit;
+    }
 }
 
 simulated function int GetGunPitchMax()
 {
+    if (VehWep == none)
+    {
+        return 0;
+    }
+
     return VehWep.CustomPitchUpLimit;
 }
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation

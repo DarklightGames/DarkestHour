@@ -26,7 +26,6 @@ defaultproperties
     PlayerCameraBone="CAMERA_COM"
 
     GunOpticsClass=class'DH_Vehicles.DHGunOptics_ItalianPeriscopic'
-    OverlayCorrectionX=12
     
     // TODO: probably need a whole other sequence of anims here for the gunner?
     AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="semo4732_gunner_yaw_driver",FrameCount=41,Channel=0)

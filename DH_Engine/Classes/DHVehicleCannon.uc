@@ -12,7 +12,8 @@ var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, Re
 var     float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 var     float               GunMantletArmorFactor;  // used for mantlet hits for casemate-style vehicles without a turret
 var     float               GunMantletSlope;
-var     bool                bHasAddedSideArmor;     // has side skirts that will make a hit by a HEAT projectile ineffective
+var     bool                bHasAddedSideArmor;     // has side skirts (schurzen) which block AP bullets, small caliber HE shells and offer some protection against HEAT
+var     bool                bHasAddedRearArmor;     // has addon armor (schurzen) which also covers the rear of the turret
 
 // Cannon ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];  // current quantity of each round type (using byte for more efficient replication)
@@ -107,6 +108,12 @@ var array<SGunWheel> GunWheels;
 // will empty as the rounds are fired).
 var int                 OldTotalRoundsRemaining;
 var int                 TotalRoundsRemaining;
+
+// Projectile rotation mode.
+var enum EProjectileRotationMode {
+    PRM_CurrentAim,     // Use the `CurrentAim` to determine the rotation. Inaccurate, though this is the legacy behavior, but is kept for backwards compatibility reasons.
+    PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
+} ProjectileRotationMode;
 
 replication
 {
@@ -450,30 +457,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 }
 
 // Modified to handle any pitch adjustments for human players, & any secondary or tertiary projectile spread properties
-function rotator GetProjectileFireRotation(optional bool bAltFire)
+function Rotator GetProjectileFireRotation(optional bool bAltFire)
 {
-    local rotator FireRotation;
+    local Rotator FireRotation;
     local float   ProjectileSpread;
 
-    // Get base firing direction, including any pitch adjustments for human players
     FireRotation = WeaponFireRotation;
-
-    if (Instigator != none && Instigator.IsHumanControlled())
-    {
-        FireRotation.Pitch += AddedPitch; // aim/pitch adjustment affecting all ranges (allows correction of cannons with non-centred aim points)
-
-        if (!bAltFire)
-        {
-            if (bDebugRangeAutomatically) // we're in the middle of an automatic debug option to calibrate pitch adjustment for range
-            {
-                FireRotation.Pitch += DebugPitchAdjustment;
-            }
-            else if (RangeSettings.Length > 0) // range-specific pitch adjustment for gunsights with mechanically adjusted range setting
-            {
-                FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-            }
-        }
-    }
 
     // Get projectile spread, with handling for secondary & tertiary projectile spread properties
     if (bAltFire)
@@ -1502,6 +1491,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local string  HitSide, OppositeSide, DebugString1, DebugString2, DebugString3;
     local bool    bProjectilePenetrated;
+    local bool    bRearHit, bSideHit;
 
     AV = DHArmoredVehicle(Base);
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
@@ -1614,29 +1604,11 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     {
         ArmorThickness = RearArmorFactor;
         ArmorSlope = RearArmorSlope;
+        bRearHit = true;
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
     {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
-        {
-            if (bDebugPenetration && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            if (bLogDebugPenetration)
-            {
-                Log("Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            if (AV != none)
-            {
-                AV.ResetTakeDamageVariables();
-            }
-
-            return false;
-        }
+        bSideHit = true;
 
         if (HitSide ~= "right")
         {
@@ -1648,6 +1620,27 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             ArmorThickness = LeftArmorFactor;
             ArmorSlope = LeftArmorSlope;
         }
+    }
+
+    // No penetration if vehicle has addon armor that stops AP Bullet and HE projectiles, so exit here (after any debug options).
+    if ((bHasAddedSideArmor && bSideHit || bHasAddedRearArmor && bRearHit) && (P.RoundType == RT_APBULLET || (P.RoundType == RT_HE && P.ShellDiameter < 8.5)))
+    {
+        if (bDebugPenetration && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Hit turret" @ HitSide $ ": no penetration as addon side armor stops AP bullets and small HE shells");
+        }
+
+        if (bLogDebugPenetration)
+        {
+            Log("Hit turret" @ HitSide $ ": no penetration as addon armor stops AP bullets and small HE shells");
+        }
+
+        if (AV != none)
+        {
+            AV.ResetTakeDamageVariables();
+        }
+
+        return false;
     }
 
     // Calculate the effective armor thickness, factoring in projectile's angle of incidence, & compare to projectile's penetration capability
@@ -1667,6 +1660,27 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         {
             AngleOfIncidence = GunMantletSlope;
         }
+
+        //Addon armor (schurzen) defeats HEAT projectiles if angle of shot is above 45 degrees
+        if ((bHasAddedSideArmor && bSideHit || bHasAddedRearArmor && bRearHit) && (P.RoundType == RT_HEAT && AngleOfIncidence > 45))
+        {
+            if (bDebugPenetration && Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Hit turret" @ AngleOfIncidence $ ": no penetration as AOI causes HEAT projectile to bounce off addon armor");
+            }
+
+            if (bLogDebugPenetration)
+            {
+                Log("Hit turret" @ AngleOfIncidence $ ": no penetration as AOI causes HEAT projectile to bounce off addon armor");
+            }
+
+            if (AV != none)
+            {
+                AV.ResetTakeDamageVariables();
+            }
+
+            return false;
+        }        
 
         // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
@@ -1811,10 +1825,13 @@ simulated function InitializeVehicleBase()
 // Modified to use the new optional AltFireSpawnOffsetX for coaxial MG fire, instead of irrelevant WeaponFireOffset for cannon
 // And to use the new AltFireAttachmentBone to get the location for coax MG fire
 // Generally re-factored a little & removed redundant dual fire stuff
+// Also adjusted to use the actual muzzle bone rotation for determining the projectile's rotation.
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
-    local name   WeaponFireAttachBone;
-    local vector CurrentFireOffset;
+    local name      WeaponFireAttachBone;
+    local Vector    CurrentFireOffset;
+    local Coords    MuzzleCoords;
+    local float     MyAddedPitch;
 
     // Get attachment bone & positional offset
     if (bWasAltFire)
@@ -1829,10 +1846,39 @@ simulated function CalcWeaponFire(bool bWasAltFire)
         CurrentFireOffset.X = WeaponFireOffset;
     }
 
-    // Calculate the world location & rotation to spawn a projectile
-    WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
-    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+    // Calculate the world location & rotation of the projectile.
+    if (Instigator != none && Instigator.IsHumanControlled())
+    {
+        MyAddedPitch += AddedPitch; // aim/pitch adjustment affecting all ranges (allows correction of cannons with non-centred aim points)
 
+        if (!bWasAltFire)
+        {
+            if (bDebugRangeAutomatically) // we're in the middle of an automatic debug option to calibrate pitch adjustment for range
+            {
+                MyAddedPitch += DebugPitchAdjustment;
+            }
+            else if (RangeSettings.Length > 0) // range-specific pitch adjustment for gunsights with mechanically adjusted range setting
+            {
+                MyAddedPitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+            }
+        }
+    }
+
+    MuzzleCoords = GetBoneCoords(WeaponFireAttachBone);
+
+    switch (ProjectileRotationMode)
+    {
+        case PRM_CurrentAim:
+            WeaponFireRotation = Rotator(Vector(CurrentAim) >> Rotation);
+            WeaponFireRotation.Pitch += MyAddedPitch;
+            break;
+        case PRM_MuzzleBone:
+            WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(-MuzzleCoords.YAxis, class'UUnits'.static.UnrealToRadians(MyAddedPitch)), MuzzleCoords.XAxis));
+            break;
+    }
+
+    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+    
     if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
         WeaponFireLocation += CurrentFireOffset >> WeaponFireRotation;
@@ -2123,7 +2169,7 @@ simulated function DebugModifyOverlayCorrection(float Adjustment)
 simulated function UpdateGunWheels()
 {
     local int i;
-    local rotator BoneRotation;
+    local Rotator BoneRotation;
     local int Value;
 
     for (i = 0; i < GunWheels.Length; ++i)

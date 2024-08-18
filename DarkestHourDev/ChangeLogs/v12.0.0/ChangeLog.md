@@ -29,6 +29,7 @@ We have tried to keep the original aesthetic of the fonts while making them more
 In addition, players who play at higher resolutions (e.g. 4K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 ## Vehicles
+This update sees the addition of 7 brand new vehicles to the game; 6 of which are unique to the Italian faction.
 
 ### DUKW
 The DUKW is a versatile amphibious vehicle used by the United States landing forces in the Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
@@ -70,7 +71,7 @@ The Carcano M91/38 is a bolt-action rifle that was the standard issue rifle of t
 ### Breda modello 30
 There are many things that have been said about the Breda modello 30; most of them not very flattering. Intended as a squad light machine-gun, it's heavy weight, low effective rate of fire, and bizarre loading mechanism made it extremely ineffective in it's assigned role. We've taken great pains to make sure that the Breda modello 30 is as historically accurate as possible (including animating ammo being spilled out on reloads), so players will be able to experience the same boiling frustration that the Italian soldiers did.
 
-> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see how many rounds are left in the magazine as it's empited. To our knowledge, this is the first time this has been accurately modeled in a video game.
+> Developer Highlight: The magazine has an open window and ammo counter on the box magazine, so you can see the spring decompress and well as how many rounds are left in the magazine as it's emptied. To our knowledge, this is the first time this has been accurately modeled in a video game.
 
 ### Moschetto Automatico Beretta 38
 The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
@@ -89,12 +90,11 @@ This compact semi-automatic pistol was the standard sidearm of the Italian army.
 
 ### L-Type Hand Grenade (`put the real name in here`)
 
-
 ## Maps
 
-The maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943.
+The Italy expansion sees the addition of 4 brand new maps, and a re-imaging of an existing map.
 
-The maps follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
+The new maps in this first Italian expansion are focused on Operation Husky, the invasion of Sicily in 1943. The follow the historical progression of the Battle of Gela, where US 1st and 2nd Infantry Divisions landed against the Italian 4th Infantry "Livorno" Division and the German 1st Fallschirm-Panzer Division Hermann Göring. Their goal was to secure the town of Gela, then push inland to capture the critical airfield at Ponte Olivo.
 
 ### Gela
 Size: Medium
@@ -103,26 +103,32 @@ Size: Medium
 Size: Medium
 
 ### Ponte Olivo Airfield
-
 Size: Large
 
 ### Villa Cecila
 This map is a fictional representation of a palatial estate in the Sicilian countryside. It is a small, infantry-only with a focus on close-quarters combat in and around the villa.
 
-# Gameplay Changes
+### San Valentino
+This popular map has been re-imagined for the Italy expansion. The original map allegedly took place in the Italian countryside, though it certainly didn't look the part!
 
+[more]
+
+# Gameplay Changes
 * Vehicle passengers may no longer use the vehicle voice commands.
 
 # Vehicles
-
 * Vehicle cannons can now be fired while the commander is looking through the periscope. [not actually done yet, but needs to be added for all the existing vehicles!]
 
 # Miscellaneous
-
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
+* The artillery response delay has been standardized to 10 seconds for all teams instead of relying on the length of the request sound effect.
+
+# Bug Fixes
+* Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands will no longer continue to play after the player has died.
 
 # SDK
-
 * A team-specific delay to spawning during the setup phase can be added using the neww `TeamAddSpawningEnabledTime` property in the `DHSetupPhaseManager`.
 * Roles can now be locked and unlocked by firing events to the new `DH_ModifyRole` actor.
-* 
+* Spawn points can now be set to only allow vehicles to spawn using the new `ESPT_VehicleOnly` spawn point type (previously, `ESPT_Vehicle` spawn points would allow tank crewmen to spawn on foot).
+* Spawn points can now be set to only spawn boat vehicles using the new `bBoatSpawn` spawn point property.

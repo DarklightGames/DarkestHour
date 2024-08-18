@@ -21,6 +21,7 @@ defaultproperties
     // Logistics
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
+    SupplyAttachmentOffset=(X=-38.7437,Y=0.0,Z=62.7177)
     ResupplyAttachmentBone="body"   // TODO: set these up
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters

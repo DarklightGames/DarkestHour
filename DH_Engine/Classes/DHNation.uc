@@ -16,10 +16,10 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 var class<DHVoicePack>          VoicePackClass;
 
 var class<DHConstruction>       PlatoonHQClass;
+var class<DHConstruction>       SupplyCacheClass;
+var class<DHInventorySpawner>   GrenadeCrateClass;
 
-// Supply Cache
-var StaticMesh                  SupplyCacheStaticMesh;
-
+// TODO: move these to classes as well.
 // Rally Point
 var StaticMesh                  RallyPointStaticMesh;
 var StaticMesh                  RallyPointStaticMeshActive;
@@ -30,8 +30,6 @@ var StaticMesh                  InfantryResupplyStaticMesh;
 // Flags
 var Material                    DeployMenuFlagTexture;
 var HudBase.SpriteWidget        MapFlagIconSpriteWidget;
-
-var class<DHInventorySpawner>   GrenadeCrateClass;
 
 // Squads
 var string                      DefaultSquadNames[8];

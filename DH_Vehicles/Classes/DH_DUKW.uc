@@ -2,18 +2,19 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] wheels should appear to be stationary while in water
-// [ ] have different driving characteristics when in water/on land
-// [ ] splash guard functionality
-// [ ] exit positions
-// [~] passengers
-// [ ] turn off wash sound when out of water
-// [ ] fx for propeller wash
-// [ ] fx for bow water spray
-// [ ] change sss
-// [ ] fix issue with wheel and suspension misalignment
-// [ ] add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
-// [ ] ADD ENGINE HITPOINT
+// [ ] Wheels should appear to be stationary while in water
+// [ ] Have different driving characteristics when in water/on land
+// [ ] Splash guard functionality
+// [ ] Exit positions
+// [ ] Turn off wash sound when out of water
+// [ ] Fix for propeller wash
+// [ ] Add bow water spray
+// [ ] Fix issue with wheel and suspension misalignment
+// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] Add engine hitpoint
+// [ ] Fix engine fire position
+// [ ] Fix issue where vehicle is inoperable after changing positions
+// [ ] Maybe make the propeller spin cause it'd be fun
 //==============================================================================
 
 class DH_DUKW extends DHBoatVehicle;
@@ -37,6 +38,13 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerToggleSplashGuard;
+}
+
+simulated event DestroyAppearance()
+{
+    // Avoid calling the DHBoatVehicle's DestroyAppearance function since it does
+    // some weird shit we don't want to replicate.
+    super(DHVehicle).DestroyAppearance();
 }
 
 simulated function name GetIdleAnim()
@@ -278,7 +286,7 @@ defaultproperties
     DirectHEImpactDamageMult=9.0
     DamagedEffectOffset=(X=130.0,Y=0.0,Z=80.0)
     DamagedEffectScale=1.0
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_DUKW_stc.DUKW_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -307,14 +315,37 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=Texture'DH_DUKW_tex.interface.DUKW_body_icon'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
 
+    VehicleHudOccupantsX(2)=0.56
+    VehicleHudOccupantsY(2)=0.5125
+    VehicleHudOccupantsX(3)=0.44
+    VehicleHudOccupantsY(3)=0.5125
+
+    VehicleHudOccupantsX(4)=0.56
+    VehicleHudOccupantsY(4)=0.6
+    VehicleHudOccupantsX(5)=0.44
+    VehicleHudOccupantsY(5)=0.6
+
+    VehicleHudOccupantsX(6)=0.56
+    VehicleHudOccupantsY(6)=0.6875
+    VehicleHudOccupantsX(7)=0.44
+    VehicleHudOccupantsY(7)=0.6875
+
+    VehicleHudOccupantsX(8)=0.56
+    VehicleHudOccupantsY(8)=0.775
+    VehicleHudOccupantsX(9)=0.44
+    VehicleHudOccupantsY(9)=0.775
+
+    SpawnOverlay(0)=Material'DH_DUKW_tex.interface.DUKW_icon'
+
+    // Splashguard 
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
 
     //================copypaste from gmc
 
@@ -330,7 +361,7 @@ defaultproperties
         SupportBoneName="SUSP_F_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_DUKW.FRWheel'
+    Wheels(0)=FRWheel
 
     Begin Object Class=SVehicleWheel Name=FLWheel
         SteerType=VST_Steered
@@ -341,7 +372,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_DUKW.FLWheel'
+    Wheels(1)=FLWheel
 
     Begin Object Class=SVehicleWheel Name=B1RWheel
         bPoweredWheel=true
@@ -351,7 +382,7 @@ defaultproperties
         SupportBoneName="SUSP_B1_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_DUKW.B1RWheel'
+    Wheels(2)=B1RWheel
 
     Begin Object Class=SVehicleWheel Name=B1LWheel
         bPoweredWheel=true
@@ -362,7 +393,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_DUKW.B1LWheel'
+    Wheels(3)=B1LWheel
 
     Begin Object Class=SVehicleWheel Name=B2RWheel
         bPoweredWheel=true
@@ -373,7 +404,7 @@ defaultproperties
         SupportBoneName="SUSP_B2_R"
         SupportBoneAxis=AXIS_X
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_DUKW.B2RWheel'
+    Wheels(4)=B2RWheel
 
     Begin Object Class=SVehicleWheel Name=B2LWheel
         bPoweredWheel=true
@@ -385,7 +416,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_DUKW.B2LWheel'
+    Wheels(5)=B2LWheel
 
     // todo: figure this out
     // Karma
@@ -406,5 +437,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_DUKW.KParams0'
+    KParams=KParams0
 }

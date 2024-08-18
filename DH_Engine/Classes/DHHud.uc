@@ -2155,6 +2155,52 @@ static function Font GetTinyFont(Canvas C)
     return LoadSmallFontStatic(Min(8, FontSize));
 }
 
+function GetPlayerNamePlateIcon(Pawn P, DHPlayerReplicationInfo OtherPRI, out Material IconMaterial, out Color IconMaterialColor)
+{
+    local DHMortarVehicle Mortar;
+
+    IconMaterial = none;
+    IconMaterialColor = class'UColor'.default.White;
+
+    if (OtherPRI == PortraitPRI)
+    {
+        IconMaterial = SpeakerIconMaterial;
+    }
+    else if (P.IsA('DHMortarVehicleWeaponPawn')) // a mortar is a special case to check for resupply
+    {
+        Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
+
+        if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
+        {
+            IconMaterial = NeedAmmoIconMaterial;
+        }
+    }
+    else
+    {
+        if (OtherPRI.IsSquadLeader())
+        {
+            IconMaterial = SquadLeaderIconMaterial;
+            IconMaterialColor = GetPlayerColor(OtherPRI);
+        }
+        else if (OtherPRI.bIsSquadAssistant)
+        {
+            IconMaterial = AssistantIconMaterial;
+            IconMaterialColor = GetPlayerColor(OtherPRI);
+        }
+        else if (DHPawn(P) != none)
+        {
+            if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
+            {
+                IconMaterial = NeedAmmoIconMaterial;
+            }
+            else if (DHPawn(P).bWeaponNeedsReload)
+            {
+                IconMaterial = NeedAssistIconMaterial;
+            }
+        }
+    }
+}
+
 // Modified to show names of friendly players within 25m if they are talking, are in our squad, or if we can resupply them or assist them with loading a rocket
 // This is as well as any player we are looking directly at (within a longer distance of 50m)
 // We also show a relevant icon above a drawn name if the player is talking or if we can resupply or assist reload them
@@ -2537,11 +2583,22 @@ function DrawPlayerNames(Canvas C)
             DrawLocation = PawnForLocation.Location;
         }
 
+        // Convert world location to screen location.
         DrawLocation = C.WorldToScreen(DrawLocation);
 
-        // Now draw the player name, with a generic name icon below it
+        // Calculate the screen-size of the player's name.
         C.TextSize(PlayerName, TextSize.X, TextSize.Y);
-        C.SetPos(DrawLocation.X - 8.0, DrawLocation.Y - (TextSize.Y * 0.5));
+
+        const ELEMENT_MARGIN = 8.0;
+        const CHEVRON_SIZE = 16.0;
+        const CHEVRON_HALF_SIZE = 8.0;
+        const BADGE_SIZE = 24.0;
+        const BADGE_HALF_SIZE = 12.0;
+
+        DrawLocation.Y -= CHEVRON_HALF_SIZE;
+
+        // Draw the small chevron icon below the player's name.
+        C.SetPos(DrawLocation.X - 8.0, DrawLocation.Y);
 
         if (OtherPRI.IsInSquad())
         {
@@ -2552,60 +2609,22 @@ function DrawPlayerNames(Canvas C)
             C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
         }
 
-        C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y - 32.0);
+        // Text is drawn from the bottom left corner.
+        DrawLocation.Y -= ((TextSize.Y / 2) + ELEMENT_MARGIN);
+        C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y);
         C.DrawTextClipped(PlayerName);
 
-        // TODO: SL icon!
-
         // Check whether we need to draw an icon above the player's name, if he's talking or needs resupply or assisted reload
-        IconMaterial = none;
-        IconMaterialColor = class'UColor'.default.White;
-
-        if (OtherPRI == PortraitPRI)
-        {
-            IconMaterial = SpeakerIconMaterial;
-        }
-        else if (P.IsA('DHMortarVehicleWeaponPawn')) // a mortar is a special case to check for resupply
-        {
-            Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-
-            if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
-            {
-                IconMaterial = NeedAmmoIconMaterial;
-            }
-        }
-        else
-        {
-            if (OtherPRI.IsSquadLeader())
-            {
-                IconMaterial = SquadLeaderIconMaterial;
-                IconMaterialColor = GetPlayerColor(OtherPRI);
-            }
-            else if (OtherPRI.bIsSquadAssistant)
-            {
-                IconMaterial = AssistantIconMaterial;
-                IconMaterialColor = GetPlayerColor(OtherPRI);
-            }
-            else if (DHPawn(P) != none)
-            {
-                if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
-                {
-                    IconMaterial = NeedAmmoIconMaterial;
-                }
-                else if (DHPawn(P).bWeaponNeedsReload)
-                {
-                    IconMaterial = NeedAssistIconMaterial;
-                }
-            }
-        }
+        GetPlayerNamePlateIcon(P, OtherPRI, IconMaterial, IconMaterialColor);
 
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
         if (IconMaterial != none)
         {
             C.DrawColor = IconMaterialColor;
             C.DrawColor.A = Alpha;
-            C.SetPos(DrawLocation.X - 12.0, DrawLocation.Y - 56.0);
-            C.DrawTile(IconMaterial, 24.0, 24.0, 0.0, 0.0, IconMaterial.MaterialUSize(), IconMaterial.MaterialVSize());
+            DrawLocation.Y -= (TextSize.Y * 0.5 + BADGE_HALF_SIZE + ELEMENT_MARGIN);
+            C.SetPos(DrawLocation.X - BADGE_HALF_SIZE, DrawLocation.Y);
+            C.DrawTile(IconMaterial, BADGE_SIZE, BADGE_SIZE, 0.0, 0.0, IconMaterial.MaterialUSize(), IconMaterial.MaterialVSize());
         }
     }
 

@@ -9,11 +9,12 @@ class DHSpawnPoint extends DHSpawnPointBase
 
 enum ESpawnPointType
 {
-    ESPT_Infantry,
-    ESPT_Vehicles,
-    ESPT_Mortars,
-    ESPT_All,
-    ESPT_VehicleCrewOnly
+    ESPT_Infantry,          // Allow the spawning of infantry only.
+    ESPT_Vehicles,          // Allow the spawning of vehicles and tank crewman (on foot).
+    ESPT_Mortars,           // Allow the spawning of mortar crew only.
+    ESPT_All,               // Anything goes.
+    ESPT_VehicleCrewOnly,   // Allow the spawning of tank crewmen only.
+    ESPT_VehicleOnly,       // Allow the spawning of vehicles only (no on-foot tank crewmen).
 };
 
 var()   ESpawnPointType Type;
@@ -233,7 +234,7 @@ simulated function bool CanSpawnInfantry()
 
 simulated function bool CanSpawnVehicles()
 {
-    return Type == ESPT_Vehicles || Type == ESPT_All;
+    return Type == ESPT_Vehicles || Type == ESPT_All || Type == ESPT_VehicleOnly;
 }
 
 simulated function bool CanSpawnMortars()
@@ -271,6 +272,10 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
         if (Type == ESPT_VehicleCrewOnly)
         {
             return RI.default.bCanBeTankCrew;
+        }
+        else if (Type == ESPT_VehicleOnly)
+        {
+            return false;
         }
         else
         {

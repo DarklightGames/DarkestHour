@@ -14,8 +14,11 @@ defaultproperties
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_hatch_collision',AttachBone="hatch")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_FiatL640_stc.collision.fiatl640_turret_gun_collision',AttachBone="gun_pitch")
 
-    BeginningIdleAnim="closed"
+    // TODO: fix the skin ordering on interior/exterior to match (ext first, then int)
+    //Skins(0)=Texture'DH_Autoblinda_tex.ab41_turret_ext'
+    //Skins(1)=Texture'DH_Autoblinda_tex.ab41_turret_int'
 
+    BeginningIdleAnim="closed"
     GunnerAttachmentBone="gun_yaw"
 
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
@@ -83,11 +86,6 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
-
-    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     YawBone="gun_yaw"
     PitchBone="gun_pitch"

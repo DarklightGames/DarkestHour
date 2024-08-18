@@ -12,6 +12,7 @@ var enum EFuzeType
     FT_Impact,  // Explode on impact.
 } FuzeType;
 
+var     float           ExplosionSoundVolume;
 var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeDirtEffectClass;
 var     class<Emitter>  ExplodeSnowEffectClass;
@@ -505,6 +506,9 @@ state TripMine
             return;
         }
 
+        // Make sure the instigator is set to the controller of the pawn that caused the damage, not the person who threw the grenade.
+        InstigatorController = InstigatedBy.Controller;
+
         // Any damage will cause this to explode.
         Explode(Location, vect(0, 0, 1));
     }
@@ -945,6 +949,7 @@ defaultproperties
     bFixedRotationDir=true
     DudChance=0.001 // 1 in 1000
     ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
+    ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'

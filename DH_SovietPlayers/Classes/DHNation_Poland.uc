@@ -10,7 +10,7 @@ defaultproperties
     NationName="Polish People's Army"
     NativeNationName="Ludowe Wojsko Polskie"
     VoicePackClass=class'DH_SovietPlayers.DHPolishVoice'
-    SupplyCacheStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
+    SupplyCacheClass=class'DHConstruction_SupplyCache_Poland'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.POL_backpack'
     InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box'

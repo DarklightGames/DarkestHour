@@ -1,0 +1,24 @@
+{
+    "repository": {
+        "rules": [
+            {
+                "pattern": "*.uax",
+                "type": "EXCLUDE"
+            },
+            {
+                "pattern": "*.ukx",
+                "type": "EXCLUDE"
+            },
+            {
+                "pattern": "Maps/*.rom",
+                "type": "EXCLUDE"
+            },
+            {
+                "pattern": "*.rom",
+                "type": "SET_ASSET_DIRECTORY",
+                "asset_directory": "./maps"
+            }
+        ]
+    }
+    
+}

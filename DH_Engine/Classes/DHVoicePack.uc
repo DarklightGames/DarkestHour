@@ -10,6 +10,12 @@ var SoundGroup RadioRequestSound;
 var SoundGroup RadioResponseConfirmSound;
 var SoundGroup RadioResponseDenySound;
 
+// This function is called to get voice pack variant when facing a specific enemy nation.
+static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNationClass)
+{
+    return default.Class;
+}
+
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
     local vector MyLocation;
@@ -122,15 +128,10 @@ function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipien
 function Timer()
 {
     local PlayerController PlayerOwner;
-    local Actor SoundPlayer;
+    local ROVoiceMessageEffect SoundPlayer;
     CONST VOICEREPEATTIME = 0.0;
 
     PlayerOwner = PlayerController(Owner);
-
-    if (bDisplayPortrait && (PhraseNum == 0) && !(bIsFromDifferentTeam && bUseAxisStrings))
-    {
-        PlayerController(Owner).myHUD.DisplayPortrait(PortraitPRI);
-    }
 
     if ((Phrase[PhraseNum] != none) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
     {
@@ -138,22 +139,34 @@ function Timer()
 
         if (bUseLocationalVoice)
         {
-            if (PawnSender != none)
+            SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+
+            if (SoundPlayer != none)
             {
-                PawnSender.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
-            }
-            else
-            {
-                SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
+                if (PawnSender != none)
+                {
+                    // Set the base of the sound player to the pawn that sent the message.
+                    // This makes it so that the sound will be attached to the pawn.
+                    SoundPlayer.SetBase(PawnSender);
+                    // TODO: if we wanna get crazy with it we could attach it to the head bone.
+                    SoundPlayer.SetRelativeLocation(vect(0,0,0));
+
+                    // Set the voice message effect for the pawn that sent the message.
+                    // This will allow us to delete the effect when the pawn dies.
+                    if (DHPawn(pawnSender) != none)
+                    {
+                        DHPawn(pawnSender).VoiceMessageEffect = SoundPlayer;
+                    }
+                }
 
                 if (SoundPlayer != none)
                 {
-                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
+                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_Talk, ShoutVolume,, ShoutRadius, 1.0, true);
                 }
-                else
-                {
-                    Warn("Unable to spawn ROVoiceMessageEffect at " $ senderLoc $ "!");
-                }
+            }
+            else
+            {
+                Warn("Failed to spawn voice message effect");
             }
         }
         else

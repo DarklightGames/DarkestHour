@@ -300,6 +300,14 @@ function Reset()
     NeutralInfluenceModifier = InitialNeutralInfluenceModifier;
 }
 
+function ResetInfluenceModifiers()
+{
+    BaseInfluenceModifier = InitialBaseInfluenceModifier;
+    AxisInfluenceModifier = InitialAxisInfluenceModifier;
+    AlliesInfluenceModifier = InitialAlliesInfluenceModifier;
+    NeutralInfluenceModifier = InitialNeutralInfluenceModifier;
+}
+
 function SetActive(bool bActiveStatus)
 {
     // Don't run any changes if we are already the status sent

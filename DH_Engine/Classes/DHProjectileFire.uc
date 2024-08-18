@@ -755,12 +755,18 @@ simulated function HandleRecoil()
 // Function used for debugging RecoilGain
 simulated function float GetEffectiveRecoilGain()
 {
+    local DHPlayer DHP;
     local float EffectiveRecoilGain;
 
-    EffectiveRecoilGain = RecoilGain - GetRecoilGainFalloff(Level.TimeSeconds - DHPlayer(Instigator.Controller).LastRecoilTime);
-    EffectiveRecoilGain = FMax(0.0, EffectiveRecoilGain);
+    DHP = DHPlayer(Instigator.Controller);
 
-    return EffectiveRecoilGain;
+    if (DHP != none)
+    {
+        EffectiveRecoilGain = RecoilGain - GetRecoilGainFalloff(Level.TimeSeconds - DHP.LastRecoilTime);
+        EffectiveRecoilGain = FMax(0.0, EffectiveRecoilGain);
+
+        return EffectiveRecoilGain;
+    }
 }
 
 simulated function float GetRecoilGainFalloff(float TimeSeconds)

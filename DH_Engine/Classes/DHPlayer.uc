@@ -4799,6 +4799,18 @@ exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, str
     }
 }
 
+// New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
+exec function SetHudEnginePos(string NewPosX, string NewPosY, string NewScale)
+{
+    local DHVehicle V;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        V.VehicleHudEngineX = float(NewPosX);
+        V.VehicleHudEngineY = float(NewPosY);
+    }
+}
+
 // New debug exec to set a vehicle's exhaust emitter location
 exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
@@ -7231,40 +7243,35 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
     local ROVoicePack V;
     local bool bIsTeamVoice;
     local class<ROVoicePack> ROV;
+    local class<DHVoicePack> DHV;
     local ROPlayerReplicationInfo PRI;
+    local DH_LevelInfo LI;
 
-    if (Sender == none || Sender.VoiceType == none || Sender.Team == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
+    if (Sender == none || Sender.VoiceType == none || Sender.Team == none || 
+        Player.Console == none || Level.NetMode == NM_DedicatedServer)
     {
         return;
     }
 
-    // If the sender is receiving the sound then allow them to hear the
-    // voicepack from their settings instead of the regular voicepack
     PRI = ROPlayerReplicationInfo(Sender);
+    bIsTeamVoice = Level.GetLocalPlayerController().PlayerReplicationInfo.Team != none && Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex;
 
     if (PRI != none && PRI.RoleInfo != none)
     {
-        if (Level.GetLocalPlayerController().PlayerReplicationInfo.Team == none ||
-            Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex)
-        {
-            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.AltVoiceType, class'Class'));
-            bIsTeamVoice = true;
-            V = Spawn(ROV, self);
-        }
-        else
-        {
-            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, class'Class'));
-            V = Spawn(ROV, self);
+        ROV = Class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, class'Class'));
+        DHV = Class<DHVoicePack>(ROV);
 
-            if (V != none)
-            {
-                V.bUseLocationalVoice = true;
-                V.bIsFromDifferentTeam = true;
-            }
+        if (DHV != none)
+        {
+            LI = class'DH_LevelInfo'.static.GetInstance(Level);
+            ROV = DHV.static.GetVoicePackClass(LI.GetTeamNationClass(int(!bool(Sender.Team.TeamIndex))));
         }
+
+        V = Spawn(ROV, self);
 
         if (V != none)
         {
+            V.bUseLocationalVoice = true;
             V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
 
             if (bIsTeamVoice)
@@ -7370,14 +7377,7 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
 
                     if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
                     {
-                        if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, none, SenderLocation);
-                        }
-                        else
-                        {
-                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
-                        }
+                        ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
                     }
                 }
                 else
