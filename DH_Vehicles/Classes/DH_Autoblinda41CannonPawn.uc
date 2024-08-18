@@ -36,7 +36,7 @@ defaultproperties
     FireImpulse=(X=-5000.0)
     FPCamPos=(X=0,Y=0,Z=0)
     CameraBone="GUN_CAMERA"
-    UnbuttonedPositionIndex=3
+    UnbuttonedPositionIndex=0
 
     // Periscope
     PeriscopeCameraBone="PERISCOPE_CAMERA"
