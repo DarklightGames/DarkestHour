@@ -8,9 +8,11 @@
 // [ ] adjust yaw dials to be more precise
 // [ ] reduce spread of mortar rounds
 // [ ] replace firing effects
-// [ ] remove reloading sounds
 // [ ] add mortar player idle animations
+// [ ] make the gun fire before the animation ends
+// [ ] make hands more grippy in the animations
 //==============================================================================
+
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
 var     float   FiringStartTimeSeconds;         // The time at which the firing animation started, relative to Level.TimeSeconds.
@@ -44,6 +46,21 @@ struct SAnimationDriver
 };
 
 var SAnimationDriver PitchAnimationDriver;
+
+simulated function Destroyed()
+{
+    if (HandsActor != none)
+    {
+        HandsActor.Destroy();
+    }
+
+    if (HandsProjectile != none)
+    {
+        HandsProjectile.Destroy();
+    }
+
+    super.Destroyed();
+}
 
 simulated function InitializeVehicleAndWeapon()
 {
