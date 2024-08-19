@@ -3363,6 +3363,11 @@ simulated event DestroyAppearance()
     {
         for (i = 0; i < Skins.Length; ++i)
         {
+            if (Skins[i] == none)
+            {
+                continue;
+            }
+
             DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
             DestroyedSkin.Material1 = Skins[i];
             // TODO: Depending on the aspect ratio, we may need to use a different overlay.
