@@ -142,4 +142,5 @@ function bool Toggle()
 defaultproperties
 {
     bReplicateAnimations=true
+    bHidden=true
 }
