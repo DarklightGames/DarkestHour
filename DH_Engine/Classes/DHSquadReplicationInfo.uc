@@ -115,6 +115,9 @@ var private DHGameReplicationInfo   GRI;    // only valid on the server, clients
 var localized array<string>         SquadMergeRequestResultStrings;
 var localized array<string>         SquadPromotionRequestResultStrings;
 
+var     DH_Battlegroup              DH_BattlegroupAllied;
+var     DH_Battlegroup              DH_BattlegroupAxis;
+
 // Squad Promotion Requests
 enum ESquadPromotionRequestResult
 {
@@ -182,6 +185,7 @@ replication
 simulated function PostBeginPlay()
 {
     local DH_LevelInfo LI;
+    local DH_Battlegroup BG;
 
     super.PostBeginPlay();
 
@@ -196,6 +200,18 @@ simulated function PostBeginPlay()
         {
             bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
             break;
+        }
+
+        foreach AllActors(class'DH_BattleGroup', BG)
+        {
+            if (BG.NationTeam == 0)
+            {
+                DH_BattlegroupAxis = BG;
+            }
+            else
+            {
+                DH_BattlegroupAllied = BG;
+            }
         }
     }
 }
@@ -627,6 +643,31 @@ function ResetSquadInfo()
     NextSquadMergeRequestID = default.NextSquadMergeRequestID;
     SquadPromotionRequests.Length = 0;
     NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
+}
+
+// simulated function SquadSelection GetSquadRoles(int TeamIndex, int squadIndex)
+// {
+//     switch (TeamIndex)
+//     {
+//         case AXIS_TEAM_INDEX:
+//             return DH_BattlegroupAxis.Squads(SquadIndex);
+//         case ALLIES_TEAM_INDEX:
+//             return DH_BattlegroupAllied.Squads(SquadIndex);
+//         default:
+//             return DH_BattlegroupAxis.Squads(SquadIndex);
+//     }
+// }
+
+simulated function int IsRoleAllowed(DHRoleInfo RI, DHPlayer DHP, int TeamIndex, int squadIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.IsRoleAllowed(RI, DHP, SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAxis.IsRoleAllowed(RI, DHP, SquadIndex);
+    }
+    return 7;
 }
 
 // Gets the maximum size of a squad for a given team.

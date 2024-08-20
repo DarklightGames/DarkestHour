@@ -48,6 +48,8 @@ var     bool                    bIsGagged;           // player is gagged from ch
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
+// var     DH_Battlegroup          ClientBattleGroupAxis;
+// var     DH_Battlegroup          ClientBattleGroupAllied;
 var     DHHintManager           DHHintManager;
 var     DHConstructionManager   ConstructionManager; // client only!
 var     float                   MapVoteTime;
@@ -286,6 +288,7 @@ simulated function ClientAddPersonalMapMarker(class<DHMapMarker> MapMarkerClass,
 // Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
+    // local DH_Battlegroup BG;
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
@@ -303,6 +306,19 @@ simulated event PostBeginPlay()
         {
             break;
         }
+
+        // foreach AllActors(class'DH_BattleGroup', BG)
+        // {
+        //     if (BG.NationTeam == 0)
+        //     {
+        //         ClientBattleGroupAxis = BG;
+        //     }
+        //     else
+        //     {
+        //         ClientBattleGroupAllied = BG;
+        //     }
+        //     break;
+        // }
     }
 
     // This forces the player to choose a valid spectator mode instead of
@@ -5863,7 +5879,7 @@ simulated function int GetSquadIndex()
 
     if (PRI != none)
     {
-    Log("----GetSquadIndex: " @ PRI.SquadIndex);
+    // Log("----GetSquadIndex: " @ PRI.SquadIndex);
 
         return PRI.SquadIndex;
     }
@@ -7838,8 +7854,10 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 {
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo GRI;
+    // local DH_Battlegroup.SquadSelection SquadSelection;
     local int Count, BotCount, Limit;
     local bool bIsRoleLimitless;
+    local int roleResult;
     
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -7865,27 +7883,45 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     // {
         if (IsInSquad())
         {
-            if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
-            {
-                if (SquadReplicationInfo.SquadType == class'DHSquadTypeInfantry')
-                {
-                    if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
-                    {
-                        return RER_SquadLeaderOnly;
-                    }
+            // switch (GetTeamNum())
+            // {
+            //     case AXIS_TEAM_INDEX:
+            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAxis.Squads(GetSquadIndex());
+            //     case ALLIES_TEAM_INDEX:
+            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAllied.Squads(GetSquadIndex());
+            //     default:
+            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAxis.Squads(GetSquadIndex());
+            // }
+            // SquadSelection = SquadReplicationInfo.GetSquadRoles(GetTeamNum(), GetSquadIndex());
+            // return SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
+            roleResult = SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
+            // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
+            return ERoleEnabledResult(roleResult);
+            // if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
+            // {
+                // if (SquadReplicationInfo.SquadType == class'DHSquadTypeInfantry')
+                // {
+                //     if (SquadSelection.Role1Leader == RI && !IsSL())
+                //     {
+                //         return RER_SquadLeaderOnly;
+                //     }
 
-                    if (IsSquadLeader() && !RI.bCanBeSquadLeader)
-                    {
-                        return RER_NonSquadLeaderOnly;
-                    }
+                //     if (SquadSelection.Role2Asl == RI && !IsAsl())
+                //     {
+                //         return RER_SquadLeaderOnly;
+                //     }
 
-                    return RER_Enabled;
-                }
-                else
-                {
-                    return RER_SquadTypeOnlyInfantry;
-                }
-            }
+                //     if (SquadSelection.Role3 == RI || SquadSelection.Role4 == RI || SquadSelection.Role5 == RI || SquadSelection.Role6 == RI)
+                //     {
+                //         return RER_Enabled;
+                //     }
+                //     return RER_SquadTypeOnlyInfantry;
+                // }
+                // else
+                // {
+                //     return RER_SquadTypeOnlyInfantry;
+                // }
+            // }
 
             if (RI.RequiredSquadType == class'DHSquadTypeArmored')
             {
@@ -7927,7 +7963,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
       
     // }
 
-    return RER_SquadOnly;
+    return RER_SquadTypeOnlyLogistics;
 }
 
 // Function for getting the correct inventory item name to display depending on settings.
