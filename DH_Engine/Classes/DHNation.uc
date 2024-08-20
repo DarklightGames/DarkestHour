@@ -18,14 +18,12 @@ var class<DHVoicePack>          VoicePackClass;
 var class<DHConstruction>       PlatoonHQClass;
 var class<DHConstruction>       SupplyCacheClass;
 var class<DHInventorySpawner>   GrenadeCrateClass;
+var class<DHConstruction>       InfantryResupplyClass;
 
 // TODO: move these to classes as well.
 // Rally Point
 var StaticMesh                  RallyPointStaticMesh;
 var StaticMesh                  RallyPointStaticMeshActive;
-
-// Resupply Point
-var StaticMesh                  InfantryResupplyStaticMesh;
 
 // Flags
 var Material                    DeployMenuFlagTexture;

@@ -213,6 +213,8 @@ var     Texture     DamagedPeriscopeOverlay;    // periscope overlay to show if 
 
 var Sound BuzzSound;
 
+var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package.
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -3136,7 +3138,7 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
         if (VehicleAnim != '' && HasAnim(VehicleAnim))
         {
-            PlayAnim(VehicleAnim,,, DriverAnimationChannel);  // TODO: needs to use the channel index!
+            PlayAnim(VehicleAnim,,, DriverAnimationChannel);
             SetAnimFrame(1.0, DriverAnimationChannel);
         }
 
@@ -3354,13 +3356,31 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
 // Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
+    local Combiner DestroyedSkin;
     local int i;
+
+    if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
+    {
+        for (i = 0; i < Skins.Length; ++i)
+        {
+            if (Skins[i] == none)
+            {
+                continue;
+            }
+
+            DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+            DestroyedSkin.Material1 = Skins[i];
+            // TODO: Depending on the aspect ratio, we may need to use a different overlay.
+            DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+            DestroyedSkin.FallbackMaterial = Skins[i];
+            DestroyedSkin.CombineOperation = CO_Multiply;
+            DestroyedMeshSkins[i] = DestroyedSkin;
+        }
+    }
 
     super.DestroyAppearance();
 
-    DestroyAttachments();
-
-    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         for (i = 0; i < DestroyedMeshSkins.Length; ++i)
         {
@@ -3370,6 +3390,8 @@ simulated event DestroyAppearance()
             }
         }
     }
+
+    DestroyAttachments();
 }
 
 // New function to destroy effects & attachments when the vehicle gets destroyed

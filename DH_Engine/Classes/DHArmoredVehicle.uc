@@ -36,7 +36,6 @@ struct NewHitpoint
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
 var     bool        bMustBeUnbuttonedToChangePositions; // if true, player must be unbuttoned to change positions (e.g. from driver to gunner), for use when the driver's compartment is not connected to the rest of the vehicle
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
-var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package
 
 // Vehicle locking
 var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
@@ -2213,23 +2212,6 @@ simulated function DestroyAttachments()
     {
         DriverHatchFireEffect.Kill();
     }
-}
-
-simulated event DestroyAppearance()
-{
-    local Combiner DestroyedSkin;
-
-    if (bUsesCodedDestroyedSkins)
-    {
-        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-        DestroyedSkin.Material1 = Skins[0];
-        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-        DestroyedSkin.FallbackMaterial = Skins[0];
-        DestroyedSkin.CombineOperation = CO_Multiply;
-        DestroyedMeshSkins[0] = DestroyedSkin;
-    }
-
-    super.DestroyAppearance();
 }
 
 // Modified to handle extended vehicle fire system, plus setting manual/powered turret

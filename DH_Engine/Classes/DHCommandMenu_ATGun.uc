@@ -12,6 +12,7 @@ var localized string IsBeingRotatedText;
 var localized string OccupiedText;
 var localized string FatalText;
 var localized string CooldownText;
+var localized string BusyText;
 
 var DHATGun.ERotateError RotationError;
 var int                  TeammatesInRadiusCount;
@@ -82,6 +83,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     switch (RotationError)
     {
+        case ERROR_Busy:
+            ORI.InfoText[0] = default.BusyText;
+            break;
         case ERROR_Occupied:
             ORI.InfoText[0] = default.OccupiedText;
             break;
@@ -157,4 +161,5 @@ defaultproperties
     OccupiedText="Gun is occupied"
     FatalText="Rotation unavailable"
     CooldownText="Wait"
+    BusyText="Busy"
 }

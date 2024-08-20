@@ -1427,7 +1427,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
-                PlayerNumberText.text = string(i + 1);
+                PlayerNumberText.Text = string(i + 1);
+                // TODO: we need an EVEN TINIER font
                 Canvas.Font = Canvas.TinyFont;
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
@@ -1654,7 +1655,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         if (bShowWeaponInfo)
         {
             // Draw cannon ammo icon
-            VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
+            VehicleAmmoIcon.WidgetTexture = CannonPawn.GetAmmoShellTexture();
             DrawSpriteWidget(Canvas, VehicleAmmoIcon);
 
             // Draw reload progress (if needed)
@@ -1662,7 +1663,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             if (ProportionOfReloadRemaining > 0.0)
             {
-                VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
+                VehicleAmmoReloadIcon.WidgetTexture = CannonPawn.GetAmmoShellReloadTexture();
                 VehicleAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
             }
@@ -1869,8 +1870,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
     }
 
-    // Draw the names
-    if (Lines.Length > 0)
+    // Draw the names if we are not the sole occupant.
+    if (Lines.Length > 1)
     {
         Canvas.Font = GetPlayerNameFont(Canvas);
         VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * HudScale;
@@ -4112,7 +4113,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
 function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, Box Viewport, float PlayerYaw, color Color, float TextureScale, optional string Text)
 {
-    local vector HUDLocation;
+    local Vector HUDLocation;
 
     MapPlayerIcon.TextureScale = TextureScale;
 

@@ -22,6 +22,12 @@ var     Texture     PeriscopeOverlay;            // overlay for commander's peri
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
+// Projectile shell textures.
+// RO only allowed a single texture for all shells, but DH allows different textures for different shell types.
+// If any of these are set, they are used in place of the AmmoShellTexture.
+var     Texture     AmmoShellTextures[3];
+var     Texture     AmmoShellReloadTextures[3];
+
 // Gunsight overlay
 var     Texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
@@ -856,6 +862,8 @@ simulated function ClientKDriverLeave(PlayerController PC)
 // Modified to add extra material properties
 static function StaticPrecache(LevelInfo L)
 {
+    local int i;
+
     super.StaticPrecache(L);
 
     if (default.CannonScopeCenter != none)
@@ -883,6 +891,22 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.AmmoShellReloadTexture);
     }
 
+    for (i = 0; i < arraycount(default.AmmoShellTextures); i++)
+    {
+        if (default.AmmoShellTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(default.AmmoShellReloadTextures); i++)
+    {
+        if (default.AmmoShellReloadTextures[i] != none)
+        {
+            L.AddPrecacheMaterial(default.AmmoShellReloadTextures[i]);
+        }
+    }
+
     if (default.AltAmmoReloadTexture != none)
     {
         L.AddPrecacheMaterial(default.AltAmmoReloadTexture);
@@ -892,12 +916,31 @@ static function StaticPrecache(LevelInfo L)
 // Modified to add extra material properties
 simulated function UpdatePrecacheMaterials()
 {
+    local int i;
+
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
     Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
+
+    for (i = 0; i < arraycount(AmmoShellTextures); i++)
+    {
+        if (AmmoShellTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellTextures[i]);
+        }
+    }
+
+    for (i = 0; i < arraycount(AmmoShellReloadTextures); i++)
+    {
+        if (AmmoShellReloadTextures[i] != none)
+        {
+            Level.AddPrecacheMaterial(AmmoShellReloadTextures[i]);
+        }
+    }
+
     Level.AddPrecacheMaterial(AmmoShellReloadTexture);
     Level.AddPrecacheMaterial(AltAmmoReloadTexture);
 }
@@ -1080,6 +1123,34 @@ function float ModifyThreat(float Current, Pawn Threat)
     }
 
     return Current;
+}
+
+simulated function Texture GetAmmoShellTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellTextures[AmmoIndex] != none)
+    {
+        return AmmoShellTextures[AmmoIndex];
+    }
+
+    return AmmoShellTexture;
+}
+
+simulated function Texture GetAmmoShellReloadTexture()
+{
+    local int AmmoIndex;
+
+    AmmoIndex = Cannon.GetAmmoIndex();
+
+    if (AmmoShellReloadTextures[AmmoIndex] != none)
+    {
+        return AmmoShellReloadTextures[AmmoIndex];
+    }
+
+    return AmmoShellReloadTexture;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

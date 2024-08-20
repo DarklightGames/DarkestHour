@@ -12,10 +12,10 @@ defaultproperties
     
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
 
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_USA'
     SupplyCacheClass=class'DHConstruction_SupplyCache_USA'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_USA'
 
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_usa'
     GrenadeCrateClass=class'DH_Weapons.DH_M1GrenadeSpawner'

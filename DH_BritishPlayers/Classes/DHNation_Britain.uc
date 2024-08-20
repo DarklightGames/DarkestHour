@@ -10,9 +10,9 @@ defaultproperties
     NationName="Great Britain"
     VoicePackClass=class'DH_BritishPlayers.DHBritishVoice'
     SupplyCacheClass=class'DHConstruction_SupplyCache_Britain'
+    InfantryResupplyClass=class'DHConstruction_Resupply_Players_Britain'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack'
-    InfantryResupplyStaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box'
     PlatoonHQClass=class'DHConstruction_PlatoonHQ_Britain'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_uk'
     GrenadeCrateClass=class'DH_Weapons.DH_MillsBombSpawner'

@@ -9,5 +9,5 @@ defaultproperties
 {
     InventoryType=class'DH_Equipment.DHBinocularsItemItalian'
     StaticMesh=StaticMesh'DetailSM.Military.Binocs'
-    Skins(0)=Texture'Weapons3rd_tex.German.Binoc_world_ger'
+    Skins(0)=Texture'DH_Equipment_tex.Binocs.Binoc_world_usa'
 }

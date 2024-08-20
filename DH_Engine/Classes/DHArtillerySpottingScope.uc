@@ -915,6 +915,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 
     VisiblePitchSegmentsNumber = NumberOfPitchSegments * PitchSegmentSchema.Length;
 
+    // TODO: something needs to be fixed in here to handle lower bounds not being astronomical.
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
     IndicatorStep = PitchIndicatorLength / VisiblePitchSegmentsNumber;
@@ -930,6 +931,11 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     {
         // Calculate index of the tick in the indicator reference frame
         Index = VisiblePitchSegmentsNumber - (Pitch - PitchLowerBound) / PitchScaleStep - 1;
+
+        if (Index < 0 || Index >= PitchTicksCurvature.Length)
+        {
+            continue;
+        }
 
         // Get the cached values
         CurvatureConstant = PitchTicksCurvature[Index];
@@ -987,33 +993,41 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     if (PitchLowerBound < GunPitchMin)
     {
         StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMin - PitchLowerBound) / PitchScaleStep - 1;
-        StrikeThroughStart = PitchTicksCurvature[StrikeThroughStartIndex] * PitchIndicatorLength;
-        StrikeThroughEnd = PitchIndicatorLength;
 
-        // Draw the strike-through
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
-        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+        if (StrikeThroughStartIndex >= 0 && StrikeThroughStartIndex < PitchTicksCurvature.Length)
+        {
+            StrikeThroughStart = PitchTicksCurvature[StrikeThroughStartIndex] * PitchIndicatorLength;
+            StrikeThroughEnd = PitchIndicatorLength;
 
-        // Add the missing tick on the end of the strike-through line
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
-        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughStart, StrikeThroughThickness);
+            // Draw the strike-through
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+            C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+            // Add the missing tick on the end of the strike-through line
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughStart, StrikeThroughThickness);
+        }
     }
 
     // Draw a strike-through if this segment is above the upper limit.
     if (PitchUpperBound > GunPitchMax)
     {
-        StrikeThroughStartIndex = 0;
         StrikeThroughEndIndex = (PitchUpperBound - GunPitchMax) / PitchScaleStep - 1;
-        StrikeThroughStart = 0;
-        StrikeThroughEnd = PitchTicksCurvature[StrikeThroughEndIndex] * PitchIndicatorLength;
 
-        // Draw the strike-through
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
-        C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+        if (StrikeThroughEndIndex >= 0 && StrikeThroughStartIndex < PitchTicksCurvature.Length)
+        {
+            StrikeThroughStartIndex = 0;
+            StrikeThroughStart = 0;
+            StrikeThroughEnd = PitchTicksCurvature[StrikeThroughEndIndex] * PitchIndicatorLength;
 
-        // Add the missing tick on the end of the strike-through line
-        C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
-        C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
+            // Draw the strike-through
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughStart);
+            C.DrawRect(Texture'WhiteSquareTexture', StrikeThroughThickness, StrikeThroughEnd - StrikeThroughStart);
+
+            // Add the missing tick on the end of the strike-through line
+            C.SetPos(IndicatorTopLeftCornerX - SmallSizeTickLength, IndicatorTopLeftCornerY + StrikeThroughEnd);
+            C.DrawHorizontal(IndicatorTopLeftCornerY + StrikeThroughEnd, StrikeThroughThickness);
+        }
     }
 
     // Draw the gradient overlay in a slightly bigger box to also cover the readout labels that could stick out

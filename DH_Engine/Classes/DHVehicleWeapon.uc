@@ -101,6 +101,10 @@ struct SRangeTableRecord
 
 var array<SRangeTableRecord> RangeTable;
 
+// Driver animation channel
+var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
+var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -123,6 +127,12 @@ simulated function PostBeginPlay()
 
     AttachCollisionMeshes();
     SpawnVehicleAttachments();
+
+    if (DriverAnimationChannelBone != '')
+    {
+        // Separate animation channel for driver camera.
+        AnimBlendParams(DriverAnimationChannel, 1.0,,, DriverAnimationChannelBone);
+    }
 }
 
 // Spawns the vehicle attachments. This is only run for the client.
