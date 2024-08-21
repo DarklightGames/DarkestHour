@@ -7894,7 +7894,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
             // }
             // SquadSelection = SquadReplicationInfo.GetSquadRoles(GetTeamNum(), GetSquadIndex());
             // return SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
-            roleResult = SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
+            roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, GetTeamNum(), GetSquadIndex());
             // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
             return ERoleEnabledResult(roleResult);
             // if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
@@ -7963,7 +7963,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
       
     // }
 
-    return RER_SquadTypeOnlyLogistics;
+    return RER_Locked;
 }
 
 // Function for getting the correct inventory item name to display depending on settings.

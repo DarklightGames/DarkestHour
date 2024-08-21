@@ -658,14 +658,14 @@ function ResetSquadInfo()
 //     }
 // }
 
-simulated function int IsRoleAllowed(DHRoleInfo RI, DHPlayer DHP, int TeamIndex, int squadIndex)
+simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int TeamIndex, int squadIndex)
 {
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return DH_BattlegroupAxis.IsRoleAllowed(RI, DHP, SquadIndex);
+            return DH_BattlegroupAxis.GetERoleEnabledResult(RI, DHP, SquadIndex);
         case ALLIES_TEAM_INDEX:
-            return DH_BattlegroupAxis.IsRoleAllowed(RI, DHP, SquadIndex);
+            return DH_BattlegroupAllied.GetERoleEnabledResult(RI, DHP, SquadIndex);
     }
     return 7;
 }

@@ -35,30 +35,37 @@ var() string                   Name;
 var() ETeam                    NationTeam;                      // The nation this battlegroup is for
 var() array<SquadSelection>    Squads;                          // The squads that can be selected for this battlegroup 
 
-simulated function int IsRoleAllowed(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
+simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
 {
     local SquadSelection SquadSel;
 
     SquadSel = Squads[SquadIndex];
-
-    if (SquadSel.Role1Leader.Role == RI.Class && !DHP.IsSL())
+    Log("----DHP.IsSL: " @ DHP.IsSL());
+    Log("----DHP.IsAsl: " @ DHP.IsAsl());
+    if (DHP.IsSL())
     {
-        Log("----GetSquadIndex returns RER_SquadLeaderOnly");
-        return 4;//RER_SquadLeaderOnly;
+        if (RI.Class == SquadSel.Role1Leader.Role)
+        {
+            return 1;//RER_Enabled;
+        }
     }
-
-    if (SquadSel.Role2Asl.Role == RI.Class && !DHP.IsAsl())
+    else if (DHP.IsAsl())
     {
-        Log("----GetSquadIndex returns RER_SquadLeaderOnly");
-        return 4;//RER_SquadLeaderOnly;
+        if (RI.Class == SquadSel.Role2Asl.Role)
+        {
+            return 1;//RER_Enabled;
+        }
     }
-    if (SquadSel.Role3.Role == RI.Class)
+    else if (((SquadSel.Role3.Role == RI.Class ) || 
+    (SquadSel.Role4.Role == RI.Class) || 
+    (SquadSel.Role5.Role == RI.Class) ||
+     (SquadSel.Role6.Role == RI.Class)))
     {
         Log("----GetSquadIndex returns RER_Enabled");
-        return 1;//RER_Enabled;
+        return 1; //RER_SquadTypeOnlyInfantry
     }
-    // Log("----GetSquadIndex returns 7");
-    return 7; //RER_SquadTypeOnlyInfantry;
+
+    return 7;//RER_SquadTypeOnlyInfantry; //RER_SquadTypeOnlyInfantry;
 }
 
 // var() material              SquadIcon;        // Used to stop loading screen image from being removed on save (not otherwise used)
