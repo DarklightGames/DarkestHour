@@ -324,7 +324,8 @@ function Timer()
 
     if (GRI != none)
     {
-        UpdateRoles();
+        PopulateRoles();
+        // UpdateRoles();
         UpdateVehicles(true);
         UpdateRoundStatus();
         UpdateStatus();
@@ -684,7 +685,6 @@ function UpdateRoles()
                     S @= "*" $ RoleSquadOnlyLogistics $ "*";
                 break;
         }
-        
         li_Roles.SetItemAtIndex(i, S);
         li_Roles.SetDisabledAtIndex(i, RoleEnabledResult != RER_Enabled);
     }
@@ -1031,7 +1031,8 @@ function PopulateRoles()
     local int    i;
 
     li_Roles.Clear();
-    li_Roles.SetIndex(-1);
+
+  
 
     if (CurrentTeam == AXIS_TEAM_INDEX)
     {
@@ -1047,8 +1048,11 @@ function PopulateRoles()
                 {
                     RoleName = GRI.DHAxisRoles[i].default.MyName;
                 }
-
-                li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
+                if (PC.GetRoleEnabledResult(GRI.DHAxisRoles[i]) == RER_Enabled)
+                {
+                    li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
+                }
+                // li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
             }
         }
     }
@@ -1067,14 +1071,22 @@ function PopulateRoles()
                     RoleName = GRI.DHAlliesRoles[i].default.MyName;
                 }
 
-                li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
+                if (PC.GetRoleEnabledResult(GRI.DHAlliesRoles[i]) == RER_Enabled)
+                {
+                    li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
+                }
             }
         }
     }
 
     li_Roles.SortList();
 
-    UpdateRoles();
+    // UpdateRoles();
+
+    if (li_Roles.IsIndexDisabled(li_Roles.Index))
+    {
+        li_Roles.SetIndex(-1);
+    }
 
     AutoSelectRole();
 }
