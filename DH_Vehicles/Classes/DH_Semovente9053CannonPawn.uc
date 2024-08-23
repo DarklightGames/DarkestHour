@@ -14,6 +14,21 @@ exec function SetOpticalRange(float NewValue)
     class<DHCannonShell>(Cannon.ProjectileClass).default.OpticalRanges[Cannon.CurrentRangeIndex].RangeValue = NewValue;
 }
 
+// Modified to send a hint to the occupant about the limited ammunition of the Semovente 90/53.
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    local DHPlayer DHPC;
+
+    DHPC = DHPlayer(PC);
+
+    if (DHPC != None)
+    {
+        DHPC.QueueHint(65, true);
+    }
+
+    super.ClientKDriverEnter(PC);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Semovente9053Cannon'

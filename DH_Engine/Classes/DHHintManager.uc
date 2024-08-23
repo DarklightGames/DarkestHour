@@ -213,5 +213,6 @@ defaultproperties
     Hints(62)=(Title="Barrel Overheating",Text="Your weapon's barrel is overheating! Overheating barrels will result in reduced accuracy and eventual destruction of the barrel.")
     Hints(63)=(Title="Barrel Swapping",Text="You can swap the barrel of this weapon. Press %ROMGOPERATION% while deployed to change to your secondary barrel.")
     Hints(64)=(Title="Barrel Destroyed",Text="Your weapon's barrel has been destroyed by overheating! You can no longer fire this weapon.")
-}
 
+    Hints(65)=(Title="Semovente da 90/53",Text="Although the Semovente da 90/53 has a powerful gun, it has a very limited ammunition rack. Make every shot count!")
+}
