@@ -324,8 +324,6 @@ function Timer()
 
     if (GRI != none)
     {
-        PopulateRoles();
-        // UpdateRoles();
         UpdateVehicles(true);
         UpdateRoundStatus();
         UpdateStatus();
@@ -335,7 +333,9 @@ function Timer()
 
     if (SRI != none)
     {
+        // PopulateRoles();
         UpdateSquads();
+        UpdateRoles();
     }
 }
 
@@ -1032,24 +1032,22 @@ function PopulateRoles()
 
     li_Roles.Clear();
 
-  
-
     if (CurrentTeam == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
             if (GRI.DHAxisRoles[i] != none)
             {
-                if (PC != none && PC.bUseNativeRoleNames)
+                if (PC.GetRoleEnabledResult(GRI.DHAxisRoles[i]) < 7)
                 {
-                    RoleName = GRI.DHAxisRoles[i].default.AltName;
-                }
-                else
-                {
-                    RoleName = GRI.DHAxisRoles[i].default.MyName;
-                }
-                if (PC.GetRoleEnabledResult(GRI.DHAxisRoles[i]) == RER_Enabled)
-                {
+                    if (PC != none && PC.bUseNativeRoleNames)
+                    {
+                        RoleName = GRI.DHAxisRoles[i].default.AltName;
+                    }
+                    else
+                    {
+                        RoleName = GRI.DHAxisRoles[i].default.MyName;
+                    }
                     li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
                 }
                 // li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
@@ -1062,17 +1060,16 @@ function PopulateRoles()
         {
             if (GRI.DHAlliesRoles[i] != none)
             {
-                if (PC != none && PC.bUseNativeRoleNames)
+                if (PC.GetRoleEnabledResult(GRI.DHAlliesRoles[i]) < 7)
                 {
-                    RoleName = GRI.DHAlliesRoles[i].default.AltName;
-                }
-                else
-                {
-                    RoleName = GRI.DHAlliesRoles[i].default.MyName;
-                }
-
-                if (PC.GetRoleEnabledResult(GRI.DHAlliesRoles[i]) == RER_Enabled)
-                {
+                    if (PC != none && PC.bUseNativeRoleNames)
+                    {
+                        RoleName = GRI.DHAlliesRoles[i].default.AltName;
+                    }
+                    else
+                    {
+                        RoleName = GRI.DHAlliesRoles[i].default.MyName;
+                    }
                     li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
                 }
             }
@@ -1081,14 +1078,13 @@ function PopulateRoles()
 
     li_Roles.SortList();
 
-    // UpdateRoles();
 
     if (li_Roles.IsIndexDisabled(li_Roles.Index))
     {
         li_Roles.SetIndex(-1);
     }
 
-    AutoSelectRole();
+    // AutoSelectRole();
 }
 
 // Automatically selects a role from the roles list. If the player is
@@ -1537,6 +1533,12 @@ function ChangeTeam(int TeamIndex)
         SetButtonsEnabled(false);
         PC.ServerSetPlayerInfo(TeamIndex, 255, 0, 0, -1, -1);
     }
+}
+
+//TODO: Make this function called whenever the squad is joined, left or the player is promoted / demoted
+function OnSquadChanged()
+{
+    PopulateRoles();
 }
 
 function OnTeamChanged(int TeamIndex)

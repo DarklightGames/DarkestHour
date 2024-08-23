@@ -1918,6 +1918,8 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
 // Sets the member of the specified squad and member index to the specified player.
 function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerReplicationInfo PRI)
 {
+    local DHPlayer Owner;
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:

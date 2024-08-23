@@ -40,20 +40,28 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     local SquadSelection SquadSel;
 
     SquadSel = Squads[SquadIndex];
-    Log("----DHP.IsSL: " @ DHP.IsSL());
-    Log("----DHP.IsAsl: " @ DHP.IsAsl());
-    if (DHP.IsSL())
+
+    if (RI.Class == SquadSel.Role1Leader.Role)
     {
-        if (RI.Class == SquadSel.Role1Leader.Role)
+        if (DHP.IsSL())
         {
             return 1;//RER_Enabled;
         }
+        else
+        {
+            return 4;
+        }
     }
-    else if (DHP.IsAsl())
+
+    if (RI.Class == SquadSel.Role2Asl.Role)
     {
-        if (RI.Class == SquadSel.Role2Asl.Role)
+        if (DHP.IsAsl())
         {
             return 1;//RER_Enabled;
+        }
+        else
+        {
+            return 4;
         }
     }
     else if (((SquadSel.Role3.Role == RI.Class ) || 
@@ -61,8 +69,14 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     (SquadSel.Role5.Role == RI.Class) ||
      (SquadSel.Role6.Role == RI.Class)))
     {
-        Log("----GetSquadIndex returns RER_Enabled");
-        return 1; //RER_SquadTypeOnlyInfantry
+        if (!DHP.IsSLorASL())
+        {
+            return 1;
+        }
+        else
+        {
+            return 5;//RER_NonSquadLeaderOnly;
+        }
     }
 
     return 7;//RER_SquadTypeOnlyInfantry; //RER_SquadTypeOnlyInfantry;
