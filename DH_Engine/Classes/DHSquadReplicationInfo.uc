@@ -658,6 +658,29 @@ function ResetSquadInfo()
 //     }
 // }
 
+// simulated function array<DHRoleInfo> GetSquadRoles(int TeamIndex, int squadIndex)
+// {
+//     switch (TeamIndex)
+//     {
+//         case AXIS_TEAM_INDEX:
+//             return DH_BattlegroupAxis.GetRoles(SquadIndex);
+//         case ALLIES_TEAM_INDEX:
+//             return DH_BattlegroupAllied.GetRoles(SquadIndex);
+//     }
+// }
+
+simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetRole(SquadIndex, RoleIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetRole(SquadIndex, RoleIndex);
+    }
+}
+
+
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int TeamIndex, int squadIndex)
 {
     switch (TeamIndex)

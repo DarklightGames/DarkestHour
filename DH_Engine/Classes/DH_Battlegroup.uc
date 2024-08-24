@@ -33,8 +33,48 @@ struct SquadSelection
 
 var() string                   Name;
 var() ETeam                    NationTeam;                      // The nation this battlegroup is for
-var() array<SquadSelection>    Squads;                          // The squads that can be selected for this battlegroup 
+var() array<SquadSelection>    Squads; 
 
+// simulated function array<DHRoleInfo> GetRoles(int squadIndex)
+// {
+//     local SquadSelection SquadSel;
+//     local DHRoleInfo Roles[6];
+//     local int RoleSize;
+//     SquadSel = Squads[SquadIndex];
+
+    
+//     Roles(0) = SquadSel.Role1Leader.Role;
+//     Roles(1) = SquadSel.Role2Asl.Role;
+//     Roles(2) = SquadSel.Role3.Role;
+//     Roles(3) = SquadSel.Role4.Role;
+//     Roles(4) = SquadSel.Role5.Role;
+//     Roles(5) = SquadSel.Role6.Role;
+
+//     return Roles;
+// } 
+
+simulated function class<DHRoleInfo> GetRole(int SquadIndex, int RoleIndex)
+{
+    switch (RoleIndex)
+    {
+        case 0:
+            return Squads[SquadIndex].Role1Leader.Role;
+        case 1:
+            return Squads[SquadIndex].Role2Asl.Role;
+        case 2:
+            return Squads[SquadIndex].Role3.Role;
+        case 3:
+            return Squads[SquadIndex].Role4.Role;
+        case 4:
+            return Squads[SquadIndex].Role5.Role;
+        case 5:
+            return Squads[SquadIndex].Role6.Role;
+        default:
+            return none;
+    }
+}
+
+// The squads that can be selected for this battlegroup 
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
 {
     local SquadSelection SquadSel;

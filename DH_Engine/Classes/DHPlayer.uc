@@ -5927,6 +5927,7 @@ function ServerSquadCreate(class<DHSquadType> CreatedSquadType, int SquadIndex)
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), CreatedSquadType, SquadIndex);
+    
 }
 
 function ServerSquadLeave()
@@ -7847,6 +7848,16 @@ exec function ToggleSelectedArtilleryTarget()
         // try the next squad
         NewSquadIndex = (NewSquadIndex + 1) % SquadReplicationInfo.TEAM_SQUADS_MAX;
     }
+}
+
+// function DhRoleInfo GetSquadRoles()
+// {
+//     SquadReplicationInfo.GetRoles(GetTeamNum(), GetSquadIndex());
+// }
+
+simulated function class<DHRoleInfo> GetSquadRole(int RoleIndex)
+{
+    return SquadReplicationInfo.GetRole(GetTeamNum(), GetSquadIndex(), RoleIndex);
 }
 
 // Gets whether or not this player is able to change to this role.
