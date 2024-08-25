@@ -2,14 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] replace mortar round names
+// [ ] stop pitch/yaw noises when going into the firing mode`
+// [ ] replace mortar round names (not done yet!)
 // [ ] calibrate range table
 // [ ] replace pitch/yaw sounds with squeaking wheels used on the other mortars
-// [ ] adjust yaw dials to be more precise
 // [ ] reduce spread of mortar rounds
 // [ ] replace firing effects
 // [ ] add mortar player idle animations
-// [ ] make the gun fire before the animation ends
 // [ ] make hands more grippy in the animations
 //==============================================================================
 
@@ -17,6 +16,7 @@ class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
 
 var     float   FiringStartTimeSeconds;         // The time at which the firing animation started, relative to Level.TimeSeconds.
 var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
+var()   float   FireDelaySeconds;               // The amount of time to wait into the firing animation before actually firing the round.
 
 var()   name  FiringCameraBone;         // The name of the bone to use for the camera while firing.
 var()   int   FiringCameraBoneChannel;  // The channel to use for the firing camera bone.
@@ -71,7 +71,22 @@ simulated function InitializeVehicleAndWeapon()
         SetupFiringCameraChannel();
         SetupGunAnimationDrivers();
         UpdateGunAnimationDrivers();
+
+        // Record the duration of the firing animation.
+        OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
     }
+}
+
+// This state only exists so that we can have CanFire return true. Without it, the mortar will not fire.
+state ProjectileFireMode
+{
+    function BeginState()
+    {
+        super.Fire();
+        GotoState('');
+    }
+
+    simulated function bool CanFire() { return true; }
 }
 
 // TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
@@ -168,8 +183,8 @@ simulated function Fire(optional float F)
 simulated state Firing
 {
     // Don't let the user move, leave, or change the round type while firing.
-    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
     simulated function Fire(optional float F) { }
+    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
     exec simulated function SwitchFireMode() { }
     function bool KDriverLeave(bool bForceLeave) { return false; }
     simulated function NextWeapon() { }
@@ -238,6 +253,10 @@ simulated state Firing
         ViewActor = self;
         CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
+
+        // Finalise the camera with any shake
+        CameraLocation += PC.ShakeOffset >> PC.Rotation;
+        CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     }
 
     simulated function BeginState()
@@ -254,40 +273,29 @@ simulated state Firing
                 HandsActor.PlayAnim(HandsFireAnims[Rand(HandsFireAnims.Length)], 1.0, 0.0, 0);
             }
 
+            // TODO: turn off the rotate sound
+            //Cannon.Base.RotateSoundAttachment.SoundVolume = 0;
+
             // Update the hands projectile mesh to the round we are about to fire.
             UpdateHandsProjectileStaticMesh();
         }
 
         FiringStartTimeSeconds = Level.TimeSeconds;
-
-        OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
     }
 
 Begin:
-    Sleep(3.0);
-    if (Role == ROLE_Authority)
-    {
-        GotoState('ServerFire');
-    }
-    else
-    {
-        // Non-authoritative clients should just go back to the default state.
-        GotoState('');
-    }
+    FireDelaySeconds = FMin(OverlayFiringAnimDuration, default.FireDelaySeconds);
+    Sleep(FireDelaySeconds);
+    SuperFire();
+    Sleep(OverlayFiringAnimDuration - FireDelaySeconds);
+    GotoState('');
 }
 
-simulated state ServerFire
+// Needed so that we can call the correct Fire function from within the Firing state.
+function SuperFire()
 {
-    simulated function BeginState()
-    {
-        // Fire the round.
-        super.Fire();
-
-        GotoState('');
-    }
+    super.Fire();
 }
-
-// TODO: add in functionality for firing the mortar to play the animation, then spawn the projectile.
 
 simulated function SetupFiringCameraChannel()
 {
@@ -420,4 +428,6 @@ defaultproperties
     HandsSleeveSkinIndex=1
     HandsProjectileBone="PROJECTILE"
     HandsRotationOffset=(Yaw=-16384)
+
+    FireDelaySeconds=2.35
 }

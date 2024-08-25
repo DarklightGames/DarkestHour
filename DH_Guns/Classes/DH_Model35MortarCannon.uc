@@ -83,4 +83,11 @@ defaultproperties
     DriverAnimationChannel=2    // 1 is used for the pitching driver
 
     ProjectileRotationMode=PRM_MuzzleBone
+
+    ShakeOffsetMag=(X=10.0,Y=10.0,Z=10.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=4.0
+    ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=5.0
 }
