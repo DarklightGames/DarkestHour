@@ -2,14 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] stop pitch/yaw noises when going into the firing mode`
-// [ ] replace mortar round names (not done yet!)
-// [ ] calibrate range table
-// [ ] replace pitch/yaw sounds with squeaking wheels used on the other mortars
-// [ ] reduce spread of mortar rounds
-// [ ] replace firing effects
-// [ ] add mortar player idle animations
-// [ ] make hands more grippy in the animations
+// [ ] Replace camera animation on tube
+// [ ] Replace mortar round names (not done yet!)
+// [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
+// [ ] Reduce spread of mortar rounds
+// [ ] Replace firing effects
+// [ ] Add mortar player idle & firing animations
+//==============================================================================
+// Nice to Have
+//==============================================================================
+// [ ] Stop pitch/yaw noises when going into the firing mode
 //==============================================================================
 
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
