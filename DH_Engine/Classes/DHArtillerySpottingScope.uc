@@ -57,10 +57,10 @@ var     localized string    ElevationString;
 var     localized string    LeftString, RightString;
 var     localized string    CorrectionString;
 var     localized string    DistanceString;
-var     texture             SpottingScopeOverlay;       // periscope overlay texture
+var     Texture             SpottingScopeOverlay;       // Periscope overlay texture
 
-var     float               YawScaleStep;               // how quickly yaw indicator should traverse
-var     float               PitchScaleStep;             // how quickly pitch indicator should traverse
+var     float               YawScaleStep;               // The step of the yaw dial in the angle units.
+var     float               PitchScaleStep;             // The step of the pitch dial in the angle units.
 var     int                 PitchIndicatorLength;       // [px], should be a multiple of number of visible pitch ticks
 var     int                 YawIndicatorLength;         // [px], should be a multiple of number of visible yaw ticks
 var     int                 StrikeThroughThickness;     // [px]
@@ -664,7 +664,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
     local int StrikeThroughStart, StrikeThroughEnd, TickPosition;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex;
     local int GunYawMaxTruncated, GunYawMinTruncated;
-    local int BottomDialBound, TopDialBound;
     local int CurrentYaw, GunYawMin, GunYawMax;
     local array<int> TargetTickBuckets;
     local float CurvatureCoefficient, ShadingCoefficient;
@@ -692,9 +691,6 @@ function DrawYaw(DHPlayer PC, Canvas C, DHVehicleWeaponPawn VWP, array<STargetIn
 
     GunYawMaxTruncated = class'UMath'.static.Floor(GunYawMax, YawScaleStep);
     GunYawMinTruncated = class'UMath'.static.Floor(GunYawMin, YawScaleStep);
-
-    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - YawDialSpan * 0.5);
-    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + YawDialSpan * 0.5);
 
     C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
@@ -885,12 +881,13 @@ function float GetPitchUpperBound(float CurrentPitch)
 
 function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
 {
-    local int CurrentPitch, GunPitchOffset, GunPitchMin, GunPitchMax;
+    local float CurrentPitch, GunPitchOffset;
     local float TextWidthFloat, TextHeightFloat;
     local int TextWidth, TextHeight;
-    local int Pitch, IndicatorTopLeftCornerX, IndicatorTopLeftCornerY, PitchUpperBound, PitchLowerBound;
+    local float Pitch, GunPitchMin, GunPitchMax;
+    local float PitchUpperBound, PitchLowerBound;
+    local int IndicatorTopLeftCornerX, IndicatorTopLeftCornerY;
     local int Quotient, Index, VisiblePitchSegmentsNumber, PitchSegmentSchemaIndex, IndicatorStep;
-    local int BottomDialBound, TopDialBound;
     local int StrikeThroughStart, StrikeThroughEnd;
     local int StrikeThroughEndIndex, StrikeThroughStartIndex, TickPosition;
     local float CurvatureConstant;
@@ -919,8 +916,6 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     PitchLowerBound = GetPitchLowerBound(CurrentPitch);
     PitchUpperBound = GetPitchUpperBound(CurrentPitch);
     IndicatorStep = PitchIndicatorLength / VisiblePitchSegmentsNumber;
-    BottomDialBound = class'UInterp'.static.DialCurvature(0.5 - PitchDialSpan * 0.5);
-    TopDialBound = class'UInterp'.static.DialCurvature(0.5 + PitchDialSpan * 0.5);
 
     C.Font = class'DHHud'.static.GetTinyFont(C);
     C.SetDrawColor(255, 255, 255, 255);
@@ -989,10 +984,9 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     }
 
     // Draw a strike-through for values outside of the traverse range
-
     if (PitchLowerBound < GunPitchMin)
     {
-        StrikeThroughStartIndex = VisiblePitchSegmentsNumber - (GunPitchMin - PitchLowerBound) / PitchScaleStep - 1;
+        StrikeThroughStartIndex = VisiblePitchSegmentsNumber - ((GunPitchMin - PitchLowerBound) / PitchScaleStep) - 1;
 
         if (StrikeThroughStartIndex >= 0 && StrikeThroughStartIndex < PitchTicksCurvature.Length)
         {
