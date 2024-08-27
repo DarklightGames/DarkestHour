@@ -1321,7 +1321,8 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
             {
                 BP.bIsCalibrating = true;
                 BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
+                BP.DebugAngleValue = Mils;
+                BP.DebugAngleUnit = AU_Milliradians;
                 BP.StartLocation = BP.Location;
             }
         }
