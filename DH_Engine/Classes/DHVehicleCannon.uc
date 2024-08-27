@@ -1864,7 +1864,6 @@ simulated function CalcWeaponFire(bool bWasAltFire)
         }
     }
 
-    MuzzleCoords = GetBoneCoords(WeaponFireAttachBone);
 
     switch (ProjectileRotationMode)
     {
@@ -1873,6 +1872,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
             WeaponFireRotation.Pitch += MyAddedPitch;
             break;
         case PRM_MuzzleBone:
+            MuzzleCoords = GetBoneCoords(WeaponFireAttachBone);
             WeaponFireRotation = Rotator(QuatRotateVector(QuatFromAxisAndAngle(-MuzzleCoords.YAxis, class'UUnits'.static.UnrealToRadians(MyAddedPitch)), MuzzleCoords.XAxis));
             break;
     }
