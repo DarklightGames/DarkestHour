@@ -176,32 +176,6 @@ simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
     return DeflectionSign $ string(Deflection);
 }
 
-exec function CalibrateFire(int MilsMin, int MilsMax)
-{
-    local int Mils;
-    local DHBallisticProjectile BP;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
-        {
-            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
-            VehWep.CurrentAim.Yaw = 0;
-
-            VehWep.CalcWeaponFire(false);
-            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
-
-            if (BP != none)
-            {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugMils = Mils;
-                BP.StartLocation = BP.Location;
-            }
-        }
-    }
-}
-
 simulated function int GetIndex(class<Projectile> ProjectileClass)
 {
     if (ProjectileClass == VehWep.PrimaryProjectileClass)

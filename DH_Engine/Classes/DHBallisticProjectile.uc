@@ -12,7 +12,8 @@ var DHVehicleWeapon VehicleWeapon;
 var bool bIsCalibrating;
 var float LifeStart;
 var vector StartLocation;
-var float DebugMils;
+var float DebugAngleValue;
+var UUnits.EAngleUnit DebugAngleUnit;
 
 function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
@@ -73,12 +74,13 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
 
 simulated function BlowUp(vector HitLocation)
 {
-    local float Distance;
+    local float Distance, Angle;
 
     if (Role == ROLE_Authority && VehicleWeapon != none && bIsCalibrating)
     {
         Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
+        Angle = class'UUnits'.static.ConvertAngleUnit(DebugAngleValue, AU_Unreal, DebugAngleUnit);
 
-        Log("(Mils=" $ DebugMils $ ",Range=" $ int(Distance) $ ",TTI=" $ Round(Level.TimeSeconds - LifeStart) $ ")");
+        Log("" $ Angle $ "," $ Distance);
     }
 }

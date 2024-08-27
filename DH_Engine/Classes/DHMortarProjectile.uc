@@ -254,6 +254,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 // Emptied out so we don't cause blast damage by default (add in subclass if required) & because we call MakeNoise() when shell lands, even if doesn't blow up
 function BlowUp(vector HitLocation)
 {
+    // TODO: add the calibration code back in here.
+    super.BlowUp(HitLocation);
 }
 
 // New function to spawn impact effects when the shell lands

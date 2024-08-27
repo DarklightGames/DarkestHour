@@ -47,6 +47,57 @@ struct SAnimationDriver
 
 var SAnimationDriver PitchAnimationDriver;
 
+exec function CalibrateMortar(string AngleUnitString, int Samples)
+{
+    local int Mils;
+    local DHBallisticProjectile BP;
+    local int Pitch;    // Unreal units.
+    local int MinPitch, MaxPitch;
+    local float PitchStep;
+    local UUnits.EAngleUnit AngleUnit;
+    local Rotator WeaponPitch;
+    local DHVehicleCannon.EProjectileRotationMode OriginalRotationMode;
+
+    // We need to temporarily change the rotation mode to current aim so that the projectile is spawned with the correct rotation.
+    OriginalRotationMode = Cannon.ProjectileRotationMode;
+    Cannon.ProjectileRotationMode = PRM_CurrentAim;
+
+    if (Samples == 0)
+    {
+        Samples = 25;
+    }
+
+    AngleUnit = class'UUnits'.static.GetAngleUnitFromString(AngleUnitString);
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        MinPitch = GetGunPitchMin() - GunPitchOffset;
+        MaxPitch = GetGunPitchMax() - GunPitchOffset;
+        PitchStep = float(MaxPitch - MinPitch) / Samples;
+
+        for (Pitch = MinPitch; Pitch < MaxPitch; Pitch += PitchStep)
+        {
+            Cannon.CurrentAim.Pitch = Pitch + GunPitchOffset;
+            Cannon.CurrentAim.Yaw = 0;
+
+            Cannon.CalcWeaponFire(false);
+
+            BP = DHBallisticProjectile(Cannon.SpawnProjectile(Cannon.ProjectileClass, false));
+
+            if (BP != none)
+            {
+                BP.bIsCalibrating = true;
+                BP.LifeStart = Level.TimeSeconds;
+                BP.DebugAngleValue = Pitch + GunPitchOffset;
+                BP.DebugAngleUnit = AngleUnit;
+                BP.StartLocation = BP.Location;
+            }
+        }
+    }
+
+    Cannon.ProjectileRotationMode = OriginalRotationMode;
+}
+
 simulated function Destroyed()
 {
     if (HandsActor != none)
