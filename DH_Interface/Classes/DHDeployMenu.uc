@@ -1032,73 +1032,68 @@ function UpdateButtons()
 
 function PopulateRoles()
 {
-    local string RoleName;
     local int    i;
     local class<DHRoleInfo> Role;
 
     li_Roles.Clear();
 
-    for (i = 0; i < 6; i++) 
+    // for (i = 0; i < 6; i++) 
+    // {
+    //     Role = PC.GetSquadRole(i);
+    //     if (Role != none)
+    //     {
+    //         if (PC != none && PC.bUseNativeRoleNames)
+    //         {
+    //             li_Roles.Add(Role.default.AltName, Role);
+    //         }
+    //         else
+    //         {
+    //             li_Roles.Add(Role.default.MyName, Role);
+    //         }
+    //     }
+    // }
+
+    //TODO: Add Global Roles
+    if (PC == none)
     {
-        Role = PC.GetSquadRole(i);
-        if (Role != none)
+        //TODO: Add warning here
+        return;
+    }
+
+    if (CurrentTeam == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            if (PC != none && PC.bUseNativeRoleNames)
+            if (GRI.DHAxisRoles[i] != none && PC.GetRoleEnabledResult(GRI.DHAxisRoles[i]) < 7)
             {
-                li_Roles.Add(Role.default.AltName, Role);
-            }
-            else
-            {
-                li_Roles.Add(Role.default.MyName, Role);
+                if (PC.bUseNativeRoleNames)
+                {
+                    li_Roles.Add(GRI.DHAxisRoles[i].default.AltName, GRI.DHAxisRoles[i]);
+                }
+                else
+                {
+                    li_Roles.Add(GRI.DHAxisRoles[i].default.MyName, GRI.DHAxisRoles[i]);
+                }
             }
         }
     }
-
-    //TODO: Add Global Roles
-
-    // if (CurrentTeam == AXIS_TEAM_INDEX)
-    // {
-    //     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-    //     {
-    //         if (GRI.DHAxisRoles[i] != none)
-    //         {
-    //             if (PC.GetRoleEnabledResult(GRI.DHAxisRoles[i]) < 7)
-    //             {
-    //                 if (PC != none && PC.bUseNativeRoleNames)
-    //                 {
-    //                     RoleName = GRI.DHAxisRoles[i].default.AltName;
-    //                 }
-    //                 else
-    //                 {
-    //                     RoleName = GRI.DHAxisRoles[i].default.MyName;
-    //                 }
-    //                 li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
-    //             }
-    //             // li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
-    //         }
-    //     }
-    // }
-    // else if (CurrentTeam == ALLIES_TEAM_INDEX)
-    // {
-    //     for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-    //     {
-    //         if (GRI.DHAlliesRoles[i] != none)
-    //         {
-    //             if (PC.GetRoleEnabledResult(GRI.DHAlliesRoles[i]) < 7)
-    //             {
-    //                 if (PC != none && PC.bUseNativeRoleNames)
-    //                 {
-    //                     RoleName = GRI.DHAlliesRoles[i].default.AltName;
-    //                 }
-    //                 else
-    //                 {
-    //                     RoleName = GRI.DHAlliesRoles[i].default.MyName;
-    //                 }
-    //                 li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
-    //             }
-    //         }
-    //     }
-    // }
+    else if (CurrentTeam == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+        {
+            if (GRI.DHAlliesRoles[i] != none && PC.GetRoleEnabledResult(GRI.DHAlliesRoles[i]) < 7)
+            {
+                if (PC.bUseNativeRoleNames)
+                {
+                    li_Roles.Add(GRI.DHAlliesRoles[i].default.AltName, GRI.DHAlliesRoles[i]);
+                }
+                else
+                {
+                    li_Roles.Add(GRI.DHAlliesRoles[i].default.MyName, GRI.DHAlliesRoles[i]);
+                }
+            }
+        }
+    }
 
     // li_Roles.SortList();
 
