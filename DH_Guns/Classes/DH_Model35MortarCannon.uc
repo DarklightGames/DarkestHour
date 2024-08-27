@@ -65,9 +65,9 @@ defaultproperties
     AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
-    CannonFireSound(1)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
-    CannonFireSound(2)=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire'
+    CannonFireSound(1)=Sound'DH_MortarSounds.Fire.81mm_mortar_fire'
+    CannonFireSound(2)=Sound'DH_MortarSounds.Fire.81mm_mortar_fire'
 
     // TODO: figure out what to do with this.
     // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
