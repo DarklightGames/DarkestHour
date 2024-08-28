@@ -21,6 +21,7 @@ simulated function bool WasLastRound()
     return AmmoAmount(0) == 0;
 }
 
+
 defaultproperties
 {
     ItemName="M1 Garand"

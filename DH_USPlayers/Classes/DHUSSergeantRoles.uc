@@ -8,9 +8,9 @@ class DHUSSergeantRoles extends DHAlliedSergeantRoles
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandGrenadeWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
