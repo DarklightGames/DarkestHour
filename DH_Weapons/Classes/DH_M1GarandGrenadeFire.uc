@@ -97,7 +97,7 @@ function PlayFiring()
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PanzerFaustRocket'
-    AmmoClass=class'DH_Weapons.DH_M1GarandGrenadeAmmo'
+    AmmoClass=class'DH_Weapons.DH_M1GarandGrenadeAmmoFrag'
     FireRate=0.215
     Spread=50.0
     MaxVerticalRecoilAngle=760

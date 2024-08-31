@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_M1GarandGrenadeAmmo extends DHAmmunition;
+class DH_M1GarandGrenadeAmmoFrag extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=1
-    InitialAmount=1
+    MaxAmmo=2
+    InitialAmount=2
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenade_ammo'
 }

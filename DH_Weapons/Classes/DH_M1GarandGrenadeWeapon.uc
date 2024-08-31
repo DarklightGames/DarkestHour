@@ -8,6 +8,12 @@ class DH_M1GarandGrenadeWeapon extends DHProjectileWeapon;
 var     bool    bIsLastRound;
 var   WeaponFire   FireModeGarand;
 var   WeaponFire   FireModeBayonet;
+var class<Projectile> ProjectileGrenade[2];
+var() class<Ammunition> GrenadeAmmoClass[2];
+var int GrenadeAmmoCharge[2];
+var int GrenadeAmmoMax[2];
+var int GrenadeIndex;
+
 
 // Modified to support garand last round clip eject for client only
 simulated function Fire(float F)
@@ -28,7 +34,7 @@ simulated function PostBeginPlay()
     Super.PostBeginPlay();
 
     FireModeGarand = FireMode[0];
-    
+    GrenadeIndex = 0;
     FireModeBayonet = new(self) class'DH_Weapons.DH_M1GarandGrenadeFire';
     FireModeBayonet.ThisModeNum = 0;
     FireModeBayonet.Weapon = self;
@@ -41,6 +47,9 @@ simulated function PostBeginPlay()
     FireModeBayonet.SetInitialState();
     FireModeBayonet.PostNetBeginPlay();
 
+    // GrenadeAmmoClass[0] = FireModeGarand.AmmoClass;
+    // GrenadeAmmoClass[1] = class'DH_Weapons.DH_M1GarandGrenadeAmmo';
+
      if (bBayonetMounted)
     {
         ChangeBayoStatus(true);
@@ -51,9 +60,9 @@ function PerformReload(optional int Count)
 {
     if (bBayonetMounted)
     {
-        AmmoCharge[0] = 1;
+        GrenadeAmmoCharge[GrenadeIndex] = 1;
 
-        if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
+        if (GrenadeAmmoCharge[GrenadeIndex] > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
         {
             ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
         }
@@ -68,7 +77,7 @@ simulated function int MaxAmmo(int mode)
 {
     if (bBayonetMounted)
     {
-        return 1;
+        return GrenadeAmmoMax[GrenadeIndex];
     }
     else
     {
@@ -76,27 +85,27 @@ simulated function int MaxAmmo(int mode)
     }
 }
 
-// simulated function int AmmoAmount(int mode)
-// {
-//     if (bBayonetMounted)
-//     {
-//         return AmmoCharge[0];
-//     }
-//     else
-//     {
-//         return super.AmmoAmount(0);
-//     }
+simulated function int AmmoAmount(int mode)
+{
+    if (bBayonetMounted)
+    {
+        return GrenadeAmmoCharge[GrenadeIndex];
+    }
+    else
+    {
+        return super.AmmoAmount(0);
+    }
 
-// 	return 0;
-// }
+	return 0;
+}
 
 function bool AddAmmo(int AmmoToAdd, int Mode)
 {
     if (bBayonetMounted)
     {
-        if (AmmoCharge[0] < MaxAmmo(0))
+        if (GrenadeAmmoCharge[GrenadeIndex] < MaxAmmo(0))
         {
-            AmmoCharge[0] = Min(MaxAmmo(0), AmmoCharge[0] + AmmoToAdd);
+            GrenadeAmmoCharge[GrenadeIndex] = Min(MaxAmmo(0), GrenadeAmmoCharge[GrenadeIndex] + AmmoToAdd);
             return true;
         }
         return false;
@@ -107,32 +116,70 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
     }
 }
 
-// simulated function bool HasAmmo()
-// {
-//     if (bBayonetMounted)
-//     {
-//         return AmmoCharge[1] > 0;
-//     }
-//     else
-//     {
-//         return super.HasAmmo();
-//     }
-// }
+simulated function bool HasAmmo()
+{
+    if (bBayonetMounted)
+    {
+        return GrenadeAmmoCharge[GrenadeIndex] > 0;
+    }
+    else
+    {
+        return super.HasAmmo();
+    }
+}
+
+exec function SwitchFireMode()
+{
+    Log("SwitchFireMode on M1 Garand Grenade Launcher");
+    if (bBayonetMounted)
+    {  
+        Log("SwitchFireMode: Bayonet is mounted");
+        if (FireMode[0] != FireModeBayonet)
+        {
+            ChangeBayoStatus(true);
+        }
+
+        if (GrenadeIndex == 0)
+        {
+            GrenadeIndex = 1;
+        }
+        else
+        {
+            GrenadeIndex = 0;
+        }
+        FireMode[0].ProjectileClass = ProjectileGrenade[GrenadeIndex];
+        AmmoClass[0] = GrenadeAmmoClass[GrenadeIndex];
+        GrenadeAmmoCharge[GrenadeIndex] = 0;
+    }
+    else
+    {
+        Log("SwitchFireMode: Bayonet is NOT attached");
+    }
+}
+
+simulated function bool UsingAutoFire()
+{
+    return bBayonetMounted && GrenadeIndex == 1;
+}
 
 function ChangeBayoStatus(bool bBayoStatus)
 {
     Log("ChangeBayoStatus: " @ bBayoStatus);
     if (bBayoStatus)
     {
+        GrenadeIndex = 0;
         FireMode[0] = FireModeBayonet;
-        AmmoClass[0] = FireModeBayonet.AmmoClass;
-        bMustFireWhileSighted = true;
+        AmmoClass[0] = GrenadeAmmoClass[GrenadeIndex];
+        bMustFireWhileSighted = false;
+        bHasSelectFire = true;
+        GrenadeAmmoCharge[GrenadeIndex] = 0;
     }
     else
     {
         FireMode[0] = FireModeGarand;
         AmmoClass[0] = FireModeGarand.AmmoClass;
         bMustFireWhileSighted = false;
+        bHasSelectFire = false;
     }
     AmmoCharge[0] = 0;
     // AmmoCharge[1] = 0;
@@ -142,12 +189,16 @@ function ChangeBayoStatus(bool bBayoStatus)
 
 defaultproperties
 {
-    ItemName="M1 Garand Grenade Launcher"
+    ItemName="M7 Grenade Launcher"
     FireModeClass(0)=class'DH_Weapons.DH_M1GarandFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1GarandMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1GarandGrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_M1GarandGrenadePickup'
 
+    ProjectileGrenade(0)=class'DH_Weapons.DH_M1GarandGrenadeRocket'
+    ProjectileGrenade(1)=class'DH_Weapons.DH_M1GarandGrenadeSmokeRocket'
+    GrenadeAmmoClass(0)=class'DH_Weapons.DH_M1GarandGrenadeAmmoFrag'
+    GrenadeAmmoClass(1)=class'DH_Weapons.DH_M1GarandGrenadeAmmoSmoke'
     Mesh=SkeletalMesh'DH_Garand_1st.Garand_1st'
     bUseHighDetailOverlayIndex=false
     //HighDetailOverlayIndex=2
@@ -164,6 +215,7 @@ defaultproperties
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
     bPlusOneLoading=false
+    bHasSelectFire=false
 
     MagEmptyReloadAnims(0)="reload"
     MagEmptyReloadAnims(1)="reload_sticky"
