@@ -23,7 +23,13 @@ defaultproperties
 
     PrimaryProjectileClass=class'DH_Guns.DH_BM36MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_BM36MortarProjectileSmoke'
-    TertiaryProjectileClass=None
 
     DriverAnimationChannelBone="RU_CAMERA_COM"
+
+    // Have to set all of these in order to "remove" the third round from the parent class.
+    TertiaryProjectileClass=None
+    MaxTertiaryAmmo=0
+    MainAmmoChargeExtra(2)=0
+    ProjectileDescriptions(2)=""
+    nProjectileDescriptions(2)=""
 }

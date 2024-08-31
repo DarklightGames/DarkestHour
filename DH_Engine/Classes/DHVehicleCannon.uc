@@ -1059,7 +1059,6 @@ simulated function bool ConsumeAmmo(int AmmoIndex)
     }
 
     return true;
-
 }
 
 // Modified to use extended ammo types
@@ -1075,7 +1074,12 @@ simulated function bool HasAmmo(int AmmoIndex)
          return NumSmokeLauncherRounds > 0;
     }
 
-    return AmmoIndex >= 0 && AmmoIndex < arraycount(MainAmmoChargeExtra) && MainAmmoChargeExtra[AmmoIndex] > 0;
+    if (GetProjectileClass(AmmoIndex) == none)
+    {
+        return false;
+    }
+
+    return AmmoIndex < arraycount(MainAmmoChargeExtra) && MainAmmoChargeExtra[AmmoIndex] > 0;
 }
 
 // Modified to use extended ammo types
@@ -1173,22 +1177,28 @@ simulated function AttemptReload()
         // If pending ammo type is different, switch to it now
         if (ServerPendingAmmoIndex != GetAmmoIndex())
         {
-            switch (ServerPendingAmmoIndex)
-            {
-                case 0:
-                    ProjectileClass = PrimaryProjectileClass;
-                    break;
-                case 1:
-                    ProjectileClass = SecondaryProjectileClass;
-                    break;
-                case 2:
-                    ProjectileClass = TertiaryProjectileClass;
-                    break;
-            }
+            ProjectileClass = GetProjectileClass(ServerPendingAmmoIndex);
         }
     }
 
     super.AttemptReload(); // now we've done that it's the usual attempt reload process
+}
+
+// Helper function to treat projectile list like an array because the morons who
+// made the initial code didn't think there would ever be more than 2 projectile classes.
+simulated function class<Projectile> GetProjectileClass(int AmmoIndex)
+{
+    switch (AmmoIndex)
+    {
+        case 0:
+            return PrimaryProjectileClass;
+        case 1:
+            return SecondaryProjectileClass;
+        case 2:
+            return TertiaryProjectileClass;
+    }
+
+    return none;
 }
 
 // Implemented to start a coaxial MG reload or resume a previously paused reload, using a multi-stage reload process like a cannon
