@@ -27,4 +27,6 @@ defaultproperties
     VehicleHudImage=Texture'DH_Model35Mortar_tex.interface.model35mortar_body_icon'
     VehicleHudTurret=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_look'
+
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Mortar'
 }
