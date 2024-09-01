@@ -40,11 +40,11 @@ defaultproperties
     // Cannon ammo
     ProjectileDescriptions(0)="HE (3.3kg)"
     ProjectileDescriptions(1)="Smoke"
-    ProjectileDescriptions(2)="HE (6.6kg)"
+    ProjectileDescriptions(2)="HE (6.8kg)"
 
     nProjectileDescriptions(0)="Amatolo 3.3kg"
     nProjectileDescriptions(1)="Fumogeno 6.6kg"
-    nProjectileDescriptions(2)="Amatolo 6.6kg"
+    nProjectileDescriptions(2)="Amatolo 6.8kg"
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
