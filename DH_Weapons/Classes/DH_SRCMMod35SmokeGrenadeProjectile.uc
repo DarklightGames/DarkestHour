@@ -15,4 +15,8 @@ defaultproperties
     FuzeType=FT_Impact
     SmokeType=ST_WhitePhosphorus
     SpoonProjectileClass=class'DH_Weapons.DH_SRCMMod35SpoonProjectile'
+
+    ExplosionSound(0)=SoundGroup'DH_weaponsounds.WPGrenade.WPGrenade_Explosions'
+    ExplosionSound(1)=SoundGroup'DH_weaponsounds.WPGrenade.WPGrenade_Explosions'
+    ExplosionSound(2)=SoundGroup'DH_weaponsounds.WPGrenade.WPGrenade_Explosions'
 }
