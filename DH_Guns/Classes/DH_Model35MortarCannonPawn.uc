@@ -2,12 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Replace mortar round names (not done yet!)
 // [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
-// [ ] Increase spread of mortar rounds
 // [ ] Replace firing effects
 // [ ] Add mortar player idle & firing animations
-// [ ] Increase blast radius of HE shell
 //==============================================================================
 // Nice to Have
 //==============================================================================

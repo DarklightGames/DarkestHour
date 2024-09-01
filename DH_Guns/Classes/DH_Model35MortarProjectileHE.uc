@@ -9,8 +9,8 @@ defaultproperties
 {
     Speed=6500
     MaxSpeed=6500
-    Damage=300.0
-    DamageRadius=720.0
+    Damage=350.0
+    DamageRadius=965.0 // 16 meters
     Tag="HE"
     BlurTime=6.0
     BlurEffectScalar=4.0
