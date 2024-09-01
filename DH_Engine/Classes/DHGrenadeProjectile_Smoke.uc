@@ -70,6 +70,10 @@ state ReleasingSmoke
 
         if (SmokeType == ST_WhitePhosphorus)
         {
+            // Hide the grenade and stop it from moving.
+            bHidden = true;
+            SetPhysics(PHYS_None);
+
             SpawnGasHurtRadius();
         }
 
