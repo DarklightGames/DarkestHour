@@ -63,6 +63,9 @@ state ReleasingSmoke
 
         super.BeginState();
 
+        // Do damage.
+        BlowUp(Location);
+
         bHasExploded = true;
 
         // Spawn smoke effect
@@ -102,17 +105,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     {
         GotoState('ReleasingSmoke');
     }
-}
-
-// Modified to remove everything relating to explosion & damage, as not an exploding grenade
-function BlowUp(vector HitLocation)
-{
-    if (Role == ROLE_Authority)
-    {
-        MakeNoise(1.0);
-    }
-    
-    // TODO: add small WP explosion damage, if applicable
 }
 
 defaultproperties

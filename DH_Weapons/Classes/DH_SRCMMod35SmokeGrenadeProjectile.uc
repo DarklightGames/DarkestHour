@@ -15,4 +15,7 @@ defaultproperties
     FuzeType=FT_Impact
     SmokeType=ST_WhitePhosphorus
     SpoonProjectileClass=class'DH_Weapons.DH_SRCMMod35SpoonProjectile'
+    Damage=100.0
+    DamageRadius=120.0
+    MyDamageType=class'DH_Engine.DHShellSmokeWPDamageType'
 }
