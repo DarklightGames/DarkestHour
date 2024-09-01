@@ -58,5 +58,4 @@ defaultproperties
     StandardHeight=0.8
 
     ServerBlacklist(0)="81.169.151.184"
-    ServerBlacklist(1)="109.108.203.236"
 }
