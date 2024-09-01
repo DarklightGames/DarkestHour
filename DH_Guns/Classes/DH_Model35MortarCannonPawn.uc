@@ -2,12 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Replace camera animation on tube
 // [ ] Replace mortar round names (not done yet!)
 // [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
-// [ ] Reduce spread of mortar rounds
+// [ ] Increase spread of mortar rounds
 // [ ] Replace firing effects
 // [ ] Add mortar player idle & firing animations
+// [ ] Increase blast radius of HE shell
 //==============================================================================
 // Nice to Have
 //==============================================================================
@@ -51,13 +51,11 @@ var SAnimationDriver PitchAnimationDriver;
 
 exec function CalibrateMortar(string AngleUnitString, int Samples)
 {
-    local int Mils;
     local DHBallisticProjectile BP;
     local int Pitch;    // Unreal units.
     local int MinPitch, MaxPitch;
     local float PitchStep;
     local UUnits.EAngleUnit AngleUnit;
-    local Rotator WeaponPitch;
     local DHVehicleCannon.EProjectileRotationMode OriginalRotationMode;
 
     // We need to temporarily change the rotation mode to current aim so that the projectile is spawned with the correct rotation.
@@ -128,18 +126,6 @@ simulated function InitializeVehicleAndWeapon()
         // Record the duration of the firing animation.
         OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
     }
-}
-
-// This state only exists so that we can have CanFire return true. Without it, the mortar will not fire.
-state ProjectileFireMode
-{
-    function BeginState()
-    {
-        super.Fire();
-        GotoState('');
-    }
-
-    simulated function bool CanFire() { return true; }
 }
 
 // TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
@@ -434,7 +420,7 @@ defaultproperties
     DriverPositions(0)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // Kneeling
     DriverPositions(1)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    // tanding
+    // Standing
     DriverPositions(2)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // Binoculars
     DriverPositions(3)=(DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)

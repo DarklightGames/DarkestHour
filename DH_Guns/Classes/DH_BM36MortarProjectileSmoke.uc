@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Model35MortarProjectileSmokeBig extends DHMortarProjectileSmoke;
+class DH_BM36MortarProjectileSmoke extends DH_Model35MortarProjectileSmoke;
 
 defaultproperties
 {
-    Speed=6500
-    MaxSpeed=6500
-    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.IT_SMOKE_M110_A'
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.RU_SMOKE_57D832'
 }

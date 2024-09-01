@@ -1693,14 +1693,20 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     {
                         for (i = 0; i < Cannon.nProjectileDescriptions.Length; ++i)
                         {
-                            Lines[i] = Cannon.nProjectileDescriptions[i];
+                            if (Cannon.GetProjectileClass(i) != none)
+                            {
+                                Lines[i] = Cannon.nProjectileDescriptions[i];
+                            }
                         }
                     }
                     else
                     {
                         for (i = 0; i < Cannon.ProjectileDescriptions.Length; ++i)
                         {
-                            Lines[i] = Cannon.ProjectileDescriptions[i];
+                            if (Cannon.GetProjectileClass(i) != none)
+                            {
+                                Lines[i] = Cannon.ProjectileDescriptions[i];
+                            }
                         }
                     }
 
