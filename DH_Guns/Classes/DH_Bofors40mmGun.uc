@@ -19,6 +19,5 @@ defaultproperties
     ShadowZOffset=30.0
     ExitPositions(1)=(X=-35.0,Y=-90.0,Z=60.0)
     VehicleMass=11.0
-    SupplyCost=1250
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_StaticAA'
 }

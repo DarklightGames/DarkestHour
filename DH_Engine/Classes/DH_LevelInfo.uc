@@ -98,14 +98,13 @@ var() material              LoadingScreenRef;        // Used to stop loading scr
 
 var const bool              bDHDebugMode;            // flag for whether debug commands can be run
 
-struct STeamConstruction
+struct SConstruction
 {
-    var() class<DHConstruction> ConstructionClass;
-    var() int TeamIndex;
-    var() int Limit;
-    var() int ReplenishPeriodSeconds;   // How long it takes, in seconds, for the limit to be increased by one
+    var() class<DHConstruction_Vehicle> ConstructionClass;  // Construction class.
+    var() int Limit; // The total limit alotted per round.
+    var() int MaxActive; // The maximum amount active at a time.
 };
-var(DH_Constructions) array<STeamConstruction> TeamConstructions;
+var(DH_Constructions) array<SConstruction> Constructions;
 
 singular static function bool DHDebugMode()
 {

@@ -171,8 +171,6 @@ var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
 var     float                                   SupplyDropSoundVolume;
 
-var     int                                     SupplyCost;             // The amout of supplies it takes to create a vehicle of this type.
-
 // Construction
 var     vector                                  ConstructionPlacementOffset;
 var     Mesh                                    ConstructionBaseMesh;

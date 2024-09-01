@@ -143,15 +143,14 @@ var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
-struct STeamConstruction
+struct SConstruction
 {
     var class<DHConstruction> ConstructionClass;
-    var byte TeamIndex;
     var byte Remaining;
     var int NextIncrementTimeSeconds;
 };
 
-var STeamConstruction   TeamConstructions[16];
+var SConstruction       Constructions[16];
 
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
@@ -273,7 +272,7 @@ replication
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
         SurrenderVotesInProgress,
-        TeamConstructions,
+        Constructions,
         bOffMapArtilleryEnabled,
         bOnMapArtilleryEnabled,
         DHMineVolumeIsActives,
@@ -336,6 +335,11 @@ simulated function PostBeginPlay()
 
         if (LI != none)
         {
+            for (i = 0; i < LI.Constructions.Length; ++i)
+            {
+                AddConstructionClass(LI.Constructions[i].ConstructionClass);
+            }
+
             bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
         }
 
@@ -358,40 +362,13 @@ simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruct
 {
     local int i;
 
-    for (i = 0; i < arraycount(TeamConstructions); ++i)
+    for (i = 0; i < arraycount(Constructions); ++i)
     {
-        if (TeamConstructions[i].ConstructionClass == none)
-        {
-            continue;
-        }
-
-        if (TeamConstructions[i].TeamIndex == TeamIndex &&
-            TeamConstructions[i].ConstructionClass == ConstructionClass)
+        if (Constructions[i].ConstructionClass != none &&
+            Constructions[i].ConstructionClass == ConstructionClass)
         {
             return i;
         }
-    }
-
-    return -1;
-}
-
-simulated function int GetTeamConstructionNextIncrementTimeSeconds(int TeamIndex, class<DHConstruction> ConstructionClass)
-{
-    local int i;
-    local DH_LevelInfo LI;
-
-    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
-
-    if (i == -1)
-    {
-       return -1;
-    }
-
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (LI != none && LI.TeamConstructions[i].ReplenishPeriodSeconds > 0)
-    {
-        return TeamConstructions[i].NextIncrementTimeSeconds;
     }
 
     return -1;
@@ -408,7 +385,7 @@ simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConst
        return -1;
     }
 
-    return TeamConstructions[i].Remaining;
+    return Constructions[i].Remaining;
 }
 
 simulated function PostNetBeginPlay()
@@ -2427,32 +2404,22 @@ defaultproperties
     ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
     ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
 
-    // Guns
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
-    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
-    ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_ATGun_HeavyEarly"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_AAGun_Medium"
-    ConstructionClassNames(23)="DH_Construction.DHConstruction_HMG"
-
     // Defenses
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_GrenadeCrate"
-    ConstructionClassNames(19)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(20)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(8)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(9)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_AntiTankCrate"
 
     // Artillery
-    ConstructionClassNames(22)="DH_Construction.DHConstruction_Artillery"
+    // TODO: the individual gun classes are to be added from the data in the level
 
     // Mortars
-    ConstructionClassNames(24)="DH_Guns.DH_Model35MortarConstruction"
-    ConstructionClassNames(25)="DH_Guns.DH_M1MortarConstruction"
-    ConstructionClassNames(26)="DH_Guns.DH_BM36MortarConstruction"
+    ConstructionClassNames(15)="DH_Guns.DH_Model35MortarConstruction"
+    ConstructionClassNames(16)="DH_Guns.DH_M1MortarConstruction"
+    ConstructionClassNames(17)="DH_Guns.DH_BM36MortarConstruction"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_ZiS3GunLate extends DH_ZiS3Gun; //added APCR
+class DH_17PounderGunConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawnLate')
+    VehicleClass=class'DH_Guns.DH_17PounderGun'
+    SupplyCost=1600
 }

@@ -170,11 +170,6 @@ function static DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Con
     return super.GetPlayerError(Context);
 }
 
-simulated static function int GetSupplyCost(DHActorProxy.Context Context)
-{
-    return GetVehicleClass(Context).default.SupplyCost;
-}
-
 static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
     if (GetVehicleClass(Context) != none)

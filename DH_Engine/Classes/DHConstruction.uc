@@ -395,17 +395,16 @@ function OnSpawnedByPlayer()
         return;
     }
 
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+    for (i = 0; i < arraycount(GRI.Constructions); ++i)
     {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
+        if (GRI.Constructions[i].ConstructionClass == none)
         {
             break;
         }
 
-        if (GRI.TeamConstructions[i].ConstructionClass == Class &&
-            GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
+        if (GRI.Constructions[i].ConstructionClass == Class)
         {
-            GRI.TeamConstructions[i].Remaining = Max(0, GRI.TeamConstructions[i].Remaining - 1);
+            GRI.Constructions[i].Remaining = Max(0, GRI.Constructions[i].Remaining - 1);
             break;
         }
     }
@@ -570,17 +569,16 @@ function TearDown(int InstigatorTeamIndex)
         return;
     }
 
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
+    for (i = 0; i < arraycount(GRI.Constructions); ++i)
     {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
+        if (GRI.Constructions[i].ConstructionClass == none)
         {
             break;
         }
 
-        if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
-            GRI.TeamConstructions[i].ConstructionClass == Class)
+        if (GRI.Constructions[i].ConstructionClass == Class)
         {
-            GRI.TeamConstructions[i].Remaining = Min(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
+            GRI.Constructions[i].Remaining = Min(LI.Constructions[i].Limit, GRI.Constructions[i].Remaining + 1);
             break;
         }
     }
@@ -1105,13 +1103,6 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
-        return E;
-    }
-
-    if (GRI.GetTeamConstructionRemaining(Context.TeamIndex, default.Class) == 0)
-    {
-        E.Type = ERROR_Exhausted;
-        E.OptionalInteger = GRI.GetTeamConstructionNextIncrementTimeSeconds(Context.TeamIndex, default.Class);
         return E;
     }
 

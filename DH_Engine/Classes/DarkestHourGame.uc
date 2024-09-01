@@ -2595,12 +2595,11 @@ state RoundInPlay
         }
 
         // Team constructions
-        for (i = 0; i < DHLevelInfo.TeamConstructions.Length; ++i)
+        for (i = 0; i < DHLevelInfo.Constructions.Length; ++i)
         {
-            GRI.TeamConstructions[i].TeamIndex = DHLevelInfo.TeamConstructions[i].TeamIndex;
-            GRI.TeamConstructions[i].ConstructionClass = DHLevelInfo.TeamConstructions[i].ConstructionClass;
-            GRI.TeamConstructions[i].Remaining = DHLevelInfo.TeamConstructions[i].Limit;
-            GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
+            GRI.Constructions[i].ConstructionClass = DHLevelInfo.Constructions[i].ConstructionClass;
+            GRI.Constructions[i].Remaining = DHLevelInfo.Constructions[i].Limit;
+            GRI.Constructions[i].NextIncrementTimeSeconds = -1;
         }
 
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
@@ -3044,8 +3043,6 @@ state RoundInPlay
             }
         }
 
-        UpdateTeamConstructions();
-
         // If round time is up, decide the winner
         if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
@@ -3056,52 +3053,6 @@ state RoundInPlay
         if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
-        }
-    }
-}
-
-function UpdateTeamConstructions()
-{
-    local int i, Count;
-
-    // Check for if we can replenish any team constructions
-    for (i = 0; i < DHLevelInfo.TeamConstructions.Length; i++)
-    {
-        // Check if all available constructions are remaining.
-        if (GRI.TeamConstructions[i].Remaining == DHLevelInfo.TeamConstructions[i].Limit)
-        {
-            continue;
-        }
-
-        // Check if this construction replenishes over time.
-        if (DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds > 0)
-        {
-            // Get the number of extant constructions that this team has on the field.
-            Count = ConstructionManager.CountOf(DHLevelInfo.TeamConstructions[i].TeamIndex, DHLevelInfo.TeamConstructions[i].ConstructionClass);
-
-            // Check if we need to set the NextIncrementTimeSeconds variable
-            // (this will be set to -1 if the remaining # gets set to zero elsewhere!)
-            if (Count == DHLevelInfo.TeamConstructions[i].Limit)
-            {
-                // We have the maximum amount of this type of construction.
-                // Make sure the next increment time is -1 so that we don't
-                // display any countdown on the UI.
-                GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
-            }
-            else if (Count < DHLevelInfo.TeamConstructions[i].Limit)
-            {
-                if (GRI.TeamConstructions[i].NextIncrementTimeSeconds == -1)
-                {
-                    // Our next increment time has not been set.
-                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = GRI.ElapsedTime + DHLevelInfo.TeamConstructions[i].ReplenishPeriodSeconds;
-                }
-
-                if (GRI.ElapsedTime >= GRI.TeamConstructions[i].NextIncrementTimeSeconds)
-                {
-                    GRI.TeamConstructions[i].Remaining += 1;
-                    GRI.TeamConstructions[i].NextIncrementTimeSeconds = -1;
-                }
-            }
         }
     }
 }
