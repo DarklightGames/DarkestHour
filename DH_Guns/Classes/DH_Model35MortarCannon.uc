@@ -56,9 +56,9 @@ defaultproperties
     MaxSecondaryAmmo=5
     MaxTertiaryAmmo=2
 
-    Spread=0.00125
-    SecondarySpread=0.00125
-    TertiarySpread=0.00125
+    Spread=0.01
+    SecondarySpread=0.01
+    TertiarySpread=0.01
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE
