@@ -40,25 +40,25 @@ defaultproperties
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
-    ProjectileDescriptions(2)="Smoke (Large)"
+    ProjectileDescriptions(2)="HE-L"
 
-    nProjectileDescriptions(0)="HE"
-    nProjectileDescriptions(1)="M110 Fumogeno"
-    nProjectileDescriptions(2)="M110 Fumogeno"
+    nProjectileDescriptions(0)="Bomba g. a. da 81"
+    nProjectileDescriptions(1)="Bomba Fumogena"
+    nProjectileDescriptions(2)="Bomba gr. c. da 81"
 
     PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmokeBig'
-    InitialPrimaryAmmo=28  // TODO: REPLACE
-    InitialSecondaryAmmo=5  // TODO: REPLACE
+    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'  
+    InitialPrimaryAmmo=28
+    InitialSecondaryAmmo=5
     InitialTertiaryAmmo=2
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
-    MaxTertiaryAmmo=2
+    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
 
-    Spread=0.00125
-    SecondarySpread=0.00125
-    TertiarySpread=0.00125
+    Spread=0.01
+    SecondarySpread=0.01
+    TertiarySpread=0.01
 
     // Weapon fire
     WeaponFireOffset=16.0  // TODO: REPLACE

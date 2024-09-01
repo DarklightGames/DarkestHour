@@ -2,10 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] make this make a big boom
-//==============================================================================
 
-class DH_M1MortarProjectileHE_L extends DH_Model35MortarProjectileHE;
+class DH_M1MortarProjectileHE_L extends DH_Model35MortarProjectileHEBig;
 
 defaultproperties
 {

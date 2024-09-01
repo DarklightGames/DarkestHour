@@ -709,7 +709,11 @@ function BlowUp(vector HitLocation)
 {
     if (Role == ROLE_Authority)
     {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        if (Damage > 0)
+        {
+            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
+        
         MakeNoise(1.0);
     }
 }

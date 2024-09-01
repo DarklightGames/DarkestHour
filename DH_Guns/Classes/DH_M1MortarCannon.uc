@@ -28,4 +28,6 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Guns.DH_M1MortarProjectileHE_L'
 
     DriverAnimationChannelBone="US_CAMERA_COM"
+    
+    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
 }
