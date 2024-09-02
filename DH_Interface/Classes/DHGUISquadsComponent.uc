@@ -21,13 +21,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     //         case 5:
     //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.tank';
     //             SquadComponents[i].i_SquadType.Hint = "Tank Squad";
-    //             SquadComponents[i].l_SquadTypeName.Caption = "Tanks";
     //             break;
 
     //         case 6:
     //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.supply_cache';
     //             SquadComponents[i].i_SquadType.Hint = "Constructs team buildings and transports supplies.";
-    //             SquadComponents[i].l_SquadTypeName.Caption = "Logistic";
     //             break;
 
     //         case 7:
@@ -38,7 +36,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     //         default:
     //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.infantry';
     //             SquadComponents[i].i_SquadType.Hint = "Infantry Squad";
-    //             SquadComponents[i].l_SquadTypeName.Caption = "Infantry";
     //             break;
     //     }
     // }
@@ -67,66 +64,66 @@ function InternalOnHide()
 defaultproperties
 {
     Begin Object Class=DHGUISquadComponent Name=SquadComponent0
-        WinWidth=0.25
-        WinHeight=0.5
+        WinWidth=1.0
+        WinHeight=0.12
         WinLeft=0.0
         WinTop=0.0
     End Object
     SquadComponents(0)=SquadComponent0
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent1
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.25
-        WinTop=0.0
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.14
     End Object
     SquadComponents(1)=SquadComponent1
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent2
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.5
-        WinTop=0.0
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.28
     End Object
     SquadComponents(2)=SquadComponent2
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent3
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.75
-        WinTop=0.0
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.42
     End Object
     SquadComponents(3)=SquadComponent3
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent4
-        WinWidth=0.25
-        WinHeight=0.5
+        WinWidth=1.0
+        WinHeight=0.12
         WinLeft=0.0
         WinTop=0.5
     End Object
     SquadComponents(4)=SquadComponent4
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent5
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.25
-        WinTop=0.5
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.56
     End Object
     SquadComponents(5)=SquadComponent5
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent6
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.5
-        WinTop=0.5
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.70
     End Object
     SquadComponents(6)=SquadComponent6
 
     Begin Object Class=DHGUISquadComponent Name=SquadComponent7
-        WinWidth=0.25
-        WinHeight=0.5
-        WinLeft=0.75
-        WinTop=0.5
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.84
     End Object
     SquadComponents(7)=SquadComponent7
 

@@ -24,7 +24,6 @@ var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   GUIImage            i_NoRallyPoints;
 var automated   GUIImage            i_SquadType;
-var automated   GUILabel            l_SquadTypeName;
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
@@ -182,6 +181,7 @@ defaultproperties
         WinLeft=0.78
         WinTop=0.89
         OnClick=OnClick
+        bVisible=false
     End Object
     b_LockSquad=LockSquadButton
 
@@ -198,6 +198,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
         RenderWeight=10.0
+        bVisible=false
     End Object
     i_LockSquad=LockSquadImage
 
@@ -206,8 +207,8 @@ defaultproperties
 
     Begin Object class=GUIImage Name=NoRallyPointsImage
         WinWidth=0.15
-        WinHeight=0.075
-        WinLeft=0.76
+        WinHeight=1.0
+        WinLeft=0.0
         WinTop=0.05
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)
@@ -228,10 +229,11 @@ defaultproperties
     End Object
 
     Begin Object class=GUIImage Name=SquadTypeImage
-        WinWidth=0.15
-        WinHeight=0.075
-        WinLeft=0.1
-        WinTop=0.89
+        WinWidth=0.10
+        // WinHeight=0.075
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=192,G=192,B=192,A=200)
         ImageRenderStyle=MSTY_Alpha
@@ -247,20 +249,6 @@ defaultproperties
     End Object
     i_SquadType=SquadTypeImage
 
-
-    Begin Object Class=GUILabel Name=SquadTypeNameLabel
-        WinHeight=0.1
-        WinWidth=1.0
-        WinTop=0.88
-        WinLeft=0.00
-        TextAlign=TXTA_Center
-        VertAlign=TXTA_Center
-        TextColor=(R=192,G=192,B=192,A=255)
-        TextFont="DHMenuFont"
-    End Object
-    l_SquadTypeName=SquadTypeNameLabel
- 
-
     Begin Object class=GUIImage Name=BackgroundImage
         WinWidth=1.0
         WinHeight=1.0
@@ -272,6 +260,7 @@ defaultproperties
         ImageStyle=ISTY_Stretched
         bBoundToParent=true
         bScaleToParent=true
+        bVisible=false
     End Object
     i_Background=BackgroundImage
 
@@ -289,10 +278,10 @@ defaultproperties
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none
-        WinWidth=0.8
-        WinHeight=0.7
-        WinLeft=0.1
-        WinTop=0.15
+        WinWidth=0.0
+        WinHeight=0.0
+        WinLeft=0.0
+        WinTop=0.0
         bVisible=false
         ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
     End Object
@@ -301,11 +290,11 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=CreateSquadButtonInfantry
         CaptionAlign=TXTA_Left
         StyleName="DHSmallTextButtonStyle"
-        Caption="Inf"
+        Caption="Join2"
         WinWidth=0.25
         WinHeight=1.0
-        WinLeft=0.0
-        WinTop=0.5
+        WinLeft=0.75
+        WinTop=0.0
         OnClick=OnClick
     End Object
     b_CreateSquadInfantry=CreateSquadButtonInfantry
@@ -317,8 +306,9 @@ defaultproperties
         WinWidth=0.25
         WinHeight=1.0
         WinLeft=0.3
-        WinTop=0.5
+        WinTop=0.0
         OnClick=OnClick
+        bVisible=false
     End Object
     b_CreateSquadArmored=CreateSquadButtonArmored
 
@@ -329,17 +319,18 @@ defaultproperties
         WinWidth=0.25
         WinHeight=1.0
         WinLeft=0.75
-        WinTop=0.5
+        WinTop=0.0
         OnClick=OnClick
+        bVisible=false
     End Object
     b_CreateSquadLogistics=CreateSquadButtonLogistics
 
     Begin Object Class=GUILabel Name=SquadNameLabel
-        WinHeight=0.1
-        WinWidth=1.0
+        WinWidth=0.65
+        WinHeight=1.0
         WinTop=0.05
-        WinLeft=0.00
-        TextAlign=TXTA_Center
+        WinLeft=0.1
+        TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
         TextFont="DHMenuFont"
@@ -351,37 +342,38 @@ defaultproperties
         CaptionAlign=TXTA_Center
         StyleName="DHLargeEditBox"
         WinTop=0.0
-        WinLeft=0.2
-        WinHeight=0.15
-        WinWidth=0.6
+        WinLeft=0.1
+        WinHeight=1.0
+        WinWidth=0.65
         TabOrder=0
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
         OnEnter=OnSquadNameEditBoxEnter
         MaxWidth=20
+        bVisible=false
     End Object
     eb_SquadName=SquadNameEditBox
 
     Begin Object Class=DHGUIButton Name=LeaveSquadButton
-        Caption="Leave Squad"
+        Caption="Leave"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.15
-        WinLeft=0.0
-        WinTop=0.75
+        WinWidth=0.25
+        WinHeight=1.0
+        WinLeft=0.75
+        WinTop=0.0
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
 
     Begin Object Class=DHGUIButton Name=JoinSquadButton
-        Caption="Join Squad"
+        Caption="Join"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.15
-        WinLeft=0.0
-        WinTop=0.75
+        WinWidth=0.25
+        WinHeight=1.0
+        WinLeft=0.75
+        WinTop=0.0
         OnClick=OnClick
     End Object
     b_JoinSquad=JoinSquadButton
