@@ -232,7 +232,7 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
 
     for (i = 0; i < RestrictedConstructions.Length; ++i)
     {
-        if (RestrictedConstructions[i] == ConstructionClass)
+        if (ClassIsChildOf(ConstructionClass, RestrictedConstructions[i]))
         {
             return true;
         }
