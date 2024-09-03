@@ -2303,18 +2303,16 @@ function UpdateArtilleryAvailability()
     }
 
     // Build context struct
-    Context.LevelInfo = DH_LevelInfo(LevelInfo);
+    Context.LevelInfo = DHLevelInfo;
 
-    // TODO: This won't actually work because some nations don't have an artillery piece in their constructions.
     // Check if artillery constructions are enabled (on-map artillery)
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    for (i = 0; i < Context.LevelInfo.ConstructionsEvaluated.Length; ++i)
     {
-        Construction = class<DHConstruction_Vehicle>(GRI.ConstructionClasses[i]);
+        Construction = class<DHConstruction_Vehicle>(Context.LevelInfo.ConstructionsEvaluated[i].ConstructionClass);
 
         if (GRI.bAreConstructionsEnabled
           && Construction != none
-          && Construction.static.IsArtillery()
-          && !DHLevelInfo.IsConstructionRestricted(Construction))
+          && Construction.static.IsArtillery())
         {
             Context.TeamIndex = AXIS_TEAM_INDEX;
             VehicleClass = Construction.static.GetVehicleClass(Context);
@@ -2595,12 +2593,7 @@ state RoundInPlay
         }
 
         // Team constructions
-        for (i = 0; i < DHLevelInfo.Constructions.Length; ++i)
-        {
-            GRI.Constructions[i].ConstructionClass = DHLevelInfo.Constructions[i].ConstructionClass;
-            GRI.Constructions[i].Remaining = DHLevelInfo.Constructions[i].Limit;
-            GRI.Constructions[i].NextIncrementTimeSeconds = -1;
-        }
+        GRI.ResetConstructionRuntimeInfo();
 
         for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
         {

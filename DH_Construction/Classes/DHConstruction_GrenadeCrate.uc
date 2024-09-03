@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO: Just create construction classes for each nation and use them in the
+// loadout classes.
+//==============================================================================
 
 class DHConstruction_GrenadeCrate extends DHConstruction_InventorySpawner;
 

@@ -11,7 +11,7 @@ const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
 const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
-const CONSTRUCTION_CLASSES_MAX = 32;
+const CONSTRUCTION_CLASSES_MAX = 63;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
 const MAP_MARKERS_MAX = 20;
@@ -139,18 +139,14 @@ var bool                bRoundIsOver;
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
 
-var private array<string>   ConstructionClassNames;
-var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
-var DHConstructionManager   ConstructionManager;
-
-struct SConstruction
+// Holds the runtime status of the construction classes.
+struct ConstructionInfo
 {
-    var class<DHConstruction> ConstructionClass;
     var byte Remaining;
-    var int NextIncrementTimeSeconds;
 };
 
-var SConstruction       Constructions[16];
+var ConstructionInfo        Constructions[CONSTRUCTION_CLASSES_MAX];
+var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
@@ -280,7 +276,7 @@ replication
         TeamScores;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
+        AxisNationID, AlliedNationID, MapMarkerClasses;
 }
 
 simulated event PreBeginPlay()
@@ -300,6 +296,7 @@ simulated function PostBeginPlay()
     local int                           i, j;
     local DH_LevelInfo                  LI;
     local class<DHMapMarker>            MapMarkerClass;
+    local class<DHConstructionLoadout>  ConstructionLoadoutClass;
 
     super.PostBeginPlay();
 
@@ -323,25 +320,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < ConstructionClassNames.Length; ++i)
-        {
-            if (ConstructionClassNames[i] != "")
-            {
-                AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
-            }
-        }
-
-        LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-        if (LI != none)
-        {
-            for (i = 0; i < LI.Constructions.Length; ++i)
-            {
-                AddConstructionClass(LI.Constructions[i].ConstructionClass);
-            }
-
-            bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
-        }
+        ResetConstructionRuntimeInfo();
 
         // Add usable map markers to the class list to be replicated!
         j = 0;
@@ -358,34 +337,79 @@ simulated function PostBeginPlay()
     RegisterNoArtyVolumes();
 }
 
-simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+// TODO: All this construction stuff in here is a disaster. Move it to a separate class.
+function ResetConstructionRuntimeInfo()
 {
     local int i;
+    local DH_LevelInfo LI;
+    
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-    for (i = 0; i < arraycount(Constructions); ++i)
+    if (LI != none)
     {
-        if (Constructions[i].ConstructionClass != none &&
-            Constructions[i].ConstructionClass == ConstructionClass)
+        for (i = 0; i < LI.ConstructionsEvaluated.Length; ++i)
         {
-            return i;
+            Constructions[i].Remaining = LI.ConstructionsEvaluated[i].Limit;
         }
-    }
 
-    return -1;
+        bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
+    }
 }
 
+simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local DH_LevelInfo LevelInfo;
+
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LevelInfo == none)
+    {
+        return -1;
+    }
+
+    return LevelInfo.GetConstructionIndex(TeamIndex, ConstructionClass);
+}
+
+// Returns whether a team has any construction remaining of a certain class.
+simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    // TODO: check if this is an unlimited construction
+    local int ConstructionIndex;
+    local DH_LevelInfo LevelInfo;
+
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    ConstructionIndex = LevelInfo.GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex == -1)
+    {
+        return false;
+    }
+
+    return LevelInfo.ConstructionsEvaluated[ConstructionIndex].Limit == -1 || Constructions[ConstructionIndex].Remaining > 0;
+}
+
+// Returns the remaining construction count for a team of a certain class, or -1 if the class construction is unlimited.
+// Also returns -1 if the team has no construction of that class.
 simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
-    local int i;
+    local int ConstructionIndex;
+    local DH_LevelInfo LI;
 
-    i = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    ConstructionIndex = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
 
-    if (i == -1)
+    if (ConstructionIndex == -1)
     {
        return -1;
     }
 
-    return Constructions[i].Remaining;
+    if (LI.ConstructionsEvaluated[ConstructionIndex].Limit == -1)
+    {
+        return -1;
+    }
+
+    return Constructions[ConstructionIndex].Remaining;
 }
 
 simulated function PostNetBeginPlay()
@@ -677,25 +701,6 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     }
 
     return Node;
-}
-
-function int AddConstructionClass(class<DHConstruction> ConstructionClass)
-{
-    local int i;
-
-    if (ConstructionClass != none)
-    {
-        for (i = 0; i < arraycount(ConstructionClasses); ++i)
-        {
-            if (ConstructionClasses[i] == none)
-            {
-                ConstructionClasses[i] = ConstructionClass;
-                return i;
-            }
-        }
-    }
-
-    return -1;
 }
 
 // Modified for net client to check whether local local player has his weapons locked & it's now time to unlock them
@@ -2390,36 +2395,6 @@ defaultproperties
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     RoundWinnerTeamIndex=255
-
-    // Constructions
-
-    // Logistics
-    ConstructionClassNames(0)="DH_Construction.DHConstruction_SupplyCache"
-    ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
-    ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
-    ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
-
-    // Obstacles
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
-
-    // Defenses
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(8)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(9)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_GrenadeCrate"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_AntiTankCrate"
-
-    // Artillery
-    // TODO: the individual gun classes are to be added from the data in the level
-
-    // Mortars
-    ConstructionClassNames(15)="DH_Guns.DH_Model35MortarConstruction"
-    ConstructionClassNames(16)="DH_Guns.DH_M1MortarConstruction"
-    ConstructionClassNames(17)="DH_Guns.DH_BM36MortarConstruction"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

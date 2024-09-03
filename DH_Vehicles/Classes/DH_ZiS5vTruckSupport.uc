@@ -20,6 +20,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.77
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="Construction_supply"
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
     ResupplyAttachmentBone="Ammo_resupply"
     VehHitpoints(5)=(PointRadius=40.0,PointBone="Ammo_resupply",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried

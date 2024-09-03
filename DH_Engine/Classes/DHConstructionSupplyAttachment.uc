@@ -137,30 +137,9 @@ simulated function float GetSupplyCount()
     return SupplyCount;
 }
 
-static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
-{
-    local DH_LevelInfo LI;
-
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (LI != none)
-    {
-        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheClass.default.StaticMesh;
-    }
-
-    return none;
-}
-
-function UpdateAppearance()
-{
-    SetStaticMesh(GetStaticMesh(Level, TeamIndex));
-    NetUpdateTime = Level.TimeSeconds - 1.0;
-}
-
 function SetSupplyCount(float Amount)
 {
     SupplyCount = FClamp(Amount, 0.0, float(SupplyCountMax));
-    UpdateAppearance();
     OnSupplyCountChanged(self);
 }
 
@@ -361,7 +340,6 @@ simulated function int GetTeamIndex()
 function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
-    UpdateAppearance();
 
     if (MapIconAttachment != none)
     {
