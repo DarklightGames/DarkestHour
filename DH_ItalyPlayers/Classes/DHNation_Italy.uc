@@ -10,10 +10,9 @@ defaultproperties
     NationName="Kingdom of Italy"
     NativeNationName="Regno d'Italia"
     VoicePackClass=class'DH_ItalyPlayers.DHItalyVoice'
-    SupplyCacheClass=class'DHConstruction_SupplyCache_Italy'
     InfantryResupplyClass=class'DHConstruction_Resupply_Players_Italy'
     
-    PlatoonHQClass=class'DHConstruction_PlatoonHQ_Italy'
+    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Italy'
     GrenadeCrateClass=class'DH_Weapons.DH_SRCMMod35GrenadeSpawner'
 
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'

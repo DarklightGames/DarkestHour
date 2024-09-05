@@ -157,8 +157,9 @@ var     float                       ShadowZOffset;           // vertical positio
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
-var     vector                                  SupplyAttachmentOffset;
-var     rotator                                 SupplyAttachmentRotation;
+var     Vector                                  SupplyAttachmentOffset;
+var     Rotator                                 SupplyAttachmentRotation;
+var     StaticMesh                              SupplyAttachmentStaticMesh;
 var     int                                     SupplyDropInterval;        // the amount of seconds that must elapse between supply drops
 var     int                                     SupplyDropCountMax;         // How many supplies this vehicle can drop at a time.
 var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
@@ -167,11 +168,9 @@ var     int                                     TouchingSupplyCount;       // su
 var     float                                   ResupplyInterval;
 var     int                                     LastResupplyTimestamp;
 
-var     sound                                   SupplyDropSound;
+var     Sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
 var     float                                   SupplyDropSoundVolume;
-
-var     int                                     SupplyCost;             // The amout of supplies it takes to create a vehicle of this type.
 
 // Construction
 var     vector                                  ConstructionPlacementOffset;
@@ -2952,6 +2951,7 @@ simulated function SpawnVehicleAttachments()
             if (SupplyAttachment != none)
             {
                 SupplyAttachment.SetTeamIndex(VehicleTeam);
+                SupplyAttachment.SetStaticMesh(SupplyAttachmentStaticMesh);
                 SupplyAttachment.SetInitialSupply();
             }
         }

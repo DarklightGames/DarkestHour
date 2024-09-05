@@ -22,6 +22,7 @@ defaultproperties
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
     SupplyAttachmentOffset=(X=-38.7437,Y=0.0,Z=62.7177)
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.ITA_Supply_cache_full'
     ResupplyAttachmentBone="body"   // TODO: set these up
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters

@@ -23,7 +23,7 @@ enum EConstructionErrorType
     ERROR_NearSpawnPoint,           // Cannot be so close to a spawn point (or location hint)
     ERROR_Indoors,                  // Cannot be placed indoors
     ERROR_InObjective,              // Cannot be placed inside an objective area
-    ERROR_TeamLimit,                // Limit reached for this type of construction
+    ERROR_MaxActive,                // Max active limit reached
     ERROR_NoSupplies,               // Not within range of any supply caches
     ERROR_InsufficientSupply,       // Not enough supplies to build this construction
     ERROR_BadSurface,               // Cannot construct on this surface type
@@ -64,7 +64,6 @@ var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience on
 var bool bIsNeutral;            // If true, this construction is neutral (can be built by either team)
 var private int OldTeamIndex;   // Used by the client to fire off an event when the team index changes.
 var private int TeamIndex;
-var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
 // Manager
 var     DHConstructionManager       Manager;
@@ -381,11 +380,11 @@ simulated function DestroyConstructionSockets()
 }
 
 // Called when this construction is spawned by a player
-function OnSpawnedByPlayer()
+function OnSpawnedByPlayer(DHPlayer PC)
 {
     local DHGameReplicationInfo GRI;
     local DH_LevelInfo LI;
-    local int i;
+    local int ConstructionIndex;
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -395,19 +394,11 @@ function OnSpawnedByPlayer()
         return;
     }
 
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
-    {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
-        {
-            break;
-        }
+    ConstructionIndex = GRI.GetTeamConstructionIndex(PC.GetTeamNum(), Class);
 
-        if (GRI.TeamConstructions[i].ConstructionClass == Class &&
-            GRI.TeamConstructions[i].TeamIndex == GetTeamIndex())
-        {
-            GRI.TeamConstructions[i].Remaining = Max(0, GRI.TeamConstructions[i].Remaining - 1);
-            break;
-        }
+    if (ConstructionIndex != -1 && LI.GetConstructionMaxActive(PC.GetTeamNum(), Class) != -1)
+    {
+        GRI.Constructions[ConstructionIndex].Remaining = Max(0, GRI.Constructions[ConstructionIndex].Remaining - 1);
     }
 }
 
@@ -554,7 +545,7 @@ function TearDown(int InstigatorTeamIndex)
 {
     local DHGameReplicationInfo GRI;
     local DH_LevelInfo LI;
-    local int i;
+    local int i, ConstructionIndex;
 
     if (bShouldRefundSuppliesOnTearDown)
     {
@@ -570,18 +561,14 @@ function TearDown(int InstigatorTeamIndex)
         return;
     }
 
-    for (i = 0; i < arraycount(GRI.TeamConstructions); ++i)
-    {
-        if (GRI.TeamConstructions[i].ConstructionClass == none)
-        {
-            break;
-        }
+    // TODO: redundant lookups happening here.
+    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
 
-        if (GRI.TeamConstructions[i].TeamIndex == TeamIndex &&
-            GRI.TeamConstructions[i].ConstructionClass == Class)
+    if (!LI.IsConstructionUnlimited(InstigatorTeamIndex, Class))
+    {
+        if (ConstructionIndex != -1)
         {
-            GRI.TeamConstructions[i].Remaining = Min(LI.TeamConstructions[i].Limit, GRI.TeamConstructions[i].Remaining + 1);
-            break;
+            GRI.Constructions[ConstructionIndex].Remaining = Min(LI.ConstructionsEvaluated[ConstructionIndex].Limit, GRI.Constructions[ConstructionIndex].Remaining + 1);
         }
     }
 
@@ -1049,6 +1036,7 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     local DHSquadReplicationInfo SRI;
     local ConstructionError E;
     local DHGameReplicationInfo GRI;
+    local int MaxActive;
 
     if (Context.PlayerController == none)
     {
@@ -1084,10 +1072,12 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (default.TeamLimit > 0 && CM.CountOf(P.GetTeamNum(), default.Class) >= default.TeamLimit)
+    MaxActive = Context.LevelInfo.GetConstructionMaxActive(Context.TeamIndex, default.Class);
+
+    if (MaxActive >= 0 && CM.CountOf(P.GetTeamNum(), default.Class) >= MaxActive)
     {
-        E.Type = ERROR_TeamLimit;
-        E.OptionalInteger = default.TeamLimit;
+        E.Type = ERROR_MaxActive;
+        E.OptionalInteger = MaxActive;
         return E;
     }
 
@@ -1108,16 +1098,15 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (GRI.GetTeamConstructionRemaining(Context.TeamIndex, default.Class) == 0)
-    {
-        E.Type = ERROR_Exhausted;
-        E.OptionalInteger = GRI.GetTeamConstructionNextIncrementTimeSeconds(Context.TeamIndex, default.Class);
-        return E;
-    }
-
     if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
     {
         E.Type = ERROR_InsufficientSupply;
+        return E;
+    }
+
+    if (!GRI.HasTeamConstructionRemaining(P.GetTeamNum(), default.Class))
+    {
+        E.Type = ERROR_Exhausted;
         return E;
     }
 

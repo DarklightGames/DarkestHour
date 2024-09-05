@@ -20,7 +20,6 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     VehicleMass=11.0
-    SupplyCost=1600
     ConstructionPlacementOffset=(Z=12.0)
     bCanBeRotated=true
     PlayersNeededToRotate=2

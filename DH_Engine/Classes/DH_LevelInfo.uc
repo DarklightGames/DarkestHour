@@ -72,7 +72,6 @@ var(DH_GameSettings) bool                           bHardTeamRatio;             
 var(DH_GameSettings) class<DHGameType>              GameTypeClass;
 var(DH_GameSettings) ESpawnMode                     SpawnMode;
 
-var(DH_GameSettings) array<class<DHConstruction> >  RestrictedConstructions;
 var(DH_GameSettings) int                            InfantrySpawnVehicleDuration;
 var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
 
@@ -98,18 +97,35 @@ var() material              LoadingScreenRef;        // Used to stop loading scr
 
 var const bool              bDHDebugMode;            // flag for whether debug commands can be run
 
-struct STeamConstruction
+struct SConstruction
 {
-    var() class<DHConstruction> ConstructionClass;
-    var() int TeamIndex;
-    var() int Limit;
-    var() int ReplenishPeriodSeconds;   // How long it takes, in seconds, for the limit to be increased by one
+    var() byte TeamIndex;
+    var() class<DHConstruction> ConstructionClass;  // Construction class.
+    var() int Limit; // The total limit alotted per round. -1 means no limit.
+    var() int MaxActive; // The maximum amount active at a time. -1 means no limit.
 };
-var(DH_Constructions) array<STeamConstruction> TeamConstructions;
+
+// Leveler-defined constructions.
+var(DH_Constructions) array<class<DHConstruction> > RestrictedConstructions;
+// When set, use this construction loadout for the team. Otherwise, use the nation's default loadout.
+var(DH_Constructions) array<class<DHConstructionLoadout> > TeamConstructionLoadoutClasses[2];
+var(DH_Constructions) protected array<SConstruction> Constructions;
+
+// Evaluated construction loadouts.
+// The list is populated by the nation's default loadout classes and any level-specific overrides.
+// The construction list in the GRI maps to this list by index.
+var array<SConstruction> ConstructionsEvaluated;
 
 singular static function bool DHDebugMode()
 {
     return default.bDHDebugMode;
+}
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    EvaluateConstructions();
 }
 
 // This is a backwards compatibility method.
@@ -180,19 +196,133 @@ simulated function class<DHNation> GetTeamNationClass(int TeamIndex)
     return none;
 }
 
+simulated function bool IsConstructionUnlimited(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+
+    ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex != -1)
+    {
+        return ConstructionsEvaluated[ConstructionIndex].Limit == -1;
+    }
+
+    return false;
+}
+
+simulated function int GetConstructionIndex(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < ConstructionsEvaluated.Length; ++i)
+    {
+        if (ConstructionsEvaluated[i].TeamIndex == TeamIndex &&
+            ConstructionsEvaluated[i].ConstructionClass == ConstructionClass)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 simulated function bool IsConstructionRestricted(class<DHConstruction> ConstructionClass)
 {
     local int i;
 
     for (i = 0; i < RestrictedConstructions.Length; ++i)
     {
-        if (ConstructionClass == RestrictedConstructions[i])
+        if (ClassIsChildOf(ConstructionClass, RestrictedConstructions[i]))
         {
             return true;
         }
     }
 
     return false;
+}
+
+// Returns the maximum active limit for a team's construction class.
+simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+
+    ConstructionIndex = GetConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex != -1)
+    {
+        return ConstructionsEvaluated[ConstructionIndex].MaxActive;
+    }
+
+    return -1;
+}
+
+// This function evaluates the level's construction classes and populates the ConstructionsEvaluated list.
+simulated function bool EvaluateConstructions()
+{
+    local int i, TeamIndex, k, ConstructionIndex;
+    local class<DHNation> NationClass;
+    local class<DHConstructionLoadout> LoadoutClass;
+    local SConstruction Construction;
+
+    // Clear the evaluated constructions.
+    ConstructionsEvaluated.Length = 0;
+
+    // Add the nation's default construction classes.
+    for (TeamIndex = 0; TeamIndex < 2; ++TeamIndex)
+    {
+        if (TeamConstructionLoadoutClasses[TeamIndex] != none)
+        {
+            // Use the level's construction loadout for this team.
+            LoadoutClass = TeamConstructionLoadoutClasses[TeamIndex];
+        }
+        else
+        {
+            // No level-specific construction loadout, use the nation's default.
+            NationClass = GetTeamNationClass(TeamIndex);
+
+            if (NationClass == none)
+            {
+                Warn("Failed to get nation class for team index " $ TeamIndex);
+                continue;
+            }
+
+            LoadoutClass = NationClass.default.DefaultConstructionLoadoutClass;
+        }
+
+        if (LoadoutClass == none)
+        {
+            Warn("Failed to get default construction loadout class for nation " $ NationClass);
+            continue;
+        }
+
+        for (i = 0; i < LoadoutClass.default.Constructions.Length; ++i)
+        {
+            Construction.TeamIndex = TeamIndex;
+            Construction.ConstructionClass = LoadoutClass.default.Constructions[i].ConstructionClass;
+            Construction.Limit = LoadoutClass.default.Constructions[i].Limit;
+            Construction.MaxActive = LoadoutClass.default.Constructions[i].MaxActive;
+
+            ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+        }
+    }
+
+    // Now add or override any construction classes with the level's list.
+    for (i = 0; i < Constructions.Length; ++i)
+    {
+        Construction = Constructions[i];
+        ConstructionIndex = GetConstructionIndex(Construction.TeamIndex, Construction.ConstructionClass);
+
+        if (ConstructionIndex == -1)
+        {
+            // Add the construction, it doesn't yet exist.
+            ConstructionsEvaluated[ConstructionsEvaluated.Length] = Construction;
+        }
+        else
+        {
+            // Update the construction, it already exists.
+            ConstructionsEvaluated[ConstructionIndex] = Construction;
+        }
+    }
 }
 
 function bool IsArtilleryInitiallyAvailable(int ArtilleryTypeIndex)

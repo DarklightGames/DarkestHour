@@ -24,6 +24,7 @@ function Setup()
     local int i, j;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
+    local class<DHConstruction> ConstructionClass;
 
     PC = GetPlayerController();
     GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
@@ -42,16 +43,23 @@ function Setup()
     // For simplicity's sake, we'll map the static array to a dynamic array so
     // we can know how many classes we have to deal upfront and not have to deal
     // with handling null values during iteration.
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    for (i = 0; i < Context.LevelInfo.ConstructionsEvaluated.Length; ++i)
     {
-        if (GRI.ConstructionClasses[i] != none &&
-            GRI.ConstructionClasses[i].default.GroupClass == GroupClass &&
-            GRI.ConstructionClasses[i].static.ShouldShowOnMenu(Context))
+        if (Context.LevelInfo.ConstructionsEvaluated[i].TeamIndex != Context.TeamIndex)
+        {
+            continue;
+        }
+
+        ConstructionClass = Context.LevelInfo.ConstructionsEvaluated[i].ConstructionClass;
+
+        if (ConstructionClass != none &&
+            ConstructionClass.default.GroupClass == GroupClass &&
+            ConstructionClass.static.ShouldShowOnMenu(Context))
         {
             Options.Insert(j, 1);
-            Options[j].OptionalObject = GRI.ConstructionClasses[i];
-            Options[j].ActionText = GRI.ConstructionClasses[i].static.GetMenuName(Context);
-            Options[j].Material = GRI.ConstructionClasses[i].static.GetMenuIcon(Context);
+            Options[j].OptionalObject = ConstructionClass;
+            Options[j].ActionText = ConstructionClass.static.GetMenuName(Context);
+            Options[j].Material = ConstructionClass.static.GetMenuIcon(Context);
             Options[j].ActionIcon = SuppliesIcon;
             ++j;
         }
@@ -66,7 +74,6 @@ function OnSelect(int OptionIndex, Vector Location, optional Vector HitNormal)
     local DH_ConstructionWeapon CW;
     local class<DHWeapon> WeaponClass;
     local class<DHConstruction> ConstructionClass;
-    local DHConstructionProxy CP;
 
     P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
@@ -143,77 +150,79 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHPlayer PC;
     local int SquadMemberCount, Remaining;
     local DHGameReplicationInfo GRI;
+    local DH_LevelInfo LevelInfo;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
     ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
     PC = GetPlayerController();
 
-    if (ConstructionClass != none && PC != none)
+    if (ConstructionClass == none || PC == none)
     {
-        E = ConstructionClass.static.GetPlayerError(Context);
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        return;
+    }
 
-        ORI.OptionName = ConstructionClass.static.GetMenuName(Context);
+    E = ConstructionClass.static.GetPlayerError(Context);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-        if (E.Type != ERROR_None)
-        {
-            ORI.InfoColor = class'UColor'.default.Red;
-        }
-        else
-        {
-            ORI.InfoColor = class'UColor'.default.White;
-        }
+    ORI.OptionName = ConstructionClass.static.GetMenuName(Context);
 
-        switch (E.Type)
-        {
-            case ERROR_RestrictedType:
-            case ERROR_Fatal:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText[0] = default.NotAvailableText;
-                break;
-            case ERROR_PlayerBusy:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText[0] = default.BusyText;
-                break;
-            case ERROR_TeamLimit:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText[0] = default.TeamLimitText;
-                break;
-            case ERROR_Exhausted:
-                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
-                ORI.InfoText[0] = default.ExhaustedText;
-                if (E.OptionalInteger >= 0)
-                {
-                    ORI.InfoText[0] @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
-                }
-                break;
-            case ERROR_SquadTooSmall:
-                if (PC != none && PC.SquadReplicationInfo != none)
-                {
-                    SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
-                }
+    if (E.Type != ERROR_None)
+    {
+        ORI.InfoColor = class'UColor'.default.Red;
+    }
+    else
+    {
+        ORI.InfoColor = class'UColor'.default.White;
+    }
 
-                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-                ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
-                break;
-            default:
-                ORI.InfoIcon = SuppliesIcon;
-                ORI.InfoText[0] = string(ConstructionClass.static.GetSupplyCost(Context));
-                break;
-        }
-
-        ORI.DescriptionText = ConstructionClass.default.MenuDescription;
-
-        if (GRI != none && ORI.DescriptionText == "")
-        {
-            Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
-
-            // GetTeamConstructionRemaining returns -1 if it can't find anything
-            if (Remaining != -1)
+    switch (E.Type)
+    {
+        case ERROR_RestrictedType:
+        case ERROR_Fatal:
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText[0] = default.NotAvailableText;
+            break;
+        case ERROR_PlayerBusy:
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText[0] = default.BusyText;
+            break;
+        case ERROR_MaxActive:
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText[0] = default.TeamLimitText;
+            break;
+        case ERROR_Exhausted:
+            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoText[0] = default.ExhaustedText;
+            if (E.OptionalInteger >= 0)
             {
-                ORI.DescriptionText = string(Remaining) @ default.RemainingText;
+                ORI.InfoText[0] @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
             }
+            break;
+        case ERROR_SquadTooSmall:
+            if (PC != none && PC.SquadReplicationInfo != none)
+            {
+                SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+            }
+
+            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
+            break;
+        default:
+            ORI.InfoIcon = SuppliesIcon;
+            ORI.InfoText[0] = string(ConstructionClass.static.GetSupplyCost(Context));
+            break;
+    }
+
+    ORI.DescriptionText = ConstructionClass.default.MenuDescription;
+
+    if (GRI != none && ORI.DescriptionText == "")
+    {
+        Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
+
+        if (Remaining != -1)
+        {
+            ORI.DescriptionText = Repl(default.RemainingText, "{0}", string(Remaining));
         }
     }
 }
@@ -232,7 +241,7 @@ defaultproperties
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
     ExhaustedText="Exhausted"
-    RemainingText="Remaining"
+    RemainingText="{0} Remaining"
     BusyText="Busy"
     SlotCountOverride=8
 }

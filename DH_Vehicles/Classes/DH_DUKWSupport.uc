@@ -10,6 +10,7 @@ defaultproperties
     VehicleNameString="DUKW (Support)"
 
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full'
     SupplyAttachmentBone="SUPPLY_ATTACHMENT"
 
     PassengerPawns(0)=(AttachBone="passenger_01",DriveAnim="dukw_passenger_01",DrivePos=(Z=58))
