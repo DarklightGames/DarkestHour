@@ -57,7 +57,7 @@ var     int         PreventTeamChangeForTK;      // Number of seconds a player c
 // Driver & driving
 var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
-var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
+var()   name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
@@ -175,6 +175,13 @@ var     float                                   SupplyDropSoundVolume;
 // Construction
 var     vector                                  ConstructionPlacementOffset;
 var     Mesh                                    ConstructionBaseMesh;
+
+// Radio Attachment
+var()   class<DHRadio>                          RadioAttachmentClass;
+var()   name                                    RadioAttachmentBone;
+var()   float                                   RadioAttachmentRadius;
+var()   float                                   RadioAttachmentHeight;
+var     DHRadio                                 RadioAttachment;
 
 // Spawning
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
@@ -2972,6 +2979,20 @@ simulated function SpawnVehicleAttachments()
             }
         }
 
+        if (RadioAttachmentClass != none && RadioAttachment == none)
+        {
+            RadioAttachment = Spawn(RadioAttachmentClass, self);
+            RadioAttachment.TeamIndex = VehicleTeam;
+            RadioAttachment.SetCollisionSize(RadioAttachmentRadius, RadioAttachmentHeight);
+
+            if (RadioAttachment != none)
+            {
+                AttachToBone(RadioAttachment, RadioAttachmentBone);
+                RadioAttachment.SetBase(self);
+                RadioAttachment.SetRelativeLocation(vect(0, 0, 0));
+            }
+        }
+
         // If vehicle has possible random decorative attachments, select which one (if any at all, depending on specified chances)
         if (RandomAttachOptions.Length > 0 && RandomAttachmentIndex >= RandomAttachOptions.Length)
         {
@@ -3436,6 +3457,11 @@ simulated function DestroyAttachments()
         {
             CollisionAttachments[i].Actor.Destroy();
         }
+    }
+
+    if (RadioAttachment != none)
+    {
+        RadioAttachment.Destroy();
     }
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -4452,4 +4478,8 @@ defaultproperties
     BuzzSound=Sound'DHMenuSounds.BuzzBuzz'
 
     PeriscopePositionIndex=-1
+
+    // Radio Attachment
+    RadioAttachmentRadius=10.0
+    RadioAttachmentHeight=10.0
 }
