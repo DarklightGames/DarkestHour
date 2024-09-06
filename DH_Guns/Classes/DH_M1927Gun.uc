@@ -34,7 +34,6 @@ defaultproperties
     ExitPositions(1)=(X=-75.00,Y=-35.00,Z=50.00)
     ExitPositions(2)=(X=-75.00,Y=35.00,Z=50.00)
     VehicleMass=11.0
-    SupplyCost=1500
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
     ShadowZOffset=20.0

@@ -15,10 +15,10 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
-var class<DHConstruction>       PlatoonHQClass;
-var class<DHConstruction>       SupplyCacheClass;
-var class<DHInventorySpawner>   GrenadeCrateClass;
 var class<DHConstruction>       InfantryResupplyClass;
+var class<DHInventorySpawner>   GrenadeCrateClass;
+
+var class<DHConstructionLoadout>    DefaultConstructionLoadoutClass;
 
 // TODO: move these to classes as well.
 // Rally Point

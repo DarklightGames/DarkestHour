@@ -20,6 +20,7 @@ defaultproperties
     SupplyAttachmentBone="body"
     SupplyAttachmentRotation=(Yaw=-16384)
     SupplyAttachmentOffset=(X=0.0,Y=55.0,Z=-10.0)
+    SupplyAttachmentStaticMesh=StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full'
     ResupplyAttachmentBone="supply"
     VehHitpoints(5)=(PointRadius=40.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried

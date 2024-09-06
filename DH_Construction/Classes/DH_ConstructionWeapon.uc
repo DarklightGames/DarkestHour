@@ -275,7 +275,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         }
 
         C.UpdateAppearance();
-        C.OnSpawnedByPlayer();
+        C.OnSpawnedByPlayer(C.InstigatorController);
     }
 }
 

@@ -13,8 +13,7 @@ defaultproperties
     InfantryResupplyClass=class'DHConstruction_Resupply_Players_Germany'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established'
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.Backpacks.GER_backpack'
-    PlatoonHQClass=class'DHConstruction_PlatoonHQ_Germany'
-    SupplyCacheClass=class'DHConstruction_SupplyCache_Germany'
+    DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Germany'
     DeployMenuFlagTexture=Material'DH_GUI_tex.DeployMenu.flag_germany'
     GrenadeCrateClass=class'DH_Weapons.DH_StielGranateSpawner'
     MapFlagIconSpriteWidget=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

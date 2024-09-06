@@ -15,11 +15,6 @@ var() int BonusSupplyGenerationRate;
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
 
-static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
-{
-    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.SupplyCacheClass;
-}
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -108,7 +103,7 @@ simulated function OnTeamIndexChanged()
 
 static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
-    return default.SupplyAttachmentClass.static.GetStaticMesh(Context.LevelInfo.Level, Context.TeamIndex);
+    return default.StaticMesh;
 }
 
 function StaticMesh GetStageStaticMesh(int StageIndex)

@@ -20,7 +20,6 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)
     VehicleMass=11.0
-    SupplyCost=1050
     ConstructionPlacementOffset=(Z=10.0)
     bCanBeRotated=true
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'

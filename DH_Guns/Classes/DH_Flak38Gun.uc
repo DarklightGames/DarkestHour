@@ -16,7 +16,6 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
     ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
-    SupplyCost=1050
     MapIconAttachmentClass=class'DHMapIconAttachment_ATGun_StaticAA'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

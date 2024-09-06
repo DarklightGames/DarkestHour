@@ -21,11 +21,6 @@ var class<DHRadioHQAttachment> RadioClass;
 var Vector                     RadioLocationOffset;
 var Rotator                    RadioRotationOffset;
 
-static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context Context)
-{
-    return Context.LevelInfo.GetTeamNationClass(Context.TeamIndex).default.PlatoonHQClass;
-}
-
 simulated state Dummy
 {
     simulated function BeginState()
