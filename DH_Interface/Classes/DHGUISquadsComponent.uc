@@ -75,7 +75,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.14
+        WinTop=0.12
     End Object
     SquadComponents(1)=SquadComponent1
 
@@ -83,7 +83,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.28
+        WinTop=0.24
     End Object
     SquadComponents(2)=SquadComponent2
 
@@ -91,7 +91,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.42
+        WinTop=0.36
     End Object
     SquadComponents(3)=SquadComponent3
 
@@ -99,7 +99,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.5
+        WinTop=0.48
     End Object
     SquadComponents(4)=SquadComponent4
 
@@ -107,7 +107,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.56
+        WinTop=0.60
     End Object
     SquadComponents(5)=SquadComponent5
 
@@ -115,7 +115,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
-        WinTop=0.70
+        WinTop=0.72
     End Object
     SquadComponents(6)=SquadComponent6
 

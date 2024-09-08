@@ -17,7 +17,7 @@ enum EMapMode
     MODE_Squads
 };
 
-const SQUAD_INDEX_LOGI = 6;
+var bool bIsEditingName;
 
 var automated   FloatingImage               i_Background;
 var automated   ROGUIProportionalContainer  c_Teams;
@@ -59,6 +59,8 @@ var automated   DHGUISquadsComponent                p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUILabel                    l_SquadName;
+var automated   DHGUIEditBox                eb_SquadName;
+var automated   GUIImage                    i_SquadType;
 var automated   GUIImage                        i_PrimaryWeapon;
 var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
@@ -1650,8 +1652,22 @@ function SetMapMode(EMapMode Mode)
             b_SquadsButton.EnableMe();
             // c_Map.SetVisibility(true);
             c_Squads.SetVisibility(false);
-            c_Roles.SetVisibility(true);
             p_Squads.DisableMe();
+
+            c_Roles.SetVisibility(true);
+            c_Roles.EnableMe();
+
+            c_Loadout.SetVisibility(true);
+            LoadoutTabContainer.SetVisibility(true);
+
+            //Dz look!
+            // c_Equipment.SetVisibility(true);
+            // c_Equipment.EnableMe();
+
+            // c_Vehicle.SetVisibility(true);
+            // c_Vehicle.EnableMe();
+
+
             UpdateSpawnPoints();
             break;
 
@@ -1659,9 +1675,22 @@ function SetMapMode(EMapMode Mode)
             b_MapButton.EnableMe();
             b_SquadsButton.DisableMe();
             // c_Map.SetVisibility(false);
+            c_Loadout.SetVisibility(false);
+            LoadoutTabContainer.SetVisibility(false);
+          
             c_Squads.SetVisibility(true);
+            
             c_Roles.SetVisibility(false);
+            c_Roles.DisableMe();
+            
             p_Squads.EnableMe();
+
+            // c_Equipment.SetVisibility(false);
+            // c_Equipment.DisableMe();
+
+            // c_Vehicle.DisableMe();
+            // c_Vehicle.SetVisibility(false);
+
             break;
 
         default:
@@ -1688,6 +1717,44 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
     }
 
     return super.OnKeyEvent(Key, State, Delta);
+}
+
+function OnSquadNameEditBoxActivate()
+{
+    eb_SquadName.TextStr = l_SquadName.Caption;
+    eb_SquadName.InternalActivate();
+
+    l_SquadName.SetVisibility(false);
+
+    bIsEditingName = true;
+}
+
+function OnSquadNameEditBoxDeactivate()
+{
+    eb_SquadName.TextStr = "";
+    eb_SquadName.InternalDeactivate();
+
+    l_SquadName.SetVisibility(true);
+
+    FocusFirst(none);
+
+    bIsEditingName = false;
+}
+
+function OnSquadNameEditBoxEnter()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none)
+    {
+        l_SquadName.Caption = eb_SquadName.TextStr;
+
+        PC.ServerSquadRename(eb_SquadName.TextStr);
+    }
+
+    OnSquadNameEditBoxDeactivate();
 }
 
 function UpdateSquads()
@@ -1756,8 +1823,25 @@ function UpdateSquads()
     for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
         p_Squads.SquadComponents[i].SquadIndex = i; //Need to set it so create squad button links correctly
+        bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+        
+        p_Squads.SquadComponents[i].l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
+
+        if (bIsInSquad)
+        {
+            p_Squads.SquadComponents[i].WinTop = 0.0;
+            p_Squads.SquadComponents[i].WinHeight = 0.4;
+        }
+        else
+        {
+            p_Squads.SquadComponents[i].WinTop = 0.4 + i * 0.05;
+            p_Squads.SquadComponents[i].WinHeight = 0.05;
+            SetVisible(p_Squads.SquadComponents[i].l_SquadName, true);
+        }
+
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
+            p_Squads.SquadComponents[i].WinHeight = 0.05;
             continue;
         }
 
@@ -1765,18 +1849,24 @@ function UpdateSquads()
 
         SetVisible(C, true);
 
-        bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
         bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
         bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
         bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
         bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
 
         // SetVisible(C.lb_Members, true);
-        SetVisible(C.lb_Members, false);
-        // SetVisible(C.li_Members, true);
-        SetVisible(C.li_Members, false);
-        SetVisible(C.l_SquadName, !C.bIsEditingName);
-        SetVisible(C.eb_SquadName, bIsSquadLeader);
+     
+
+        SetVisible(C.lb_Members, bIsInSquad);
+        SetVisible(C.li_Members, bIsInSquad);
+        
+        // SetVisible(C.l_SquadName, !C.bIsEditingName);
+        // SetVisible(C.eb_SquadName, bIsSquadLeader);
+
+        SetVisible(C.l_SquadName, bIsInSquad);
+        SetVisible(eb_SquadName, bIsSquadLeader);
+
+
         SetVisible(C.b_CreateSquadInfantry, false);
         SetVisible(C.b_CreateSquadArmored, false);
         SetVisible(C.b_CreateSquadLogistics, false);
@@ -1785,7 +1875,7 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
-        SetVisible(C.i_NoRallyPoints, i != SQUAD_INDEX_LOGI && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
+        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
         
         //TODO: Fix this so it's not the player squad type
         C.i_SquadType.Image = SRI.SquadType.default.Image;
@@ -1883,56 +1973,20 @@ function UpdateSquads()
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
-        SetVisible(C.eb_SquadName, false);
         SetVisible(C.i_NoRallyPoints, false);
     }
 
     while (j < p_Squads.SquadComponents.Length - 1)
     {
-        // if (j == SQUAD_INDEX_LOGI)
-        // {
-        //     CLogi = p_Squads.SquadComponents[j];
-        //     SetVisible(CLogi, true);
-        //     SetVisible(CLogi.l_SquadName, true);
-        //     SetVisible(CLogi.b_LockSquad, false);
-        //     SetVisible(CLogi.i_LockSquad, false);
-        //     SetVisible(CLogi.i_NoRallyPoints, false);
+        // SetVisible(p_Squads.SquadComponents[j], false);
+        SetVisible(p_Squads.SquadComponents[j].i_SquadType, true);
+        SetVisible(p_Squads.SquadComponents[j].lb_Members, false);
+        SetVisible(p_Squads.SquadComponents[j].b_JoinSquad, false);
+        SetVisible(p_Squads.SquadComponents[j].b_LeaveSquad, false);
+        SetVisible(p_Squads.SquadComponents[j].b_LockSquad, false);
+        SetVisible(p_Squads.SquadComponents[j].i_LockSquad, false);
+        SetVisible(p_Squads.SquadComponents[j].i_NoRallyPoints, false);
 
-        //     if (SRI.IsSquadActive(TeamIndex, j))
-        //     {
-        //         // bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
-        //         // bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
-        //         // bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
-        //         // bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
-        //         // bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
-
-        //         SetVisible(CLogi.lb_Members, true);
-        //         SetVisible(CLogi.li_Members, true);
-        //         SetVisible(CLogi.l_SquadName, !CLogi.bIsEditingName);
-        //         SetVisible(CLogi.eb_SquadName, bIsSquadLeader);
-        //         SetVisible(C.b_CreateSquadInfantry, false);
-        //         SetVisible(C.b_CreateSquadArmored, false);
-        //         SetVisible(C.b_CreateSquadLogistics, false);
-        //         SetVisible(CLogi.b_JoinSquad, !bIsInSquad);
-        //         SetVisible(CLogi.b_LeaveSquad, bIsInSquad);
-        //     }
-        //     else
-        //     {
-        //         SetVisible(C.b_CreateSquadInfantry, !bIsInSquad);
-        //         SetVisible(C.b_CreateSquadArmored, !bIsInSquad);
-        //         SetVisible(C.b_CreateSquadLogistics, !bIsInSquad);
-        //         SetVisible(CLogi.l_SquadName, false);
-        //         SetVisible(CLogi.lb_Members, false);
-        //         SetVisible(CLogi.li_Members, false);
-        //         SetVisible(CLogi.b_JoinSquad, false);
-        //         SetVisible(CLogi.b_LeaveSquad, false);
-        //         SetVisible(CLogi.eb_SquadName, false);
-        //     }
-        // }
-        // else
-        // {
-        // }
-        SetVisible(p_Squads.SquadComponents[j], false);
         ++j;
     }
 
@@ -1950,19 +2004,20 @@ function UpdateSquads()
         C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
         C.SquadIndex = -1;
 
-        SetVisible(C, false);
-        // SetVisible(C.lb_Members, true);
-        // SetVisible(C.li_Members, true);
-        // SetVisible(C.l_SquadName, true);
-        // SetVisible(C.eb_SquadName, false);
-        // SetVisible(C.b_CreateSquadInfantry, false);
-        // SetVisible(C.b_CreateSquadArmored, false);
-        // SetVisible(C.b_CreateSquadLogistics, false);
-        // SetVisible(C.b_JoinSquad, false);
-        // SetVisible(C.b_LeaveSquad, false);
-        // SetVisible(C.b_LockSquad, false);
-        // SetVisible(C.i_LockSquad, false);
-        // SetVisible(C.i_NoRallyPoints, false);
+        C.WinHeight = 0.3;
+
+        SetVisible(C, true);
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, true);
+        SetVisible(C.b_CreateSquadInfantry, false);
+        SetVisible(C.b_CreateSquadArmored, false);
+        SetVisible(C.b_CreateSquadLogistics, false);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
+        SetVisible(C.i_NoRallyPoints, false);
 
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
@@ -2378,10 +2433,49 @@ defaultproperties
         WinWidth=0.5
         WinHeight=1.0
         WinTop=0.0
-        WinLeft=0.1
+        WinLeft=0.0
         TextFont="DHMenuFont"
     End Object
     l_SquadName=SquadNameLabelObject
+
+    Begin Object Class=DHGUIEditBox Name=SquadNameEditBox
+        Caption=""
+        CaptionAlign=TXTA_Center
+        StyleName="DHLargeEditBox"
+        WinTop=0.05
+        WinLeft=0.1
+        WinHeight=0.1
+        WinWidth=0.65
+        TabOrder=0
+        OnActivate=OnSquadNameEditBoxActivate
+        OnDeactivate=OnSquadNameEditBoxDeactivate
+        OnEnter=OnSquadNameEditBoxEnter
+        MaxWidth=20
+        bVisible=false
+    End Object
+    eb_SquadName=SquadNameEditBox
+
+    Begin Object class=GUIImage Name=SquadTypeImage
+        WinWidth=0.10
+        // WinHeight=0.075
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.05
+        Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
+        ImageColor=(R=192,G=192,B=192,A=200)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+        bBoundToParent=true
+        bScaleToParent=true
+        bVisible=false
+        RenderWeight=10.0
+        bAcceptsInput=true
+        ToolTip=SquadTypeImageTooltip
+        Hint="Infantry, Vehicle or Supply Squad."
+    End Object
+    i_SquadType=SquadTypeImage
+
     //DZ End
 
     Begin Object Class=DHGUIButton Name=MapButtonObject
@@ -2735,9 +2829,9 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
         WinWidth=0.26
-        WinHeight=0.22
+        WinHeight=0.72
         WinLeft=0.02
-        WinTop=0.18
+        WinTop=0.16
         LeftPadding=0.05
         RightPadding=0.05
         TopPadding=0.05

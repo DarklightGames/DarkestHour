@@ -6,7 +6,6 @@
 class DHGUISquadComponent extends GUIPanel;
 
 var int SquadIndex;
-var bool bIsEditingName;
 const SQUAD_INDEX_LOGI = 6;
 
 var DHContextMenu_SquadMembers      MembersListContextMenuWrapper;
@@ -24,7 +23,6 @@ var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   GUIImage            i_NoRallyPoints;
 var automated   GUIImage            i_SquadType;
-var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
 var Color DarkBackgroundColor;
@@ -89,44 +87,6 @@ function InternalOnShow()
     super.InternalOnShow();
 
     Timer();
-}
-
-function OnSquadNameEditBoxActivate()
-{
-    eb_SquadName.TextStr = l_SquadName.Caption;
-    eb_SquadName.InternalActivate();
-
-    l_SquadName.SetVisibility(false);
-
-    bIsEditingName = true;
-}
-
-function OnSquadNameEditBoxDeactivate()
-{
-    eb_SquadName.TextStr = "";
-    eb_SquadName.InternalDeactivate();
-
-    l_SquadName.SetVisibility(true);
-
-    FocusFirst(none);
-
-    bIsEditingName = false;
-}
-
-function OnSquadNameEditBoxEnter()
-{
-    local DHPlayer PC;
-
-    PC = DHPlayer(PlayerOwner());
-
-    if (PC != none)
-    {
-        l_SquadName.Caption = eb_SquadName.TextStr;
-
-        PC.ServerSquadRename(eb_SquadName.TextStr);
-    }
-
-    OnSquadNameEditBoxDeactivate();
 }
 
 function bool MembersListContextMenuOpen(GUIContextMenu Sender)
@@ -208,7 +168,7 @@ defaultproperties
     Begin Object class=GUIImage Name=NoRallyPointsImage
         WinWidth=0.15
         WinHeight=1.0
-        WinLeft=0.0
+        WinLeft=0.8
         WinTop=0.05
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)
@@ -233,8 +193,8 @@ defaultproperties
         // WinHeight=0.075
         WinHeight=1.0
         WinLeft=0.0
-        WinTop=0.0
-        Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
+        WinTop=0.05
+        Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
         ImageColor=(R=192,G=192,B=192,A=200)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -278,10 +238,10 @@ defaultproperties
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none
-        WinWidth=0.0
-        WinHeight=0.0
-        WinLeft=0.0
-        WinTop=0.0
+        WinWidth=0.8
+        WinHeight=0.7
+        WinLeft=0.1
+        WinTop=0.2
         bVisible=false
         ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
     End Object
@@ -327,39 +287,22 @@ defaultproperties
 
     Begin Object Class=GUILabel Name=SquadNameLabel
         WinWidth=0.65
-        WinHeight=1.0
+        WinHeight=0.1
         WinTop=0.05
         WinLeft=0.1
-        TextAlign=TXTA_Left
-        VertAlign=TXTA_Center
+        // TextAlign=TXTA_Left
+        // VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
         TextFont="DHMenuFont"
     End Object
     l_SquadName=SquadNameLabel
-
-    Begin Object Class=DHGUIEditBox Name=SquadNameEditBox
-        Caption=""
-        CaptionAlign=TXTA_Center
-        StyleName="DHLargeEditBox"
-        WinTop=0.0
-        WinLeft=0.1
-        WinHeight=1.0
-        WinWidth=0.65
-        TabOrder=0
-        OnActivate=OnSquadNameEditBoxActivate
-        OnDeactivate=OnSquadNameEditBoxDeactivate
-        OnEnter=OnSquadNameEditBoxEnter
-        MaxWidth=20
-        bVisible=false
-    End Object
-    eb_SquadName=SquadNameEditBox
 
     Begin Object Class=DHGUIButton Name=LeaveSquadButton
         Caption="Leave"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.25
-        WinHeight=1.0
+        WinHeight=0.2
         WinLeft=0.75
         WinTop=0.0
         OnClick=OnClick
