@@ -24,6 +24,7 @@ enum ERoleEnabledResult
     RER_Limit,
     RER_SquadOnly,
     RER_SquadLeaderOnly,
+    RER_SquadAslOnly,
     RER_NonSquadLeaderOnly,
     RER_Locked,
     RER_SquadTypeOnlyInfantry,
@@ -5961,6 +5962,12 @@ function ServerSquadInvite(DHPlayerReplicationInfo Recipient)
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    
+    if (Recipient == None)
+    {
+        Log("ServerSquadInvite - Recipent was none!");
+        return;
+    }
 
     if (SquadReplicationInfo != none && PRI != none && PRI.IsAllowedToInviteToSquad() && !Recipient.IsInSquad())
     {
@@ -6049,7 +6056,7 @@ function ServerSquadRename(string Name)
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (SquadReplicationInfo != none && PRI != none)
+    if (SquadReplicationInfo != none && PRI != none && PRI.SquadIndex > -1)
     {
         SquadReplicationInfo.SetName(GetTeamNum(), PRI.SquadIndex, Name);
     }
@@ -7860,6 +7867,16 @@ simulated function class<DHRoleInfo> GetSquadRole(int RoleIndex)
     return SquadReplicationInfo.GetRole(GetTeamNum(), GetSquadIndex(), RoleIndex);
 }
 
+function int GetRoleLimit(DHRoleInfo RI)
+{
+    if (!IsInSquad())
+    {
+        return 255;
+    }
+
+    return SquadReplicationInfo.GetRoleLimit(RI, GetTeamNum(), GetSquadIndex());
+}
+
 // Gets whether or not this player is able to change to this role.
 function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 {
@@ -7869,6 +7886,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     local int Count, BotCount, Limit;
     local bool bIsRoleLimitless;
     local int roleResult;
+    local int TeamNum, SquadIndex; 
     
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -7880,7 +7898,10 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         return RER_Locked;
     }
 
-    GRI.GetRoleCounts(RI, Count, BotCount, Limit);
+    GRI.GetRoleCounts(RI, Count, BotCount);
+    TeamNum = GetTeamNum();
+    SquadIndex = GetSquadIndex();
+    Limit = SquadReplicationInfo.GetRoleLimit(Ri, TeamNum, SquadIndex);
 
     if (GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0)
     {
@@ -7894,6 +7915,9 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     // {
         if (IsInSquad())
         {
+            //Dz temp fix for maps with BattleGroups
+            // return ERoleEnabledResult(1);
+
             // switch (GetTeamNum())
             // {
             //     case AXIS_TEAM_INDEX:
@@ -7905,7 +7929,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
             // }
             // SquadSelection = SquadReplicationInfo.GetSquadRoles(GetTeamNum(), GetSquadIndex());
             // return SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
-            roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, GetTeamNum(), GetSquadIndex());
+            roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
             // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
             return ERoleEnabledResult(roleResult);
             // if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
@@ -7974,7 +7998,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
       
     // }
 
-    return RER_Locked;
+    return RER_SquadTypeOnlyLogistics; //Temp, should return disabled
 }
 
 // Function for getting the correct inventory item name to display depending on settings.

@@ -18,7 +18,6 @@ const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 20;
 
 const SQUAD_LEADER_INDEX = 0;
-const SQUAD_INDEX_LOGI = 6;
 
 const SQUAD_DISBAND_THRESHOLD = 2;
 const SQUAD_LEADER_DRAW_DURATION_SECONDS = 15;
@@ -348,7 +347,7 @@ private function UpdateSquadLeaderLocations(DHPlayer PC)
         PC.SquadLeaderLocations[i] = 0;
 
         //Logi Squad leader shouldnt be visible on the map
-        if (i == SQUAD_INDEX_LOGI || !IsSquadActive(PC.GetTeamNum(), i))
+        if (!IsSquadActive(PC.GetTeamNum(), i))
         {
             continue;
         }
@@ -645,30 +644,6 @@ function ResetSquadInfo()
     NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
-// simulated function SquadSelection GetSquadRoles(int TeamIndex, int squadIndex)
-// {
-//     switch (TeamIndex)
-//     {
-//         case AXIS_TEAM_INDEX:
-//             return DH_BattlegroupAxis.Squads(SquadIndex);
-//         case ALLIES_TEAM_INDEX:
-//             return DH_BattlegroupAllied.Squads(SquadIndex);
-//         default:
-//             return DH_BattlegroupAxis.Squads(SquadIndex);
-//     }
-// }
-
-// simulated function array<DHRoleInfo> GetSquadRoles(int TeamIndex, int squadIndex)
-// {
-//     switch (TeamIndex)
-//     {
-//         case AXIS_TEAM_INDEX:
-//             return DH_BattlegroupAxis.GetRoles(SquadIndex);
-//         case ALLIES_TEAM_INDEX:
-//             return DH_BattlegroupAllied.GetRoles(SquadIndex);
-//     }
-// }
-
 simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
 {
     switch (TeamIndex)
@@ -678,6 +653,23 @@ simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int 
         case ALLIES_TEAM_INDEX:
             return DH_BattlegroupAllied.GetRole(SquadIndex, RoleIndex);
     }
+}
+
+simulated function int GetRoleLimit(DHRoleInfo RI, int TeamIndex, int squadIndex)
+{
+    if (SquadIndex < 0)
+    {
+        return 255;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetRoleLimit(RI, SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetRoleLimit(RI, SquadIndex);
+    }
+    return 255;
 }
 
 
@@ -1276,6 +1268,11 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
 // Returns true if the specified player is a member of the specified squad.
 simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
+    if (SquadIndex == -1)
+    {
+        return false;
+    }
+
     return PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
 }
 
@@ -1797,6 +1794,16 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
 // NOTE: Specifying an inactive squad will return the last name of the squad.
 simulated function string GetSquadName(int TeamIndex, int SquadIndex)
 {
+    if (SquadIndex < 0)
+    {
+        return "Index too low";
+    }
+
+    if (SquadIndex > 6)
+    {
+        return "Index too high";
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -1805,7 +1812,7 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
             return AlliesNames[SquadIndex];
     }
 
-    return "";
+    return "TeamIndex " @ TeamIndex;
 }
 
 // Returns the member of the specified squad at the specified member index.

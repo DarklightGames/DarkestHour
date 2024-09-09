@@ -74,6 +74,31 @@ simulated function class<DHRoleInfo> GetRole(int SquadIndex, int RoleIndex)
     }
 }
 
+simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
+{
+    local SquadSelection SquadSel;
+
+    SquadSel = Squads[SquadIndex];
+
+    switch (RI.Class)
+    {
+        case SquadSel.Role1Leader.Role:
+            return SquadSel.Role1Leader.Limit;
+        case SquadSel.Role2Asl.Role:
+            return SquadSel.Role2Asl.Limit;
+        case SquadSel.Role3.Role:
+            return SquadSel.Role3.Limit;
+        case SquadSel.Role4.Role:
+            return SquadSel.Role4.Limit;
+        case SquadSel.Role5.Role:
+            return SquadSel.Role5.Limit;
+        case SquadSel.Role6.Role:
+            return SquadSel.Role6.Limit;
+        default:
+            return 255;
+    }
+}
+
 // The squads that can be selected for this battlegroup 
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
 {
@@ -101,7 +126,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
         }
         else
         {
-            return 4;
+            return 5;
         }
     }
     else if (((SquadSel.Role3.Role == RI.Class ) || 
@@ -115,7 +140,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
         }
         else
         {
-            return 5;//RER_NonSquadLeaderOnly;
+            return 6;//RER_NonSquadLeaderOnly;
         }
     }
 

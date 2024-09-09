@@ -1221,7 +1221,7 @@ simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team
     return -1;
 }
 
-simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount, out int Limit)
+simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount)
 {
     local int Index;
     local byte Team;
@@ -1236,12 +1236,12 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
-            Limit = DHAxisRoleLimit[Index];
+            // Limit = DHAxisRoleLimit[Index];
             Count = DHAxisRoleCount[Index];
             BotCount = DHAxisRoleBotCount[Index];
             break;
         case ALLIES_TEAM_INDEX:
-            Limit = DHAlliesRoleLimit[Index];
+            // Limit = DHAlliesRoleLimit[Index];
             Count = DHAlliesRoleCount[Index];
             BotCount = DHAlliesRoleBotCount[Index];
             break;

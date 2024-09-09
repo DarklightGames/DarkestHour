@@ -3501,6 +3501,8 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
     local DHPlayer              PC;
     local int                   RoleCount, RoleBotCount, RoleLimit, i;
 
+    //Temp Disabled
+
     if (GRI == none)
     {
         return;
@@ -3509,12 +3511,14 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
     if (Team == AXIS_TEAM_INDEX)
     {
         GRI.DHAxisRoleLimit[Index] = NewLimit;
-        GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount, RoleLimit);
+        GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount);
+        RoleLimit = PC.GetRoleLimit(GRI.DHAxisRoles[Index]);
     }
     else if (Team == ALLIES_TEAM_INDEX)
     {
         GRI.DHAlliesRoleLimit[Index] = NewLimit;
-        GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount, RoleLimit);
+        GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount);
+        RoleLimit = PC.GetRoleLimit(GRI.DHAlliesRoles[Index]);
     }
 
     if (RoleCount - NewLimit > 0)

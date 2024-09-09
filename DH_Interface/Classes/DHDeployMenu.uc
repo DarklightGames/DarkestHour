@@ -101,6 +101,7 @@ var localized   string                      NoneText,
                                             BotsText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
+                                            SquadAslOnlyText,
                                             RecommendJoiningSquadText,
                                             UnassignedPlayersCaptionText,
                                             NonSquadLeaderOnlyText,
@@ -190,7 +191,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     LoadoutTabContainer.ManageComponent(i_EquipmentButton);
     LoadoutTabContainer.ManageComponent(i_VehiclesButton);
 
+    MapSquadsTabContainer.ManageComponent(i_SquadType);
     MapSquadsTabContainer.ManageComponent(l_SquadName);
+    MapSquadsTabContainer.ManageComponent(eb_SquadName);
     MapSquadsTabContainer.ManageComponent(b_MapButton);
     MapSquadsTabContainer.ManageComponent(b_SquadsButton);
     MapSquadsTabContainer.ManageComponent(i_MapButton);
@@ -635,12 +638,15 @@ function UpdateRoles()
     local int SquadIndex;
 
     SquadIndex = PC.GetSquadIndex();
-    SRI.GetMembers(PC.GetTeamNum(), i, Members);
 
     if (SquadIndex == -1 || PC.GetTeamNum() == 255)
     {
         return;
     }
+    
+    // SRI = PC.SquadReplicationInfo;
+    // SRI.GetMembers(PC.GetTeamNum(), i, Members);
+
 
     C = p_Squads.SquadComponents[SquadIndex];
 
@@ -652,6 +658,38 @@ function UpdateRoles()
         {
             continue;
         }
+        RoleEnabledResult = PC.GetRoleEnabledResult(RI);
+
+        switch (RoleEnabledResult)
+        {
+            case RER_SquadOnly:
+                S = "" $ SquadOnlyText $ "*";
+                break;
+            case RER_SquadLeaderOnly:
+                S = "SL: ";
+                break;
+            case RER_SquadAslOnly:
+                S = "ASL: ";
+                break;
+            case RER_NonSquadLeaderOnly:
+                S = "";
+                break;
+            case RER_Locked:
+                S = "Locked: ";
+                break;
+            case RER_SquadTypeOnlyInfantry:
+                S = "" $ RoleSquadOnlyInfantry $ ":";
+                break;
+            case RER_SquadTypeOnlyArmored:
+                S = "" $ RoleSquadOnlyArmored $ ":";
+                break;
+            case RER_SquadTypeOnlyLogistics:
+                S = "" $ RoleSquadOnlyLogistics $ ":";
+                break;
+            default:
+                S = "";
+                break;
+        }
 
         if (PC != none && PC.bUseNativeRoleNames)
         {
@@ -662,19 +700,20 @@ function UpdateRoles()
             S = RI.MyName;
         }
 
-        RoleEnabledResult = PC.GetRoleEnabledResult(RI);
 
-        GRI.GetRoleCounts(RI, Count, BotCount, Limit);
+        GRI.GetRoleCounts(RI, Count, BotCount);
+        Limit = PC.GetRoleLimit(RI);
+
 
         if (Limit == 0)
         {
             S @= "[" $ LockedText $ "]";
         }
-        else if (Limit == 255)
+        else if (Limit == -1 || Limit == 255)
         {
             S @= "[" $ Count $ "]";
         }
-        else
+        else if (Limit > 1)
         {
             S @= "[" $ Count $ "/" $ Limit $ "]";
         }
@@ -683,10 +722,10 @@ function UpdateRoles()
         {
             S @= "*" $ BotsText $ "*";
         }
-        if (Members[i] != None)
-        {
-            S @= " " @ Members[i].PlayerName;
-        }
+        // if (Members.Length > i && Members[i] != None)
+        // {
+        //     S @= " " @ Members[i].PlayerName;
+        // }
 
         // switch (RoleEnabledResult)
         // {
@@ -695,6 +734,9 @@ function UpdateRoles()
         //         break;
         //     case RER_SquadLeaderOnly:
         //         S @= "*" $ SquadLeadershipOnlyText $ "*";
+        //         break;
+        //     case RER_SquadAslOnly:
+        //         S @= "*" $ SquadAslOnlyText $ "*";
         //         break;
         //     case RER_NonSquadLeaderOnly:
         //         S @= "*" $ NonSquadLeaderOnlyText $ "*";
@@ -1762,9 +1804,10 @@ function UpdateSquads()
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
-    local int TeamIndex, SquadLimit, i, j, k;
-    local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
-
+    local DHGUISquadComponent            C1;
+    local int TeamIndex, SquadLimit, i, j, k, SquadIndexOffset;
+    local bool bIsInSquad, bIsInASquad, bIsSquadActive, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
+    local string SquadName;
     super.Timer();
 
     // HACK: this GUI system is madness and requires me to do stupid things
@@ -1777,10 +1820,9 @@ function UpdateSquads()
 
             SetVisible(C.lb_Members, false);
             SetVisible(C.li_Members, false);
-            SetVisible(C.eb_SquadName, false);
             SetVisible(C.b_CreateSquadInfantry, false);
-            SetVisible(C.b_CreateSquadArmored, false);
-            SetVisible(C.b_CreateSquadLogistics, false);
+            // SetVisible(C.b_CreateSquadArmored, false);
+            // SetVisible(C.b_CreateSquadLogistics, false);
             SetVisible(C.b_JoinSquad, false);
             SetVisible(C.b_LeaveSquad, false);
             SetVisible(C.b_LockSquad, false);
@@ -1816,38 +1858,89 @@ function UpdateSquads()
     bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
-    l_SquadName.Caption = " " $ SRI.GetSquadName(TeamIndex, PC.GetSquadIndex());
-    SetVisible(l_SquadName, bIsInASquad);
+    if (bIsInASquad)
+    {
+        l_SquadName.Caption = SRI.GetSquadName(TeamIndex, PC.GetSquadIndex());
+    }
+    else
+    {
+        l_SquadName.Caption = "No Squad";
+    }
+    // SetVisible(l_SquadName, true);
 
     // Go through the active squads
+    SquadIndexOffset = 0;
     for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
-        p_Squads.SquadComponents[i].SquadIndex = i; //Need to set it so create squad button links correctly
-        bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
-        
-        p_Squads.SquadComponents[i].l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
+        C1 = p_Squads.SquadComponents[i];
+        C1.SquadIndex = i; //Need to set it so create squad button links correctly
+        bIsInSquad = PC.GetSquadIndex() == i || SRI.IsInSquad(PRI, TeamIndex, i);
+        bIsSquadActive = SRI.IsSquadActive(TeamIndex, i);
+        SetVisible(C1, true);
 
         if (bIsInSquad)
         {
-            p_Squads.SquadComponents[i].WinTop = 0.0;
-            p_Squads.SquadComponents[i].WinHeight = 0.4;
+            C1.WinTop = 0.0;
+            C1.WinHeight = 0.4;
+            C1.l_SquadName.Caption = "";
+            SetVisible(C1.l_SquadName, false);
+            SetVisible(C1.i_SquadType, false);
         }
         else
         {
-            p_Squads.SquadComponents[i].WinTop = 0.4 + i * 0.05;
-            p_Squads.SquadComponents[i].WinHeight = 0.05;
-            SetVisible(p_Squads.SquadComponents[i].l_SquadName, true);
+            SquadName = SRI.GetSquadName(TeamIndex, i);
+            if (SquadName == "")
+            {
+                SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
+            }
+            
+            if (bIsSquadActive)
+            {
+                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SRi.GetTeamSquadSize(TeamIndex, i)  @ "] - " @ C1.li_Members.GetObjectAtIndex(0).GetItemName("PlayerName");
+            }
+
+            C1.WinTop = 0.4 + SquadIndexOffset * 0.05;
+            C1.WinHeight = 0.05;
+            SquadIndexOffset++;
+            SetVisible(C1.i_SquadType, true);
+            SetVisible(C1.l_SquadName, true);
+            SetVisible(C1.i_NoRallyPoints, false);
+            C1.l_SquadName.Caption = SquadName;
+
+            if (bIsInASquad)
+            {
+                C1.b_CreateSquadInfantry.bAcceptsInput = false;
+                C1.b_JoinSquad.bAcceptsInput = false;
+            }
+            else
+            {
+                C1.b_CreateSquadInfantry.bAcceptsInput = true;
+                C1.b_JoinSquad.bAcceptsInput = true;
+            }
+
+            // C1.i_SquadType.Image = SRI.SquadType.default.Image;
+            // C1.i_SquadType.Hint = SRI.SquadType.default.Hint;
         }
 
-        if (!SRI.IsSquadActive(TeamIndex, i))
+        if (!bIsSquadActive)
         {
-            p_Squads.SquadComponents[i].WinHeight = 0.05;
+            SetVisible(C1.lb_Members, false);
+            SetVisible(C1.li_Members, false);
+            SetVisible(C1.l_SquadName, true);
+            SetVisible(C1.b_CreateSquadInfantry, true);
+            // SetVisible(C1.b_CreateSquadArmored, false);
+            // SetVisible(C1.b_CreateSquadLogistics, false);
+            SetVisible(C1.i_SquadType, true);
+            SetVisible(C1.b_JoinSquad, false);
+            SetVisible(C1.b_LeaveSquad, false);
+            SetVisible(C1.b_LockSquad, false);
+            SetVisible(C1.i_LockSquad, false);
+            SetVisible(C1.i_NoRallyPoints, false);
             continue;
         }
 
         C = p_Squads.SquadComponents[i];
 
-        SetVisible(C, true);
 
         bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
         bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
@@ -1863,23 +1956,21 @@ function UpdateSquads()
         // SetVisible(C.l_SquadName, !C.bIsEditingName);
         // SetVisible(C.eb_SquadName, bIsSquadLeader);
 
-        SetVisible(C.l_SquadName, bIsInSquad);
         SetVisible(eb_SquadName, bIsSquadLeader);
 
 
         SetVisible(C.b_CreateSquadInfantry, false);
-        SetVisible(C.b_CreateSquadArmored, false);
-        SetVisible(C.b_CreateSquadLogistics, false);
-        SetVisible(C.i_SquadType, true);
+        // SetVisible(C.b_CreateSquadArmored, false);
+        // SetVisible(C.b_CreateSquadLogistics, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
-        SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
+        SetVisible(C.i_NoRallyPoints, bIsInSquad && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
         
         //TODO: Fix this so it's not the player squad type
-        C.i_SquadType.Image = SRI.SquadType.default.Image;
-        C.i_SquadType.Hint = SRI.SquadType.default.Hint;
+        // C.i_SquadType.Image = SRI.SquadType.default.Image;
+        // C.i_SquadType.Hint = SRI.SquadType.default.Hint;
 
         if (bIsSquadLeader)
         {
@@ -1926,8 +2017,6 @@ function UpdateSquads()
 
         C.b_LockSquad.SetVisibility(bIsSquadLeader);
 
-        C.l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
-
         SRI.GetMembers(TeamIndex, i, Members);
 
         // Save the current PRI that is selected.
@@ -1957,29 +2046,28 @@ function UpdateSquads()
         ++j;
     }
 
-    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
-    {
-        C = p_Squads.SquadComponents[j++];
+    // if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
+    // {
+    //     C = p_Squads.SquadComponents[j++];
 
-        SetVisible(C, true);
-        SetVisible(C.lb_Members, false);
-        SetVisible(C.li_Members, false);
-        SetVisible(C.l_SquadName, false);
-        SetVisible(C.b_CreateSquadInfantry, true);
-        SetVisible(C.b_CreateSquadArmored, false);
-        SetVisible(C.b_CreateSquadLogistics, false);
-        SetVisible(C.i_SquadType, false);
-        SetVisible(C.b_JoinSquad, false);
-        SetVisible(C.b_LeaveSquad, false);
-        SetVisible(C.b_LockSquad, false);
-        SetVisible(C.i_LockSquad, false);
-        SetVisible(C.i_NoRallyPoints, false);
-    }
+    //     SetVisible(C, true);
+    //     SetVisible(C.lb_Members, false);
+    //     SetVisible(C.li_Members, false);
+    //     SetVisible(C.l_SquadName, false);
+    //     SetVisible(C.b_CreateSquadInfantry, true);
+    //     // SetVisible(C.b_CreateSquadArmored, false);
+    //     // SetVisible(C.b_CreateSquadLogistics, false);
+    //     SetVisible(C.i_SquadType, false);
+    //     SetVisible(C.b_JoinSquad, false);
+    //     SetVisible(C.b_LeaveSquad, false);
+    //     SetVisible(C.b_LockSquad, false);
+    //     SetVisible(C.i_LockSquad, false);
+    //     SetVisible(C.i_NoRallyPoints, false);
+    // }
 
     while (j < p_Squads.SquadComponents.Length - 1)
     {
         // SetVisible(p_Squads.SquadComponents[j], false);
-        SetVisible(p_Squads.SquadComponents[j].i_SquadType, true);
         SetVisible(p_Squads.SquadComponents[j].lb_Members, false);
         SetVisible(p_Squads.SquadComponents[j].b_JoinSquad, false);
         SetVisible(p_Squads.SquadComponents[j].b_LeaveSquad, false);
@@ -1992,18 +2080,19 @@ function UpdateSquads()
 
     // Show the unassigned category
     SRI.GetUnassignedPlayers(TeamIndex, Members);
+    j =  p_Squads.SquadComponents.Length - 1;
 
-    if (j >= p_Squads.SquadComponents.Length)
-    {
-        return;
-    }
+    // if (j >= p_Squads.SquadComponents.Length)
+    // {
+    //     return;
+    // }
 
     if (Members.Length > 0)
     {
         C = p_Squads.SquadComponents[j];
-        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+        // C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+        C.l_SquadName.Caption = "";
         C.SquadIndex = -1;
-
         C.WinHeight = 0.3;
 
         SetVisible(C, true);
@@ -2011,13 +2100,16 @@ function UpdateSquads()
         SetVisible(C.li_Members, true);
         SetVisible(C.l_SquadName, true);
         SetVisible(C.b_CreateSquadInfantry, false);
-        SetVisible(C.b_CreateSquadArmored, false);
-        SetVisible(C.b_CreateSquadLogistics, false);
+        // SetVisible(C.b_CreateSquadArmored, false);
+        // SetVisible(C.b_CreateSquadLogistics, false);
         SetVisible(C.b_JoinSquad, false);
         SetVisible(C.b_LeaveSquad, false);
         SetVisible(C.b_LockSquad, false);
         SetVisible(C.i_LockSquad, false);
         SetVisible(C.i_NoRallyPoints, false);
+        SetVisible(C.i_SquadType, false);
+        C.l_SquadName.VertAlign = TXTA_Left;
+
 
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
@@ -2095,8 +2187,9 @@ defaultproperties
     LockedText="Locked"
     BotsText="BOTS"
     SquadOnlyText="Squad"
-    SquadLeadershipOnlyText="LEADERS"
-    NonSquadLeaderOnlyText="NON-LEADERS"
+    SquadLeadershipOnlyText="SL"
+    SquadASLOnlyText="ASL"
+    NonSquadLeaderOnlyText="Privates"
     RoleLockedText="LOCKED"
     RoleLogiOnlyOneClass="--"
     RoleSquadOnlyInfantry="Infantry"
@@ -2427,13 +2520,14 @@ defaultproperties
 
     //DZ
     Begin Object class=GUILabel Name=SquadNameLabelObject
+        Caption="No Squad"
         TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
         WinWidth=0.5
         WinHeight=1.0
         WinTop=0.0
-        WinLeft=0.0
+        WinLeft=0.1
         TextFont="DHMenuFont"
     End Object
     l_SquadName=SquadNameLabelObject
@@ -2442,10 +2536,10 @@ defaultproperties
         Caption=""
         CaptionAlign=TXTA_Center
         StyleName="DHLargeEditBox"
-        WinTop=0.05
+        WinTop=0.0
         WinLeft=0.1
-        WinHeight=0.1
-        WinWidth=0.65
+        WinHeight=1.0
+        WinWidth=0.5
         TabOrder=0
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
@@ -2455,27 +2549,26 @@ defaultproperties
     End Object
     eb_SquadName=SquadNameEditBox
 
-    Begin Object class=GUIImage Name=SquadTypeImage
+    Begin Object class=GUIImage Name=SquadOwnTypeImage
         WinWidth=0.10
         // WinHeight=0.075
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.05
-        Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
+        Image=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
         ImageColor=(R=192,G=192,B=192,A=200)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
         bBoundToParent=true
         bScaleToParent=true
-        bVisible=false
+        bVisible=true
         RenderWeight=10.0
         bAcceptsInput=true
         ToolTip=SquadTypeImageTooltip
         Hint="Infantry, Vehicle or Supply Squad."
     End Object
-    i_SquadType=SquadTypeImage
-
+    i_SquadType=SquadOwnTypeImage
     //DZ End
 
     Begin Object Class=DHGUIButton Name=MapButtonObject
@@ -2828,9 +2921,9 @@ defaultproperties
     l_Status=StatusLabelObject
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
-        WinWidth=0.26
-        WinHeight=0.72
-        WinLeft=0.02
+        WinWidth=0.28
+        WinHeight=0.74
+        WinLeft=0.01
         WinTop=0.16
         LeftPadding=0.05
         RightPadding=0.05
