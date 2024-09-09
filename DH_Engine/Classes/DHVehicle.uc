@@ -32,11 +32,24 @@ struct VehicleAttachment
     var float           CullDistance;
 };
 
+// A static mesh and probability weight for random attachment options.
 struct RandomAttachOption
 {
-    var StaticMesh  StaticMesh;     // a possible random decorative attachment mesh
-    var byte        PercentChance;  // the % chance of this attachment being the one spawned
+    var()   VehicleAttachment   Attachment;
+    var()   float               Probability;
 };
+
+// A group of attachment options. One of the options will be selected at random.
+struct RandomAttachmentGroup
+{
+    var() array<RandomAttachOption>  Options;   // Only the first 8 options will be used.
+};
+
+var() bool bDoRandomAttachments;
+var() array<RandomAttachmentGroup> RandomAttachmentGroups;
+
+const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
+var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
 
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
@@ -145,9 +158,6 @@ var     DHMapIconAttachment         MapIconAttachment;
 // Vehicle attachments
 var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
 var     array<VehicleAttachment>    CollisionAttachments;    // collision mesh attachments for a moving part of vehicle that should have collision, e.g. a ramp or driver's armoured visor
-var     VehicleAttachment           RandomAttachment;        // option for a visual attachment with a random selection of static mesh type, e.g. schurzen with different stages of damage
-var     array<RandomAttachOption>   RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
-var     byte                        RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
 var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
 var     name                        ResupplyAttachmentBone;  // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
@@ -225,7 +235,7 @@ replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        RandomAttachmentIndex;
+        RandomAttachmentGroupOptions;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2802,13 +2812,20 @@ static function StaticPrecache(LevelInfo L)
         }
     }
 
-    for (i = 0; i < default.RandomAttachOptions.Length; ++i)
+    if (default.bDoRandomAttachments)
     {
-        if (default.RandomAttachOptions[i].StaticMesh != none)
+        for (i = 0; i < default.RandomAttachmentGroups.Length; ++i)
         {
-            L.AddPrecacheStaticMesh(default.RandomAttachOptions[i].StaticMesh);
+            for (j = 0; j < default.RandomAttachmentGroups[i].Options.Length; ++j)
+            {
+                if (default.RandomAttachmentGroups[i].Options[j].Attachment.StaticMesh != none)
+                {
+                    L.AddPrecacheStaticMesh(default.RandomAttachmentGroups[i].Options[j].Attachment.StaticMesh);
+                }
+            }
         }
     }
+    
 
     for (i = 0; i < default.CollisionAttachments.Length; ++i)
     {
@@ -2881,7 +2898,7 @@ simulated function UpdatePrecacheMaterials()
 
 simulated function UpdatePrecacheStaticMeshes()
 {
-    local int i;
+    local int i, j;
 
     super.UpdatePrecacheStaticMeshes();
 
@@ -2893,11 +2910,17 @@ simulated function UpdatePrecacheStaticMeshes()
         }
     }
 
-    for (i = 0; i < RandomAttachOptions.Length; ++i)
+    if (bDoRandomAttachments)
     {
-        if (RandomAttachOptions[i].StaticMesh != none)
+        for (i = 0; i < RandomAttachmentGroups.Length; ++i)
         {
-            Level.AddPrecacheStaticMesh(RandomAttachOptions[i].StaticMesh);
+            for (j = 0; j < RandomAttachmentGroups[i].Options.Length; ++j)
+            {
+                if (RandomAttachmentGroups[i].Options[j].Attachment.StaticMesh != none)
+                {
+                    Level.AddPrecacheStaticMesh(RandomAttachmentGroups[i].Options[j].Attachment.StaticMesh);
+                }
+            }
         }
     }
 
@@ -2916,7 +2939,8 @@ simulated function SpawnVehicleAttachments()
     local VehicleAttachment VA;
     local class<Actor>      AttachClass;
     local Actor             A;
-    local int               RandomNumber, CumulativeChance, i, j;
+    local float             RandomNumber, ProbabilitySum;
+    local int               i, j;
 
     // Treads & movement sound attachments
     if (Level.NetMode != NM_DedicatedServer)
@@ -2994,28 +3018,44 @@ simulated function SpawnVehicleAttachments()
         }
 
         // If vehicle has possible random decorative attachments, select which one (if any at all, depending on specified chances)
-        if (RandomAttachOptions.Length > 0 && RandomAttachmentIndex >= RandomAttachOptions.Length)
+        if (bDoRandomAttachments)
         {
-            RandomNumber = RAND(100);
-
-            for (i = 0; i < RandomAttachOptions.Length; ++i)
+            for (i = 0; i < Min(MAX_RANDOM_ATTACHMENT_GROUPS, RandomAttachmentGroups.Length); ++i)
             {
-                CumulativeChance += RandomAttachOptions[i].PercentChance;
+                ProbabilitySum = 0.0;
+                RandomNumber = FRand();
 
-                if (RandomNumber < CumulativeChance)
+                RandomAttachmentGroupOptions[i] = -1;
+
+                for (j = 0; j < RandomAttachmentGroups[i].Options.Length; ++j)
                 {
-                    RandomAttachmentIndex = i; // set replicated variable so clients know which random attachment to spawn
-                    break;
+                    ProbabilitySum += RandomAttachmentGroups[i].Options[j].Probability;
+
+                    if (RandomNumber < ProbabilitySum)
+                    {
+                        RandomAttachmentGroupOptions[i] = j;
+                        break;
+                    }
                 }
             }
         }
     }
 
-    // If a valid random attachment type has been selected, copy it to the VehicleAttachments array, so it gets spawned next like a standard vehicle attachment
-    if (RandomAttachmentIndex < RandomAttachOptions.Length && RandomAttachOptions[RandomAttachmentIndex].StaticMesh != none)
+    // Spawn any selected random decorative attachments.
+    if (bDoRandomAttachments)
     {
-        RandomAttachment.StaticMesh = RandomAttachOptions[RandomAttachmentIndex].StaticMesh;
-        VehicleAttachments[VehicleAttachments.Length] = RandomAttachment;
+        for (i = 0; i < Min(MAX_RANDOM_ATTACHMENT_GROUPS, RandomAttachmentGroups.Length); ++i)
+        {
+            if (RandomAttachmentGroupOptions[i] >= 0 && RandomAttachmentGroupOptions[i] < RandomAttachmentGroups[i].Options.Length)
+            {
+                VA = RandomAttachmentGroups[i].Options[RandomAttachmentGroupOptions[i]].Attachment;
+
+                if (VA.StaticMesh != none)
+                {
+                    VehicleAttachments[VehicleAttachments.Length] = VA;
+                }
+            }
+        }
     }
 
     // Spawn any decorative attachments
@@ -4409,7 +4449,6 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
     SteeringScaleFactor=4.0
-    RandomAttachmentIndex=255 // an invalid starting value, so will only get changed & replicated if a valid selection is made for a random decorative attachment
     ShadowZOffset=5.0 // the literal value used in the ShadowProjector class
 
     // HUD
@@ -4482,4 +4521,5 @@ defaultproperties
     // Radio Attachment
     RadioAttachmentRadius=10.0
     RadioAttachmentHeight=10.0
+    bDoRandomAttachments=true
 }

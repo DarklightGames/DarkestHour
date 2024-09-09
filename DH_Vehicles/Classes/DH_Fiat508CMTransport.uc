@@ -61,8 +61,8 @@ defaultproperties
     WheelLatFrictionScale=1.55
     WheelHandbrakeFriction=0.6
     WheelHandbrakeSlip=0.05
-    WheelSuspensionTravel=10.0
-    WheelSuspensionOffset=-4.0
+    WheelSuspensionTravel=5.0
+    WheelSuspensionOffset=-2.0
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
@@ -128,7 +128,13 @@ defaultproperties
 
     // Attachments
     // TODO: add radio attachment logic for normal vehicles
-    //VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Jeep_stc.Roof.jeep_roof_down',AttachBone="Body")
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.attachments.fiat508cm_radio',AttachBone="BODY")
+
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_searchlight'))))
+    RandomAttachmentGroups(1)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_tools'))))
+    RandomAttachmentGroups(2)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_jerry_can'))))
+    RandomAttachmentGroups(3)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_roof'))))
+    RandomAttachmentGroups(4)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_windows'))))
 
     RadioAttachmentClass=class'DH_Engine.DHRadio'
     RadioAttachmentBone="RADIO_ATTACHMENT"
@@ -188,7 +194,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.5) // default is zero
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.325)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true

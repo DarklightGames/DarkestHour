@@ -5,17 +5,6 @@
 
 class DH_PantherDTank extends DHArmoredVehicle;
 
-// Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
-simulated function SpawnVehicleAttachments()
-{
-    if (RandomAttachment.Skins[0] == none)
-    {
-        RandomAttachOptions.Length = 0;
-    }
-
-    super.SpawnVehicleAttachments();
-}
-
 defaultproperties
 {
     // Vehicle properties
@@ -115,12 +104,7 @@ defaultproperties
     WheelRotationScale=81250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    RandomAttachment=(AttachBone="body",Skins=(none)) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
-
+    
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
