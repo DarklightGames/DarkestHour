@@ -283,7 +283,7 @@ defaultproperties
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.35
         WinHeight=0.2
-        WinLeft=0.63
+        WinLeft=0.62
         WinTop=0.0
         OnClick=OnClick
     End Object
