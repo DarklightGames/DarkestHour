@@ -4,7 +4,6 @@
 //==============================================================================
 // [ ] Ammo hitpoint areas
 // [ ] Armor values (wolfkraut)
-// [ ] Fix wheel suspension skinning in the rig
 // [ ] Fix collision area for the driver's hatch on the body
 // [ ] Set up projectiles for AB41 & 43
 // [ ] Calibrate range for shells
@@ -78,7 +77,7 @@ defaultproperties
     WheelSuspensionTravel=10.0
     WheelSuspensionMaxRenderTravel=5.0
     ChassisTorqueScale=0.095
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=20.0),(InVal=500.0,OutVal=15.0),(InVal=600.0,OutVal=10.0),(InVal=1000000000.0,OutVal=8.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=32.0),(InVal=500.0,OutVal=16.0),(InVal=600.0,OutVal=8.0),(InVal=1000000000.0,OutVal=4.0)))
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     SteerSpeed=75.0
@@ -154,42 +153,41 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         //BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_RF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_F_R"
+        SupportBoneAxis=AXIS_X
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FRWheel'
+    Wheels(0)=FRWheel
     Begin Object Class=SVehicleWheel Name=FLWheel
         SteerType=VST_Steered
         BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
         // BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_LF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_F_L"
+        SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.FLWheel'
+    Wheels(1)=FLWheel
     Begin Object Class=SVehicleWheel Name=BRWheel
         SteerType=VST_Inverted
         BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
         // BoneOffset=(Y=11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_RF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_B_R"
+        SupportBoneAxis=AXIS_X
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BRWheel'
+    Wheels(2)=BRWheel
     Begin Object Class=SVehicleWheel Name=BLWheel
         SteerType=VST_Inverted
         BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        //BoneOffset=(Y=-11.0)
         WheelRadius=32.0
-        //SupportBoneName="Axel_LF"
-        //SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSPENSION_B_L"
+        SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_AutoblindaArmoredCar.BLWheel'
+    Wheels(3)=BLWheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -209,5 +207,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_AutoblindaArmoredCar.KParams0'
+    KParams=KParams0
 }
