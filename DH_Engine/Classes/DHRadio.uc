@@ -413,7 +413,7 @@ defaultproperties
     TeamIndex=2 // NEUTRAL_TEAM_INDEX
     bAlwaysRelevant=true
     RemoteRole=ROLE_DumbProxy
-    ResponseDelaySeconds=10.0
+    ResponseDelaySeconds=15.0   // TODO: also make italian request sounds shorter
     AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
 
     ResponseSoundRadius=100.0
