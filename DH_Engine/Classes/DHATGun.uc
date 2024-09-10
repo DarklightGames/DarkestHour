@@ -235,7 +235,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_TooFarAway;
     }
 
-    if (Pawn.GetTeamNum() != VehicleTeam)
+    if (bTeamLocked && Pawn.GetTeamNum() != VehicleTeam)
     {
         return ERROR_EnemyGun;
     }

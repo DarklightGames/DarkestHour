@@ -19,7 +19,17 @@ var     class<Emitter>  ExplodeSnowEffectClass;
 var     class<Emitter>  ExplodeMidAirEffectClass;
 
 var     class<Actor>    SplashEffect;  // water splash effect class
-var     sound           WaterHitSound; // sound of this bullet hitting water
+var     Sound           WaterHitSound; // sound of this bullet hitting water
+
+var     float           NextImpactSoundTime;    // Time when the next impact sound can be played.
+var     float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var()   float           ImpactSoundRadius;
+var()   Sound           ImpactSoundDirt;
+var()   Sound           ImpactSoundWood;
+var()   Sound           ImpactSoundMetal;
+var()   Sound           ImpactSoundMud;
+var()   Sound           ImpactSoundGrass;
+var()   Sound           ImpactSoundConcrete;
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
 var     PlayerReplicationInfo   SavedPRI;
@@ -614,9 +624,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             Speed = VSize(Velocity);
         }
 
-        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, 1.1);
+            PlaySound(ImpactSound, SLOT_Misc, 1.0,, ImpactSoundRadius);
+
+            NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
         }
     }
 }
@@ -816,83 +828,104 @@ simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
 // From ROGrenadeProjectile/ROSatchelChargeProjectile
 simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 {
+    local Sound MyImpactSound;
+
     switch (ST)
     {
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
+            MyImpactSound = default.ImpactSoundDirt;
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundMetal;
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
+            MyImpactSound = default.ImpactSoundWood;
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
+            MyImpactSound = default.ImpactSoundGrass;
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Water:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
-            ImpactSound = WaterHitSound;
+            MyImpactSound = WaterHitSound;
             break;
 
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Custom01: //Sand
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Custom02: //SandBag
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Custom03: //Brick
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Custom04: //Hedgerow
             DampenFactor = 0.15;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundGrass;
             break;
+    }
+
+    if (MyImpactSound == none)
+    {
+        ImpactSound = default.ImpactSound;
     }
 }
 
@@ -978,4 +1011,7 @@ defaultproperties
 
     ImpactFuzeMomentumThreshold=500.0
     TripMineLifeSpan=300
+
+    ImpactSoundInterval=0.5
+    ImpactSoundRadius=100.0
 }

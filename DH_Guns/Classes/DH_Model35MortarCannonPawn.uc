@@ -290,6 +290,9 @@ simulated state Firing
         CameraLocation = class'UVector'.static.VLerp(Theta, NormalCameraLocation, FiringCameraLocation);
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
 
+        // Neutralize the roll to prevent motion sickness.
+        CameraRotation.Roll = 0;
+
         // Finalise the camera with any shake
         CameraLocation += PC.ShakeOffset >> PC.Rotation;
         CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
