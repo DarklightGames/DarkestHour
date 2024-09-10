@@ -80,12 +80,11 @@ defaultproperties
     AltFireOffset=(X=-8,Y=0,Z=0)
 
     // TODO: get new sounds for all these!
-    // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
+    AltFireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
+    AltFireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
 
     YawBone="gun_yaw"
     PitchBone="gun_pitch"

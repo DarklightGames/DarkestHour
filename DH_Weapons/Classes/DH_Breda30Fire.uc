@@ -29,9 +29,9 @@ defaultproperties
 
     FlashEmitterClass=Class'ROEffects.MuzzleFlash1stMG'
     
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'  // TODO: give me custom sounds or give me death
-    FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'
-    FireSounds(2)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire03'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Breda30.Breda30Fire01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Breda30.Breda30Fire02'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Breda30.Breda30Fire03'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm' // TODO: replace with wacky italian 6.5×52mm Carcano
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)

@@ -65,9 +65,9 @@ defaultproperties
     AddedPitch=0  // TODO: REPLACE
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire'
-    CannonFireSound(1)=Sound'DH_MortarSounds.Fire.81mm_mortar_fire'
-    CannonFireSound(2)=Sound'DH_MortarSounds.Fire.81mm_mortar_fire'
+    CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
+    CannonFireSound(1)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_02'
+    CannonFireSound(2)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_03'
 
     // TODO: figure out what to do with this.
     // ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03',Duration=1.0)
@@ -90,4 +90,8 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
+
+    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    // TODO: maybe get a dust emitter for this.
+    CannonDustEmitterClass=None
 }

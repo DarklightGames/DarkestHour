@@ -8,7 +8,7 @@ class DH_Model35Mortar extends DHATGun;
 defaultproperties
 {
     VehicleNameString="81/14 Model 35 Mortar"
-    Team=0
+    VehicleTeam=0
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
