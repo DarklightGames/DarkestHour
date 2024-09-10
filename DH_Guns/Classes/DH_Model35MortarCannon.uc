@@ -90,4 +90,8 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
+
+    EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    // TODO: maybe get a dust emitter for this.
+    CannonDustEmitterClass=None
 }
