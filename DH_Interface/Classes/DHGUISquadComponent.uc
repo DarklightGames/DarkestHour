@@ -281,18 +281,18 @@ defaultproperties
         Caption="Leave"
         CaptionAlign=TXTA_Right
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=0.35
+        WinWidth=0.4
         WinHeight=0.2
-        WinLeft=0.62
+        WinLeft=0.55
         WinTop=0.0
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
 
     Begin Object Class=DHGUIButton Name=JoinSquadButton
-        Caption="Join"
-        CaptionAlign=TXTA_Center
+        CaptionAlign=TXTA_Right
         StyleName="DHSmallTextButtonStyle"
+        Caption="Join"
         WinWidth=0.95
         WinHeight=1.0
         WinLeft=0.0

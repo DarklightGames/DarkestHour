@@ -23,6 +23,7 @@ struct SquadSelection
     var() string                       Name;
     var() class<DHSquadType>           SquadType;               // The Squad type class to use.
     var() int                          SquadLimit;                   // How many of this squad type there can be
+    var() int                          SquadSize;                   // How many of this squad type there can be
     var() SquadRole            Role1Leader;             // The Roles allowed within this class
     var() SquadRole            Role2Asl;                // The Roles allowed within this class
     var() SquadRole            Role3;                   // The Roles allowed within this class
@@ -97,6 +98,16 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
         default:
             return 255;
     }
+}
+
+simulated function string GetDefaultSquadName(int SquadIndex)
+{
+    return Squads[SquadIndex].Name;
+}
+
+simulated function int GetSquadSize(int SquadIndex)
+{
+    return Squads[SquadIndex].SquadSize;
 }
 
 // The squads that can be selected for this battlegroup 

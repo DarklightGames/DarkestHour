@@ -688,12 +688,26 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Te
 // Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 {
+    // switch (TeamIndex)
+    // {
+    //     case AXIS_TEAM_INDEX:
+    //         return AxisSquadSize;
+    //     case ALLIES_TEAM_INDEX:
+    //         return AlliesSquadSize;
+    //     default:
+    //         return 0;
+    // }
+    if (SquadIndex < 0)
+    {
+        return 0;
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return AxisSquadSize;
+            return DH_BattlegroupAxis.GetSquadSize(SquadIndex);
         case ALLIES_TEAM_INDEX:
-            return AlliesSquadSize;
+            return DH_BattlegroupAllied.GetSquadSize(SquadIndex);
         default:
             return 0;
     }
@@ -841,19 +855,32 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
     return true;
 }
 
-// Returns the default squad name for the specified team and squad index.
+// // Returns the default squad name for the specified team and squad index.
+// simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
+// {
+//     local DH_LevelInfo LI;
+
+//     LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+//     if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
+//     {
+//         return "";
+//     }
+
+//     return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
+// }
+
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
-    local DH_LevelInfo LI;
-
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
+    switch (TeamIndex)
     {
-        return "";
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
+        default:
+            return "Not found";
     }
-
-    return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.

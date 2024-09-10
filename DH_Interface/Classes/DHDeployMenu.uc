@@ -635,11 +635,12 @@ function UpdateRoles()
     
     local array<DHPlayerReplicationInfo> Members;
     local DHGUISquadComponent            C;
-    local int SquadIndex;
+    local int TeamIndex, SquadIndex;
 
     SquadIndex = PC.GetSquadIndex();
+    TeamIndex = PC.GetTeamNum();
 
-    if (SquadIndex == -1 || PC.GetTeamNum() == 255)
+    if (SquadIndex == -1 || TeamIndex == 255)
     {
         return;
     }
@@ -702,7 +703,8 @@ function UpdateRoles()
 
 
         GRI.GetRoleCounts(RI, Count, BotCount);
-        Limit = PC.GetRoleLimit(RI);
+        // Limit = PC.GetRoleLimit(RI);
+        Limit = SRI.GetRoleLimit(RI, TeamIndex, SquadIndex);
 
 
         if (Limit == 0)
@@ -1799,6 +1801,20 @@ function OnSquadNameEditBoxEnter()
     OnSquadNameEditBoxDeactivate();
 }
 
+function UpdateSquadName()
+{
+    local bool bIsInASquad;
+
+    if (SRI != none && PRI.IsInSquad())
+    {
+        l_SquadName.Caption = SRI.GetSquadName(PC.GetTeamNum(), PC.GetSquadIndex());
+    }
+    else
+    {
+        l_SquadName.Caption = "No Squad";
+    }
+}
+
 function UpdateSquads()
 {
     local array<DHPlayerReplicationInfo> Members;
@@ -1858,14 +1874,7 @@ function UpdateSquads()
     bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
-    if (bIsInASquad)
-    {
-        l_SquadName.Caption = SRI.GetSquadName(TeamIndex, PC.GetSquadIndex());
-    }
-    else
-    {
-        l_SquadName.Caption = "No Squad";
-    }
+    UpdateSquadName();
     // SetVisible(l_SquadName, true);
 
     // Go through the active squads
@@ -1877,6 +1886,14 @@ function UpdateSquads()
         bIsInSquad = PC.GetSquadIndex() == i || SRI.IsInSquad(PRI, TeamIndex, i);
         bIsSquadActive = SRI.IsSquadActive(TeamIndex, i);
         SetVisible(C1, true);
+        C1.UpdateBackgroundColor(PRI);
+
+
+        //TODO: DZ Debugging
+        if (PC.GetSquadIndex() == i)
+        {
+            Log("Squad: " @ i @ " - PC SquadIndex: " @ PC.GetSquadIndex() @ " is in squad: " @ SRI.IsInSquad(PRI, TeamIndex, i) @ " and bIsInSquad is: " @ bIsInSquad);
+        }
 
         if (bIsInSquad)
         {
@@ -1888,15 +1905,18 @@ function UpdateSquads()
         }
         else
         {
-            SquadName = SRI.GetSquadName(TeamIndex, i);
-            if (SquadName == "")
-            {
-                SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
-            }
-            
             if (bIsSquadActive)
             {
-                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SRi.GetTeamSquadSize(TeamIndex, i)  @ "] - " @ C1.li_Members.GetObjectAtIndex(0).GetItemName("PlayerName");
+                SquadName = SRI.GetSquadName(TeamIndex, i);
+                if (SquadName == "")
+                {
+                    SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
+                }
+                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SRi.GetTeamSquadSize(TeamIndex, i)  @ "]";
+            }
+            else
+            {
+                SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
             }
 
             C1.WinTop = 0.4 + SquadIndexOffset * 0.05;
@@ -1926,7 +1946,6 @@ function UpdateSquads()
         {
             SetVisible(C1.lb_Members, false);
             SetVisible(C1.li_Members, false);
-            SetVisible(C1.l_SquadName, true);
             SetVisible(C1.b_CreateSquadInfantry, true);
             // SetVisible(C1.b_CreateSquadArmored, false);
             // SetVisible(C1.b_CreateSquadLogistics, false);
@@ -2065,18 +2084,18 @@ function UpdateSquads()
     //     SetVisible(C.i_NoRallyPoints, false);
     // }
 
-    while (j < p_Squads.SquadComponents.Length - 1)
-    {
-        // SetVisible(p_Squads.SquadComponents[j], false);
-        SetVisible(p_Squads.SquadComponents[j].lb_Members, false);
-        SetVisible(p_Squads.SquadComponents[j].b_JoinSquad, false);
-        SetVisible(p_Squads.SquadComponents[j].b_LeaveSquad, false);
-        SetVisible(p_Squads.SquadComponents[j].b_LockSquad, false);
-        SetVisible(p_Squads.SquadComponents[j].i_LockSquad, false);
-        SetVisible(p_Squads.SquadComponents[j].i_NoRallyPoints, false);
+    // while (j < p_Squads.SquadComponents.Length - 1)
+    // {
+    //     // SetVisible(p_Squads.SquadComponents[j], false);
 
-        ++j;
-    }
+        // SetVisible(p_Squads.SquadComponents[j].lb_Members, false);
+        // SetVisible(p_Squads.SquadComponents[j].b_JoinSquad, false);
+        // SetVisible(p_Squads.SquadComponents[j].b_LeaveSquad, false);
+        // SetVisible(p_Squads.SquadComponents[j].b_LockSquad, false);
+        // SetVisible(p_Squads.SquadComponents[j].i_LockSquad, false);
+        // SetVisible(p_Squads.SquadComponents[j].i_NoRallyPoints, false);
+    //     ++j;
+    // }
 
     // Show the unassigned category
     SRI.GetUnassignedPlayers(TeamIndex, Members);
@@ -2137,12 +2156,6 @@ function UpdateSquads()
     else
     {
         SetVisible(p_Squads.SquadComponents[j], false);
-    }
-
-    // Update the background colors.
-    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
-    {
-        p_Squads.SquadComponents[i].UpdateBackgroundColor(PRI);
     }
 }
 
@@ -2520,7 +2533,7 @@ defaultproperties
 
     //DZ
     Begin Object class=GUILabel Name=SquadNameLabelObject
-        Caption="No Squad"
+        Caption="SquadName"
         TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
