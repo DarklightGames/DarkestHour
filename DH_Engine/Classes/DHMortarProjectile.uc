@@ -741,7 +741,7 @@ defaultproperties
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
     FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
+    DescendingSound=SoundGroup'DH_MortarSounds.81mm_mortar_whistle'
 
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
