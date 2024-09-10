@@ -135,7 +135,7 @@ simulated function Destroyed()
 
     WeaponLight();
 
-    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
+    PlaySound(ExplosionSound[Rand(3)],, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
     Start = Location + vect(0.0, 0.0, 32.0);
 
@@ -626,7 +626,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
         if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, 1.0,, ImpactSoundRadius);
+            PlaySound(ImpactSound, SLOT_Misc, 1.8,, ImpactSoundRadius);
 
             NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
         }
@@ -923,9 +923,9 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
             break;
     }
 
-    if (MyImpactSound == none)
+    if (MyImpactSound != none)
     {
-        ImpactSound = default.ImpactSound;
+        ImpactSound = MyImpactSound;
     }
 }
 
@@ -985,13 +985,19 @@ defaultproperties
     DampenFactorParallel=0.8
     bFixedRotationDir=true
     DudChance=0.001 // 1 in 1000
-    ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
+    ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
+    ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'
+    ImpactSoundMetal=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Metal'
+    ImpactSoundMud=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Mud'
+    ImpactSoundGrass=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Grass'
+    ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence
     LightPeriod=3
@@ -1013,5 +1019,5 @@ defaultproperties
     TripMineLifeSpan=300
 
     ImpactSoundInterval=0.5
-    ImpactSoundRadius=100.0
+    ImpactSoundRadius=45.0
 }
