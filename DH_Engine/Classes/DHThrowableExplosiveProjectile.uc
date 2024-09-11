@@ -624,7 +624,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             Speed = VSize(Velocity);
         }
 
-        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
+        if (Level.NetMode != NM_DedicatedServer && Speed > 100.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
             PlaySound(ImpactSound, SLOT_Misc, 1.8,, ImpactSoundRadius);
 

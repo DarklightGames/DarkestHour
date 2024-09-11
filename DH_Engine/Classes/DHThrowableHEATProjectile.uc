@@ -372,7 +372,7 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
         NumDeflections++;
     }
 
-    if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+    if (Level.NetMode != NM_DedicatedServer && Speed > 100.0 && ImpactSound != none)
     {
         PlaySound(ImpactSound, SLOT_Misc, 1.1);
     }
