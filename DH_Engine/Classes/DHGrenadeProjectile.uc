@@ -110,6 +110,16 @@ defaultproperties
     ExplodeDirtEffectClass=class'GrenadeExplosion'
     ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
     ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
+    ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
+    ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'
+    ImpactSoundMetal=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Metal'
+    ImpactSoundMud=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Mud'
+    ImpactSoundGrass=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Grass'
+    ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
+    ImpactSoundVolume=2.0
+    ImpactSoundRadius=45.0
     CollisionHeight=2.0
     CollisionRadius=4.0
     bSwitchToZeroCollision=true

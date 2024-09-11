@@ -223,6 +223,12 @@ defaultproperties
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
 
     ImpactSound=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundDirt=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundWood=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundMetal=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundMud=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundGrass=Sound'DH_WeaponSounds.satchel.satcheldrops'
+    ImpactSoundConcrete=Sound'DH_WeaponSounds.satchel.satcheldrops'
 
     BlurTime=6.0
     BlurEffectScalar=2.1

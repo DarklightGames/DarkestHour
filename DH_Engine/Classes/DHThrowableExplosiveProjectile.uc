@@ -23,6 +23,7 @@ var     Sound           WaterHitSound; // sound of this bullet hitting water
 
 var     float           NextImpactSoundTime;    // Time when the next impact sound can be played.
 var     float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var     float           ImpactSoundVolume;
 var()   float           ImpactSoundRadius;
 var()   Sound           ImpactSoundDirt;
 var()   Sound           ImpactSoundWood;
@@ -626,7 +627,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
         if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, 1.8,, ImpactSoundRadius);
+            PlaySound(ImpactSound, SLOT_Misc, ImpactSoundVolume,, ImpactSoundRadius);
 
             NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
         }
@@ -1019,5 +1020,6 @@ defaultproperties
     TripMineLifeSpan=300
 
     ImpactSoundInterval=0.5
+    ImpactSoundVolume=1.0
     ImpactSoundRadius=45.0
 }
