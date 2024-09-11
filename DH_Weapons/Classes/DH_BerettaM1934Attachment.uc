@@ -10,9 +10,10 @@ defaultproperties
     Mesh=SkeletalMesh'DH_BerettaM1934_anm.beretta_m1934_3rd'  
     MenuImage=Texture'DH_BerettaM1934_tex.interface.beretta_m1934_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'  // TODO: replace
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     bRapidFire=false
     MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="EJECTOR"
 
     WA_Idle="idle_beretta"             // TODO: weapon animations needed
     WA_IdleEmpty="empty_beretta"
