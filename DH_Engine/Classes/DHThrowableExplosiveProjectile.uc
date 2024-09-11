@@ -40,7 +40,8 @@ var     Pawn            SavedInstigator;
 
 var     byte            ThrowerTeam;        // the team number of the person that threw this projectile
 var     Range           FuzeLengthRange;
-var     float           ImpactFuzeMomentumThreshold;    // The "momentum" (i.e. speed * surface modifier) the projectile must be going to explode on impact.
+var     float           ImpactFuzeMomentumThreshold;        // Calculated when spawned, a random value between the range's min and max.
+var()   Range           ImpactFuzeMomentumThresholdRange;    // The "momentum" range (i.e. speed * surface modifier) the projectile must be going to explode on impact.
 var     float           DudChance;          // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     float           DudLifeSpan;        // How long a dud lasts before it disappears.
@@ -100,6 +101,16 @@ simulated function PostBeginPlay()
             {
                 SetFuzeLength(GetRandomFuzeLength());
             }
+        }
+
+        // Calculate the momentum threshold for impact fuze grenades.
+        if (FuzeType == FT_Impact)
+        {
+            ImpactFuzeMomentumThreshold = class'UInterp'.static.Lerp(
+                FRand(), 
+                ImpactFuzeMomentumThresholdRange.Min, 
+                ImpactFuzeMomentumThresholdRange.Max
+            );
         }
     }
 
@@ -596,7 +607,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     GetHitSurfaceType(ST, HitNormal);
 
-    if (Role == ROLE_Authority && FuzeType == FT_Impact)
+    if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud)
     {
         ImpactMomentumTransfer = GetSurfaceTypeMomentumTransfer(ST) * Speed;
 
@@ -1015,7 +1026,7 @@ defaultproperties
     BlurTime=4.0
     BlurEffectScalar=1.35
 
-    ImpactFuzeMomentumThreshold=500.0
+    ImpactFuzeMomentumThresholdRange=(Min=0,Max=500.0)
     TripMineLifeSpan=300
 
     ImpactSoundInterval=0.5
