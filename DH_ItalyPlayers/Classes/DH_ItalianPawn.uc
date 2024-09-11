@@ -23,6 +23,7 @@ defaultproperties
     FaceSkins(7)=Texture'DHItalianCharactersTex.Faces.ita_face08'
     FaceSkins(8)=Texture'DHItalianCharactersTex.Faces.ita_face09'
     FaceSkins(9)=Texture'DHItalianCharactersTex.Faces.ita_face10'
+    FaceSkins(10)=Texture'DHItalianCharactersTex.Faces.ita_face11'
 
     // TODO: replace all this
     ShovelClass=class'DH_Equipment.DHShovelItem_Italian'
