@@ -21,8 +21,11 @@ var     class<Emitter>  ExplodeMidAirEffectClass;
 var     class<Actor>    SplashEffect;  // water splash effect class
 var     Sound           WaterHitSound; // sound of this bullet hitting water
 
+// Impact Sounds
 var     float           NextImpactSoundTime;    // Time when the next impact sound can be played.
-var     float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var()   float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var()   Range           ImpactSoundSpeedFactorRange;
+var()   Range           ImpactSoundVolumeRange;         // The volume of the sound impact is dependent on the speed of the projectile (see ImpactSoundSpeedFactorRange).
 var()   float           ImpactSoundRadius;
 var()   Sound           ImpactSoundDirt;
 var()   Sound           ImpactSoundWood;
@@ -572,7 +575,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local vector        VNorm;
     local ESurfaceTypes ST;
     local int           i;
-    local float         ImpactMomentumTransfer;
+    local float         ImpactMomentumTransfer, ImpactSoundVolume;
 
     DestroMesh = RODestroyableStaticMesh(Wall);
 
@@ -635,11 +638,20 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             Speed = VSize(Velocity);
         }
 
-        if (Level.NetMode != NM_DedicatedServer && Speed > 100.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
+        if (Level.NetMode != NM_DedicatedServer && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, 1.8,, ImpactSoundRadius);
+            ImpactSoundVolume = class'UInterp'.static.MapRangeClamped(
+                Speed, 
+                ImpactSoundSpeedFactorRange.Min, ImpactSoundSpeedFactorRange.Max, 
+                ImpactSoundVolumeRange.Min, ImpactSoundVolumeRange.Max
+                );
 
-            NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
+            if (ImpactSoundVolume > 0.0)
+            {
+                PlaySound(ImpactSound, SLOT_Misc, ImpactSoundVolume,, ImpactSoundRadius);
+
+                NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
+            }
         }
     }
 }
@@ -1026,9 +1038,11 @@ defaultproperties
     BlurTime=4.0
     BlurEffectScalar=1.35
 
-    ImpactFuzeMomentumThresholdRange=(Min=0,Max=500.0)
+    ImpactFuzeMomentumThresholdRange=(Min=0,Max=200.0)
     TripMineLifeSpan=300
 
     ImpactSoundInterval=0.5
     ImpactSoundRadius=45.0
+    ImpactSoundVolumeRange=(Min=0.0,Max=1.0)
+    ImpactSoundSpeedFactorRange=(Min=100,Max=500.0)
 }
