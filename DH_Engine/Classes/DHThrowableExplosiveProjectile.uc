@@ -1043,6 +1043,6 @@ defaultproperties
 
     ImpactSoundInterval=0.5
     ImpactSoundRadius=45.0
-    ImpactSoundVolumeRange=(Min=0.5,Max=1.0)
-    ImpactSoundSpeedFactorRange=(Min=0.0,Max=100.0)
+    ImpactSoundVolumeRange=(Min=0.0,Max=1.0)
+    ImpactSoundSpeedFactorRange=(Min=100,Max=500.0)
 }
