@@ -21,20 +21,21 @@ defaultproperties
     // Skins(2)=Texture'DH_Jeep_tex.body.Willys_Gear_OD'
     // Skins(3)=Texture'DH_ShermanM4A3E8_tex.hull_stowage_01'
 
-    BeginningIdleAnim="driver_hatch_idle_close"
+    BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
 
     // Passengers
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-30.0,Y=25.0,Z=50.0),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-90,Y=-20,Z=55.0),DriveRot=(Yaw=2048),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-90,Y=20,Z=55.0),DriveRot=(Yaw=-2048),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_01")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_02")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_03")
 
     // Driver
     bMultiPosition=false
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(X=-30.0,Y=-25.0,Z=50.0)
-    DriverAttachmentBone=body
-    DriveAnim="Vhalftrack_driver_idle"
+    DrivePos=(Z=58)
+    DriveRot=(Yaw=16384)
+    DriverAttachmentBone="body"
+    DriveAnim="fiat508cm_driver"
 
     // Movement
     GearRatios(0)=-0.3
@@ -140,7 +141,7 @@ defaultproperties
     RadioAttachmentBone="RADIO_ATTACHMENT"
 
     // Shadow
-    ShadowZOffset=15
+    ShadowZOffset=25
 
     // Camera
     TPCamLookat=(X=0.0,Y=0.0,Z=50.0)
