@@ -1821,7 +1821,7 @@ function UpdateSquads()
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
     local DHGUISquadComponent            C1;
-    local int TeamIndex, SquadLimit, i, j, k, SquadIndexOffset;
+    local int TeamIndex, SquadLimit, SquadSize, i, j, k, l, SquadIndexOffset;
     local bool bIsInSquad, bIsInASquad, bIsSquadActive, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
     local string SquadName;
     super.Timer();
@@ -1888,7 +1888,6 @@ function UpdateSquads()
         SetVisible(C1, true);
         C1.UpdateBackgroundColor(PRI);
 
-
         //TODO: DZ Debugging
         if (PC.GetSquadIndex() == i)
         {
@@ -1902,6 +1901,7 @@ function UpdateSquads()
             C1.l_SquadName.Caption = "";
             SetVisible(C1.l_SquadName, false);
             SetVisible(C1.i_SquadType, false);
+            SRI.GetMembers(TeamIndex, i, Members);
         }
         else
         {
@@ -1912,15 +1912,45 @@ function UpdateSquads()
                 {
                     SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
                 }
-                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SRi.GetTeamSquadSize(TeamIndex, i)  @ "]";
+
+                SquadSize = SRi.GetTeamSquadSize(TeamIndex, i);
+                SRI.GetMembers(TeamIndex, i, Members);
+
+                for (l = 0; l < SquadSize; l++)
+                {
+                    if (Members.Length > l && Members[l] != none)
+                    {
+                        if (l > 0)
+                        {
+                            C1.b_JoinSquad.ToolTip.Lines[l] = l + 1@"." @ Members[l].PlayerName;
+                        }
+                        else
+                        {
+                            C1.b_JoinSquad.ToolTip.Lines[l] = "SL." @ Members[l].PlayerName;
+                        }
+                    }
+                    else
+                    {
+                        C1.b_JoinSquad.ToolTip.Lines[l] = "";
+                    }
+                }
+
+                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SquadSize  @ "]";
             }
             else
             {
                 SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
             }
 
-            C1.WinTop = 0.4 + SquadIndexOffset * 0.05;
-            C1.WinHeight = 0.05;
+            if (bIsInASquad)
+            {
+                C1.WinTop = 0.4 + SquadIndexOffset * 0.1;
+            }
+            else
+            {
+                C1.WinTop = 0.3 + SquadIndexOffset * 0.1;
+            }
+            C1.WinHeight = 0.1;
             SquadIndexOffset++;
             SetVisible(C1.i_SquadType, true);
             SetVisible(C1.l_SquadName, true);
@@ -1937,6 +1967,8 @@ function UpdateSquads()
                 C1.b_CreateSquadInfantry.bAcceptsInput = true;
                 C1.b_JoinSquad.bAcceptsInput = true;
             }
+            // C1.b_CreateSquadInfantry.Hint = "0. LordDz | 1. Asdf | 3.asdldas"; 
+            // C1.b_JoinSquad.Hint = 
 
             // C1.i_SquadType.Image = SRI.SquadType.default.Image;
             // C1.i_SquadType.Hint = SRI.SquadType.default.Hint;
@@ -2036,7 +2068,6 @@ function UpdateSquads()
 
         C.b_LockSquad.SetVisibility(bIsSquadLeader);
 
-        SRI.GetMembers(TeamIndex, i, Members);
 
         // Save the current PRI that is selected.
         SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
@@ -2109,10 +2140,13 @@ function UpdateSquads()
     if (Members.Length > 0)
     {
         C = p_Squads.SquadComponents[j];
-        // C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
-        C.l_SquadName.Caption = "";
+        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+        // C.l_SquadName.Caption = "";
         C.SquadIndex = -1;
-        C.WinHeight = 0.3;
+        C.WinLeft = 1.02;
+        C.WinTop = 0.0;
+        C.WinWidth = 0.42;
+        C.WinHeight = 1.0;
 
         SetVisible(C, true);
         SetVisible(C.lb_Members, true);
@@ -2935,9 +2969,9 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
         WinWidth=0.28
-        WinHeight=0.74
+        WinHeight=0.25
         WinLeft=0.01
-        WinTop=0.16
+        WinTop=0.15
         LeftPadding=0.05
         RightPadding=0.05
         TopPadding=0.05
