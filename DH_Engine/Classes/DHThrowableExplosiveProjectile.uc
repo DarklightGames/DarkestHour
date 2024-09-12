@@ -19,7 +19,17 @@ var     class<Emitter>  ExplodeSnowEffectClass;
 var     class<Emitter>  ExplodeMidAirEffectClass;
 
 var     class<Actor>    SplashEffect;  // water splash effect class
-var     sound           WaterHitSound; // sound of this bullet hitting water
+var     Sound           WaterHitSound; // sound of this bullet hitting water
+
+var     float           NextImpactSoundTime;    // Time when the next impact sound can be played.
+var     float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var()   float           ImpactSoundRadius;
+var()   Sound           ImpactSoundDirt;
+var()   Sound           ImpactSoundWood;
+var()   Sound           ImpactSoundMetal;
+var()   Sound           ImpactSoundMud;
+var()   Sound           ImpactSoundGrass;
+var()   Sound           ImpactSoundConcrete;
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
 var     PlayerReplicationInfo   SavedPRI;
@@ -30,7 +40,8 @@ var     Pawn            SavedInstigator;
 
 var     byte            ThrowerTeam;        // the team number of the person that threw this projectile
 var     Range           FuzeLengthRange;
-var     float           ImpactFuzeMomentumThreshold;    // The "momentum" (i.e. speed * surface modifier) the projectile must be going to explode on impact.
+var     float           ImpactFuzeMomentumThreshold;        // Calculated when spawned, a random value between the range's min and max.
+var()   Range           ImpactFuzeMomentumThresholdRange;    // The "momentum" range (i.e. speed * surface modifier) the projectile must be going to explode on impact.
 var     float           DudChance;          // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     float           DudLifeSpan;        // How long a dud lasts before it disappears.
@@ -91,6 +102,16 @@ simulated function PostBeginPlay()
                 SetFuzeLength(GetRandomFuzeLength());
             }
         }
+
+        // Calculate the momentum threshold for impact fuze grenades.
+        if (FuzeType == FT_Impact)
+        {
+            ImpactFuzeMomentumThreshold = class'UInterp'.static.Lerp(
+                FRand(), 
+                ImpactFuzeMomentumThresholdRange.Min, 
+                ImpactFuzeMomentumThresholdRange.Max
+            );
+        }
     }
 
     Acceleration = 0.5 * PhysicsVolume.Gravity;
@@ -125,7 +146,7 @@ simulated function Destroyed()
 
     WeaponLight();
 
-    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
+    PlaySound(ExplosionSound[Rand(3)],, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
     Start = Location + vect(0.0, 0.0, 32.0);
 
@@ -586,7 +607,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     GetHitSurfaceType(ST, HitNormal);
 
-    if (Role == ROLE_Authority && FuzeType == FT_Impact)
+    if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud)
     {
         ImpactMomentumTransfer = GetSurfaceTypeMomentumTransfer(ST) * Speed;
 
@@ -614,9 +635,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             Speed = VSize(Velocity);
         }
 
-        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
+        if (Level.NetMode != NM_DedicatedServer && Speed > 100.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, 1.1);
+            PlaySound(ImpactSound, SLOT_Misc, 1.8,, ImpactSoundRadius);
+
+            NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
         }
     }
 }
@@ -816,83 +839,104 @@ simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
 // From ROGrenadeProjectile/ROSatchelChargeProjectile
 simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 {
+    local Sound MyImpactSound;
+
     switch (ST)
     {
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
+            MyImpactSound = default.ImpactSoundDirt;
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundMetal;
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
+            MyImpactSound = default.ImpactSoundWood;
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
+            MyImpactSound = default.ImpactSoundGrass;
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Water:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
-            ImpactSound = WaterHitSound;
+            MyImpactSound = WaterHitSound;
             break;
 
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Custom01: //Sand
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Custom02: //SandBag
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundMud;
             break;
 
         case EST_Custom03: //Brick
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
+            MyImpactSound = default.ImpactSoundConcrete;
             break;
 
         case EST_Custom04: //Hedgerow
             DampenFactor = 0.15;
             DampenFactorParallel = 0.55;
+            MyImpactSound = default.ImpactSoundGrass;
             break;
+    }
+
+    if (MyImpactSound != none)
+    {
+        ImpactSound = MyImpactSound;
     }
 }
 
@@ -952,13 +996,19 @@ defaultproperties
     DampenFactorParallel=0.8
     bFixedRotationDir=true
     DudChance=0.001 // 1 in 1000
-    ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
+    ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
+    ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
+    ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'
+    ImpactSoundMetal=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Metal'
+    ImpactSoundMud=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Mud'
+    ImpactSoundGrass=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Grass'
+    ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence
     LightPeriod=3
@@ -976,6 +1026,9 @@ defaultproperties
     BlurTime=4.0
     BlurEffectScalar=1.35
 
-    ImpactFuzeMomentumThreshold=500.0
+    ImpactFuzeMomentumThresholdRange=(Min=0,Max=500.0)
     TripMineLifeSpan=300
+
+    ImpactSoundInterval=0.5
+    ImpactSoundRadius=45.0
 }
