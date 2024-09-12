@@ -487,6 +487,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     // Update hit effect (not if we hit a player, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
     if (HitPlayer == none && 
         ROWeaponAttachment(Weapon.ThirdPersonActor) != none && 
+        Other != none &&
         (Other.bWorldGeometry || Other.IsA('Vehicle') || Other.IsA('VehicleWeapon')) || Other.Physics == PHYS_MovingBrush)
     {
         ROWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
@@ -498,7 +499,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
         HitPlayer.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitPlayerLocation,
             ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType, HitPoints);
     }
-    else if ((!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) && !bTraceHitBulletProofColMesh)
+    else if (Other != none && (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) && !bTraceHitBulletProofColMesh)
     {
         Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
             ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType);
