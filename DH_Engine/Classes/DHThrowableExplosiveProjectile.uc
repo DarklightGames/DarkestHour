@@ -21,9 +21,11 @@ var     class<Emitter>  ExplodeMidAirEffectClass;
 var     class<Actor>    SplashEffect;  // water splash effect class
 var     Sound           WaterHitSound; // sound of this bullet hitting water
 
+// Impact Sounds
 var     float           NextImpactSoundTime;    // Time when the next impact sound can be played.
-var     float           ImpactSoundInterval;    // Minimum time between impact sounds.
-var     float           ImpactSoundVolume;
+var()   float           ImpactSoundInterval;    // Minimum time between impact sounds.
+var()   Range           ImpactSoundSpeedFactorRange;
+var()   Range           ImpactSoundVolumeRange;         // The volume of the sound impact is dependent on the speed of the projectile (see ImpactSoundSpeedFactorRange).
 var()   float           ImpactSoundRadius;
 var()   Sound           ImpactSoundDirt;
 var()   Sound           ImpactSoundWood;
@@ -41,7 +43,8 @@ var     Pawn            SavedInstigator;
 
 var     byte            ThrowerTeam;        // the team number of the person that threw this projectile
 var     Range           FuzeLengthRange;
-var     float           ImpactFuzeMomentumThreshold;    // The "momentum" (i.e. speed * surface modifier) the projectile must be going to explode on impact.
+var     float           ImpactFuzeMomentumThreshold;        // Calculated when spawned, a random value between the range's min and max.
+var()   Range           ImpactFuzeMomentumThresholdRange;    // The "momentum" range (i.e. speed * surface modifier) the projectile must be going to explode on impact.
 var     float           DudChance;          // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     float           DudLifeSpan;        // How long a dud lasts before it disappears.
@@ -101,6 +104,16 @@ simulated function PostBeginPlay()
             {
                 SetFuzeLength(GetRandomFuzeLength());
             }
+        }
+
+        // Calculate the momentum threshold for impact fuze grenades.
+        if (FuzeType == FT_Impact)
+        {
+            ImpactFuzeMomentumThreshold = class'UInterp'.static.Lerp(
+                FRand(), 
+                ImpactFuzeMomentumThresholdRange.Min, 
+                ImpactFuzeMomentumThresholdRange.Max
+            );
         }
     }
 
@@ -562,7 +575,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local vector        VNorm;
     local ESurfaceTypes ST;
     local int           i;
-    local float         ImpactMomentumTransfer;
+    local float         ImpactMomentumTransfer, ImpactSoundVolume;
 
     DestroMesh = RODestroyableStaticMesh(Wall);
 
@@ -597,7 +610,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     GetHitSurfaceType(ST, HitNormal);
 
-    if (Role == ROLE_Authority && FuzeType == FT_Impact)
+    if (Role == ROLE_Authority && FuzeType == FT_Impact && !bDud)
     {
         ImpactMomentumTransfer = GetSurfaceTypeMomentumTransfer(ST) * Speed;
 
@@ -625,11 +638,20 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             Speed = VSize(Velocity);
         }
 
-        if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
+        if (Level.NetMode != NM_DedicatedServer && ImpactSound != none && Level.TimeSeconds >= NextImpactSoundTime)
         {
-            PlaySound(ImpactSound, SLOT_Misc, ImpactSoundVolume,, ImpactSoundRadius);
+            ImpactSoundVolume = class'UInterp'.static.MapRangeClamped(
+                Speed, 
+                ImpactSoundSpeedFactorRange.Min, ImpactSoundSpeedFactorRange.Max, 
+                ImpactSoundVolumeRange.Min, ImpactSoundVolumeRange.Max
+                );
 
-            NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
+            if (ImpactSoundVolume > 0.0)
+            {
+                PlaySound(ImpactSound, SLOT_Misc, ImpactSoundVolume,, ImpactSoundRadius);
+
+                NextImpactSoundTime = Level.TimeSeconds + ImpactSoundInterval;
+            }
         }
     }
 }
@@ -1016,10 +1038,11 @@ defaultproperties
     BlurTime=4.0
     BlurEffectScalar=1.35
 
-    ImpactFuzeMomentumThreshold=500.0
+    ImpactFuzeMomentumThresholdRange=(Min=0,Max=200.0)
     TripMineLifeSpan=300
 
     ImpactSoundInterval=0.5
-    ImpactSoundVolume=1.0
     ImpactSoundRadius=45.0
+    ImpactSoundVolumeRange=(Min=0.0,Max=1.0)
+    ImpactSoundSpeedFactorRange=(Min=100,Max=500.0)
 }

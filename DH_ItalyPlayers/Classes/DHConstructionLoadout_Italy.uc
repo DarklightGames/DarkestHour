@@ -27,7 +27,7 @@ defaultproperties
     // Obstacles
     Constructions(10)=(ConstructionClass=class'DHConstruction_ConcertinaWire',Limit=-1,MaxActive=-1)
     Constructions(11)=(ConstructionClass=class'DHConstruction_Hedgehog',Limit=-1,MaxActive=-1)
-    Constructions(12)=(ConstructionClass=class'DHConstruction_DragonsTooth',Limit=-1,MaxActive=-1)
+    Constructions(12)=(ConstructionClass=class'DHConstruction_DragonsTooth_Italy',Limit=-1,MaxActive=-1)
 
     // Guns
     Constructions(13)=(ConstructionClass=class'DH_Cannone4732GunConstruction',Limit=5,MaxActive=-1)
