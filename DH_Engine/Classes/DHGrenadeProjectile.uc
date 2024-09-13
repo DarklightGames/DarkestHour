@@ -8,8 +8,8 @@ class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporatin
 
 var enum ESpinType
 {
-    ST_Normal,        // Normal spin for egg-shaped or canister grenades.
-    ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades.
+    ST_Normal,      // Normal spin for egg-shaped or canister grenades.
+    ST_Tumble,      // End-over-end tumbling flight (e.g. stick grenades).
 } SpinType;
 
 // Client-side only projectile class to accompany a throw
