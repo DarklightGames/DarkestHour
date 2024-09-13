@@ -2,6 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// Colin
+//==============================================================================
+// [ ] UI Elements
+// [ ] Passenger position dots
+// [ ] Hitpoints
+// [ ] Damage effect positions
+//===============================================================================
+// Matty
+//===============================================================================
+// [ ] Destroyed mesh
+// [ ] Camo & texture variants
+//===============================================================================
 
 class DH_Fiat508CMTransport extends DHVehicle;
 
@@ -115,16 +127,16 @@ defaultproperties
     SteerBoneAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_Jeep_tex.HUD.jeep_body1'
+    VehicleHudImage=Texture'DH_Fiat508CM_tex.interface.fiat508cm_icon'
     VehicleHudEngineY=0.28
-    VehicleHudOccupantsX(0)=0.42
-    VehicleHudOccupantsY(0)=0.57
-    VehicleHudOccupantsX(1)=0.58
-    VehicleHudOccupantsY(1)=0.57
-    VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.76
-    VehicleHudOccupantsX(3)=0.55
-    VehicleHudOccupantsY(3)=0.76
+    VehicleHudOccupantsX(0)=0.56125
+    VehicleHudOccupantsY(0)=0.51250
+    VehicleHudOccupantsX(1)=0.43875
+    VehicleHudOccupantsY(1)=0.51250
+    VehicleHudOccupantsX(2)=0.56125
+    VehicleHudOccupantsY(2)=0.675
+    VehicleHudOccupantsX(3)=0.43875
+    VehicleHudOccupantsY(3)=0.675
     SpawnOverlay(0)=Material'DH_Jeep_tex.HUD.profile'
 
     // Attachments
