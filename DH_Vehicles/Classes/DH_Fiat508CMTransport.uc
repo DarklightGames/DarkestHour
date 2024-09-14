@@ -4,10 +4,9 @@
 //==============================================================================
 // Colin
 //==============================================================================
-// [ ] UI Elements
-// [ ] Passenger position dots
 // [ ] Hitpoints
 // [ ] Damage effect positions
+// [ ] Fix radio bug
 //===============================================================================
 // Matty
 //===============================================================================
@@ -28,10 +27,9 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body'
-    // Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_OD'
-    // Skins(1)=Texture'DH_Jeep_tex.body.Willys_Wheels_OD'
-    // Skins(2)=Texture'DH_Jeep_tex.body.Willys_Gear_OD'
-    // Skins(3)=Texture'DH_ShermanM4A3E8_tex.hull_stowage_01'
+    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_tan'
+    Skins(1)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_tan'
+    Skins(2)=FinalBlend'DH_Fiat508CM_tex.fiat508.fiat508_windows_fb'
 
     BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
 
@@ -137,7 +135,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.675
     VehicleHudOccupantsX(3)=0.43875
     VehicleHudOccupantsY(3)=0.675
-    SpawnOverlay(0)=Material'DH_Jeep_tex.HUD.profile'
+    SpawnOverlay(0)=Texture'DH_Fiat508CM_tex.fiat508cm_menu_icon'
 
     // Attachments
     // TODO: add radio attachment logic for normal vehicles
