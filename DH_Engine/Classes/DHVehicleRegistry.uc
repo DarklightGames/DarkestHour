@@ -240,7 +240,7 @@ defaultproperties
     Records(106)=(VehicleNames=("fiat1435"),Variants=((ClassName="DH_Guns.DH_Fiat1435Gun")))
     Records(107)=(VehicleNames=("fiatl640","l640"),Variants=((ClassName="DH_Vehicles.DH_FiatL640Tank")))
     Records(108)=(VehicleNames=("semo47","semovente4732"),Variants=((ClassName="DH_Vehicles.DH_Semovente4732Destroyer")))
-    Records(109)=(VehicleNames=("fiat508","fiat508cm"),Variants=((ClassName="DH_Vehicles.DH_Fiat508CMTransport")))
+    Records(109)=(VehicleNames=("fiat508","fiat508cm"),Variants=((ClassName="DH_Vehicles.DH_Fiat508CMTransport_Green"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport_Camo",VariantName="camo")))
     // Vehicles to be added in the near future:
     // Semovente da 47/32 (https://en.wikipedia.org/wiki/Semovente_da_47/32)
     // Semovente da 75/18 (https://en.wikipedia.org/wiki/Semovente_da_75/18)

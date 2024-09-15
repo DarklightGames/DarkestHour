@@ -133,7 +133,6 @@ defaultproperties
     SpawnOverlay(0)=Texture'DH_Fiat508CM_tex.fiat508cm_menu_icon'
 
     // Attachments
-    // TODO: add radio attachment logic for normal vehicles
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.attachments.fiat508cm_radio',AttachBone="BODY")
 
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_searchlight'))))
@@ -143,6 +142,8 @@ defaultproperties
     RandomAttachmentGroups(4)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_windows'))))
 
     RadioAttachmentClass=class'DH_Engine.DHRadio'
+    RadioAttachmentHeight=16.0
+    RadioAttachmentRadius=16.0
     RadioAttachmentBone="RADIO_ATTACHMENT"
 
     // Shadow
