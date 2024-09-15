@@ -82,10 +82,9 @@ defaultproperties
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=70.0)
-    DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.Destroyed.jeep_destroyed'
-    DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.body.Willys_Body_OD_Destroyed'
-    DestroyedMeshSkins(1)=Combiner'DH_Jeep_tex.body.Willys_Wheels_OD_Destroyed'
-    DestroyedMeshSkins(2)=Combiner'DH_Jeep_tex.body.Willys_Gear_OD_Destroyed'
+
+    bUsesCodedDestroyedSkins=true
+    DestroyedVehicleMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_destroyed'
 
     // Vehicle destruction
     ExplosionDamage=50.0
