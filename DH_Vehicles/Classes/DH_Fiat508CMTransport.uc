@@ -2,10 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// Matty
-//===============================================================================
-// [ ] Destroyed mesh
-//===============================================================================
 
 class DH_Fiat508CMTransport extends DHVehicle;
 
@@ -102,9 +98,9 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=350.0
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
+    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
+    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
+    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
     RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects
