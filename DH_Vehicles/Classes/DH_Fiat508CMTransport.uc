@@ -2,11 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// Colin
-//==============================================================================
-// [ ] Damage effect positions
-// [ ] Fix radio bug
-//===============================================================================
 // Matty
 //===============================================================================
 // [ ] Destroyed mesh
@@ -87,7 +82,7 @@ defaultproperties
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
-    DamagedEffectOffset=(X=40.0,Y=0.0,Z=70.0)
+    DamagedEffectOffset=(X=60.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_Jeep_stc.Destroyed.jeep_destroyed'
     DestroyedMeshSkins(0)=Combiner'DH_Jeep_tex.body.Willys_Body_OD_Destroyed'
     DestroyedMeshSkins(1)=Combiner'DH_Jeep_tex.body.Willys_Wheels_OD_Destroyed'
@@ -140,10 +135,12 @@ defaultproperties
     RandomAttachmentGroups(2)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_jerry_can'))))
     RandomAttachmentGroups(3)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_roof'))))
     RandomAttachmentGroups(4)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_windows'))))
+    RandomAttachmentGroups(5)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights_protected'))))
 
     RadioAttachmentClass=class'DH_Engine.DHRadio'
     RadioAttachmentHeight=16.0
     RadioAttachmentRadius=16.0
+    RadioAttachmentSoundRadius=20.0
     RadioAttachmentBone="RADIO_ATTACHMENT"
 
     // Shadow
