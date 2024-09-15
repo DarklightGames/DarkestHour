@@ -93,7 +93,6 @@ state ReleasingSmoke
         LifeSpan = SmokeAttachmentClass.default.SmokeSoundDuration + 10.0;
     }
 
-
     simulated function Explode(vector HitLocation, vector HitNormal);
 }
 

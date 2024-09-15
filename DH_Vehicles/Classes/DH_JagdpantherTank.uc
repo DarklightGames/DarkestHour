@@ -5,17 +5,6 @@
 
 class DH_JagdpantherTank extends DHArmoredVehicle;
 
-// Hack to stop jagdpanther camo variants without a matching schurzen texture from spawning schurzen
-simulated function SpawnVehicleAttachments()
-{
-    if (RandomAttachment.Skins[0] == none)
-    {
-        RandomAttachOptions.Length = 0;
-    }
-
-    super.SpawnVehicleAttachments();
-}
-
 defaultproperties
 {
     // Vehicle properties
@@ -119,11 +108,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:
-    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2'))
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
+    RandomAttachmentGroups(0)=(Options=((Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.3),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.15),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.10),(Attachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',Skins=(Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')),Probability=0.15)))
 
     // HUD
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
