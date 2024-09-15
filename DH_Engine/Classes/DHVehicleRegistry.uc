@@ -30,6 +30,11 @@ static function string GetClassNameFromVehicleName(string VehicleName, optional 
         {
             if (StrCmp(VehicleName, default.Records[i].VehicleNames[j]) == 0)
             {
+                if (StrCmp(VariantName, "random",, false) == 0)
+                {
+                    return default.Records[i].Variants[Rand(default.Records[i].Variants.Length)].ClassName;
+                }
+
                 for (k = 0; k < default.Records[i].Variants.Length; ++k)
                 {
                     if (StrCmp(default.Records[i].Variants[k].VariantName, VariantName) == 0)
