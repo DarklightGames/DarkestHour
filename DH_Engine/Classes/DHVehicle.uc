@@ -191,6 +191,7 @@ var()   class<DHRadio>                          RadioAttachmentClass;
 var()   name                                    RadioAttachmentBone;
 var()   float                                   RadioAttachmentRadius;
 var()   float                                   RadioAttachmentHeight;
+var()   float                                   RadioAttachmentSoundRadius;
 var     DHRadio                                 RadioAttachment;
 
 // Spawning
@@ -3009,6 +3010,11 @@ simulated function SpawnVehicleAttachments()
             RadioAttachment.TeamIndex = VehicleTeam;
             RadioAttachment.SetCollisionSize(RadioAttachmentRadius, RadioAttachmentHeight);
 
+            if (RadioAttachmentSoundRadius != 0.0)
+            {
+                RadioAttachment.SoundRadius = RadioAttachmentSoundRadius;
+            }
+
             if (RadioAttachment != none)
             {
                 AttachToBone(RadioAttachment, RadioAttachmentBone);
@@ -4521,5 +4527,6 @@ defaultproperties
     // Radio Attachment
     RadioAttachmentRadius=10.0
     RadioAttachmentHeight=10.0
+
     bDoRandomAttachments=true
 }
