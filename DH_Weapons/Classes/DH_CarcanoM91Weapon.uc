@@ -15,7 +15,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_CarcanoM91Attachment'
     PickupClass=class'DH_Weapons.DH_CarcanoM91Pickup'
 
-    Mesh=SkeletalMesh'DH_Carcano_1st.CarcanoM91_1st'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_1st'
 
     bUseHighDetailOverlayIndex=false
 
