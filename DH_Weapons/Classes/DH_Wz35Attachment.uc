@@ -7,9 +7,10 @@ class DH_Wz35Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    //Mesh=SkeletalMesh'DH_Wz35_anm.wz35_3rd' uncomment when wz35 3rd model is added to the anim package
+    Mesh=SkeletalMesh'DH_Wz35_anm.wz35_3rd'
     MenuImage=Texture'DH_Wz35_tex.Interface.wz35_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
+    MuzzleBoneName="MUZZLE"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
     bRapidFire=false
 
