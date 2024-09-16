@@ -8,7 +8,7 @@ class DH_BazookaWeapon extends DHRocketWeapon;
 defaultproperties
 {
     ItemName="M1A1 Bazooka"
-    Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka_m1a1'
+    Mesh=SkeletalMesh'DH_Bazooka_anm.Bazooka_m1a1'
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
     AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'
