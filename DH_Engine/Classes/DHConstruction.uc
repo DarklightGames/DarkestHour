@@ -242,7 +242,7 @@ var bool bIsArtillery;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex, StateName;
+        TeamIndex, StateName, Progress;
 }
 
 simulated function OnConstructed();
