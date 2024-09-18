@@ -45,7 +45,8 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire'
+    FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
+    FireModeClass(1)=class'DH_Equipment.DHTrenchMaceMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
     
     ItemName="Trench Club"
     InventoryGroup=7
@@ -55,17 +56,24 @@ defaultproperties
 
     DisplayFOV=90.0
     bCanSway=false
-    
+
     SelectAnim="draw"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
     IdleAnim="idle"
     SprintStartAnim="sprint_start"
     SprintEndAnim="sprint_end"
-    PutDownAnim="putaway"
+    PutDownAnim="put_away"
     
     AIRating=0.0
     CurrentRating=0.0
+
+    SprintStartAnimRate=1
+    SprintEndAnimRate=1
+    SprintLoopAnimRate=1
+
+    bUsesFreeAim=true
+    FreeAimRotationSpeed=2.0
 
     AttachmentClass=class'DHTrenchMaceAttachment'
     Mesh=SkeletalMesh'DH_Halloween_anm.trenchmace'
