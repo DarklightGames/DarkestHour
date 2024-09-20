@@ -10,7 +10,7 @@ class DH_CarcanoM91Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Carcano_3rd.CarcanoM91_world'
+    Mesh=SkeletalMesh'DH_Carcano_anm.CarcanoM91_world'
     MenuImage=Texture'DH_Carcano_tex.weapon_icons.carcano_m91_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'

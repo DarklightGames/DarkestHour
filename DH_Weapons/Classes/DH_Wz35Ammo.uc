@@ -7,7 +7,7 @@ class DH_Wz35Ammo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=3
-    InitialAmount=3
+    MaxAmmo=4
+    InitialAmount=4
     IconMaterial=Material'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
 }

@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'
     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_1st'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_1st'
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8  //reduced from 13 because this rifle used to have x2 as much ammo as other rifles

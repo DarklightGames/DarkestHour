@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped_1st'
+    Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_Scoped_1st'
 
     bHasScope=true
     bIsSniper=true

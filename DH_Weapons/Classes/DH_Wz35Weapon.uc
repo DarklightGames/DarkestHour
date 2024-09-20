@@ -30,17 +30,35 @@ simulated function ROIronSights()
     Deploy();
 }
 
-// Modified because bolt action class can't handle reloads for this type of
-// a weapon.
-// TODO: Add proper reload handling to the base class and remove this.
-simulated function PerfomReload()
+// HACK: Bypass special reload logic in `DHBoltActionWeapon` to fix the issues with reloading.
+function PerformReload(optional int Count)
 {
-    super(DHProjectileWeapon).PerformReload();
+    super(DHProjectileWeapon).PerformReload(Count);
 }
 
-simulated function bool AllowReload()
+simulated function ClientDoReload(optional byte NumRounds)
 {
-    return super(DHProjectileWeapon).AllowReload();
+    super(DHProjectileWeapon).ClientDoReload(NumRounds);
+}
+
+function ServerRequestReload()
+{
+    super(DHProjectileWeapon).ServerRequestReload();
+}
+
+simulated function byte GetRoundsToLoad()
+{
+    if (CurrentMagCount == 0)
+    {
+        return 0;
+    }
+
+    return GetMaxLoadedRounds();
+}
+
+simulated function int GetStripperClipSize()
+{
+    return 4;
 }
 
 defaultproperties
@@ -58,8 +76,9 @@ defaultproperties
     IronSightDisplayFOV=55
 
     bCanHaveInitialNumMagsChanged=false
-    MaxNumPrimaryMags=20
-    InitialNumPrimaryMags=20
+    bUsesMagazines=true
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
 
     bCanBipodDeploy=true
     bCanRestDeploy=false

@@ -20,7 +20,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st14mm'
     //ShellIronSightOffset=(X=10.0,Y=3.0,Z=0.0)
     //ShellRotOffsetIron=()
-    bAnimNotifiedShellEjects=false
+    bAnimNotifiedShellEjects=true
     FireIronAnim="deploy_shoot"
     ShakeOffsetMag=(X=6.0,Y=2.0,Z=10.0)
     ShakeOffsetTime=4.0
