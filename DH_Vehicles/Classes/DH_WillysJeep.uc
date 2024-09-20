@@ -47,7 +47,7 @@ defaultproperties
     ChassisTorqueScale=0.1
     TurnDamping=5.0
     SteerSpeed=130.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=35.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=40.0),(InVal=200.0,OutVal=30.0),(InVal=900.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
     MinBrakeFriction=2.0
     MaxBrakeTorque=10.0
     EngineBrakeFactor=0.0002

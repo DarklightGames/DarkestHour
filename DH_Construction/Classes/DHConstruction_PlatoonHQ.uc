@@ -298,7 +298,7 @@ defaultproperties
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
-    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of controlled territory."
+    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of a controlled objective."
     bCanBePlacedInDangerZone=false
 
     StartRotationMin=(Yaw=32768)

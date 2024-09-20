@@ -15,7 +15,7 @@ defaultproperties
     Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
 
     //to do: destroyed skin
-    RandomAttachment=(Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'))
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'))),(Probability=0.5,Attachment=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',Skins=(Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter')))))
     DestroyedMeshSkins(0)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
     DestroyedMeshSkins(1)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'
 }

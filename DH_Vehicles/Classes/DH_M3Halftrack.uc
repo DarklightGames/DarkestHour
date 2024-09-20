@@ -137,10 +137,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-90.0,Y=50.0,Z=20.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     SteerBoneName="steering_wheel"
     SteerBoneAxis=AXIS_Z
-    RandomAttachment=(AttachBone="body",bHasCollision=true)
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
-    ShadowZOffset=32.0
+    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',bHasCollision=true)),(Probability=0.5,Attachment=(AttachBone="body",StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',bHasCollision=true))))
 
     // HUD
     VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
