@@ -17,6 +17,13 @@ enum EMapMode
     MODE_Squads
 };
 
+enum ESquadPlayersMode
+{
+    MODE_NonSquads,
+    MODE_Squads
+};
+
+
 var bool bIsEditingName;
 
 var automated   FloatingImage               i_Background;
@@ -127,6 +134,7 @@ var             bool                        bButtonsEnabled;
 var             Material                    VehicleNoneMaterial;
 
 var             EMapMode                    MapMode;
+var             ESquadPlayersMode           SquadPlayerMode;
 
 var Texture LockIcon;
 var Texture UnlockIcon;
@@ -1801,18 +1809,390 @@ function OnSquadNameEditBoxEnter()
     OnSquadNameEditBoxDeactivate();
 }
 
-function UpdateSquadName()
+function UpdatePlayerSquadName(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 {
-    local bool bIsInASquad;
-
-    if (SRI != none && PRI.IsInSquad())
+    if (bIsInASquad)
     {
-        l_SquadName.Caption = SRI.GetSquadName(PC.GetTeamNum(), PC.GetSquadIndex());
+        l_SquadName.Caption = SRI.GetSquadName(TeamIndex, PlayerSquadIndex);
     }
     else
     {
         l_SquadName.Caption = "No Squad";
     }
+}
+
+function HideSquads()
+{
+    local int i;
+    local DHGUISquadComponent            C;
+
+    // HACK: this GUI system is madness and requires me to do stupid things
+    // like this in order for it to work.
+    for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+    {
+        C = p_Squads.SquadComponents[i];
+        SetVisible(C, false);
+        // SetVisible(C.lb_Members, false);
+        // SetVisible(C.li_Members, false);
+        // SetVisible(C.b_CreateSquadInfantry, false);
+        // // SetVisible(C.b_CreateSquadArmored, false);
+        // // SetVisible(C.b_CreateSquadLogistics, false);
+        // SetVisible(C.b_JoinSquad, false);
+        // SetVisible(C.b_LeaveSquad, false);
+        // SetVisible(C.b_LockSquad, false);
+        // SetVisible(C.i_LockSquad, false);
+        // SetVisible(C.i_NoRallyPoints, false);
+    }
+}
+
+function UpdateSquadLeaderLockButton(DHGUISquadComponent C, bool bIsSquadLeader, bool bIsSquadLocked, bool bCanSquadBeLocked)
+{
+    if (!bIsSquadLeader)
+    {
+        C.b_LockSquad.SetVisibility(false);
+        return;
+    }
+
+    if (bIsSquadLocked)
+    {
+        C.i_LockSquad.Image = LockIcon;
+        C.b_LockSquad.SetHint(default.UnlockText);
+    }
+    else
+    {
+        C.i_LockSquad.Image = UnlockIcon;
+
+        if (bCanSquadBeLocked)
+        {
+            C.i_LockSquad.ImageColor.A = 255;
+            C.b_LockSquad.SetHint(default.LockText);
+        }
+        else
+        {
+            C.i_LockSquad.ImageColor.A = 64;
+            C.b_LockSquad.SetHint("Squad can be locked only if it has " $ SRI.SquadLockMemberCountMin $ " or more members");
+        }
+    }
+    SetVisible(C.i_LockSquad, bIsSquadLocked);
+    C.b_LockSquad.SetVisibility(true);
+}
+
+function ShowPlayerSquad(int TeamIndex, int PlayerSquadIndex)
+{
+    local DHGUISquadComponent C;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHPlayerReplicationInfo SavedPri;
+    local bool bIsSquadLeader, bIsSquadLocked, bCanSquadBeLocked;
+    local int k;
+
+    C = p_Squads.SquadComponents[PlayerSquadIndex];
+    C.WinTop = 0.0;
+    C.WinHeight = 0.4;
+    C.l_SquadName.Caption = "";
+
+    SetVisible(C.l_SquadName, false);
+    SetVisible(C.i_SquadType, false);
+
+    SRI.GetMembers(TeamIndex, PlayerSquadIndex, Members);
+    bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, PlayerSquadIndex);
+    bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, PlayerSquadIndex);
+    bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, PlayerSquadIndex);
+
+    C.b_LockSquad.SetVisibility(bIsSquadLeader);
+
+    SetVisible(C.b_CreateSquadInfantry, false);
+    SetVisible(C.b_JoinSquad, false);
+    SetVisible(eb_SquadName, bIsSquadLeader);
+    SetVisible(C.b_LockSquad, bIsSquadLeader);
+    SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+    SetVisible(C.lb_Members, true);
+    SetVisible(C.li_Members, true);
+    SetVisible(C.b_LeaveSquad, true);
+    SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, PlayerSquadIndex));
+
+    Log("Squad: " @ PlayerSquadIndex @ " - PC SquadIndex: " @ PC.GetSquadIndex() @ " is in squad: " @ SRI.IsInSquad(PRI, TeamIndex, PlayerSquadIndex));
+    UpdateSquadLeaderLockButton(C, bIsSquadLeader, bIsSquadLocked, bCanSquadBeLocked);
+    C.UpdateBackgroundColor(PRI);
+
+
+
+    // Save the current PRI that is selected.
+    SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+
+    // Add or remove entries to match the member count.
+    while (C.li_Members.ItemCount < Members.Length)
+    {
+        C.li_Members.Add("");
+    }
+
+    while (C.li_Members.ItemCount > Members.Length)
+    {
+        C.li_Members.Remove(0, 1);
+    }
+
+    // Update the text and associated object for each item.
+    for (k = 0; k < Members.Length; ++k)
+    {
+        C.li_Members.SetItemAtIndex(k, Members[k].GetNamePrefix() $ "." @ Members[k].PlayerName);
+        C.li_Members.SetObjectAtIndex(k, Members[k]);
+    }
+
+    // Re-select the previous selection.
+    C.li_Members.SelectByObject(SavedPRI);
+}
+
+function UpdateSquadTypeImage(DHGUISquadComponent C, int TeamIndex, int SquadIndex)
+{
+    // C.b_CreateSquadInfantry.Hint = "0. LordDz | 1. Asdf | 3.asdldas"; 
+    // C.b_JoinSquad.Hint = 
+
+    // C.i_SquadType.Image = SRI.SquadType.default.Image;
+    // C.i_SquadType.Hint = SRI.SquadType.default.Hint;
+}
+
+function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex)
+{
+    local DHPlayerReplicationInfo SavedPri;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHGUISquadComponent C;
+    local int i, k;
+    local int SquadIndexOffset;
+    local int SquadLimit;
+    local bool bIsInASquad, bIsInSquad, bIsSquadActive;
+    local string SquadName;
+
+    SquadIndexOffset = 0;
+    for (i = 0; i < p_Squads.SquadComponents.Length - 1; ++i)
+    {
+        bIsInSquad = PlayerSquadIndex == i || SRI.IsInSquad(PRI, TeamIndex, i);
+
+        if (bIsInSquad)
+        {
+            continue;
+        }
+
+        C = p_Squads.SquadComponents[i];
+        SetVisible(C, true);
+        C.UpdateBackgroundColor(PRI);
+        
+
+        if (bIsInASquad)
+        {
+            C.WinTop = 0.4 + SquadIndexOffset * 0.1;
+        }
+        else
+        {
+            C.WinTop = 0.4 + SquadIndexOffset * 0.1;
+        }
+
+        C.b_CreateSquadInfantry.bAcceptsInput = !bIsInASquad;
+        C.b_JoinSquad.bAcceptsInput = !bIsInASquad;
+
+        SquadIndexOffset++;
+        C.WinHeight = 0.1;
+     
+        bIsSquadActive = SRI.IsSquadActive(TeamIndex, i);
+
+        if (bIsSquadActive)
+        {
+            SRI.GetMembers(TeamIndex, i, Members);
+            UpdateActiveSquad(TeamIndex, i, C, Members);
+        }
+        else
+        {
+            UpdateInactiveSquad(C, TeamIndex, i);
+        }
+
+
+        UpdateSquadTypeImage(C, TeamIndex, i);
+        
+       
+
+
+        // Save the current PRI that is selected.
+        // SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+        // // Add or remove entries to match the member count.
+        // while (C.li_Members.ItemCount < Members.Length)
+        // {
+        //     C.li_Members.Add("");
+        // }
+
+        // while (C.li_Members.ItemCount > Members.Length)
+        // {
+        //     C.li_Members.Remove(0, 1);
+        // }
+
+        // // Update the text and associated object for each item.
+        // for (k = 0; k < Members.Length; ++k)
+        // {
+        //     C.li_Members.SetItemAtIndex(k, Members[k].GetNamePrefix() $ "." @ Members[k].PlayerName);
+        //     C.li_Members.SetObjectAtIndex(k, Members[k]);
+        // }
+
+        // // Re-select the previous selection.
+        // C.li_Members.SelectByObject(SavedPRI);
+    }
+}
+
+function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C, array<DHPlayerReplicationInfo> Members)
+{
+    local int l;
+    local int SquadSize;
+    local string SquadName;
+    local bool bIsSquadFull, bIsSquadLocked, bCanSquadBeLocked;
+
+    SetVisible(C.i_SquadType, true);
+    SetVisible(C.l_SquadName, true);
+    SetVisible(C.i_NoRallyPoints, false);
+    SetVisible(C.b_CreateSquadInfantry, false);
+    // SetVisible(C.b_CreateSquadArmored, false);
+    // SetVisible(C.b_CreateSquadLogistics, false);
+    SetVisible(C.lb_Members, false);
+    SetVisible(C.li_Members, false);
+    SetVisible(C.b_LeaveSquad, false);
+    SetVisible(C.i_NoRallyPoints, false);
+    C.b_LockSquad.SetVisibility(false);
+
+    SquadName = SRI.GetSquadName(TeamIndex, SquadIndex);
+    if (SquadName == "")
+    {
+        SquadName = SRI.GetDefaultSquadName(TeamIndex, SquadIndex);
+    }
+
+    SquadSize = SRi.GetTeamSquadSize(TeamIndex, SquadIndex);
+    SRI.GetMembers(TeamIndex, SquadIndex, Members);
+
+    for (l = 0; l < SquadSize; l++)
+    {
+        if (Members.Length > l && Members[l] != none)
+        {
+            if (l > 0)
+            {
+                C.b_JoinSquad.ToolTip.Lines[l] = l + 1@"." @ Members[l].PlayerName;
+            }
+            else
+            {
+                C.b_JoinSquad.ToolTip.Lines[l] = "SL." @ Members[l].PlayerName;
+            }
+        }
+        else
+        {
+            C.b_JoinSquad.ToolTip.Lines[l] = "";
+        }
+    }
+    C.l_SquadName.Caption = SquadName @ " ["  @ C.li_Members.ItemCount @ "/" @ SquadSize  @ "]";
+    
+    bIsSquadFull = SRI.IsSquadFull(TeamIndex, SquadIndex);
+    bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, SquadIndex);
+    bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, SquadIndex);
+
+    SetVisible(C.b_JoinSquad, bIsSquadLocked);
+
+    if (bIsSquadLocked)
+    {
+        C.i_LockSquad.Image = LockIcon;
+        C.i_LockSquad.ImageColor.A = 128;
+
+        C.b_JoinSquad.DisableMe();
+        SetVisible(C.i_LockSquad, true);
+    }
+    else
+    {
+        SetVisible(C.i_LockSquad, false);
+
+        if (SRI.IsSquadJoinable(TeamIndex, SquadIndex))
+        {
+            C.b_JoinSquad.EnableMe();
+        }
+        else
+        {
+            C.b_JoinSquad.DisableMe();
+        }
+    }
+}
+
+function UpdateInactiveSquad(DHGUISquadComponent C, int TeamIndex, int SquadIndex)
+{
+    C.l_SquadName.Caption = SRI.GetDefaultSquadName(TeamIndex, SquadIndex);
+    
+    SetVisible(C.i_SquadType, true);
+    SetVisible(C.l_SquadName, true);
+    SetVisible(C.i_NoRallyPoints, false);
+    SetVisible(C.b_CreateSquadInfantry, true);
+    SetVisible(C.b_JoinSquad, false);
+    SetVisible(C.lb_Members, false);
+    SetVisible(C.li_Members, false);
+    SetVisible(C.b_LeaveSquad, false);
+    SetVisible(C.i_NoRallyPoints, false);
+    SetVisible(C.i_LockSquad, false);
+
+    C.b_JoinSquad.EnableMe();
+    C.b_LockSquad.SetVisibility(false);
+}
+
+function ShowUnassignedPlayers(int TeamIndex)
+{
+    local DHPlayerReplicationInfo SavedPri;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHGUISquadComponent C;
+    local int k;
+
+    SRI.GetUnassignedPlayers(TeamIndex, Members);
+
+    if (Members.Length == 0)
+    {
+        SetVisible(C, false);
+        return;
+    }
+
+    C = p_Squads.SquadComponents[p_Squads.SquadComponents.Length - 1];
+    C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+    // C.l_SquadName.Caption = "";
+    C.SquadIndex = -1;
+    C.WinLeft = 1.02;
+    C.WinTop = 0.0;
+    C.WinWidth = 0.42;
+    C.WinHeight = 1.0;
+
+    SetVisible(C, true);
+    SetVisible(C.lb_Members, true);
+    SetVisible(C.li_Members, true);
+    SetVisible(C.l_SquadName, true);
+    SetVisible(C.b_CreateSquadInfantry, false);
+    SetVisible(C.b_JoinSquad, false);
+    SetVisible(C.b_LeaveSquad, false);
+    SetVisible(C.b_LockSquad, false);
+    SetVisible(C.i_LockSquad, false);
+    SetVisible(C.i_NoRallyPoints, false);
+    SetVisible(C.i_SquadType, false);
+    C.UpdateBackgroundColor(PRI);
+    // C.l_SquadName.VertAlign = TXTA_Left;
+
+    SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+    // Add or remove entries to match the member count.
+    while (C.li_Members.ItemCount < Members.Length)
+    {
+        C.li_Members.Add("");
+    }
+
+    while (C.li_Members.ItemCount > Members.Length)
+    {
+        C.li_Members.Remove(0, 1);
+    }
+
+    // Update the text and associated object for each item.
+    for (k = 0; k < Members.Length; ++k)
+    {
+        C.li_Members.SetItemAtIndex(k, Members[k].PlayerName);
+        C.li_Members.SetObjectAtIndex(k, Members[k]);
+    }
+
+    // Re-select the previous selection.
+    C.li_Members.SelectByObject(SavedPRI);
+
 }
 
 function UpdateSquads()
@@ -1821,31 +2201,13 @@ function UpdateSquads()
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
     local DHGUISquadComponent            C1;
-    local int TeamIndex, SquadLimit, SquadSize, i, j, k, l, SquadIndexOffset;
-    local bool bIsInSquad, bIsInASquad, bIsSquadActive, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
-    local string SquadName;
+    local int TeamIndex, SquadLimit, PlayerSquadIndex, SquadSize, i, j, k, l, SquadIndexOffset;
+    local bool bIsInSquad, bIsInASquad, bIsSquadActive, bIsSquadFull, bIsSquadLocked, bCanSquadBeLocked;
     super.Timer();
 
-    // HACK: this GUI system is madness and requires me to do stupid things
-    // like this in order for it to work.
     if (MapMode != MODE_Squads)
     {
-        for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
-        {
-            C = p_Squads.SquadComponents[i];
-
-            SetVisible(C.lb_Members, false);
-            SetVisible(C.li_Members, false);
-            SetVisible(C.b_CreateSquadInfantry, false);
-            // SetVisible(C.b_CreateSquadArmored, false);
-            // SetVisible(C.b_CreateSquadLogistics, false);
-            SetVisible(C.b_JoinSquad, false);
-            SetVisible(C.b_LeaveSquad, false);
-            SetVisible(C.b_LockSquad, false);
-            SetVisible(C.i_LockSquad, false);
-            SetVisible(C.i_NoRallyPoints, false);
-        }
-
+        HideSquads();
         return;
     }
 
@@ -1874,322 +2236,28 @@ function UpdateSquads()
     bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
-    UpdateSquadName();
-    // SetVisible(l_SquadName, true);
 
-    // Go through the active squads
-    SquadIndexOffset = 0;
-    for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
+    PlayerSquadIndex =  PC.GetSquadIndex();
+    UpdatePlayerSquadName(TeamIndex, PlayerSquadIndex, bIsInASquad);
+
+
+    if (PlayerSquadIndex != -1)
     {
-        C1 = p_Squads.SquadComponents[i];
-        C1.SquadIndex = i; //Need to set it so create squad button links correctly
-        bIsInSquad = PC.GetSquadIndex() == i || SRI.IsInSquad(PRI, TeamIndex, i);
-        bIsSquadActive = SRI.IsSquadActive(TeamIndex, i);
-        SetVisible(C1, true);
-        C1.UpdateBackgroundColor(PRI);
-
-        //TODO: DZ Debugging
-        if (PC.GetSquadIndex() == i)
-        {
-            Log("Squad: " @ i @ " - PC SquadIndex: " @ PC.GetSquadIndex() @ " is in squad: " @ SRI.IsInSquad(PRI, TeamIndex, i) @ " and bIsInSquad is: " @ bIsInSquad);
-        }
-
-        if (bIsInSquad)
-        {
-            C1.WinTop = 0.0;
-            C1.WinHeight = 0.4;
-            C1.l_SquadName.Caption = "";
-            SetVisible(C1.l_SquadName, false);
-            SetVisible(C1.i_SquadType, false);
-            SRI.GetMembers(TeamIndex, i, Members);
-        }
-        else
-        {
-            if (bIsSquadActive)
-            {
-                SquadName = SRI.GetSquadName(TeamIndex, i);
-                if (SquadName == "")
-                {
-                    SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
-                }
-
-                SquadSize = SRi.GetTeamSquadSize(TeamIndex, i);
-                SRI.GetMembers(TeamIndex, i, Members);
-
-                for (l = 0; l < SquadSize; l++)
-                {
-                    if (Members.Length > l && Members[l] != none)
-                    {
-                        if (l > 0)
-                        {
-                            C1.b_JoinSquad.ToolTip.Lines[l] = l + 1@"." @ Members[l].PlayerName;
-                        }
-                        else
-                        {
-                            C1.b_JoinSquad.ToolTip.Lines[l] = "SL." @ Members[l].PlayerName;
-                        }
-                    }
-                    else
-                    {
-                        C1.b_JoinSquad.ToolTip.Lines[l] = "";
-                    }
-                }
-
-                SquadName = SquadName @ " ["  @ C1.li_Members.ItemCount @ "/" @ SquadSize  @ "]";
-            }
-            else
-            {
-                SquadName = SRI.GetDefaultSquadName(TeamIndex, i);
-            }
-
-            if (bIsInASquad)
-            {
-                C1.WinTop = 0.4 + SquadIndexOffset * 0.1;
-            }
-            else
-            {
-                C1.WinTop = 0.3 + SquadIndexOffset * 0.1;
-            }
-            C1.WinHeight = 0.1;
-            SquadIndexOffset++;
-            SetVisible(C1.i_SquadType, true);
-            SetVisible(C1.l_SquadName, true);
-            SetVisible(C1.i_NoRallyPoints, false);
-            C1.l_SquadName.Caption = SquadName;
-
-            if (bIsInASquad)
-            {
-                C1.b_CreateSquadInfantry.bAcceptsInput = false;
-                C1.b_JoinSquad.bAcceptsInput = false;
-            }
-            else
-            {
-                C1.b_CreateSquadInfantry.bAcceptsInput = true;
-                C1.b_JoinSquad.bAcceptsInput = true;
-            }
-            // C1.b_CreateSquadInfantry.Hint = "0. LordDz | 1. Asdf | 3.asdldas"; 
-            // C1.b_JoinSquad.Hint = 
-
-            // C1.i_SquadType.Image = SRI.SquadType.default.Image;
-            // C1.i_SquadType.Hint = SRI.SquadType.default.Hint;
-        }
-
-        if (!bIsSquadActive)
-        {
-            SetVisible(C1.lb_Members, false);
-            SetVisible(C1.li_Members, false);
-            SetVisible(C1.b_CreateSquadInfantry, true);
-            // SetVisible(C1.b_CreateSquadArmored, false);
-            // SetVisible(C1.b_CreateSquadLogistics, false);
-            SetVisible(C1.i_SquadType, true);
-            SetVisible(C1.b_JoinSquad, false);
-            SetVisible(C1.b_LeaveSquad, false);
-            SetVisible(C1.b_LockSquad, false);
-            SetVisible(C1.i_LockSquad, false);
-            SetVisible(C1.i_NoRallyPoints, false);
-            continue;
-        }
-
-        C = p_Squads.SquadComponents[i];
-
-
-        bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
-        bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
-        bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
-        bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
-
-        // SetVisible(C.lb_Members, true);
-     
-
-        SetVisible(C.lb_Members, bIsInSquad);
-        SetVisible(C.li_Members, bIsInSquad);
-        
-        // SetVisible(C.l_SquadName, !C.bIsEditingName);
-        // SetVisible(C.eb_SquadName, bIsSquadLeader);
-
-        SetVisible(eb_SquadName, bIsSquadLeader);
-
-
-        SetVisible(C.b_CreateSquadInfantry, false);
-        // SetVisible(C.b_CreateSquadArmored, false);
-        // SetVisible(C.b_CreateSquadLogistics, false);
-        SetVisible(C.b_JoinSquad, !bIsInSquad);
-        SetVisible(C.b_LeaveSquad, bIsInSquad);
-        SetVisible(C.b_LockSquad, bIsSquadLeader);
-        SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
-        SetVisible(C.i_NoRallyPoints, bIsInSquad && SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, i));
-        
-        //TODO: Fix this so it's not the player squad type
-        // C.i_SquadType.Image = SRI.SquadType.default.Image;
-        // C.i_SquadType.Hint = SRI.SquadType.default.Hint;
-
-        if (bIsSquadLeader)
-        {
-            if (bIsSquadLocked)
-            {
-                C.i_LockSquad.Image = LockIcon;
-                C.b_LockSquad.SetHint(default.UnlockText);
-            }
-            else
-            {
-                C.i_LockSquad.Image = UnlockIcon;
-
-                if (bCanSquadBeLocked)
-                {
-                    C.i_LockSquad.ImageColor.A = 255;
-                    C.b_LockSquad.SetHint(default.LockText);
-                }
-                else
-                {
-                    C.i_LockSquad.ImageColor.A = 64;
-                    C.b_LockSquad.SetHint("Squad can be locked only if it has " $ SRI.SquadLockMemberCountMin $ " or more members");
-                }
-            }
-        }
-        else
-        {
-            if (bIsSquadLocked)
-            {
-                C.i_LockSquad.Image = LockIcon;
-                C.i_LockSquad.ImageColor.A = 128;
-            }
-        }
-
-        bCanJoinSquad = SRI.IsSquadJoinable(TeamIndex, i);
-
-        if (bCanJoinSquad)
-        {
-            C.b_JoinSquad.EnableMe();
-        }
-        else
-        {
-            C.b_JoinSquad.DisableMe();
-        }
-
-        C.b_LockSquad.SetVisibility(bIsSquadLeader);
-
-
-        // Save the current PRI that is selected.
-        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
-
-        // Add or remove entries to match the member count.
-        while (C.li_Members.ItemCount < Members.Length)
-        {
-            C.li_Members.Add("");
-        }
-
-        while (C.li_Members.ItemCount > Members.Length)
-        {
-            C.li_Members.Remove(0, 1);
-        }
-
-        // Update the text and associated object for each item.
-        for (k = 0; k < Members.Length; ++k)
-        {
-            C.li_Members.SetItemAtIndex(k, Members[k].GetNamePrefix() $ "." @ Members[k].PlayerName);
-            C.li_Members.SetObjectAtIndex(k, Members[k]);
-        }
-
-        // Re-select the previous selection.
-        C.li_Members.SelectByObject(SavedPRI);
-
-        ++j;
+        ShowPlayerSquad(TeamIndex, PlayerSquadIndex);
     }
 
-    // if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
-    // {
-    //     C = p_Squads.SquadComponents[j++];
-
-    //     SetVisible(C, true);
-    //     SetVisible(C.lb_Members, false);
-    //     SetVisible(C.li_Members, false);
-    //     SetVisible(C.l_SquadName, false);
-    //     SetVisible(C.b_CreateSquadInfantry, true);
-    //     // SetVisible(C.b_CreateSquadArmored, false);
-    //     // SetVisible(C.b_CreateSquadLogistics, false);
-    //     SetVisible(C.i_SquadType, false);
-    //     SetVisible(C.b_JoinSquad, false);
-    //     SetVisible(C.b_LeaveSquad, false);
-    //     SetVisible(C.b_LockSquad, false);
-    //     SetVisible(C.i_LockSquad, false);
-    //     SetVisible(C.i_NoRallyPoints, false);
-    // }
-
-    // while (j < p_Squads.SquadComponents.Length - 1)
-    // {
-    //     // SetVisible(p_Squads.SquadComponents[j], false);
-
-        // SetVisible(p_Squads.SquadComponents[j].lb_Members, false);
-        // SetVisible(p_Squads.SquadComponents[j].b_JoinSquad, false);
-        // SetVisible(p_Squads.SquadComponents[j].b_LeaveSquad, false);
-        // SetVisible(p_Squads.SquadComponents[j].b_LockSquad, false);
-        // SetVisible(p_Squads.SquadComponents[j].i_LockSquad, false);
-        // SetVisible(p_Squads.SquadComponents[j].i_NoRallyPoints, false);
-    //     ++j;
-    // }
-
-    // Show the unassigned category
-    SRI.GetUnassignedPlayers(TeamIndex, Members);
-    j =  p_Squads.SquadComponents.Length - 1;
-
-    // if (j >= p_Squads.SquadComponents.Length)
-    // {
-    //     return;
-    // }
-
-    if (Members.Length > 0)
+    if (SquadPlayerMode == MODE_Squads)
     {
-        C = p_Squads.SquadComponents[j];
-        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
-        // C.l_SquadName.Caption = "";
-        C.SquadIndex = -1;
-        C.WinLeft = 1.02;
-        C.WinTop = 0.0;
-        C.WinWidth = 0.42;
-        C.WinHeight = 1.0;
-
-        SetVisible(C, true);
-        SetVisible(C.lb_Members, true);
-        SetVisible(C.li_Members, true);
-        SetVisible(C.l_SquadName, true);
-        SetVisible(C.b_CreateSquadInfantry, false);
-        // SetVisible(C.b_CreateSquadArmored, false);
-        // SetVisible(C.b_CreateSquadLogistics, false);
-        SetVisible(C.b_JoinSquad, false);
-        SetVisible(C.b_LeaveSquad, false);
-        SetVisible(C.b_LockSquad, false);
-        SetVisible(C.i_LockSquad, false);
-        SetVisible(C.i_NoRallyPoints, false);
-        SetVisible(C.i_SquadType, false);
-        C.l_SquadName.VertAlign = TXTA_Left;
-
-
-        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
-
-        // Add or remove entries to match the member count.
-        while (C.li_Members.ItemCount < Members.Length)
-        {
-            C.li_Members.Add("");
-        }
-
-        while (C.li_Members.ItemCount > Members.Length)
-        {
-            C.li_Members.Remove(0, 1);
-        }
-
-        // Update the text and associated object for each item.
-        for (k = 0; k < Members.Length; ++k)
-        {
-            C.li_Members.SetItemAtIndex(k, Members[k].PlayerName);
-            C.li_Members.SetObjectAtIndex(k, Members[k]);
-        }
-
-        // Re-select the previous selection.
-        C.li_Members.SelectByObject(SavedPRI);
+        ShowOtherSquads(TeamIndex, PlayerSquadIndex);
+        SetVisible(p_Squads.SquadComponents[p_Squads.SquadComponents.Length - 1], false);
     }
     else
     {
-        SetVisible(p_Squads.SquadComponents[j], false);
+        for (i = 0; i < p_Squads.SquadComponents.Length - 1; ++i)
+        {
+            SetVisible(p_Squads.SquadComponents[i], false);
+        }
+        ShowUnassignedPlayers(TeamIndex);
     }
 }
 
@@ -2266,6 +2334,7 @@ defaultproperties
     SurrenderResponseMessages[10]="You cannot retreat during the setup phase."
 
     MapMode=MODE_Map
+    SquadPlayerMode=MODE_Squads
     bButtonsEnabled=true
     SpawnPointIndex=-1
     VehicleNoneMaterial=Material'DH_GUI_tex.DeployMenu.vehicle_none'
@@ -2969,7 +3038,7 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
         WinWidth=0.28
-        WinHeight=0.25
+        WinHeight=0.72
         WinLeft=0.01
         WinTop=0.15
         LeftPadding=0.05

@@ -12,7 +12,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     local int i;
 
     super.InitComponent(MyController, MyOwner);
-
+    for (i = 0; i < SquadComponents.Length; i++)
+    {
+        SquadComponents[i].SquadIndex = i; //Need to set it so create squad button links correctly
+    }
     // for (i = 0; i < SquadComponents.Length; ++i)
     // {
     //     switch (i)

@@ -19,7 +19,6 @@ var automated   DHGUIButton         b_JoinSquad;    // Joins the squad. Only sho
 var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only show to members of this squad.
 var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
 var automated   GUIImage            i_LockSquad;
-var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   GUIImage            i_NoRallyPoints;
 var automated   GUIImage            i_SquadType;
 var automated   GUIImage            i_Background;
@@ -147,7 +146,7 @@ defaultproperties
     Begin Object class=GUIImage Name=LockSquadImage
         WinWidth=0.10
         WinHeight=1.0
-        WinLeft=0.05
+        WinLeft=0.8
         WinTop=0.05
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
@@ -199,7 +198,7 @@ defaultproperties
         // WinHeight=0.075
         WinHeight=1.0
         WinLeft=0.02
-        WinTop=0.05
+        WinTop=0.10
         Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
         ImageColor=(R=192,G=192,B=192,A=200)
         ImageRenderStyle=MSTY_Alpha
@@ -266,10 +265,10 @@ defaultproperties
     b_CreateSquadInfantry=CreateSquadButtonInfantry
 
     Begin Object Class=GUILabel Name=SquadNameLabel
-        WinWidth=0.9
+        WinWidth=0.87
         WinHeight=1.0
         WinTop=0.00
-        WinLeft=0.12
+        WinLeft=0.15
         TextAlign=TXTA_Left
         VertAlign=TXTA_Left
         TextColor=(R=255,G=255,B=255,A=255)
@@ -289,6 +288,12 @@ defaultproperties
     End Object
     b_LeaveSquad=LeaveSquadButton
 
+     Begin Object Class=DHGUIToolTip Name=JoinSquadButtonTooltip
+        ExpirationSeconds=60
+        bMultiLine=true
+        // StyleName="DHMouseOver"  
+    End Object
+
     Begin Object Class=DHGUIButton Name=JoinSquadButton
         CaptionAlign=TXTA_Right
         StyleName="DHSmallTextButtonStyle"
@@ -298,6 +303,8 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
         OnClick=OnClick
+        ToolTip=JoinSquadButtonTooltip
+        Hint="            ";
     End Object
     b_JoinSquad=JoinSquadButton
 
