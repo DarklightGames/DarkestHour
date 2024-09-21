@@ -22,7 +22,7 @@ defaultproperties
     // Projectiles
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=13
@@ -35,11 +35,11 @@ defaultproperties
 
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HE"
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(2)="HVAP"
 
     nProjectileDescriptions(0)="M62 APC"
     nProjectileDescriptions(1)="M42 HE"
-    nProjectileDescriptions(2)="M88 HC"
+    nProjectileDescriptions(2)="M93 HVAP"
 
     FireAttachBone="com_attachment"
     FireEffectOffset=(X=0,Y=0,Z=50)
