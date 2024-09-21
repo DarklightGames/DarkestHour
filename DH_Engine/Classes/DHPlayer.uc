@@ -17,6 +17,12 @@ enum EMapMode
     MODE_Squads
 };
 
+enum ESquadPlayersMode
+{
+    MODE_Unassigned,
+    MODE_Squads,
+};
+
 enum ERoleEnabledResult
 {
     RER_Fatal,
@@ -48,6 +54,7 @@ var     bool                    bToggleRun;          // user activated toggle ru
 var     bool                    bIsGagged;           // player is gagged from chatting
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
+var     ESquadPlayersMode       DeployMenuSquadPlayerMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
 // var     DH_Battlegroup          ClientBattleGroupAxis;
 // var     DH_Battlegroup          ClientBattleGroupAllied;
@@ -734,6 +741,20 @@ exec function PlaceRallyPoint()
 exec function SquadJoinAuto()
 {
     ServerSquadJoinAuto();
+}
+
+function function SetSquadPlayersMode(int Mode)
+{
+    switch (Mode)
+    {
+        case 0:
+            DeployMenuSquadPlayerMode = Mode_Unassigned;
+        break;
+
+        case 1:
+            DeployMenuSquadPlayerMode = Mode_Squads;
+        break;
+    }
 }
 
 // Modified to remove pausing in singleplayer and to open the correct menu
@@ -5926,6 +5947,7 @@ function ServerSquadCreate(class<DHSquadType> CreatedSquadType, int SquadIndex)
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
+    DeployMenuSquadPlayerMode = MODE_Unassigned;
 
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), CreatedSquadType, SquadIndex);
     
@@ -5936,6 +5958,8 @@ function ServerSquadLeave()
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
+
+    DeployMenuSquadPlayerMode = Mode_Squads;
 
     G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
 }
@@ -5983,6 +6007,7 @@ function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
+        DeployMenuSquadPlayerMode = Mode_Squads;
         SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
     }
 }
@@ -5995,6 +6020,7 @@ function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
+        DeployMenuSquadPlayerMode = Mode_Squads;
         SquadReplicationInfo.BanFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, PlayerToBan);
     }
 }

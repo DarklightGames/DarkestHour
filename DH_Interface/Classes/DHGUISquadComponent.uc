@@ -246,7 +246,7 @@ defaultproperties
         WinLeft=0.05
         WinWidth=0.93
         WinHeight=0.77
-        WinTop=0.2
+        WinTop=0.05
         bVisible=false
         ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
     End Object
@@ -272,7 +272,7 @@ defaultproperties
         TextAlign=TXTA_Left
         VertAlign=TXTA_Left
         TextColor=(R=255,G=255,B=255,A=255)
-        TextFont="DHMenuFont"
+        Hint="            ";
     End Object
     l_SquadName=SquadNameLabel
 
@@ -281,14 +281,15 @@ defaultproperties
         CaptionAlign=TXTA_Right
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.4
-        WinHeight=0.2
+        WinHeight=0.6
         WinLeft=0.55
-        WinTop=0.0
+        WinTop=0.6
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
 
-     Begin Object Class=DHGUIToolTip Name=JoinSquadButtonTooltip
+    Begin Object Class=DHGUIToolTip Name=JoinSquadButtonTooltip
+        InitialDelay=0
         ExpirationSeconds=60
         bMultiLine=true
         // StyleName="DHMouseOver"  

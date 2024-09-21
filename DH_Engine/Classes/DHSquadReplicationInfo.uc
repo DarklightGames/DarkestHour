@@ -855,32 +855,32 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
     return true;
 }
 
-// // Returns the default squad name for the specified team and squad index.
-// simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
-// {
-//     local DH_LevelInfo LI;
-
-//     LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-//     if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) && LI != none)
-//     {
-//         return "";
-//     }
-
-//     return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
-// }
-
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
+    local DH_LevelInfo LI;
+    local string SquadName;
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
+            SquadName = DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
         case ALLIES_TEAM_INDEX:
-            return DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
-        default:
-            return "Not found";
+            SquadName = DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
     }
+
+    if (SquadName != "")
+    {
+        return SquadName;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex) || LI == none)
+    {
+        return "";
+    }
+
+    return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
@@ -928,6 +928,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, class<DHSquadType> Created
             }
         }
     }
+    Log("Creating squad with index: " @ i @ " name: " @ Name);
 
     SquadType = CreatedSquadType;
     

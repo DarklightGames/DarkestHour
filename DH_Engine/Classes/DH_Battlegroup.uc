@@ -107,7 +107,11 @@ simulated function string GetDefaultSquadName(int SquadIndex)
 
 simulated function int GetSquadSize(int SquadIndex)
 {
-    return Squads[SquadIndex].SquadSize;
+    if (Squads[SquadIndex].SquadSize > 0)
+    {
+        return Squads[SquadIndex].SquadSize;
+    }
+    return 8;
 }
 
 // The squads that can be selected for this battlegroup 
