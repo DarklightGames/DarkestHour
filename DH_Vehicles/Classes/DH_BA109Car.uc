@@ -213,6 +213,9 @@ simulated event SVehicleUpdateParams()
 
 defaultproperties
 {
+
+     //DriverWeapons(0)=(WeaponClass=Class'DH_Vehicles.DH_BA109Gun',WeaponBone="Turret_placement") YOU WILL NEED TO REPLACE THIS WITH YOUR OWN WEAPON
+
      WheelPenScale=1.200000
      WheelPenOffset=0.010000
      WheelRestitution=0.100000
@@ -250,7 +253,6 @@ defaultproperties
      StopThreshold=100.000000
      MaxRandForce=0.100000
      RandForceInterval=0.750000
-     DriverWeapons(0)=(WeaponClass=Class'ROStuffDeeival.BA109Gun',WeaponBone="Turret_placement")
      IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
@@ -284,7 +286,7 @@ defaultproperties
          SupportBoneName="Axle_RF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(0)=SVehicleWheel'ROStuffDeeival.BA109Car.LFWheel1'
+     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BA109Car.LFWheel1'
 
      Begin Object Class=SVehicleWheel Name=RFWheel1
          SteerType=VST_Steered
@@ -295,7 +297,7 @@ defaultproperties
          SupportBoneName="Axle_LF"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(1)=SVehicleWheel'ROStuffDeeival.BA109Car.RFWheel1'
+     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BA109Car.RFWheel1'
 
      Begin Object Class=SVehicleWheel Name=LRWheel1
          bPoweredWheel=True
@@ -307,7 +309,7 @@ defaultproperties
          SupportBoneName="Axle_LR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(2)=SVehicleWheel'ROStuffDeeival.BA109Car.LRWheel1'
+     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BA109Car.LRWheel1'
 
      Begin Object Class=SVehicleWheel Name=RRWheel1
          bPoweredWheel=True
@@ -319,7 +321,7 @@ defaultproperties
          SupportBoneName="Axle_RR"
          SupportBoneAxis=AXIS_X
      End Object
-     Wheels(3)=SVehicleWheel'ROStuffDeeival.BA109Car.RRWheel1'
+     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BA109Car.RRWheel1'
 
      VehicleMass=4.000000
      bTeamLocked=False
@@ -346,7 +348,7 @@ defaultproperties
      HealthMax=500.000000
      Health=500
      Mesh=SkeletalMesh'allies_ba64_anm.BA64_body_ext'
-     Skins(0)=Texture'BA64Custom.ext_vehicles.BA109'
+     Skins(0)=Texture'DH_BA64Custom.ext_vehicles.BA109'
      Skins(1)=Texture'allies_vehicles_tex.int_vehicles.BA64_int'
      SoundRadius=600.000000
      CollisionRadius=175.000000
@@ -371,7 +373,7 @@ defaultproperties
          KFriction=1.500000
          KImpactThreshold=300.000000
      End Object
-     KParams=KarmaParamsRBFull'ROStuffDeeival.BA109Car.KParams1100'
+     KParams=KarmaParamsRBFull'DH_Vehicles.DH_BA109Car.KParams1100'
 
      HighDetailOverlay=Shader'allies_vehicles_tex.int_vehicles.BA64_int_s'
      bUseHighDetailOverlayIndex=True
