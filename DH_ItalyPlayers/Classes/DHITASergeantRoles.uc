@@ -10,8 +10,8 @@ defaultproperties
 {
     AltName="Sergente"
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MAB42Weapon',AssociatedAttachment=none)
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MAB38Weapon',AssociatedAttachment=none)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_CarcanoM91Weapon',AssociatedAttachment=class'DH_CarcanoM91AmmoPouch')
+    // TODO: Add Carcano Carbine as an option.
 
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_BerettaM1934Weapon',AssociatedAttachment=class'DH_BerettaM1934AmmoPouch')
 
@@ -23,11 +23,11 @@ defaultproperties
     BareHandTexture=Texture'DHItalianCharactersTex.Hands.Italian_hands'
     SleeveTexture=Texture'DHItalianCharactersTex.Sleeves.Livorno_sleeves'
     GlovedHandTexture=Texture'DHSovietCharactersTex.soviet_gear.hands_sovgloves' // TODO: replace
-
+    
     Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'
     Headgear(1)=class'DH_ItalyPlayers.DH_ItalianHelmet_Livorno'
     Headgear(2)=class'DH_ItalyPlayers.DH_ItalianCapNCO'
-
+    
     HeadgearProbabilities(0)=0.4
     HeadgearProbabilities(1)=0.4
     HeadgearProbabilities(2)=0.2
