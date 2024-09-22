@@ -456,7 +456,7 @@ defaultproperties
     GunPitchOffset=7280 // +40 degrees
 
     FiringCameraInTime=0.65
-    FiringCameraOutTime=0.65
+    FiringCameraOutTime=1.0
     FiringCameraBone="MY_COOL_CAMERA"
     FiringCameraBoneChannel=3
     GunFireAnim="FIRINGCAMERA"
