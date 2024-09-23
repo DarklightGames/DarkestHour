@@ -802,8 +802,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocalHuman())
     {
-        InitializeClientWeaponSystems();
-
         if (bBarrelSteamActive)
         {
             SetBarrelSteamActive(true);
