@@ -406,6 +406,37 @@ state SpeechMenuVisible
         }
     }
 
+    function buildSMVehicleDirectionArray()
+    {
+        local int i;
+		local class<ROVoicePack> VoicePack;
+
+		SMArraySize = 0;
+		PreviousStateName = ROSMS_Main;
+
+		VoicePack = GetROVoiceClass();
+        
+		if (VoicePack == none)
+        {
+			return;
+        }
+
+		for(i=0; i< VoicePack.default.numVehicleDirections; i++)
+		{
+            if (VoicePack.default.VehicleDirectionAbbrev[i] != "")
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionAbbrev[i];
+            }
+            else
+            {
+                SMNameArray[SMArraySize] = VoicePack.default.VehicleDirectionString[i];
+            }
+
+			SMIndexArray[SMArraySize] = i;
+			SMArraySize++;
+		}
+    }
+
     // Overriden to give squad leaders the ability to use order commands.
     // TODO: This function could use a refactor
     function HandleInput(int KeyIn)
