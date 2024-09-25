@@ -15,7 +15,7 @@ defaultproperties
 
     // Ammunition
     Constructions(3)=(ConstructionClass=class'DHConstruction_Resupply_Players_Britain',Limit=-1,MaxActive=-1)
-    Constructions(4)=(ConstructionClass=class'DHConstruction_Resupply_Vehicles',Limit=-1,MaxActive=-1)
+    Constructions(4)=(ConstructionClass=class'DHConstruction_Resupply_Vehicles_Britain',Limit=-1,MaxActive=-1)
     Constructions(5)=(ConstructionClass=class'DHConstruction_GrenadeCrate',Limit=-1,MaxActive=-1)
 
     // Defenses
