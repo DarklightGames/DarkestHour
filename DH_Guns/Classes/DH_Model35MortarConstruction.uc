@@ -7,6 +7,7 @@ class DH_Model35MortarConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
     VehicleClass=class'DH_Guns.DH_Model35Mortar'
     bIsArtillery=true
     SupplyCost=750
