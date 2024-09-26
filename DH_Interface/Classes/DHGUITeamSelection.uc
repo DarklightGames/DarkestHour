@@ -5,7 +5,8 @@
 
 class DHGUITeamSelection extends ROGUITeamSelection;
 
-var array<texture>                          BackgroundTextures;
+var array<Texture>                          GermanyBackgroundTextures;
+var array<Texture>                          ItalyBackgroundTextures;
 
 var automated GUIButton                     b_Disconnect, b_Settings;
 
@@ -102,7 +103,17 @@ function SetBackground()
 
     if (LI != none)
     {
-        bg_Background.Image = BackgroundTextures[int(LI.AlliedNation)];
+        // HACK: This screen is a disaster. When we make this page modular, each team will define their own
+        // screen elements. For now, just carve out a special case for Italy.
+        switch (LI.AxisNation)
+        {
+            case NATION_Italy:
+                bg_Background.Image = ItalyBackgroundTextures[int(LI.AlliedNation)];
+                break;
+            case NATION_Germany:
+                bg_Background.Image = GermanyBackgroundTextures[int(LI.AlliedNation)];
+                break;
+        }
     }
 }
 
@@ -239,12 +250,19 @@ defaultproperties
     UnitsText=" players"
     SizeBonusText="army size"
 
-    BackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
-    BackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
-    BackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
-    BackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
-    BackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectP'
-    BackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectCS'
+    GermanyBackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
+    GermanyBackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
+    GermanyBackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
+    GermanyBackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
+    GermanyBackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectP'
+    GermanyBackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectCS'
+
+    ItalyBackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(4)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
+    ItalyBackgroundTextures(5)=Texture'DH_GUI_Tex.Menu.TeamselectIT'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
