@@ -509,6 +509,7 @@ defaultproperties
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
+    bCanResupplyWhenEmpty=true
 
     AIRating=0.4
     CurrentRating=0.4
