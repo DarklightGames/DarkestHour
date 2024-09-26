@@ -97,4 +97,5 @@ defaultproperties
     MagEmptyReloadAnims(0)="reload_empty"
 
     bShouldZoomWhenBolting=true
+    bMustBeDeployedToBolt=true
 }
