@@ -26,8 +26,8 @@ defaultproperties
     TracerFrequency=7
 
     // Weapon fire
-    FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
+    FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     WeaponFireAttachmentBone=MUZZLE_AC
