@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
-class DH_Fiat1435GunConstruction extends DHConstruction_Vehicle;
+class DH_LivornoCorporal extends DHITCorporalRoles;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mg'
-    VehicleClass=class'DH_Guns.DH_Fiat1435Gun'
-    SupplyCost=500
+    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianLivornoCorporalPawn',Weight=1.0)
 }

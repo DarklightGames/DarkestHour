@@ -3,12 +3,9 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Model35MortarConstruction extends DHConstruction_Vehicle;
+class DHConstruction_Resupply_Vehicles_Germany extends DHConstruction_Resupply_Vehicles;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
-    VehicleClass=class'DH_Guns.DH_Model35Mortar'
-    bIsArtillery=true
-    SupplyCost=750
+    StaticMesh=StaticMesh'DH_Construction_stc.Ammo.GER_AT_Ammo_Box';
 }

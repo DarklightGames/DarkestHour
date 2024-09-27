@@ -155,6 +155,8 @@ var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each
 
 var     bool            bCanUseIronsights;      // allows firing from a shouldered/hipfire position (while not deployed)
 
+var()   bool            bMustBeDeployedToBolt;  // if true, the weapon must be deployed to bolt
+
 enum EWeaponComponentAnimationDriverType
 {
     DRIVER_MagazineAmmunition,  // Drives the animation based on the number of rounds in the magazine.
@@ -802,8 +804,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocalHuman())
     {
-        InitializeClientWeaponSystems();
-
         if (bBarrelSteamActive)
         {
             SetBarrelSteamActive(true);

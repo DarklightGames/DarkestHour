@@ -57,10 +57,26 @@ replication
         ServerSetInterruptReload;
 }
 
+// Function to return if the player is able to bolt.
+simulated function bool CanWorkBolt()
+{
+    if (IsBusy() && !bWaitingToBolt)
+    {
+        return false;
+    }
+
+    if (bMustBeDeployedToBolt && !Instigator.bBipodDeployed)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
+    if (!bShouldSkipBolt && CanWorkBolt())
     {
         WorkBolt();
     }
