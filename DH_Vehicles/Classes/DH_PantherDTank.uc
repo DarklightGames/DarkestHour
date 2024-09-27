@@ -52,9 +52,9 @@ defaultproperties
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
     FrontArmor(1)=(Thickness=8.5,Slope=55.0,LocationName="upper")
-    RightArmor(0)=(Thickness=4.5,MaxRelativeHeight=23.0,LocationName="lower")
+    RightArmor(0)=(Thickness=4.0,MaxRelativeHeight=23.0,LocationName="lower")
     RightArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=4.5,MaxRelativeHeight=23.0,LocationName="lower")
+    LeftArmor(0)=(Thickness=4.0,MaxRelativeHeight=23.0,LocationName="lower")
     LeftArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="upper")
     RearArmor(0)=(Thickness=4.0,Slope=-30.0)
 
