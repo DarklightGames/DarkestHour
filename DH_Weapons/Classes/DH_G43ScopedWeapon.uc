@@ -20,8 +20,8 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
 
     DisplayFOV=83.0
     IronSightDisplayFOV=45.5

@@ -21,8 +21,8 @@ defaultproperties
     ScopeOverlaySize=0.266
 
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_SovScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
 
     IronSightDisplayFOV=48.2
     IronSightDisplayFOVHigh=48.2

@@ -10,7 +10,7 @@ class DH_FG42ScopedWeapon extends DH_FG42Weapon;
 defaultproperties
 {   
     ItemName="FG 42 (ZFG42)"
-    NativeItemName="Fallschirmjägergewehr 42 (ZFG42)"
+    NativeItemName="Fallschirmjï¿½gergewehr 42 (ZFG42)"
     FireModeClass(0)=class'DH_Weapons.DH_FG42ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_FG42ScopedAttachment'
@@ -47,7 +47,8 @@ defaultproperties
 
     // Scope
     bHasScope=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
     ScopeOverlaySize=0.32
     IronSightDisplayFOV=47.0
     IronSightDisplayFOVHigh=47.0

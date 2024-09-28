@@ -21,9 +21,9 @@ defaultproperties
 
     bHasScope=true
     bIsSniper=true
-    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-	//ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
-    DisplayFOV=88.0
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Textured_GerScope'
+	ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  // Enfield: i struggle to know how the transparency works in this engine
+    DisplayFOV=88.0                                                             // had to create two seperate textures to get the 2d and 3d scopes to work
     IronSightDisplayFOV=45.0
     IronSightDisplayFOVHigh=45.0
     PlayerFOVZoom=15.0
