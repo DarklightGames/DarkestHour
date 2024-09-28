@@ -307,7 +307,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    // HACK: Because engine doesn't handle arrays of emptry structs properly, we have to force the array to have at least one element, otherwise
+    // HACK: Because engine doesn't handle arrays of empty structs properly, we have to force the array to have at least one element, otherwise
     //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
     //  pass on the translation files.
     Options(0)=(ActionText=" ",OptionalObject=class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Icons.Artillery')
