@@ -729,22 +729,11 @@ def generate_font_scripts(args):
 
 
 def sync(args):
-    # Clone the repository to a temporary directory.
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    i18n_config_path = os.path.join(root_path, args.mod, 'i18n.yml')  # TODO: lazy
-    i18n_config = yaml.load(open(i18n_config_path, 'r'), Loader=yaml.FullLoader)
-
-    temp_dir = tempfile.mkdtemp()
-    repository = i18n_config['repository']
-
-    print('Cloning repository...')
-
-    git.Repo.clone_from(repository['url'], temp_dir)
-
-    print('Done.')
+    repository_path = os.path.join(root_path, 'submodules', 'weblate-darklightgames')
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
-    pattern = f'{temp_dir}\\**\\*.po'
+    pattern = f'{repository_path}\\**\\*.po'
 
     for filename in glob.glob(pattern, recursive=True):
 
@@ -789,10 +778,6 @@ def sync(args):
             with open(output_path, 'wb') as output_file:
                 output_file.write(b'\xff\xfe')  # Byte-order-mark.
                 output_file.write(unt_contents.encode('utf-16-le'))
-
-    # Delete the temporary directory.
-    if not args.dry:
-        shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 def debug_value(args):
