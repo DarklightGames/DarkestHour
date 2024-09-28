@@ -539,9 +539,11 @@ def command_export_directory(args):
             if args.verbose:
                 print(f'Found {len(key_value_pairs)} key-value pairs')
 
-            output_path = args.output_path
-            output_path = output_path.replace('{l}', language.part1)
-            output_path = output_path.replace('{f}', basename)
+            output_filename = args.pattern
+            output_filename = output_filename.replace('{l}', language.part1)
+            output_filename = output_filename.replace('{f}', basename)
+
+            output_path = os.path.join(args.output_directory, output_filename)
 
             if not args.dry:
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -838,8 +840,12 @@ export_directory_parser = subparsers.add_parser('export_directory', help='Export
 export_directory_parser.add_argument('input_path',
                                      help='The directory to search for Unreal Tournament translation files'
                                      )
-export_directory_parser.add_argument('-o', '--output_path',
-                                     help='The pattern to use for the output path. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
+export_directory_parser.add_argument('-o', '--output_directory',
+                                     help='The directory to write the .po files to',
+                                     required=True
+                                     )
+export_directory_parser.add_argument('-p', '--pattern',
+                                     help='The pattern to use for the output file names. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
                                      default='{f}/{f}.{l}.po',
                                      required=False
                                      )
