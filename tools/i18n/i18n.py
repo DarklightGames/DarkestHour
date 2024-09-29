@@ -539,9 +539,11 @@ def command_export_directory(args):
             if args.verbose:
                 print(f'Found {len(key_value_pairs)} key-value pairs')
 
-            output_path = args.output_path
-            output_path = output_path.replace('{l}', language.part1)
-            output_path = output_path.replace('{f}', basename)
+            output_filename = args.pattern
+            output_filename = output_filename.replace('{l}', language.part1)
+            output_filename = output_filename.replace('{f}', basename)
+
+            output_path = os.path.join(args.output_directory, output_filename)
 
             if not args.dry:
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -727,22 +729,11 @@ def generate_font_scripts(args):
 
 
 def sync(args):
-    # Clone the repository to a temporary directory.
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    i18n_config_path = os.path.join(root_path, args.mod, 'i18n.yml')  # TODO: lazy
-    i18n_config = yaml.load(open(i18n_config_path, 'r'), Loader=yaml.FullLoader)
-
-    temp_dir = tempfile.mkdtemp()
-    repository = i18n_config['repository']
-
-    print('Cloning repository...')
-
-    git.Repo.clone_from(repository['url'], temp_dir)
-
-    print('Done.')
+    repository_path = os.path.join(root_path, 'submodules', 'weblate-darklightgames')
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
-    pattern = f'{temp_dir}\\**\\*.po'
+    pattern = f'{repository_path}\\**\\*.po'
 
     for filename in glob.glob(pattern, recursive=True):
 
@@ -787,10 +778,6 @@ def sync(args):
             with open(output_path, 'wb') as output_file:
                 output_file.write(b'\xff\xfe')  # Byte-order-mark.
                 output_file.write(unt_contents.encode('utf-16-le'))
-
-    # Delete the temporary directory.
-    if not args.dry:
-        shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 def debug_value(args):
@@ -838,8 +825,12 @@ export_directory_parser = subparsers.add_parser('export_directory', help='Export
 export_directory_parser.add_argument('input_path',
                                      help='The directory to search for Unreal Tournament translation files'
                                      )
-export_directory_parser.add_argument('-o', '--output_path',
-                                     help='The pattern to use for the output path. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
+export_directory_parser.add_argument('-o', '--output_directory',
+                                     help='The directory to write the .po files to',
+                                     required=True
+                                     )
+export_directory_parser.add_argument('-p', '--pattern',
+                                     help='The pattern to use for the output file names. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
                                      default='{f}/{f}.{l}.po',
                                      required=False
                                      )

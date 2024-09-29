@@ -1,0 +1,3 @@
+[submodule "submodules/weblate-darklightgames"]
+	path = submodules/weblate-darklightgames
+	url = https://github.com/DarklightGames/weblate-darklightgames.git
