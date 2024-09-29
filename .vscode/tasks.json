@@ -1,0 +1,81 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "py",
+            "args": ["tools/make/make.py", "-mod", "DarkestHourDev", "."],
+            "problemMatcher": {
+                "owner": "unrealscript",
+                "fileLocation": "absolute",
+                "source": "ucc",
+                "severity": "info",
+                "pattern": {
+                        "regexp": "(^.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+$)",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build and Run",
+            "command": "./RedOrchestraLargeAddressAware.exe -mod=DarkestHourDev",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            },
+            "dependsOn": [
+                "build"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Run Map",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            },
+            "dependsOn": [
+                "build"
+            ],
+            "problemMatcher": []
+        },
+    ],
+    "inputs": [
+        {
+            "id": "pickMap",
+            "type": "command",
+            "command": "extension.commandvariable.pickStringRemember",
+            "args": {
+                "description": "Run map",
+                "options": [
+                    ["Use last map", "${remember:lastMapName}"],
+                    ["Select map", "${pickFile:mapName}"]
+                ],
+                "rememberTransformed": true,
+                "key": "lastMapName",
+                "pickFile": {
+                    "mapName": {
+                        "description": "Select a map",
+                        "include": "DarkestHourDev/Maps/**/*.rom",
+                        "keyRemember": "mapName",
+                        "display": "fileName",
+                        "transform": { "text": "${fileBasename}" }
+                    }
+                }
+            }
+        }
+    ]
+}

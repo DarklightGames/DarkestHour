@@ -108,7 +108,9 @@ XWebAdmin/
 UserLogs
 *.rus
 .vs/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/extensions.json
 *.log
 umodel.cfg
 
