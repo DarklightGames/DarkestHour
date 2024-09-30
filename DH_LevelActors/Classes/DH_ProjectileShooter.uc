@@ -86,7 +86,6 @@ simulated event PostBeginPlay()
 
 simulated function FindTargetActors()
 {
-    local int i;
     local Actor TargetActor;
 
     super.PostBeginPlay();
@@ -132,7 +131,6 @@ state Firing
 {
     function BeginState()
     {
-        local float FireTime;
         local float FireDelay;
 
         super.BeginState();
@@ -159,8 +157,6 @@ state Firing
 
     function Timer()
     {
-        local float FireTime;
-
         if (FireCount >= MaxProjectiles)
         {
             GotoState('');
@@ -219,7 +215,6 @@ simulated function Rotator GetProjectileRotation()
 
 simulated function Projectile SpawnProjectile()
 {
-    local Projectile Projectile;
     local Rotator ProjectileRotation;
     local Vector ProjectileLocation;
 

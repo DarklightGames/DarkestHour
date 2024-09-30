@@ -12,7 +12,6 @@ var()   int                                 Value;
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local DHSpawnManager    SM;
-    local int               i;
     local DarkestHourGame   G;
 
     G = DarkestHourGame(Level.Game);
