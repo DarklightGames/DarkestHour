@@ -6,54 +6,151 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "py",
-            "args": ["tools/make/make.py", "-mod", "DarkestHourDev", "."],
-            "problemMatcher": {
-                "owner": "unrealscript",
-                "fileLocation": "absolute",
-                "source": "ucc",
-                "severity": "info",
-                "pattern": {
-                        "regexp": "(^.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+$)",
+            "command": "py tools/make/make.py -mod DarkestHourDev .",
+            "problemMatcher": [
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "pattern": {
+                        "regexp": "(?!.*Class names shouldn't end in a digit)(^.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+$)",
                         "file": 1,
                         "line": 2,
                         "severity": 3,
                         "message": 4
+                    }
+                },
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "severity": "info",
+                    "pattern": {
+                        "regexp": "^(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\sWarning,\\s(Class names shouldn't end in a digit)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
                 }
-            },
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
         },
         {
-            "label": "Build and Run",
+            "label": "Build with Parameters",
+            "type": "shell",
+            "command": "py tools/make/make.py ${input:buildArgs} -mod DarkestHourDev .",
+            "problemMatcher": [
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "pattern": {
+                        "regexp": "^(?!.*Class names shouldn't end in a digit)(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\s(Warning|Error),\\s(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    }
+                },
+                {
+                    "owner": "unrealscript",
+                    "fileLocation": "absolute",
+                    "source": "ucc",
+                    "severity": "info",
+                    "pattern": {
+                        "regexp": "^(.+(?=\\(\\d+\\)\\s:))\\((\\d+)\\)\\s:\\sWarning,\\s(Class names shouldn't end in a digit)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                }
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Run",
             "command": "./RedOrchestraLargeAddressAware.exe -mod=DarkestHourDev",
             "type": "shell",
-            "group": "build",
+            "group": "test",
+            "problemMatcher": [],
             "options": {
                 "cwd": "${workspaceFolder}/System"
-            },
+            }
+        },
+        {
+            "label": "Run Map",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Map",
+            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Run Default Map",
+            "command": "./RedOrchestraLargeAddressAware.exe DH-Target_Range.rom?quickstart=true -mod=DarkestHourDev",
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/System"
+            }
+        },
+        {
+            "label": "Build and Run",
+            "dependsOrder": "sequence",
             "dependsOn": [
-                "build"
+                "Build",
+                "Run"
             ],
+            "group": "test",
             "problemMatcher": []
         },
         {
             "label": "Build and Run Map",
-            "command": "./RedOrchestraLargeAddressAware.exe ${input:pickMap}?quickstart=true -mod=DarkestHourDev",
-            "type": "shell",
-            "group": "build",
-            "options": {
-                "cwd": "${workspaceFolder}/System"
-            },
+            "dependsOrder": "sequence",
             "dependsOn": [
-                "build"
+                "Build",
+                "Run Map"
             ],
+            "group": "test",
             "problemMatcher": []
         },
+        {
+            "label": "Build and Run Default Map",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build",
+                "Run Default Map"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
     ],
     "inputs": [
+        {
+            "type": "promptString",
+            "id": "buildArgs",
+            "description": "Optional: Type-in extra build parameters",
+            "default": ""
+        },
         {
             "id": "pickMap",
             "type": "command",
