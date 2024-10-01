@@ -26,14 +26,13 @@ defaultproperties
     DisplayFOV=88.0
     IronSightDisplayFOV=45.0
     IronSightDisplayFOVHigh=45.0
-    PlayerFOVZoom=15
+    PlayerFOVZoom=15.0
     ScopePortalFOV=7.1     //very hard to find information on ZF39's field of view, + it wasnt a single scope but rather a variety of similar scopes
     ScopePortalFOVHigh=7.1 //i managed to find that it was approximately ~6.5 degrees (varied between manufacturers)
     LensMaterialID=5
 
-    PlayerIronsightFOV=90
-    bUsesIronsightFOV=false // turning this off disables the weird FOV zoom in that is usefull on the ironsights, not so much for scopes
-                            // setting it to false gives a greater perhipheral vison for the user
+    PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 
     ScopeOverlaySize=0.43
 
