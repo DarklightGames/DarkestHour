@@ -6,11 +6,12 @@
 class DHBoatVehicle extends DHVehicle
     abstract;
 
-var     Sound   WashSound;
-var     name    WashSoundBoneName;
-var     float   WashSoundRadius;
+var     Sound               WashSound;
+var     name                WashSoundBoneName;
+var     float               WashSoundRadius;
+var     ROSoundAttachment   WashSoundAttachment;
 
-var     name    DestroyedAnimName;
+var     name                DestroyedAnimName;
 
 // Modified to add wash sound attachment
 simulated function SpawnVehicleAttachments()
@@ -24,9 +25,25 @@ simulated function SpawnVehicleAttachments()
 
     if (VehicleAttachments[0].Actor != none)
     {
-        VehicleAttachments[0].Actor.AmbientSound = WashSound;
-        VehicleAttachments[0].Actor.SoundVolume = 255;
-        VehicleAttachments[0].Actor.SoundRadius = WashSoundRadius;
+        WashSoundAttachment = ROSoundAttachment(VehicleAttachments[0].Actor);
+        WashSoundAttachment.AmbientSound = WashSound;
+        WashSoundAttachment.SoundVolume = 255;
+        WashSoundAttachment.SoundRadius = WashSoundRadius;
+    }
+}
+
+simulated function SetWashSoundActive(bool bActive)
+{
+    if (WashSoundAttachment != none)
+    {
+        if (bActive)
+        {
+            WashSoundAttachment.SoundVolume = 255;
+        }
+        else
+        {
+            WashSoundAttachment.SoundVolume = 0;
+        }
     }
 }
 

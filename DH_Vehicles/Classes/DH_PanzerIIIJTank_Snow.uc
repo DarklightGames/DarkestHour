@@ -21,7 +21,6 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer3J_ext_winter'
     Skins(2)=Texture'GUP_vehicles_tex.WELT_Panzer4F2_treadsnow'
     Skins(3)=Texture'GUP_vehicles_tex.WELT_Panzer4F2_treadsnow'

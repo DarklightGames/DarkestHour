@@ -7,7 +7,6 @@ class DH_JagdpanzerIVL48Destroyer_Snow extends DH_JagdpanzerIVL48Destroyer;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
     Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow'
     Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_wheels_snow'

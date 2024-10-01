@@ -7,7 +7,6 @@ class DH_WirbelwindTank_Snow extends DH_WirbelwindTank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     VehicleNameString="Flakpanzer IV 'Wirbelwind'"
     Skins(0)=Texture'DH_VehiclesGE_tex8.ext_vehicles.Panzer4F2_ext_winter'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Panzer4F2_treadsnow'

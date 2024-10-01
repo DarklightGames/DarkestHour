@@ -7,7 +7,6 @@ class DH_GMCTruckTransport_Snow extends DH_GMCTruckTransport;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_GMC_tex.GMC.GMC_USOD_Snow'
     Skins(1)=Texture'DH_GMC_tex.GMC.GMC_Canvas_Snow'
     DestroyedMeshSkins(0)=Combiner'DH_GMC_tex.GMC.GMC_USOD_Snow_Destroyed'

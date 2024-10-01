@@ -7,7 +7,6 @@ class DH_JacksonTank_Snow extends DH_JacksonTank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.M36_Bodysnow_ext'
     Skins(1)=Texture'DH_VehiclesUS_tex5.ext_vehicles.M36_turretsnow_ext'
     Skins(4)=Texture'DH_VehiclesUS_tex2.Treads.M10_treadsnow'

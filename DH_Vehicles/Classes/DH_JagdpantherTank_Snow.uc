@@ -7,7 +7,6 @@ class DH_JagdpantherTank_Snow extends DH_JagdpantherTank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.jagdpanther_body_snow'
     Skins(1)=Texture'DH_VehiclesGE_tex3.Treads.Jagdpanther_treads_snow'
     Skins(2)=Texture'DH_VehiclesGE_tex3.Treads.Jagdpanther_treads_snow'

@@ -7,7 +7,6 @@ class DH_WolverineTank_Snow extends DH_WolverineTank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow'
     Skins(1)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M10_turret_snow'
     Skins(2)=Texture'DH_VehiclesUS_tex2.Treads.M10_treadsnow'

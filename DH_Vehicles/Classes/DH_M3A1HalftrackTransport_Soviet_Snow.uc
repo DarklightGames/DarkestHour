@@ -7,7 +7,6 @@ class DH_M3A1HalftrackTransport_Soviet_Snow extends DH_M3A1HalftrackTransport;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.M3Halftrack_sov_winter'
     Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'

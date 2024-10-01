@@ -7,7 +7,6 @@ class DH_CromwellTank_Snow extends DH_CromwellTank;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_snow'
     Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_snow'
     Skins(4)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treadsnow'

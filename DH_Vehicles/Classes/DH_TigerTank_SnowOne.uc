@@ -7,7 +7,6 @@ class DH_TigerTank_SnowOne extends DH_TigerTank_Late;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Tiger_body_snow1'
     Skins(1)=Texture'axis_vehicles_tex.Treads.Tiger1_treadsnow'
     Skins(2)=Texture'axis_vehicles_tex.Treads.Tiger1_treadsnow'

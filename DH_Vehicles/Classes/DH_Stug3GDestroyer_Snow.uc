@@ -7,7 +7,6 @@ class DH_Stug3GDestroyer_Snow extends DH_Stug3GDestroyer;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     bHasAddedSideArmor=true
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'

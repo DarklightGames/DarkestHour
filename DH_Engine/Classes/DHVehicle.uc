@@ -107,7 +107,6 @@ var     float       IgnitionSwitchInterval;      // how frequently the engine ca
 var     float       EngineRestartFailChance;     // chance of engine failing to re-start (only temporarily) after it has been switched off (0 to 1 value)
 
 // Driving effects
-var     bool        bIsWinterVariant;            // Notes in the defaults if a vehicle uses Winter or Snow skins to force use of the white dust emitter (saves levelers from remembering to set the right dust color in Level Properties)
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       MaxPitchSpeed;               // used to set movement sounds volume, based on vehicle's speed
 var     sound       RumbleSound;                 // interior rumble sound
@@ -540,7 +539,7 @@ simulated function PostNetReceive()
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState   BodyState;
-    local rotator           WheelsRotation;
+    local Rotator           WheelsRotation;
     local float             VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
     local int               i;
 
@@ -588,7 +587,7 @@ simulated function Tick(float DeltaTime)
             Throttle = FClamp(Throttle, -0.5, 0.5);
         }
     }
-
+    
     if (Role == ROLE_Authority)
     {
         // Recalculate the total supply count for our pawn, or -1 if there are
@@ -610,7 +609,7 @@ simulated function Tick(float DeltaTime)
             }
         }
     }
-
+    
     if (Level.NetMode != NM_DedicatedServer)
     {
         VehicleSpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
@@ -674,6 +673,9 @@ simulated function Tick(float DeltaTime)
                 RightTreadPanner.PanRate = 0.0;
             }
         }
+ 
+        // Update the dust color.
+        UpdateDustColor();
 
         if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachment != none)
         {
@@ -692,6 +694,63 @@ simulated function Tick(float DeltaTime)
     if (!bDriving && ForwardVel ~= 0.0)
     {
         Disable('Tick');
+    }
+}
+
+// New function to dynamically set the dust color based on the physics volume and
+// the material the vehicle is currently touching.
+simulated function UpdateDustColor()
+{ 
+    local Vector            HitLocation, HitNormal, TraceStart, TraceEnd;
+    local Material          HitMaterial;
+    local int               i;
+    local Color             DustColor;
+
+    if (Dust.Length == 0)
+    {
+        return;
+    }
+
+    DustColor = Level.DustColor;
+    
+    if (PhysicsVolume != none && PhysicsVolume.IsA('DHWaterVolume'))
+    {
+        DustColor = Level.WaterDustColor;
+    }
+    else
+    {
+        // We will just use a single wheel for the trace.
+        TraceStart = GetBoneCoords(Wheels[0].BoneName).Origin;
+        TraceEnd = TraceStart;
+        TraceEnd.Z -= Wheels[0].WheelRadius * 2;
+
+        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,, HitMaterial) != none)
+        {
+            if (HitMaterial != none)
+            {
+                switch (HitMaterial.SurfaceType)
+                {
+                    case EST_Snow:
+                    case EST_Ice:
+                        DustColor = Level.WaterDustColor;
+                        break;
+                    default:
+                        DustColor = Level.DustColor;
+                }
+            }
+            else
+            {
+                DustColor = Level.DustColor;
+            }
+        }
+    }
+
+    for (i = 0; i < Dust.Length; ++i)
+    {
+        if (Dust[i] != none)
+        {
+            Dust[i].SetDirtColor(DustColor);
+        }
     }
 }
 
@@ -2008,7 +2067,7 @@ simulated function StartEmitters()
             }
 
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i] = Spawn(class'DHVehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
             Dust[i].CullDistance = 12000; // ~200m
 
             if (bLowDetail)
@@ -2019,17 +2078,6 @@ simulated function StartEmitters()
             }
 
             Dust[i].SetBase(self);
-
-            // Boat vehicle uses different 'dirt' colour (white-grey) to simulate a spray effect instead of the usual wheel dust
-            // This also forces vehicles in snow camo skins to use the white-grey dust, which should save levelers from forgetting to set the correct color on Winter maps
-            if (IsA('DHBoatVehicle') || bIsWinterVariant)
-            {
-                Dust[i].SetDirtColor(Level.WaterDustColor);
-            }
-            else
-            {
-                Dust[i].SetDirtColor(Level.DustColor);
-            }
         }
 
         // Create exhaust emitters
@@ -4451,7 +4499,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)
 
     // Visual effects
-    bIsWinterVariant=false
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground

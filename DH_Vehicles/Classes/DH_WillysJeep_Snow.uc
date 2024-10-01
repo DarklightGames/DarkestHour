@@ -7,7 +7,6 @@ class DH_WillysJeep_Snow extends DH_WillysJeep;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_Jeep_tex.body.Willys_Body_Winter'
     Skins(1)=Texture'DH_Jeep_tex.body.Willys_Wheels_Winter'
     Skins(2)=Texture'DH_Jeep_tex.body.Willys_Gear_Snow'

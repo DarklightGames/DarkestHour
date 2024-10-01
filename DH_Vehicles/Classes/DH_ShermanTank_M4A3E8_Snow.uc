@@ -10,7 +10,6 @@ class DH_ShermanTank_M4A3E8_Snow extends DH_ShermanTank_M4A3E8;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_ShermanM4A3E8_tex.body_ext_snow'
     CannonSkins(0)=Texture'DH_ShermanM4A3E8_tex.turret_ext_snow'
     DestroyedMeshSkins(0)=Combiner'DH_ShermanM4A3E8_tex.body_ext_snow_destroyed'

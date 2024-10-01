@@ -2,19 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Wheels should appear to be stationary while in water
-// [ ] Have different driving characteristics when in water/on land
-// [ ] Splash guard functionality
+// [ ] Fix issue where vehicle is inoperable after changing positions
 // [ ] Exit positions
-// [ ] Turn off wash sound when out of water
-// [ ] Fix for propeller wash
-// [ ] Add bow water spray
-// [ ] Fix issue with wheel and suspension misalignment
-// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] Have different driving characteristics when in water/on land
 // [ ] Add engine hitpoint
 // [ ] Fix engine fire position
-// [ ] Fix issue where vehicle is inoperable after changing positions
+//==============================================================================
+// Bonus Marks:
 // [ ] Maybe make the propeller spin cause it'd be fun
+// [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
+// [ ] Add bow water spray
+// [ ] Splash guard functionality
+// [ ] Wheels should appear to be stationary while in water
 //==============================================================================
 
 class DH_DUKW extends DHBoatVehicle;
@@ -64,6 +63,8 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     SplashGuard = Spawn(class'DH_DUKWSplashGuard', self);
+
+    UpdateInWaterStatus();
 }
 
 function ServerToggleSplashGuard()
@@ -83,14 +84,16 @@ exec simulated function ROMGOperation()
 
 simulated function OnWaterEntered()
 {
-    LoopAnim(WaterIdleAnim);
+    LoopAnim(WaterIdleAnim, 1.0, 1.0);
     
     SplashGuard.Raise();
 
     WheelRotationScale = 0;
 
     // Change the engine sound to the boat engine.
-    Ambientsound = WaterEngineSound;
+    AmbientSound = WaterEngineSound;
+
+    SetWashSoundActive(true);
 
     // Play the startup sound for the boat engine if the engine is on.
     // if (!bEngineOff)
@@ -108,10 +111,12 @@ simulated function OnWaterLeft()
 
     SplashGuard.Lower();
 
-    LoopAnim(GroundIdleAnim);
+    LoopAnim(GroundIdleAnim, 1.0, 0.5);
 
     // Change the engine sound to the truck engine.
     AmbientSound = GroundEngineSound;
+
+    SetWashSoundActive(false);
 
     // Play the startup sound for the truck engine if the engine is on.
     // if (!bEngineOff)
@@ -119,8 +124,24 @@ simulated function OnWaterLeft()
     //     PlaySound(GroundStartUpSound, SLOT_None, 1.0);
     //     PlaySound(WaterShutDownSound, SLOT_None, 1.0);
     // }
+}
 
-    // TODO: turn off the wash sound.
+simulated function UpdateInWaterStatus()
+{
+    local bool bNewIsInWater;
+
+    bNewIsInWater = PhysicsVolume != none && PhysicsVolume.bWaterVolume;
+
+    if (bNewIsInWater && !bIsInWater)
+    {
+        OnWaterEntered();
+    }
+    else if (!bNewIsInWater && bIsInWater)
+    {
+        OnWaterLeft();
+    }
+
+    bIsInWater = bNewIsInWater;
 }
 
 simulated event PhysicsVolumeChange(PhysicsVolume NewPhysicsVolume)

@@ -7,7 +7,6 @@ class DH_UniversalCarrierTransport_PolishSnow extends DH_UniversalCarrierTranspo
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesPOL_tex.ext_vehicles.universal_carrier_Snow_polish'
     Skins(1)=Texture'allies_vehicles_tex2.Treads.UCSnow_Tread'
     Skins(2)=Texture'allies_vehicles_tex2.Treads.UCSnow_Tread'

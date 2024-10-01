@@ -7,7 +7,6 @@ class DH_GreyhoundArmoredCar_Snow extends DH_GreyhoundArmoredCar;
 
 defaultproperties
 {
-    bIsWinterVariant=true
     Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_snow'
     Skins(1)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_snow'
     Skins(2)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels_snow'
