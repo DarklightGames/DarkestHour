@@ -21,7 +21,7 @@ defaultproperties
 
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'  //to do: proper 3d scope texture
     bIsSniper=true
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85

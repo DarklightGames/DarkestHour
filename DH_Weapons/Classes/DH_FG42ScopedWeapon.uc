@@ -48,6 +48,7 @@ defaultproperties
     // Scope
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
     ScopeOverlaySize=0.32
     IronSightDisplayFOV=47.0
     IronSightDisplayFOVHigh=47.0

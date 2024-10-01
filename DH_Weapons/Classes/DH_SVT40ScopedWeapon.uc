@@ -22,7 +22,7 @@ defaultproperties
 
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
-    //ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'  //to do: proper 3d scope texture
 
     IronSightDisplayFOV=48.2
     IronSightDisplayFOVHigh=48.2
