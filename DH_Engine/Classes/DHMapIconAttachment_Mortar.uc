@@ -18,5 +18,5 @@ function EVisibleFor GetVisibilityInDangerZone()
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.mortar_topdown'
+    IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.mortar_topdown_rot'
 }

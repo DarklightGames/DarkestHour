@@ -294,9 +294,7 @@ simulated function PostBeginPlay()
     local WaterVolume                   WV;
     local FluidSurfaceInfo              FSI;
     local int                           i, j;
-    local DH_LevelInfo                  LI;
     local class<DHMapMarker>            MapMarkerClass;
-    local class<DHConstructionLoadout>  ConstructionLoadoutClass;
 
     super.PostBeginPlay();
 

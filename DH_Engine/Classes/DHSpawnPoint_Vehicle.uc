@@ -15,8 +15,6 @@ var     DHVehicle   Vehicle;        // Reference to the owning vehicle.
 var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon.
 
 var     bool        bHasSpawnKillPenalty;
-var     int         SpawnKillPenalty;
-var     int         SpawnKillPenaltyCounter;
 var     float       CreatedTimeSeconds;
 
 replication
@@ -48,7 +46,6 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     local int i;
     local DHObjective O;
     local Pawn P;
-    local DHGameReplicationInfo GRI;
     local bool bIsInSafeZone;
     local bool bIsNewSpawn;
 
@@ -56,9 +53,6 @@ function DHSpawnPointBase.ESpawnPointBlockReason GetSpawnPointBlockReason()
     {
         return SPBR_Burning;
     }
-
-    // Check to ensure that we are in our team's safe zone.
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Check that we are not inside the danger zone.
     if (GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))

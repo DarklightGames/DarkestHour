@@ -535,10 +535,6 @@ simulated function bool HasPeriscopeCameraBone()
 
 simulated function bool CanFireFromPeriscope()
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(VehWep);
-    
     return HasPeriscopeCameraBone() || (Cannon != none && Cannon.ShootAnimBoneName != '');
 }
 

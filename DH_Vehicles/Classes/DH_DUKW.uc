@@ -178,6 +178,8 @@ simulated function Sound GetShutDownSound()
 
 defaultproperties
 {
+    bIsAmphibious=true
+
     WaterIdleAnim="idle_water"
     GroundIdleAnim="idle_ground"
 

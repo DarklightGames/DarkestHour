@@ -66,6 +66,7 @@ var     bool        bClientInitialized;          // clientside flag that replica
 var     TreeMap_string_Object  NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     int         WeaponLockTimeForTK;         // Number of seconds a player's weapons are locked for TKing this vehicle
 var     int         PreventTeamChangeForTK;      // Number of seconds a player cannot team change after TKing this vehicle
+var     bool        bIsAmphibious;               // Vehicle can spawn at both boat and non-boat spawn points
 
 // Driver & driving
 var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position

@@ -545,7 +545,7 @@ function TearDown(int InstigatorTeamIndex)
 {
     local DHGameReplicationInfo GRI;
     local DH_LevelInfo LI;
-    local int i, ConstructionIndex;
+    local int ConstructionIndex;
 
     if (bShouldRefundSuppliesOnTearDown)
     {
