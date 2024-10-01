@@ -257,7 +257,7 @@ simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruct
 }
 
 // This function evaluates the level's construction classes and populates the ConstructionsEvaluated list.
-simulated function bool EvaluateConstructions()
+simulated function EvaluateConstructions()
 {
     local int i, TeamIndex, ConstructionIndex;
     local class<DHNation> NationClass;
