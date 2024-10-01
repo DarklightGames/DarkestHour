@@ -69,8 +69,6 @@ function AddSection(string Header, array<string> Lines)
 
 function BuildCreditLines()
 {
-    local int i;
-
     CreditLines.Length = 0;
 
     AddHeader("DARKEST HOUR: EUROPE '44-'45");

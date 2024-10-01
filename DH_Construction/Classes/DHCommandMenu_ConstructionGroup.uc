@@ -150,7 +150,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHPlayer PC;
     local int SquadMemberCount, Remaining;
     local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LevelInfo;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 

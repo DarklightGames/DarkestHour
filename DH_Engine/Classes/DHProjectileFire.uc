@@ -252,8 +252,6 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
     local Projectile         SpawnedProjectile;
     local ROWeaponAttachment WeapAttach;
-    local Actor              Other;
-    local vector             HitLocation, HitNormal;
 
     // Do any additional pitch/yaw changes before launching the projectile
     Dir.Pitch += AddedPitch;
