@@ -11,7 +11,6 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_EnfieldNo4ScopedAmmo'
     Spread=20.0
     AddedPitch=10
-    AddedYaw=9
     PctRestDeployRecoil=0.25
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'

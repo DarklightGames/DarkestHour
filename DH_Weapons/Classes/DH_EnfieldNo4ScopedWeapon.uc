@@ -21,7 +21,7 @@ defaultproperties
     bPlusOneLoading=true
 
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
-    ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
+    ScriptedScopeTexture=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_overlay'
 
     ScopeOverlaySize=0.54 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5
