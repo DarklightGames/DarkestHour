@@ -304,7 +304,7 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
     if (bBoatSpawn != VehicleClass.default.bCanSwim)
     {
         // Ambphibious vehicles can be spawned from boat and land spawn points.
-        if (class<DHVehicle>(VehicleClass) != none && class<DHVehicle>(VehicleClass).default.bIsAmphibious)
+        if (class<DHVehicle>(VehicleClass) != none && !class<DHVehicle>(VehicleClass).default.bIsAmphibious)
         {
             return false;
         }
