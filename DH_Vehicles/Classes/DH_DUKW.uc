@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Fix issue where vehicle is inoperable after changing positions
-// [ ] Exit positions
 // [ ] Have different driving characteristics when in water/on land
 // [ ] Add engine hitpoint
 // [ ] Fix engine fire position
@@ -16,7 +15,8 @@
 // [ ] Wheels should appear to be stationary while in water
 //==============================================================================
 
-class DH_DUKW extends DHBoatVehicle;
+class DH_DUKW extends DHBoatVehicle
+    abstract;
 
 var name WaterIdleAnim;
 var name GroundIdleAnim;
@@ -319,8 +319,10 @@ defaultproperties
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
-    ExitPositions(0)=(X=57.0,Y=-132.0,Z=25.0) // driver
-    ExitPositions(1)=(X=65.0,Y=137.0,Z=25.0)  // front passenger
+    ExitPositions(0)=(X=65.0,Y=-135.0,Z=60.0)       // Driver
+    ExitPositions(1)=(X=65.0,Y=135.0,Z=60.0)        // Front passenger
+    ExitPositions(2)=(X=-8.00,Y=135.00,Z=60.00)     // Right Passenger 01
+    ExitPositions(3)=(X=-8.00,Y=-135.00,Z=60.00)    // Left Passenger 01
 
     // Sounds
     SoundPitch=32.0

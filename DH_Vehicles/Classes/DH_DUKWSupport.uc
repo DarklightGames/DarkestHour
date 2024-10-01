@@ -19,4 +19,7 @@ defaultproperties
 
     bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
+
+    ExitPositions(4)=(X=-337.00,Y=-40.00,Z=60.00)  // Fallback Exit (rear)
+    ExitPositions(5)=(X=-337.00,Y=-40.00,Z=60.00)  // Fallback Exit (rear)
 }
