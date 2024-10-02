@@ -1872,6 +1872,31 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
     Destroy();
 }
 
+function UpdateRadioTeam(byte NewTeam)
+{
+    local int i;
+
+    if (VehWep != none)
+    {
+        for (i = 0; i < VehWep.VehicleAttachments.Length; ++i)
+        {
+            if (VehWep.VehicleAttachments[i].Actor != none && VehWep.VehicleAttachments[i].Actor.IsA('DHRadio'))
+            {
+                DHRadio(VehWep.VehicleAttachments[i].Actor).TeamIndex = NewTeam;
+            }
+        }
+    }
+}
+
+// Modified to set the player's team index on the radio actor when the player's team changes.
+// Needed because we don't have a direct reference to the base vehicle when we're spawning attachments.
+simulated function TeamChanged()
+{
+    super.TeamChanged();
+
+    UpdateRadioTeam(Team);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

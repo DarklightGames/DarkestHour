@@ -38,6 +38,8 @@ struct VehicleAttachment
     var Rotator         RelativeRotation;
     var float           RadioCollisionRadius;
     var float           RadioCollisionHeight;
+    // Note that when bServerOnly is true, RelativeLocation & Rotation are not guaranteed to be replicated correctly to clients.
+    // Use AttachBone instead for reliable client-side attachment.
     var bool            bServerOnly;
 };
 var array<VehicleAttachment> VehicleAttachments;
@@ -168,7 +170,7 @@ simulated function SpawnVehicleAttachments()
         if (VA.AttachClass == class'DHRadio')
         {
             Radio = DHRadio(VA.Actor);
-            Radio.TeamIndex = ROVehicle(Base).default.VehicleTeam;
+            Radio.TeamIndex = NEUTRAL_TEAM_INDEX;
             Radio.SoundVolume = 64;
 
             if (VA.RadioCollisionRadius == 0.0)
