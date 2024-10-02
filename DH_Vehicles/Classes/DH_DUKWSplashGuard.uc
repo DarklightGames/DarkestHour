@@ -3,50 +3,78 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_DUKWSplashGuard extends Actor;
+class DH_DUKWSplashGuard extends Actor
+    notplaceable;
 
-var name RaisingAnim;
-var name RaisedAnim;
-var name LoweringAnim;
-var name LoweredAnim;
+var int     SplashGuardAnimationChannel;
+var name    SplashGuardBone;
+var name    RaisingAnim;
+var name    LoweringAnim;
 
 enum ESplashGuardState
 {
-    SGS_Lowered,
     SGS_Raised,
-    SGS_Transitioning
+    SGS_Lowered,
 };
 
 var private ESplashGuardState TargetState;
 
-function ESplashGuardState GetTargetSplashGuardState()
+replication
 {
-    return TargetState;
+    reliable if (Role == ROLE_Authority)
+        TargetState;
 }
 
-simulated state Idle
+simulated function PostBeginPlay()
 {
-    simulated function BeginState()
+    super.PostBeginPlay();
+
+    // Set up the animation channel.
+    // TODO: what about out-of-order replication?
+    Owner.AnimBlendParams(SplashGuardAnimationChannel, 1.0, 0.0, 0.0, SplashGuardBone);
+}
+
+function SetSplashGuardState(ESplashGuardState NewState)
+{
+    Log("Set Splash Guard State: " @ NewState);
+
+    TargetState = NewState;
+
+    CheckState();
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    CheckState();
+}
+
+// Checks the current state vs the target state and transitions if necessary.
+simulated function CheckState()
+{
+    if (GetSplashGuardState() != TargetState)
     {
-        if (GetSplashGuardState() != TargetState)
+        if (TargetState == SGS_Raised)
         {
-            if (TargetState == SGS_Raised)
-            {
-                GotoState('Raising');
-            }
-            else if (TargetState == SGS_Lowered)
-            {
-                GotoState('Lowering');
-            }
+            GotoState('Raising');
+        }
+        else if (TargetState == SGS_Lowered)
+        {
+            GotoState('Lowering');
         }
     }
 }
 
-simulated state Raised extends Idle
+auto simulated state Raised
 {
-    function BeginState()
+    simulated function BeginState()
     {
-        LoopAnim(RaisedAnim);
+        Log("Splash Guard Raised");
+
+        // The target state may have changed during the transition, so
+        // check the state again.
+        CheckState();
     }
 
     simulated function ESplashGuardState GetSplashGuardState()
@@ -55,11 +83,15 @@ simulated state Raised extends Idle
     }
 }
 
-simulated state Lowered extends Idle
+simulated state Lowered
 {
-    function BeginState()
+    simulated function BeginState()
     {
-        LoopAnim(LoweredAnim);
+        Log("Splash Guard Lowered");
+
+        // The target state may have changed during the transition, so
+        // check the state again.
+        CheckState();
     }
 
     simulated function ESplashGuardState GetSplashGuardState()
@@ -70,54 +102,42 @@ simulated state Lowered extends Idle
 
 simulated state Transitioning
 {
-    simulated function ESplashGuardState GetSplashGuardState()
-    {
-        return SGS_Transitioning;
-    }
+    simulated function bool IsTransitioning() { return true; }
 }
 
 simulated state Lowering extends Transitioning
 {
-    function BeginState()
-    {
-        PlayAnim(LoweringAnim);
-    }
-
-    function AnimEnd(int Channel)
-    {
-        GotoState('Lowered');
-    }
+Begin:
+    Owner.PlayAnim(LoweringAnim, 1.0, 0.0, SplashGuardAnimationChannel);
+    Sleep(Owner.GetAnimDuration(LoweringAnim));
+    GotoState('Lowered');
 }
 
 simulated state Raising extends Transitioning
 {
-    function BeginState()
-    {
-        PlayAnim(RaisingAnim);
-    }
-
-    function AnimEnd(int Channel)
-    {
-        GotoState('Raised');
-    }
+Begin:
+    Owner.PlayAnim(RaisingAnim, 1.0, 0.0, SplashGuardAnimationChannel);
+    Sleep(Owner.GetAnimDuration(RaisingAnim));
+    GotoState('Raised');
 }
 
 simulated function ESplashGuardState GetSplashGuardState();
 
 function Raise()
 {
-    TargetState = SGS_Raised;
+    SetSplashGuardState(SGS_Raised);
 }
 
 function Lower()
 {
-    TargetState = SGS_Lowered;
+    SetSplashGuardState(SGS_Lowered);
 }
 
+simulated function bool IsTransitioning() { return false; }
 simulated function bool IsRaised() { return GetSplashGuardState() == SGS_Raised; }
 simulated function bool IsLowered() { return GetSplashGuardState() == SGS_Lowered; }
-simulated function bool IsTransitioning() { return GetSplashGuardState() == SGS_Transitioning; }
 
+// Returns true if the splash guard was toggled, false otherwise.
 function bool Toggle()
 {
     if (IsTransitioning())
@@ -141,6 +161,11 @@ function bool Toggle()
 
 defaultproperties
 {
-    bReplicateAnimations=true
     bHidden=true
+    SplashGuardAnimationChannel=2
+    SplashGuardBone="SPLASH_GUARD"
+    RaisingAnim="splash_guard_up"
+    LoweringAnim="splash_guard_down"
+    RemoteRole=ROLE_DumbProxy
+    bNetNotify=true
 }

@@ -3,15 +3,17 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Fix issue where vehicle is inoperable after changing positions
-// [ ] Have different driving characteristics when in water/on land
 // [ ] Add engine hitpoint
 // [ ] Fix engine fire position
+// [ ] exhaust? doesn't appear to be any modeled for it
+// [ ] Fix passengers all facing wild directions by default
 //==============================================================================
 // Bonus Marks:
+// [ ] Have a special emitter for the propeller and bow wash
+// [ ] Have different driving characteristics when in water/on land
 // [ ] Maybe make the propeller spin cause it'd be fun
 // [ ] Add more wash sounds to the sides of the vehicle (IMMERSION, BABY!)
 // [ ] Add bow water spray
-// [ ] Splash guard functionality
 // [ ] Wheels should appear to be stationary while in water
 //==============================================================================
 
@@ -35,8 +37,8 @@ var DH_DUKWSplashGuard SplashGuard;
 
 replication
 {
-    reliable if (Role < ROLE_Authority)
-        ServerToggleSplashGuard;
+    reliable if (Role == ROLE_Authority)
+        SplashGuard;
 }
 
 simulated event DestroyAppearance()
@@ -62,31 +64,33 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    SplashGuard = Spawn(class'DH_DUKWSplashGuard', self);
+    if (Role == ROLE_Authority)
+    {
+        SplashGuard = Spawn(class'DH_DUKWSplashGuard', self);
+        SplashGuard.SetBase(self);
+    }
 
     UpdateInWaterStatus();
 }
 
-function ServerToggleSplashGuard()
+simulated function Destroyed()
 {
-    if (SplashGuard == none)
+    super.Destroyed();
+
+    if (SplashGuard != none)
     {
-        return;
+        SplashGuard.Destroy();
     }
-
-    SplashGuard.Toggle();
-}
-
-exec simulated function ROMGOperation()
-{
-    ServerToggleSplashGuard();
 }
 
 simulated function OnWaterEntered()
 {
     LoopAnim(WaterIdleAnim, 1.0, 1.0);
     
-    SplashGuard.Raise();
+    if (Role == ROLE_Authority && SplashGuard != none)
+    {
+        SplashGuard.Raise();
+    }
 
     WheelRotationScale = 0;
 
@@ -94,22 +98,16 @@ simulated function OnWaterEntered()
     AmbientSound = WaterEngineSound;
 
     SetWashSoundActive(true);
-
-    // Play the startup sound for the boat engine if the engine is on.
-    // if (!bEngineOff)
-    // {
-    //     PlaySound(WaterStartUpSound, SLOT_None, 1.0);
-    //     PlaySound(GroundShutDownSound, SLOT_None, 1.0);
-    // }
-    
-    // TODO: turn on the wash sound.
 }
 
 simulated function OnWaterLeft()
 {
     WheelRotationScale = default.WheelRotationScale;
 
-    SplashGuard.Lower();
+    if (Role == ROLE_Authority && SplashGuard != none)
+    {
+        SplashGuard.Lower();
+    }
 
     LoopAnim(GroundIdleAnim, 1.0, 0.5);
 
