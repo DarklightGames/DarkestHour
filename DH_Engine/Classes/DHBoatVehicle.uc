@@ -131,4 +131,6 @@ defaultproperties
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Y=0.0,Z=2.0)
     ViewShakeOffsetFreq=7.0
+
+    WaterMovementState=PlayerDriving
 }

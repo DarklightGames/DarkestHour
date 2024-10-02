@@ -2,10 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Fix issue where vehicle is inoperable after changing positions
 // [ ] Add engine hitpoint
 // [ ] Fix engine fire position
-// [ ] exhaust? doesn't appear to be any modeled for it
+// [ ] Exhaust? doesn't appear to be any modeled for it
 // [ ] Fix passengers all facing wild directions by default
 //==============================================================================
 // Bonus Marks:
