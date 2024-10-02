@@ -137,10 +137,10 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Semovente9053_tex.Tank_Hud.semo9053_turret_look'
     VehicleHudEngineX=0.50
     VehicleHudEngineY=0.50
-    VehicleHudTreadsPosX(0)=0.35
-    VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.6
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
     VehicleHudOccupantsX(0)=0.425
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.45
@@ -184,7 +184,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -192,7 +192,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -201,7 +201,7 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.LR_Steering'
+    Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -209,7 +209,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.RR_Steering'
+    Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
@@ -217,14 +217,14 @@ defaultproperties
         WheelRadius=28.0
         bLeftTrack=true
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Left_Drive_Wheel'
+    Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=28.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Semovente9053Destroyer.Right_Drive_Wheel'
+    Wheels(5)=Right_Drive_Wheel
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -245,7 +245,7 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_Semovente9053Destroyer.KParams0'
+    KParams=KParams0
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
 
