@@ -1723,7 +1723,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         DebugString2 = "Shot penetration =" @ int(Round(MaxArmorPenetration * 10.0)) $ "mm, effective armor =" @ int(Round(EffectiveArmorThickness * 10.0))
             $ "mm, shot AOI =" @ int(Round(AngleOfIncidence)) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
 
-        DebugString3 = "Penetration radio =" @ PenetrationRatio $ ", shatter chance =" @ (ShatterChance * 100) $ "%, shattered =" @ Locs(P.bRoundShattered);
+        DebugString3 = "Penetration ratio =" @ PenetrationRatio $ ", shatter chance =" @ (ShatterChance * 100) $ "%, shattered =" @ Locs(P.bRoundShattered);
 
         if (bLogDebugPenetration)
         {
