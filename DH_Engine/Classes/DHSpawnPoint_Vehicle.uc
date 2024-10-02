@@ -244,7 +244,7 @@ function bool PerformSpawn(DHPlayer PC)
         // Otherwise vehicle may be moving, so attempt to deploy into the vehicle
         else
         {
-            bCanEnterTankCrewPositions = RoleInfo.bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn, true);
+            bCanEnterTankCrewPositions = RoleInfo.bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn);
             EntryVehiclePosition = FindEntryVehicle(bCanEnterTankCrewPositions);
 
             if (EntryVehiclePosition != none && EntryVehiclePosition.TryToDrive(PC.Pawn))

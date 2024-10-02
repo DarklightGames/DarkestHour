@@ -660,13 +660,13 @@ function bool TryToDrive(Pawn P)
         if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
-
             return false;
         }
 
         // Deny entry to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
         if (DHArmoredVehicle(VehicleBase) != none && DHArmoredVehicle(VehicleBase).AreCrewPositionsLockedForPlayer(P))
         {
+            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
             return false;
         }
     }
@@ -1384,7 +1384,6 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
         {
             DisplayVehicleMessage(0); // not qualified to operate vehicle
-
             return false;
         }
 
@@ -1392,6 +1391,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
         if (Role == ROLE_Authority && (AV != none || GetArmoredVehicleBase(AV)) && AV.AreCrewPositionsLockedForPlayer(self))
         {
+            DisplayVehicleMessage(22); // this vehicle has been locked by its crew
             return false;
         }
     }

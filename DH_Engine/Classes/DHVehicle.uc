@@ -1019,7 +1019,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 {
     local ROVehicleWeaponPawn WP;
     local Vehicle             VehicleGoal;
-    local bool                bPlayerIsTankCrew, bCanEnterTankCrewPositions, bHasTankCrewPositions;
+    local bool                bPlayerIsTankCrew, bCanEnterTankCrewPositions, bHasTankCrewPositions, bAreCrewPositionsLockedForPlayer, bIsPlayerLicensedToDrive;
     local int                 i;
     local Vehicle             LowPriorityEntry;
 
@@ -1028,17 +1028,20 @@ function Vehicle FindEntryVehicle(Pawn P)
         return none;
     }
 
+    bAreCrewPositionsLockedForPlayer = AreCrewPositionsLockedForPlayer(P);
+    bIsPlayerLicensedToDrive = class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller));
+
     if (P.IsHumanControlled())
     {
         // Check & save whether player is a tank crewman and, if so, whether he can enter tank crew positions (i.e. vehicle's crew haven't locked him out)
         if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P))
         {
             bPlayerIsTankCrew = true;
-            bCanEnterTankCrewPositions = !AreCrewPositionsLockedForPlayer(P, true);
+            bCanEnterTankCrewPositions = !bAreCrewPositionsLockedForPlayer;
         }
 
         // Select driver position if it's empty, & player isn't barred by tank crew restriction, & it isn't a locked armored vehicle that player can't enter
-        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions) && (!default.bRequiresDriverLicense || class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller))))
+        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions) && (!bRequiresDriverLicense || bIsPlayerLicensedToDrive))
         {
             return self;
         }
@@ -1079,9 +1082,13 @@ function Vehicle FindEntryVehicle(Pawn P)
         // There are no empty, usable vehicle positions for this player, so give him a screen message (only if vehicle is his team's) & don't let him enter
         if (P.GetTeamNum() == VehicleTeam || !bTeamLocked)
         {
-            if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)))
+            if (bRequiresDriverLicense && !bIsPlayerLicensedToDrive)
             {
                 DisplayVehicleMessage(3, P); // all rider positions full (if non-tanker tries to enter a tank that has rider positions)
+            }
+            if (bHasTankCrewPositions && bAreCrewPositionsLockedForPlayer)
+            {
+                DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
             }
             else if (!bHasTankCrewPositions || bPlayerIsTankCrew)
             {
@@ -1108,7 +1115,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 
     if (VehicleGoal == self)
     {
-        if (Driver == none && !(bMustBeTankCommander && AreCrewPositionsLockedForPlayer(P)))
+        if (Driver == none && !(bMustBeTankCommander && bAreCrewPositionsLockedForPlayer))
         {
             return self;
         }
@@ -1121,12 +1128,12 @@ function Vehicle FindEntryVehicle(Pawn P)
 
             if (VehicleGoal == WP)
             {
-                if (WP.Driver == none && !(WP.bMustBeTankCrew && AreCrewPositionsLockedForPlayer(P)))
+                if (WP.Driver == none && !(WP.bMustBeTankCrew && bAreCrewPositionsLockedForPlayer))
                 {
                     return WP;
                 }
 
-                if (Driver == none && !(bMustBeTankCommander && AreCrewPositionsLockedForPlayer(P))) // bot tries to enter driver's position if can't use its weapon pawn goal
+                if (Driver == none && !(bMustBeTankCommander && bAreCrewPositionsLockedForPlayer)) // bot tries to enter driver's position if can't use its weapon pawn goal
                 {
                     return self;
                 }
@@ -1204,6 +1211,7 @@ function bool TryToDrive(Pawn P)
         // Deny entry to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
         if (AreCrewPositionsLockedForPlayer(P))
         {
+            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
             return false;
         }
     }
@@ -1649,7 +1657,6 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
             if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
             {
                 DisplayVehicleMessage(0); // not qualified to operate vehicle
-
                 return false;
             }
 
@@ -1657,6 +1664,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
             // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
             if (Role == ROLE_Authority && AreCrewPositionsLockedForPlayer(self))
             {
+                DisplayVehicleMessage(22); // this vehicle has been locked by its crew
                 return false;
             }
         }
@@ -4034,7 +4042,7 @@ function bool IsFactorysLastVehicle()
 
 // New helper function to check whether tank crew positions in this vehicle have been locked, preventing a player from entering them
 // Implemented in armored vehicle subclass, but useful here to facilitate a generic entry functions in this class
-function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+function bool AreCrewPositionsLockedForPlayer(Pawn P)
 {
     return false;
 }

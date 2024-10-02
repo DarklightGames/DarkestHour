@@ -840,7 +840,7 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 // Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
 // If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
 // Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
-function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+function bool AreCrewPositionsLockedForPlayer(Pawn P)
 {
     if (bVehicleLocked && P != none)
     {
@@ -848,12 +848,6 @@ function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageTo
         if (IsAnAllowedCrewman(P))
         {
             return false;
-        }
-
-        // Player is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
-        if (!bNoMessageToPlayer)
-        {
-            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
         }
 
         return true;
