@@ -78,7 +78,7 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
     if (CSA != none && IsConstructed())
     {
-        SetStaticMesh(CSA.StaticMesh);
+        SetStaticMesh(StaticMesh);
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
