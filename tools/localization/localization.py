@@ -728,12 +728,30 @@ def generate_font_scripts(args):
             file.write('\n'.join(lines))
 
 
+def update(args):
+    # Update the submodule.
+    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    repository_path = os.path.join(root_path)
+
+    repo = git.Repo(repository_path)
+    for submodule in repo.submodules:
+        submodule.update(init=True, recursive=True)
+
+
 def sync(args):
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     repository_path = os.path.join(root_path, 'submodules', 'weblate-darklightgames')
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
     pattern = f'{repository_path}\\**\\*.po'
+
+    # Print out the latest commit info (author, date, message etc.)
+    repo = git.Repo(repository_path)
+    latest_commit = repo.head.commit
+    print(f'Latest commit: {latest_commit} by {latest_commit.author} on {latest_commit.authored_datetime} with message "{latest_commit.message}"')
+
+    files_processed = 0
+    language_files_processed = dict()
 
     for filename in glob.glob(pattern, recursive=True):
 
@@ -761,8 +779,6 @@ def sync(args):
         if args.verbose:
             print(f'Processing {filename} - {language.name} ({language.part1})')
 
-        print(f'Processing {filename} - {language.name} ({language.part1})')
-
         # Convert the .po file to a .unt file.
         with open(filename, 'r', encoding='utf-8') as file:
             unt_contents = po_to_unt(file.read())
@@ -778,6 +794,16 @@ def sync(args):
             with open(output_path, 'wb') as output_file:
                 output_file.write(b'\xff\xfe')  # Byte-order-mark.
                 output_file.write(unt_contents.encode('utf-16-le'))
+
+        if language not in language_files_processed:
+            language_files_processed[language] = 0
+        language_files_processed[language] += 1
+
+        files_processed += 1
+
+    print(f'Processed {files_processed} file(s)')
+    for language_code, count in language_files_processed.items():
+        print(f'{language_code.name}: {count} file(s)')
 
 
 def debug_value(args):
@@ -874,6 +900,9 @@ sync_parser.add_argument('-l', '--language_code', help='The language to sync (IS
 sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 sync_parser.add_argument('-f', '--filter', help='Filter the files to sync by a glob pattern', required=False)
 sync_parser.set_defaults(func=sync)
+
+update_parser = subparsers.add_parser('update', help='Update the submodule.')
+update_parser.set_defaults(func=update)
 
 debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
 debug_key_parser.set_defaults(func=debug_keys)
