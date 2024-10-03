@@ -6509,6 +6509,33 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     return false;
 }
 
+// Exec function to set the player's patron tier for testing purposes.
+exec function DebugPatron(int Tier)
+{
+    local DHPlayerReplicationInfo.EPatronTier PatronTier;
+    
+    switch (Tier)
+    {
+        case 0:
+            PatronTier = PATRON_None;
+            break;
+        case 1:
+            PatronTier = PATRON_Lead;
+            break;
+        case 2:
+            PatronTier = PATRON_Bronze;
+            break;
+        case 3:
+            PatronTier = PATRON_Silver;
+            break;
+        case 4:
+            PatronTier = PATRON_Gold;
+            break;
+    }
+
+    DHPlayerReplicationInfo(PlayerReplicationInfo).PatronTier = PatronTier;
+}
+
 exec function HideOrderMenu()
 {
     if (CommandInteraction != none)
