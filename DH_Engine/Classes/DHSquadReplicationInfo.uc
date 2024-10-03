@@ -1922,7 +1922,7 @@ function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, 
     local DHPlayer Sender, Recipient;
     local Pawn OtherPawn;
 
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) && !IsSquadAssistant(PRI, TeamIndex, SquadIndex))
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) && !IsSquadAssistant(PRI, TeamIndex, SquadIndex) && !PRI.IsPatron())
     {
         return;
     }
