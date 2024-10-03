@@ -203,6 +203,8 @@ def main():
                            help='compresses all build artifacts into a .zip file')
     argparser.add_argument('-debug', required=False, action='store_true', default=False,
                            help='compile debug packages (for use with UDebugger)')
+    argparser.add_argument('-localize', required=False, action='store_true', default=False,
+                           help='synchronize localization files from weblate submodule')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)

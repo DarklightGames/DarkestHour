@@ -2,4 +2,3 @@
 pushd %~dp0
 python make.py ../../. -mod DarkestHourDev -dumpint -snapshot
 popd
-pause
