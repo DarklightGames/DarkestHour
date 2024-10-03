@@ -25,4 +25,3 @@ defaultproperties
     PickupCount=15
     PickupsMax=15
 }
-

@@ -13,7 +13,6 @@ defaultproperties
     InfantryResupplyClass=class'DHConstruction_Resupply_Players_Italy'
     
     DefaultConstructionLoadoutClass=class'DHConstructionLoadout_Italy'
-    GrenadeCrateClass=class'DH_Weapons.DH_SRCMMod35GrenadeSpawner'
 
     RallyPointStaticMesh=StaticMesh'DH_Construction_stc.ITA_backpack'
     RallyPointStaticMeshActive=StaticMesh'DH_Construction_stc.ITA_backpack_established'

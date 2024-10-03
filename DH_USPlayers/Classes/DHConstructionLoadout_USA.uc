@@ -16,7 +16,7 @@ defaultproperties
     // Ammunition
     Constructions(3)=(ConstructionClass=class'DHConstruction_Resupply_Players_USA',Limit=-1,MaxActive=-1)
     Constructions(4)=(ConstructionClass=class'DHConstruction_Resupply_Vehicles_USA',Limit=-1,MaxActive=-1)
-    Constructions(5)=(ConstructionClass=class'DHConstruction_GrenadeCrate',Limit=-1,MaxActive=-1)
+    Constructions(5)=(ConstructionClass=class'DH_M1GrenadeCrateConstruction',Limit=-1,MaxActive=-1)
 
     // Defenses
     Constructions(6)=(ConstructionClass=class'DHConstruction_Foxhole',Limit=-1,MaxActive=-1)

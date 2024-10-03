@@ -9,16 +9,11 @@ class DHConstruction_InventorySpawner extends DHConstruction
 var class<DHInventorySpawner>   SpawnerClass;
 var DHInventorySpawner          Spawner;
 
-static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context Context)
-{
-    return default.SpawnerClass;
-}
-
 static function DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHConstruction.ConstructionError Error;
 
-    if (GetSpawnerClass(Context) == none)
+    if (default.SpawnerClass == none)
     {
         Error.Type = ERROR_Fatal;
         return Error;
@@ -36,7 +31,7 @@ simulated function OnConstructed()
             Spawner.Destroy();
         }
 
-        Spawner = Spawn(GetSpawnerClass(GetContext()), Level,, Location, Rotation);
+        Spawner = Spawn(SpawnerClass, Level,, Location, Rotation);
         Spawner.SetTeamIndex(GetTeamIndex());
         Spawner.OnExhausted = self.OnExhausted;
         Spawner.bShouldDestroyOnExhaustion = true;
@@ -46,7 +41,6 @@ simulated function OnConstructed()
 static function UpdateProxy(DHActorProxy AP)
 {
     local int i;
-    local class<DHInventorySpawner> SpawnerClass;
     local DHConstructionProxy CP;
 
     super.UpdateProxy(AP);
@@ -58,26 +52,20 @@ static function UpdateProxy(DHActorProxy AP)
         return;
     }
 
-    SpawnerClass = GetSpawnerClass(CP.GetContext());
-
     CP.SetDrawType(DT_Mesh);
-    CP.LinkMesh(GetSpawnerClass(CP.GetContext()).default.Mesh);
+    CP.LinkMesh(default.SpawnerClass.default.Mesh);
 
-    for (i = 0; i < SpawnerClass.default.Skins.Length; ++i)
+    for (i = 0; i < default.SpawnerClass.default.Skins.Length; ++i)
     {
-        CP.Skins[i] = CP.CreateProxyMaterial(SpawnerClass.default.Skins[i]);
+        CP.Skins[i] = CP.CreateProxyMaterial(default.SpawnerClass.default.Skins[i]);
     }
 }
 
 static function string GetMenuName(DHActorProxy.Context Context)
 {
-    local class<DHInventorySpawner> SpawnerClass;
-
-    SpawnerClass = GetSpawnerClass(Context);
-
-    if (SpawnerClass != none)
+    if (default.SpawnerClass != none)
     {
-        return SpawnerClass.static.GetMenuName(Context.PlayerController);
+        return default.SpawnerClass.static.GetMenuName(Context.PlayerController);
     }
 
     return "";
@@ -85,14 +73,10 @@ static function string GetMenuName(DHActorProxy.Context Context)
 
 static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
-    local class<DHInventorySpawner> SpawnerClass;
-
-    SpawnerClass = GetSpawnerClass(Context);
-
-    if (SpawnerClass != none)
+    if (default.SpawnerClass != none)
     {
-        NewRadius = SpawnerClass.default.CollisionRadius;
-        NewHeight = SpawnerClass.default.CollisionHeight;
+        NewRadius = default.SpawnerClass.default.CollisionRadius;
+        NewHeight = default.SpawnerClass.default.CollisionHeight;
     }
 }
 
@@ -114,15 +98,9 @@ simulated function OnExhausted(DHInventorySpawner Spawner)
     }
 }
 
-static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
-{
-    return GetSpawnerClass(Context) != none;
-}
-
 defaultproperties
 {
     GroupClass=class'DHConstructionGroup_Ammunition'
-    SpawnerClass=class'DH_Weapons.DH_StielGranateSpawner'
     bDummyOnConstruction=true
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true
