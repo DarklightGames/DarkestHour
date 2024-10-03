@@ -338,6 +338,11 @@ simulated function NotifySelected(Pawn User)
 
     Error = GetRadioUsageError(User);
 
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+    
     switch (Error)
     {
         case ERROR_None:
