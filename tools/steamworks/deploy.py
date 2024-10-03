@@ -166,7 +166,6 @@ if __name__ == '__main__':
                 '1291': 'depot_build_1291.vdf',
             }
         }
-
     }
 
     # Write the app_build files to the scripts directory in the VDF format.
