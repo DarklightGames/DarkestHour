@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.aa_light'
     VehicleClass=class'DH_Guns.DH_M45QuadmountGun'
     SupplyCost=1050
+    ProgressMax=7
 }

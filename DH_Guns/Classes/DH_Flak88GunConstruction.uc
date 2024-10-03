@@ -10,4 +10,6 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     VehicleClass=class'DH_Guns.DH_Flak88Gun'
     SupplyCost=2100
+    ProgressMax=14
+    CollisionRadius=200
 }

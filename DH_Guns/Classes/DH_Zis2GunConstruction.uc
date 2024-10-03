@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     VehicleClass=class'DH_Guns.DH_Zis2Gun'
     SupplyCost=1250
+    ProgressMax=14
 }

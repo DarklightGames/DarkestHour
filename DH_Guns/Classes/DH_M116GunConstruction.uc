@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.artillery'
     VehicleClass=class'DH_Guns.DH_M116Gun'
     SupplyCost=1500
+    ProgressMax=9
 }

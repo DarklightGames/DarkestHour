@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     VehicleClass=class'DH_Guns.DH_Pak40ATGun'
     SupplyCost=1200
+    ProgressMax=14
 }

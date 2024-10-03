@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     VehicleClass=class'DH_Guns.DH_17PounderGun'
     SupplyCost=1600
+    ProgressMax=14
 }

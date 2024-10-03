@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.aa_light'
     VehicleClass=class'DH_Guns.DH_Bofors40mmGun'
     SupplyCost=1250
+    ProgressMax=9
 }

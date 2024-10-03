@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_Model35Mortar'
     bIsArtillery=true
     SupplyCost=750
+    ProgressMax=8
 }

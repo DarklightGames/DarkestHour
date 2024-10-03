@@ -10,4 +10,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mg'
     VehicleClass=class'DH_Guns.DH_Fiat1435Gun'
     SupplyCost=500
+    ProgressMax=5
 }
