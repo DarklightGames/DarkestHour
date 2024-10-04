@@ -8,5 +8,5 @@ class DH_LTypeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Ltype_anm.ltype_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_icon'  // TODO: make our own, put it in the Ltype package
+    MenuImage=Texture'DH_Ltype_tex.interface.ltype_icon'
 }
