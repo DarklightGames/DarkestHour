@@ -250,18 +250,13 @@ function CalcSpreadModifiers()
 // If we do then we can avoid spawning the projectile if we'd hit something so close that the ballistics wouldn't matter anyway (don't use this for things like rocket launchers)
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local class<Projectile>  ProjectileClassToSpawn;
-    local ROWeaponAttachment WeapAttach;
+    local class<Projectile>     ProjectileClassToSpawn;
+    local ROWeaponAttachment    WeapAttach;
+    local bool                  bIsSpawningTracer;
 
     // Do any additional pitch/yaw changes before launching the projectile
     Dir.Pitch += AddedPitch;
     Dir.Yaw += AddedYaw;
-
-    // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here
-    if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
-    {
-        return none;
-    }
 
     ProjectileClassToSpawn = ProjectileClass;
 
@@ -288,6 +283,18 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             ProjectileClassToSpawn = TracerProjectileClass;
 
             NextTracerCounter = 0; // reset for next tracer spawn
+
+            bIsSpawningTracer = true;
+        }
+    }
+
+    if (!bIsSpawningTracer)
+    {
+        // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here.
+        // We only want to do this if we're not spawning a tracer, otherwise tracers will not be spawned when firing at things close to the player.
+        if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
+        {
+            return none;
         }
     }
 
