@@ -1861,13 +1861,16 @@ simulated function bool CanExit()
 // Also to trace from player's actual world location, with a smaller trace extent so player is less likely to snag on objects that wouldn't really block his exit
 function bool PlaceExitingDriver()
 {
-    local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
+    local array<Vector> MyExitPositions;
+    local Vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    i;
 
     if (Driver == none)
     {
         return false;
     }
+
+    MyExitPositions = GetExitPositions();
 
     // Set extent & ZOffset, using a smaller extent than original
     Extent.X = Driver.default.DrivingRadius;
@@ -1886,9 +1889,9 @@ function bool PlaceExitingDriver()
     }
 
     // Check through exit positions to see if player can be moved there, using the 1st valid one we find
-    for (i = 0; i < ExitPositions.Length; ++i)
+    for (i = 0; i < MyExitPositions.Length; ++i)
     {
-        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
+        ExitPosition = Location + (MyExitPositions[i] >> Rotation) + ZOffset;
 
         if (Trace(HitLocation, HitNormal, ExitPosition, Driver.Location + ZOffset - Driver.default.PrePivot, false, Extent) == none
             && Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none
@@ -1901,6 +1904,8 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+
+// Modify if you want to have different exit positions depending on context.
 function array<vector> GetExitPositions()
 {
     return self.ExitPositions;

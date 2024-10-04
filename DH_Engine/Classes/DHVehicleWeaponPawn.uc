@@ -1681,6 +1681,7 @@ simulated function bool CanExit()
 // Also to trace from player's actual world location, with a smaller trace extent so player is less likely to snag on objects that wouldn't really block his exit
 function bool PlaceExitingDriver()
 {
+    local array<Vector> MyExitPositions;
     local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    StartIndex, i;
     local DHVehicle DHV;
@@ -1709,14 +1710,23 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.DrivingHeight;
     ZOffset.Z = Driver.default.CollisionHeight * 0.5;
 
+    if (DHV != none)
+    {
+        MyExitPositions = DHV.GetExitPositions();
+    }
+    else
+    {
+        MyExitPositions = VehicleBase.ExitPositions;
+    }
+
     // Check through exit positions to see if player can be moved there, using the 1st valid one we find
     // Start with the exit position for this weapon pawn, & if necessary loop back to position zero to find a valid exit
-    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
+    i = Clamp(PositionInArray + 1, 0, MyExitPositions.Length - 1);
     StartIndex = i;
 
-    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
+    while (i >= 0 && i < MyExitPositions.Length)
     {
-        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+        ExitPosition = VehicleBase.Location + (MyExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
 
         if (VehicleBase.Trace(HitLocation, HitNormal, ExitPosition, Driver.Location + ZOffset - Driver.default.PrePivot, false, Extent) == none
             && Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none
@@ -1731,7 +1741,7 @@ function bool PlaceExitingDriver()
         {
             break;
         }
-        else if (i == VehicleBase.ExitPositions.Length)
+        else if (i == MyExitPositions.Length)
         {
             i = 0;
         }
