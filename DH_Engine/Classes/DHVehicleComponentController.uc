@@ -2,39 +2,50 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// This actor can be attached to any vehicle to provide a toggleable animated
+// element on any vehicle.
+//==============================================================================
 
-class DH_DUKWSplashGuard extends Actor
+class DHVehicleComponentController extends Actor
     notplaceable;
 
-var int     SplashGuardAnimationChannel;
-var name    SplashGuardBone;
+var int     Channel;
+var name    BoneName;
 var name    RaisingAnim;
 var name    LoweringAnim;
 
-enum ESplashGuardState
+enum EControllerState
 {
-    SGS_Raised,
-    SGS_Lowered,
+    STATE_Raised,
+    STATE_Lowered,
 };
 
-var private ESplashGuardState TargetState;
+var private EControllerState TargetState;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        Channel, BoneName, RaisingAnim, LoweringAnim;
+    reliable if (bNetDirty && Role == ROLE_Authority)
         TargetState;
 }
 
-simulated function PostBeginPlay()
+simulated function PostNetBeginPlay()
 {
-    super.PostBeginPlay();
+    super.PostNetBeginPlay();
 
-    // Set up the animation channel.
-    // TODO: what about out-of-order replication?
-    Owner.AnimBlendParams(SplashGuardAnimationChannel, 1.0, 0.0, 0.0, SplashGuardBone);
+    if (Role < ROLE_Authority)
+    {
+        SetAnimBlendParams();
+    }
 }
 
-function SetSplashGuardState(ESplashGuardState NewState)
+simulated function SetAnimBlendParams()
+{
+    Owner.AnimBlendParams(Channel, 1.0, 0.0, 0.0, BoneName);
+}
+
+function SetControllerState(EControllerState NewState)
 {
     TargetState = NewState;
 
@@ -51,13 +62,13 @@ simulated function PostNetReceive()
 // Checks the current state vs the target state and transitions if necessary.
 simulated function CheckState()
 {
-    if (GetSplashGuardState() != TargetState)
+    if (GetControllerState() != TargetState)
     {
-        if (TargetState == SGS_Raised)
+        if (TargetState == STATE_Raised)
         {
             GotoState('Raising');
         }
-        else if (TargetState == SGS_Lowered)
+        else if (TargetState == STATE_Lowered)
         {
             GotoState('Lowering');
         }
@@ -73,9 +84,9 @@ auto simulated state Raised
         CheckState();
     }
 
-    simulated function ESplashGuardState GetSplashGuardState()
+    simulated function EControllerState GetControllerState()
     {
-        return SGS_Raised;
+        return STATE_Raised;
     }
 }
 
@@ -88,9 +99,9 @@ simulated state Lowered
         CheckState();
     }
 
-    simulated function ESplashGuardState GetSplashGuardState()
+    simulated function EControllerState GetControllerState()
     {
-        return SGS_Lowered;
+        return STATE_Lowered;
     }
 }
 
@@ -102,7 +113,7 @@ simulated state Transitioning
 simulated state Lowering extends Transitioning
 {
 Begin:
-    Owner.PlayAnim(LoweringAnim, 1.0, 0.0, SplashGuardAnimationChannel);
+    Owner.PlayAnim(LoweringAnim, 1.0, 0.0, Channel);
     Sleep(Owner.GetAnimDuration(LoweringAnim));
     GotoState('Lowered');
 }
@@ -110,26 +121,26 @@ Begin:
 simulated state Raising extends Transitioning
 {
 Begin:
-    Owner.PlayAnim(RaisingAnim, 1.0, 0.0, SplashGuardAnimationChannel);
+    Owner.PlayAnim(RaisingAnim, 1.0, 0.0, Channel);
     Sleep(Owner.GetAnimDuration(RaisingAnim));
     GotoState('Raised');
 }
 
-simulated function ESplashGuardState GetSplashGuardState();
+simulated function EControllerState GetControllerState();
 
 function Raise()
 {
-    SetSplashGuardState(SGS_Raised);
+    SetControllerState(STATE_Raised);
 }
 
 function Lower()
 {
-    SetSplashGuardState(SGS_Lowered);
+    SetControllerState(STATE_Lowered);
 }
 
 simulated function bool IsTransitioning() { return false; }
-simulated function bool IsRaised() { return GetSplashGuardState() == SGS_Raised; }
-simulated function bool IsLowered() { return GetSplashGuardState() == SGS_Lowered; }
+simulated function bool IsRaised() { return GetControllerState() == STATE_Raised; }
+simulated function bool IsLowered() { return GetControllerState() == STATE_Lowered; }
 
 // Returns true if the splash guard was toggled, false otherwise.
 function bool Toggle()
@@ -156,10 +167,6 @@ function bool Toggle()
 defaultproperties
 {
     bHidden=true
-    SplashGuardAnimationChannel=2
-    SplashGuardBone="SPLASH_GUARD"
-    RaisingAnim="splash_guard_up"
-    LoweringAnim="splash_guard_down"
     RemoteRole=ROLE_DumbProxy
     bNetNotify=true
 }

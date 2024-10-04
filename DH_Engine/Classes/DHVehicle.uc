@@ -6,6 +6,7 @@
 // ==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
+    dependson(DHVehicleComponentController)
     abstract;
 
 // Structs
@@ -50,6 +51,17 @@ var() array<RandomAttachmentGroup> RandomAttachmentGroups;
 
 const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
 var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
+
+struct VehicleComponentController
+{
+    var() int Channel;
+    var() name BoneName;
+    var() name RaisingAnim;
+    var() name LoweringAnim;
+    var() DHVehicleComponentController.EControllerState InitialState;
+};
+var() array<VehicleComponentController>     VehicleComponentControllers;
+var   array<DHVehicleComponentController>   VehicleComponentControllerActors;
 
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
@@ -251,6 +263,43 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+function DestroyVehicleComponentControllers()
+{
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
+    {
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Destroy();
+        }
+    }
+}
+
+function SpawnVehicleComponentControllers()
+{
+    local int i;
+    local DHVehicleComponentController ComponentController;
+
+    for (i = 0; i < VehicleComponentControllers.Length; ++i)
+    {
+        ComponentController = Spawn(class'DHVehicleComponentController', self);
+        ComponentController.SetBase(self);
+
+        if (ComponentController != none)
+        {
+            ComponentController.Channel = VehicleComponentControllers[i].Channel;
+            ComponentController.BoneName = VehicleComponentControllers[i].BoneName;
+            ComponentController.RaisingAnim = VehicleComponentControllers[i].RaisingAnim;
+            ComponentController.LoweringAnim = VehicleComponentControllers[i].LoweringAnim;
+            ComponentController.SetControllerState(VehicleComponentControllers[i].InitialState);
+            ComponentController.SetAnimBlendParams();
+        }
+
+        VehicleComponentControllerActors[VehicleComponentControllerActors.Length] = ComponentController;
+    }
+}
+
 simulated function name GetIdleAnim()
 {
     return BeginningIdleAnim;
@@ -298,6 +347,8 @@ simulated function PostBeginPlay()
             DriverPositionIndex = InitialPositionIndex;
             PreviousPositionIndex = InitialPositionIndex;
         }
+
+        SpawnVehicleComponentControllers();
     }
     // On net client, force length of WeaponPawns array to normal length so it works with our new passenger pawn system
     // Passenger pawns won't now exist on client unless occupied, so although passenger slots may be empty in array we still see grey passenger position dots on HUD vehicle icon
@@ -368,6 +419,7 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
+    DestroyVehicleComponentControllers();
 
     if (NotifyParameters != none)
     {

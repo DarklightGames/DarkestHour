@@ -33,14 +33,6 @@ var bool bIsInWater;
 // A set of exit positions for use when the vehicle is in water.
 var array<Vector> WaterExitPositions;
 
-var DH_DUKWSplashGuard SplashGuard;
-
-replication
-{
-    reliable if (Role == ROLE_Authority)
-        SplashGuard;
-}
-
 // Modified so that players will exit inside the vehicle when it's in water.
 function array<Vector> GetExitPositions()
 {
@@ -76,22 +68,37 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Role == ROLE_Authority)
-    {
-        SplashGuard = Spawn(class'DH_DUKWSplashGuard', self);
-        SplashGuard.SetBase(self);
-    }
-
     UpdateInWaterStatus();
 }
 
 simulated function Destroyed()
 {
     super.Destroyed();
+}
 
-    if (SplashGuard != none)
+function RaiseSplashGuard()
+{
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
     {
-        SplashGuard.Destroy();
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Raise();
+        }
+    }
+}
+
+function LowerSplashGuard()
+{
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
+    {
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Lower();
+        }
     }
 }
 
@@ -99,9 +106,9 @@ simulated function OnWaterEntered()
 {
     LoopAnim(WaterIdleAnim, 1.0, 1.0);
     
-    if (Role == ROLE_Authority && SplashGuard != none)
+    if (Role == ROLE_Authority)
     {
-        SplashGuard.Raise();
+        RaiseSplashGuard();
     }
 
     WheelRotationScale = 0;
@@ -116,9 +123,9 @@ simulated function OnWaterLeft()
 {
     WheelRotationScale = default.WheelRotationScale;
 
-    if (Role == ROLE_Authority && SplashGuard != none)
+    if (Role == ROLE_Authority)
     {
-        SplashGuard.Lower();
+        LowerSplashGuard();
     }
 
     LoopAnim(GroundIdleAnim, 1.0, 0.5);
@@ -383,6 +390,8 @@ defaultproperties
 
     // Splashguard 
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_DUKW_stc.DUKW_splash_collision',AttachBone="SPLASH_GUARD")
+
+    VehicleComponentControllers(0)=(Channel=2,BoneName="SPLASH_GUARD",RaisingAnim="splash_guard_up",LoweringAnim="splash_guard_down")
 
     //================copypaste from gmc
 
