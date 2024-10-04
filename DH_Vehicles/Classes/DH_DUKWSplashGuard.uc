@@ -36,8 +36,6 @@ simulated function PostBeginPlay()
 
 function SetSplashGuardState(ESplashGuardState NewState)
 {
-    Log("Set Splash Guard State: " @ NewState);
-
     TargetState = NewState;
 
     CheckState();
@@ -70,8 +68,6 @@ auto simulated state Raised
 {
     simulated function BeginState()
     {
-        Log("Splash Guard Raised");
-
         // The target state may have changed during the transition, so
         // check the state again.
         CheckState();
@@ -87,8 +83,6 @@ simulated state Lowered
 {
     simulated function BeginState()
     {
-        Log("Splash Guard Lowered");
-
         // The target state may have changed during the transition, so
         // check the state again.
         CheckState();
