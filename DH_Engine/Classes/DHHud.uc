@@ -211,20 +211,13 @@ function DrawDebugInformation(Canvas C)
 
     PC = DHPlayer(PlayerOwner);
 
-    S = class'DHLib'.static.GetMapName(Level);
-
-    if (PC != none && PC.Pawn != none)
-    {
-        S @= "[" $ int(PC.Pawn.Location.X) $ "," @ int(PC.Pawn.Location.Y) $ "," $ int(PC.Pawn.Location.Z) $ "]";
-    }
-
     S @= class'DarkestHourGame'.default.Version.ToString();
 
     C.Style = ERenderStyle.STY_Alpha;
     C.Font = GetTinyFont(C);
 
     C.TextSize(S, StrX, StrY);
-    Y = C.ClipY - StrY;
+    Y = 0;
     X = C.ClipX - StrX;
 
     C.DrawColor = WhiteColor;
@@ -1857,38 +1850,42 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
     Lines.Length = 0; // clear array
 
-    // Get driver name & color
-    if (Vehicle.PlayerReplicationInfo != none)
+    if (V.bShouldDrawOccupantList)
     {
-        Lines[0] = "1." @ Vehicle.PlayerReplicationInfo.PlayerName;
-        Colors[0] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
-    }
-
-    // Get passenger names & colors
-    for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
-    {
-        WP = Vehicle.WeaponPawns[i];
-
-        if (WP != none && WP.PlayerReplicationInfo != none)
+        // Get driver name & color
+        if (Vehicle.PlayerReplicationInfo != none)
         {
-            Lines[Lines.Length] = (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
-            Colors[Colors.Length] = GetPlayerColor(WP.PlayerReplicationInfo);
+            Lines[0] = "1." @ Vehicle.PlayerReplicationInfo.PlayerName;
+            Colors[0] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
         }
-    }
 
-    // Draw the names if we are not the sole occupant.
-    if (Lines.Length > 1)
-    {
-        Canvas.Font = GetPlayerNameFont(Canvas);
-        VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * HudScale;
-
-        for (i = Lines.Length - 1; i >= 0; --i)
+        // Get passenger names & colors
+        for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
         {
-            VehicleOccupantsText.Text = Lines[i];
-            VehicleOccupantsText.Tints[0] = Colors[i];
-            VehicleOccupantsText.Tints[1] = Colors[i];
-            DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
-            VehicleOccupantsText.OffsetY -= YL;
+            WP = Vehicle.WeaponPawns[i];
+
+            if (WP != none && WP.PlayerReplicationInfo != none)
+            {
+                Lines[Lines.Length] = (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
+                Colors[Colors.Length] = GetPlayerColor(WP.PlayerReplicationInfo);
+            }
+        }
+
+        // Draw the names if we are not the sole occupant.
+        if (Lines.Length > 1)
+        {
+            Canvas.Font = GetConsoleFont(Canvas);
+            VehicleOccupantsText.bDrawShadow = false;
+            VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * HudScale;
+
+            for (i = Lines.Length - 1; i >= 0; --i)
+            {
+                VehicleOccupantsText.Text = Lines[i];
+                VehicleOccupantsText.Tints[0] = Colors[i];
+                VehicleOccupantsText.Tints[1] = Colors[i];
+                DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
+                VehicleOccupantsText.OffsetY -= YL;
+            }
         }
     }
 
