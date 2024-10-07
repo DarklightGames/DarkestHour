@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2024
 //==============================================================================
 
-class DHBrokenBottleAttachment extends DHShovelAttachment;
+class DH_USMadManHalloween extends DHUSMadManRoles;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Halloween3rd_anm.bottle_3rd'
-    //Skins(0)=Texture'DH_Halloween_tex.Maces.maces_world' replace world texture
-    MenuImage=Texture'DH_Halloween_tex.HUD.bottle_icon'
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USMadManPawn',Weight=1.0)
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
 }
