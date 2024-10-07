@@ -16,7 +16,6 @@ struct RolePawn
 
 var()   array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
 var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
-var     class<DHSquadType>  RequiredSquadType;
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
 var     bool                bCanCarryExtraAmmo;     // role can carry extra ammo
 var     bool                bSpawnWithExtraAmmo;    // role spawns with extra ammo
@@ -25,7 +24,6 @@ var     bool                bCanPickupWeapons;
 
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
-var     bool                bRequiresLogi;          // player must be in the Logi squad to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 var     bool                bRequiresSL;
 var     bool                bCanBeSquadLeader;      // squad leaders can take this role (disabled for special weapon roles!)
 
@@ -373,5 +371,4 @@ defaultproperties
     HandType=Hand_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
-    RequiredSquadType=class'DHSquadTypeInfantry'
 }

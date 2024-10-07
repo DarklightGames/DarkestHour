@@ -16,5 +16,4 @@ defaultproperties
     AddedRoleRespawnTime=15
     bExemptSquadRequirement=true
     bCanBeSquadLeader=false
-    RequiredSquadType=class'DHSquadTypeNoSquad'
 }

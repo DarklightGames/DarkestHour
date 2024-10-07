@@ -30,8 +30,6 @@ enum ERoleSelector
     ERS_PATRON
 };
 
-const SQUAD_INDEX_LOGI = 6;
-
 var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 var     bool                    bIsIncognito;
@@ -69,11 +67,8 @@ replication
 
 simulated function string GetNamePrefix()
 {
-    if (IsInSquadLogistics())
-    {
-        return default.AbbreviationLogi;
-    }
-    else if (IsSquadLeader())
+    
+    if (IsSquadLeader())
     {
         return default.AbbreviationSquadLeader;
     }
@@ -81,11 +76,16 @@ simulated function string GetNamePrefix()
     {
         return default.AbbreviationAssistant;
     }
+    else if (IsInSquadLogistics())
+    {
+        return default.AbbreviationLogi;
+    }
     else if (IsInSquad())
     {
         return string(SquadMemberIndex + 1);
     }
-
+    //SL, ASL, Engineer, Sniper, Mortar, Lmg, MG, AT, Logi, Tank Crew
+    //SL, A, E, S, M, Lmg, MG, AT, Logi
     return "";
 }
 
@@ -96,12 +96,12 @@ simulated function bool IsLoggedInAsAdmin()
 
 simulated function bool IsSquadLeader()
 {
-    return IsInSquad() && SquadIndex != SQUAD_INDEX_LOGI && SquadMemberIndex == 0;
+    return IsInSquad() && SquadMemberIndex == 0;
 }
 
 simulated function bool IsAllowedToInviteToSquad()
 {
-    return IsInSquad() && (SquadMemberIndex == 0 || SquadIndex == SQUAD_INDEX_LOGI);
+    return IsInSquad() && (SquadMemberIndex == 0);
 }
 
 // TODO: GET RID OF THIS!
@@ -137,17 +137,39 @@ simulated function bool IsInSquad()
 
 simulated function bool IsInSquadInfantry()
 {
-    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    if (SRI == none) return false;
+    if (SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeInfantry')
+    {
+        return true;
+    }
+    return false;
 }
 
 simulated function bool IsInSquadArmored()
 {
-    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
+    return false;
+    // return Team != none && SquadIndex != -1 && SRI.GetSquadType(Team.TeamIndex, SquadIndex) == class'DHSquadTypeArmored';
 }
 
 simulated function bool IsInSquadLogistics()
 {
-    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex == SQUAD_INDEX_LOGI;
+    return false;
+    // return Team != none && SquadIndex != -1 && SRI.GetSquadType(Team.TeamIndex, SquadIndex) == class'DHSquadTypeLogistics';
 }
 
 simulated function bool HasSquadMembers(int MinCount)

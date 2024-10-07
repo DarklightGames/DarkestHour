@@ -7939,92 +7939,15 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 // && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly
     // if (Level.NetMode != NM_Standalone)
     // {
-        if (IsInSquad())
-        {
-            //Dz temp fix for maps with BattleGroups
-            // return ERoleEnabledResult(1);
-
-            // switch (GetTeamNum())
-            // {
-            //     case AXIS_TEAM_INDEX:
-            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAxis.Squads(GetSquadIndex());
-            //     case ALLIES_TEAM_INDEX:
-            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAllied.Squads(GetSquadIndex());
-            //     default:
-            //         SquadSelection = SquadReplicationInfo.DH_BattlegroupAxis.Squads(GetSquadIndex());
-            // }
-            // SquadSelection = SquadReplicationInfo.GetSquadRoles(GetTeamNum(), GetSquadIndex());
-            // return SquadReplicationInfo.IsRoleAllowed(RI, self, GetTeamNum(), GetSquadIndex());
-            roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
-            // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
-            return ERoleEnabledResult(roleResult);
-            // if (RI.RequiredSquadType == class'DHSquadTypeInfantry' || RI.RequiredSquadType == class'DHSquadTypeNoSquad')
-            // {
-                // if (SquadReplicationInfo.SquadType == class'DHSquadTypeInfantry')
-                // {
-                //     if (SquadSelection.Role1Leader == RI && !IsSL())
-                //     {
-                //         return RER_SquadLeaderOnly;
-                //     }
-
-                //     if (SquadSelection.Role2Asl == RI && !IsAsl())
-                //     {
-                //         return RER_SquadLeaderOnly;
-                //     }
-
-                //     if (SquadSelection.Role3 == RI || SquadSelection.Role4 == RI || SquadSelection.Role5 == RI || SquadSelection.Role6 == RI)
-                //     {
-                //         return RER_Enabled;
-                //     }
-                //     return RER_SquadTypeOnlyInfantry;
-                // }
-                // else
-                // {
-                //     return RER_SquadTypeOnlyInfantry;
-                // }
-            // }
-
-            if (RI.RequiredSquadType == class'DHSquadTypeArmored')
-            {
-                if (SquadReplicationInfo.SquadType == class'DHSquadTypeArmored')
-                {
-                    if ((RI.bRequiresSLorASL && !IsSLorASL()) || (RI.bRequiresSL && !IsSquadLeader()))
-                    {
-                        return RER_SquadLeaderOnly;
-                    }
-
-                    if (IsSquadLeader() && !RI.bCanBeSquadLeader)
-                    {
-                        return RER_NonSquadLeaderOnly;
-                    }
-                    return RER_Enabled;
-                }
-                else
-                {
-                    return RER_SquadTypeOnlyArmored;
-                }
-            }
-
-             if (RI.RequiredSquadType == class'DHSquadTypeLogistics')
-            {
-                if (SquadReplicationInfo.SquadType == class'DHSquadTypeLogistics')
-                {
-                    return RER_Enabled;
-                }
-                else
-                {
-                    return RER_SquadTypeOnlyLogistics;
-                }
-            }
-        }
-        else if (RI.RequiredSquadType == class'DHSquadTypeNoSquad')
-        {
-            return RER_Enabled;
-        }
-      
+    if (IsInSquad())
+    {
+        roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
+        // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
+        return ERoleEnabledResult(roleResult);
+    }
     // }
 
-    return RER_SquadTypeOnlyLogistics; //Temp, should return disabled
+    return RER_Fatal; //Temp, should return disabled
 }
 
 // Function for getting the correct inventory item name to display depending on settings.

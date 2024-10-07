@@ -54,6 +54,11 @@ var() array<SquadSelection>    Squads;
 //     return Roles;
 // } 
 
+simulated function class<DHSquadType> GetSquadType(int SquadIndex)
+{
+    return Squads[SquadIndex].SquadType;
+}
+
 simulated function class<DHRoleInfo> GetRole(int SquadIndex, int RoleIndex)
 {
     switch (RoleIndex)

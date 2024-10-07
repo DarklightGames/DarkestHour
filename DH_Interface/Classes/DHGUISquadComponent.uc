@@ -195,9 +195,8 @@ defaultproperties
 
     Begin Object class=GUIImage Name=SquadTypeImage
         WinWidth=0.10
-        // WinHeight=0.075
         WinHeight=1.0
-        WinLeft=0.02
+        WinLeft=0.03
         WinTop=0.10
         Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
         ImageColor=(R=192,G=192,B=192,A=200)
@@ -208,7 +207,7 @@ defaultproperties
         bScaleToParent=true
         bVisible=false
         RenderWeight=10.0
-        // bAcceptsInput=true
+        bAcceptsInput=true
         ToolTip=SquadTypeImageTooltip
         Hint="Infantry, Vehicle or Supply Squad."
     End Object

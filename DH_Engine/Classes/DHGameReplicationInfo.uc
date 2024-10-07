@@ -1164,6 +1164,7 @@ simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
     local int i;
     local DHRoleInfo RI;
 
+    //TODO: Rewrite this with squad index
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHAxisRoles); ++i)

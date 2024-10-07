@@ -644,6 +644,17 @@ function ResetSquadInfo()
     NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
+simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetSquadType(SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetSquadType(SquadIndex);
+    }
+}
+
 simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
 {
     switch (TeamIndex)
@@ -699,7 +710,8 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
     // }
     if (SquadIndex < 0)
     {
-        return 0;
+        Log("GetTeamSquadSize squadIndex is less 0! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
+        return 8;
     }
 
     switch (TeamIndex)
@@ -709,7 +721,8 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
         case ALLIES_TEAM_INDEX:
             return DH_BattlegroupAllied.GetSquadSize(SquadIndex);
         default:
-            return 0;
+            Log("GetTeamSquadSize team index is default! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
+            return 8;
     }
 
     // if (SquadIndex == SQUAD_INDEX_LOGI)
@@ -735,6 +748,25 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
     //         return 0;
     // }
     
+}
+
+simulated function int GetTeamSquadTypeImage(int TeamIndex, int SquadIndex)
+{
+    if (SquadIndex < 0)
+    {
+        return 3;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetSquadSize(SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetSquadSize(SquadIndex);
+        default:
+            Log("GetTeamSquadSize team index is default! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
+            return 5;
+    }
 }
 
 // Gets the the number of squads a team can have.
@@ -1827,7 +1859,7 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
         return "Index too low";
     }
 
-    if (SquadIndex > 6)
+    if (SquadIndex > 7)
     {
         return "Index too high";
     }

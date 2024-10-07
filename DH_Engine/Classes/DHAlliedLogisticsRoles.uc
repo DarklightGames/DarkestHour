@@ -8,12 +8,10 @@ class DHAlliedLogisticsRoles extends DHAlliedRoles
 
 defaultproperties
 {
-    bRequiresLogi=true
     MyName="Logistic Engineer"
     AltName="Logistic Engineer"
     Article="a "
     PluralName="Logistic Engineers"
     Limit=4
     bSpawnWithExtraAmmo=true
-    RequiredSquadType=class'DHSquadTypeLogistics'
 }

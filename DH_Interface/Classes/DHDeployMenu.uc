@@ -722,7 +722,16 @@ function UpdateRoles()
 
         GRI.GetRoleCounts(RI, Count, BotCount);
         // Limit = PC.GetRoleLimit(RI);
-        Limit = SRI.GetRoleLimit(RI, TeamIndex, SquadIndex);
+
+        if (SRI != none)
+        {
+            Limit = SRI.GetRoleLimit(RI, TeamIndex, SquadIndex);
+        }
+        else
+        {
+            Log("No squad");
+            Limit = -1;
+        }
 
 
         if (Limit == 0)
@@ -1854,15 +1863,15 @@ function OnSquadNameEditBoxDeactivate()
 
 function OnSquadNameEditBoxEnter()
 {
-    local DHPlayer PC;
+    local DHPlayer PCEditer;
 
-    PC = DHPlayer(PlayerOwner());
+    PCEditer = DHPlayer(PlayerOwner());
 
-    if (PC != none)
+    if (PCEditer != none)
     {
         l_SquadName.Caption = eb_SquadName.TextStr;
 
-        PC.ServerSquadRename(eb_SquadName.TextStr);
+        PCEditer.ServerSquadRename(eb_SquadName.TextStr);
     }
 
     OnSquadNameEditBoxDeactivate();
@@ -2004,23 +2013,20 @@ function ShowPlayerSquad(int TeamIndex, int PlayerSquadIndex)
 
 function UpdateSquadTypeImage(DHGUISquadComponent C, int TeamIndex, int SquadIndex)
 {
-    // C.b_CreateSquadInfantry.Hint = "0. LordDz | 1. Asdf | 3.asdldas"; 
-    // C.b_JoinSquad.Hint = 
+    local class<DHSquadType> SquadType;
 
-    // C.i_SquadType.Image = SRI.SquadType.default.Image;
-    // C.i_SquadType.Hint = SRI.SquadType.default.Hint;
+    SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
+    C.i_SquadType.Image = SquadType.default.Image;
+    C.i_SquadType.Hint = SquadType.default.Hint;
 }
 
 function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 {
-    local DHPlayerReplicationInfo SavedPri;
     local array<DHPlayerReplicationInfo> Members;
     local DHGUISquadComponent C;
-    local int i, k;
+    local int i;
     local int SquadIndexOffset;
-    local int SquadLimit;
     local bool bIsInSquad, bIsSquadActive;
-    local string SquadName;
 
     SquadIndexOffset = 0;
     SetVisible(p_Squads.SquadComponents[p_Squads.SquadComponents.Length - 1], false);
@@ -2037,7 +2043,6 @@ function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
         C = p_Squads.SquadComponents[i];
         SetVisible(C, true);
         C.UpdateBackgroundColor(PRI);
-        
 
         if (bIsInASquad)
         {
@@ -2096,7 +2101,7 @@ function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 
 function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C, array<DHPlayerReplicationInfo> Members)
 {
-    local int l;
+    local int k, l;
     local int SquadSize;
     local string SquadName;
     local bool bIsSquadFull, bIsSquadLocked, bCanSquadBeLocked;
@@ -2127,21 +2132,15 @@ function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C,
     {
         if (Members.Length > l && Members[l] != none)
         {
-            if (l > 0)
-            {
-                C.b_JoinSquad.ToolTip.Lines[l] = l + 1@"."@Members[l].PlayerName;
-            }
-            else
-            {
-                C.b_JoinSquad.ToolTip.Lines[l] = "SL." @ Members[l].PlayerName;
-            }
+            C.b_JoinSquad.ToolTip.Lines[l] = Members[l].GetNamePrefix() @ "." @ Members[l].PlayerName;
         }
         else
         {
             C.b_JoinSquad.ToolTip.Lines[l] = "";
         }
     }
-    C.l_SquadName.Caption = SquadName @ " ["  @ Members.Length @ "/" @ SquadSize  @ "]";
+    C.l_SquadName.Caption = ""; //SquadName @ " ["  @ Members.Length @ "/" @ SquadSize  @ "]";
+    C.b_JoinSquad.Caption = SquadName @ " ["  @ Members.Length @ "/" @ SquadSize  @ "]";
     
     bIsSquadFull = SRI.IsSquadFull(TeamIndex, SquadIndex);
     bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, SquadIndex);
@@ -2196,7 +2195,8 @@ function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C,
 
 function UpdateInactiveSquad(DHGUISquadComponent C, int TeamIndex, int SquadIndex)
 {
-    C.l_SquadName.Caption = SRI.GetDefaultSquadName(TeamIndex, SquadIndex);
+    C.l_SquadName.Caption = ""; //SRI.GetDefaultSquadName(TeamIndex, SquadIndex);
+    C.b_CreateSquadInfantry.Caption = SRI.GetDefaultSquadName(TeamIndex, SquadIndex);
 
     SetVisible(C.i_SquadType, true);
     SetVisible(C.l_SquadName, true);
@@ -2281,13 +2281,25 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
 
 function UpdateSquads()
 {
-    local array<DHPlayerReplicationInfo> Members;
-    local DHPlayerReplicationInfo        SavedPRI;
-    local DHGUISquadComponent            C;
-    local DHGUISquadComponent            C1;
-    local int TeamIndex, SquadLimit, PlayerSquadIndex, SquadSize, i, j, k, l, SquadIndexOffset;
-    local bool bIsInSquad, bIsInASquad, bIsSquadActive, bIsSquadFull, bIsSquadLocked, bCanSquadBeLocked;
+    local int TeamIndex, SquadLimit;
+    local bool bIsInASquad;
     super.Timer();
+
+    if (PRI == none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    }
+
+    if (PC != none)
+    {
+        if (PRI != none)
+        {
+            bIsInASquad = PRI.IsInSquad();
+        }
+        TeamIndex = PC.GetTeamNum();
+        PlayerSquadIndex = PC.GetSquadIndex();
+        UpdatePlayerSquadName(TeamIndex, PlayerSquadIndex, bIsInASquad);
+    }
 
     if (MapMode != MODE_Squads)
     {
@@ -2295,7 +2307,7 @@ function UpdateSquads()
         return;
     }
 
-    if (PC == none || PRI == none || SRI == none)
+    if (PC == none || SRI == none)
     {
         return;
     }
@@ -2311,29 +2323,20 @@ function UpdateSquads()
         b_SquadsActiveButton.DisableMe();
     }
 
-    TeamIndex = PC.GetTeamNum();
 
     if (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX)
     {
         return;
     }
 
-    if (PRI == none)
-    {
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    // if (PRI == none)
+    // {
+    //     return;
+    //     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    // }
 
-        if (PRI == none)
-        {
-            return;
-        }
-    }
-
-    bIsInASquad = PRI.IsInSquad();
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
-
-    PlayerSquadIndex =  PC.GetSquadIndex();
-    UpdatePlayerSquadName(TeamIndex, PlayerSquadIndex, bIsInASquad);
 
     if (PlayerSquadIndex != -1)
     {
