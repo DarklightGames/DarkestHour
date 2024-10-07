@@ -8,6 +8,7 @@ class DH_Fiat626TruckSupport extends DH_Fiat626Truck;
 defaultproperties
 {
     VehicleNameString="Fiat 626 (Logistics)"
+    MapIconMaterial=Texture'DH_GUI_tex.GUI.supply_point'
 
     // Passengers
     PassengerPawns(1)=(AttachBone="passenger_06",DriveAnim="fiat626_passenger_bl",DrivePos=(Z=58),DriveRot=(Yaw=-16384))
