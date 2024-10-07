@@ -9,11 +9,17 @@ class DHMapIconAttachment_Vehicle extends DHMapIconAttachment
 // Track the driver of the vehicle so we can display the correct icon color
 // depending on the driver's team and squad.
 var private DHPlayerReplicationInfo DriverPRI;
+var class<DHVehicle>                VehicleClass;
 
 var Color                           UnoccupiedColor;
 
+var TexRotator                      MyIconMaterial;
+
 replication
 {
+    reliable if (Role == ROLE_Authority && bNetInitial)
+        VehicleClass;
+
     reliable if (Role == ROLE_Authority && bNetDirty)
         DriverPRI;
 }
@@ -21,6 +27,15 @@ replication
 simulated function bool IsOccupied()
 {
     return DriverPRI != none;
+}
+
+function PostNetBeginPlay()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Create the material instance for the icon.
+        MyIconMaterial = TexRotator(Level.ObjectPool.AllocateObject(class'TexRotator'));
+    }
 }
 
 function Timer()
@@ -83,17 +98,15 @@ function EVisibleFor GetVisibilityInDangerZone()
 
 simulated function Material GetIconMaterial(DHPlayer PC)
 {
-    local Material RotatedMaterial;
-
-    // TODO: get the icon from the vehicle class, not the attachment class.
-    // this will eliminate the class-spam.
-
     if (PC != none)
     {
-        RotatedMaterial = default.IconMaterial;
-        TexRotator(RotatedMaterial).Rotation.Yaw = GetMapIconYaw(DHGameReplicationInfo(PC.GameReplicationInfo));
-        return RotatedMaterial;
+        MyIconMaterial.Material = VehicleClass.default.MapIconMaterial;
+        MyIconMaterial.UOffset = MyIconMaterial.Material.MaterialUSize() / 2;
+        MyIconMaterial.VOffset = MyIconMaterial.Material.MaterialVSize() / 2;
+        MyIconMaterial.Rotation.Yaw = GetMapIconYaw(DHGameReplicationInfo(PC.GameReplicationInfo));
     }
+
+    return MyIconMaterial;
 }
 
 defaultproperties

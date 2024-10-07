@@ -298,6 +298,8 @@ defaultproperties
     bSavedEngineOff=false
     MaxDesireability=1.9
 
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_topdown'
+
     // Spawning
     bHasSpawnKillPenalty=false
 

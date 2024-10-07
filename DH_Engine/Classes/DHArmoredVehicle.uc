@@ -2394,6 +2394,7 @@ defaultproperties
     PointValue=1000
     WeaponLockTimeForTK=30
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.tank_topdown'
 
     // Driver & positions
     bMustBeTankCommander=true

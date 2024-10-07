@@ -226,6 +226,8 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_DUKW_anm.dukw_ext'
 
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_amphibious_topdown'
+
     BeginningIdleAnim="idle_water"
 
     // Use a secondary animation channel to decouple the driver transition animations from the boat idle animations.

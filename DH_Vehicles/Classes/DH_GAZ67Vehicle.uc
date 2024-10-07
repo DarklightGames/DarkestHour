@@ -13,6 +13,7 @@ defaultproperties
     VehicleMass=3.5
     ReinforcementCost=1
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GAZ67_anm.GAZ67_ext'

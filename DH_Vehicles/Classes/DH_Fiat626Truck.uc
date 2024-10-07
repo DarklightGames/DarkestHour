@@ -18,6 +18,7 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=2
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat626_anm.fiat626_body_ext'

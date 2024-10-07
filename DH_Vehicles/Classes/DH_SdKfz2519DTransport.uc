@@ -29,6 +29,8 @@ defaultproperties
     bIsApc=false
     bMustBeTankCommander=true
 
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_gun_topdown'
+
     Health=500
     HealthMax=500.0
     DisintegrationHealth=-200.0 // increased because other burning properties dont seem to exist on this vehicle type, hence "compensation"
