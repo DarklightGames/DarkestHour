@@ -4110,9 +4110,20 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
         if (PRI != none)
         {
-            SelfColor = class'UColor'.default.OrangeRed;
+            SelfColor = class'DHColor'.default.SelfColor;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, 0.05); // TODO: magic number
+
+            // Display a smaller icon if we are in a vehicle.
+            if (A != none && A.IsA('Vehicle'))
+            {
+                IconScale = PlayerIconScale;
+            }
+            else
+            {
+                IconScale = PlayerIconLargeScale;
+            }
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale); // TODO: magic number
         }
     }
 }

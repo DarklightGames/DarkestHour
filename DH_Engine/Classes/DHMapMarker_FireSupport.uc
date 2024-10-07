@@ -31,7 +31,7 @@ static function string GetCaptionString(DHPlayer PC, DHGameReplicationInfo.MapMa
     }
 }
 
-static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     if (PC == none)
     {

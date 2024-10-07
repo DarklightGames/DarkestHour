@@ -274,6 +274,7 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
+/*
 simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
 {
     local GUIStyles Style;
@@ -297,10 +298,11 @@ simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScal
 
     return Style;
 }
+*/
 
 defaultproperties
 {
-    SpawnPointStyle="DHSpawnVehicleButtonStyle"
+    SpawnPointStyle="DHSpawnButtonStyle"
     bCombatSpawn=true
     bIsLowPriority=true
     bHasSpawnKillPenalty=true

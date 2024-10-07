@@ -168,7 +168,7 @@ static function color GetBeeLineColor()
     return default.IconColor;
 }
 
-static function color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
+static function Color GetIconColor(DHPlayer PC, DHGameReplicationInfo.MapMarker Marker)
 {
     return default.IconColor;
 }
