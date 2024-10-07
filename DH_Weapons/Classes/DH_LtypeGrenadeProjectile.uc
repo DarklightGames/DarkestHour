@@ -61,14 +61,14 @@ defaultproperties
 
     // Sounds
     ExplosionSoundVolume=8.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
-    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    VehicleHitSound=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
     VehicleDeflectSound=Sound'DH_WeaponSounds.faust_explode021'
     ImpactSound=Sound'DH_WeaponSounds.faust_explode021'
     DirtHitSound=Sound'DH_WeaponSounds.faust_explode021'
     RockHitSound=Sound'DH_WeaponSounds.faust_explode021'
     WoodHitSound=Sound'DH_WeaponSounds.faust_explode021'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp02'
-    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp03'
-    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.PIAT.PiatExp01'
+    ExplosionSound(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
+    ExplosionSound(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
+    ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
 }
