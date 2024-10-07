@@ -23,7 +23,6 @@ defaultproperties
     ConstructionPlacementOffset=(Z=16)
     bCanBeRotated=true
     PlayersNeededToRotate=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

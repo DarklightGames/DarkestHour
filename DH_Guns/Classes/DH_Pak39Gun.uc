@@ -16,7 +16,6 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Pak39_tex.interface.pak39_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Pak39_tex.interface.pak39_turret_look'
     ExitPositions(0)=(X=-115.00,Y=0.00,Z=60.00)
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0

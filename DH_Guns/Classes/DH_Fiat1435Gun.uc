@@ -14,6 +14,5 @@ defaultproperties
     CollisionHeight=32.0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Fiat1435MGPawn',WeaponBone=turret_placement)
     RotationsPerSecond=0.25
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
 }

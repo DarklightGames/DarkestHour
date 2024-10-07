@@ -24,6 +24,5 @@ defaultproperties
     ConstructionPlacementOffset=(Z=-2)
     bCanBeRotated=true
     PlayersNeededToRotate=2
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 }

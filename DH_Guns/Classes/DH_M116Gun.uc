@@ -21,7 +21,6 @@ defaultproperties
     ExitPositions(2)=(X=-78.00,Y=50.00,Z=48.00)
     VehicleMass=11.0
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.artillery_topdown'
     ShadowZOffset=10.0
     RotateCooldown=2

@@ -4646,5 +4646,6 @@ defaultproperties
 
     bDoRandomAttachments=true
 
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 }
