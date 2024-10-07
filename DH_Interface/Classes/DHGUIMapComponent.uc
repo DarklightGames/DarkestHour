@@ -164,7 +164,7 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
                 b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
             }
 
-            b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetMapStyleName(), FS);
+            b_SpawnPoints[i].Style = GRI.SpawnPoints[i].GetStyle(Controller, FS);
         }
         else
         {
