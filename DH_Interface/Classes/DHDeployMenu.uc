@@ -1941,7 +1941,7 @@ function UpdateSquadLeaderLockButton(DHGUISquadComponent C, bool bIsSquadLeader,
             C.b_LockSquad.SetHint("Squad can be locked only if it has " $ SRI.SquadLockMemberCountMin $ " or more members");
         }
     }
-    SetVisible(C.i_LockSquad, bIsSquadLocked);
+    SetVisible(C.i_LockSquad, true);
     C.b_LockSquad.SetVisibility(true);
 }
 
@@ -2017,7 +2017,16 @@ function UpdateSquadTypeImage(DHGUISquadComponent C, int TeamIndex, int SquadInd
 
     SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
     C.i_SquadType.Image = SquadType.default.Image;
-    C.i_SquadType.Hint = SquadType.default.Hint;
+    C.i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+}
+
+function UpdateSquadTypeImageForPlayerSquad(int TeamIndex, int SquadIndex)
+{
+    local class<DHSquadType> SquadType;
+
+    SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
+    i_SquadType.Image = SquadType.default.Image;
+    i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
 }
 
 function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
@@ -2299,6 +2308,7 @@ function UpdateSquads()
         TeamIndex = PC.GetTeamNum();
         PlayerSquadIndex = PC.GetSquadIndex();
         UpdatePlayerSquadName(TeamIndex, PlayerSquadIndex, bIsInASquad);
+        UpdateSquadTypeImageForPlayerSquad(TeamIndex, PlayerSquadIndex);
     }
 
     if (MapMode != MODE_Squads)
@@ -2781,7 +2791,7 @@ defaultproperties
         RenderWeight=10.0
         bAcceptsInput=true
         ToolTip=SquadTypeImageTooltip
-        Hint="Infantry, Vehicle or Supply Squad."
+        Hint="This is my own squad type."
     End Object
     i_SquadType=SquadOwnTypeImage
 

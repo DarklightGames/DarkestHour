@@ -21,6 +21,7 @@ struct SquadRole
 struct SquadSelection
 {
     var() string                       Name;
+    var() string                       SquadTypeHint;
     var() class<DHSquadType>           SquadType;               // The Squad type class to use.
     var() int                          SquadLimit;                   // How many of this squad type there can be
     var() int                          SquadSize;                   // How many of this squad type there can be
@@ -108,6 +109,11 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
 simulated function string GetDefaultSquadName(int SquadIndex)
 {
     return Squads[SquadIndex].Name;
+}
+
+simulated function string GetSquadTypeHint(int SquadIndex)
+{
+    return Squads[SquadIndex].SquadTypeHint;
 }
 
 simulated function int GetSquadSize(int SquadIndex)

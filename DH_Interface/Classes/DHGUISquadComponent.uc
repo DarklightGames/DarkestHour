@@ -135,9 +135,9 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=LockSquadButton
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.10
-        WinHeight=1.0
+        WinHeight=0.15
         WinLeft=0.08
-        WinTop=0.05
+        WinTop=0.85
         OnClick=OnClick
         bVisible=true
     End Object
@@ -146,8 +146,8 @@ defaultproperties
     Begin Object class=GUIImage Name=LockSquadImage
         WinWidth=0.10
         WinHeight=1.0
-        WinLeft=0.8
-        WinTop=0.05
+        WinLeft=0.10
+        WinTop=0.80
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
@@ -170,10 +170,9 @@ defaultproperties
         // WinTop=0.05
 
         WinWidth=0.10
-        // WinHeight=0.075
         WinHeight=1.0
-        WinLeft=0.18
-        WinTop=0.05
+        WinLeft=0.05
+        WinTop=0.80
 
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)
@@ -197,7 +196,7 @@ defaultproperties
         WinWidth=0.10
         WinHeight=1.0
         WinLeft=0.03
-        WinTop=0.10
+        WinTop=0.15
         Image=Texture'DH_InterfaceArt2_tex.Icons.binoculars'
         ImageColor=(R=192,G=192,B=192,A=200)
         ImageRenderStyle=MSTY_Alpha
@@ -209,7 +208,7 @@ defaultproperties
         RenderWeight=10.0
         bAcceptsInput=true
         ToolTip=SquadTypeImageTooltip
-        Hint="Infantry, Vehicle or Supply Squad."
+        Hint="This class can have many classes."
     End Object
     i_SquadType=SquadTypeImage
 

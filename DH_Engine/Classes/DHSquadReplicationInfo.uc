@@ -313,6 +313,11 @@ private function UpdateSquadMemberLocations(DHPlayer PC)
     //
     // The method below sends the position (X, Y) and rotation (Z) of each
     // member in the players' squad every 2 seconds.
+    if (PRI.SquadIndex < 0)
+    {
+        return;
+    }
+    
     for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum(), PRI.SquadIndex); ++i)
     {
         OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
@@ -913,6 +918,22 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     }
 
     return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
+}
+
+simulated function string GetSquadTypeHint(int TeamIndex, int SquadIndex)
+{
+    local DH_LevelInfo LI;
+    local string Hint;
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetSquadTypeHint(SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetSquadTypeHint(SquadIndex);
+        default:
+            return "Spectator Squad";
+    }
 }
 
 // Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
