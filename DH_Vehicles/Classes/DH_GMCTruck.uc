@@ -14,7 +14,6 @@ defaultproperties
     VehicleMass=5.0 //2.5
     ReinforcementCost=2
     MaxDesireability=0.12
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
