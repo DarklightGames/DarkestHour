@@ -5579,6 +5579,13 @@ function DrawRallyPointStatus(Canvas C)
         return;
     }
 
+    if (PC.Pawn != none && PC.Pawn.IsA('Vehicle'))
+    {
+        // Don't show this if we're in a vehicle, because it is largely unhelpful
+        // and overlaps the occupant list.
+        return;
+    }
+
     if (Level.TimeSeconds >= NextRallyPointPlacementResultTime)
     {
         Result = SRI.GetRallyPointPlacementResult(PC);
