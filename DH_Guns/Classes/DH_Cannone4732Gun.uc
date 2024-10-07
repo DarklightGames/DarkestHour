@@ -30,7 +30,8 @@ defaultproperties
     VehicleMass=3.0
     ConstructionPlacementOffset=(Z=0.0)
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
     ShadowZOffset=10.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

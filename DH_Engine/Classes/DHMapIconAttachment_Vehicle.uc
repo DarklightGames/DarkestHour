@@ -10,9 +10,7 @@ class DHMapIconAttachment_Vehicle extends DHMapIconAttachment
 // depending on the driver's team and squad.
 var private DHPlayerReplicationInfo DriverPRI;
 var class<DHVehicle>                VehicleClass;
-
 var Color                           UnoccupiedColor;
-
 var TexRotator                      MyIconMaterial;
 
 replication
@@ -38,22 +36,34 @@ function PostNetBeginPlay()
     }
 }
 
-function Timer()
+function DHPlayerReplicationInfo GetPrimaryOccupant()
 {
-    local Vehicle V;
+    local ROVehicle V;
+	local int i;
 
-    super.Timer();
-
-    V = Vehicle(AttachedTo);
+    V = ROVehicle(AttachedTo);
 
     if (V != none && V.Controller != none)
     {
-        DriverPRI = DHPlayerReplicationInfo(V.Controller.PlayerReplicationInfo);
+        return DHPlayerReplicationInfo(V.Controller.PlayerReplicationInfo);
     }
-    else
+
+	for (i = 0; i < V.WeaponPawns.Length; i++)
     {
-        DriverPRI = none;
+		if (V.WeaponPawns[i] != none && V.WeaponPawns[i].Controller != none && !V.WeaponPawns[i].IsA('DHPassengerPawn'))
+        {
+			return DHPlayerReplicationInfo(V.WeaponPawns[i].PlayerReplicationInfo);
+        }
     }
+    
+    return none;
+}
+
+function Timer()
+{
+    super.Timer();
+    
+    DriverPRI = GetPrimaryOccupant();
 }
 
 simulated function Color GetIconColor(DHPlayer PC)

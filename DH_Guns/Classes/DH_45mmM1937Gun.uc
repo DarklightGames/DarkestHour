@@ -24,5 +24,6 @@ defaultproperties
     VehicleMass=8.0
     ConstructionPlacementOffset=(Z=10.0)
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 }

@@ -4645,4 +4645,6 @@ defaultproperties
     RadioAttachmentHeight=10.0
 
     bDoRandomAttachments=true
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 }

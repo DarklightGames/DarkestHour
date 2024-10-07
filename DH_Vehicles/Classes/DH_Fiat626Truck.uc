@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Engine Sounds (Napoleon)
-// [ ] Supply Cache for Italians (needs a bone etc.)
 // [ ] Add hitpoint for the supply cache on the support version
 //==============================================================================
 
