@@ -178,13 +178,27 @@ replication
         AxisSquadSize, AlliesSquadSize,
         AxisMembers, AxisNames, AxisLocked, AlliesMembers, AlliesNames,
         AlliesLocked, bAreRallyPointsEnabled, RallyPoints,
-        AxisNextRallyPointTimes, AlliesNextRallyPointTimes;
+        AxisNextRallyPointTimes, AlliesNextRallyPointTimes, DH_BattlegroupAxis, DH_BattlegroupAllied;
 }
 
 simulated function PostBeginPlay()
 {
     local DH_LevelInfo LI;
     local DH_Battlegroup BG;
+
+    Log("Looking for battlegroups... in local");
+      foreach AllActors(class'DH_BattleGroup', BG)
+        {
+            Log("Found battlegroup: " @ BG @ " with nation team: " @ BG.NationTeam);
+            if (BG.NationTeam == 0)
+            {
+                DH_BattlegroupAxis = BG;
+            }
+            else
+            {
+                DH_BattlegroupAllied = BG;
+            }
+        }
 
     super.PostBeginPlay();
 
@@ -201,23 +215,33 @@ simulated function PostBeginPlay()
             break;
         }
 
-        foreach AllActors(class'DH_BattleGroup', BG)
-        {
-            if (BG.NationTeam == 0)
-            {
-                DH_BattlegroupAxis = BG;
-            }
-            else
-            {
-                DH_BattlegroupAllied = BG;
-            }
-        }
+      
     }
 }
 
 function PostNetBeginPlay()
 {
+    local DH_Battlegroup BG;
+
+    Log("Looking for battlegroups... in NET");
+
+    foreach AllActors(class'DH_BattleGroup', BG)
+    {
+        Log("Found battlegroup in NET: " @ BG @ " with nation team: " @ BG.NationTeam);
+        if (BG.NationTeam == 0)
+        {
+            DH_BattlegroupAxis = BG;
+        }
+        else
+        {
+            DH_BattlegroupAllied = BG;
+        }
+    }
+
     super.PostNetBeginPlay();
+    
+
+  
 
     if (Role == ROLE_Authority)
     {
@@ -317,7 +341,7 @@ private function UpdateSquadMemberLocations(DHPlayer PC)
     {
         return;
     }
-    
+
     for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum(), PRI.SquadIndex); ++i)
     {
         OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
@@ -649,8 +673,18 @@ function ResetSquadInfo()
     NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
+function bool IsBattleGroupsDefined()
+{
+    return DH_BattlegroupAxis != none && DH_BattlegroupAllied != none;
+}
+
 simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex)
 {
+    if (!IsBattleGroupsDefined())
+    {
+        return class'DHSquadTypeInfantry';
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -658,10 +692,13 @@ simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex
         case ALLIES_TEAM_INDEX:
             return DH_BattlegroupAllied.GetSquadType(SquadIndex);
     }
+    return class'DHSquadTypeInfantry';
+
 }
 
 simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
 {
+    
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -678,6 +715,11 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int TeamIndex, int squadIndex
         return 255;
     }
 
+    if (!IsBattleGroupsDefined())
+    {
+        return 255; //TODO: Change this to role checking
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -691,6 +733,11 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int TeamIndex, int squadIndex
 
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int TeamIndex, int squadIndex)
 {
+    if (!IsBattleGroupsDefined())
+    {
+        return 1; //TODO: Change this to old way
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -704,15 +751,19 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Te
 // Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 {
-    // switch (TeamIndex)
-    // {
-    //     case AXIS_TEAM_INDEX:
-    //         return AxisSquadSize;
-    //     case ALLIES_TEAM_INDEX:
-    //         return AlliesSquadSize;
-    //     default:
-    //         return 0;
-    // }
+    if (!IsBattleGroupsDefined())
+    {
+        switch (TeamIndex)
+        {
+        case AXIS_TEAM_INDEX:
+            return AxisSquadSize;
+        case ALLIES_TEAM_INDEX:
+            return AlliesSquadSize;
+        default:
+            return 0;
+        }
+    }
+    
     if (SquadIndex < 0)
     {
         Log("GetTeamSquadSize squadIndex is less 0! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
@@ -728,49 +779,6 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
         default:
             Log("GetTeamSquadSize team index is default! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
             return 8;
-    }
-
-    // if (SquadIndex == SQUAD_INDEX_LOGI)
-    // {
-    //     switch (TeamIndex)
-    //     {
-    //         case AXIS_TEAM_INDEX:
-    //             return AxisSquadLogiSize;
-    //         case ALLIES_TEAM_INDEX:
-    //             return AlliesSquadLogiSize;
-    //         default:
-    //             return 0;
-    //     }
-    // }
-
-    // switch (TeamIndex)
-    // {
-    //     case AXIS_TEAM_INDEX:
-    //         return AxisSquadSize;
-    //     case ALLIES_TEAM_INDEX:
-    //         return AlliesSquadSize;
-    //     default:
-    //         return 0;
-    // }
-    
-}
-
-simulated function int GetTeamSquadTypeImage(int TeamIndex, int SquadIndex)
-{
-    if (SquadIndex < 0)
-    {
-        return 3;
-    }
-
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return DH_BattlegroupAxis.GetSquadSize(SquadIndex);
-        case ALLIES_TEAM_INDEX:
-            return DH_BattlegroupAllied.GetSquadSize(SquadIndex);
-        default:
-            Log("GetTeamSquadSize team index is default! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
-            return 5;
     }
 }
 
@@ -897,17 +905,22 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     local DH_LevelInfo LI;
     local string SquadName;
 
-    switch (TeamIndex)
+    if (IsBattleGroupsDefined())
     {
+        switch (TeamIndex)
+        {
         case AXIS_TEAM_INDEX:
             SquadName = DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
+            break;
         case ALLIES_TEAM_INDEX:
             SquadName = DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
-    }
-
-    if (SquadName != "")
-    {
-        return SquadName;
+            break;
+        }
+        
+        if (SquadName != "")
+        {
+            return SquadName;
+        }
     }
 
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -925,12 +938,25 @@ simulated function string GetSquadTypeHint(int TeamIndex, int SquadIndex)
     local DH_LevelInfo LI;
     local string Hint;
 
+    if (IsBattleGroupsDefined())
+    {
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return DH_BattlegroupAxis.GetSquadTypeHint(SquadIndex);
+            case ALLIES_TEAM_INDEX:
+                return DH_BattlegroupAllied.GetSquadTypeHint(SquadIndex);
+            default:
+                return "Spectator Squad";
+        }
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return DH_BattlegroupAxis.GetSquadTypeHint(SquadIndex);
+            return "Axis Squad";
         case ALLIES_TEAM_INDEX:
-            return DH_BattlegroupAllied.GetSquadTypeHint(SquadIndex);
+            return "Allied Squad";
         default:
             return "Spectator Squad";
     }

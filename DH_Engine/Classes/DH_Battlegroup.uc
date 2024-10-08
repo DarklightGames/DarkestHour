@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DH_Battlegroup extends Actor
+	hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Display,Advanced,Sound)
     placeable;
 
 enum ETeam
@@ -54,6 +55,16 @@ var() array<SquadSelection>    Squads;
 
 //     return Roles;
 // } 
+
+//=============================================================================
+// replication
+//=============================================================================
+
+replication
+{
+	reliable if (bNetInitial && Role == ROLE_Authority)
+		Name, NationTeam, Squads;
+}
 
 simulated function class<DHSquadType> GetSquadType(int SquadIndex)
 {
