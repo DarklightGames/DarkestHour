@@ -146,8 +146,8 @@ defaultproperties
     Begin Object class=GUIImage Name=LockSquadImage
         WinWidth=0.10
         WinHeight=1.0
-        WinLeft=0.10
-        WinTop=0.80
+        WinLeft=0.15
+        WinTop=0.85
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
@@ -164,15 +164,10 @@ defaultproperties
     End Object
 
     Begin Object class=GUIImage Name=NoRallyPointsImage
-        // WinWidth=0.15
-        // WinHeight=1.0
-        // WinLeft=0.8
-        // WinTop=0.05
-
         WinWidth=0.10
         WinHeight=1.0
         WinLeft=0.05
-        WinTop=0.80
+        WinTop=0.85
 
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)

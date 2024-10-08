@@ -2020,13 +2020,21 @@ function UpdateSquadTypeImage(DHGUISquadComponent C, int TeamIndex, int SquadInd
     C.i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
 }
 
-function UpdateSquadTypeImageForPlayerSquad(int TeamIndex, int SquadIndex)
+function UpdateSquadTypeImageForPlayerSquad(int TeamIndex, int SquadIndex, bool bIsInASquad)
 {
     local class<DHSquadType> SquadType;
 
-    SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
-    i_SquadType.Image = SquadType.default.Image;
-    i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+    if (bIsInASquad && SRI != none)
+    {
+        SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
+        i_SquadType.Image = SquadType.default.Image;
+        i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+    }
+    else
+    {
+        i_SquadType.Image = none;
+    }
+
 }
 
 function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
@@ -2308,7 +2316,7 @@ function UpdateSquads()
         TeamIndex = PC.GetTeamNum();
         PlayerSquadIndex = PC.GetSquadIndex();
         UpdatePlayerSquadName(TeamIndex, PlayerSquadIndex, bIsInASquad);
-        UpdateSquadTypeImageForPlayerSquad(TeamIndex, PlayerSquadIndex);
+        UpdateSquadTypeImageForPlayerSquad(TeamIndex, PlayerSquadIndex, bIsInASquad);
     }
 
     if (MapMode != MODE_Squads)
