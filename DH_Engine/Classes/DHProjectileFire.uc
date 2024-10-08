@@ -250,29 +250,26 @@ function CalcSpreadModifiers()
 // If we do then we can avoid spawning the projectile if we'd hit something so close that the ballistics wouldn't matter anyway (don't use this for things like rocket launchers)
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local Projectile         SpawnedProjectile;
-    local ROWeaponAttachment WeapAttach;
+    local class<Projectile>     ProjectileClassToSpawn;
+    local ROWeaponAttachment    WeapAttach;
+    local bool                  bIsSpawningTracer;
 
     // Do any additional pitch/yaw changes before launching the projectile
     Dir.Pitch += AddedPitch;
     Dir.Yaw += AddedYaw;
 
-    // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here
-    if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
-    {
-        return none;
-    }
+    ProjectileClassToSpawn = ProjectileClass;
 
     // Spawn a tracer projectile if one is due
     // But don't bother on a dedicated server if weapon uses the 'high ROF' system, as net clients will handle tracers independently
-    if (bUsesTracers && !(Level.NetMode == NM_DedicatedServer && DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) != none) && TracerProjectileClass != none)
+    if (bUsesTracers && TracerProjectileClass != none && !(Level.NetMode == NM_DedicatedServer && DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) != none))
     {
         NextTracerCounter++;
 
         if (NextTracerCounter >= TracerFrequency)
         {
-            // If the person is looking at themselves in third person, spawn the tracer from the tip of the 3rd person weapon
-            if (Instigator != none && !Instigator.IsFirstPerson())
+            // If the person is looking at themselves in third person (in a standlone game), spawn the tracer from the tip of the 3rd person weapon.
+            if (Level.NetMode == NM_Standalone && Instigator != none && !Instigator.IsFirstPerson())
             {
                 WeapAttach = ROWeaponAttachment(Weapon.ThirdPersonActor);
 
@@ -282,19 +279,32 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
                 }
             }
 
-            SpawnedProjectile = Spawn(TracerProjectileClass,,, Start, Dir);
+            // Set the tracer projectile class to spawn.
+            ProjectileClassToSpawn = TracerProjectileClass;
 
             NextTracerCounter = 0; // reset for next tracer spawn
+
+            bIsSpawningTracer = true;
         }
     }
 
-    // Spawn a normal projectile if we didn't spawn a tracer
-    if (SpawnedProjectile == none && ProjectileClass != none)
+    if (!bIsSpawningTracer)
     {
-        SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
+        // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here.
+        // We only want to do this if we're not spawning a tracer, otherwise tracers will not be spawned when firing at things close to the player.
+        if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
+        {
+            return none;
+        }
     }
 
-    return SpawnedProjectile;
+    if (ProjectileClassToSpawn != none)
+    {
+        // Spawn the projectile.
+        return Spawn(ProjectileClassToSpawn,,, Start, Dir);
+    }
+
+    return none;
 }
 
 // New function to perform a pre-launch trace to see if we hit something fairly close, where ballistics aren't a factor & a simple trace will give an accurate hit result

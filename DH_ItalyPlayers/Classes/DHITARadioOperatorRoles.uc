@@ -21,9 +21,13 @@ defaultproperties
 
     Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet'
     Headgear(1)=class'DH_ItalyPlayers.DH_ItalianHelmet_Livorno'
+    Headgear(2)=class'DH_ItalyPlayers.DH_ItalianHelmet_Adrian'
+    Headgear(3)=class'DH_ItalyPlayers.DH_ItalianHelmet_AdrianTwo'
 
-    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(0)=0.4
     HeadgearProbabilities(1)=0.5
+    HeadgearProbabilities(2)=0.05
+    HeadgearProbabilities(3)=0.05
 
     GivenItems(0)="DH_Equipment.DH_ItalianRadioItem"
     

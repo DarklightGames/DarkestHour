@@ -6,6 +6,7 @@
 // ==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
+    dependson(DHVehicleComponentController)
     abstract;
 
 // Structs
@@ -50,6 +51,17 @@ var() array<RandomAttachmentGroup> RandomAttachmentGroups;
 
 const MAX_RANDOM_ATTACHMENT_GROUPS = 8;
 var byte RandomAttachmentGroupOptions[MAX_RANDOM_ATTACHMENT_GROUPS];
+
+struct VehicleComponentController
+{
+    var() int Channel;
+    var() name BoneName;
+    var() name RaisingAnim;
+    var() name LoweringAnim;
+    var() DHVehicleComponentController.EControllerState InitialState;
+};
+var() array<VehicleComponentController>     VehicleComponentControllers;
+var   array<DHVehicleComponentController>   VehicleComponentControllerActors;
 
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
@@ -251,6 +263,43 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+function DestroyVehicleComponentControllers()
+{
+    local int i;
+
+    for (i = 0; i < VehicleComponentControllerActors.Length; ++i)
+    {
+        if (VehicleComponentControllerActors[i] != none)
+        {
+            VehicleComponentControllerActors[i].Destroy();
+        }
+    }
+}
+
+function SpawnVehicleComponentControllers()
+{
+    local int i;
+    local DHVehicleComponentController ComponentController;
+
+    for (i = 0; i < VehicleComponentControllers.Length; ++i)
+    {
+        ComponentController = Spawn(class'DHVehicleComponentController', self);
+        ComponentController.SetBase(self);
+
+        if (ComponentController != none)
+        {
+            ComponentController.Channel = VehicleComponentControllers[i].Channel;
+            ComponentController.BoneName = VehicleComponentControllers[i].BoneName;
+            ComponentController.RaisingAnim = VehicleComponentControllers[i].RaisingAnim;
+            ComponentController.LoweringAnim = VehicleComponentControllers[i].LoweringAnim;
+            ComponentController.SetControllerState(VehicleComponentControllers[i].InitialState);
+            ComponentController.SetAnimBlendParams();
+        }
+
+        VehicleComponentControllerActors[VehicleComponentControllerActors.Length] = ComponentController;
+    }
+}
+
 simulated function name GetIdleAnim()
 {
     return BeginningIdleAnim;
@@ -298,6 +347,8 @@ simulated function PostBeginPlay()
             DriverPositionIndex = InitialPositionIndex;
             PreviousPositionIndex = InitialPositionIndex;
         }
+
+        SpawnVehicleComponentControllers();
     }
     // On net client, force length of WeaponPawns array to normal length so it works with our new passenger pawn system
     // Passenger pawns won't now exist on client unless occupied, so although passenger slots may be empty in array we still see grey passenger position dots on HUD vehicle icon
@@ -368,6 +419,7 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
+    DestroyVehicleComponentControllers();
 
     if (NotifyParameters != none)
     {
@@ -1861,13 +1913,16 @@ simulated function bool CanExit()
 // Also to trace from player's actual world location, with a smaller trace extent so player is less likely to snag on objects that wouldn't really block his exit
 function bool PlaceExitingDriver()
 {
-    local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
+    local array<Vector> MyExitPositions;
+    local Vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    i;
 
     if (Driver == none)
     {
         return false;
     }
+
+    MyExitPositions = GetExitPositions();
 
     // Set extent & ZOffset, using a smaller extent than original
     Extent.X = Driver.default.DrivingRadius;
@@ -1886,9 +1941,9 @@ function bool PlaceExitingDriver()
     }
 
     // Check through exit positions to see if player can be moved there, using the 1st valid one we find
-    for (i = 0; i < ExitPositions.Length; ++i)
+    for (i = 0; i < MyExitPositions.Length; ++i)
     {
-        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
+        ExitPosition = Location + (MyExitPositions[i] >> Rotation) + ZOffset;
 
         if (Trace(HitLocation, HitNormal, ExitPosition, Driver.Location + ZOffset - Driver.default.PrePivot, false, Extent) == none
             && Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none
@@ -1901,6 +1956,8 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+
+// Modify if you want to have different exit positions depending on context.
 function array<vector> GetExitPositions()
 {
     return self.ExitPositions;

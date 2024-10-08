@@ -162,5 +162,5 @@ defaultproperties
     SetGamePasswordText="Please specify the new game password"
     ToggleWeaponLockText="Press enter to confirm you want to toggle weapon locking on/off"
     ConfirmDisableRallyPoints="Press enter to confirm you want to DISABLE rally point placement"
-    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally poiint placement"
+    ConfirmEnableRallyPoints="Press enter to confirm you want to RE-ENABLE rally point placement"
 }
