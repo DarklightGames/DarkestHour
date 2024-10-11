@@ -5,7 +5,8 @@
 
 class DHBrowser_ServerListPageInternet extends ROUT2k4Browser_ServerListPageInternet;
 
-var array<string> ServerBlacklist; // Hide unwanted servers
+var bool            bDisableWhitelist;  // Kill-switch for the whitelist.
+var array<string>   ServerWhitelist;    // Show only servers in this list if they aren't password-protected.
 
 function InitServerList()
 {
@@ -20,17 +21,47 @@ function InitServerList()
     lb_Server.SetAnchor(self);
 }
 
+function bool IsServerPasswordProtected(GameInfo.ServerResponseLine S)
+{
+    // Passworded      1
+    // Stats           2
+    // LatestVersion   4
+    // Listen Server   8
+    // Vac Secured	   16
+    // Standard        32
+    // UT CLassic      64
+    return (S.Flags & 1) != 0;
+}
+
+function bool IsServerOnWhitelist(string IP)
+{
+    local int i;
+
+    for (i = 0; i < ServerWhitelist.Length; ++i)
+    {
+        if (ServerWhitelist[i] == IP)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function bool ShouldServerBeDisplayed(GameInfo.ServerResponseLine s)
+{
+    // If the server is not on the whitelist and is not password-protected, don't show it.
+    return bDisableWhitelist || IsServerOnWhitelist(s.IP) || IsServerPasswordProtected(s);
+}
+
 function MyOnReceivedServer(GameInfo.ServerResponseLine s)
 {
     local int i;
 
-    for (i = 0; i < ServerBlacklist.Length; ++i)
+    if (!ShouldServerBeDisplayed(s))
     {
-        if (ServerBlacklist[i] == s.IP)
-        {
-            SetTimer(1.0);
-            return;
-        }
+        SetTimer(1.0);
+        return;
     }
 
     super.MyOnReceivedServer(s);
@@ -57,6 +88,7 @@ defaultproperties
     bStandardized=true
     StandardHeight=0.8
 
-    ServerBlacklist(0)="81.169.151.184"
-    ServerBlacklist(1)="109.108.203.236"
+    ServerWhitelist(0)="104.243.41.183"     // Official US
+    ServerWhitelist(1)="45.76.59.241"       // Amish USA
+    ServerWhitelist(2)="141.94.99.196"      // Official EU
 }
