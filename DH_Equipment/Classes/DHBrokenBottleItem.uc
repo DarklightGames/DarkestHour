@@ -49,7 +49,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Equipment.DHBrokenBottleMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
     PickupClass=class'DH_Equipment.DHBrokenBottlePickup'
     ItemName="Vino Rosso 'Bass-net' 2009 Vintage"
-    InventoryGroup=7
+    InventoryGroup=1
     GroupOffset=0
     Priority=4 // this should be higher than any other weapon on InventoryGroup=4, raising this higher than 8 will require to raise priority on other weapons
     bCanThrow=true

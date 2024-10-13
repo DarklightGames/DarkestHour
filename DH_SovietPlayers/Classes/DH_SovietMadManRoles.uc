@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2024
 //==============================================================================
 
-class DHUSMadManRoles extends DHAlliedRiflemanRoles
+class DH_SovietMadManRoles extends DHAlliedRiflemanRoles
     abstract;
 
 defaultproperties
@@ -11,17 +11,16 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Equipment.DHBrokenBottleItem')
     Grenades(0)=(Item=class'DH_Weapons.DH_GLWeapon')
 
-    Headgear(0)=class'DH_Halloween_3rd_anm.MadHat"
-    HeadgearProbabilities(0)=0.9
-    
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
+    HeadgearProbabilities(0)=1
+    Headgear(0)=class'DH_SovietPlayers.DH_MadTopHat'
+
+    SleeveTexture=Texture'DHSovietCharactersTex.Sleeves.NavalSleeves2'
     GlovedHandTexture=Texture'DHUSCharactersTex.Gear.hands_USgloves'
     VoiceType="DH_USPlayers.DHUSVoice"
-    AltVoiceType="DH_USPlayers.DHUSVoice"
    
     MyName="Mad Man"
     AltName="Mad Man"
-    Article="a "
+    Article="the "
     PluralName="Mad Men"
     
     bCanPickupWeapons=false
