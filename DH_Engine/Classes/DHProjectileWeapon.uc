@@ -51,9 +51,9 @@ var         name        BayoAttachEmptyAnim;        // anim for attaching the ba
 var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
+var         StaticMesh  BayonetStaticMesh;          // custom Bayonet mesh
+var         DHDecoAttachment    BayonetAttachment;  // deco attachment for custom bayonet mesh
 
-var         StaticMesh  BayonetStaticMesh;          //  Bayonet mesh
-var         DHDecoAttachment    BayonetAttachment;   //Deco attachment for custom bayonet mesh
 var         name        MuzzleBone;                 // muzzle bone, used to get coordinates
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
 
@@ -782,7 +782,7 @@ simulated function InitializeClientWeaponSystems()
 //Custom function to change Bayonet mesh, allows for both early and late war bayonets to attach to a single weapon
 //Usefull for countries fielding different patterns of bayonet during the war
 simulated function InitializeBayonet() 
-{
+{  
     if (bHasBayonet && BayonetStaticMesh != none)
     {
         BayonetAttachment = Spawn(class'DH_Engine.DHDecoAttachment', self);
@@ -801,7 +801,6 @@ simulated function InitializeBayonet()
         {
             log("Failed To Spawn Custom Bayonet Mesh");
         }
-
     }
 }
 // Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
@@ -859,8 +858,6 @@ simulated function bool PutDown()
     {
         UpdateResupplyStatus(false);
     }
-
-    
 
     return super.PutDown();
 }
