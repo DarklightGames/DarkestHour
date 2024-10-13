@@ -5,7 +5,8 @@
 // Plane flyby actor, sends a plane flying when triggered.
 //==============================================================================
 
-class DHPlaneFlyby extends Actor;
+class DHPlaneFlyby extends Actor
+    placeable;
 
 var() StaticMesh    PlaneStaticMesh;
 var() Rotator       PlaneRelativeRotation;
@@ -19,6 +20,7 @@ var() float         PlaneCloseSoundVolume;
 
 var() name          PlaneBoneName;      // Bone to attach the plane to.
 var() name          PlaneFlybyAnimation;
+var() float         PlaneFlybyAnimationRate;
 
 var DHDecoAttachment  PlaneAttachment;
 var ROSoundAttachment PlaneDistantSoundAttachment;
@@ -31,6 +33,7 @@ function ROSoundAttachment SpawnSoundAttachment(Sound S, float Volume, float Rad
     SA = Spawn(class'ROSoundAttachment');
     SA.SoundRadius = Radius;
     SA.SoundVolume = Volume;
+    SA.AmbientSound = S;
 
     AttachToBone(SA, PlaneBoneName);
 
@@ -70,11 +73,18 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     SpawnAttachments();
 
-    PlayAnim(PlaneFlybyAnimation, 1.0);
+    PlayAnim(PlaneFlybyAnimation, PlaneFlybyAnimationRate);
 }
 
 defaultproperties
 {
+    DrawType=DT_Mesh
+    CullDistance=0.0
     Mesh=SkeletalMesh'DH_Planes_anm.plane_flyby'
-    PlaneFlybyAnimation="plane_flyby_01"
+    PlaneFlybyAnimation="plane_flyby_1"
+    PlaneFlybyAnimationRate=1.0
+    PlaneDistantSoundVolume=1.0
+    PlaneCloseSoundVolume=1.0
+    PlaneDistantSoundRadius=10000.0
+    PlaneCloseSoundRadius=5000.0
 }
