@@ -22,20 +22,25 @@ If you'd like to help us localize the game into your native language, please vis
 
 ## Font Overhaul
 
-To accomodate the localization efforts, all of the game's fonts have been completely overhauled!
+To accommodate the localization efforts, all of the game's fonts have been completely overhauled!
 
 We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
 
 In addition, players who play at higher resolutions (e.g. 4K) will be pleased to find that the game's fonts are no longer unreadably small.
 
+[[ insert screenshots of the new fonts in action ]]
+
 ## Vehicles
-This update sees the addition of 7 brand new vehicles to the game; 6 of which are unique to the Italian faction.
+This update sees the addition of 8 brand new vehicles to the game; 7 of which are unique to the Italian faction.
 
 ### DUKW
-The DUKW is a versatile amphibious vehicle used by the United States landing forces in the Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
+The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
 
 ### Carro Velocce 33 (CV-33, L3/33)
 One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored. It is armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
+
+### Semovente 47/32
+Ther most produced Italian self-propelled gun of the war, the Semovente 47/32 is armed with a 47mm cannon capable of penetrating most enemy tanks from the side and rear. It's low profile and good maneuverability make it an excellent ambush vehicle, but it's thin armor and open-topped turret make it extremely vulnerable to enemy fire.
 
 ### Semovente 90/53
 A self-propelled gun sporting a devastating 90mm cannon, the Semovente 90/53 is capable of easily destroying any enemy vehicle it encounters. This power comes with a pretty dramatic drawback, though, as the chassis can can only carry a contingent of 8 extra rounds. In addition, the gun crew is exposed to enemy fire from its rear. However, with good positioning and logistical support, it has the potential to be the deciding factor in any battle.
@@ -46,10 +51,13 @@ This Autoblinda 41 armored car is a fast and extremely maneuverable vehicle exce
 It is also unique in that it is the only vehicle in the game with a rear-facing machine-gun, allowing it to defend itself from enemy infantry tempting to flank it.
 
 ### Fiat L6/40
-
+A light tank armed with a 20mm cannon and a 8mm machine-gun; the majority of these were destroyed or captured by the Allies during the North African campaign. It can excel at engaging lightly armored vehicles and unsupported infantry, but will be virtually useless against anything with more than a few millimeters of armor.
 
 ### Fiat 626
-The workhorse truck of the Italian army, the Fiat 626 is capable of carrying a large number of troops and supplies. It has no armaments, so like any light vehicle, it is vulnerable to all manner of enemy fire.
+The workhorse hauler of the Italian army, the Fiat 626 is capable of carrying a large number of troops and supplies. It has no armaments, so like any light vehicle, it is vulnerable to all manner of enemy fire.
+
+### Fiat 508CM
+The Fiat 508CM is a light utility vehicle used mainly as a scouting and staff car. One unique feature of the Fiat 508CM is that it has a working radio in the back seat, allowing squad leaders to call in artillery strikes from the front lines.  
 
 ## Guns
 
@@ -60,6 +68,9 @@ The Cannone da 47/32 is a light 47mm anti-tank gun capable of decent penetration
 The Fiat-Rivelli 14/35 is a stationary tripod-mounted machine-gun. It can be deployed as a construction, and like mortars, can be disassembled and moved to a new location if necessary.
 
 This is the first stationary machine-gun to be added to the game, so it will be interesting to see how these will shape the battlefield.
+
+## 81/14 Mortar
+
 
 ## Weapons
 
@@ -76,17 +87,19 @@ There are many things that have been said about the Breda modello 30; most of th
 ### Moschetto Automatico Beretta 38
 The Italian sub-machine gun was a very effective weapon owing to it's great handling and high rate of fire. Unfortunately, it was issued almost exclusively to Blackshirt divisions that were attached to larger army groups. As a result, it was rarely seen in the hands of regular infantry units.
 
-### SRCM Mod. 35
-Dubbed the "red devil" by the Allies, the SRCM Mod. 35 was one of the standard hand grenades used by the Italian army. Unlike the grenades used by other nations, it uses an impact fuse, making it extremely dangerous to use in close quarters. The impact fuzes had a habit of not detonating when landing on soft ground, leaving a live grenade on the ground that could blow up if disturbed.
-
-### SRCM Mod. 35 (Incendiary Smoke)
-The SRCM Mod. 35 (Incendiary Smoke) is a variant of the standard hand grenade that produces a thick cloud of white phosphorus smoke when detonated. In addition to it's typical use as a smoke screen, the white phosphorus can cause severe burns to anyone unfortunate enough to be near the detonation, as well as being a potentially lethal choking hazard.
+This weapon can be found exclusively in the hands of the Italian "Camicie Nere" (Blackshirts).
 
 ### Fucile Controcarro 35(P)
 Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bolt-action, magazine-fed anti-tank rifle with an impressive high-velocity cartridge capable of penetrating most light tanks from the side and rear.
 
 ### Beretta M1934
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
+
+### SRCM Mod. 35
+Dubbed the "red devil" by the Allies, the SRCM Mod. 35 was one of the standard hand grenades used by the Italian army. Unlike the grenades used by other nations, it uses an impact fuse, making it extremely dangerous to use in close quarters. The impact fuzes had a habit of not detonating when landing on soft ground, leaving a live grenade on the ground that could blow up if disturbed.
+
+### SRCM Mod. 35 (Incendiary Smoke)
+The SRCM Mod. 35 (Incendiary Smoke) is a variant of the standard hand grenade that produces a thick cloud of white phosphorus smoke when detonated. In addition to it's typical use as a smoke screen, the white phosphorus can cause severe burns to anyone unfortunate enough to be near the detonation, as well as being a potentially lethal choking hazard.
 
 ### L-Type Hand Grenade (`put the real name in here`)
 
@@ -121,11 +134,15 @@ This popular map has been re-imagined for the Italy expansion. The original map 
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
-* The artillery response delay has been standardized to 10 seconds for all teams instead of relying on the length of the request sound effect.
+* The artillery response delay has been standardized to 15 seconds for all teams instead of relying on the length of the request sound effect.
 
 # Bug Fixes
 * Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
+* Patron spotting signals will now be properly displayed in-world and send a voice command.
+* Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
+* Tracer rounds for some weapons (Bren, ZB30 etc.) will no longer be misaligned with the barrel from the perspective of the gunner.
+* Fixed a bug where the pre-launch-trace would suppress tracer rounds from being spawned when firing at nearby targets. 
 
 # SDK
 * A team-specific delay to spawning during the setup phase can be added using the neww `TeamAddSpawningEnabledTime` property in the `DHSetupPhaseManager`.
