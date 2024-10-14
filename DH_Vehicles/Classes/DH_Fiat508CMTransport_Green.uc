@@ -9,6 +9,8 @@ defaultproperties
 {
     Skins(0)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_green'
     Skins(1)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_green'
+    DestroyedMeshSkins(0)=Combiner'DH_Fiat508CM_tex.fiat508cm_gear_green_dest'
+    DestroyedMeshSkins(1)=Combiner'DH_Fiat508CM_tex.fiat508cm_green_dest'
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.attachments.fiat508cm_radio',AttachBone="BODY",Skins=(Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_green'))
     RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_searchlight',Skins=(Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_green')))))
     RandomAttachmentGroups(1)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_tools',Skins=(Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_green')))))

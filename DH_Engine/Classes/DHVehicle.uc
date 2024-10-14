@@ -3542,32 +3542,28 @@ simulated event DestroyAppearance()
 
     if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
     {
-        for (i = 0; i < Skins.Length; ++i)
-        {
-            if (Skins[i] == none)
-            {
-                continue;
-            }
+        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+        DestroyedSkin.Material1 = Skins[0];
+        // TODO: use a different overlay depending on the aspect ratio.
+        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+        DestroyedSkin.FallbackMaterial = Skins[0];
+        DestroyedSkin.CombineOperation = CO_Multiply;
 
-            DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-            DestroyedSkin.Material1 = Skins[i];
-            // TODO: Depending on the aspect ratio, we may need to use a different overlay.
-            DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-            DestroyedSkin.FallbackMaterial = Skins[i];
-            DestroyedSkin.CombineOperation = CO_Multiply;
-            DestroyedMeshSkins[i] = DestroyedSkin;
-        }
+        DestroyedMeshSkins[0] = DestroyedSkin;
     }
 
     super.DestroyAppearance();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+        if (DestroyedMeshSkins.Length > 0)
         {
-            if (DestroyedMeshSkins[i] != none)
+            for (i = 0; i < DestroyedMeshSkins.Length; ++i)
             {
-                Skins[i] = DestroyedMeshSkins[i];
+                if (DestroyedMeshSkins[i] != none)
+                {
+                    Skins[i] = DestroyedMeshSkins[i];
+                }
             }
         }
     }

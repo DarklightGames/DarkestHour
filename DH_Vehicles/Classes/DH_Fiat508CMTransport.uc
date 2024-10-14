@@ -79,7 +79,6 @@ defaultproperties
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=70.0)
 
-    bUsesCodedDestroyedSkins=true
     DestroyedVehicleMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_destroyed'
 
     // Vehicle destruction
