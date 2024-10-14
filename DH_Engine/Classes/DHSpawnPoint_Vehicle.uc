@@ -11,8 +11,9 @@ class DHSpawnPoint_Vehicle extends DHSpawnPointBase
 
 const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
-var     DHVehicle   Vehicle;        // Reference to the owning vehicle.
-var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon.
+var     DHVehicle   Vehicle;            // Reference to the owning vehicle.
+var     class<DHVehicle> VehicleClass;  // The class of the vehicle that this spawn point is attached to.
+var     bool        bIsTemporary;       // When true, this is a "temporary" spawn point that will be destroyed soon.
 
 var     bool        bHasSpawnKillPenalty;
 var     float       CreatedTimeSeconds;
@@ -20,7 +21,7 @@ var     float       CreatedTimeSeconds;
 replication
 {
     reliable if (Role == ROLE_Authority && bNetDirty)
-        bIsTemporary;
+        bIsTemporary, VehicleClass;
 }
 
 // Modified to start a repeating timer to keep checking whether this spawn vehicle can be deployed into
@@ -273,9 +274,35 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
+/*
+simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
+{
+    local GUIStyles Style;
+    local Material M;
+    local int i;
+
+    Style = GUIController.GetStyle(GetMapStyleName(), FontScale);
+
+    // Set all the images to be the icon used for the vehicle.
+    if (VehicleClass != none && 
+        VehicleClass.default.MapIconAttachmentClass != none && 
+        VehicleClass.default.MapIconAttachmentClass.default.IconMaterial != none)
+    {
+        M = VehicleClass.default.MapIconAttachmentClass.default.IconMaterial;
+
+        for (i = 0; i < arraycount(Style.Images); ++i)
+        {
+            Style.Images[i] = M;
+        }
+    }
+
+    return Style;
+}
+*/
+
 defaultproperties
 {
-    SpawnPointStyle="DHSpawnVehicleButtonStyle"
+    SpawnPointStyle="DHSpawnButtonStyle"
     bCombatSpawn=true
     bIsLowPriority=true
     bHasSpawnKillPenalty=true

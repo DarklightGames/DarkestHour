@@ -19,5 +19,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.m45_turret_look'
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_StaticAA'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
 }

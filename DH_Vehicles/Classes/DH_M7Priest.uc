@@ -28,6 +28,8 @@ defaultproperties
     MaxDesireability=0.1
     ReinforcementCost=5
 
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.tank_artillery_topdown'
+
     // Artillery
     bIsArtilleryVehicle=true
 

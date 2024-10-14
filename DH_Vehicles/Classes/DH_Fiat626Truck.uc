@@ -3,7 +3,6 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Engine Sounds (Napoleon)
-// [ ] Supply Cache for Italians (needs a bone etc.)
 // [ ] Add hitpoint for the supply cache on the support version
 //==============================================================================
 
@@ -17,7 +16,7 @@ defaultproperties
     VehicleTeam=0
     VehicleMass=5.0
     ReinforcementCost=2
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat626_anm.fiat626_body_ext'

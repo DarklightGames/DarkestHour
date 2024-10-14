@@ -16,7 +16,6 @@ defaultproperties
     ReinforcementCost=3
     MinRunOverSpeed=350 //Lighter vehicle so slightly higher min speed than other APCs
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
     UnbuttonedPositionIndex=2
 

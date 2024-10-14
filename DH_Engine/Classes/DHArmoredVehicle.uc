@@ -2393,7 +2393,7 @@ defaultproperties
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
     PointValue=1000
     WeaponLockTimeForTK=30
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.tank_topdown'
 
     // Driver & positions
     bMustBeTankCommander=true

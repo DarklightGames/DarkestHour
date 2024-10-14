@@ -48,5 +48,5 @@ defaultproperties
     SupplyCount=2000.0
     SupplyCountMax=2000
     bCanBeResupplied=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Supply'
+    MapIconAttachmentClass=None
 }

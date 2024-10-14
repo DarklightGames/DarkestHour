@@ -163,9 +163,11 @@ var     float               VehicleHudTreadsScale;   // drawing scale of tread d
 var     bool                bShouldDrawPositionDots;
 var     bool                bShouldDrawOccupantList;
 
+
 // Map icon
-var     class<DHMapIconAttachment>  MapIconAttachmentClass;
-var     DHMapIconAttachment         MapIconAttachment;
+var     class<DHMapIconAttachment_Vehicle>  MapIconAttachmentClass;
+var     Material                    MapIconMaterial;
+var     DHMapIconAttachment_Vehicle MapIconAttachment;
 
 // Vehicle attachments
 var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
@@ -3111,6 +3113,7 @@ simulated function SpawnVehicleAttachments()
                 MapIconAttachment.SetBase(self);
                 MapIconAttachment.Setup();
                 MapIconAttachment.SetTeamIndex(VehicleTeam);
+                MapIconAttachment.VehicleClass = Class;
             }
             else
             {
@@ -4638,4 +4641,7 @@ defaultproperties
     RadioAttachmentHeight=10.0
 
     bDoRandomAttachments=true
+
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 }

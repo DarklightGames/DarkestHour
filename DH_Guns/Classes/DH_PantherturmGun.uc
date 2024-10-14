@@ -19,7 +19,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
     ExitPositions(0)=(X=-91.0,Y=20.0,Z=110.0)
     VehicleMass=14.0
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.panzerturm_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

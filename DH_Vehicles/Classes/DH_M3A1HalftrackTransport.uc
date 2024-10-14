@@ -10,6 +10,7 @@ defaultproperties
     VehicleNameString="M3A1 Halftrack"
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body'
     DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_destro'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.halftrack_topdown'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3HalftrackMGPawn',WeaponBone="turret_placement")

@@ -12,7 +12,7 @@ defaultproperties
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle' // TODO: same as the GAZ (car)
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body'

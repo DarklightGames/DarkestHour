@@ -21,7 +21,7 @@ defaultproperties
     VehicleMass=11.0
     ConstructionPlacementOffset=(Z=13.0)
     bCanBeRotated=true
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -41,5 +41,5 @@ defaultproperties
         KFriction=50.0
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_Pak40ATGun.KParams0'
+    KParams=KParams0
 }

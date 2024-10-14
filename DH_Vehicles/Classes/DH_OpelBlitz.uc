@@ -13,7 +13,7 @@ defaultproperties
     VehicleMass=3.0
     ReinforcementCost=2
     MaxDesireability=0.12
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.truck_topdown'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
