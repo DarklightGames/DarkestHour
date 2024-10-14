@@ -2,9 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Fix muzzle emitter offset being a bit too far forward
-// [ ] Add correct projectile class
-//==============================================================================
 
 class DH_CV33MG extends DHVehicleMG;
 
@@ -27,16 +24,16 @@ defaultproperties
     CustomPitchDownLimit=63352  // 12 degrees
 
     // Ammo
-    ProjectileClass=class'DH_Weapons.DH_MG34Bullet' // replace: fiat 35 bullet & properties
+    ProjectileClass=class'DH_Weapons.DH_Breda38Bullet'
     InitialPrimaryAmmo=150
     NumMGMags=5
     FireInterval=0.1    // 600rpm
-    TracerProjectileClass=class'DH_Weapons.DH_Breda30TracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_Breda38BulletTracer'
     TracerFrequency=7
 
     // Weapon fire
-    FireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
-    FireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
+    FireSoundClass=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoop'
+    FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     WeaponFireAttachmentBone="MUZZLE_L"

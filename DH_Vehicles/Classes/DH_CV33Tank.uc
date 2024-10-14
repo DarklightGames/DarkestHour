@@ -2,16 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// CV33 Tank
-//
-// Code
-// [~] Tweak vehicle handling & stats
-// [ ] Tweak reloading of the MG to account for double MG
-// [ ] Fix MG reload UI
-//
-// Audio
-// [ ] New MG sound for double Fiat 14/35
-//==============================================================================
 
 class DH_CV33Tank extends DHArmoredVehicle;
 
@@ -210,7 +200,7 @@ defaultproperties
         WheelRadius=18.0
         bLeftTrack=true
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_CV33Tank.LF_Steering'
+    Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -218,7 +208,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=18.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_CV33Tank.RF_Steering'
+    Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LB_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -227,7 +217,7 @@ defaultproperties
         WheelRadius=18.0
         bLeftTrack=true
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_CV33Tank.LB_Steering'
+    Wheels(2)=LB_Steering
     Begin Object Class=SVehicleWheel Name=RB_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -235,7 +225,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         WheelRadius=18.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_CV33Tank.RB_Steering'
+    Wheels(3)=RB_Steering
 
     // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -256,5 +246,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_CV33Tank.KParams0'
+    KParams=KParams0
 }
