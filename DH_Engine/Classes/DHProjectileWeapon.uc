@@ -51,8 +51,8 @@ var         name        BayoAttachEmptyAnim;        // anim for attaching the ba
 var         name        BayoDetachEmptyAnim;        // anim for detaching the bayonet when empty
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
-var         StaticMesh  BayonetStaticMesh;          // custom Bayonet mesh
-var         DHDecoAttachment    BayonetAttachment;  // deco attachment for custom bayonet mesh
+var         StaticMesh          BayonetStaticMesh;  // custom bayonet mesh reference
+var         DHDecoAttachment    BayonetAttachment;  // attachment for custom bayonet mesh
 
 var         name        MuzzleBone;                 // muzzle bone, used to get coordinates
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
@@ -791,22 +791,21 @@ simulated function InitializeBayonet()
         {
             BayonetAttachment.SetStaticMesh(BayonetStaticMesh);
             BayonetAttachment.SetDrawScale(5.0);
-            AttachToBone(BayonetAttachment, BayonetBoneName); 
-            BayonetAttachment.SetBase(self);
-            BayonetAttachment.SetRelativeLocation(VECT(0,0,0)); //Hide original bayonet mesh
-            BayonetAttachment.SetRelativeRotation(ROT(0,0,0));
-            SetBoneScale(0,0.001, BayonetBoneName);
+            AttachToBone(BayonetAttachment, BayonetBoneName);
+            // NOTE: 0.001 is needed here instead of 0.0 since the engine queries the resulting
+            // transform matrix to determine the rotation. Scaling the bone to 0.0 zeroes out the
+            // rotation component of the matrix, which causes the bone to be rotated incorrectly.
+            SetBoneScale(0, 0.001, BayonetBoneName);
         }
         else
         {
-            log("Failed To Spawn Custom Bayonet Mesh");
+            Log("Failed to spawn bayonet attachment");
         }
     }
 }
 // Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-
     if (Role == ROLE_Authority)
     {
         UpdateResupplyStatus(true);
@@ -823,12 +822,12 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
         InitializeClientWeaponSystems();
         InitializeBayonetAnimationChannels();
-
         InitializeBayonet();
+
         UpdateBayonet();
         UpdateWeaponComponentAnimations();
         UpdateAmmoBelt();
-    }   
+    }
 }
 
 // Mute or unmute any bayonet animation channels based on whether bayonet is mounted.
@@ -1251,7 +1250,7 @@ simulated function PlayEndCrawl()
 // Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function HideBayonet()
 {
-    if(BayonetAttachment != none)
+    if (BayonetAttachment != none)
     {
         BayonetAttachment.bHidden = true;
     }
@@ -1264,7 +1263,7 @@ simulated function HideBayonet()
 // Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function ShowBayonet()
 {
-    if(BayonetAttachment != none)
+    if (BayonetAttachment != none)
     {
         BayonetAttachment.bHidden = false;
     }
