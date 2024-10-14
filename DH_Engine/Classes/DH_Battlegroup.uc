@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2024
 //==============================================================================
 
-class DH_Battlegroup extends Actor
+class DH_Battlegroup extends Info
 	hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Display,Advanced,Sound)
     placeable;
 
@@ -119,6 +119,7 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
 
 simulated function string GetDefaultSquadName(int SquadIndex)
 {
+    Log("GetDefaultSquadName: " @ Squads[SquadIndex].Name);
     return Squads[SquadIndex].Name;
 }
 
@@ -128,7 +129,7 @@ simulated function string GetSquadTypeHint(int SquadIndex)
 }
 
 simulated function int GetSquadSize(int SquadIndex)
-{
+{   
     if (Squads[SquadIndex].SquadSize > 0)
     {
         return Squads[SquadIndex].SquadSize;

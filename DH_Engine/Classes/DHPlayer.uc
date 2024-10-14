@@ -5948,7 +5948,7 @@ function ServerSquadCreate(class<DHSquadType> CreatedSquadType, int SquadIndex)
 
     G = DarkestHourGame(Level.Game);
     DeployMenuSquadPlayerMode = MODE_Unassigned;
-
+    Log("ServerSquadCreate: " @ CreatedSquadType @ " SquadIndex: " @ SquadIndex);
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), CreatedSquadType, SquadIndex);
     
 }
@@ -5969,6 +5969,8 @@ function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvite
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
+
+    Log("ServerSquadJoin: SquadIndex: " @ SquadIndex);
 
     G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
 }

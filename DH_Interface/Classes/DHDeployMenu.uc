@@ -1879,7 +1879,7 @@ function OnSquadNameEditBoxEnter()
 
 function UpdatePlayerSquadName(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 {
-    if (bIsInASquad)
+    if (SRI != none && bIsInASquad)
     {
         l_SquadName.Caption = SRI.GetSquadName(TeamIndex, PlayerSquadIndex);
     }
@@ -1979,15 +1979,12 @@ function ShowPlayerSquad(int TeamIndex, int PlayerSquadIndex)
     SetVisible(C.b_LeaveSquad, true);
     SetVisible(C.i_NoRallyPoints, SRI.SquadHadNoRallyPointsInAwhile(TeamIndex, PlayerSquadIndex));
 
-    Log("Squad: " @ PlayerSquadIndex @ " - PC SquadIndex: " @ PC.GetSquadIndex() @ " is in squad: " @ SRI.IsInSquad(PRI, TeamIndex, PlayerSquadIndex));
+    // Log("Squad: " @ PlayerSquadIndex @ " - PC SquadIndex: " @ PC.GetSquadIndex() @ " is in squad: " @ SRI.IsInSquad(PRI, TeamIndex, PlayerSquadIndex));
     UpdateSquadLeaderLockButton(C, bIsSquadLeader, bIsSquadLocked, bCanSquadBeLocked);
     C.UpdateBackgroundColor(PRI);
 
-
-
     // Save the current PRI that is selected.
     SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
-
 
     // Add or remove entries to match the member count.
     while (C.li_Members.ItemCount < Members.Length)
@@ -2034,12 +2031,10 @@ function UpdateSquadTypeImageForPlayerSquad(int TeamIndex, int SquadIndex, bool 
     {
         i_SquadType.Image = none;
     }
-
 }
 
-function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
+function ShowSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 {
-    local array<DHPlayerReplicationInfo> Members;
     local DHGUISquadComponent C;
     local int i;
     local int SquadIndexOffset;
@@ -2080,8 +2075,7 @@ function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 
         if (bIsSquadActive)
         {
-            SRI.GetMembers(TeamIndex, i, Members);
-            UpdateActiveSquad(TeamIndex, i, C, Members);
+            UpdateActiveSquad(TeamIndex, i, C);
         }
         else
         {
@@ -2116,13 +2110,14 @@ function ShowOtherSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
     }
 }
 
-function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C, array<DHPlayerReplicationInfo> Members)
+function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C)
 {
     local int k, l;
     local int SquadSize;
     local string SquadName;
     local bool bIsSquadFull, bIsSquadLocked, bCanSquadBeLocked;
     local DHPlayerReplicationInfo SavedPri;
+    local array<DHPlayerReplicationInfo> Members;
 
     SetVisible(C.i_SquadType, true);
     SetVisible(C.l_SquadName, true);
@@ -2184,7 +2179,7 @@ function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C,
         }
         else
         {
-            C.b_JoinSquad.DisableMe();
+            // C.b_JoinSquad.DisableMe();
         }
     }
 
@@ -2363,7 +2358,7 @@ function UpdateSquads()
 
     if (PC.DeployMenuSquadPlayerMode == MODE_Squads)
     {
-        ShowOtherSquads(TeamIndex, PlayerSquadIndex, bIsInASquad);
+        ShowSquads(TeamIndex, PlayerSquadIndex, bIsInASquad);
     }
     else
     {

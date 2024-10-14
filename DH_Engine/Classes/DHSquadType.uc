@@ -44,7 +44,7 @@ static function string GetSquadAbbreviation(DHPlayerReplicationInfo PRI)
 defaultproperties
 {
     Image = Material'DH_InterfaceArt2_tex.Icons.supply_cache';
-    Hint = "Constructs team buildings and transports supplies.";
-    Caption = "Logistic";
+    Hint = "Squad type";
+    Caption = "Type of Squad";
     Limit=1
 }

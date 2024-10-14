@@ -147,7 +147,7 @@ defaultproperties
         WinWidth=0.10
         WinHeight=1.0
         WinLeft=0.15
-        WinTop=0.85
+        WinTop=0.82
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
@@ -167,7 +167,7 @@ defaultproperties
         WinWidth=0.10
         WinHeight=1.0
         WinLeft=0.05
-        WinTop=0.85
+        WinTop=0.82
 
         Image=Texture'DH_InterfaceArt2_tex.Icons.no_rally_point'
         ImageColor=(R=255,G=0,B=0,A=200)

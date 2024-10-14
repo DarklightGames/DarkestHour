@@ -187,18 +187,18 @@ simulated function PostBeginPlay()
     local DH_Battlegroup BG;
 
     Log("Looking for battlegroups... in local");
-      foreach AllActors(class'DH_BattleGroup', BG)
+    foreach AllActors(class'DH_BattleGroup', BG)
+    {
+        Log("Found battlegroup: " @ BG @ " with nation team: " @ BG.NationTeam);
+        if (BG.NationTeam == 0)
         {
-            Log("Found battlegroup: " @ BG @ " with nation team: " @ BG.NationTeam);
-            if (BG.NationTeam == 0)
-            {
-                DH_BattlegroupAxis = BG;
-            }
-            else
-            {
-                DH_BattlegroupAllied = BG;
-            }
+            DH_BattlegroupAxis = BG;
         }
+        else
+        {
+            DH_BattlegroupAllied = BG;
+        }
+    }
 
     super.PostBeginPlay();
 
@@ -214,8 +214,6 @@ simulated function PostBeginPlay()
             bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
             break;
         }
-
-      
     }
 }
 
@@ -341,7 +339,7 @@ private function UpdateSquadMemberLocations(DHPlayer PC)
     {
         return;
     }
-
+    
     for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum(), PRI.SquadIndex); ++i)
     {
         OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
@@ -673,8 +671,9 @@ function ResetSquadInfo()
     NextSquadPromotionRequestID = default.NextSquadPromotionRequestID;
 }
 
-function bool IsBattleGroupsDefined()
+simulated function bool IsBattleGroupsDefined()
 {
+    // Log("IsBattleGroupsDefined - Axis: " @ DH_BattlegroupAxis != none @ " and Allies: " @ DH_BattlegroupAllied != none);
     return DH_BattlegroupAxis != none && DH_BattlegroupAllied != none;
 }
 
@@ -682,7 +681,7 @@ simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex
 {
     if (!IsBattleGroupsDefined())
     {
-        return class'DHSquadTypeInfantry';
+        return class'DHSquadTypeGeneric';
     }
 
     switch (TeamIndex)
@@ -698,7 +697,6 @@ simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex
 
 simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
 {
-    
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -751,6 +749,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Te
 // Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 {
+    return 8; //TODO: Change this to proper squad checking
     if (!IsBattleGroupsDefined())
     {
         switch (TeamIndex)
@@ -764,9 +763,9 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
         }
     }
     
-    if (SquadIndex < 0)
+    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
     {
-        Log("GetTeamSquadSize squadIndex is less 0! with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
+        Log("GetTeamSquadSize squadIndex is not within limits with teamIndex: " @ TeamIndex @ " with squadIndex: " @ SquadIndex);
         return 8;
     }
 
@@ -909,16 +908,17 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     {
         switch (TeamIndex)
         {
-        case AXIS_TEAM_INDEX:
-            SquadName = DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
-            break;
-        case ALLIES_TEAM_INDEX:
-            SquadName = DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
-            break;
+            case AXIS_TEAM_INDEX:
+                SquadName = DH_BattlegroupAxis.GetDefaultSquadName(SquadIndex);
+                break;
+            case ALLIES_TEAM_INDEX:
+                SquadName = DH_BattlegroupAllied.GetDefaultSquadName(SquadIndex);
+                break;
         }
         
         if (SquadName != "")
         {
+            Log("Returning battlegroup squad name: " @ SquadName);
             return SquadName;
         }
     }
@@ -929,6 +929,8 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     {
         return "";
     }
+
+    Log("Did not find BattleGroup squad name, returning default squad name: " @ LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex]);
 
     return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
@@ -2100,6 +2102,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 {
     local int i;
     local int OutSquadIndex;
+    local string SquadName;
 
     if (Name != "")
     {
@@ -2130,20 +2133,22 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
     if (Name == "")
     {
         // Go through default names and choose a default squad name that hasn't yet been used.
-        if (IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, SquadIndex)))
+        SquadName = GetDefaultSquadName(TeamIndex, SquadIndex);
+        if (IsSquadNameTaken(TeamIndex, SquadName))
         {
             for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
             {
-                if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
+                SquadName = GetDefaultSquadName(TeamIndex, i);
+                if (!IsSquadNameTaken(TeamIndex, SquadName))
                 {
-                    Name = GetDefaultSquadName(TeamIndex, i);
+                    Name = SquadName;
                     break;
                 }
             }
         }
         else
         {
-            Name = GetDefaultSquadName(TeamIndex, SquadIndex);
+            Name = SquadName;
         }
     }
 
@@ -2799,7 +2804,7 @@ function UpdateRallyPoints()
 
 function SetTeamSquadSize(int TeamIndex, int SquadSize)
 {
-    local int OldTeamSquadSize, i;
+    local int OldTeamSquadSize, SquadIndex;
     local array<DHPlayerReplicationInfo> Members;
 
     if (SquadSize == 0)
@@ -2817,19 +2822,21 @@ function SetTeamSquadSize(int TeamIndex, int SquadSize)
                 break;
         }
     }
+    //TODO: Look at this, is this even needed anymore ?
 
-    OldTeamSquadSize = GetTeamSquadSize(TeamIndex, SquadSize);
     SquadSize = Clamp(SquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
 
-    if (SquadSize < OldTeamSquadSize)
+    // The squad size is now less than it was previously!
+    // Let's do a check to make sure that existing squads on this team
+    // do not exceed the size limit. If they do, we will kick the players
+    // from the squads until they are all within the size limit.
+    for (SquadIndex = 0; SquadIndex < GetTeamSquadLimit(TeamIndex); ++SquadIndex)
     {
-        // The squad size is now less than it was previously!
-        // Let's do a check to make sure that existing squads on this team
-        // do not exceed the size limit. If they do, we will kick the players
-        // from the squads until they are all within the size limit.
-        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+        OldTeamSquadSize = GetTeamSquadSize(TeamIndex, SquadIndex);
+
+        if (SquadSize < OldTeamSquadSize)
         {
-            GetMembers(TeamIndex, i, Members);
+            GetMembers(TeamIndex, SquadIndex, Members);
 
             while (Members.Length > SquadSize)
             {
