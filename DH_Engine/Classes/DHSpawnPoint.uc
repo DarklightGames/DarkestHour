@@ -243,7 +243,7 @@ simulated function bool CanSpawnMortars()
 }
 
 // Modified to check whether spawn point allows player to use it, depending on role & type of vehicle (if any)
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
 {
     local class<ROVehicle> VehicleClass;
     local DHRoleInfo       RI;

@@ -295,8 +295,12 @@ simulated function bool IsExposed()
     return bIsExposed;
 }
 
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
 {
+    local DHSquadReplicationInfo SRI;
+    local class<DHSquadType> SquadType;
+    local bool bIsPlayerSquadLogi;
+
     if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck))
     {
         return false;
@@ -304,6 +308,19 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 
     if (self.SquadIndex != SquadIndex)
     {
+        if (PC != none)
+        {
+            SRI = PC.SquadReplicationInfo;
+            if (SRI != none)
+            {
+                SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
+                if (SquadType != none && SquadType == class'DHSquadTypeLogistics')
+                {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -315,9 +332,22 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, DHPlayer PC)
 {
-    return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex) && self.SquadIndex == SquadIndex;
+    local DHSquadReplicationInfo SRI;
+    local class<DHSquadType> SquadType;
+    local bool bIsPlayerSquadLogi;
+
+    if (SquadIndex > -1 && PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+        if (SRI != none)
+        {
+            SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
+            bIsPlayerSquadLogi = SquadType != none && SquadType == class'DHSquadTypeLogistics';
+        }
+    }
+    return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, PC) && (self.SquadIndex == SquadIndex || bIsPlayerSquadLogi);
 }
 
 function OnPawnSpawned(Pawn P)

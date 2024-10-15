@@ -258,46 +258,62 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function SetLoadoutMode(ELoadoutMode Mode)
 {
     local int i;
+    local bool IsVehicleMode, IsEquipmentMode;
 
+    isVehicleMode = MapMode == MODE_Map && Mode == LM_Vehicle;
+    IsEquipmentMode = MapMode == MODE_Map && Mode == LM_Equipment;
     LoadoutMode = Mode;
 
     // GUIComponent visibility is not properly hierarchical, so we
     // need to hide and show elements individually.
-    i_Vehicle.SetVisibility(Mode == LM_Vehicle);
-    lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
+    i_Vehicle.SetVisibility(isVehicleMode);
+    lb_Vehicles.SetVisibility(isVehicleMode);
 
-    i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
-    i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
+    i_PrimaryWeapon.SetVisibility(IsEquipmentMode);
+    i_SecondaryWeapon.SetVisibility(IsEquipmentMode);
 
-    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 1);
-    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 1);
+    cb_PrimaryWeapon.SetVisibility(IsEquipmentMode && cb_PrimaryWeapon.ItemCount() > 1);
+    cb_SecondaryWeapon.SetVisibility(IsEquipmentMode && cb_SecondaryWeapon.ItemCount() > 1);
 
     for (i = 0; i < arraycount(i_GivenItems); ++i)
     {
         if (i_GivenItems[i] != none)
         {
-            i_GivenItems[i].SetVisibility(Mode == LM_Equipment);
+            i_GivenItems[i].SetVisibility(IsEquipmentMode);
         }
     }
 
-    switch (Mode)
+    if (isVehicleMode || IsEquipmentMode)
     {
-        case LM_Equipment:
-            b_EquipmentButton.DisableMe();
-            b_VehicleButton.EnableMe();
-            i_SpawnVehicle.SetVisibility(false);
-            i_ArtilleryVehicle.SetVisibility(false);
-            i_SupplyVehicle.SetVisibility(false);
-            i_MaxVehicles.SetVisibility(false);
-            l_MaxVehicles.SetVisibility(false);
-            break;
+        switch (Mode)
+        {
+            case LM_Equipment:
+                b_EquipmentButton.DisableMe();
+                b_VehicleButton.EnableMe();
+                i_SpawnVehicle.SetVisibility(false);
+                i_ArtilleryVehicle.SetVisibility(false);
+                i_SupplyVehicle.SetVisibility(false);
+                i_MaxVehicles.SetVisibility(false);
+                l_MaxVehicles.SetVisibility(false);
+                break;
 
-        case LM_Vehicle:
-            b_EquipmentButton.EnableMe();
-            b_VehicleButton.DisableMe();
-            i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
-            UpdateVehicleImage();
-            break;
+            case LM_Vehicle:
+                b_EquipmentButton.EnableMe();
+                b_VehicleButton.DisableMe();
+                i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
+                UpdateVehicleImage();
+                break;
+        }
+    }
+    else
+    {
+        i_SpawnVehicle.SetVisibility(false);
+        i_ArtilleryVehicle.SetVisibility(false);
+        i_SupplyVehicle.SetVisibility(false);
+        i_MaxVehicles.SetVisibility(false);
+        l_MaxVehicles.SetVisibility(false);
+        b_EquipmentButton.DisableMe();
+        b_VehicleButton.DisableMe();
     }
 
     UpdateSpawnPoints();
@@ -729,7 +745,6 @@ function UpdateRoles()
         }
         else
         {
-            Log("No squad");
             Limit = -1;
         }
 
@@ -1090,6 +1105,18 @@ function UpdateButtons()
 
         b_Spectate.EnableMe();
 
+        if (CurrentTeam == ALLIES_TEAM_INDEX)
+        {
+            Log("PC != none: " @ PC != none);
+            Log("GRI.CanSpawnWithParameters(SpawnPointIndex: " @ li_Vehicles.Index >= 0 && GRI.CanSpawnWithParameters(SpawnPointIndex,
+                                                                 CurrentTeam,
+                                                                 GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
+                                                                 SquadIndex,
+                                                                 GetSelectedVehiclePoolIndex(),
+                                                                 true, PC));
+        }
+        
+
         // Continue button should always be clickable if we're using the old
         // spawning system. If we're using the new spawning system, we have to
         // check that our pending parameters are valid.
@@ -1099,7 +1126,7 @@ function UpdateButtons()
                                                                  GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
                                                                  SquadIndex,
                                                                  GetSelectedVehiclePoolIndex(),
-                                                                 true)))
+                                                                 true, PC)))
         {
             bContinueEnabled = true;
         }
@@ -1110,15 +1137,7 @@ function UpdateButtons()
         b_Axis.DisableMe();
         b_Spectate.DisableMe();
     }
-
-    if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
-    {
-        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
-    }
-    else
-    {
-        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
-    }
+    UpdateButtonImageVehicle();
 
     if (bContinueEnabled)
     {
@@ -1129,6 +1148,33 @@ function UpdateButtons()
     {
         b_MenuOptions[6].DisableMe();
         i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
+    }
+}
+
+function UpdateButtonImageVehicle()
+{
+    local class<Vehicle>   VehicleClass;
+    local class<DHVehicle> DHVC;
+    local int VehiclePoolIndex;
+
+    if (li_Vehicles.GetObject() != none)
+    {
+        VehiclePoolIndex = GetSelectedVehiclePoolIndex();
+
+        if (VehiclePoolIndex >= -1)
+        {
+            VehicleClass = GRI.VehiclePoolVehicleClasses[VehiclePoolIndex];
+            i_VehiclesButton.Image = VehicleClass.default.SpawnOverlay[0];
+            // i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
+        }
+        else
+        {
+            i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
+        }
+    }
+    else
+    {
+        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
     }
 }
 
@@ -1197,10 +1243,8 @@ function PopulateRoles()
         }
     }
 
-    // li_Roles.SortList();
-
+    li_Roles.SortList();
     UpdateRoles();
-
 
     if (li_Roles.IsIndexDisabled(li_Roles.Index))
     {
@@ -1223,38 +1267,23 @@ function AutoSelectRole()
     // before PC.GetRoleInfo() is updated. Luckily, we can check the result of
     // SelectByObject and run the default behaviour (select an infinite role)
     // if it fails.
-    if (PC.GetRoleInfo() != none &&
+    if (li_Roles.ItemCount == 0 || PC.GetRoleInfo() != none &&
         li_Roles.SelectByObject(PC.GetRoleInfo()) != -1)
     {
         return;
     }
 
-    // if (CurrentTeam == AXIS_TEAM_INDEX)
-    // {
-    //     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-    //     {
-    //         if (GRI.DHAxisRoles[i] != none &&
-    //             GRI.DHAxisRoleLimit[i] == 255)
-    //         {
-    //             li_Roles.SelectByObject(GRI.DHAxisRoles[i]);
-    //         }
-    //     }
-    // }
-    // else if (CurrentTeam == ALLIES_TEAM_INDEX)
-    // {
-    //     for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-    //     {
-    //         if (GRI.DHAlliesRoles[i] != none &&
-    //             GRI.DHAlliesRoleLimit[i] == 255)
-    //         {
-    //             li_Roles.SelectByObject(GRI.DHAlliesRoles[i]);
-    //         }
-    //     }
-    // }
-    // else
-    // {
-    // }
+
     li_Roles.SelectByObject(none);
+
+    for (i = 0; i < li_Roles.ItemCount; ++i)
+    {
+        if (!li_Roles.IsIndexDisabled(i))
+        {
+            li_Roles.SetIndex(i);
+            break;
+        }
+    }
 }
 
 // Automatically selects the players' currently selected vehicle to
@@ -1723,6 +1752,8 @@ function ToggleMapMode()
 
 function SetMapMode(EMapMode Mode)
 {
+    local RORoleInfo RI;
+
     MapMode = Mode;
 
     switch (MapMode)
@@ -1747,12 +1778,21 @@ function SetMapMode(EMapMode Mode)
 
             l_Status.SetVisibility(true);
 
-            //Dz look!
-            // c_Equipment.SetVisibility(true);
-            // c_Equipment.EnableMe();
+            c_Equipment.SetVisibility(true);
+            c_Equipment.EnableMe();
 
-            // c_Vehicle.SetVisibility(true);
-            // c_Vehicle.EnableMe();
+            c_Vehicle.SetVisibility(true);
+            c_Vehicle.EnableMe();
+
+            RI = RORoleInfo(li_Roles.GetObject());
+            if (RI != none && RI.bCanBeTankCrew)
+            {
+                SetLoadoutMode(LM_Vehicle);
+            }
+            else
+            {
+                SetLoadoutMode(LM_Equipment);
+            }
 
             UpdateSpawnPoints();
             break;
@@ -1777,14 +1817,13 @@ function SetMapMode(EMapMode Mode)
             i_SquadUnassignedButton.SetVisibility(true);
             l_Status.SetVisibility(false);
 
+            c_Equipment.SetVisibility(false);
+            c_Equipment.DisableMe();
+
+            c_Vehicle.DisableMe();
+            c_Vehicle.SetVisibility(false);
 
             SetSquadPlayersMode(MODE_Squads);
-
-            // c_Equipment.SetVisibility(false);
-            // c_Equipment.DisableMe();
-
-            // c_Vehicle.DisableMe();
-            // c_Vehicle.SetVisibility(false);
 
             break;
 

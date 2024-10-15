@@ -7938,18 +7938,23 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
 
     bIsRoleLimitless = Limit == 255;
 
-// && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly
-    // if (Level.NetMode != NM_Standalone)
-    // {
-    if (IsInSquad())
-    {
-        roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
-        // Log("--ERoleEnabledResult(roleResult): " @ ERoleEnabledResult(roleResult));
-        return ERoleEnabledResult(roleResult);
-    }
-    // }
+    roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
+    return ERoleEnabledResult(roleResult);
 
-    return RER_Fatal; //Temp, should return disabled
+// // && GRI.GameType != none && GRI.GameType.default.bSquadSpecialRolesOnly
+//     // if (Level.NetMode != NM_Standalone)
+//     // {
+//     if (IsInSquad())
+//     {
+       
+//     }
+//     else {
+//         roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
+//         return ERoleEnabledResult(roleResult);
+//     }
+//     // }
+
+//     return RER_Fatal; //Temp, should return disabled
 }
 
 // Function for getting the correct inventory item name to display depending on settings.

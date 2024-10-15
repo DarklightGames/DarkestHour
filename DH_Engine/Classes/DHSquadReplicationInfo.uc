@@ -918,7 +918,6 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
         
         if (SquadName != "")
         {
-            Log("Returning battlegroup squad name: " @ SquadName);
             return SquadName;
         }
     }

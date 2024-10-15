@@ -969,7 +969,7 @@ simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex
     return true;
 }
 
-simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
+simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
 {
     local DHSpawnPointBase SP;
     local class<DHVehicle> VehicleClass;
@@ -986,7 +986,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
 
     SP = GetSpawnPoint(SpawnPointIndex);
 
-    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck);
+    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck, PC);
 }
 
 simulated function bool CanSpawnVehicle(int VehiclePoolIndex, optional bool bSkipTimeCheck)

@@ -141,13 +141,13 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
     {
         if (GRI != none &&
             GRI.SpawnPoints[i] != none &&
-            GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+            GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, PC))
         {
             b_SpawnPoints[i].bIsActive = true;
             b_SpawnPoints[i].SetVisibility(true);
             b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
-            if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true))
+            if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true, PC))
             {
                 // Spawn is acessible to spawn at, make the button clickable.
                 b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);

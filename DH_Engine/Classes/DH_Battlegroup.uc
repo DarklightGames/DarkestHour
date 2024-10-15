@@ -36,7 +36,9 @@ struct SquadSelection
 
 var() string                   Name;
 var() ETeam                    NationTeam;                      // The nation this battlegroup is for
-var() array<SquadSelection>    Squads; 
+var() array<SquadSelection>    Squads;
+var() class<DHRoleInfo>        NoSquadRole;
+
 
 // simulated function array<DHRoleInfo> GetRoles(int squadIndex)
 // {
@@ -119,7 +121,6 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
 
 simulated function string GetDefaultSquadName(int SquadIndex)
 {
-    Log("GetDefaultSquadName: " @ Squads[SquadIndex].Name);
     return Squads[SquadIndex].Name;
 }
 
@@ -141,6 +142,15 @@ simulated function int GetSquadSize(int SquadIndex)
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
 {
     local SquadSelection SquadSel;
+
+    if (SquadIndex <= 0 || SquadIndex >= Squads.Length)
+    {
+        if (RI.Class == NoSquadRole)
+        {
+            return 1;//RER_Enabled;
+        }
+        return 7;
+    }
 
     SquadSel = Squads[SquadIndex];
 
@@ -242,6 +252,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
 
 defaultproperties
 {
+    bStatic=true
     Texture=Texture'DHEngine_Tex.LevelInfo'
     // Squads(0)=(Name="Rifle Squad",SquadType=class'DHSquadTypeInfantry',Limit=4,Role1Leader=class'DHAlliedSergeantRoles',Role2Asl=class'DHAlliedSergeantRoles',Role3=class'DHAlliedSergeantRoles')
 }

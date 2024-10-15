@@ -327,11 +327,11 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
 simulated function bool IsVisibleToPlayer(DHPlayer PC)
 {
-    return IsVisibleTo(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex);
+    return IsVisibleTo(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex, PC);
 }
 
 // Returns true if the spawn point is "visible" to a player with the arguments provided
-simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, DHPlayer PC)
 {
     if (self.TeamIndex != TeamIndex || !bIsActive)
     {
@@ -354,7 +354,7 @@ simulated function bool IsBlocked()
 }
 
 // Returns true if the given arguments are satisfactory for spawning on this spawn point
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
 {
     if (GRI == none || self.TeamIndex != TeamIndex || !bIsActive || IsBlocked())
     {
