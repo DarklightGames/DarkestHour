@@ -16,7 +16,8 @@ defaultproperties
     WalkingPct=0.3   
     Health=300
     Stamina=500
+    MinHurtSpeed=700.0
     bNeverStaggers=true
-    bAlwaysSeverBodyparts=true
+   
     
 }
