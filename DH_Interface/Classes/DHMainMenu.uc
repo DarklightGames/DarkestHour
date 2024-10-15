@@ -64,7 +64,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
 
-    l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
+    l_Version.Caption = class'DHBuildManifest'.default.Version.ToString();
 
     // If they have not changed their name from the default, change their
     // name to their Steam name!
@@ -320,7 +320,7 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("CANCEL");
     }
 
-    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
+    if (SavedVersion != class'DHBuildManifest'.default.Version.ToString())
     {
         SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
 
@@ -389,7 +389,7 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Comma", "ToggleSelectedArtilleryTarget");
         }
 
-        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
+        SavedVersion = class'DHBuildManifest'.default.Version.ToString();
         SaveConfig();
     }
 

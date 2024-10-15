@@ -1,0 +1,10 @@
+{
+    "version": {
+        "major": 12,
+        "minor": 0,
+        "patch": 0,
+        "prerelease": "alpha"
+    },
+    "should_write_build_manifest": true,
+    "build_manifest_path": "./DH_Engine/Classes/DHBuildManifest.uc"
+}

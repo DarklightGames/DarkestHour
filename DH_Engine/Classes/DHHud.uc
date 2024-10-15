@@ -211,7 +211,7 @@ function DrawDebugInformation(Canvas C)
 
     PC = DHPlayer(PlayerOwner);
 
-    S @= class'DarkestHourGame'.default.Version.ToString();
+    S @= class'DHBuildManifest'.default.Version.ToString();
 
     C.Style = ERenderStyle.STY_Alpha;
     C.Font = GetTinyFont(C);
@@ -1151,7 +1151,7 @@ function DrawHudPassC(Canvas C)
         }
     }
 
-    if (IsDebugModeAllowed() || class'DarkestHourGame'.default.Version.IsPrerelease())
+    if (IsDebugModeAllowed() || class'DHBuildManifest'.default.Version.IsPrerelease())
     {
         DrawDebugInformation(C);
     }

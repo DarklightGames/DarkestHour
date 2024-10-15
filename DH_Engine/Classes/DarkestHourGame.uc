@@ -77,7 +77,6 @@ var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
 var()   config string               ServerLocation;
-var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
@@ -5549,9 +5548,10 @@ function GetServerDetails(out ServerResponseLine ServerState)
 {
     super.GetServerDetails(ServerState);
 
-    AddServerDetail(ServerState, "Version", Version.ToString());
+    AddServerDetail(ServerState, "Version", class'DHBuildManifest'.default.Version.ToShortString());
+    AddServerDetail(ServerState, "GitCommit", class'DHBuildManifest'.default.GitCommit);
     AddServerDetail(ServerState, "Location", ServerLocation);
-    AddServerDetail(ServerState, "AverageTick", ServerTickRateAverage);
+    AddServerDetail(ServerState, "AverageTick", int(ServerTickRateAverage));
 }
 
 function string GetServerMessage(int Index)
@@ -5799,14 +5799,6 @@ defaultproperties
     ReinforcementMessagePercentages(3)=0.1
 
     ServerLocation="Unspecified"
-
-    Begin Object Class=UVersion Name=VersionObject
-        Major=12
-        Minor=0
-        Patch=0
-        Prerelease="alpha.1"
-    End Object
-    Version=VersionObject
 
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true
