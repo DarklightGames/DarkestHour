@@ -197,8 +197,7 @@ var     float                                   SupplyDropSoundRadius;
 var     float                                   SupplyDropSoundVolume;
 
 // Construction
-var     vector                                  ConstructionPlacementOffset;
-var     Mesh                                    ConstructionBaseMesh;
+var     Mesh                                    ConstructionBaseMesh;   // TODO: move this to the construction class
 
 // Radio Attachment
 var()   class<DHRadio>                          RadioAttachmentClass;

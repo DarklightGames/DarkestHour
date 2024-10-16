@@ -28,7 +28,6 @@ defaultproperties
     ExitPositions(1)=(X=-100,Y=-35.00,Z=50)
     ExitPositions(2)=(X=-200,Y=0,Z=50)
     VehicleMass=3.0
-    ConstructionPlacementOffset=(Z=0.0)
     bCanBeRotated=true
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
     ShadowZOffset=10.0

@@ -20,7 +20,6 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.65
     ExitPositions(1)=(X=-120.00,Y=-38.00,Z=30.00)
     VehicleMass=11.0
-    ConstructionPlacementOffset=(Z=16)
     bCanBeRotated=true
     PlayersNeededToRotate=1
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'

@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_Pak40ATGun'
     SupplyCost=1200
     ProgressMax=14
+    PlacementOffset=(Z=13.0)
 }

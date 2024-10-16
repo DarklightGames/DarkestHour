@@ -10,6 +10,10 @@ class DHConstruction_Vehicle extends DHConstruction
 var class<DHVehicle>    VehicleClass;
 var DHVehicle           Vehicle;
 
+// The mesh to use when the vehicle is being constructed.
+// If not set, the vehicle's default mesh will be used.
+var Mesh                ConstructionBaseMesh;
+
 function Destroyed()
 {
     super.Destroyed();
@@ -122,9 +126,9 @@ function UpdateAppearance()
 {
     SetDrawType(DT_Mesh);
 
-    if (VehicleClass.default.ConstructionBaseMesh != none)
+    if (ConstructionBaseMesh != none)
     {
-        LinkMesh(VehicleClass.default.ConstructionBaseMesh);
+        LinkMesh(ConstructionBaseMesh);
     }
     else
     {
@@ -180,15 +184,6 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
     {
         return false;
     }
-}
-
-static function vector GetPlacementOffset(DHActorProxy.Context Context)
-{
-    local class<DHVehicle> VehicleClass;
-
-    VehicleClass = GetVehicleClass(Context);
-
-    return VehicleClass.default.ConstructionPlacementOffset;
 }
 
 defaultproperties

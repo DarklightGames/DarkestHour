@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_45mmM1937Gun'
     SupplyCost=700
     ProgressMax=8
+    PlacementOffset=(Z=10.0)
 }

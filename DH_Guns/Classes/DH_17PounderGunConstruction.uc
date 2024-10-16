@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_17PounderGun'
     SupplyCost=1600
     ProgressMax=14
+    PlacementOffset=(Z=12.0)
 }

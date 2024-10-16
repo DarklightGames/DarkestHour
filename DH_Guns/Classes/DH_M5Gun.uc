@@ -21,7 +21,6 @@ defaultproperties
     ShadowZOffset=20.0
     ExitPositions(1)=(X=-100.00,Y=-30.00,Z=35.00)
     VehicleMass=11.0
-    ConstructionPlacementOffset=(Z=-2)
     bCanBeRotated=true
     PlayersNeededToRotate=2
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'

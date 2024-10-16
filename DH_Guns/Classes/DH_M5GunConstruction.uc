@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_M5Gun'
     SupplyCost=1650
     ProgressMax=14
+    PlacementOffset=(Z=-2)
 }
