@@ -17,25 +17,25 @@ defaultproperties
     KeyName="DHMenuTextButtonStyle"
     
     // Small
-    FontNames(0)="DHButtonFont"     // Blurry
+    FontNames(0)="DHButtonFontDS"   // Blurry
     FontNames(1)="DHButtonFontDS"   // Watched
     FontNames(2)="DHButtonFontDS"   // Focused
-    FontNames(3)="DHButtonFont"     // Pressed
-    FontNames(4)="DHButtonFont"     // Disabled
+    FontNames(3)="DHButtonFontDS"   // Pressed
+    FontNames(4)="DHButtonFontDS"   // Disabled
 
     // Medium
-    FontNames(5)="DHButtonFont"     // Blurry
+    FontNames(5)="DHButtonFontDS"   // Blurry
     FontNames(6)="DHButtonFontDS"   // Watched
     FontNames(7)="DHButtonFontDS"   // Focused
-    FontNames(8)="DHButtonFont"     // Pressed
-    FontNames(9)="DHButtonFont"     // Disabled
+    FontNames(8)="DHButtonFontDS"   // Pressed
+    FontNames(9)="DHButtonFontDS"   // Disabled
 
     // Large
-    FontNames(10)="DHButtonFont"    // Blurry
+    FontNames(10)="DHButtonFontDS"  // Blurry
     FontNames(11)="DHButtonFontDS"  // Watched
     FontNames(12)="DHButtonFontDS"  // Focused
-    FontNames(13)="DHButtonFont"    // Pressed
-    FontNames(14)="DHButtonFont"    // Disabled
+    FontNames(13)="DHButtonFontDS"  // Pressed
+    FontNames(14)="DHButtonFontDS"  // Disabled
 
     FontColors(0)=(B=0,G=0,R=0)             // Blurry
     FontColors(2)=(B=255,G=255,R=255)       // Focused

@@ -1,85 +1,135 @@
-# This file is used to generate the fonts for the game.
+# This file is used to generate the fonts and supporting code for the game.
 # All fonts must be installed before executing the script.
 package_name: DHFonts
-default_unicode_ranges: # These unicode ranges are always included for each language.
-  - [ 0x0000, 0x007F ] # Basic Latin
-  - [ 0x0080, 0x00FF ] # Latin-1 Supplement
-  - [ 0x0180, 0x024F ] # Latin Extended-B
-  - [ 0x0400, 0x04FF ] # Cyrillic
-  - [ 0x0500, 0x052F ] # Cyrillic Supplement
-  - [ 0x2DE0, 0x2DFF ] # Cyrillic Extended-A
-  - [ 0xA640, 0xA69F ] # Cyrillic Extended-B
-  - [ 0x1C80, 0x1C8F ] # Cyrillic Extended-C
-  - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
-  - 0x1D2B
-  - 0x1D78
-  - 0x2116 # Numero sign (№)
-  - [ 0xFE2E, 0xFE2F ]
-default_font_style:
-  texture_size: # Maximum size of each texture atlas.
-    x: 512
-    y: 512
-  margin: # Margin around each character
-    bottom: 1
-    top: 1
-    left: 1
-    right: 1
-  padding:
-    x: 1
-    y: 1
+unrealscript:
+  gui_fonts:
+    # The parent class for all generated GUI fonts.
+    parent_class: GUIFont
+    # The directory where the GUIFonts will be generated.
+    directory: ./DH_Interface/Classes
+  # The path to the script that will be generated to support loading and accessing fonts.
+  fonts:
+    directory: ./DH_Engine/Classes
+    class_name: DHFonts
+proportional:
+  resolution:
+    baseline: 1080  # The resolution that the baseline font size is based on.
+    groups:
+      canvas: [2880, 2160, 1800, 1440, 1080, 1024, 900, 768]
+      gui: [2160, 1400, 1080] # GUI fonts can only have 3 different size levels.
+defaults:
+  unicode_ranges: # These unicode ranges are always included for each language.
+    - [ 0x0000, 0x007F ] # Basic Latin
+    - [ 0x0080, 0x00FF ] # Latin-1 Supplement
+    - [ 0x0180, 0x024F ] # Latin Extended-B
+    - [ 0x0400, 0x04FF ] # Cyrillic
+    - [ 0x0500, 0x052F ] # Cyrillic Supplement
+    - [ 0x2DE0, 0x2DFF ] # Cyrillic Extended-A
+    - [ 0xA640, 0xA69F ] # Cyrillic Extended-B
+    - [ 0x1C80, 0x1C8F ] # Cyrillic Extended-C
+    - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
+    - 0x1D2B
+    - 0x1D78
+    - 0x2116 # Numero sign (№)
+    - [ 0xFE2E, 0xFE2F ]
+  font_style:
+    texture_size: # Maximum size of each texture atlas.
+      x: 512
+      y: 512
+    margin: # Margin around each character
+      bottom: 1
+      top: 1
+      left: 1
+      right: 1
+    padding:
+      x: 1
+      y: 1
+  resolution_group: canvas
 font_styles:
+  # TODO: do not duplicate duplicate font styles if the hash of all the settings are identical.
   DHConsoleFont:
-    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
     font: Inter
+    size:
+        method: proportional
+        baseline: 14
   DHConsoleFontDS:
-    sizes: [28, 26, 24, 22, 20, 18, 16, 14, 12, 9, 7]
+    font: Inter
+    size:
+        method: proportional
+        baseline: 14
     drop_shadow:
       x: 1
       y: 1
-    font: Inter
   DHButtonFont:
-    sizes: 20
     font: Sofia Sans Condensed
+    size:
+        method: proportional
+        baseline: 20
+        resolution_group: gui
     weight: 1000
   DHButtonFontDS:
-    sizes: 20
+    font: Sofia Sans Condensed
+    size:
+        method: proportional
+        baseline: 20
+        resolution_group: gui
     drop_shadow:
       x: 1
       y: 1
-    font: Sofia Sans Condensed
     weight: 1000
   DHHugeButtonFont:
-    sizes: 24
+    size:
+        method: proportional
+        baseline: 24
+        resolution_group: gui
     font: Sofia Sans Condensed
   DHLargeFont:
-    sizes: 16
+    size:
+        method: proportional
+        baseline: 16
+        resolution_group: gui
     font: Arial
   DHLargeFontDS:
-    sizes: 16
+    size:
+        method: proportional
+        baseline: 16
+        resolution_group: gui
     drop_shadow:
       x: 1
       y: 1
     font: Arial
   DHMenuFont:
-    sizes: 22
+    size:
+        method: proportional
+        baseline: 22
+        resolution_group: gui
     font: Sofia Sans Condensed
     weight: 1000
   DHMenuFontDS:
-    sizes: 22
     font: Sofia Sans Condensed
+    size:
+        method: proportional
+        baseline: 22
+        resolution_group: gui
     weight: 1000
     drop_shadow:
       x: 1
       y: 1
   DHSmallFont:
-    sizes: 14
     font: Inter
+    size:
+        method: proportional
+        baseline: 14
+        resolution_group: gui
   DHSmallFontDS:
-    sizes: 14
+    font: Inter
+    size:
+        method: proportional
+        baseline: 14
+        resolution_group: gui
     drop_shadow:
       x: 1
       y: 1
-    font: Inter
 languages:
   en:
     name: English, French, German, Italian, Spanish
