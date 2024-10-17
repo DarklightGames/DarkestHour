@@ -61,7 +61,7 @@ function bool OnClick(GUIComponent Sender)
         //     PC.ServerSquadCreate(class'DHSquadTypeArmored', SquadIndex);
         //     return true;
         // case b_CreateSquadLogistics:
-        //     PC.ServerSquadCreate(class'DHSquadTypeLogistics', SquadIndex);
+        //     PC.ServerSquadCreate(class'DHSquadTypeHeadquarters', SquadIndex);
         //     return true;
         case b_JoinSquad:
             PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
