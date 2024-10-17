@@ -100,7 +100,7 @@ defaultproperties
 
     // Group Class
     SpawnPointClass=class'DHSpawnPoint_VehiclePool'
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Headquarters'
 
     // Rules
     bCanBeTornDownByFriendlies=false

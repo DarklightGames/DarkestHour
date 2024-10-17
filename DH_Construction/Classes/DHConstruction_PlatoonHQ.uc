@@ -332,7 +332,7 @@ defaultproperties
     EnemyObjectiveDistanceMinMeters=150.0
     EnemySecuredObjectiveDistanceMinMeters=800.0
     PermittedFriendlyControlledDistanceMeters=300.0 // This should be higher than both ObjectiveDistanceMinMeters and DuplicateFriendlyDistanceInMeters
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Headquarters'
 
     CompletionPointValue=1000
 

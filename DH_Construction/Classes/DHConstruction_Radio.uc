@@ -72,7 +72,7 @@ defaultproperties
     SupplyCost=500
     bCanBeTornDownByFriendlies=false
     bCanBeMantled=false // HACK: Stops the mantle icon from interfering with the touch message
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Headquarters'
     bCanPlaceIndoors=true
 
     ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=50.0)

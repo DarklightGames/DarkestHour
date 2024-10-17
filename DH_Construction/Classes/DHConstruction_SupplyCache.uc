@@ -170,5 +170,5 @@ defaultproperties
     BrokenSounds(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
     BrokenSounds(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
 
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Headquarters'
 }
