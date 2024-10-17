@@ -28,6 +28,7 @@ var Sound WaterShutDownSound;
 var Sound GroundStartUpSound;
 var Sound GroundShutDownSound;
 
+// State tracking whether the vehicle is in water or not.
 var bool bIsInWater;
 
 // A set of exit positions for use when the vehicle is in water.
@@ -64,16 +65,13 @@ simulated function name GetIdleAnim()
     }
 }
 
-simulated function PostBeginPlay()
+simulated function PostNetBeginPlay()
 {
-    super.PostBeginPlay();
+    super.PostNetBeginPlay();
 
-    UpdateInWaterStatus();
-}
-
-simulated function Destroyed()
-{
-    super.Destroyed();
+    // Force update the water status and run the callbacks so that
+    // we initialize into the correct state.
+    UpdateInWaterStatus(true);
 }
 
 function RaiseSplashGuard()
@@ -134,26 +132,19 @@ simulated function OnWaterLeft()
     AmbientSound = GroundEngineSound;
 
     SetWashSoundActive(false);
-
-    // Play the startup sound for the truck engine if the engine is on.
-    // if (!bEngineOff)
-    // {
-    //     PlaySound(GroundStartUpSound, SLOT_None, 1.0);
-    //     PlaySound(WaterShutDownSound, SLOT_None, 1.0);
-    // }
 }
 
-simulated function UpdateInWaterStatus()
+simulated function UpdateInWaterStatus(optional bool bForceUpdate)
 {
     local bool bNewIsInWater;
 
     bNewIsInWater = PhysicsVolume != none && PhysicsVolume.bWaterVolume;
 
-    if (bNewIsInWater && !bIsInWater)
+    if (bNewIsInWater && (bForceUpdate || !bIsInWater))
     {
         OnWaterEntered();
     }
-    else if (!bNewIsInWater && bIsInWater)
+    else if (!bNewIsInWater && (bForceUpdate || bIsInWater))
     {
         OnWaterLeft();
     }
@@ -225,6 +216,8 @@ defaultproperties
     VehicleTeam=1
 
     Mesh=SkeletalMesh'DH_DUKW_anm.dukw_ext'
+
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_amphibious_topdown'
 
     BeginningIdleAnim="idle_water"
 

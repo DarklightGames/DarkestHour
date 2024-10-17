@@ -122,3 +122,4 @@ umodel.cfg
 *.til
 *.i64
 .bdk
+DH_Engine/Classes/DHBuildManifest.uc

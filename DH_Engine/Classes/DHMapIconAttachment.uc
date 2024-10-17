@@ -317,7 +317,7 @@ function EVisibleFor GetVisibilityInDangerZone();
 // ICON APPEARANCE
 //==============================================================================
 
-simulated function color GetIconColor(DHPlayer PC)
+simulated function Color GetIconColor(DHPlayer PC)
 {
     local byte PlayerTeamIndex;
 

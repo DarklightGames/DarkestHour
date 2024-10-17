@@ -32,7 +32,6 @@ defaultproperties
     MaxDesireability=1.2
     MinRunOverSpeed=350 //Lighter vehicle so slightly higher min speed than other APCs
     PointValue=500
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
     PrioritizeWeaponPawnEntryFromIndex=1
     bMustBeTankCommander=false
     UnbuttonedPositionIndex=0

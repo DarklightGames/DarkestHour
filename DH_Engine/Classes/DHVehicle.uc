@@ -163,9 +163,11 @@ var     float               VehicleHudTreadsScale;   // drawing scale of tread d
 var     bool                bShouldDrawPositionDots;
 var     bool                bShouldDrawOccupantList;
 
+
 // Map icon
-var     class<DHMapIconAttachment>  MapIconAttachmentClass;
-var     DHMapIconAttachment         MapIconAttachment;
+var     class<DHMapIconAttachment_Vehicle>  MapIconAttachmentClass;
+var     Material                    MapIconMaterial;
+var     DHMapIconAttachment_Vehicle MapIconAttachment;
 
 // Vehicle attachments
 var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
@@ -195,8 +197,7 @@ var     float                                   SupplyDropSoundRadius;
 var     float                                   SupplyDropSoundVolume;
 
 // Construction
-var     vector                                  ConstructionPlacementOffset;
-var     Mesh                                    ConstructionBaseMesh;
+var     Mesh                                    ConstructionBaseMesh;   // TODO: move this to the construction class
 
 // Radio Attachment
 var()   class<DHRadio>                          RadioAttachmentClass;
@@ -3111,6 +3112,7 @@ simulated function SpawnVehicleAttachments()
                 MapIconAttachment.SetBase(self);
                 MapIconAttachment.Setup();
                 MapIconAttachment.SetTeamIndex(VehicleTeam);
+                MapIconAttachment.VehicleClass = Class;
             }
             else
             {
@@ -3542,32 +3544,28 @@ simulated event DestroyAppearance()
 
     if (Level.NetMode != NM_DedicatedServer && bUsesCodedDestroyedSkins)
     {
-        for (i = 0; i < Skins.Length; ++i)
-        {
-            if (Skins[i] == none)
-            {
-                continue;
-            }
+        DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+        DestroyedSkin.Material1 = Skins[0];
+        // TODO: use a different overlay depending on the aspect ratio.
+        DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
+        DestroyedSkin.FallbackMaterial = Skins[0];
+        DestroyedSkin.CombineOperation = CO_Multiply;
 
-            DestroyedSkin = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-            DestroyedSkin.Material1 = Skins[i];
-            // TODO: Depending on the aspect ratio, we may need to use a different overlay.
-            DestroyedSkin.Material2 = Texture'DH_FX_Tex.Overlays.DestroyedVehicleOverlay2';
-            DestroyedSkin.FallbackMaterial = Skins[i];
-            DestroyedSkin.CombineOperation = CO_Multiply;
-            DestroyedMeshSkins[i] = DestroyedSkin;
-        }
+        DestroyedMeshSkins[0] = DestroyedSkin;
     }
 
     super.DestroyAppearance();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+        if (DestroyedMeshSkins.Length > 0)
         {
-            if (DestroyedMeshSkins[i] != none)
+            for (i = 0; i < DestroyedMeshSkins.Length; ++i)
             {
-                Skins[i] = DestroyedMeshSkins[i];
+                if (DestroyedMeshSkins[i] != none)
+                {
+                    Skins[i] = DestroyedMeshSkins[i];
+                }
             }
         }
     }
@@ -4642,4 +4640,7 @@ defaultproperties
     RadioAttachmentHeight=10.0
 
     bDoRandomAttachments=true
+
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.car_topdown'
 }

@@ -20,10 +20,9 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     VehicleMass=11.0
-    ConstructionPlacementOffset=(Z=12.0)
     bCanBeRotated=true
     PlayersNeededToRotate=2
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

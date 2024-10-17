@@ -402,6 +402,11 @@ function SetIsActive(bool bIsActive)
     }
 }
 
+simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScale FontScale)
+{
+    return GUIController.GetStyle(SpawnPointStyle, FontScale);
+}
+
 // Override to change the button style for display on the deploy menu.
 simulated function string GetMapStyleName()
 {

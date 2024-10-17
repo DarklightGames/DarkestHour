@@ -18,8 +18,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_look'
     ExitPositions(1)=(X=-50.0,Y=75.0,Z=50.0)
     VehicleMass=20.0
-    ConstructionPlacementOffset=(Z=0)
-    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Static'
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.at_static_topdown'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

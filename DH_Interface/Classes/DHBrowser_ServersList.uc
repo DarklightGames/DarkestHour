@@ -59,7 +59,7 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
 {
     local float CellLeft, CellWidth, DrawX;
     local float IconPosX, IconPosY;
-    local string Ping, VersionString, LocationString, HealthString;
+    local string Ping, VersionString, LocationString, HealthString, GitCommit;
     local int k, j, flags, checkFlag;
     local color HealthColor;
     local GUIStyles DStyle;
@@ -80,21 +80,27 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
             LocationString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
 
-        // Get the game version the server is running
+        // Get the game version the server is running.
         if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "Version")
         {
             VersionString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
+
+        // Get the commit hash of the build that the server is running.
+        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "GitCommit")
+        {
+            GitCommit = Servers[SortData[i].SortItem].ServerInfo[j].Value;
+        }
     }
 
-    // Choose style, we will grey out servers which don't match version
-    if (VersionString != class'DarkestHourGame'.default.Version.ToString())
+    // Choose style, we will grey out servers which don't match the current build.
+    if (GitCommit != class'DHBuildManifest'.default.GitCommit)
     {
         VersionString = class'GameInfo'.static.MakeColorCode(WrongVersionColor) $ VersionString;
 
         if (bSelected)
         {
-            WrongVersionStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
+            WrongVersionStyle.Draw(Canvas, MenuState, X, Y, W, H + 1);
         }
 
         DStyle = WrongVersionStyle;
