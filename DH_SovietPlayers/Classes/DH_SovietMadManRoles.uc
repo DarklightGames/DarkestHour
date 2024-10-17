@@ -23,5 +23,5 @@ defaultproperties
     Article="the "
     PluralName="Mad Men"
     
-    bCanPickupWeapons=true
+    bCanPickupWeapons=false
 }

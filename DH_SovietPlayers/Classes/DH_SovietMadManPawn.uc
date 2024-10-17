@@ -18,6 +18,5 @@ defaultproperties
     Stamina=500
     MinHurtSpeed=700.0
     bNeverStaggers=true
-   
-    
+
 }
