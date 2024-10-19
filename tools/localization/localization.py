@@ -1,23 +1,19 @@
 import argparse
-from configparser import RawConfigParser, MissingSectionHeaderError
-from collections import OrderedDict
-import glob
-from pathlib import Path
 import copy
-
-from pprint import pprint
-
-import polib
+from collections import OrderedDict
+from configparser import MissingSectionHeaderError, RawConfigParser
+import fnmatch
+import glob
+import git
 from iso639 import LanguageNotFoundError, Language
+from pathlib import Path
+import polib
 import os
 from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
 import re
-from typing import List, Tuple, Optional, Iterable, Set, Union
-
-import git
-import fnmatch
+from typing import Iterable, List, Optional, Set, Tuple, Union
 import yaml
 
 
@@ -241,7 +237,6 @@ def add_entry(msgid: str, msgstr: str, sections):
 
 
 def po_to_unt(contents: str) -> str:
-    import polib
     po = polib.pofile(contents)
 
     sections = OrderedDict()
@@ -665,7 +660,6 @@ def read_unique_characters_from_unt_file(path: str) -> Set[int]:
     return characters
 
 
-
 def generate_font_scripts(args):
     # Load the YAML file
     mod = args.mod
@@ -1071,35 +1065,6 @@ def sync(args):
         print(f'{language_code.name}: {count} file(s)')
 
 
-def debug_value(args):
-    while True:
-        line = input('Value: ')
-        if line == 'quit':
-            break
-        visitor = ValueVisitor()
-        try:
-            value = visitor.visit(grammar.parse(line))
-            print(value, type(value))
-        except IncompleteParseError as e:
-            print('IncompleteParseError', line)
-            print(e)
-            continue
-        except ParseError:
-            print('ParseError', line)
-            continue
-
-def debug_keys(args):
-    sections = OrderedDict()
-    while True:
-        key = input('Key: ')
-        if key == 'quit':
-            break
-        elif key == 'dump':
-            pprint(sections)
-        add_entry(key, 'My Value', sections)
-    pprint(sections)
-
-
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
 
@@ -1168,12 +1133,6 @@ sync_parser.set_defaults(func=sync)
 
 update_parser = subparsers.add_parser('update', help='Update the submodule.')
 update_parser.set_defaults(func=update)
-
-debug_key_parser = subparsers.add_parser('debug_key', help='Debug keys')
-debug_key_parser.set_defaults(func=debug_keys)
-
-debug_key_parser = subparsers.add_parser('debug_value', help='Debug values')
-debug_key_parser.set_defaults(func=debug_value)
 
 
 if __name__ == '__main__':

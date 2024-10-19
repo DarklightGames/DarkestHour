@@ -28,10 +28,11 @@ defaults:
     - [ 0xA640, 0xA69F ] # Cyrillic Extended-B
     - [ 0x1C80, 0x1C8F ] # Cyrillic Extended-C
     - [ 0x1E030, 0x1E08F ] # Cyrillic Extended-D
-    - 0x1D2B
-    - 0x1D78
-    - 0x2116 # Numero sign (№)
-    - [ 0xFE2E, 0xFE2F ]
+    - 0x1D2B # Cyrillic Letter Small Capital El (ᴫ)
+    - 0x1D78 # Modifier Letter Cyrillic En (ᵸ)
+    - 0x2116 # Numero Sign (№)
+    - 0xFE2E # Combining Cyrillic Titlo Left Half
+    - 0xFE2F # Combining Cyrillic Titlo Right Half
   font_style:
     texture_size: # Maximum size of each texture atlas.
       x: 512
