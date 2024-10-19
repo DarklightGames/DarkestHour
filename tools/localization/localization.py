@@ -3,6 +3,7 @@ from configparser import RawConfigParser, MissingSectionHeaderError
 from collections import OrderedDict
 import glob
 from pathlib import Path
+import copy
 
 from pprint import pprint
 
@@ -13,7 +14,7 @@ from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
 import re
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Iterable, Set, Union
 
 import git
 import fnmatch
@@ -557,8 +558,78 @@ def command_export_directory(args):
     print(f'Exported {count} file(s)')
 
 
+class UnicodeRanges:
+    def __init__(self, ranges: List[Union[int, Tuple[int, int]]] = None):
+        # Initialize the ranges as an empty list of tuples (start, end)
+        if ranges is None:
+            ranges: List[Tuple[int, int]] = []
+        # Convert any single integers to tuples
+        ranges = [(r, r) if isinstance(r, int) else r for r in ranges]
+        self._ranges = []
+        self.add_ranges(ranges)
+
+    def _merge_in_place(self, start: int, end: int, insert_index: int):
+        """Merge the new range in place starting at insert_index."""
+        n = len(self._ranges)
+        i = insert_index
+
+        # Expand the start and end if overlapping or contiguous ranges are found
+        while i < n and self._ranges[i][0] <= end + 1:
+            start = min(start, self._ranges[i][0])
+            end = max(end, self._ranges[i][1])
+            i += 1
+
+        # Replace the current range and delete any overlapped ranges
+        self._ranges[insert_index: i] = [(start, end)]
+
+    def add_ranges(self, ranges: Iterable[Tuple[int, int]]):
+        for start, end in ranges:
+            self.add_range(start, end)
+
+    def add_range(self, start: int, end: int):
+        """Add a new range (start, end) while maintaining sorted order and merging if necessary."""
+        if start > end:
+            start, end = end, start
+
+        n = len(self._ranges)
+        i = 0
+
+        # Find the insertion point
+        while i < n and self._ranges[i][1] < start - 1:
+            i += 1
+
+        # Merge the new range into the correct position
+        self._merge_in_place(start, end, i)
+
+    def add_ordinal(self, ordinal: int):
+        """Add a single ordinal and merge it with existing ranges if necessary."""
+        self.add_range(ordinal, ordinal)
+
+    def add_ordinals(self, ordinals: Iterable[int]):
+        """Add a list of ordinals and merge them with existing ranges if necessary."""
+        for ordinal in ordinals:
+            self.add_ordinal(ordinal)
+
+    def get_ranges(self) -> List[Tuple[int, int]]:
+        return self._ranges
+
+    def merge(self, other):
+        print(other.get_ranges())
+        for start, end in other.get_ranges():
+            self.add_range(start, end)
+        return self
+
+    def get_unicode_ranges_string(self):
+        def int_to_hex(i: int) -> str:
+            return hex(i)[2:].upper()
+        parts = []
+        for unicode_range in self._ranges:
+            parts.append(f'{int_to_hex(unicode_range[0])}-{int_to_hex(unicode_range[1])}')
+        return ','.join(parts)
+
+
 class TrueTypeFont:
-    def __init__(self, package: str, group: str, name: str, fontname: str, height: int, unicode_ranges: str, anti_alias: int, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, resolution: Optional[int] = None):
+    def __init__(self, package: str, group: str, name: str, fontname: str, height: int, unicode_ranges: UnicodeRanges, anti_alias: int, drop_shadow_x: int, drop_shadow_y: int, u_size: int, v_size: int, x_pad: int, y_pad: int, extend_bottom: int, extend_top: int, extend_left: int, extend_right: int, kerning: int, style: int, italic: int, resolution: Optional[int] = None):
         self.package = package
         self.group = group
         self.name = name
@@ -582,366 +653,344 @@ class TrueTypeFont:
         self.resolution = resolution
 
 
+def read_unique_characters_from_unt_file(path: str) -> Set[int]:
+    characters = set()
+    with open(path, 'r', encoding='utf-16-le') as file:
+        file.seek(2)  # Skip the BOM.
+        contents = file.read()
+        key_value_pairs = parse_unt(contents)
+        for _, value in key_value_pairs:
+            for character in value:
+                characters.add(ord(character))
+    return characters
+
+
+
 def generate_font_scripts(args):
     # Load the YAML file
     mod = args.mod
 
-    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    root_path = (Path(os.path.dirname(__file__)) / '..' /  '..').absolute()
 
-    print(f'Root path: {root_path}')
-
-    mod_path = os.path.join(root_path, mod)
-    fonts_path = os.path.join(mod_path, 'Fonts')
-    fonts_config_path = os.path.join(fonts_path, 'fonts.yml')
-    output_path = os.path.join(fonts_path, 'ImportFonts.exec.txt')
+    mod_path = root_path / mod
+    fonts_path = mod_path / 'Fonts'
+    fonts_config_path = fonts_path / 'fonts.yml'
+    import_font_script_path = fonts_path / 'ImportFonts.exec.txt'
 
     with open(fonts_config_path, 'r') as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
-        font_styles = data['font_styles']
-        languages = data['languages']
-        fonts_package_name = data['package_name']
 
-        def int_to_hex(i: int) -> str:
-            return hex(i)[2:].upper()
+    font_styles = data['font_styles']
+    languages = data['languages']
+    fonts_package_name = data['package_name']
 
-        proportional_data = data.get('proportional', None)
-        resolution_baseline = None
-        resolution_groups = None
+    proportional_data = data.get('proportional', None)
+    resolution_baseline = None
+    resolution_groups = None
 
-        resolution_data = proportional_data.get('resolution', None)
+    resolution_data = proportional_data.get('resolution', None)
 
-        if proportional_data:
-            resolution_baseline = resolution_data.get('baseline', 1080)
-            resolution_groups = resolution_data.get('groups', {})
+    if proportional_data:
+        resolution_baseline = resolution_data.get('baseline', 1080)
+        resolution_groups = resolution_data.get('groups', {})
 
-            # Ensure that resolution groups is a dictionary of strings to integer lists.
-            if not isinstance(resolution_groups, dict):
-                raise Exception('resolution_groups must be a dictionary')
+        # Ensure that resolution groups is a dictionary of strings to integer lists.
+        if not isinstance(resolution_groups, dict):
+            raise Exception('resolution_groups must be a dictionary')
 
-            if any(not isinstance(key, str) or not isinstance(value, list) for (key, value) in resolution_groups.items()):
-                raise Exception('resolution_groups must be a dictionary of strings to lists')
+        if any(not isinstance(key, str) or not isinstance(value, list) for (key, value) in resolution_groups.items()):
+            raise Exception('resolution_groups must be a dictionary of strings to lists')
 
-            for key, value in resolution_groups.items():
-                if any(not isinstance(i, int) for i in value):
-                    raise Exception(f'Values in resolution_group "{key}" must only be integers')
+        for key, value in resolution_groups.items():
+            if any(not isinstance(i, int) for i in value):
+                raise Exception(f'Values in resolution_group "{key}" must only be integers')
 
-        # Defaults
-        defaults = data['defaults']
-        default_font_style = defaults.get('font_style', None)
-        default_unicode_ranges = defaults.get('unicode_ranges', None)
-        default_resolution_group = defaults.get('resolution_group', resolution_groups[0] if isinstance(resolution_groups, list) and resolution_groups is not None else None)
+    # Defaults
+    defaults = data['defaults']
+    default_font_style = defaults.get('font_style', None)
+    default_unicode_ranges = UnicodeRanges(defaults.get('unicode_ranges', []))
 
-        font_style_true_type_fonts = {}
+    default_resolution_group = defaults.get('resolution_group', resolution_groups[0] if isinstance(resolution_groups, list) and resolution_groups is not None else None)
 
-        for language_code, language in languages.items():
-            if args.language_code is not None and args.language_code != language_code:
-                continue
+    font_style_true_type_fonts = {}
 
-            package_name = fonts_package_name
-            unicode_ranges = default_unicode_ranges + language.get('unicode_ranges', [])
+    for language_code, language in languages.items():
+        if args.language_code is not None and args.language_code != language_code:
+            continue
 
-            language_suffix = 'int'
+        package_name = fonts_package_name
+        language_unicode_ranges = UnicodeRanges()
+        language_unicode_ranges.add_ranges(language.get('unicode_ranges', []))
+        unicode_ranges = copy.deepcopy(default_unicode_ranges).merge(language_unicode_ranges)
 
-            if language_code != 'en':
-                part3 = Language.from_part1(language_code).part3
-                language_suffix = iso639_to_language_extension.get(part3, part3)
-                package_name = f'{fonts_package_name}_{language_suffix}'
+        language_suffix = 'int'
 
-            # Go through each of the Unreal translation files for this language and get the characters that are used.
+        if language_code != 'en':
+            part3 = Language.from_part1(language_code).part3
+            language_suffix = iso639_to_language_extension.get(part3, part3)
+            package_name = f'{fonts_package_name}_{language_suffix}'
+
+        # Go through each of the Unreal translation files for this language and get the characters that are used.
+        ensure_all_characters = language.get('ensure_all_characters', False)
+
+        if ensure_all_characters:
+            characters = set()
             pattern = f'{mod_path}\\System\\*.{language_suffix}'
 
-            ensure_all_characters = language.get('ensure_all_characters', False)
+            for filename in glob.glob(pattern):
+                characters |= read_unique_characters_from_unt_file(filename)
 
-            if ensure_all_characters:
-                characters = set()
-                for filename in glob.glob(pattern):
-                    # Load the config file.
-                    print(filename)
-                    with open(filename, 'r', encoding='utf-16-le') as file:
-                        file.seek(2)  # Skip the BOM.
-                        contents = file.read()
-                        key_value_pairs = parse_unt(contents)
+            # For each of the characters, see if it's in the unicode ranges.
+            # If it's not, add it to the unicode ranges.
+            unicode_ranges.add_ordinals(characters)
 
-                        for _, value in key_value_pairs:
-                            for character in value:
-                                characters.add(ord(character))
+            if len(added_characters) > 0:
+                print(f'Added {len(characters)} characters to unicode ranges for language {language["name"]} ({language_code}): {[hex(c) for c in added_characters]}')
 
-                # For each of the characters, see if it's in the unicode ranges.
-                # If it's not, add it to the unicode ranges.
-                added_characters = set()
-                for character in characters:
-                    found = False
-                    for unicode_range in unicode_ranges:
-                        if type(unicode_range) == int:
-                            if character == unicode_range:
-                                found = True
-                        if type(unicode_range) == list:
-                            # Make sure it's a range of two numbers.
-                            if len(unicode_range) != 2:
-                                raise Exception(f'Invalid unicode range: {unicode_range}')
-                            if character >= unicode_range[0] and character <= unicode_range[1]:
-                                found = True
-                    if not found:
-                        added_characters.add(character)
-                        # There is (surprise), a bug in Unreal where it appears to support having a single character
-                        # in the UNICODERANGE string (e.g., 0-FF,1234,1235). However, it doesn't actually work, so we
-                        # have to add the character to the unicode ranges as a range of two numbers.
-                        unicode_ranges.append([character, character])
+        for font_style_name, font_style in font_styles.items():
+            font_style_true_type_fonts[font_style_name] = []
 
-                if len(added_characters) > 0:
-                    print(f'Added {len(added_characters)} characters to unicode ranges for language {language["name"]} ({language_code}): {[hex(c) for c in added_characters]}')
+            # Merge the default font style with the language's font style.
+            font_style = {**default_font_style, **font_style}
 
-            for font_style_name, font_style in font_styles.items():
+            font = font_style['font']
+            font_substitutions = language.get('font_substitutions', {})
 
-                font_style_true_type_fonts[font_style_name] = []
+            if font in font_substitutions:
+                # Use the language's font substitution, if it exists.
+                font = font_substitutions[font]
 
-                # Merge the default font style with the language's font style.
-                font_style = {**default_font_style, **font_style}
+            font_style_size = font_style['size']
+            size_method = font_style_size.get('method', 'proportional')
 
-                font = font_style['font']
-                font_substitutions = language.get('font_substitutions', {})
+            match size_method:
+                case 'proportional':
+                    # Get the resolution group we're using.
+                    font_size_baseline = font_style_size['baseline']
+                    resolution_group = font_style_size.get('resolution_group', default_resolution_group)
 
-                if font in font_substitutions:
-                    # Use the language's font substitution, if it exists.
-                    font = font_substitutions[font]
+                    # Make sure the resolution group exists.
+                    if resolution_group not in resolution_groups:
+                        raise Exception(f'Resolution group "{resolution_group}" does not exist')
 
-                font_style_size = font_style['size']
+                    resolutions = resolution_groups[resolution_group]
+                    sizes = [int(font_size_baseline * resolution / resolution_baseline) for resolution in resolutions]
+                    # Round the sizes round up to a multiple of 2 (stops there from being a 1px difference between
+                    # sizes, wasting space).
+                    sizes = [size + 1 if size % 2 == 1 else size for size in sizes]
+                case 'fixed':
+                    sizes = font_style_size['sizes']
+                case _:
+                    raise Exception(f'Invalid size method: {size_method}, expected one of {["proportional", "fixed"]}')
 
-                size_method = font_style_size.get('method', 'proportional')
+            if type(sizes) == int:
+                sizes = [sizes]
+            elif type(sizes) != list:
+                raise Exception(f'Invalid sizes for font style {font_style_name}: {sizes}')
 
-                match size_method:
-                    case 'proportional':
-                        # Get the resolution group we're using.
-                        font_size_baseline = font_style_size['baseline']
-                        resolution_group = font_style_size.get('resolution_group', default_resolution_group)
+            padding = font_style.get('padding', {'x': 1, 'y': 1})
+            margin = font_style.get('margin', {})
+            anti_alias = int(font_style.get('anti_alias', 1))
+            drop_shadow = font_style.get('drop_shadow', {})
+            kerning = int(font_style.get('kerning', 0))
+            weight = int(font_style.get('weight', 500))
+            italic = bool(font_style.get('italic', False))
+            texture_size = font_style.get('texture_size', {'x': 512, 'y': 512})
 
-                        # Make sure the resolution group exists.
-                        if resolution_group not in resolution_groups:
-                            raise Exception(f'Resolution group "{resolution_group}" does not exist')
+            for size in sizes:
+                has_drop_shadow = 'x' in drop_shadow or 'y' in drop_shadow and (
+                            drop_shadow['x'] != 0 or drop_shadow['y'] != 0)
+                font_name = (f'{font.replace(" ", "")}'
+                             f'{"A" if anti_alias else ""}'
+                             f'{"D" if has_drop_shadow else ""}'
+                             f'{"I" if italic else ""}'
+                             f'{f"W{weight}" if weight != 500 else ""}'
+                             f'{size}')
+                true_type_font = TrueTypeFont(
+                    package=package_name,
+                    group=font_style_name,
+                    name=font_name,
+                    fontname=font,
+                    height=size,
+                    unicode_ranges=unicode_ranges,
+                    anti_alias=anti_alias,
+                    drop_shadow_x=drop_shadow.get("x", 0),
+                    drop_shadow_y=drop_shadow.get("y", 0),
+                    u_size=texture_size.get("x", 256),
+                    v_size=texture_size.get("y", 256),
+                    x_pad=padding.get("x", 0),
+                    y_pad=padding.get("y", 0),
+                    extend_bottom=margin.get("bottom", 0),
+                    extend_top=margin.get("top", 0),
+                    extend_left=margin.get("left", 0),
+                    extend_right=margin.get("right", 0),
+                    kerning=kerning,
+                    style=weight,
+                    italic=int(italic),
+                )
+                font_style_true_type_fonts[font_style_name].append(true_type_font)
 
-                        resolutions = resolution_groups[resolution_group]
-                        sizes = [int(font_size_baseline * resolution / resolution_baseline) for resolution in resolutions]
-                        # Round the sizes round up to a multiple of 2 (stops there from being a 1px difference between
-                        # sizes, wasting space).
-                        sizes = [size + 1 if size % 2 == 1 else size for size in sizes]
-                    case 'fixed':
-                        sizes = font_style_size['sizes']
-                        resolutions = [0] * len(sizes)
-                    case _:
-                        raise Exception(f'Invalid size method: {size_method}, expected one of {["proportional", "fixed"]}')
-
-                if type(sizes) == int:
-                    sizes = [sizes]
-                elif type(sizes) != list:
-                    raise Exception(f'Invalid sizes for font style {font_style_name}: {sizes}')
-
-                padding = font_style.get('padding', {'x': 1, 'y': 1})
-                margin = font_style.get('margin', {})
-                anti_alias = int(font_style.get('anti_alias', 1))
-                drop_shadow = font_style.get('drop_shadow', {})
-                kerning = int(font_style.get('kerning', 0))
-                weight = int(font_style.get('weight', 500))
-                italic = bool(font_style.get('italic', False))
-                texture_size = font_style.get('texture_size', 512)
-
-                def get_unicode_ranges_string(unicode_ranges):
-                    unicode_ranges_parts = []
-                    for unicode_range in unicode_ranges:
-                        if type(unicode_range) == int:
-                            unicode_ranges_parts.append(f'{int_to_hex(unicode_range)}')
-                        if type(unicode_range) == list:
-                            # Make sure it's a range of two numbers.
-                            if len(unicode_range) != 2:
-                                raise Exception(f'Invalid unicode range: {unicode_range}')
-                            unicode_ranges_parts.append(f'{int_to_hex(unicode_range[0])}-{int_to_hex(unicode_range[1])}')
-                    unicode_ranges_string = ','.join(unicode_ranges_parts)
-                    return unicode_ranges_string
-
-                has_drop_shadow = 'x' in drop_shadow or 'y' in drop_shadow and (drop_shadow['x'] != 0 or drop_shadow['y'] != 0)
-
-                for resolution, size in zip(resolutions, sizes):
-                    font_name = f'{font.replace(" ", "")}{"DS" if has_drop_shadow else ""}{size}'
-                    true_type_font = TrueTypeFont(
-                        package=package_name,
-                        group=font_style_name,
-                        name=font_name,
-                        fontname=font,
-                        height=size,
-                        unicode_ranges=unicode_ranges,
-                        anti_alias=anti_alias,
-                        drop_shadow_x=drop_shadow.get("x", 0),
-                        drop_shadow_y=drop_shadow.get("y", 0),
-                        u_size=texture_size.get("x", 256),
-                        v_size=texture_size.get("y", 256),
-                        x_pad=padding.get("x", 0),
-                        y_pad=padding.get("y", 0),
-                        extend_bottom=margin.get("bottom", 0),
-                        extend_top=margin.get("top", 0),
-                        extend_left=margin.get("left", 0),
-                        extend_right=margin.get("right", 0),
-                        kerning=kerning,
-                        style=weight,
-                        italic=int(italic),
-                        resolution=resolution
-                    )
-                    font_style_true_type_fonts[font_style_name].append(true_type_font)
-
-        # Write the font generation script.
-        lines = []
-        for font_style_name, fonts in font_style_true_type_fonts.items():
-            for font in fonts:
-                lines.append(f'NEW TRUETYPEFONTFACTORY '
-                             f'PACKAGE={font.package} '
-                             f'GROUP={font.group} '
-                             f'NAME={font.name} '
-                             f'FONTNAME="{font.fontname}" '
-                             f'HEIGHT={font.height} '
-                             f'UNICODERANGE="{get_unicode_ranges_string(font.unicode_ranges)}" '
-                             f'ANTIALIAS={font.anti_alias} '
-                             f'DROPSHADOWX={font.drop_shadow_x} '
-                             f'DROPSHADOWY={font.drop_shadow_y} '
-                             f'USIZE={font.u_size} '
-                             f'VSIZE={font.v_size} '
-                             f'XPAD={font.x_pad} '
-                             f'YPAD={font.y_pad} '
-                             f'EXTENDBOTTOM={font.extend_bottom} '
-                             f'EXTENDTOP={font.extend_top} '
-                             f'EXTENDLEFT={font.extend_left} '
-                             f'EXTENDRIGHT={font.extend_right} '
-                             f'KERNING={font.kerning} '
-                             f'STYLE={font.style} '
-                             f'ITALIC={font.italic} '
-                             )
-            lines.append('')
-
-        lines.append(F'OBJ SAVEPACKAGE PACKAGE={package_name} FILE="..\\DarkestHourDev\\Textures\\{package_name}.utx"')
+    # Write the font generation script.
+    lines = []
+    for _, fonts in font_style_true_type_fonts.items():
+        for font in fonts:
+            lines.append(f'NEW TRUETYPEFONTFACTORY '
+                         f'PACKAGE={font.package} '
+                         f'GROUP={font.group} '
+                         f'NAME={font.name} '
+                         f'FONTNAME="{font.fontname}" '
+                         f'HEIGHT={font.height} '
+                         f'UNICODERANGE="{font.unicode_ranges.get_unicode_ranges_string()}" '
+                         f'ANTIALIAS={font.anti_alias} '
+                         f'DROPSHADOWX={font.drop_shadow_x} '
+                         f'DROPSHADOWY={font.drop_shadow_y} '
+                         f'USIZE={font.u_size} '
+                         f'VSIZE={font.v_size} '
+                         f'XPAD={font.x_pad} '
+                         f'YPAD={font.y_pad} '
+                         f'EXTENDBOTTOM={font.extend_bottom} '
+                         f'EXTENDTOP={font.extend_top} '
+                         f'EXTENDLEFT={font.extend_left} '
+                         f'EXTENDRIGHT={font.extend_right} '
+                         f'KERNING={font.kerning} '
+                         f'STYLE={font.style} '
+                         f'ITALIC={font.italic} '
+                         )
         lines.append('')
-        lines.append('; Execute this with the following command:')
-        lines.append(f'; EXEC "{os.path.abspath(output_path)}"')
 
-        for line in lines:
-            print(line)
+    lines += [
+        f'OBJ SAVEPACKAGE PACKAGE={package_name} FILE="..\\DarkestHourDev\\Textures\\{package_name}.utx"',
+        '',
+        '; Execute this with the following command:',
+        f'; EXEC "{import_font_script_path.resolve()}"'
+    ]
 
-        with open(output_path, 'w') as file:
-            file.write('\n'.join(lines))
+    for line in lines:
+        print(line)
 
-        unrealscript = data['unrealscript']
-        unrealscript_gui_fonts = unrealscript.get('gui_fonts', None)
-        gui_font_parent_class = unrealscript_gui_fonts.get('parent_class', 'GUIFont')
+    with open(import_font_script_path, 'w') as file:
+        file.write('\n'.join(lines))
 
-        unrealscript_gui_font_path = Path(root_path) / unrealscript_gui_fonts['directory']
-        for font_style_name in font_style_true_type_fonts.keys():
-            gui_font_path = unrealscript_gui_font_path / f'{font_style_name}.uc'
-            with open(gui_font_path, 'w') as f:
-                lines = [
-                    '//==============================================================================',
-                    '// This file was automatically generated by the localization tool.',
-                    '// Do not edit this file directly.',
-                    '// To regenerate this file, run ./tools/localization/generate_fonts.bat',
-                    '//==============================================================================',
-                    '',
-                    f'class {font_style_name} extends {gui_font_parent_class};',
-                    '',
-                    f'event Font GetFont(int ResX)',
-                    '{',
-                    '    local int ResYGuess;',
-                    '    ResYGuess = ResX * (9.0 / 16.0);',
-                    '',
-                    f'    return class\'{package_name}\'.static.Get{font_style_name}ByResolution(ResYGuess);',
-                    '}',
-                    '',
-                    'defaultproperties',
-                    '{',
-                    f'    KeyName="{font_style_name}"',
-                    '}',
-                ]
-                for line in lines:
-                    f.write(line + '\n')
+    # UnrealScript
+    unrealscript = data['unrealscript']
+    unrealscript_gui_fonts = unrealscript.get('gui_fonts', None)
+    unrealscript_gui_font_path = Path(root_path) / unrealscript_gui_fonts['directory']
 
-
-        # Write the UnrealScript fonts file.
-        unrealscript_fonts = unrealscript.get('fonts', None)
-        unrealscript_fonts_path = Path(root_path) / unrealscript_fonts['directory'] / f'{unrealscript_fonts["class_name"]}.uc'
-
-        lines = []
-        with open(unrealscript_fonts_path, 'w') as file:
-            lines += [
+    def write_font_style_class_file(path: Path, font_style_name: str, package_name: str):
+        with open(path, 'w') as f:
+            lines = [
                 '//==============================================================================',
                 '// This file was automatically generated by the localization tool.',
                 '// Do not edit this file directly.',
                 '// To regenerate this file, run ./tools/localization/generate_fonts.bat',
                 '//==============================================================================',
                 '',
-                'class DHFonts extends Object',
-                '    abstract;',
+                f'class {font_style_name} extends GUIFont;',
                 '',
-            ]
-            lines += [
-                'struct FontStyleSize {',
-                '    var string FontName;',
-                '    var Font Font;',
-                '    var int Size;',
-                '    var int Resolution;',
-                '};',
+                f'event Font GetFont(int ResX)',
+                '{',
+                '    local int ResYGuess;',
+                '    ResYGuess = ResX * (9.0 / 16.0);',
                 '',
+                f'    return class\'{package_name}\'.static.Get{font_style_name}ByResolution(ResYGuess);',
+                '}',
+                '',
+                'defaultproperties',
+                '{',
+                f'    KeyName="{font_style_name}"',
+                '}',
             ]
-
-            # Create the string arrays for the font style.
-            for font_style_name, fonts in font_style_true_type_fonts.items():
-                lines.append(f'var FontStyleSize {font_style_name}Sizes[{len(fonts)}];')
-
-            lines.append('')
-
-            # Create the function to load the fonts.
-            for font_style_name, fonts in font_style_true_type_fonts.items():
-                sizes_array_name = f'{font_style_name}Sizes'
-                lines += [
-                    f'static function Font Get{font_style_name}ByIndex(int i) {{',
-                    f'    if (default.{sizes_array_name}[i].Font == none) {{',
-                    f'        default.{sizes_array_name}[i].Font = Font(DynamicLoadObject(default.{sizes_array_name}[i].FontName, class\'Font\'));',
-                    f'        if (default.{sizes_array_name}[i].Font == none) {{',
-                    f'            Warn("Could not dynamically load" @ default.{sizes_array_name}[i].FontName);',
-                    f'        }}',
-                    f'    }}',
-                    f'    return default.{sizes_array_name}[i].Font;',
-                    f'}}',
-                    f'',
-                    f'// Load a font by the nearest target size',
-                    f'static function Font Get{font_style_name}BySize(int Size) {{',
-                    f'    local int i;',
-                    f'    for (i = 0; i < arraycount(default.{sizes_array_name}); i++) {{',
-                    f'        if (Size >= default.{sizes_array_name}[i].Size) {{',
-                    f'            return Get{font_style_name}ByIndex(i);',
-                    f'        }}',
-                    f'    }}',
-                    f'    return Get{font_style_name}ByIndex(arraycount(default.{sizes_array_name}) - 1);',
-                    f'}}',
-                    f'',
-                    f'// Load a font by the nearest target resolution',
-                    f'static function Font Get{font_style_name}ByResolution(int Resolution) {{',
-                    f'    local int i;',
-                    f'    for (i = 0; i < arraycount(default.{sizes_array_name}); i++) {{',
-                    f'        if (Resolution >= default.{sizes_array_name}[i].Resolution) {{',
-                    f'            return Get{font_style_name}ByIndex(i);',
-                    f'        }}',
-                    f'    }}',
-                    f'    return Get{font_style_name}ByIndex(arraycount(default.{sizes_array_name}) - 1);',
-                    f'}}',
-                    '',
-                ]
-
-            lines.append('defaultproperties')
-            lines.append('{')
-
-            for font_style_name, fonts in font_style_true_type_fonts.items():
-                for font_index, font in enumerate(fonts):
-                    lines.append(f'    {font_style_name}Sizes({font_index})=(FontName="{font.package}.{font.name}",Size={font.height},Resolution={font.resolution})')
-
-            lines.append('}')
-
-            # Write the lines to the file.
             for line in lines:
-                file.write(line + '\n')
+                f.write(line + '\n')
+
+    # Write the font style classes.
+    for font_style_name in font_style_true_type_fonts.keys():
+        gui_font_path = unrealscript_gui_font_path / f'{font_style_name}.uc'
+        write_font_style_class_file(gui_font_path, font_style_name, package_name)
+
+    # Write the fonts class.
+    unrealscript_fonts = unrealscript.get('fonts', None)
+    unrealscript_fonts_path = Path(root_path) / unrealscript_fonts['directory'] / f'{unrealscript_fonts["class_name"]}.uc'
+
+    lines = []
+    with open(unrealscript_fonts_path, 'w') as file:
+        lines += [
+            '//==============================================================================',
+            '// This file was automatically generated by the localization tool.',
+            '// Do not edit this file directly.',
+            '// To regenerate this file, run ./tools/localization/generate_fonts.bat',
+            '//==============================================================================',
+            '',
+            'class DHFonts extends Object',
+            '    abstract;',
+            '',
+        ]
+        lines += [
+            'struct FontStyleSize {',
+            '    var string FontName;',
+            '    var Font Font;',
+            '    var int Size;',
+            '    var int Resolution;',
+            '};',
+            '',
+        ]
+
+        # Create the string arrays for the font style.
+        for font_style_name, fonts in font_style_true_type_fonts.items():
+            lines.append(f'var FontStyleSize {font_style_name}Sizes[{len(fonts)}];')
+
+        lines.append('')
+
+        # Create the function to load the fonts.
+        for font_style_name, fonts in font_style_true_type_fonts.items():
+            sizes_array_name = f'{font_style_name}Sizes'
+            lines += [
+                f'static function Font Get{font_style_name}ByIndex(int i) {{',
+                f'    if (default.{sizes_array_name}[i].Font == none) {{',
+                f'        default.{sizes_array_name}[i].Font = Font(DynamicLoadObject(default.{sizes_array_name}[i].FontName, class\'Font\'));',
+                f'        if (default.{sizes_array_name}[i].Font == none) {{',
+                f'            Warn("Could not dynamically load" @ default.{sizes_array_name}[i].FontName);',
+                f'        }}',
+                f'    }}',
+                f'    return default.{sizes_array_name}[i].Font;',
+                f'}}',
+                f'',
+                f'// Load a font by the nearest target size',
+                f'static function Font Get{font_style_name}BySize(int Size) {{',
+                f'    local int i;',
+                f'    for (i = 0; i < arraycount(default.{sizes_array_name}); i++) {{',
+                f'        if (Size >= default.{sizes_array_name}[i].Size) {{',
+                f'            return Get{font_style_name}ByIndex(i);',
+                f'        }}',
+                f'    }}',
+                f'    return Get{font_style_name}ByIndex(arraycount(default.{sizes_array_name}) - 1);',
+                f'}}',
+                f'',
+                f'// Load a font by the nearest target resolution',
+                f'static function Font Get{font_style_name}ByResolution(int Resolution) {{',
+                f'    local int i;',
+                f'    for (i = 0; i < arraycount(default.{sizes_array_name}); i++) {{',
+                f'        if (Resolution >= default.{sizes_array_name}[i].Resolution) {{',
+                f'            return Get{font_style_name}ByIndex(i);',
+                f'        }}',
+                f'    }}',
+                f'    return Get{font_style_name}ByIndex(arraycount(default.{sizes_array_name}) - 1);',
+                f'}}',
+                '',
+            ]
+
+        lines.append('defaultproperties')
+        lines.append('{')
+
+        for font_style_name, fonts in font_style_true_type_fonts.items():
+            for font_index, font in enumerate(fonts):
+                lines.append(f'    {font_style_name}Sizes({font_index})=(FontName="{font.package}.{font.name}",Size={font.height},Resolution={font.resolution})')
+
+        lines.append('}')
+
+        # Write the lines to the file.
+        for line in lines:
+            file.write(line + '\n')
 
 
 def update(args):
