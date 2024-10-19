@@ -89,6 +89,6 @@ defaultproperties
     StandardHeight=0.8
 
     ServerWhitelist(0)="104.243.41.183"     // Official US
-    ServerWhitelist(1)="45.76.59.241"       // Amish USA
-    ServerWhitelist(2)="141.94.99.196"      // Official EU
+    ServerWhitelist(1)="185.206.148.38"     // Official EU
+    ServerWhitelist(2)="45.76.59.241"       // Amish USA
 }
