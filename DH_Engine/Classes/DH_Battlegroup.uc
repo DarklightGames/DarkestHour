@@ -204,7 +204,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     }
     else if (IsPrivatesRole(SquadSel, RI.Class))
     {
-        if (DHP.IsSLorASL())
+        if (!DHP.IsSLorASL())
         {
             return 1;
         }
