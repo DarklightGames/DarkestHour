@@ -219,6 +219,7 @@ simulated function PostBeginPlay()
 
 function PostNetBeginPlay()
 {
+    local DH_LevelInfo LI;
     local DH_Battlegroup BG;
 
     Log("Looking for battlegroups... in NET");
@@ -237,14 +238,17 @@ function PostNetBeginPlay()
     }
 
     super.PostNetBeginPlay();
-    
-
   
 
     if (Role == ROLE_Authority)
     {
         SetTimer(1.0, true);
     }
+}
+
+private function SpawnBattleGroupAxis()
+{
+
 }
 
 private function SendJoinSquadNagMessage()

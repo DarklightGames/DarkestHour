@@ -969,7 +969,7 @@ simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex
     return true;
 }
 
-simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
+simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local DHSpawnPointBase SP;
     local class<DHVehicle> VehicleClass;
@@ -986,7 +986,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
 
     SP = GetSpawnPoint(SpawnPointIndex);
 
-    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck, PC);
+    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck);
 }
 
 simulated function bool CanSpawnVehicle(int VehiclePoolIndex, optional bool bSkipTimeCheck)
@@ -2371,6 +2371,27 @@ simulated function array<SAvailableArtilleryInfoEntry> GetTeamOffMapFireSupportC
     }
 
     return Result;
+}
+
+simulated function int GetTeamFireSupportBarrage(int TeamIndex)
+{
+    local int i, BarrageCount;
+    local DH_LevelInfo LI;
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
+    {
+        if (LI.ArtilleryTypes[i].ArtilleryClass.default.ArtilleryType == ArtyType_Barrage && LI.ArtilleryTypes[i].TeamIndex == TeamIndex && ArtilleryTypeInfos[i].bIsAvailable)
+        {
+            BarrageCount += ArtilleryTypeInfos[i].Limit - ArtilleryTypeInfos[i].UsedCount;
+        }
+    }
+    return BarrageCount;
 }
 
 function AddKillForTeam(int TeamIndex)

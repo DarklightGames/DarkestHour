@@ -354,7 +354,7 @@ simulated function bool IsBlocked()
 }
 
 // Returns true if the given arguments are satisfactory for spawning on this spawn point
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     if (GRI == none || self.TeamIndex != TeamIndex || !bIsActive || IsBlocked())
     {
@@ -419,7 +419,7 @@ simulated function string GetMapStyleName()
 }
 
 // Override to change the text displayed overtop of the spawn point icon on the map.
-simulated function string GetMapText();
+simulated function string GetMapText(int LookerSquadIndex);
 
 // TODO: I don't like this one bit! SEPARATE OUT INTO DIFFERENT FUNCTIONS
 function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadIndex, optional out int SquadmateCount, optional out int EnemyCount, optional out int TeammateCount)

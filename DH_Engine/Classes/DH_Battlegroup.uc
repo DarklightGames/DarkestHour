@@ -176,7 +176,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     }
     else
     {
-        SquadSel = Squads[Squads.Length - 1]; //Unnasigned players
+        SquadSel = Squads[Squads.Length - 1]; //Unnassigned players
     }
 
     if (RI.Class == SquadSel.Role1Leader.Role)
@@ -202,12 +202,9 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
             return 5;
         }
     }
-    else if (((SquadSel.Role3.Role == RI.Class ) || 
-    (SquadSel.Role4.Role == RI.Class) || 
-    (SquadSel.Role5.Role == RI.Class) ||
-     (SquadSel.Role6.Role == RI.Class)))
+    else if (IsPrivatesRole(SquadSel, RI.Class))
     {
-        if (!DHP.IsSLorASL())
+        if (DHP.IsSLorASL())
         {
             return 1;
         }
@@ -218,6 +215,14 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     }
 
     return 7;//RER_SquadTypeOnlyInfantry; //RER_SquadTypeOnlyInfantry;
+}
+
+private simulated function bool IsPrivatesRole(SquadSelection Squad, class<DHRoleInfo> RiClass)
+{
+    return ((Squad.Role3.Role == RiClass ) || 
+    (Squad.Role4.Role == RiClass) || 
+    (Squad.Role5.Role == RiClass) ||
+     (Squad.Role6.Role == RiClass));
 }
 
 // var() material              SquadIcon;        // Used to stop loading screen image from being removed on save (not otherwise used)

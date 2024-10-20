@@ -134,8 +134,8 @@ defaultproperties
 {
     Begin Object Class=DHGUIButton Name=LockSquadButton
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=0.10
-        WinHeight=0.15
+        WinWidth=0.2
+        WinHeight=0.2
         WinLeft=0.08
         WinTop=0.85
         OnClick=OnClick

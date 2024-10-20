@@ -67,7 +67,6 @@ replication
 
 simulated function string GetNamePrefix()
 {
-    
     if (IsSquadLeader())
     {
         return default.AbbreviationSquadLeader;
@@ -76,7 +75,7 @@ simulated function string GetNamePrefix()
     {
         return default.AbbreviationAssistant;
     }
-    else if (IsInSquadLogistics())
+    else if (IsInSquadHeadquarters())
     {
         return default.AbbreviationLogi;
     }
@@ -127,7 +126,7 @@ simulated function bool IsSLorASL()
 
 simulated function bool IsAllowedToBuild()
 {
-    return IsSL() || IsASL() || IsInSquadLogistics();
+    return IsSL() || IsASL() || IsInSquadHeadquarters();
 }
 
 simulated function bool IsInSquad()
@@ -153,23 +152,49 @@ simulated function bool IsInSquadInfantry()
     }
 
     if (SRI == none) return false;
-    if (SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeInfantry')
-    {
-        return true;
-    }
-    return false;
+    return SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeInfantry';
 }
 
 simulated function bool IsInSquadArmored()
 {
-    return false;
-    // return Team != none && SquadIndex != -1 && SRI.GetSquadType(Team.TeamIndex, SquadIndex) == class'DHSquadTypeArmored';
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    if (SRI == none) return false;
+    return SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeArmored';
 }
 
-simulated function bool IsInSquadLogistics()
+simulated function bool IsInSquadHeadquarters()
 {
-    return false;
-    // return Team != none && SquadIndex != -1 && SRI.GetSquadType(Team.TeamIndex, SquadIndex) == class'DHSquadTypeLogistics';
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+
+    if (!IsInSquad())
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Owner);
+
+    if (PC != none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    if (SRI == none) return false;
+    return SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeHeadquarters';
 }
 
 simulated function bool HasSquadMembers(int MinCount)
@@ -251,7 +276,7 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
 //Used by Logi trucks only
 simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
 {
-    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsInSquadLogistics();
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsInSquadHeadquarters();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -281,13 +306,13 @@ simulated function bool CheckRole(ERoleSelector RoleSelector)
         case ERS_ALL:
             return true;
         case ERS_LOGI:
-            return IsInSquadLogistics();
+            return IsInSquadHeadquarters();
         case ERS_SL:
             return IsSL();
         case ERS_ASL:
             return IsASL();
         case ERS_TANKER:
-            return IsInSquadLogistics();
+            return IsInSquadArmored();
         case ERS_ARTILLERY_SPOTTER:
             return IsArtillerySpotter();
         case ERS_ARTILLERY_OPERATOR:

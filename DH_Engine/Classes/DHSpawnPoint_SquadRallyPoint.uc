@@ -295,12 +295,8 @@ simulated function bool IsExposed()
     return bIsExposed;
 }
 
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck, optional DHPlayer PC)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
-    local DHSquadReplicationInfo SRI;
-    local class<DHSquadType> SquadType;
-    local bool bIsPlayerSquadLogi;
-
     if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck))
     {
         return false;
@@ -308,19 +304,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 
     if (self.SquadIndex != SquadIndex)
     {
-        if (PC != none)
-        {
-            SRI = PC.SquadReplicationInfo;
-            if (SRI != none)
-            {
-                SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
-                if (SquadType != none && SquadType == class'DHSquadTypeLogistics')
-                {
-                    return true;
-                }
-            }
-        }
-
         return false;
     }
 
@@ -334,20 +317,27 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, DHPlayer PC)
 {
-    local DHSquadReplicationInfo SRI;
+    local DHSquadReplicationInfo SRIOther;
     local class<DHSquadType> SquadType;
-    local bool bIsPlayerSquadLogi;
+    local bool bIsVisibleToOtherSquadPlayer;
 
     if (SquadIndex > -1 && PC != none)
     {
-        SRI = PC.SquadReplicationInfo;
-        if (SRI != none)
+        if (PC.IsSquadLeader())
         {
-            SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
-            bIsPlayerSquadLogi = SquadType != none && SquadType == class'DHSquadTypeLogistics';
+            bIsVisibleToOtherSquadPlayer = true;
+        }
+        else
+        {
+            SRIOther = PC.SquadReplicationInfo;
+            if (SRIOther != none)
+            {
+                SquadType = SRIOther.GetSquadType(TeamIndex, SquadIndex);
+                bIsVisibleToOtherSquadPlayer = SquadType != none && SquadType == class'DHSquadTypeHeadquarters';
+            }
         }
     }
-    return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, PC) && (self.SquadIndex == SquadIndex || bIsPlayerSquadLogi);
+    return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, PC) && (self.SquadIndex == SquadIndex || bIsVisibleToOtherSquadPlayer);
 }
 
 function OnPawnSpawned(Pawn P)
@@ -448,10 +438,25 @@ function OnTeamIndexChanged()
     }
 }
 
-simulated function string GetMapText()
+simulated function string GetMapText(int LookerSquadIndex)
 {
-    return string(SpawnsRemaining);
+    local DHPlayer PC;
+    if (LookerSquadIndex == SquadIndex)
+    {
+        return string(SpawnsRemaining);
+    }
+
+    return "aaa";//GetSquadNamePrefix(SquadIndex);
 }
+
+// function GetSquadNamePrefix(int SquadIndex)
+// {
+//     if (SRI != none)
+//     {
+//         return SRI.GetSquadNamePrefix(SquadIndex);
+//     }
+//     return "Nope";
+// }
 
 simulated function int GetSpawnTimePenalty()
 {
