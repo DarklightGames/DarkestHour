@@ -27,7 +27,7 @@ simulated function bool IsOccupied()
     return DriverPRI != none;
 }
 
-function PostNetBeginPlay()
+simulated function PostNetBeginPlay()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
