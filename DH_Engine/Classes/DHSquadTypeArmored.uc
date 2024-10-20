@@ -8,7 +8,4 @@ class DHSquadTypeArmored extends DHSquadType;
 
 defaultproperties
 {
-    Image = Material'DH_InterfaceArt2_tex.Icons.tank';
-    Hint = "Armored Squad";
-    Caption = "Armored";
 }

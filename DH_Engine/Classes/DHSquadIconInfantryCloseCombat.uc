@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHSquadTypeInfantry extends DHSquadType;
+class DHSquadIconInfantryCloseCombat extends DHSquadIcon;
 
 
 defaultproperties
 {
+    Icon = Material'DH_InterfaceArt2_tex.Icons.attack';
 }

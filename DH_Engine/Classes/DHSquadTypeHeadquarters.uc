@@ -8,7 +8,4 @@ class DHSquadTypeHeadquarters extends DHSquadType;
 
 defaultproperties
 {
-    Image = Material'DH_InterfaceArt2_tex.Icons.supply_cache';
-    Hint = "Constructs team buildings and transports supplies.";
-    Caption = "Headquarters";
 }

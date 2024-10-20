@@ -8,7 +8,4 @@ class DHSquadTypeGeneric extends DHSquadType;
 
 defaultproperties
 {
-    Image = Material'DH_InterfaceArt2_tex.Icons.squad';
-    Hint = "Generic Squad";
-    Caption = "Squad";
 }
