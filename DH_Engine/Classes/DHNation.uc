@@ -32,7 +32,7 @@ var Material                    DeployMenuFlagTexture;
 var HudBase.SpriteWidget        MapFlagIconSpriteWidget;
 
 // Squads
-var string                      DefaultSquadNames[8];
+var string                      DefaultSquadNames[9]; //TEAM_SQUADS_MAX
 
 var Sound                       RoundStartSound;
 

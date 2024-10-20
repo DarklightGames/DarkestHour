@@ -24,7 +24,8 @@ struct SquadSelection
     var() string                       Name;
     var() string                       SquadTypeHint;
     var() class<DHSquadType>           SquadType;               // The Squad type class to use.
-    var() int                          SquadLimit;                   // How many of this squad type there can be
+    var() class<DHSquadIcon>           SquadTypeIcon;                    // The icon to use for this squad
+    // var() int                          SquadLimit;                   // How many of this squad type there can be
     var() int                          SquadSize;                   // How many of this squad type there can be
     var() SquadRole            Role1Leader;             // The Roles allowed within this class
     var() SquadRole            Role2Asl;                // The Roles allowed within this class
@@ -34,10 +35,9 @@ struct SquadSelection
     var() SquadRole            Role6;                   // The Roles allowed within this class
 };
 
-var() string                   Name;
 var() ETeam                    NationTeam;                      // The nation this battlegroup is for
 var() array<SquadSelection>    Squads;
-var() class<DHRoleInfo>        NoSquadRole;
+// var() class<DHRoleInfo>        NoSquadRole;
 
 
 // simulated function array<DHRoleInfo> GetRoles(int squadIndex)
@@ -65,13 +65,36 @@ var() class<DHRoleInfo>        NoSquadRole;
 replication
 {
 	reliable if (bNetInitial && Role == ROLE_Authority)
-		Name, NationTeam, Squads;
+		NationTeam, Squads;
 }
 
 simulated function class<DHSquadType> GetSquadType(int SquadIndex)
 {
-    return Squads[SquadIndex].SquadType;
+    if (IsSquadIndexOk(SquadIndex) && Squads[SquadIndex].SquadType != none)
+    {
+        return Squads[SquadIndex].SquadType;
+    }
+    return class'DHSquadTypeGeneric';
 }
+
+simulated function Material GetSquadTypeIcon(int SquadIndex)
+{
+    if (IsSquadIndexOk(SquadIndex) && Squads[SquadIndex].SquadTypeIcon != none)
+    {
+        return Squads[SquadIndex].SquadTypeIcon.default.Icon;
+    }
+    return Material'DH_InterfaceArt2_tex.Icons.squad';
+}
+
+simulated function string GetSquadTypeHint(int SquadIndex)
+{
+    if (IsSquadIndexOk(SquadIndex))
+    {
+        return Squads[SquadIndex].SquadTypeHint;
+    }
+    return "";
+}
+
 
 simulated function class<DHRoleInfo> GetRole(int SquadIndex, int RoleIndex)
 {
@@ -119,19 +142,23 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
     }
 }
 
-simulated function string GetDefaultSquadName(int SquadIndex)
+simulated function bool IsSquadIndexOk(int SquadIndex)
 {
-    return Squads[SquadIndex].Name;
+    return SquadIndex >= 0 && SquadIndex < Squads.Length;
 }
 
-simulated function string GetSquadTypeHint(int SquadIndex)
+simulated function string GetDefaultSquadName(int SquadIndex)
 {
-    return Squads[SquadIndex].SquadTypeHint;
+    if (IsSquadIndexOk(SquadIndex))
+    {
+        return Squads[SquadIndex].Name;
+    }
+    return "Squad";
 }
 
 simulated function int GetSquadSize(int SquadIndex)
 {   
-    if (Squads[SquadIndex].SquadSize > 0)
+    if (IsSquadIndexOk(SquadIndex) && Squads[SquadIndex].SquadSize > 0)
     {
         return Squads[SquadIndex].SquadSize;
     }
@@ -143,16 +170,14 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
 {
     local SquadSelection SquadSel;
 
-    if (SquadIndex <= 0 || SquadIndex >= Squads.Length)
+    if (IsSquadIndexOk(SquadIndex))
     {
-        if (RI.Class == NoSquadRole)
-        {
-            return 1;//RER_Enabled;
-        }
-        return 7;
+        SquadSel = Squads[SquadIndex];
     }
-
-    SquadSel = Squads[SquadIndex];
+    else
+    {
+        SquadSel = Squads[Squads.Length - 1]; //Unnasigned players
+    }
 
     if (RI.Class == SquadSel.Role1Leader.Role)
     {

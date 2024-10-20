@@ -17,32 +17,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         SquadComponents[i].SquadIndex = i; //Need to set it so create squad button links correctly
     }
     SquadComponents[SquadComponents.Length - 1].SquadIndex = -1;
-    // for (i = 0; i < SquadComponents.Length; ++i)
-    // {
-    //     switch (i)
-    //     {
-            
-    //         case 5:
-    //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.tank';
-    //             SquadComponents[i].i_SquadType.Hint = "Tank Squad";
-    //             break;
-
-    //         case 6:
-    //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.supply_cache';
-    //             SquadComponents[i].i_SquadType.Hint = "Constructs team buildings and transports supplies.";
-    //             break;
-
-    //         case 7:
-    //             SquadComponents[i].i_SquadType.SetVisibility(false);
-    //             SquadComponents[i].i_SquadType.Hint = "Invite these players to a squad.";
-    //             break;
-
-    //         default:
-    //             SquadComponents[i].i_SquadType.Image = Material'DH_InterfaceArt2_tex.Icons.infantry';
-    //             SquadComponents[i].i_SquadType.Hint = "Infantry Squad";
-    //             break;
-    //     }
-    // }
 }
 
 function InternalOnShow()
@@ -123,13 +97,30 @@ defaultproperties
     End Object
     SquadComponents(6)=SquadComponent6
 
-    Begin Object Class=DHGUISquadComponent Name=SquadComponent7
+    Begin Object Class=DHGUISquadComponent Name=SquadComponent7  //Extra squad
         WinWidth=1.0
         WinHeight=0.12
         WinLeft=0.0
         WinTop=0.84
     End Object
     SquadComponents(7)=SquadComponent7
+
+    Begin Object Class=DHGUISquadComponent Name=SquadComponent8  //Headquarters
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.96
+    End Object
+    SquadComponents(8)=SquadComponent8
+
+    Begin Object Class=DHGUISquadComponent Name=SquadComponent9  //Unassigned Players
+        WinWidth=1.0
+        WinHeight=0.12
+        WinLeft=0.0
+        WinTop=0.96
+    End Object
+    SquadComponents(9)=SquadComponent9
+    
 
     //OnHide=InternalOnHide
     //OnShow=InternalOnShow

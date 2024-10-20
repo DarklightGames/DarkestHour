@@ -782,7 +782,7 @@ function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> Team
 
             // Draw the squad header
             DrawRowBackground(C, BaseXPos[TeamIndex], Y, TeamWidth, LineHeight, SquadHeaderColor);
-            DHDrawCell(C, TabSpaces $ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex, SquadIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, class'UColor'.default.White);
+            DHDrawCell(C, TabSpaces $ SRI.GetSquadNamePrefix(SquadIndex) @ "." @ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex, SquadIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, class'UColor'.default.White);
 
             // Increment the Y value
             Y += LineHeight;

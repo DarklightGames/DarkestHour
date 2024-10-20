@@ -10,7 +10,7 @@ const SQUAD_SIZE_MAX = 12;
 const SQUAD_RALLY_POINTS_MAX = 2;           // The number of squad rally points that can be exist at one time.
 const SQUAD_RALLY_POINTS_ACTIVE_MAX = 1;    // The number of squad rally points that are "active" at one time.
 const TEAM_SQUAD_MEMBERS_MAX = 64;
-const TEAM_SQUADS_MAX = 7;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
+const TEAM_SQUADS_MAX = 9;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
 const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
@@ -691,8 +691,24 @@ simulated function class<DHSquadType> GetSquadType(int TeamIndex, int SquadIndex
         case ALLIES_TEAM_INDEX:
             return DH_BattlegroupAllied.GetSquadType(SquadIndex);
     }
-    return class'DHSquadTypeInfantry';
+    return class'DHSquadTypeGeneric';
+}
 
+simulated function Material GetSquadTypeIcon(int TeamIndex, int SquadIndex)
+{
+    if (!IsBattleGroupsDefined())
+    {
+        return Material'DH_InterfaceArt2_tex.Icons.squad';
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DH_BattlegroupAxis.GetSquadTypeIcon(SquadIndex);
+        case ALLIES_TEAM_INDEX:
+            return DH_BattlegroupAllied.GetSquadTypeIcon(SquadIndex);
+    }
+    return Material'DH_InterfaceArt2_tex.Icons.squad';
 }
 
 simulated function class<DHRoleInfo> GetRole(int TeamIndex, int SquadIndex, int RoleIndex)
@@ -749,7 +765,6 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Te
 // Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 {
-    return 8; //TODO: Change this to proper squad checking
     if (!IsBattleGroupsDefined())
     {
         switch (TeamIndex)
@@ -784,7 +799,7 @@ simulated function int GetTeamSquadSize(int TeamIndex, int SquadIndex)
 // Gets the the number of squads a team can have.
 simulated function int GetTeamSquadLimit(int TeamIndex)
 {
-    return 8;
+    return 9;
     // local int TeamSquadSize;
 
     // TeamSquadSize = GetTeamSquadSize(TeamIndex);
@@ -928,8 +943,6 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     {
         return "";
     }
-
-    Log("Did not find BattleGroup squad name, returning default squad name: " @ LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex]);
 
     return LI.GetTeamNationClass(TeamIndex).default.DefaultSquadNames[SquadIndex];
 }
@@ -1907,30 +1920,67 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
         return "Index too low";
     }
 
-    if (SquadIndex > 7)
-    {
-        return "Index too high";
-    }
-
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
+            if (SquadIndex > TEAM_SQUADS_MAX)
+            {
+                return "German Squad Index too high";
+            }
             return AxisNames[SquadIndex];
         case ALLIES_TEAM_INDEX:
+            if (SquadIndex > TEAM_SQUADS_MAX)
+            {
+                return "Allied Squad Index too high";
+            }
             return AlliesNames[SquadIndex];
     }
 
-    return "TeamIndex " @ TeamIndex;
+    return "Spectator";
+}
+
+simulated function string GetSquadNamePrefix(int SquadIndex)
+{
+    switch (SquadIndex)
+    {
+        case 0:
+            return "A";
+        case 1:
+            return "B";
+        case 2:
+            return "C";
+        case 3:
+            return "D";
+        case 4:
+            return "E";
+        case 5:
+            return "F";
+        case 6:
+            return "G";
+        case 7:
+            return "H";
+        case 8:
+            return "I";
+        case 9:
+            return "J";
+        case 10:
+            return "K";
+        case 11:
+            return "L";
+        case 12:
+            return "M";
+    }
+    return "Squad not found";
 }
 
 // Returns the member of the specified squad at the specified member index.
 simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
 {
-    local int i;
+    local int SelectedIndex;
 
-    i = SquadIndex * GetTeamSquadSize(TeamIndex, SquadIndex) + MemberIndex;
+    SelectedIndex = GetSquadIndexStart(TeamIndex, SquadIndex) + MemberIndex;
 
-    if (i < 0 || i >= arraycount(AxisMembers))
+    if (SelectedIndex < 0 || SelectedIndex >= arraycount(AxisMembers))
     {
         return none;
     }
@@ -1938,12 +1988,27 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return AxisMembers[i];
+            return AxisMembers[SelectedIndex];
         case ALLIES_TEAM_INDEX:
-            return AlliesMembers[i];
+            return AlliesMembers[SelectedIndex];
     }
 
     return none;
+}
+
+private simulated function int GetSquadIndexStart(int TeamIndex, int SquadIndex)
+{
+     local int i;
+    local int IndexStart;
+
+    if (SquadIndex > 0)
+    {
+        for (i = 0; i < SquadIndex; ++i)
+        {
+            IndexStart += GetTeamSquadSize(TeamIndex, i);
+        }
+    }
+    return IndexStart;
 }
 
 private simulated function DHGameReplicationInfo GetGameReplicationInfo()
@@ -2042,6 +2107,7 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
         return;
     }
 
+
     for (i = 0; i < GetTeamSquadSize(TeamIndex, SquadIndex); ++i)
     {
         PRI = GetMember(TeamIndex, SquadIndex, i);
@@ -2056,15 +2122,30 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
 // Sets the member of the specified squad and member index to the specified player.
 function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerReplicationInfo PRI)
 {
-    local DHPlayer Owner;
+    local int SelectedIndex;
+
+    SelectedIndex = GetSquadIndexStart(TeamIndex, SquadIndex) + MemberIndex;
+
+    //Backup old
+    // switch (TeamIndex)
+    // {
+    //     case AXIS_TEAM_INDEX:
+    //         AxisMembers[SquadIndex * GetTeamSquadSize(TeamIndex, SquadIndex) + MemberIndex] = PRI;
+    //         break;
+    //     case ALLIES_TEAM_INDEX:
+    //         AlliesMembers[SquadIndex * GetTeamSquadSize(TeamIndex, SquadIndex) + MemberIndex] = PRI;
+    //         break;
+    //     default:
+    //         return;
+    // }
 
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            AxisMembers[SquadIndex * GetTeamSquadSize(TeamIndex, SquadIndex) + MemberIndex] = PRI;
+            AxisMembers[SelectedIndex] = PRI;
             break;
         case ALLIES_TEAM_INDEX:
-            AlliesMembers[SquadIndex * GetTeamSquadSize(TeamIndex, SquadIndex) + MemberIndex] = PRI;
+            AlliesMembers[SelectedIndex] = PRI;
             break;
         default:
             return;
@@ -2131,24 +2212,25 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 
     if (Name == "")
     {
+        //Since we now have a prefix in the squad names, having the same squad name shouldn't be an issue anymore
         // Go through default names and choose a default squad name that hasn't yet been used.
-        SquadName = GetDefaultSquadName(TeamIndex, SquadIndex);
-        if (IsSquadNameTaken(TeamIndex, SquadName))
-        {
-            for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
-            {
-                SquadName = GetDefaultSquadName(TeamIndex, i);
-                if (!IsSquadNameTaken(TeamIndex, SquadName))
-                {
-                    Name = SquadName;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            Name = SquadName;
-        }
+        Name = GetDefaultSquadName(TeamIndex, SquadIndex);
+        // if (IsSquadNameTaken(TeamIndex, SquadName))
+        // {
+        //     for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+        //     {
+        //         SquadName = GetDefaultSquadName(TeamIndex, i);
+        //         if (!IsSquadNameTaken(TeamIndex, SquadName))
+        //         {
+        //             Name = SquadName;
+        //             break;
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     Name = SquadName;
+        // }
     }
 
     switch (TeamIndex)

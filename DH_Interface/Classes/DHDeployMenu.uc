@@ -19,8 +19,9 @@ enum EMapMode
 
 enum ESquadPlayersMode
 {
+    MODE_Headquarters,
     MODE_Unassigned,
-    MODE_Squads,
+    MODE_ActiveSquads,
 };
 
 
@@ -42,6 +43,8 @@ var automated   GUIImage                    i_SizeAdvantage;
 var automated   GUILabel                    l_SizeAdvantage;
 var automated   GUIImage                    i_RoundTime;
 var automated   GUILabel                    l_RoundTime;
+var automated   GUILabel                    l_HqInfoTeamName;
+var automated   GUILabel                    l_HqInfoFireSupport;
 var automated   ROGUIProportionalContainer  c_Roles;
 var automated   DHGUIListBox                    lb_Roles;
 var             DHGUIList                       li_Roles;
@@ -56,6 +59,8 @@ var automated   GUIButton                   b_MapButton;
 var automated   GUIImage                    i_MapButton;
 var automated   GUIButton                   b_SquadsButton;
 var automated   GUIImage                    i_SquadsButton;
+var automated   GUIButton                   b_SquadHeadquartersButton;
+var automated   GUIImage                    i_SquadHeadquartersButton;
 var automated   GUIButton                   b_SquadUnassignedButton;
 var automated   GUIImage                    i_SquadUnassignedButton;
 var automated   GUIButton                   b_SquadsActiveButton;
@@ -63,6 +68,7 @@ var automated   GUIImage                    i_SquadsActiveButton;
 var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer      c_Equipment;
+var automated   ROGUIProportionalContainer      c_HeadQuarters;
 var automated   ROGUIProportionalContainer      c_Vehicle;
 var automated   ROGUIProportionalContainer  c_MapRoot;
 var automated   DHGUIMapContainer               c_Map;
@@ -116,11 +122,12 @@ var localized   string                      NoneText,
                                             SquadAslOnlyText,
                                             RecommendJoiningSquadText,
                                             UnassignedPlayersCaptionText,
+                                            HeadQuartersCaptionText,
                                             NonSquadLeaderOnlyText,
                                             RoleLockedText,
                                             RoleSquadOnlyInfantry,
                                             RoleSquadOnlyArmored,
-                                            RoleSquadOnlyLogistics,
+                                            RoleSquadOnlyHeadquarters,
                                             RoleLogiOnlyOneClass
                                             ;
 
@@ -214,11 +221,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     MapUnassignedActiveSquadsTabContainer.ManageComponent(b_SquadsActiveButton);
     MapUnassignedActiveSquadsTabContainer.ManageComponent(b_SquadUnassignedButton);
+    MapUnassignedActiveSquadsTabContainer.ManageComponent(b_SquadHeadquartersButton);
     MapUnassignedActiveSquadsTabContainer.ManageComponent(i_SquadsActiveButton);
     MapUnassignedActiveSquadsTabContainer.ManageComponent(i_SquadUnassignedButton);
+    MapUnassignedActiveSquadsTabContainer.ManageComponent(i_SquadHeadquartersButton);
+
+    c_HeadQuarters.ManageComponent(l_HqInfoTeamName);
+    c_HeadQuarters.ManageComponent(l_HqInfoFireSupport);
 
     c_MapRoot.ManageComponent(c_Map);
-
     c_Squads.ManageComponent(p_Squads);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
@@ -718,8 +729,8 @@ function UpdateRoles()
             case RER_SquadTypeOnlyArmored:
                 S = "" $ RoleSquadOnlyArmored $ ":";
                 break;
-            case RER_SquadTypeOnlyLogistics:
-                S = "" $ RoleSquadOnlyLogistics $ ":";
+            case RER_SquadTypeOnlyHeadquarters:
+                S = "" $ RoleSquadOnlyHeadquarters $ ":";
                 break;
             default:
                 S = "";
@@ -891,12 +902,16 @@ function bool OnClick(GUIComponent Sender)
             SetMapMode(MODE_Squads);
             break;
 
+        case b_SquadHeadquartersButton:
+            SetSquadPlayersMode(Mode_Headquarters);
+            break;
+
         case b_SquadUnassignedButton:
             SetSquadPlayersMode(Mode_Unassigned);
             break;
 
         case b_SquadsActiveButton:
-            SetSquadPlayersMode(Mode_Squads);
+            SetSquadPlayersMode(MODE_ActiveSquads);
             break;
 
 
@@ -1105,18 +1120,6 @@ function UpdateButtons()
 
         b_Spectate.EnableMe();
 
-        if (CurrentTeam == ALLIES_TEAM_INDEX)
-        {
-            Log("PC != none: " @ PC != none);
-            Log("GRI.CanSpawnWithParameters(SpawnPointIndex: " @ li_Vehicles.Index >= 0 && GRI.CanSpawnWithParameters(SpawnPointIndex,
-                                                                 CurrentTeam,
-                                                                 GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
-                                                                 SquadIndex,
-                                                                 GetSelectedVehiclePoolIndex(),
-                                                                 true, PC));
-        }
-        
-
         // Continue button should always be clickable if we're using the old
         // spawning system. If we're using the new spawning system, we have to
         // check that our pending parameters are valid.
@@ -1126,7 +1129,7 @@ function UpdateButtons()
                                                                  GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
                                                                  SquadIndex,
                                                                  GetSelectedVehiclePoolIndex(),
-                                                                 true, PC)))
+                                                                 true)))
         {
             bContinueEnabled = true;
         }
@@ -1763,18 +1766,21 @@ function SetMapMode(EMapMode Mode)
             b_SquadsButton.EnableMe();
             c_Squads.SetVisibility(false);
             p_Squads.DisableMe();
-
+            
             c_Roles.SetVisibility(true);
             c_Roles.EnableMe();
+            c_HeadQuarters.SetVisibility(false);
 
             c_Loadout.SetVisibility(true);
             LoadoutTabContainer.SetVisibility(true);
 
             b_SquadsActiveButton.SetVisibility(false);
             b_SquadUnassignedButton.SetVisibility(false);
+            b_SquadHeadquartersButton.SetVisibility(false);
 
             i_SquadsActiveButton.SetVisibility(false);
             i_SquadUnassignedButton.SetVisibility(false);
+            i_SquadHeadquartersButton.SetVisibility(false);
 
             l_Status.SetVisibility(true);
 
@@ -1812,9 +1818,11 @@ function SetMapMode(EMapMode Mode)
 
             b_SquadsActiveButton.SetVisibility(true);
             b_SquadUnassignedButton.SetVisibility(true);
+            b_SquadHeadquartersButton.SetVisibility(true);
 
             i_SquadsActiveButton.SetVisibility(true);
             i_SquadUnassignedButton.SetVisibility(true);
+            i_SquadHeadquartersButton.SetVisibility(true);
             l_Status.SetVisibility(false);
 
             c_Equipment.SetVisibility(false);
@@ -1823,7 +1831,14 @@ function SetMapMode(EMapMode Mode)
             c_Vehicle.DisableMe();
             c_Vehicle.SetVisibility(false);
 
-            SetSquadPlayersMode(MODE_Squads);
+            if (PRI != none && PRI.IsInSquad())
+            {
+                SetSquadPlayersMode(Mode_Unassigned);
+            }
+            else
+            {
+                SetSquadPlayersMode(MODE_ActiveSquads);
+            }
 
             break;
 
@@ -1837,20 +1852,29 @@ function SetMapMode(EMapMode Mode)
 
 function SetSquadPlayersMode(ESquadPlayersMode Mode)
 {
-    // SquadPlayerMode = Mode;
-
     switch (Mode)
     {
+        case Mode_Headquarters:
+            b_SquadHeadquartersButton.DisableMe();
+            b_SquadUnassignedButton.EnableMe();
+            b_SquadsActiveButton.EnableMe();
+            c_HeadQuarters.SetVisibility(true);
+            PC.SetSquadPlayersMode(0);
+            break;
         case Mode_UnAssigned:
+            b_SquadHeadquartersButton.EnableMe();
             b_SquadUnassignedButton.DisableMe();
             b_SquadsActiveButton.EnableMe();
-            PC.SetSquadPlayersMode(0);
+            c_HeadQuarters.SetVisibility(false);
+            PC.SetSquadPlayersMode(1);
 
             break;
-        case Mode_Squads:
+        case MODE_ActiveSquads:
+            b_SquadHeadquartersButton.EnableMe();
             b_SquadUnassignedButton.EnableMe();
             b_SquadsActiveButton.DisableMe();
-            PC.SetSquadPlayersMode(1);
+            c_HeadQuarters.SetVisibility(false);
+            PC.SetSquadPlayersMode(2);
             break;
         default:
             Warn("Unhandled ESquadPlayersMode mode");
@@ -1994,7 +2018,7 @@ function ShowPlayerSquad(int TeamIndex, int PlayerSquadIndex)
 
     C = p_Squads.SquadComponents[PlayerSquadIndex];
     C.WinTop = 0.0;
-    C.WinHeight = 0.45;
+    C.WinHeight = 0.5;
     C.l_SquadName.Caption = "";
 
     SetVisible(C, true);
@@ -2049,26 +2073,27 @@ function ShowPlayerSquad(int TeamIndex, int PlayerSquadIndex)
 
 function UpdateSquadTypeImage(DHGUISquadComponent C, int TeamIndex, int SquadIndex)
 {
-    local class<DHSquadType> SquadType;
-
-    SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
-    C.i_SquadType.Image = SquadType.default.Image;
-    C.i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+    if (SquadIndex > -1)
+    {
+        C.i_SquadType.Image = SRI.GetSquadTypeIcon(TeamIndex, SquadIndex);
+        C.i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+    }
+    else
+    {
+        C.i_SquadType.Image = none;
+    }
 }
 
 function UpdateSquadTypeImageForPlayerSquad(int TeamIndex, int SquadIndex, bool bIsInASquad)
 {
-    local class<DHSquadType> SquadType;
-
     if (bIsInASquad && SRI != none)
     {
-        SquadType = SRI.GetSquadType(TeamIndex, SquadIndex);
-        i_SquadType.Image = SquadType.default.Image;
-        i_SquadType.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
+        i_SquadUnassignedButton.Image = SRI.GetSquadTypeIcon(TeamIndex, SquadIndex);
+        i_SquadUnassignedButton.SetHint(SRI.GetSquadTypeHint(TeamIndex, SquadIndex));
     }
     else
     {
-        i_SquadType.Image = none;
+        i_SquadUnassignedButton.Image = Texture'DH_GUI_Tex.DeployMenu.StopWatch';
     }
 }
 
@@ -2076,20 +2101,23 @@ function ShowSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 {
     local DHGUISquadComponent C;
     local int i;
+    local int HeadQuarterIndex;
     local int SquadIndexOffset;
     local bool bIsInSquad, bIsSquadActive;
 
+    HeadQuarterIndex = GetHeadquartersIndex();
     SquadIndexOffset = 0;
-    SetVisible(p_Squads.SquadComponents[p_Squads.SquadComponents.Length - 1], false);
+    SetVisible(p_Squads.SquadComponents[HeadQuarterIndex], false);
+    SetVisible(p_Squads.SquadComponents[GetUnassignedIndex()], false);
 
-    for (i = 0; i < p_Squads.SquadComponents.Length - 1; ++i)
+    for (i = 0; i < HeadQuarterIndex; ++i)
     {
         bIsInSquad = PlayerSquadIndex == i || SRI.IsInSquad(PRI, TeamIndex, i);
 
-        if (bIsInSquad)
-        {
-            continue;
-        }
+        // if (bIsInSquad)
+        // {
+        //     continue;
+        // }
 
         C = p_Squads.SquadComponents[i];
         SetVisible(C, true);
@@ -2097,15 +2125,12 @@ function ShowSquads(int TeamIndex, int PlayerSquadIndex, bool bIsInASquad)
 
         if (bIsInASquad)
         {
-            C.WinTop = 0.45 + SquadIndexOffset * 0.1;
+            C.WinTop = 0 + SquadIndexOffset * 0.1;
         }
         else
         {
-            C.WinTop = 0.35 + SquadIndexOffset * 0.1;
+            C.WinTop = 0 + SquadIndexOffset * 0.1;
         }
-
-        C.b_CreateSquadInfantry.bAcceptsInput = !bIsInASquad;
-        C.b_JoinSquad.bAcceptsInput = !bIsInASquad;
 
         SquadIndexOffset++;
         C.WinHeight = 0.1;
@@ -2192,6 +2217,8 @@ function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C)
     }
     C.l_SquadName.Caption = ""; //SquadName @ " ["  @ Members.Length @ "/" @ SquadSize  @ "]";
     C.b_JoinSquad.Caption = SquadName @ " ["  @ Members.Length @ "/" @ SquadSize  @ "]";
+    C.b_CreateSquadInfantry.bAcceptsInput = false;
+    C.b_JoinSquad.bAcceptsInput = true;
     
     bIsSquadFull = SRI.IsSquadFull(TeamIndex, SquadIndex);
     bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, SquadIndex);
@@ -2262,6 +2289,8 @@ function UpdateInactiveSquad(DHGUISquadComponent C, int TeamIndex, int SquadInde
 
     C.b_JoinSquad.EnableMe();
     C.b_LockSquad.SetVisibility(false);
+    C.b_CreateSquadInfantry.bAcceptsInput = true;
+    C.b_JoinSquad.bAcceptsInput = false;
 }
 
 function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
@@ -2271,7 +2300,8 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
     local DHGUISquadComponent C;
     local int i, k;
 
-    for (i = 0; i < p_Squads.SquadComponents.Length - 1; ++i)
+    //Hide the rest of the squads other than the player expanded one and the unassigned players squad.
+    for (i = 0; i < GetUnassignedIndex(); ++i)
     {
         if (i != PlayerIndex)
         {
@@ -2280,7 +2310,7 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
     }
 
     SRI.GetUnassignedPlayers(TeamIndex, Members);
-    C = p_Squads.SquadComponents[p_Squads.SquadComponents.Length - 1];
+    C = p_Squads.SquadComponents[GetUnassignedIndex()];
 
     if (Members.Length == 0)
     {
@@ -2289,8 +2319,8 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
     }
 
     C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
-    C.WinTop = 0.45;
-    C.WinHeight = 0.60;
+    C.WinTop = 0.55;
+    C.WinHeight = 0.5;
 
     SetVisible(C, true);
     SetVisible(C.lb_Members, true);
@@ -2307,6 +2337,8 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
     // C.l_SquadName.VertAlign = TXTA_Left;
 
     SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+    C.b_CreateSquadInfantry.bAcceptsInput = false;
+    C.b_JoinSquad.bAcceptsInput = false;
 
     // Add or remove entries to match the member count.
     while (C.li_Members.ItemCount < Members.Length)
@@ -2330,19 +2362,85 @@ function ShowUnassignedPlayers(int TeamIndex, int PlayerIndex)
     C.li_Members.SelectByObject(SavedPRI);
 }
 
+function int GetHeadquartersIndex()
+{
+    return p_Squads.SquadComponents.Length - 2;
+}
+
+function int GetUnassignedIndex()
+{
+    return p_Squads.SquadComponents.Length - 1;
+}
+
+function ShowHeadquarters(int TeamIndex, int PlayerIndex, bool bIsInASquad)
+{
+    local DHPlayerReplicationInfo SavedPri;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHGUISquadComponent C;
+    local int i, k;
+    local int HeadquarterIndex;
+
+    local int SquadIndexOffset;
+    HeadquarterIndex = GetHeadquartersIndex();
+    SetVisible(p_Squads.SquadComponents[GetUnassignedIndex()], false);
+
+
+    //Hide the rest of the squads other than the player expanded one and the unassigned players squad.
+    for (i = 0; i < HeadquarterIndex; ++i)
+    {
+        SetVisible(p_Squads.SquadComponents[i], false);
+    }
+
+    C = p_Squads.SquadComponents[HeadquarterIndex];
+
+    if (PlayerSquadIndex == i || SRI.IsInSquad(PRI, TeamIndex, i))
+    {
+        ShowPlayerSquad(TeamIndex, PlayerSquadIndex);
+    }
+    else
+    {
+        C.WinTop = 0.0;
+        C.WinHeight = 0.1;
+        C.UpdateBackgroundColor(PRI);
+        SetVisible(C, true);
+       
+        if (SRI.IsSquadActive(TeamIndex, i))
+        {
+            UpdateActiveSquad(TeamIndex, i, C);
+        }
+        else
+        {
+            UpdateInactiveSquad(C, TeamIndex, i);
+        }
+    }
+    
+
+    UpdateHeadquartersInfo(TeamIndex);
+    UpdateSquadTypeImage(C, TeamIndex, i);
+}
+
+function UpdateHeadquartersInfo(int TeamIndex)
+{
+    if (GRI != none && TeamIndex > -1 && TeamIndex < 2)
+    {
+        l_HqInfoTeamName.Caption = GRI.UnitName[TeamIndex];
+        l_HqInfoFireSupport.Caption = "Fire Support: " @ GRI.GetTeamFireSupportBarrage(TeamIndex);
+    }
+}
+
 function UpdateSquads()
 {
     local int TeamIndex, SquadLimit;
     local bool bIsInASquad;
     super.Timer();
 
-    if (PRI == none)
-    {
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    }
-
     if (PC != none)
     {
+        if (PRI == none)
+        {
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        }
+
         if (PRI != none)
         {
             bIsInASquad = PRI.IsInSquad();
@@ -2364,45 +2462,56 @@ function UpdateSquads()
         return;
     }
 
-    if (PC.DeployMenuSquadPlayerMode == 0)
-    {
-        b_SquadUnassignedButton.DisableMe();
-        b_SquadsActiveButton.EnableMe();
-    }
-    else
-    {
-        b_SquadUnassignedButton.EnableMe();
-        b_SquadsActiveButton.DisableMe();
-    }
-
-
     if (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX)
     {
         return;
     }
+
+    switch (PC.DeployMenuSquadPlayerMode)
+    {
+        case Mode_Headquarters:
+            b_SquadHeadquartersButton.DisableMe();
+            b_SquadUnassignedButton.EnableMe();
+            b_SquadsActiveButton.EnableMe();
+            ShowHeadquarters(TeamIndex, PlayerSquadIndex, bIsInASquad);
+
+            break;
+        case MODE_Unassigned:
+            b_SquadHeadquartersButton.EnableMe();
+            b_SquadUnassignedButton.DisableMe();
+            b_SquadsActiveButton.EnableMe();
+            ShowUnassignedPlayers(TeamIndex, PlayerSquadIndex);
+
+            if (PlayerSquadIndex != -1)
+            {
+                ShowPlayerSquad(TeamIndex, PlayerSquadIndex);
+            }
+
+            break;
+        case MODE_ActiveSquads:
+            b_SquadHeadquartersButton.EnableMe();
+            b_SquadUnassignedButton.EnableMe();
+            b_SquadsActiveButton.DisableMe();
+            ShowSquads(TeamIndex, PlayerSquadIndex, bIsInASquad);
+
+            break;
+        default:
+            Warn("Unhandled squad player mode");
+            break;
+    }
+
+
+ 
 
     // if (PRI == none)
     // {
     //     return;
     //     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     // }
-
+    //TODO: Do something with this
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
 
-    if (PlayerSquadIndex != -1)
-    {
-        ShowPlayerSquad(TeamIndex, PlayerSquadIndex);
-    }
-
-    if (PC.DeployMenuSquadPlayerMode == MODE_Squads)
-    {
-        ShowSquads(TeamIndex, PlayerSquadIndex, bIsInASquad);
-    }
-    else
-    {
-        ShowUnassignedPlayers(TeamIndex, PlayerSquadIndex);
-    }
 }
 
 static function SetEnabled(GUIComponent C, bool bEnabled)
@@ -2453,9 +2562,10 @@ defaultproperties
     RoleLogiOnlyOneClass="--"
     RoleSquadOnlyInfantry="Infantry"
     RoleSquadOnlyArmored="Armored"
-    RoleSquadOnlyLogistics="Logistics"
+    RoleSquadOnlyHeadquarters="Headquarters"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
+    HeadQuartersCaptionText="Headquarters"
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
@@ -2676,6 +2786,33 @@ defaultproperties
     End Object
     l_RoundTime=RoundTimeLabelObject
 
+    //Headquarters info
+    Begin Object Class=GUILabel Name=HqInfoTeamName
+        WinHeight=0.3
+        WinWidth=0.35
+        WinTop=0.4
+        WinLeft=0.05
+        VertAlign=TXTA_Left
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+        Caption="Name:"
+    End Object
+    l_HqInfoTeamName=HqInfoTeamName
+
+    Begin Object Class=GUILabel Name=HqInfoFireSupport
+        WinHeight=0.3
+        WinWidth=0.35
+        WinTop=0.5
+        WinLeft=0.05
+        VertAlign=TXTA_Left
+        TextAlign=TXTA_Left
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+        Caption="Fire Support:"
+    End Object
+    l_HqInfoFireSupport=HqInfoFireSupport
+
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
         WinWidth=0.26
         WinHeight=0.22
@@ -2795,7 +2932,7 @@ defaultproperties
         WinWidth=0.5
         WinHeight=1.0
         WinTop=0.0
-        WinLeft=0.1
+        WinLeft=0.05
         TextFont="DHMenuFont"
     End Object
     l_SquadName=SquadNameLabelObject
@@ -2805,7 +2942,7 @@ defaultproperties
         CaptionAlign=TXTA_Center
         StyleName="DHLargeEditBox"
         WinTop=0.0
-        WinLeft=0.1
+        WinLeft=0.03
         WinHeight=1.0
         WinWidth=0.5
         TabOrder=0
@@ -2816,26 +2953,6 @@ defaultproperties
         bVisible=false
     End Object
     eb_SquadName=SquadNameEditBox
-
-    Begin Object class=GUIImage Name=SquadOwnTypeImage
-        WinWidth=0.10
-        WinHeight=1.0
-        WinLeft=0.0
-        WinTop=0.05
-        Image=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
-        ImageColor=(R=192,G=192,B=192,A=200)
-        ImageRenderStyle=MSTY_Alpha
-        ImageStyle=ISTY_Justified
-        ImageAlign=ISTY_Center
-        bBoundToParent=true
-        bScaleToParent=true
-        bVisible=true
-        RenderWeight=10.0
-        bAcceptsInput=true
-        ToolTip=SquadTypeImageTooltip
-        Hint="This is my own squad type."
-    End Object
-    i_SquadType=SquadOwnTypeImage
 
     //Map
     Begin Object Class=DHGUIButton Name=MapButtonObject
@@ -2883,22 +3000,45 @@ defaultproperties
     End Object
     i_SquadsButton=SquadsButtonImageObject
 
+    //Headquarters
+    Begin Object Class=DHGUIButton Name=SquadHeadquartersButtonObject
+        StyleName="DHDeployTabButton"
+        WinWidth=0.25
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.25
+        OnClick=OnClick
+        Hint="Headquarters"
+    End Object
+    b_SquadHeadquartersButton=SquadHeadquartersButtonObject
+
+    Begin Object Class=GUIImage Name=SquadHeadquartersImageObject
+        WinWidth=0.25
+        WinHeight=1.0
+        WinLeft=0.25
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    End Object
+    i_SquadHeadquartersButton=SquadHeadquartersImageObject
+
     //Unassigned squad
     Begin Object Class=DHGUIButton Name=SquadUnassignedButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.25
         WinHeight=1.0
         WinTop=0.0
-        WinLeft=0.5
+        WinLeft=0.75
         OnClick=OnClick
-        Hint="Unassigned Players"
+        Hint="My Squad"
     End Object
     b_SquadUnassignedButton=SquadUnassignedButtonObject
 
     Begin Object Class=GUIImage Name=SquadUnassignedImageObject
         WinWidth=0.25
         WinHeight=1.0
-        WinLeft=0.5
+        WinLeft=0.75
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -2912,16 +3052,16 @@ defaultproperties
         WinWidth=0.25
         WinHeight=1.0
         WinTop=0.0
-        WinLeft=0.75
+        WinLeft=0.50
         OnClick=OnClick
-        Hint="Active Squads"
+        Hint="List Squads"
     End Object
     b_SquadsActiveButton=SquadsActiveButtonObject
 
     Begin Object Class=GUIImage Name=SquadsActiveImageObject
         WinWidth=0.25
         WinHeight=1.0
-        WinLeft=0.75
+        WinLeft=0.50
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -2958,6 +3098,15 @@ defaultproperties
         bVisible=false
     End Object
     c_Vehicle=VehicleContainerObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=HeadquartersContainerObject
+        WinWidth=0.26
+        WinHeight=0.45
+        WinLeft=0.1
+        WinTop=0.35
+        bVisible=false
+    End Object
+    c_HeadQuarters=HeadquartersContainerObject
 
     Begin Object Class=DHGUIButton Name=DisconnectButtonObject
         Caption="Disconnect"

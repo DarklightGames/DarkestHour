@@ -19,8 +19,9 @@ enum EMapMode
 
 enum ESquadPlayersMode
 {
+    Mode_Headquarters,
     MODE_Unassigned,
-    MODE_Squads,
+    MODE_ActiveSquads,
 };
 
 enum ERoleEnabledResult
@@ -35,7 +36,7 @@ enum ERoleEnabledResult
     RER_Locked,
     RER_SquadTypeOnlyInfantry,
     RER_SquadTypeOnlyArmored,
-    RER_SquadTypeOnlyLogistics,
+    RER_SquadTypeOnlyHeadquarters,
 };
 
 enum EAutomaticVehicleAlerts
@@ -140,7 +141,7 @@ var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
-var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
+var     int                     SquadLeaderLocations[9];    // TEAM_SQUADS_MAX
 var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
 var     bool                    bIgnoreSquadPromotionRequestPrompts;
 
@@ -748,11 +749,15 @@ function function SetSquadPlayersMode(int Mode)
     switch (Mode)
     {
         case 0:
-            DeployMenuSquadPlayerMode = Mode_Unassigned;
+            DeployMenuSquadPlayerMode = Mode_Headquarters;
         break;
 
         case 1:
-            DeployMenuSquadPlayerMode = Mode_Squads;
+            DeployMenuSquadPlayerMode = Mode_Unassigned;
+        break;
+
+        case 2:
+            DeployMenuSquadPlayerMode = MODE_ActiveSquads;
         break;
     }
 }
@@ -1247,9 +1252,9 @@ simulated function bool IsSLorASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
 
-simulated function bool IsLogi()
+simulated function bool IsHeadquarters()
 {
-    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquadLogistics();
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquadHeadquarters();
 }
 
 simulated function bool IsAllowedToBuild()
@@ -5901,12 +5906,8 @@ simulated function int GetSquadIndex()
 
     if (PRI != none)
     {
-    // Log("----GetSquadIndex: " @ PRI.SquadIndex);
-
         return PRI.SquadIndex;
     }
-    Log("----GetSquadIndex returns -1");
-
     return -1;
 }
 
@@ -5959,7 +5960,7 @@ function ServerSquadLeave()
 
     G = DarkestHourGame(Level.Game);
 
-    DeployMenuSquadPlayerMode = Mode_Squads;
+    DeployMenuSquadPlayerMode = MODE_ActiveSquads;
 
     G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
 }
@@ -5971,6 +5972,8 @@ function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvite
     G = DarkestHourGame(Level.Game);
 
     Log("ServerSquadJoin: SquadIndex: " @ SquadIndex);
+    DeployMenuSquadPlayerMode = MODE_Unassigned;
+
 
     G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
 }
@@ -6009,7 +6012,7 @@ function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        DeployMenuSquadPlayerMode = Mode_Squads;
+        DeployMenuSquadPlayerMode = MODE_ActiveSquads;
         SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
     }
 }
@@ -6022,7 +6025,7 @@ function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        DeployMenuSquadPlayerMode = Mode_Squads;
+        DeployMenuSquadPlayerMode = MODE_ActiveSquads;
         SquadReplicationInfo.BanFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, PlayerToBan);
     }
 }
@@ -6553,7 +6556,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         }
     }
 
-    if (PRI.IsInSquadLogistics())
+    if (PRI.IsInSquadHeadquarters())
     {
         MenuClassName = "DH_Construction.DHCommandMenu_ConstructionGroups";
         return true;

@@ -4002,7 +4002,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
             IconScale = PlayerIconScale;
 
-            SquadNameAbbreviation = Caps(Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1));
+            SquadNameAbbreviation = SRI.GetSquadNamePrefix(i);
 
             DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
         }
