@@ -14,6 +14,7 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHShovelItem_US"
+    Backpack(0)=(BackpackClass=class'DH_Equipment.DH_LogisticBackpack')
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
