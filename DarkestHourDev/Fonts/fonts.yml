@@ -33,6 +33,20 @@ defaults:
     - 0x2116 # Numero Sign (№)
     - 0xFE2E # Combining Cyrillic Titlo Left Half
     - 0xFE2F # Combining Cyrillic Titlo Right Half
+    # Polish characters
+    - [ 0x104, 0x107 ]
+    - [ 0x118, 0x119 ]
+    - [ 0x141, 0x144 ]
+    - [ 0x15A, 0x15B ]
+    - [ 0x179, 0x17C ]
+    - [ 0x2010, 0x2011 ]
+    - [ 0x2013, 0x2014 ]
+    - [ 0x201D, 0x201E ]
+    - [ 0x2020, 0x2021 ]
+    - 0x2026
+    - 0x2030
+    - [ 0x2032, 0x2033 ]
+    - 0x20AC
   font_style:
     texture_size: # Maximum size of each texture atlas.
       x: 512
