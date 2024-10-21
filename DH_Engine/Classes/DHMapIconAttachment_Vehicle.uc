@@ -82,7 +82,7 @@ simulated function Color GetIconColor(DHPlayer PC)
     {
         if (IsOccupied())
         {
-            if (PC.GetSquadIndex() == DriverPRI.SquadIndex)
+            if (PC.GetSquadIndex() == DriverPRI.SquadIndex && DriverPRI.SquadIndex != 0)
             {
                 return class'DHColor'.default.SquadColor;
             }
