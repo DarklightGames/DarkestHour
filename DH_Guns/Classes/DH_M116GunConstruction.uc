@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_M116Gun'
     SupplyCost=1500
     ProgressMax=9
+    ConstructionBaseMesh=Mesh'DH_M116_anm.m116_base'
 }

@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_17PounderGunConstruction extends DHConstruction_Vehicle;
+class DH_BlackshirtAntiTank extends DHITAAntiTankRoles;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
-    VehicleClass=class'DH_Guns.DH_17PounderGun'
-    SupplyCost=1600
-    ProgressMax=14
-    PlacementOffset=(Z=12.0)
+    RolePawns(0)=(PawnClass=class'DH_ItalyPlayers.DH_ItalianBlackshirtPawn',Weight=1.0)
+    Headgear(0)=class'DH_ItalyPlayers.DH_ItalianHelmet_Blackshirt'
+    HeadgearProbabilities(0)=1.0
 }

@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_Zis3Gun'
     SupplyCost=1050
     ProgressMax=14
+    PlacementOffset=(Z=16)
 }

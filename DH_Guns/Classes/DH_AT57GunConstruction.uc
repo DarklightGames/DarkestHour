@@ -11,4 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_AT57Gun'
     SupplyCost=1050
     ProgressMax=10
+    PlacementOffset=(Z=10.0)
 }

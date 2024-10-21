@@ -184,6 +184,8 @@ var     Material            RallyPointIconKey;
 var     SpriteWidget        IQIconWidget;
 var     TextWidget          IQTextWidget;
 
+var localized string        PrereleaseDisclaimerText;
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
@@ -205,23 +207,26 @@ function DrawDamageIndicators(Canvas C)
 
 function DrawDebugInformation(Canvas C)
 {
-    local DHPlayer PC;
     local string S;
     local float X, Y, StrX, StrY;
 
-    PC = DHPlayer(PlayerOwner);
-
-    S @= class'DHBuildManifest'.default.Version.ToString();
+    const MARGIN = 4.0;
 
     C.Style = ERenderStyle.STY_Alpha;
     C.Font = GetTinyFont(C);
-
-    C.TextSize(S, StrX, StrY);
-    Y = 0;
-    X = C.ClipX - StrX;
-
     C.DrawColor = WhiteColor;
 
+    S = default.PrereleaseDisclaimerText;
+    C.TextSize(S, StrX, StrY);
+    X = C.ClipX - StrX - MARGIN;
+    Y = MARGIN;
+    C.SetPos(X, Y);
+    C.DrawTextClipped(S);
+
+    S = class'DHBuildManifest'.default.Version.ToString();
+    C.TextSize(S, StrX, StrY);
+    Y += StrY;
+    X = C.ClipX - StrX - MARGIN;
     C.SetPos(X, Y);
     C.DrawTextClipped(S);
 }
@@ -6234,4 +6239,9 @@ defaultproperties
 
     SayTypeConsoleText="[CONSOLE]"
     SayTypeAllText="[ALL]"
+
+    PrereleaseDisclaimerText="This is a pre-release build. All content is subject to change."
+
+    PortraitText(0)=(Text="",PosX=0.0,PosY=0.5,WrapWidth=0,WrapHeight=0,OffsetX=8,OffsetY=0,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
+	PortraitText(1)=(Text="",PosX=0.0,PosY=0.5,WrapWidth=0,WrapHeight=0,OffsetX=8,OffsetY=0,DrawPivot=DP_UpperLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
 }
