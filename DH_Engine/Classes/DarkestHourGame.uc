@@ -1635,24 +1635,14 @@ function RORoleInfo GetRoleInfo(int Team, int Num)
     return none;
 }
 
-function bool RoleLimitReached(int Team, int Num)
+function bool RoleLimitReachedInSquad(int Team, int SquadIndex, int Num)
 {
-    // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
-    {
-        return true;
-    }
+    local int RoleLimit, RoleCount;
 
-    if (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoleLimit[Num] != 255 && GRI.DHAxisRoleCount[Num] >= GRI.DHAxisRoleLimit[Num])
-    {
-        return true;
-    }
-    else if (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoleLimit[Num] != 255 && GRI.DHAlliesRoleCount[Num] >= GRI.DHAlliesRoleLimit[Num])
-    {
-        return true;
-    }
+    RoleLimit = GRI.GetRoleLimit(Team, SquadIndex, Num);
+    RoleCount = GRI.GetRoleCount(Team, SquadIndex, Num);
 
-    return false;
+    return RoleLimit != 255 && RoleCount >= RoleLimit;
 }
 
 function bool HumanWantsRole(int Team, int Num)
@@ -1726,53 +1716,53 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
 
-    if (ThisBot != none)
-    {
-        MyRole = Rand(arraycount(GRI.DHAxisRoles));
+    // if (ThisBot != none)
+    // {
+    //     MyRole = Rand(arraycount(GRI.DHAxisRoles));
 
-        do
-        {
-            if (FRand() < LevelInfo.VehicleBotRoleBalance)
-            {
-                AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
+    //     do
+    //     {
+    //         if (FRand() < LevelInfo.VehicleBotRoleBalance)
+    //         {
+    //             AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
 
-                if (AltRole != -1)
-                {
-                    MyRole = AltRole;
-                    break;
-                }
-            }
+    //             if (AltRole != -1)
+    //             {
+    //                 MyRole = AltRole;
+    //                 break;
+    //             }
+    //         }
 
-            // Temp hack to prevent bots from getting MG roles
-            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
-                || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
-            {
-                ++Count;
+    //         // Temp hack to prevent bots from getting MG roles
+    //         if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
+    //             || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
+    //         {
+    //             ++Count;
 
-                if (Count > arraycount(GRI.DHAxisRoles))
-                {
-                    Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
+    //             if (Count > arraycount(GRI.DHAxisRoles))
+    //             {
+    //                 Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
 
-                    return -1;
-                }
-                else
-                {
-                    ++MyRole;
+    //                 return -1;
+    //             }
+    //             else
+    //             {
+    //                 ++MyRole;
 
-                    if (MyRole >= arraycount(GRI.DHAxisRoles))
-                    {
-                        MyRole = 0;
-                    }
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
+    //                 if (MyRole >= arraycount(GRI.DHAxisRoles))
+    //                 {
+    //                     MyRole = 0;
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             break;
+    //         }
+    //     }
 
-        return MyRole;
-    }
+    //     return MyRole;
+    // }
 
     return -1;
 }
@@ -1837,6 +1827,8 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     local RORoleInfo RI;
     local DHPlayer   Playa;
     local ROBot      MrRoboto;
+    local bool bRoleLimitReached;
+    local int RoleCount, SquadIndex;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
     {
@@ -1863,13 +1855,15 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
         if (aPlayer.Pawn == none)
         {
+            SquadIndex = Playa.GetSquadIndex();
+            bRoleLimitReached = RoleLimitReachedInSquad(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, i);
             // Try and kick a bot out of this role if bots are occupying it
-            if (RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
+            if (bRoleLimitReached)
             {
                 HumanWantsRole(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i);
             }
 
-            if (!RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
+            if (!bRoleLimitReached)
             {
                 if (bForceMenu)
                 {
@@ -1880,28 +1874,16 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     // Decrement the RoleCounter for the old role
                     if (Playa.CurrentRole != -1)
                     {
-                        if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-                        {
-                            GRI.DHAxisRoleCount[Playa.CurrentRole]--;
-                        }
-                        else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-                        {
-                            GRI.DHAlliesRoleCount[Playa.CurrentRole]--;
-                        }
+                        RoleCount = GRI.GetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, Playa.CurrentRole);
+                        GRI.SetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, Playa.CurrentRole, RoleCount - 1);
                     }
 
                     Playa.CurrentRole = i;
-
                     // Increment the RoleCounter for the new role
-                    if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-                    {
-                        GRI.DHAxisRoleCount[Playa.CurrentRole]++;
-                    }
-                    else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-                    {
-                        GRI.DHAlliesRoleCount[Playa.CurrentRole]++;
-                    }
+                    RoleCount = GRI.GetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, Playa.CurrentRole);
+                    GRI.SetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, Playa.CurrentRole, RoleCount + 1);
 
+                
                     ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
                     Playa.PrimaryWeapon = -1;
                     Playa.DHPrimaryWeapon = -1;
@@ -1938,32 +1920,20 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
         if (aPlayer.Pawn == none)
         {
-            if (!RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
+            SquadIndex = Playa.GetSquadIndex();
+            bRoleLimitReached = RoleLimitReachedInSquad(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, i);
+            if (!bRoleLimitReached)
             {
                 // Decrement the RoleCounter for the old role
                 if (MrRoboto.CurrentRole != -1)
                 {
-                    if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-                    {
-                        GRI.DHAxisRoleCount[MrRoboto.CurrentRole]--;
-                    }
-                    else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-                    {
-                        GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]--;
-                    }
+                    RoleCount = GRI.GetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, MrRoboto.CurrentRole);
+                    GRI.SetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, MrRoboto.CurrentRole, RoleCount - 1);
                 }
 
                 MrRoboto.CurrentRole = i;
-
-                // Increment the RoleCounter for the new role
-                if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-                {
-                    GRI.DHAxisRoleCount[MrRoboto.CurrentRole]++;
-                }
-                else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-                {
-                    GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]++;
-                }
+                RoleCount = GRI.GetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, MrRoboto.CurrentRole);
+                GRI.SetRoleCount(aPlayer.PlayerReplicationInfo.Team.TeamIndex, SquadIndex, MrRoboto.CurrentRole, RoleCount + 1);
 
                 ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
                 SetCharacter(aPlayer);

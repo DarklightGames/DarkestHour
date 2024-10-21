@@ -747,7 +747,7 @@ function UpdateRoles()
         }
 
 
-        GRI.GetRoleCounts(RI, Count, BotCount);
+        GRI.GetSquadRoleCounts(RI, SquadIndex, Count, BotCount);
         // Limit = PC.GetRoleLimit(RI);
 
         if (SRI != none)

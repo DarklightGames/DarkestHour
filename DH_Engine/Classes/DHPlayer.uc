@@ -3188,10 +3188,17 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
         // Check if change was successful
         if (DesiredRole != newRole)
         {
-            if (ROTeamGame(Level.Game) != none &&
+            Log("PRI != none: " @ PRI != none);
+            if (PRI != none)
+            {
+                Log("PRI.SquadIndex: " @ PRI.SquadIndex);
+            }
+
+            if (DarkestHourGame(Level.Game) != none &&
                 PlayerReplicationInfo != none &&
                 PlayerReplicationInfo.Team != none &&
-                ROTeamGame(Level.Game).RoleLimitReached(PlayerReplicationInfo.Team.TeamIndex, newRole))
+                PRI != none &&
+                DarkestHourGame(Level.Game).RoleLimitReachedInSquad(PlayerReplicationInfo.Team.TeamIndex, PRI.SquadIndex, newRole))
             {
                 ClientChangePlayerInfoResult(100);
             }
@@ -7929,7 +7936,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         return RER_Locked;
     }
 
-    GRI.GetRoleCounts(RI, Count, BotCount);
+    GRI.GetSquadRoleCounts(RI, SquadIndex, Count, BotCount);
     TeamNum = GetTeamNum();
     SquadIndex = GetSquadIndex();
     Limit = SquadReplicationInfo.GetRoleLimit(Ri, TeamNum, SquadIndex);

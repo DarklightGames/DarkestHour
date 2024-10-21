@@ -7,6 +7,8 @@ class DHGameReplicationInfo extends ROGameReplicationInfo;
 
 const RADIOS_MAX = 32;
 const ROLES_MAX = 16;
+const ROLES_MAX_PER_SQUAD = 16;
+const SQUADS_MAX = 9;
 const MORTAR_TARGETS_MAX = 2;
 const VEHICLE_POOLS_MAX = 32;
 const SPAWN_POINTS_MAX = 63;
@@ -99,9 +101,27 @@ var DHArtillery         DHArtillery[ARTILLERY_MAX];
 var byte                DHAlliesRoleLimit[ROLES_MAX];
 var byte                DHAlliesRoleBotCount[ROLES_MAX];
 var byte                DHAlliesRoleCount[ROLES_MAX];
+var byte                DHAlliesSquad0RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad1RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad2RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad3RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad4RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad5RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad6RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad7RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAlliesSquad8RoleCount[ROLES_MAX_PER_SQUAD];
 var byte                DHAxisRoleLimit[ROLES_MAX];
 var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
+var byte                DHAxisSquad0RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad1RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad2RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad3RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad4RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad5RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad6RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad7RoleCount[ROLES_MAX_PER_SQUAD];
+var byte                DHAxisSquad8RoleCount[ROLES_MAX_PER_SQUAD];
 
 var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
@@ -142,6 +162,7 @@ var localized string    ReinforcementsInfiniteText;
 var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
+var DHSquadReplicationInfo  SRI;
 
 struct STeamConstruction
 {
@@ -228,8 +249,26 @@ replication
         DHAlliesRoles,
         DHAlliesRoleLimit,
         DHAlliesRoleCount,
+        DHAlliesSquad0RoleCount,
+        DHAlliesSquad1RoleCount,
+        DHAlliesSquad2RoleCount,
+        DHAlliesSquad3RoleCount,
+        DHAlliesSquad4RoleCount,
+        DHAlliesSquad5RoleCount,
+        DHAlliesSquad6RoleCount,
+        DHAlliesSquad7RoleCount,
+        DHAlliesSquad8RoleCount,
         DHAxisRoleLimit,
         DHAxisRoleCount,
+        DHAxisSquad0RoleCount,
+        DHAxisSquad1RoleCount,
+        DHAxisSquad2RoleCount,
+        DHAxisSquad3RoleCount,
+        DHAxisSquad4RoleCount,
+        DHAxisSquad5RoleCount,
+        DHAxisSquad6RoleCount,
+        DHAxisSquad7RoleCount,
+        DHAxisSquad8RoleCount,
         DHAlliesRoleBotCount,
         DHAxisRoleBotCount,
         Radios,
@@ -282,6 +321,123 @@ replication
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AxisNationID, AlliedNationID, ConstructionClasses, MapMarkerClasses;
+}
+
+function SetSRI()
+{
+    if (Role == ROLE_Authority)
+    {
+        SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+    }
+}
+
+simulated function int GetRoleLimit(int TeamIndex, int SquadIndex, int RoleNum)
+{
+    local DHRoleInfo RI;
+
+    RI = GetRole(TeamIndex, RoleNum);
+
+    if (RI == none)
+    {
+        return 255;
+    }
+
+    if (SRI == none)
+    {
+        SetSRI();
+    }
+
+    if (SRI != none)
+    {
+        return SRI.GetRoleLimit(RI, TeamIndex, SquadIndex);
+    }
+    return 255;
+}
+
+simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
+{
+    if (RoleNum < 0 || RoleNum >= ROLES_MAX || TeamIndex < 0 || TeamIndex >= 2)
+    {
+        return 255;
+    }
+    //We don't have multi arrays so we gotta do this, yay
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            switch (SquadIndex)
+            {
+                case 0: return DHAxisSquad0RoleCount[RoleNum];
+                case 1: return DHAxisSquad1RoleCount[RoleNum];
+                case 2: return DHAxisSquad2RoleCount[RoleNum];
+                case 3: return DHAxisSquad3RoleCount[RoleNum];
+                case 4: return DHAxisSquad4RoleCount[RoleNum];
+                case 5: return DHAxisSquad5RoleCount[RoleNum];
+                case 6: return DHAxisSquad6RoleCount[RoleNum];
+                case 7: return DHAxisSquad7RoleCount[RoleNum];
+                case 8: return DHAxisSquad8RoleCount[RoleNum];
+                default: return DHAxisSquad8RoleCount[RoleNum];
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            switch (SquadIndex)
+            {
+                case 0: return DHAlliesSquad0RoleCount[RoleNum];
+                case 1: return DHAlliesSquad1RoleCount[RoleNum];
+                case 2: return DHAlliesSquad2RoleCount[RoleNum];
+                case 3: return DHAlliesSquad3RoleCount[RoleNum];
+                case 4: return DHAlliesSquad4RoleCount[RoleNum];
+                case 5: return DHAlliesSquad5RoleCount[RoleNum];
+                case 6: return DHAlliesSquad6RoleCount[RoleNum];
+                case 7: return DHAlliesSquad7RoleCount[RoleNum];
+                case 8: return DHAlliesSquad8RoleCount[RoleNum];
+            default: return DHAlliesSquad8RoleCount[RoleNum];
+
+            }
+            break;
+        default:
+            return 255;
+    }
+}
+
+function SetRoleCount(int TeamIndex, int SquadIndex, int RoleIndex, int newValue)
+{
+    //We don't have multi arrays so we gotta do this, yay
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            switch (SquadIndex)
+            {
+                case 0: DHAxisSquad0RoleCount[RoleIndex] = newValue; break;
+                case 1: DHAxisSquad1RoleCount[RoleIndex] = newValue; break;
+                case 2: DHAxisSquad2RoleCount[RoleIndex] = newValue; break;
+                case 3: DHAxisSquad3RoleCount[RoleIndex] = newValue; break;
+                case 4: DHAxisSquad4RoleCount[RoleIndex] = newValue; break;
+                case 5: DHAxisSquad5RoleCount[RoleIndex] = newValue; break;
+                case 6: DHAxisSquad6RoleCount[RoleIndex] = newValue; break;
+                case 7: DHAxisSquad7RoleCount[RoleIndex] = newValue; break;
+                case 8: DHAxisSquad8RoleCount[RoleIndex] = newValue; break;
+                default: DHAxisSquad8RoleCount[RoleIndex] = newValue; break;
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            switch (SquadIndex)
+            {
+                case 0: DHAlliesSquad0RoleCount[RoleIndex] = newValue; break;
+                case 1: DHAlliesSquad1RoleCount[RoleIndex] = newValue; break;
+                case 2: DHAlliesSquad2RoleCount[RoleIndex] = newValue; break;
+                case 3: DHAlliesSquad3RoleCount[RoleIndex] = newValue; break;
+                case 4: DHAlliesSquad4RoleCount[RoleIndex] = newValue; break;
+                case 5: DHAlliesSquad5RoleCount[RoleIndex] = newValue; break;
+                case 6: DHAlliesSquad6RoleCount[RoleIndex] = newValue; break;
+                case 7: DHAlliesSquad7RoleCount[RoleIndex] = newValue; break;
+                case 8: DHAlliesSquad8RoleCount[RoleIndex] = newValue; break;
+                default: DHAlliesSquad8RoleCount[RoleIndex] = newValue; break;
+
+            }
+            break;
+        default:
+            Log("SetRoleCount: Invalid team index");
+    }
 }
 
 simulated event PreBeginPlay()
@@ -1249,6 +1405,31 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount)
     }
 }
 
+simulated function GetSquadRoleCounts(RORoleInfo RI, int SquadIndex, out int Count, out int BotCount)
+{
+    local int Index;
+    local byte Team;
+
+    Index = GetRoleIndexAndTeam(RI, Team);
+
+    if (Index == -1)
+    {
+        return;
+    }
+
+    Count = GetRoleCount(Team, SquadIndex, Index);
+
+    switch (Team)
+    {
+        case AXIS_TEAM_INDEX:
+            BotCount = DHAxisRoleBotCount[Index];
+            break;
+        case ALLIES_TEAM_INDEX: 
+            BotCount = DHAlliesRoleBotCount[Index];
+            break;
+    }
+}
+
 //------------------------------------------------------------------------------
 // Artillery Functions
 //------------------------------------------------------------------------------
@@ -2159,14 +2340,16 @@ simulated function bool IsInFriendlyZone(float PointerX, float PointerY, byte Te
 
 simulated function DangerZoneUpdated()
 {
-    local DHSquadReplicationInfo SRI;
     local DHPlayer PC;
     local DHHud Hud;
 
     // Server
     if (Role == ROLE_Authority)
     {
-        SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+        if (SRI == none)
+        {
+            SetSRI();
+        }
 
         if (SRI != none)
         {
