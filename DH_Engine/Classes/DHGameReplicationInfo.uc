@@ -356,8 +356,14 @@ simulated function int GetRoleLimit(int TeamIndex, int SquadIndex, int RoleNum)
 
 simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
 {
+    if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        Log("GetRoleCount: " @ RoleNum @ ", " @ TeamIndex @ ", SquadIndex: " @ SquadIndex);
+    }
+
     if (RoleNum < 0 || RoleNum >= ROLES_MAX || TeamIndex < 0 || TeamIndex >= 2)
     {
+        Log("GetRoleCount: Invalid RoleNum or TeamIndex: " @ RoleNum @ ", " @ TeamIndex @ ", SquadIndex: " @ SquadIndex);
         return 255;
     }
     //We don't have multi arrays so we gotta do this, yay
@@ -375,7 +381,9 @@ simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
                 case 6: return DHAxisSquad6RoleCount[RoleNum];
                 case 7: return DHAxisSquad7RoleCount[RoleNum];
                 case 8: return DHAxisSquad8RoleCount[RoleNum];
-                default: return DHAxisSquad8RoleCount[RoleNum];
+                default: 
+                    Log("GetRoleCount: Returning default axis count: " @ DHAxisSquad8RoleCount[RoleNum]);
+                    return DHAxisSquad8RoleCount[RoleNum];
             }
             break;
         case ALLIES_TEAM_INDEX:
@@ -390,8 +398,9 @@ simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
                 case 6: return DHAlliesSquad6RoleCount[RoleNum];
                 case 7: return DHAlliesSquad7RoleCount[RoleNum];
                 case 8: return DHAlliesSquad8RoleCount[RoleNum];
-            default: return DHAlliesSquad8RoleCount[RoleNum];
-
+            default: 
+                Log("GetRoleCount: Returning default allied count: " @ DHAxisSquad8RoleCount[RoleNum]);
+                return DHAlliesSquad8RoleCount[RoleNum];
             }
             break;
         default:

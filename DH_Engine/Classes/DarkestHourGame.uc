@@ -1635,6 +1635,11 @@ function RORoleInfo GetRoleInfo(int Team, int Num)
     return none;
 }
 
+function bool RoleLimitReached(int Team, int Num)
+{
+    return false;
+}
+
 function bool RoleLimitReachedInSquad(int Team, int SquadIndex, int Num)
 {
     local int RoleLimit, RoleCount;
@@ -1642,6 +1647,8 @@ function bool RoleLimitReachedInSquad(int Team, int SquadIndex, int Num)
     RoleLimit = GRI.GetRoleLimit(Team, SquadIndex, Num);
     RoleCount = GRI.GetRoleCount(Team, SquadIndex, Num);
 
+    Log("RoleLimitReachedInSquad: Team: " @ Team @ ", SquadIndex: " @ SquadIndex @ ", Num: " @ Num);
+    Log("RoleLimitReachedInSquad: RoleLimit: " @ RoleLimit @ ", RoleCount: " @ RoleCount);
     return RoleLimit != 255 && RoleCount >= RoleLimit;
 }
 
@@ -1716,68 +1723,68 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
 
-    // if (ThisBot != none)
-    // {
-    //     MyRole = Rand(arraycount(GRI.DHAxisRoles));
+    if (ThisBot != none)
+    {
+        MyRole = Rand(arraycount(GRI.DHAxisRoles));
+        //TODO: Fixup this code to match with the new RoleLimitReachInSquad
+        do
+        {
+            // Temp hack to prevent bots from getting MG roles
+            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
+                || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
+            {
+                ++Count;
 
-    //     do
-    //     {
-    //         if (FRand() < LevelInfo.VehicleBotRoleBalance)
-    //         {
-    //             AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
+                if (Count > arraycount(GRI.DHAxisRoles))
+                {
+                    Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
 
-    //             if (AltRole != -1)
-    //             {
-    //                 MyRole = AltRole;
-    //                 break;
-    //             }
-    //         }
+                    return -1;
+                }
+                else
+                {
+                    ++MyRole;
 
-    //         // Temp hack to prevent bots from getting MG roles
-    //         if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
-    //             || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
-    //         {
-    //             ++Count;
+                    if (MyRole >= arraycount(GRI.DHAxisRoles))
+                    {
+                        MyRole = 0;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
 
-    //             if (Count > arraycount(GRI.DHAxisRoles))
-    //             {
-    //                 Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
-
-    //                 return -1;
-    //             }
-    //             else
-    //             {
-    //                 ++MyRole;
-
-    //                 if (MyRole >= arraycount(GRI.DHAxisRoles))
-    //                 {
-    //                     MyRole = 0;
-    //                 }
-    //             }
-    //         }
-    //         else
-    //         {
-    //             break;
-    //         }
-    //     }
-
-    //     return MyRole;
-    // }
+        return MyRole;
+    }
 
     return -1;
 }
 
-function UpdateRoleCounts()
+function UpdateRoleCountsForSquads()
 {
     local Controller C;
-    local int i;
+    local int i, SquadIndex, RoleCount, PlayerSquadIndex;
+    local DHPlayer DP;
+    local ROBot RB;
 
-    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    for (SquadIndex = 0; SquadIndex < 9; SquadIndex++)
     {
-        if (GRI.DHAxisRoles[i] != none)
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            GRI.DHAxisRoleCount[i] = 0;
-            GRI.DHAxisRoleBotCount[i] = 0;
+            GRI.SetRoleCount(AXIS_TEAM_INDEX, SquadIndex, i, 0);
+            GRI.SetRoleCount(ALLIES_TEAM_INDEX, SquadIndex, i, 0);
+
+            if (SquadIndex == 0)
+            {
+                if (GRI.DHAxisRoles[i] != none)
+                {
+                    GRI.DHAxisRoleCount[i] = 0;
+                    GRI.DHAxisRoleBotCount[i] = 0;
+                }
+            }
         }
     }
 
@@ -1794,32 +1801,88 @@ function UpdateRoleCounts()
     {
         if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none)
         {
-            if (ROPlayer(C) != none && ROPlayer(C).CurrentRole != -1)
+            DP = DHPlayer(C);
+            RB = ROBot(C);
+
+            if (DP != none && DP.CurrentRole != -1)
             {
-                if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-                {
-                    GRI.DHAlliesRoleCount[ROPlayer(C).CurrentRole]++;
-                }
-                else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-                {
-                    GRI.DHAxisRoleCount[ROPlayer(C).CurrentRole]++;
-                }
+                PlayerSquadIndex = DP.GetSquadIndex();
+                RoleCount = GRI.GetRoleCount(C.PlayerReplicationInfo.Team.TeamIndex, PlayerSquadIndex, DP.CurrentRole);
+                GRI.SetRoleCount(C.PlayerReplicationInfo.Team.TeamIndex, PlayerSquadIndex, DP.CurrentRole, RoleCount + 1);
             }
-            else if (ROBot(C) != none && ROBot(C).CurrentRole != -1)
+            else if (RB != none && RB.CurrentRole != -1)
             {
                 if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    GRI.DHAlliesRoleCount[ROBot(C).CurrentRole]++;
-                    GRI.DHAlliesRoleBotCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAlliesRoleCount[RB.CurrentRole]++;
+                    GRI.DHAlliesRoleBotCount[RB.CurrentRole]++;
                 }
                 else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    GRI.DHAxisRoleCount[ROBot(C).CurrentRole]++;
-                    GRI.DHAxisRoleBotCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAxisRoleCount[RB.CurrentRole]++;
+                    GRI.DHAxisRoleBotCount[RB.CurrentRole]++;
                 }
             }
         }
     }
+}
+
+function UpdateRoleCounts()
+{
+    local Controller C;
+    local int i;
+
+    UpdateRoleCountsForSquads();
+    return;
+
+    // for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    // {
+    //     if (GRI.DHAxisRoles[i] != none)
+    //     {
+    //         GRI.DHAxisRoleCount[i] = 0;
+    //         GRI.DHAxisRoleBotCount[i] = 0;
+    //     }
+    // }
+
+    // for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+    // {
+    //     if (GRI.DHAlliesRoles[i] != none)
+    //     {
+    //         GRI.DHAlliesRoleCount[i] = 0;
+    //         GRI.DHAlliesRoleBotCount[i] = 0;
+    //     }
+    // }
+
+    // for (C = Level.ControllerList; C != none; C = C.NextController)
+    // {
+    //     if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none)
+    //     {
+    //         if (ROPlayer(C) != none && ROPlayer(C).CurrentRole != -1)
+    //         {
+    //             if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+    //             {
+    //                 GRI.DHAlliesRoleCount[ROPlayer(C).CurrentRole]++;
+    //             }
+    //             else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+    //             {
+    //                 GRI.DHAxisRoleCount[ROPlayer(C).CurrentRole]++;
+    //             }
+    //         }
+    //         else if (ROBot(C) != none && ROBot(C).CurrentRole != -1)
+    //         {
+    //             if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+    //             {
+    //                 GRI.DHAlliesRoleCount[ROBot(C).CurrentRole]++;
+    //                 GRI.DHAlliesRoleBotCount[ROBot(C).CurrentRole]++;
+    //             }
+    //             else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+    //             {
+    //                 GRI.DHAxisRoleCount[ROBot(C).CurrentRole]++;
+    //                 GRI.DHAxisRoleBotCount[ROBot(C).CurrentRole]++;
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)

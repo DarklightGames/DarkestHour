@@ -3188,12 +3188,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
         // Check if change was successful
         if (DesiredRole != newRole)
         {
-            Log("PRI != none: " @ PRI != none);
-            if (PRI != none)
-            {
-                Log("PRI.SquadIndex: " @ PRI.SquadIndex);
-            }
-
             if (DarkestHourGame(Level.Game) != none &&
                 PlayerReplicationInfo != none &&
                 PlayerReplicationInfo.Team != none &&
@@ -3289,6 +3283,44 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             ClientChangePlayerInfoResult(0);
         }
     }
+}
+
+function ClientChangePlayerInfoResult(byte result)
+{
+    local UT2K4GUIController c;
+    local GUIPage page;
+    local class<GUIPage> page_class;
+
+    // Update state of hint manager (if needed)
+    // This is done here so that we still have a hint manager even if
+    // we joined game as spectator and later joined an active team.
+    UpdateHintManagement(bShowHints);
+
+    if (Player == none)
+    {
+        warn("ClientChangePlayerInfoResult - Player is none.");
+        return;
+    }
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    c = UT2K4GUIController(Player.GUIController);
+
+    if (c == none)
+    {
+        warn("Unable to cast guicontroller to UT2K4GUIController.");
+        return;
+    }
+
+    //page_class = class<GUIPage>(DynamicLoadObject("ROInterface.ROGUIRoleSelection", class'class'));
+    page_class = class'GUIPage';
+    if (page_class != none)
+    {
+        page = c.FindMenuByClass(page_class);
+        if (page != none)
+            page.OnMessage("notify_gui_role_selection_page", result);
+    }
+    else
+        warn("Unable to dynamically load RoleSelection menu class: ROInterface.ROGUIRoleSelection");
 }
 
 function OnTeamChanged()
@@ -7936,9 +7968,10 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
         return RER_Locked;
     }
 
-    GRI.GetSquadRoleCounts(RI, SquadIndex, Count, BotCount);
     TeamNum = GetTeamNum();
     SquadIndex = GetSquadIndex();
+    GRI.GetSquadRoleCounts(RI, SquadIndex, Count, BotCount);
+    
     Limit = SquadReplicationInfo.GetRoleLimit(Ri, TeamNum, SquadIndex);
 
     if (GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0)

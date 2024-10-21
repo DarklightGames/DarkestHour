@@ -682,12 +682,24 @@ function UpdateRoles()
     local DHGUISquadComponent            C;
     local int TeamIndex, SquadIndex;
 
-    SquadIndex = PC.GetSquadIndex();
-    TeamIndex = PC.GetTeamNum();
-
-    if (SquadIndex == -1 || TeamIndex == 255)
+    if (PC == none)
     {
         return;
+    }
+
+    TeamIndex = PC.GetTeamNum();
+
+    if (TeamIndex == 255)
+    {
+        return;
+    }
+
+    SquadIndex = PC.GetSquadIndex();
+    Log("UpdateRoles: " @ SquadIndex);
+
+    if (SquadIndex < 0 || SquadIndex >= p_Squads.SquadComponents.Length)
+    {
+        SquadIndex = p_Squads.SquadComponents.Length - 1;
     }
     
     // SRI = PC.SquadReplicationInfo;
@@ -759,12 +771,11 @@ function UpdateRoles()
             Limit = -1;
         }
 
-
         if (Limit == 0)
         {
             S @= "[" $ LockedText $ "]";
         }
-        else if (Limit == -1 || Limit == 255)
+        else if (Limit == -1 || Limit == 255 || (Count > 0 && Limit == 1))
         {
             S @= "[" $ Count $ "]";
         }
