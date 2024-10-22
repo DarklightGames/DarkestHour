@@ -17,7 +17,7 @@ defaultproperties
     ShootIntermediateAnim="shoot_close"
 
     // Turret movement
-    RotationsPerSecond=0.005
+    RotationsPerSecond=0.01
     MaxPositiveYaw=1092.0
     MaxNegativeYaw=-1092.0
     YawStartConstraint=-1092.0
