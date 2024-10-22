@@ -591,7 +591,13 @@ function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMes
 // Font functions.
 static function Font GetMediumFontFor(Canvas C)
 {
-    return class'DHFonts'.static.GetDHLargeFontByResolution(C.ClipY);
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
+}
+
+function Font GetFontSizeIndex(Canvas C, int FontSize)
+{
+    // FontSize always seems to be passed in as a NEGATIVE value.
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
 }
 
 static function Font GetPlayerNameFont(Canvas C)
@@ -615,11 +621,6 @@ static function Font GetSmallMenuFont(Canvas C)
 }
 
 static function Font GetSmallerMenuFont(Canvas C)
-{
-    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
-}
-
-function Font GetFontSizeIndex(Canvas C, int FontSize)
 {
     return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
 }

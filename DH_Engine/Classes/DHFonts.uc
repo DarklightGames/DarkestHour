@@ -7,420 +7,266 @@
 class DHFonts extends Object
     abstract;
 
-struct FontStyleSize {
-    var string FontName;
-    var Font Font;
-    var int Size;
+struct FontStyleItem {
+    var int FontIndex;
     var int Resolution;
 };
 
-var FontStyleSize DHConsoleFontSizes[8];
-var FontStyleSize DHConsoleFontDSSizes[8];
-var FontStyleSize DHButtonFontSizes[3];
-var FontStyleSize DHButtonFontDSSizes[3];
-var FontStyleSize DHHugeButtonFontSizes[3];
-var FontStyleSize DHLargeFontSizes[3];
-var FontStyleSize DHLargeFontDSSizes[3];
-var FontStyleSize DHMenuFontSizes[3];
-var FontStyleSize DHMenuFontDSSizes[3];
-var FontStyleSize DHSmallFontSizes[3];
-var FontStyleSize DHSmallFontDSSizes[3];
+var string FontNames[29];
+var Font Fonts[29];
+var FontStyleItem DHConsoleFontItems[5];
+var FontStyleItem DHConsoleFontDSItems[5];
+var FontStyleItem DHButtonFontItems[3];
+var FontStyleItem DHButtonFontDSItems[3];
+var FontStyleItem DHHugeButtonFontItems[3];
+var FontStyleItem DHLargeFontItems[3];
+var FontStyleItem DHLargeFontDSItems[3];
+var FontStyleItem DHMenuFontItems[3];
+var FontStyleItem DHMenuFontDSItems[3];
+var FontStyleItem DHSmallFontItems[3];
+var FontStyleItem DHSmallFontDSItems[3];
 
-static function Font GetDHConsoleFontByIndex(int i) {
-    if (default.DHConsoleFontSizes[i].Font == none) {
-        default.DHConsoleFontSizes[i].Font = Font(DynamicLoadObject(default.DHConsoleFontSizes[i].FontName, class'Font'));
-        if (default.DHConsoleFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHConsoleFontSizes[i].FontName);
+static function Font GetFontByIndex(int i) {
+    if (default.Fonts[i] == none) {
+        default.Fonts[i] = Font(DynamicLoadObject(default.FontNames[i], class'Font'));
+        if (default.Fonts[i] == none) {
+            Warn("Could not dynamically load" @ default.FontNames[i]);
         }
     }
-    return default.DHConsoleFontSizes[i].Font;
+    return default.Fonts[i];
 }
 
-// Load a font by the nearest target size
-static function Font GetDHConsoleFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHConsoleFontSizes); i++) {
-        if (Size >= default.DHConsoleFontSizes[i].Size) {
-            return GetDHConsoleFontByIndex(i);
-        }
-    }
-    return GetDHConsoleFontByIndex(arraycount(default.DHConsoleFontSizes) - 1);
+static function Font GetDHConsoleFontByIndex(int i) {
+    return GetFontByIndex(default.DHConsoleFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHConsoleFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHConsoleFontSizes); i++) {
-        if (Resolution >= default.DHConsoleFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHConsoleFontItems); i++) {
+        if (Resolution >= default.DHConsoleFontItems[i].Resolution) {
             return GetDHConsoleFontByIndex(i);
         }
     }
-    return GetDHConsoleFontByIndex(arraycount(default.DHConsoleFontSizes) - 1);
+    return GetDHConsoleFontByIndex(arraycount(default.DHConsoleFontItems) - 1);
 }
 
 static function Font GetDHConsoleFontDSByIndex(int i) {
-    if (default.DHConsoleFontDSSizes[i].Font == none) {
-        default.DHConsoleFontDSSizes[i].Font = Font(DynamicLoadObject(default.DHConsoleFontDSSizes[i].FontName, class'Font'));
-        if (default.DHConsoleFontDSSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHConsoleFontDSSizes[i].FontName);
-        }
-    }
-    return default.DHConsoleFontDSSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHConsoleFontDSBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHConsoleFontDSSizes); i++) {
-        if (Size >= default.DHConsoleFontDSSizes[i].Size) {
-            return GetDHConsoleFontDSByIndex(i);
-        }
-    }
-    return GetDHConsoleFontDSByIndex(arraycount(default.DHConsoleFontDSSizes) - 1);
+    return GetFontByIndex(default.DHConsoleFontDSItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHConsoleFontDSByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHConsoleFontDSSizes); i++) {
-        if (Resolution >= default.DHConsoleFontDSSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHConsoleFontDSItems); i++) {
+        if (Resolution >= default.DHConsoleFontDSItems[i].Resolution) {
             return GetDHConsoleFontDSByIndex(i);
         }
     }
-    return GetDHConsoleFontDSByIndex(arraycount(default.DHConsoleFontDSSizes) - 1);
+    return GetDHConsoleFontDSByIndex(arraycount(default.DHConsoleFontDSItems) - 1);
 }
 
 static function Font GetDHButtonFontByIndex(int i) {
-    if (default.DHButtonFontSizes[i].Font == none) {
-        default.DHButtonFontSizes[i].Font = Font(DynamicLoadObject(default.DHButtonFontSizes[i].FontName, class'Font'));
-        if (default.DHButtonFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHButtonFontSizes[i].FontName);
-        }
-    }
-    return default.DHButtonFontSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHButtonFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHButtonFontSizes); i++) {
-        if (Size >= default.DHButtonFontSizes[i].Size) {
-            return GetDHButtonFontByIndex(i);
-        }
-    }
-    return GetDHButtonFontByIndex(arraycount(default.DHButtonFontSizes) - 1);
+    return GetFontByIndex(default.DHButtonFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHButtonFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHButtonFontSizes); i++) {
-        if (Resolution >= default.DHButtonFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHButtonFontItems); i++) {
+        if (Resolution >= default.DHButtonFontItems[i].Resolution) {
             return GetDHButtonFontByIndex(i);
         }
     }
-    return GetDHButtonFontByIndex(arraycount(default.DHButtonFontSizes) - 1);
+    return GetDHButtonFontByIndex(arraycount(default.DHButtonFontItems) - 1);
 }
 
 static function Font GetDHButtonFontDSByIndex(int i) {
-    if (default.DHButtonFontDSSizes[i].Font == none) {
-        default.DHButtonFontDSSizes[i].Font = Font(DynamicLoadObject(default.DHButtonFontDSSizes[i].FontName, class'Font'));
-        if (default.DHButtonFontDSSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHButtonFontDSSizes[i].FontName);
-        }
-    }
-    return default.DHButtonFontDSSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHButtonFontDSBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHButtonFontDSSizes); i++) {
-        if (Size >= default.DHButtonFontDSSizes[i].Size) {
-            return GetDHButtonFontDSByIndex(i);
-        }
-    }
-    return GetDHButtonFontDSByIndex(arraycount(default.DHButtonFontDSSizes) - 1);
+    return GetFontByIndex(default.DHButtonFontDSItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHButtonFontDSByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHButtonFontDSSizes); i++) {
-        if (Resolution >= default.DHButtonFontDSSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHButtonFontDSItems); i++) {
+        if (Resolution >= default.DHButtonFontDSItems[i].Resolution) {
             return GetDHButtonFontDSByIndex(i);
         }
     }
-    return GetDHButtonFontDSByIndex(arraycount(default.DHButtonFontDSSizes) - 1);
+    return GetDHButtonFontDSByIndex(arraycount(default.DHButtonFontDSItems) - 1);
 }
 
 static function Font GetDHHugeButtonFontByIndex(int i) {
-    if (default.DHHugeButtonFontSizes[i].Font == none) {
-        default.DHHugeButtonFontSizes[i].Font = Font(DynamicLoadObject(default.DHHugeButtonFontSizes[i].FontName, class'Font'));
-        if (default.DHHugeButtonFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHHugeButtonFontSizes[i].FontName);
-        }
-    }
-    return default.DHHugeButtonFontSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHHugeButtonFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHHugeButtonFontSizes); i++) {
-        if (Size >= default.DHHugeButtonFontSizes[i].Size) {
-            return GetDHHugeButtonFontByIndex(i);
-        }
-    }
-    return GetDHHugeButtonFontByIndex(arraycount(default.DHHugeButtonFontSizes) - 1);
+    return GetFontByIndex(default.DHHugeButtonFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHHugeButtonFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHHugeButtonFontSizes); i++) {
-        if (Resolution >= default.DHHugeButtonFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHHugeButtonFontItems); i++) {
+        if (Resolution >= default.DHHugeButtonFontItems[i].Resolution) {
             return GetDHHugeButtonFontByIndex(i);
         }
     }
-    return GetDHHugeButtonFontByIndex(arraycount(default.DHHugeButtonFontSizes) - 1);
+    return GetDHHugeButtonFontByIndex(arraycount(default.DHHugeButtonFontItems) - 1);
 }
 
 static function Font GetDHLargeFontByIndex(int i) {
-    if (default.DHLargeFontSizes[i].Font == none) {
-        default.DHLargeFontSizes[i].Font = Font(DynamicLoadObject(default.DHLargeFontSizes[i].FontName, class'Font'));
-        if (default.DHLargeFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHLargeFontSizes[i].FontName);
-        }
-    }
-    return default.DHLargeFontSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHLargeFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHLargeFontSizes); i++) {
-        if (Size >= default.DHLargeFontSizes[i].Size) {
-            return GetDHLargeFontByIndex(i);
-        }
-    }
-    return GetDHLargeFontByIndex(arraycount(default.DHLargeFontSizes) - 1);
+    return GetFontByIndex(default.DHLargeFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHLargeFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHLargeFontSizes); i++) {
-        if (Resolution >= default.DHLargeFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHLargeFontItems); i++) {
+        if (Resolution >= default.DHLargeFontItems[i].Resolution) {
             return GetDHLargeFontByIndex(i);
         }
     }
-    return GetDHLargeFontByIndex(arraycount(default.DHLargeFontSizes) - 1);
+    return GetDHLargeFontByIndex(arraycount(default.DHLargeFontItems) - 1);
 }
 
 static function Font GetDHLargeFontDSByIndex(int i) {
-    if (default.DHLargeFontDSSizes[i].Font == none) {
-        default.DHLargeFontDSSizes[i].Font = Font(DynamicLoadObject(default.DHLargeFontDSSizes[i].FontName, class'Font'));
-        if (default.DHLargeFontDSSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHLargeFontDSSizes[i].FontName);
-        }
-    }
-    return default.DHLargeFontDSSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHLargeFontDSBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHLargeFontDSSizes); i++) {
-        if (Size >= default.DHLargeFontDSSizes[i].Size) {
-            return GetDHLargeFontDSByIndex(i);
-        }
-    }
-    return GetDHLargeFontDSByIndex(arraycount(default.DHLargeFontDSSizes) - 1);
+    return GetFontByIndex(default.DHLargeFontDSItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHLargeFontDSByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHLargeFontDSSizes); i++) {
-        if (Resolution >= default.DHLargeFontDSSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHLargeFontDSItems); i++) {
+        if (Resolution >= default.DHLargeFontDSItems[i].Resolution) {
             return GetDHLargeFontDSByIndex(i);
         }
     }
-    return GetDHLargeFontDSByIndex(arraycount(default.DHLargeFontDSSizes) - 1);
+    return GetDHLargeFontDSByIndex(arraycount(default.DHLargeFontDSItems) - 1);
 }
 
 static function Font GetDHMenuFontByIndex(int i) {
-    if (default.DHMenuFontSizes[i].Font == none) {
-        default.DHMenuFontSizes[i].Font = Font(DynamicLoadObject(default.DHMenuFontSizes[i].FontName, class'Font'));
-        if (default.DHMenuFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHMenuFontSizes[i].FontName);
-        }
-    }
-    return default.DHMenuFontSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHMenuFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHMenuFontSizes); i++) {
-        if (Size >= default.DHMenuFontSizes[i].Size) {
-            return GetDHMenuFontByIndex(i);
-        }
-    }
-    return GetDHMenuFontByIndex(arraycount(default.DHMenuFontSizes) - 1);
+    return GetFontByIndex(default.DHMenuFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHMenuFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHMenuFontSizes); i++) {
-        if (Resolution >= default.DHMenuFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHMenuFontItems); i++) {
+        if (Resolution >= default.DHMenuFontItems[i].Resolution) {
             return GetDHMenuFontByIndex(i);
         }
     }
-    return GetDHMenuFontByIndex(arraycount(default.DHMenuFontSizes) - 1);
+    return GetDHMenuFontByIndex(arraycount(default.DHMenuFontItems) - 1);
 }
 
 static function Font GetDHMenuFontDSByIndex(int i) {
-    if (default.DHMenuFontDSSizes[i].Font == none) {
-        default.DHMenuFontDSSizes[i].Font = Font(DynamicLoadObject(default.DHMenuFontDSSizes[i].FontName, class'Font'));
-        if (default.DHMenuFontDSSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHMenuFontDSSizes[i].FontName);
-        }
-    }
-    return default.DHMenuFontDSSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHMenuFontDSBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHMenuFontDSSizes); i++) {
-        if (Size >= default.DHMenuFontDSSizes[i].Size) {
-            return GetDHMenuFontDSByIndex(i);
-        }
-    }
-    return GetDHMenuFontDSByIndex(arraycount(default.DHMenuFontDSSizes) - 1);
+    return GetFontByIndex(default.DHMenuFontDSItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHMenuFontDSByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHMenuFontDSSizes); i++) {
-        if (Resolution >= default.DHMenuFontDSSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHMenuFontDSItems); i++) {
+        if (Resolution >= default.DHMenuFontDSItems[i].Resolution) {
             return GetDHMenuFontDSByIndex(i);
         }
     }
-    return GetDHMenuFontDSByIndex(arraycount(default.DHMenuFontDSSizes) - 1);
+    return GetDHMenuFontDSByIndex(arraycount(default.DHMenuFontDSItems) - 1);
 }
 
 static function Font GetDHSmallFontByIndex(int i) {
-    if (default.DHSmallFontSizes[i].Font == none) {
-        default.DHSmallFontSizes[i].Font = Font(DynamicLoadObject(default.DHSmallFontSizes[i].FontName, class'Font'));
-        if (default.DHSmallFontSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHSmallFontSizes[i].FontName);
-        }
-    }
-    return default.DHSmallFontSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHSmallFontBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHSmallFontSizes); i++) {
-        if (Size >= default.DHSmallFontSizes[i].Size) {
-            return GetDHSmallFontByIndex(i);
-        }
-    }
-    return GetDHSmallFontByIndex(arraycount(default.DHSmallFontSizes) - 1);
+    return GetFontByIndex(default.DHSmallFontItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHSmallFontByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHSmallFontSizes); i++) {
-        if (Resolution >= default.DHSmallFontSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHSmallFontItems); i++) {
+        if (Resolution >= default.DHSmallFontItems[i].Resolution) {
             return GetDHSmallFontByIndex(i);
         }
     }
-    return GetDHSmallFontByIndex(arraycount(default.DHSmallFontSizes) - 1);
+    return GetDHSmallFontByIndex(arraycount(default.DHSmallFontItems) - 1);
 }
 
 static function Font GetDHSmallFontDSByIndex(int i) {
-    if (default.DHSmallFontDSSizes[i].Font == none) {
-        default.DHSmallFontDSSizes[i].Font = Font(DynamicLoadObject(default.DHSmallFontDSSizes[i].FontName, class'Font'));
-        if (default.DHSmallFontDSSizes[i].Font == none) {
-            Warn("Could not dynamically load" @ default.DHSmallFontDSSizes[i].FontName);
-        }
-    }
-    return default.DHSmallFontDSSizes[i].Font;
-}
-
-// Load a font by the nearest target size
-static function Font GetDHSmallFontDSBySize(int Size) {
-    local int i;
-    for (i = 0; i < arraycount(default.DHSmallFontDSSizes); i++) {
-        if (Size >= default.DHSmallFontDSSizes[i].Size) {
-            return GetDHSmallFontDSByIndex(i);
-        }
-    }
-    return GetDHSmallFontDSByIndex(arraycount(default.DHSmallFontDSSizes) - 1);
+    return GetFontByIndex(default.DHSmallFontDSItems[i].FontIndex);
 }
 
 // Load a font by the nearest target resolution
 static function Font GetDHSmallFontDSByResolution(int Resolution) {
     local int i;
-    for (i = 0; i < arraycount(default.DHSmallFontDSSizes); i++) {
-        if (Resolution >= default.DHSmallFontDSSizes[i].Resolution) {
+    for (i = 0; i < arraycount(default.DHSmallFontDSItems); i++) {
+        if (Resolution >= default.DHSmallFontDSItems[i].Resolution) {
             return GetDHSmallFontDSByIndex(i);
         }
     }
-    return GetDHSmallFontDSByIndex(arraycount(default.DHSmallFontDSSizes) - 1);
+    return GetDHSmallFontDSByIndex(arraycount(default.DHSmallFontDSItems) - 1);
 }
 
 defaultproperties
 {
-    DHConsoleFontSizes(0)=(FontName="DHFonts.Inter38",Size=38,Resolution=2880)
-    DHConsoleFontSizes(1)=(FontName="DHFonts.Inter28",Size=28,Resolution=2160)
-    DHConsoleFontSizes(2)=(FontName="DHFonts.Inter24",Size=24,Resolution=1800)
-    DHConsoleFontSizes(3)=(FontName="DHFonts.Inter18",Size=18,Resolution=1440)
-    DHConsoleFontSizes(4)=(FontName="DHFonts.Inter14",Size=14,Resolution=1080)
-    DHConsoleFontSizes(5)=(FontName="DHFonts.Inter14",Size=14,Resolution=1024)
-    DHConsoleFontSizes(6)=(FontName="DHFonts.Inter12",Size=12,Resolution=900)
-    DHConsoleFontSizes(7)=(FontName="DHFonts.Inter10",Size=10,Resolution=768)
-    DHConsoleFontDSSizes(0)=(FontName="DHFonts.InterDS38",Size=38,Resolution=2880)
-    DHConsoleFontDSSizes(1)=(FontName="DHFonts.InterDS28",Size=28,Resolution=2160)
-    DHConsoleFontDSSizes(2)=(FontName="DHFonts.InterDS24",Size=24,Resolution=1800)
-    DHConsoleFontDSSizes(3)=(FontName="DHFonts.InterDS18",Size=18,Resolution=1440)
-    DHConsoleFontDSSizes(4)=(FontName="DHFonts.InterDS14",Size=14,Resolution=1080)
-    DHConsoleFontDSSizes(5)=(FontName="DHFonts.InterDS14",Size=14,Resolution=1024)
-    DHConsoleFontDSSizes(6)=(FontName="DHFonts.InterDS12",Size=12,Resolution=900)
-    DHConsoleFontDSSizes(7)=(FontName="DHFonts.InterDS10",Size=10,Resolution=768)
-    DHButtonFontSizes(0)=(FontName="DHFonts.SofiaSansCondensed40",Size=40,Resolution=2160)
-    DHButtonFontSizes(1)=(FontName="DHFonts.SofiaSansCondensed26",Size=26,Resolution=1400)
-    DHButtonFontSizes(2)=(FontName="DHFonts.SofiaSansCondensed20",Size=20,Resolution=1080)
-    DHButtonFontDSSizes(0)=(FontName="DHFonts.SofiaSansCondensedDS40",Size=40,Resolution=2160)
-    DHButtonFontDSSizes(1)=(FontName="DHFonts.SofiaSansCondensedDS26",Size=26,Resolution=1400)
-    DHButtonFontDSSizes(2)=(FontName="DHFonts.SofiaSansCondensedDS20",Size=20,Resolution=1080)
-    DHHugeButtonFontSizes(0)=(FontName="DHFonts.SofiaSansCondensed48",Size=48,Resolution=2160)
-    DHHugeButtonFontSizes(1)=(FontName="DHFonts.SofiaSansCondensed32",Size=32,Resolution=1400)
-    DHHugeButtonFontSizes(2)=(FontName="DHFonts.SofiaSansCondensed24",Size=24,Resolution=1080)
-    DHLargeFontSizes(0)=(FontName="DHFonts.Arial32",Size=32,Resolution=2160)
-    DHLargeFontSizes(1)=(FontName="DHFonts.Arial20",Size=20,Resolution=1400)
-    DHLargeFontSizes(2)=(FontName="DHFonts.Arial16",Size=16,Resolution=1080)
-    DHLargeFontDSSizes(0)=(FontName="DHFonts.ArialDS32",Size=32,Resolution=2160)
-    DHLargeFontDSSizes(1)=(FontName="DHFonts.ArialDS20",Size=20,Resolution=1400)
-    DHLargeFontDSSizes(2)=(FontName="DHFonts.ArialDS16",Size=16,Resolution=1080)
-    DHMenuFontSizes(0)=(FontName="DHFonts.SofiaSansCondensed44",Size=44,Resolution=2160)
-    DHMenuFontSizes(1)=(FontName="DHFonts.SofiaSansCondensed28",Size=28,Resolution=1400)
-    DHMenuFontSizes(2)=(FontName="DHFonts.SofiaSansCondensed22",Size=22,Resolution=1080)
-    DHMenuFontDSSizes(0)=(FontName="DHFonts.SofiaSansCondensedDS44",Size=44,Resolution=2160)
-    DHMenuFontDSSizes(1)=(FontName="DHFonts.SofiaSansCondensedDS28",Size=28,Resolution=1400)
-    DHMenuFontDSSizes(2)=(FontName="DHFonts.SofiaSansCondensedDS22",Size=22,Resolution=1080)
-    DHSmallFontSizes(0)=(FontName="DHFonts.Inter28",Size=28,Resolution=2160)
-    DHSmallFontSizes(1)=(FontName="DHFonts.Inter18",Size=18,Resolution=1400)
-    DHSmallFontSizes(2)=(FontName="DHFonts.Inter14",Size=14,Resolution=1080)
-    DHSmallFontDSSizes(0)=(FontName="DHFonts.InterDS28",Size=28,Resolution=2160)
-    DHSmallFontDSSizes(1)=(FontName="DHFonts.InterDS18",Size=18,Resolution=1400)
-    DHSmallFontDSSizes(2)=(FontName="DHFonts.InterDS14",Size=14,Resolution=1080)
+    FontNames(0)="DHFonts.InterA18"
+    FontNames(1)="DHFonts.InterA14"
+    FontNames(2)="DHFonts.InterA12"
+    FontNames(3)="DHFonts.InterA10"
+    FontNames(4)="DHFonts.InterAD18"
+    FontNames(5)="DHFonts.InterAD14"
+    FontNames(6)="DHFonts.InterAD12"
+    FontNames(7)="DHFonts.InterAD10"
+    FontNames(8)="DHFonts.SofiaSansCondensedAW100026"
+    FontNames(9)="DHFonts.SofiaSansCondensedAW100020"
+    FontNames(10)="DHFonts.SofiaSansCondensedAW100016"
+    FontNames(11)="DHFonts.SofiaSansCondensedADW100026"
+    FontNames(12)="DHFonts.SofiaSansCondensedADW100020"
+    FontNames(13)="DHFonts.SofiaSansCondensedADW100016"
+    FontNames(14)="DHFonts.SofiaSansCondensedA42"
+    FontNames(15)="DHFonts.SofiaSansCondensedA32"
+    FontNames(16)="DHFonts.SofiaSansCondensedA26"
+    FontNames(17)="DHFonts.ArialA26"
+    FontNames(18)="DHFonts.ArialA20"
+    FontNames(19)="DHFonts.ArialA16"
+    FontNames(20)="DHFonts.ArialAD26"
+    FontNames(21)="DHFonts.ArialAD20"
+    FontNames(22)="DHFonts.ArialAD16"
+    FontNames(23)="DHFonts.SofiaSansCondensedAW100028"
+    FontNames(24)="DHFonts.SofiaSansCondensedAW100022"
+    FontNames(25)="DHFonts.SofiaSansCondensedAW100018"
+    FontNames(26)="DHFonts.SofiaSansCondensedADW100028"
+    FontNames(27)="DHFonts.SofiaSansCondensedADW100022"
+    FontNames(28)="DHFonts.SofiaSansCondensedADW100018"
+    DHConsoleFontItems(0)=(FontIndex=0,Resolution=1440)
+    DHConsoleFontItems(1)=(FontIndex=1,Resolution=1080)
+    DHConsoleFontItems(2)=(FontIndex=1,Resolution=1024)
+    DHConsoleFontItems(3)=(FontIndex=2,Resolution=900)
+    DHConsoleFontItems(4)=(FontIndex=3,Resolution=768)
+    DHConsoleFontDSItems(0)=(FontIndex=4,Resolution=1440)
+    DHConsoleFontDSItems(1)=(FontIndex=5,Resolution=1080)
+    DHConsoleFontDSItems(2)=(FontIndex=5,Resolution=1024)
+    DHConsoleFontDSItems(3)=(FontIndex=6,Resolution=900)
+    DHConsoleFontDSItems(4)=(FontIndex=7,Resolution=768)
+    DHButtonFontItems(0)=(FontIndex=8,Resolution=1400)
+    DHButtonFontItems(1)=(FontIndex=9,Resolution=1080)
+    DHButtonFontItems(2)=(FontIndex=10,Resolution=900)
+    DHButtonFontDSItems(0)=(FontIndex=11,Resolution=1400)
+    DHButtonFontDSItems(1)=(FontIndex=12,Resolution=1080)
+    DHButtonFontDSItems(2)=(FontIndex=13,Resolution=900)
+    DHHugeButtonFontItems(0)=(FontIndex=14,Resolution=1400)
+    DHHugeButtonFontItems(1)=(FontIndex=15,Resolution=1080)
+    DHHugeButtonFontItems(2)=(FontIndex=16,Resolution=900)
+    DHLargeFontItems(0)=(FontIndex=17,Resolution=1400)
+    DHLargeFontItems(1)=(FontIndex=18,Resolution=1080)
+    DHLargeFontItems(2)=(FontIndex=19,Resolution=900)
+    DHLargeFontDSItems(0)=(FontIndex=20,Resolution=1400)
+    DHLargeFontDSItems(1)=(FontIndex=21,Resolution=1080)
+    DHLargeFontDSItems(2)=(FontIndex=22,Resolution=900)
+    DHMenuFontItems(0)=(FontIndex=23,Resolution=1400)
+    DHMenuFontItems(1)=(FontIndex=24,Resolution=1080)
+    DHMenuFontItems(2)=(FontIndex=25,Resolution=900)
+    DHMenuFontDSItems(0)=(FontIndex=26,Resolution=1400)
+    DHMenuFontDSItems(1)=(FontIndex=27,Resolution=1080)
+    DHMenuFontDSItems(2)=(FontIndex=28,Resolution=900)
+    DHSmallFontItems(0)=(FontIndex=0,Resolution=1400)
+    DHSmallFontItems(1)=(FontIndex=1,Resolution=1080)
+    DHSmallFontItems(2)=(FontIndex=2,Resolution=900)
+    DHSmallFontDSItems(0)=(FontIndex=4,Resolution=1400)
+    DHSmallFontDSItems(1)=(FontIndex=5,Resolution=1080)
+    DHSmallFontDSItems(2)=(FontIndex=6,Resolution=900)
 }

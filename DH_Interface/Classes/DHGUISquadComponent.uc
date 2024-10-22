@@ -236,8 +236,8 @@ defaultproperties
     Begin Object Class=DHGUIListBox Name=MembersList
         OutlineStyleName="ItemOutline"
         SectionStyleName="ListSection"
-        SelectedStyleName="DHItemLargeOutline"
-        StyleName="DHLargeText"
+        SelectedStyleName="DHItemOutline"
+        StyleName="DHSmallText"
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none

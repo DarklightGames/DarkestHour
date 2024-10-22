@@ -267,7 +267,7 @@ defaultproperties
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
         TextAlign=TXTA_Center
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.871667
         WinLeft=0.09625
         WinWidth=0.3
@@ -278,7 +278,7 @@ defaultproperties
     Begin Object Class=GUILabel Name=TeamsCount2
         Caption="? players"
         TextAlign=TXTA_Center
-        StyleName="DHLargeText"
+        StyleName="DHSmallText"
         WinTop=0.415
         WinLeft=0.09625
         WinWidth=0.3
