@@ -7275,7 +7275,7 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
     local DH_LevelInfo LI;
 
     if (Sender == none || Sender.VoiceType == none || Sender.Team == none || 
-        Player.Console == none || Level.NetMode == NM_DedicatedServer)
+        Player == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
     {
         return;
     }
