@@ -432,13 +432,6 @@ function PostRender(Canvas C)
     {
         Menu.GetOptionRenderInfo(SelectedIndex, ORI);
 
-        // Draw action text
-        C.TextSize(ORI.OptionName, XL, YL);
-        C.DrawColor = class'UColor'.default.White;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2), CenterY + (GUIScale * 32.0));
-        C.DrawText(ORI.OptionName);
-
         // Draw info text
         for (i = 0; i < arraycount(ORI.InfoText); ++i)
         {
@@ -449,25 +442,35 @@ function PostRender(Canvas C)
                 C.DrawColor.A = byte(255 * MenuAlpha);
                 C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 32) - (i + 1) * YL);
                 C.DrawText(ORI.InfoText[i]);
+
+                if (i == 0)
+                {
+                    // Draw action icon
+                    if (ORI.InfoIcon != none)
+                    {
+                        AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
+
+                        YL2 = 32;
+                        XL2 = YL2 * AspectRatio;
+
+                        YL2 *= GUIScale;
+                        XL2 *= GUIScale;
+
+                        C.DrawColor = ORI.InfoColor;
+                        C.DrawColor.A = byte(255 * MenuAlpha);
+                        C.SetPos(CenterX - (XL / 2) - XL2 - (GUIScale * 4), CenterY - YL2 - YL - (GUIScale * 8));
+                        C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
+                    }
+                }
             }
         }
 
-        // Draw action icon
-        if (ORI.InfoIcon != none)
-        {
-            AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
-
-            YL2 = 32;
-            XL2 = YL2 * AspectRatio;
-
-            YL2 *= GUIScale;
-            XL2 *= GUIScale;
-
-            C.DrawColor = ORI.InfoColor;
-            C.DrawColor.A = byte(255 * MenuAlpha);
-            C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - (GUIScale * 8));
-            C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
-        }
+        // Draw action text
+        C.TextSize(ORI.OptionName, XL, YL);
+        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2), CenterY + (GUIScale * 32.0));
+        C.DrawText(ORI.OptionName);
 
         // Draw description text
         C.TextSize(ORI.DescriptionText, XL, YL);
