@@ -383,21 +383,20 @@ simulated function DestroyConstructionSockets()
 function OnSpawnedByPlayer(DHPlayer PC)
 {
     local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LI;
     local int ConstructionIndex;
 
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI == none || LI == none)
+    if (GRI == none)
     {
         return;
     }
 
     ConstructionIndex = GRI.GetTeamConstructionIndex(PC.GetTeamNum(), Class);
 
-    if (ConstructionIndex != -1 && LI.GetConstructionMaxActive(PC.GetTeamNum(), Class) != -1)
+    if (ConstructionIndex != -1)
     {
+        // Decrement the remaining count of this construction type.
         GRI.Constructions[ConstructionIndex].Remaining = Max(0, GRI.Constructions[ConstructionIndex].Remaining - 1);
     }
 }
