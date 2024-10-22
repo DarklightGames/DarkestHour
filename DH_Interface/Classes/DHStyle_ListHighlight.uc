@@ -22,7 +22,7 @@ defaultproperties
     FontNames(11)="DHSmallFontDS"
     FontNames(12)="DHSmallFontDS"
     FontNames(13)="DHSmallFontDS"
-    FontNames(14)="DHSmallFontSD"
+    FontNames(14)="DHSmallFontDS"
     Images(0)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
     Images(1)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
     Images(2)=Texture'DH_GUI_Tex.Menu.DHSmallBox'

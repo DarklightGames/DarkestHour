@@ -3,3 +3,4 @@ polib
 PyYAML
 GitPython
 python-iso639
+fonttools
