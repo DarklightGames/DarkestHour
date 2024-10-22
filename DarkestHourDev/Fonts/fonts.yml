@@ -3,8 +3,6 @@
 package_name: DHFonts
 unrealscript:
   gui_fonts:
-    # The parent class for all generated GUI fonts.
-    parent_class: GUIFont
     # The directory where the GUIFonts will be generated.
     directory: ./DH_Interface/Classes
   # The path to the script that will be generated to support loading and accessing fonts.
@@ -15,8 +13,8 @@ proportional:
   resolution:
     baseline: 1080  # The resolution that the baseline font size is based on.
     groups:
-      canvas: [2880, 2160, 1800, 1440, 1080, 1024, 900, 768]
-      gui: [2160, 1400, 1080] # GUI fonts can only have 3 different size levels.
+      canvas: [1440, 1080, 1024, 900, 768]
+      gui: [1400, 1080, 900] # GUI fonts can only have 3 different size levels.
 defaults:
   unicode_ranges: # These unicode ranges are always included for each language.
     - [ 0x0000, 0x007F ] # Basic Latin
@@ -95,19 +93,19 @@ font_styles:
   DHHugeButtonFont:
     size:
         method: proportional
-        baseline: 24
+        baseline: 32
         resolution_group: gui
     font: Sofia Sans Condensed
   DHLargeFont:
     size:
         method: proportional
-        baseline: 16
+        baseline: 20
         resolution_group: gui
     font: Arial
   DHLargeFontDS:
     size:
         method: proportional
-        baseline: 16
+        baseline: 20
         resolution_group: gui
     drop_shadow:
       x: 1
@@ -157,4 +155,3 @@ languages:
 #      - [0x3041, 0x309F]
 #      - [0x30A0, 0x30FF]
 #      - [0x31F0, 0x31FF]
-##      - # TODO: kanji, as needed (there are tens of thousands of them, so it is probably better to include them as needed)
