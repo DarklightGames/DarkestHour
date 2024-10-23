@@ -356,14 +356,8 @@ simulated function int GetRoleLimit(int TeamIndex, int SquadIndex, int RoleNum)
 
 simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
 {
-    if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        Log("GetRoleCount: " @ RoleNum @ ", " @ TeamIndex @ ", SquadIndex: " @ SquadIndex);
-    }
-
     if (RoleNum < 0 || RoleNum >= ROLES_MAX || TeamIndex < 0 || TeamIndex >= 2)
     {
-        Log("GetRoleCount: Invalid RoleNum or TeamIndex: " @ RoleNum @ ", " @ TeamIndex @ ", SquadIndex: " @ SquadIndex);
         return 255;
     }
     //We don't have multi arrays so we gotta do this, yay
@@ -382,7 +376,6 @@ simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
                 case 7: return DHAxisSquad7RoleCount[RoleNum];
                 case 8: return DHAxisSquad8RoleCount[RoleNum];
                 default: 
-                    Log("GetRoleCount: Returning default axis count: " @ DHAxisSquad8RoleCount[RoleNum]);
                     return DHAxisSquad8RoleCount[RoleNum];
             }
             break;
@@ -399,7 +392,6 @@ simulated function int GetRoleCount(int TeamIndex, int SquadIndex, int RoleNum)
                 case 7: return DHAlliesSquad7RoleCount[RoleNum];
                 case 8: return DHAlliesSquad8RoleCount[RoleNum];
             default: 
-                Log("GetRoleCount: Returning default allied count: " @ DHAxisSquad8RoleCount[RoleNum]);
                 return DHAlliesSquad8RoleCount[RoleNum];
             }
             break;
@@ -1327,16 +1319,12 @@ simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
 simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
 {
     local int i;
-    local DHRoleInfo RI;
 
-    //TODO: Rewrite this with squad index
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHAxisRoles); ++i)
         {
-            RI = DHAxisRoles[i];
-
-            if (DHAxisRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            if (DHAxisRoles[i] != none && SRI != none && SRI.GetERoleEnabledResult(DHAxisRoles[i], none, TeamIndex, -1) == 1)
             {
                 return i;
             }
@@ -1346,9 +1334,7 @@ simulated function int GetDefaultRoleIndexForTeam(byte TeamIndex)
     {
         for (i = 0; i < arraycount(DHAlliesRoles); ++i)
         {
-            RI = DHAlliesRoles[i];
-
-            if (DHAlliesRoleLimit[i] == 255 && RI != none && !RI.bRequiresSL && !RI.bRequiresSLorASL)
+            if (DHAlliesRoles[i] != none && SRI != none && SRI.GetERoleEnabledResult(DHAlliesRoles[i], none, TeamIndex, -1) == 1)
             {
                 return i;
             }

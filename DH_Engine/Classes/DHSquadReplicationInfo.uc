@@ -988,9 +988,6 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, class<DHSquadType> Created
     local DHPlayer PC;
     local DHVoiceReplicationInfo VRI;
 
-    Log("----CreateSquad: " @ SquadIndex);
-
-
     if (PRI == none)
     {
         return -1;
@@ -1025,7 +1022,6 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, class<DHSquadType> Created
             }
         }
     }
-    Log("Creating squad with index: " @ i @ " name: " @ Name);
 
     SquadType = CreatedSquadType;
     
@@ -1059,7 +1055,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, class<DHSquadType> Created
         // New squad will have no rallies. Reset the no rally points time to now.
         UpdateSquadLeaderNoRallyPointsTime(TeamIndex, i);
 
-        // This new squad leader may need to have their role invalidated.
+        // The squad member may need to have their role invalidated.
         MaybeInvalidateRole(PC);
 
         return i;
@@ -3217,6 +3213,7 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
 // qualified to have their current role.
 function MaybeInvalidateRole(DHPlayer PC)
 {
+    local int TeamNum;
     local DHRoleInfo RI;
     local int DefaultRoleIndex;
 
@@ -3230,12 +3227,14 @@ function MaybeInvalidateRole(DHPlayer PC)
     {
         // "You are no longer qualified to be {article} {name}."
         PC.ReceiveLocalizedMessage(class'DHGameMessage', 24,,, RI);
-
-        DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());
+        TeamNum = PC.GetTeamNum();
+        DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(TeamNum);
 
         // Set the player's role to a default so that they don't occupy the role.abs
         // Also set the spawn paramters to be invalid so they are forced to go to
         // the deploy menu upon death.
+        //Forcing the player select a new spawn point fixes a bug where they would otherwise spawn as
+        PC.SpawnPointIndex = -1;
         PC.ServerSetPlayerInfo(255, DefaultRoleIndex, -1, -1, PC.SpawnPointIndex, PC.VehiclePoolIndex);
         PC.bSpawnParametersInvalidated = true;
     }

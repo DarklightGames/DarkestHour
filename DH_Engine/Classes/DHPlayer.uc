@@ -3302,6 +3302,7 @@ function ClientChangePlayerInfoResult(byte result)
         return;
     }
 
+
     // Find the currently open ROGUIRoleSelection menu and notify it
     c = UT2K4GUIController(Player.GUIController);
 
@@ -3310,6 +3311,7 @@ function ClientChangePlayerInfoResult(byte result)
         warn("Unable to cast guicontroller to UT2K4GUIController.");
         return;
     }
+
 
     //page_class = class<GUIPage>(DynamicLoadObject("ROInterface.ROGUIRoleSelection", class'class'));
     page_class = class'GUIPage';
@@ -7954,7 +7956,6 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     local DHGameReplicationInfo GRI;
     // local DH_Battlegroup.SquadSelection SquadSelection;
     local int Count, BotCount, Limit;
-    local bool bIsRoleLimitless;
     local int roleResult;
     local int TeamNum, SquadIndex; 
     
@@ -7971,6 +7972,7 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     TeamNum = GetTeamNum();
     SquadIndex = GetSquadIndex();
     GRI.GetSquadRoleCounts(RI, SquadIndex, Count, BotCount);
+
     
     Limit = SquadReplicationInfo.GetRoleLimit(Ri, TeamNum, SquadIndex);
 
@@ -7978,8 +7980,6 @@ function ERoleEnabledResult GetRoleEnabledResult(DHRoleInfo RI)
     {
         return RER_Limit;
     }
-
-    bIsRoleLimitless = Limit == 255;
 
     roleResult = SquadReplicationInfo.GetERoleEnabledResult(RI, self, TeamNum, SquadIndex);
     return ERoleEnabledResult(roleResult);

@@ -1707,12 +1707,24 @@ function int GetVehicleRole(int Team, int Num)
         return -1;
     }
 
-    // Should probably do this team specific in case the teams have different amounts of roles
-    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    if (Team == AXIS_TEAM_INDEX)
     {
-        if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            return i;
+            if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
+            {
+                return i;
+            }
+        }
+    }
+    else if ( Team == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+        {
+            if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
+            {
+                return i;
+            }
         }
     }
 
@@ -1721,43 +1733,9 @@ function int GetVehicleRole(int Team, int Num)
 
 function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
-    local int MyRole, Count, AltRole;
-
-    if (ThisBot != none)
+    if (ThisBot != none && GRI != none)
     {
-        MyRole = Rand(arraycount(GRI.DHAxisRoles));
-        //TODO: Fixup this code to match with the new RoleLimitReachInSquad
-        do
-        {
-            // Temp hack to prevent bots from getting MG roles
-            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
-                || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
-            {
-                ++Count;
-
-                if (Count > arraycount(GRI.DHAxisRoles))
-                {
-                    Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
-
-                    return -1;
-                }
-                else
-                {
-                    ++MyRole;
-
-                    if (MyRole >= arraycount(GRI.DHAxisRoles))
-                    {
-                        MyRole = 0;
-                    }
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        return MyRole;
+        return GRI.GetDefaultRoleIndexForTeam(BotTeamNum);
     }
 
     return -1;

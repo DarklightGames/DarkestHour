@@ -181,7 +181,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
 
     if (RI.Class == SquadSel.Role1Leader.Role)
     {
-        if (DHP.IsSL())
+        if (DHP != none && DHP.IsSL())
         {
             return 1;//RER_Enabled;
         }
@@ -193,7 +193,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
 
     if (RI.Class == SquadSel.Role2Asl.Role)
     {
-        if (DHP.IsAsl())
+        if (DHP != none && DHP.IsAsl())
         {
             return 1;//RER_Enabled;
         }
@@ -204,7 +204,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     }
     else if (IsPrivatesRole(SquadSel, RI.Class))
     {
-        if (!DHP.IsSLorASL())
+        if (DHP == none || !DHP.IsSLorASL())
         {
             return 1;
         }

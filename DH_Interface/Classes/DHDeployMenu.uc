@@ -338,6 +338,7 @@ function Timer()
     // confirmed to be present before populating any lists or running any
     // regular timer logic.
     local int TeamIndex;
+    local int SquadIndex;
 
     if (GRI == none)
     {
@@ -386,10 +387,18 @@ function Timer()
 
     if (SRI != none)
     {
-        if (PC.GetSquadIndex() != PlayerSquadIndex)
+        SquadIndex = PC.GetSquadIndex();
+        if (SquadIndex != PlayerSquadIndex)
         {
-            PlayerSquadIndex = PC.GetSquadIndex();
+            PlayerSquadIndex = SquadIndex;
             PopulateRoles();
+
+            //Only squad leaders should care about seeing the squad tab
+            //While privates will be moved to the equipment tab
+            if (SquadIndex > -1 && !PC.IsSquadLeader())
+            {
+                SetMapMode(MODE_Map);
+            }
         }
         UpdateSquads();
         UpdateRoles();
@@ -695,7 +704,6 @@ function UpdateRoles()
     }
 
     SquadIndex = PC.GetSquadIndex();
-    Log("UpdateRoles: " @ SquadIndex);
 
     if (SquadIndex < 0 || SquadIndex >= p_Squads.SquadComponents.Length)
     {
@@ -1195,9 +1203,7 @@ function UpdateButtonImageVehicle()
 function PopulateRoles()
 {
     local int    i;
-    local class<DHRoleInfo> Role;
-
-    li_Roles.Clear();
+    // local class<DHRoleInfo> Role;
 
     // for (i = 0; i < 6; i++) 
     // {
@@ -1215,10 +1221,12 @@ function PopulateRoles()
     //     }
     // }
 
+    li_Roles.Clear();
+
     //TODO: Add Global Roles
     if (PC == none)
     {
-        //TODO: Add warning here
+        warn("PC is none in PopulateRoles");
         return;
     }
 
@@ -1275,6 +1283,8 @@ function PopulateRoles()
 function AutoSelectRole()
 {
     local int i;
+    local RORoleInfo RI;
+    local int        RoleIndex;
 
     // Colin: PC.GetRoleInfo() can be invalid by the time it gets here. For
     // example, when switching teams, the client can (and likely will) get here
@@ -1288,6 +1298,8 @@ function AutoSelectRole()
     }
 
 
+    RoleIndex = GRI.GetRoleIndexAndTeam(RI);
+
     li_Roles.SelectByObject(none);
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
@@ -1295,10 +1307,23 @@ function AutoSelectRole()
         if (!li_Roles.IsIndexDisabled(i))
         {
             li_Roles.SetIndex(i);
+
             break;
         }
     }
+
+        RI = RORoleInfo(li_Roles.GetObject());
+
+        if (RI == none)
+        {
+            return;
+        }
+
+        RoleIndex = GRI.GetRoleIndexAndTeam(RI);
+
+    //If the Player has spawned, they will have a role already, so we need to change that role for them so they respawn with a squad allowed role
 }
+
 
 // Automatically selects the players' currently selected vehicle to
 // spawn. If no vehicle is selected to spawn, the "None" option will be
@@ -1333,6 +1358,8 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     local byte TeamIndex;
 
     Result = int(MsgLife);
+
+    Log("DHDeployMenu - InternalOnMessage: " @ Msg @ ", result " @ Result);
 
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
@@ -1441,6 +1468,7 @@ function OnOpen()
 
 function CloseMenu()
 {
+    Log("DHDeployMenu close menu called!");
     if (Controller != none)
     {
         Controller.RemoveMenu(self);
@@ -1910,6 +1938,8 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
         return true;
     }
 
+    //TODO: Add squad mode here
+
     return super.OnKeyEvent(Key, State, Delta);
 }
 
@@ -1959,7 +1989,7 @@ function UpdatePlayerSquadName(int TeamIndex, int PlayerSquadIndex, bool bIsInAS
     }
     else
     {
-        l_SquadName.Caption = "No Squad";
+        l_SquadName.Caption = "Unassigned";
     }
 }
 
@@ -2202,6 +2232,7 @@ function UpdateActiveSquad(int TeamIndex, int SquadIndex, DHGUISquadComponent C)
     // SetVisible(C.b_CreateSquadLogistics, false);
     SetVisible(C.lb_Members, false);
     SetVisible(C.li_Members, false);
+    SetVisible(C.b_JoinSquad, true);
     SetVisible(C.b_LeaveSquad, false);
     SetVisible(C.i_NoRallyPoints, false);
     C.b_LockSquad.SetVisibility(false);
@@ -2424,7 +2455,6 @@ function ShowHeadquarters(int TeamIndex, int PlayerIndex, bool bIsInASquad)
             UpdateInactiveSquad(C, TeamIndex, i);
         }
     }
-    
 
     UpdateHeadquartersInfo(TeamIndex);
     UpdateSquadTypeImage(C, TeamIndex, i);
