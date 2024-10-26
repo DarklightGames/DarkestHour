@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHTrenchMaceItem extends DHWeapon;
+class DHBrokenBottleItem extends DHWeapon;
 
 // Modified to allow same InventoryGroup item (this shares same slot as wirecutters/satchel, each item on the slot requires multi-item support)
 function bool HandlePickupQuery(Pickup Item)
@@ -45,25 +45,29 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
-    FireModeClass(0)=class'DH_Equipment.DHTrenchMaceMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
-    FireModeClass(1)=class'DH_Equipment.DHTrenchMaceMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
-    
-    ItemName="Trench Club"
-    InventoryGroup=7
+    FireModeClass(0)=class'DH_Equipment.DHBrokenBottleMeleeFire' // for some odd reason, having just the singular firemodeclass causes tweening issues with the weapons bash animations
+    FireModeClass(1)=class'DH_Equipment.DHBrokenBottleMeleeFire' // hacky fix but duplicating the firemodeclass fixes this?
+    PickupClass=class'DH_Equipment.DHBrokenBottlePickup'
+    ItemName="Vino Rosso 'Bass-net' 2009 Vintage"
+    InventoryGroup=1
     GroupOffset=0
     Priority=4 // this should be higher than any other weapon on InventoryGroup=4, raising this higher than 8 will require to raise priority on other weapons
-    bCanThrow=false
+    bCanThrow=true
+    
 
     DisplayFOV=90.0
     bCanSway=false
 
-    SelectAnim="draw"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    IdleAnim="idle"
-    SprintStartAnim="sprint_start"
-    SprintEndAnim="sprint_end"
-    PutDownAnim="put_away"
+    SelectAnim="draw_bottle"
+    CrawlStartAnim="crawl_in_bottle"
+    CrawlEndAnim="crawl_out_bottle"
+    IdleAnim="idle_bottle"
+    SprintStartAnim="sprint_start_bottle"
+    SprintEndAnim="sprint_end_bottle"
+    PutDownAnim="put_away_bottle"
+    CrawlForwardAnim="crawlF_bottle"
+    CrawlBackwardAnim="crawlB_bottle"
+  
     
     AIRating=0.0
     CurrentRating=0.0
@@ -75,10 +79,8 @@ defaultproperties
     bUsesFreeAim=true
     FreeAimRotationSpeed=2.0
 
-    AttachmentClass=class'DHTrenchMaceAttachment'
-    Mesh=SkeletalMesh'DH_Halloween_anm.trenchmace'
-    Skins(2)=Texture'DH_Halloween_tex.Maces.TrenchClubTexture'
-    //HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.US_shovel_s'
-    //bUseHighDetailOverlayIndex=true
-    //HighDetailOverlayIndex=2
+    AttachmentClass=class'DHBrokenBottleAttachment'
+    Mesh=SkeletalMesh'DH_Halloween_anm.BrokenBottle'
+    //Skins(0)=Texture'DH_Halloween_tex.Maces.BrokenBottleTexture'
+    //Skins(1)=Texture'DH_Halloween_tex.Maces.BrokenBottleTexture'
 }
