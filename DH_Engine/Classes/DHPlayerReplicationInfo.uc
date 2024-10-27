@@ -194,7 +194,7 @@ simulated function bool IsInSquadHeadquarters()
     }
 
     if (SRI == none) return false;
-    return SRI.GetSquadType(Team.TeamIndex, SquadIndex).class == class'DHSquadTypeHeadquarters';
+    return SRI.GetSquadType(Team.TeamIndex, SquadIndex) == class'DHSquadTypeHeadquarters';
 }
 
 simulated function bool HasSquadMembers(int MinCount)
