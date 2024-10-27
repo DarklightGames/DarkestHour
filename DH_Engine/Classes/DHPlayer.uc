@@ -5987,12 +5987,17 @@ simulated function int GetRoleIndex()
 function ServerSquadCreate(class<DHSquadType> CreatedSquadType, int SquadIndex)
 {
     local DarkestHourGame G;
+    local DHPlayerReplicationInfo PRI;
 
     G = DarkestHourGame(Level.Game);
     DeployMenuSquadPlayerMode = MODE_Unassigned;
-    Log("ServerSquadCreate: " @ CreatedSquadType @ " SquadIndex: " @ SquadIndex);
-    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), CreatedSquadType, SquadIndex);
-    
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    if (!PRI.IsInSquad())
+    {
+        Log("ServerSquadCreate: " @ CreatedSquadType @ " SquadIndex: " @ SquadIndex);
+        G.SquadReplicationInfo.CreateSquad(PRI, CreatedSquadType, SquadIndex);
+    }
 }
 
 function ServerSquadLeave()
@@ -6009,14 +6014,18 @@ function ServerSquadLeave()
 function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
     local DarkestHourGame G;
+    local DHPlayerReplicationInfo PRI;
 
     G = DarkestHourGame(Level.Game);
 
-    Log("ServerSquadJoin: SquadIndex: " @ SquadIndex);
     DeployMenuSquadPlayerMode = MODE_Unassigned;
 
-
-    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    if (!PRI.IsInSquad())
+    {
+        Log("ServerSquadJoin: SquadIndex: " @ SquadIndex);
+        G.SquadReplicationInfo.JoinSquad(PRI, TeamIndex, SquadIndex, bWasInvited);
+    }
 }
 
 function ServerSquadJoinAuto()
