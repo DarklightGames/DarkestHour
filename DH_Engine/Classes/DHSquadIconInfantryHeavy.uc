@@ -8,5 +8,5 @@ class DHSquadIconInfantryHeavy extends DHSquadIcon;
 
 defaultproperties
 {
-    Icon = Material'DH_InterfaceArt2_tex.Icons.munitions_vehicle';
+    Icon = Material'DH_InterfaceArt2_tex.Icons.squad_ban';
 }
