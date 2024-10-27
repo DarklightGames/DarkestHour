@@ -7702,35 +7702,6 @@ exec function BigHead(float V)
     SetHeadScale(V);
 }
 
-simulated function bool CanBuildWithShovel()
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(50.0);
-}
-
-simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
-{
-    local Pawn P;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(DistanceMeters))
-    {
-        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-        if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 defaultproperties
 {
     // General class & interaction stuff

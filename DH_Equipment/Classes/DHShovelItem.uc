@@ -13,17 +13,6 @@ simulated function bool ShouldUseFreeAim() { return true; }
 
 simulated function Fire(float F)
 {
-    local DHPawn P;
-
-    P = DHPawn(Instigator);
-
-    if (P != none && !P.CanBuildWithShovel())
-    {
-        // "You must have another squadmate nearby to use your shovel to build!"
-        P.ReceiveLocalizedMessage(class'DHShovelWarningMessage', 1);
-        return;
-    }
-
     if (Instigator != none && Instigator.bIsCrawling)
     {
         class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);

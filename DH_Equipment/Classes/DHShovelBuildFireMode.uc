@@ -51,11 +51,6 @@ simulated function bool AllowFire()
     
     Pawn = DHPawn(Instigator);
 
-    if (Pawn != none && !Pawn.CanBuildWithShovel())
-    {
-        return false;
-    }
-
     return  (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) && Construction.CanBeBuilt();
 }
 
