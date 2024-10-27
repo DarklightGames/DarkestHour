@@ -29,34 +29,19 @@ struct SquadSelection
     var() int                          SquadSize;                   // How many of this squad type there can be
     var() SquadRole            Role1Leader;             // The Roles allowed within this class
     var() SquadRole            Role2Asl;                // The Roles allowed within this class
-    var() SquadRole            Role3;                   // The Roles allowed within this class
-    var() SquadRole            Role4;                   // The Roles allowed within this class
-    var() SquadRole            Role5;                   // The Roles allowed within this class
-    var() SquadRole            Role6;                   // The Roles allowed within this class
+    var() array <SquadRole>    Role3Privates;            // The Roles allowed within this class
 };
 
 var() ETeam                    NationTeam;                      // The nation this battlegroup is for
-var() array<SquadSelection>    Squads;
-// var() class<DHRoleInfo>        NoSquadRole;
+var() SquadSelection           Squads[8];
+var() SquadRole                HQRole1SL;                     // The role for unassigned players
+var() SquadRole                HQRole2ASL;                     // The role for unassigned players
+var() array<SquadRole>         HQRolesPrivates;                     // The role for unassigned players
+var() array<SquadRole>         UnAssignedSquadRoles;                     // The role for unassigned players
 
+const SQUAD_INDEX_HQ	= 8;
+const SQUAD_INDEX_UNASSIGNED = 9;
 
-// simulated function array<DHRoleInfo> GetRoles(int squadIndex)
-// {
-//     local SquadSelection SquadSel;
-//     local DHRoleInfo Roles[6];
-//     local int RoleSize;
-//     SquadSel = Squads[SquadIndex];
-
-    
-//     Roles(0) = SquadSel.Role1Leader.Role;
-//     Roles(1) = SquadSel.Role2Asl.Role;
-//     Roles(2) = SquadSel.Role3.Role;
-//     Roles(3) = SquadSel.Role4.Role;
-//     Roles(4) = SquadSel.Role5.Role;
-//     Roles(5) = SquadSel.Role6.Role;
-
-//     return Roles;
-// } 
 
 //=============================================================================
 // replication
@@ -68,13 +53,29 @@ replication
 		NationTeam, Squads;
 }
 
+
 simulated function class<DHSquadType> GetSquadType(int SquadIndex)
 {
     if (IsSquadIndexOk(SquadIndex) && Squads[SquadIndex].SquadType != none)
     {
         return Squads[SquadIndex].SquadType;
     }
+
+    if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return class'DHSquadTypeHeadquarters';
+    }
+
+    if (IsSquadUnassigned(SquadIndex))
+    {
+        return class'DHSquadTypeUnassigned';
+    }
     return class'DHSquadTypeGeneric';
+}
+
+simulated function bool IsSquadUnassigned(int SquadIndex)
+{
+    return SquadIndex < 0 || SquadIndex == SQUAD_INDEX_UNASSIGNED;
 }
 
 simulated function Material GetSquadTypeIcon(int SquadIndex)
@@ -95,31 +96,94 @@ simulated function string GetSquadTypeHint(int SquadIndex)
     return "";
 }
 
-
+//TODO: Fix this function
 simulated function class<DHRoleInfo> GetRole(int SquadIndex, int RoleIndex)
 {
+    // local int i;
     switch (RoleIndex)
     {
         case 0:
             return Squads[SquadIndex].Role1Leader.Role;
         case 1:
             return Squads[SquadIndex].Role2Asl.Role;
-        case 2:
-            return Squads[SquadIndex].Role3.Role;
-        case 3:
-            return Squads[SquadIndex].Role4.Role;
-        case 4:
-            return Squads[SquadIndex].Role5.Role;
-        case 5:
-            return Squads[SquadIndex].Role6.Role;
         default:
-            return none;
+        if (IsSquadIndexOk(SquadIndex))
+        {
+            return Squads[SquadIndex].Role3Privates[0].Role;
+        }
+        return UnAssignedSquadRoles[0].Role;
     }
 }
+
+//TODO: Make this work if we want it
+// simulated function array<DHRoleInfo> GetRoles(int squadIndex)
+// {
+//     local int i;
+//     local SquadSelection SquadSel;
+//     local array<DHRoleInfo> Roles;
+
+//     if (!IsSquadIndexOk(SquadIndex))
+//     {
+//         if (SquadIndex  == SQUAD_INDEX_HQ)
+//         {
+//             Roles.Length = HQRole1SL.Limit + HQRole2ASL.Limit + HQRolesPrivates.Length;
+//             if (Roles.Length < 2)
+//             {
+//                 return Roles;
+//             }
+            
+//             Roles(0) = HQRole1SL.Role;
+//             Roles(1) = HQRole2ASL.Role;
+
+//             for (i = 2; i < HQRolesPrivates.Length; i++)
+//             {
+//                 Roles(i) = HQRolesPrivates[i - 2].Role;
+//             }
+//             return Roles;
+//         }
+//         else if (IsSquadUnassigned(SquadIndex))
+//         {
+//             Roles.Length = UnAssignedSquadRoles.Length;
+//             for (i = 0; i < UnAssignedSquadRoles.Length; i++)
+//             {
+//                 Roles(i) = UnAssignedSquadRoles[i].Role;
+//             }
+//             return Roles;
+//         }
+//     }
+
+//     SquadSel = Squads[SquadIndex];
+    
+//     Roles.Length = GetSquadSize(SquadIndex);
+//     Roles(0) = SquadSel.Role1Leader.Role;
+//     Roles(1) = SquadSel.Role2Asl.Role;
+
+//     for (i = 2; i < roles.Length; i++)
+//     {
+//         Roles(i) = SquadSel.Role3Privates[i - 2].Role;
+        
+//     }
+//     return Roles;
+// }
 
 simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
 {
     local SquadSelection SquadSel;
+
+    if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return GetLimitForRole(RI, HQRolesPrivates);
+    }
+    else if (IsSquadUnassigned(SquadIndex))
+    {
+        return GetLimitForRole(RI, UnAssignedSquadRoles);
+    }
+    else if (!IsSquadIndexOk(SquadIndex))
+    {
+        Log("GetRoleLimit !IsSquadIndexOk: " @ SquadIndex @ " " @ RI.Class);
+
+        return -1;
+    }
 
     SquadSel = Squads[SquadIndex];
 
@@ -129,22 +193,14 @@ simulated function int GetRoleLimit(DHRoleInfo RI, int SquadIndex)
             return SquadSel.Role1Leader.Limit;
         case SquadSel.Role2Asl.Role:
             return SquadSel.Role2Asl.Limit;
-        case SquadSel.Role3.Role:
-            return SquadSel.Role3.Limit;
-        case SquadSel.Role4.Role:
-            return SquadSel.Role4.Limit;
-        case SquadSel.Role5.Role:
-            return SquadSel.Role5.Limit;
-        case SquadSel.Role6.Role:
-            return SquadSel.Role6.Limit;
         default:
-            return 255;
+            return GetLimitForRole(RI, SquadSel.Role3Privates);
     }
 }
 
 simulated function bool IsSquadIndexOk(int SquadIndex)
 {
-    return SquadIndex >= 0 && SquadIndex < Squads.Length;
+    return SquadIndex >= 0 && SquadIndex < SQUAD_INDEX_HQ;
 }
 
 simulated function string GetDefaultSquadName(int SquadIndex)
@@ -153,6 +209,17 @@ simulated function string GetDefaultSquadName(int SquadIndex)
     {
         return Squads[SquadIndex].Name;
     }
+
+    if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return "Headquarters";
+    }
+
+    if (IsSquadUnassigned(SquadIndex))
+    {
+        return "Unassigned";
+    }
+
     return "Squad";
 }
 
@@ -162,10 +229,30 @@ simulated function int GetSquadSize(int SquadIndex)
     {
         return Squads[SquadIndex].SquadSize;
     }
+
+    if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return GetHQSquadSize();
+    }
+
+    if (IsSquadUnassigned(SquadIndex))
+    {
+        return 8;
+    }
+
     return 8;
 }
 
-// The squads that can be selected for this battlegroup 
+private simulated function int GetHQSquadSize()
+{
+    local int Size;
+    
+    Size += HQRole1SL.Limit;
+    Size += HQRole2ASL.Limit;
+
+    return Size + HQRolesPrivates.Length;
+}
+
 simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int SquadIndex)
 {
     local SquadSelection SquadSel;
@@ -174,9 +261,17 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
     {
         SquadSel = Squads[SquadIndex];
     }
+    else if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return GetERoleEnabledResultForHQ(RI, DHP);
+    }
+    else if (IsSquadUnassigned(SquadIndex))
+    {
+        return GetERoleEnabledResultForRole(RI, UnAssignedSquadRoles);
+    }
     else
     {
-        SquadSel = Squads[Squads.Length - 1]; //Unnassigned players
+        return 7;
     }
 
     if (RI.Class == SquadSel.Role1Leader.Role)
@@ -190,8 +285,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
             return 4;
         }
     }
-
-    if (RI.Class == SquadSel.Role2Asl.Role)
+    else if (RI.Class == SquadSel.Role2Asl.Role)
     {
         if (DHP != none && DHP.IsAsl())
         {
@@ -202,7 +296,7 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
             return 5;
         }
     }
-    else if (IsPrivatesRole(SquadSel, RI.Class))
+    else if (GetERoleEnabledResultForRole(RI, SquadSel.Role3Privates) == 1)
     {
         if (DHP == none || !DHP.IsSLorASL())
         {
@@ -214,75 +308,78 @@ simulated function int GetERoleEnabledResult(DHRoleInfo RI, DHPlayer DHP, int Sq
         }
     }
 
-    return 7;//RER_SquadTypeOnlyInfantry; //RER_SquadTypeOnlyInfantry;
+    return 7;
 }
 
-private simulated function bool IsPrivatesRole(SquadSelection Squad, class<DHRoleInfo> RiClass)
+private simulated function int GetERoleEnabledResultForHQ(DHRoleInfo RI, DHPlayer DHP)
 {
-    return ((Squad.Role3.Role == RiClass ) || 
-    (Squad.Role4.Role == RiClass) || 
-    (Squad.Role5.Role == RiClass) ||
-     (Squad.Role6.Role == RiClass));
+    if (RI.Class == HQRole1SL.Role)
+    {
+        if (DHP != none && DHP.IsSL())
+        {
+            return 1;//RER_Enabled;
+        }
+        else
+        {
+            return 4;
+        }
+    }
+    else if (RI.Class == HQRole2ASL.Role)
+    {
+        if (DHP != none && DHP.IsAsl())
+        {
+            return 1;//RER_Enabled;
+        }
+        else
+        {
+            return 5;
+        }
+    }
+    else if (GetERoleEnabledResultForRole(RI, HQRolesPrivates) == 1)
+    {
+        if (DHP == none || !DHP.IsSLorASL())
+        {
+            return 1;
+        }
+        else
+        {
+            return 6;//RER_NonSquadLeaderOnly;
+        }
+    }
+    return 7;
 }
 
-// var() material              SquadIcon;        // Used to stop loading screen image from being removed on save (not otherwise used)
 
-// simulated static function DH_BattleGroup GetInstance(LevelInfo Level, ETeam Team)
-// {
-//     local DarkestHourGame G;
-//     local DHPlayer PC;
-//     local DH_BattleGroup BG;
+private simulated function int GetERoleEnabledResultForRole(DHRoleInfo RI, array<SquadRole> roles)
+{
+    local int i;
 
-//     if (Level.Role == ROLE_Authority)
-//     {
-//         G = DarkestHourGame(Level.Game);
+    for (i = 0; i < roles.Length; i++)
+    {
+        if (RI.Class == roles[i].Role)
+        {
+            return 1;//RER_Enabled;
+        }
+    }
+    return -1;
+}
 
-//         if (G != none)
-//         {
-//             if (Team == ETeam.TEAM_Axis)
-//             {
-//                 BG = G.DH_BattlegroupAxis;
-//             }
-//             else
-//             {
-//                 BG = G.DH_BattlegroupAllied;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         PC = DHPlayer(Level.GetLocalPlayerController());
+private simulated function int GetLimitForRole(DHRoleInfo RI, array<SquadRole> roles)
+{
+    local int i;
 
-//         if (PC != none)
-//         {
-//             if (Team == ETeam.TEAM_Axis)
-//             {
-//                 BG = PC.ClientBattlegroupAxis;
-//             }
-//             else
-//             {
-//                 BG = PC.ClientBattlegroupAllied;
-//             }
-//         }
-//     }
-
-//     if (BG == none)
-//     {
-//         foreach Level.AllActors(class'DH_BattleGroup', BG)
-//         {
-//             if (BG.NationTeam == Team)
-//             {
-//                 break;
-//             }
-//         }
-//     }
-
-//     return BG;
-// }
+    for (i = 0; i < roles.Length; i++)
+    {
+        if (RI.Class == roles[i].Role)
+        {
+            return roles[i].Limit;
+        }
+    }
+    return -1;
+}
 
 defaultproperties
 {
     bStatic=true
     Texture=Texture'DHEngine_Tex.LevelInfo'
-    // Squads(0)=(Name="Rifle Squad",SquadType=class'DHSquadTypeInfantry',Limit=4,Role1Leader=class'DHAlliedSergeantRoles',Role2Asl=class'DHAlliedSergeantRoles',Role3=class'DHAlliedSergeantRoles')
 }
