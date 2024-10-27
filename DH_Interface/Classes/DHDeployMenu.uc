@@ -1784,11 +1784,40 @@ function ToggleMapMode()
 {
     if (MapMode == MODE_Map)
     {
-        SetMapMode(MODE_Squads);
     }
     else if (MapMode == MODE_Squads)
     {
         SetMapMode(MODE_Map);
+    }
+}
+
+function ToggleLoadOut()
+{
+    if (MapMode == MODE_Map)
+    {
+        if (LoadoutMode == LM_Equipment)
+        {
+            SetLoadoutMode(LM_Vehicle);
+        }
+        else if (LoadoutMode == LM_Vehicle)
+        {
+            SetLoadoutMode(LM_Equipment);
+        }
+    }
+    else if (MapMode == MODE_Squads)
+    {
+        if (PC.DeployMenuSquadPlayerMode == Mode_Headquarters)
+        {
+            SetSquadPlayersMode(MODE_ActiveSquads);
+        }
+        else if (PC.DeployMenuSquadPlayerMode == MODE_ActiveSquads)
+        {
+            SetSquadPlayersMode(MODE_Unassigned);
+        }
+        else if (PC.DeployMenuSquadPlayerMode == MODE_Unassigned)
+        {
+            SetSquadPlayersMode(Mode_Headquarters);
+        }
     }
 }
 
@@ -1930,15 +1959,65 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
     K = EInputKey(Key);
     A = EInputAction(State);
-
-    if (K == IK_F1 && A == IST_Release)
+    if (A == IST_Release)
     {
-        ToggleMapMode();
-
-        return true;
+        switch (K)
+        {
+            case IK_F1:
+                if (MapMode != Mode_Map)
+                {
+                    SetMapMode(Mode_Map);
+                }
+                return true;
+            case IK_F2:
+                if (MapMode != Mode_Squads)
+                {
+                    SetMapMode(Mode_Squads);
+                }
+                return true;
+            case IK_F3:
+                if (MapMode == Mode_Map)
+                {
+                    if (LoadoutMode != LM_Equipment)
+                    {
+                        SetLoadoutMode(LM_Equipment);
+                    }
+                }
+                else if (MapMode == Mode_Squads && PC != none)
+                {
+                    if (PC.DeployMenuSquadPlayerMode != Mode_Headquarters)
+                    {
+                        SetSquadPlayersMode(Mode_Headquarters);
+                    }
+                }
+                return true;
+            case IK_F4:
+                if (MapMode == Mode_Map)
+                {
+                    if (LoadoutMode != LM_Vehicle)
+                    {
+                        SetLoadoutMode(LM_Vehicle);
+                    }
+                }
+                else if (MapMode == Mode_Squads && PC != none)
+                {
+                    if (PC.DeployMenuSquadPlayerMode != MODE_ActiveSquads)
+                    {
+                        SetSquadPlayersMode(MODE_ActiveSquads);
+                    }
+                }
+                return true;
+            case IK_F5:
+                if (MapMode == Mode_Squads && PC != none)
+                {
+                    if (PC.DeployMenuSquadPlayerMode != MODE_Unassigned)
+                    {
+                        SetSquadPlayersMode(MODE_Unassigned);
+                    }
+                }
+                return true;
+        }
     }
-
-    //TODO: Add squad mode here
 
     return super.OnKeyEvent(Key, State, Delta);
 }
@@ -3003,7 +3082,7 @@ defaultproperties
         WinTop=0.0
         WinLeft=0.5
         OnClick=OnClick
-        Hint="Squad [F1]"
+        Hint="Loadout [F1]"
     End Object
     b_MapButton=MapButtonObject
 
