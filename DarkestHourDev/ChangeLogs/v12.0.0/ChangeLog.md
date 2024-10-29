@@ -20,13 +20,24 @@ We have developed a system for localization that will allow us to easily add mor
 
 If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
 
+## Map Icon Overhaul
+
+The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the piece of equipment that they represent.
+
+To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while they will be colored blue if they are occupied. In addition, if they are being occupied by a squadmate, they will be colored green.
+
+Finally, all friendly vehicles will now be visible on the map at all times. We will keep an eye on if this has a negative impact on the usability of the map, and will adjust as necessary.
+
+[[pending]]
+The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
+
 ## Font Overhaul
 
-To accommodate the localization efforts, all of the game's fonts have been completely overhauled!
+To accommodate the localization efforts, all the game's fonts have been completely overhauled!
 
 We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
 
-In addition, players who play at higher resolutions (e.g. 4K) will be pleased to find that the game's fonts are no longer unreadably small.
+In addition, players who play at higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 [[ insert screenshots of the new fonts in action ]]
 

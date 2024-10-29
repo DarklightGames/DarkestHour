@@ -588,19 +588,47 @@ function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMes
     }
 }
 
+// Font functions.
+static function Font GetMediumFontFor(Canvas C)
+{
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
+}
+
+function Font GetFontSizeIndex(Canvas C, int FontSize)
+{
+    // FontSize always seems to be passed in as a NEGATIVE value.
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(C.ClipY);
+}
+
 static function Font GetPlayerNameFont(Canvas C)
 {
-    local int FontSize;
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+}
 
-    FontSize = default.PlayerNameFontSize;
+static function Font GetConsoleFont(Canvas C)
+{
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+}
 
-    if (C.ClipX < 640.0) { FontSize++; }
-    if (C.ClipX < 800.0) { FontSize++; }
-    if (C.ClipX < 1024.0) { FontSize++; }
-    if (C.ClipX < 1280.0) { FontSize++; }
-    if (C.ClipX < 1600.0) { FontSize++; }
+static function Font GetLargeMenuFont(Canvas C)
+{
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+}
 
-    return LoadFontStatic(Min(8, FontSize));
+static function Font GetSmallMenuFont(Canvas C)
+{
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+}
+
+static function Font GetSmallerMenuFont(Canvas C)
+{
+    return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
+}
+
+function Font GetCriticalMsgFontSizeIndex(Canvas C, int FontSize)
+{
+    // TODO: Index is irrelevant here (although we probably want an offset here because we want it kinda big).
+    return class'DHFonts'.static.GetDHConsoleFontByResolution(C.ClipY);
 }
 
 // This is more or less just a re-stating of the ROHud function with a couple of
@@ -1938,7 +1966,7 @@ function DrawSignals(Canvas C)
     local Vector    TraceStart, TraceEnd;
     local Vector    ScreenLocation;
     local Material  SignalMaterial;
-    local float     AngleDegrees, XL, YL, X, Y, SignalIconSize, T, Alpha, TimeRemaining, AlphaMin;
+    local float     AngleDegrees, XL, YL, X, Y, SignalIconSize, T, Alpha, TimeRemaining, AlphaMin, GUIScale;
     local bool      bHasLOS, bIsNew;
     local string    DistanceText, LabelText;
     local Color     SignalColor;
@@ -1950,6 +1978,9 @@ function DrawSignals(Canvas C)
     {
         return;
     }
+
+    // Scale the HUD based on the screen resolution.
+    GUIScale = C.ClipY / 1080.0;
 
     MyProjWeapon = DHProjectileWeapon(PawnOwner.Weapon);
 
@@ -2027,6 +2058,7 @@ function DrawSignals(Canvas C)
         }
 
         SignalIconSize *= PC.Signals[i].SignalClass.default.WorldIconScale;
+        SignalIconSize *= GUIScale;
 
         C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
         C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);
@@ -5957,6 +5989,51 @@ function DHDrawTypingPrompt(Canvas C)
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
 
+// Modified from ROHud to pass the right name of the weapon and fix the font.
+simulated function DrawWeaponName(Canvas C)
+{
+	local string CurWeaponName;
+	local float XL,YL, Fade;
+
+	if (bHideWeaponName)
+    {
+		return;
+    }
+
+	if (WeaponDrawTimer>Level.TimeSeconds)
+	{
+		C.DrawColor = WhiteColor;
+		C.Font = GetMediumFontFor(C);
+		C.TextSize(CurWeaponName, XL, YL);
+
+		Fade = WeaponDrawTimer - Level.TimeSeconds;
+
+		if (Fade <= 1)
+        {
+            C.DrawColor.A = 255 * Fade;
+        }
+
+		C.StrLen(LastWeaponName, XL, YL);
+		C.SetPos((C.ClipX / 2) - (XL / 2), C.ClipY * 0.8 - YL);
+		C.DrawText(LastWeaponName);
+	}
+
+	if (PawnOwner == none || PawnOwner.PendingWeapon == none)
+    {
+		return;
+    }
+
+	CurWeaponName = class'DHPlayer'.static.GetInventoryName(PawnOwner.PendingWeapon.Class);
+
+	if (CurWeaponName != LastWeaponName)
+	{
+		WeaponDrawTimer = Level.TimeSeconds + 1.5;
+		WeaponDrawColor = PawnOwner.PendingWeapon.HudColor;
+	}
+
+   	LastWeaponName = CurWeaponName;
+}
+
 defaultproperties
 {
     // General
@@ -6161,44 +6238,11 @@ defaultproperties
     IQIconWidget=(/*WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Intelligence',*/RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_MiddleMiddle,PosX=1.0,PosY=1.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=-90,OffsetY=-130)
     IQTextWidget=(PosX=1.0,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=-55,OffsetY=-118)
 
-	SmallFontArrayNames(0)="DHFonts.DHConsoleFontDS24"
-	SmallFontArrayNames(1)="DHFonts.DHConsoleFontDS24"
-	SmallFontArrayNames(2)="DHFonts.DHConsoleFontDS22"
-	SmallFontArrayNames(3)="DHFonts.DHConsoleFontDS22"
-	SmallFontArrayNames(4)="DHFonts.DHConsoleFontDS18"
-	SmallFontArrayNames(5)="DHFonts.DHConsoleFontDS14"
-	SmallFontArrayNames(6)="DHFonts.DHConsoleFontDS12"
-	SmallFontArrayNames(7)="DHFonts.DHConsoleFontDS9"
-	SmallFontArrayNames(8)="DHFonts.DHConsoleFontDS7"
-    
-	FontArrayNames(0)="DHFonts.DHConsoleFontDS28"
-	FontArrayNames(1)="DHFonts.DHConsoleFontDS26"
-	FontArrayNames(2)="DHFonts.DHConsoleFontDS24"
-	FontArrayNames(3)="DHFonts.DHConsoleFontDS22"
-	FontArrayNames(4)="DHFonts.DHConsoleFontDS18"
-	FontArrayNames(5)="DHFonts.DHConsoleFontDS16"
-	FontArrayNames(6)="DHFonts.DHConsoleFontDS14"
-	FontArrayNames(7)="DHFonts.DHConsoleFontDS12"
-	FontArrayNames(8)="DHFonts.DHConsoleFontDS9"
-
-	MenuFontArrayNames(0)="DHFonts.DHConsoleFontDS18"
-	MenuFontArrayNames(1)="DHFonts.DHConsoleFontDS14"
-	MenuFontArrayNames(2)="DHFonts.DHConsoleFontDS12"
-	MenuFontArrayNames(3)="DHFonts.DHConsoleFontDS9"
-	MenuFontArrayNames(4)="DHFonts.DHConsoleFontDS7"
-
-	CriticalMsgFontArrayNames(0)="DHFonts.DHConsoleFont28"
-	CriticalMsgFontArrayNames(1)="DHFonts.DHConsoleFont26"
-	CriticalMsgFontArrayNames(2)="DHFonts.DHConsoleFont24"
-	CriticalMsgFontArrayNames(3)="DHFonts.DHConsoleFont22"
-	CriticalMsgFontArrayNames(4)="DHFonts.DHConsoleFont18"
-	CriticalMsgFontArrayNames(5)="DHFonts.DHConsoleFont16"
-	CriticalMsgFontArrayNames(6)="DHFonts.DHConsoleFont14"
-	CriticalMsgFontArrayNames(7)="DHFonts.DHConsoleFont12"
-	CriticalMsgFontArrayNames(8)="DHFonts.DHConsoleFont9"
-
     SayTypeConsoleText="[CONSOLE]"
     SayTypeAllText="[ALL]"
 
     PrereleaseDisclaimerText="This is a pre-release build. All content is subject to change."
+
+    PortraitText(0)=(Text="",PosX=0.0,PosY=0.5,WrapWidth=0,WrapHeight=0,OffsetX=8,OffsetY=0,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
+	PortraitText(1)=(Text="",PosX=0.0,PosY=0.5,WrapWidth=0,WrapHeight=0,OffsetX=8,OffsetY=0,DrawPivot=DP_UpperLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
 }

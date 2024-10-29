@@ -11,4 +11,7 @@ defaultproperties
     VehicleClass=class'DH_Guns.DH_Fiat1435Gun'
     SupplyCost=500
     ProgressMax=5
+    bCanOnlyPlaceOnTerrain=false
+    bCanPlaceIndoors=true
+    ArcLengthTraceIntervalInMeters=0.125
 }

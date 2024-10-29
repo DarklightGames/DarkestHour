@@ -4,17 +4,17 @@
 // To regenerate this file, run ./tools/localization/generate_fonts.bat
 //==============================================================================
 
-class DHConsoleFont extends GUIFont;
+class DHLargeFontDS extends GUIFont;
 
 event Font GetFont(int ResX)
 {
     local int ResYGuess;
     ResYGuess = ResX * (9.0 / 16.0);
 
-    return class'DHFonts'.static.GetDHConsoleFontByResolution(ResYGuess);
+    return class'DHFonts'.static.GetDHLargeFontDSByResolution(ResYGuess);
 }
 
 defaultproperties
 {
-    KeyName="DHConsoleFont"
+    KeyName="DHLargeFontDS"
 }

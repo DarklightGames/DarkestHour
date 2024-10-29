@@ -12,7 +12,7 @@ defaultproperties
     bUsesTracers=true
     TracerFrequency=5
     AmmoClass=class'DH_Weapons.DH_Breda30Ammo'
-    FireRate=0.14 // ~500 rpm
+    FireRate=0.13 // ~500 rpm
     FAProjSpawnOffset=(X=-28.0)
 
     AddedPitch=15.0
@@ -21,8 +21,8 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=580
-    MaxHorizontalRecoilAngle=230
+    MaxVerticalRecoilAngle=500
+    MaxHorizontalRecoilAngle=200
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.66),(InVal=2.0,OutVal=0.8),(InVal=3.0,OutVal=1.0),(InVal=6.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=6.0

@@ -193,10 +193,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         case ERROR_Exhausted:
             ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
             ORI.InfoText[0] = default.ExhaustedText;
-            if (E.OptionalInteger >= 0)
-            {
-                ORI.InfoText[0] @= "(" $ class'TimeSpan'.static.ToString(E.OptionalInteger - GRI.ElapsedTime) $ ")";
-            }
             break;
         case ERROR_SquadTooSmall:
             if (PC != none && PC.SquadReplicationInfo != none)
@@ -215,13 +211,13 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     ORI.DescriptionText = ConstructionClass.default.MenuDescription;
 
-    if (GRI != none && ORI.DescriptionText == "")
+    if (GRI != none)
     {
         Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
 
         if (Remaining != -1)
         {
-            ORI.DescriptionText = Repl(default.RemainingText, "{0}", string(Remaining));
+            ORI.InfoText[1] = Repl(default.RemainingText, "{0}", string(Remaining));
         }
     }
 }

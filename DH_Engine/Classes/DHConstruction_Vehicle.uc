@@ -197,4 +197,5 @@ defaultproperties
     DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
     bCanOnlyPlaceOnTerrain=false
+    Stages(0)=(Progress=0)
 }

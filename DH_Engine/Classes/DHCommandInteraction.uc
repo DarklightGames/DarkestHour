@@ -298,22 +298,26 @@ function Tick(float DeltaTime)
     }
 }
 
-function DrawCenteredTile(Canvas C, Material TileMaterial, float CenterX, float CenterY)
+function DrawCenteredTile(Canvas C, Material TileMaterial, float CenterX, float CenterY, float GUIScale)
 {
+    local float MaterialUSize, MaterialVSize;
     local float USize, VSize;
 
-    USize = TileMaterial.MaterialUSize();
-    VSize = TileMaterial.MaterialVSize();
+    MaterialUSize = TileMaterial.MaterialUSize();
+    MaterialVSize = TileMaterial.MaterialVSize();
+
+    USize = GUIScale * MaterialUSize;
+    VSize = GUIScale * MaterialVSize;
 
     C.SetPos(CenterX - (USize / 2), CenterY - (VSize / 2));
-    C.DrawTile(TileMaterial, USize, VSize, 0, 0, USize, VSize);
+    C.DrawTile(TileMaterial, USize, VSize, 0, 0, MaterialUSize, MaterialVSize);
 }
 
 function PostRender(Canvas C)
 {
     local int i, OptionIndex;
     local float Theta, ArcLength;
-    local float CenterX, CenterY, X, Y, XL, YL, AspectRatio, XL2, YL2;
+    local float CenterX, CenterY, X, Y, XL, YL, AspectRatio, XL2, YL2, GUIScale;
     local DHCommandMenu Menu;
     local bool bIsOptionDisabled;
     local DHCommandMenu.OptionRenderInfo ORI;
@@ -323,6 +327,8 @@ function PostRender(Canvas C)
         return;
     }
 
+    // Calculate the GUI scale factor as compared to 1080p.
+    GUIScale = C.ClipY / 1080.0;
     CenterX = C.ClipX / 2;
     CenterY = C.ClipY / 2;
 
@@ -330,10 +336,10 @@ function PostRender(Canvas C)
     C.DrawColor.A = byte(255 * MenuAlpha);
 
     // Draw menu crosshair
-    DrawCenteredTile(C, CrosshairMaterial, CenterX, CenterY);
+    DrawCenteredTile(C, CrosshairMaterial, CenterX, CenterY, GUIScale);
 
     // Draw outer "beauty" ring
-    DrawCenteredTile(C, RingTexture, CenterX, CenterY);
+    DrawCenteredTile(C, RingTexture, CenterX, CenterY, GUIScale);
 
     C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
@@ -388,7 +394,7 @@ function PostRender(Canvas C)
         }
 
         // Draw the option background texture.
-        DrawCenteredTile(C, OptionTexRotators[i], CenterX, CenterY);
+        DrawCenteredTile(C, OptionTexRotators[i], CenterX, CenterY, GUIScale);
 
         // Draw option icon
         if (Menu.Options[OptionIndex].Material != none)
@@ -412,10 +418,10 @@ function PostRender(Canvas C)
             C.DrawColor.A = byte(255 * MenuAlpha);
 
             // Calculate the center of where the option icon should be.
-            X = CenterX + (Cos(Theta) * 144);
-            Y = CenterY + (Sin(Theta) * 144);
+            X = CenterX + (Cos(Theta) * (GUIScale * 144.0));
+            Y = CenterY + (Sin(Theta) * (GUIScale * 144.0));
 
-            DrawCenteredTile(C, Menu.Options[OptionIndex].Material, X, Y);
+            DrawCenteredTile(C, Menu.Options[OptionIndex].Material, X, Y, GUIScale);
         }
 
         Theta += ArcLength;
@@ -426,13 +432,6 @@ function PostRender(Canvas C)
     {
         Menu.GetOptionRenderInfo(SelectedIndex, ORI);
 
-        // Draw action text
-        C.TextSize(ORI.OptionName, XL, YL);
-        C.DrawColor = class'UColor'.default.White;
-        C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2), CenterY + 32);
-        C.DrawText(ORI.OptionName);
-
         // Draw info text
         for (i = 0; i < arraycount(ORI.InfoText); ++i)
         {
@@ -441,30 +440,43 @@ function PostRender(Canvas C)
                 C.TextSize(ORI.InfoText[i], XL, YL);
                 C.DrawColor = ORI.InfoColor;
                 C.DrawColor.A = byte(255 * MenuAlpha);
-                C.SetPos(CenterX - (XL / 2), CenterY - 32 - (i + 1) * YL);
+                C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 32) - (i + 1) * YL);
                 C.DrawText(ORI.InfoText[i]);
+
+                if (i == 0)
+                {
+                    // Draw action icon
+                    if (ORI.InfoIcon != none)
+                    {
+                        AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
+
+                        YL2 = 32;
+                        XL2 = YL2 * AspectRatio;
+
+                        YL2 *= GUIScale;
+                        XL2 *= GUIScale;
+
+                        C.DrawColor = ORI.InfoColor;
+                        C.DrawColor.A = byte(255 * MenuAlpha);
+                        C.SetPos(CenterX - (XL / 2) - XL2 - (GUIScale * 4), CenterY - YL2 - YL - (GUIScale * 8));
+                        C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
+                    }
+                }
             }
         }
 
-        // Draw action icon
-        if (ORI.InfoIcon != none)
-        {
-            AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
-
-            YL2 = 32;
-            XL2 = YL2 * AspectRatio;
-
-            C.DrawColor = ORI.InfoColor;
-            C.DrawColor.A = byte(255 * MenuAlpha);
-            C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - 8);
-            C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
-        }
+        // Draw action text
+        C.TextSize(ORI.OptionName, XL, YL);
+        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2), CenterY + (GUIScale * 32.0));
+        C.DrawText(ORI.OptionName);
 
         // Draw description text
         C.TextSize(ORI.DescriptionText, XL, YL);
         C.DrawColor = class'UColor'.default.White;
         C.DrawColor.A = byte(255 * MenuAlpha);
-        C.SetPos(CenterX - (XL / 2), CenterY - 192 - YL);
+        C.SetPos(CenterX - (XL / 2), CenterY - (GUIScale * 192) - YL);
         C.DrawText(ORI.DescriptionText);
     }
     

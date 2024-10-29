@@ -10,7 +10,7 @@ defaultproperties
     SpottingScopeOverlay=Texture'DH_VehicleOptics_tex.German.RblF16_artillery_sight'
 
     YawScaleStep=5.0
-    PitchScaleStep=10.0
+    PitchScaleStep=5.0
 
     RangeTable(0)=(Pitch=30,Range=100)
     RangeTable(1)=(Pitch=55,Range=150)
@@ -36,13 +36,13 @@ defaultproperties
     RangeTable(21)=(Pitch=545,Range=1150)
     RangeTable(22)=(Pitch=595,Range=1200)
 
-    NumberOfPitchSegments=6
+    NumberOfPitchSegments=3
     PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
     PitchSegmentSchema(3)=(Shape=ShortTick)
     PitchSegmentSchema(4)=(Shape=ShortTick)
-    PitchSegmentSchema(5)=(Shape=ShortTick)
+    PitchSegmentSchema(5)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(6)=(Shape=ShortTick)
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)

@@ -116,6 +116,7 @@ if __name__ == '__main__':
             # Make sure subdirectories exist.
             if not os.path.exists(os.path.join(content_path, os.path.dirname(relpath))):
                 os.makedirs(os.path.join(content_path, os.path.dirname(relpath)))
+            print(f'Copying {os.path.join(args.dir, relpath)} to {os.path.join(content_path, relpath)}...')
             # Copy file to content path.
             shutil.copy(os.path.join(args.dir, relpath), os.path.join(content_path, relpath))
 
