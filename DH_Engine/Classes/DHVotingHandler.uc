@@ -401,10 +401,17 @@ function ForceMapVote(int MapIndex, int GameIndex, Actor Voter)
     {
         Admin = Level.Game.AccessControl.GetLoggedAdmin(PC);
 
-        if (!Admin.HasPrivilege("Mm") &&                    // Change map
-            !Admin.HasPrivilege("Xm") &&                    // Match setup
-            !(bSwapAndRestart && Admin.HasPrivilege("Mr"))) // Restart map
+        if (bSwapAndRestart)
         {
+            if (!Admin.HasPrivilege("Mr"))
+            {
+                PC.ClientMapVoteResponse(0); // Can't restart maps
+                return;
+            }
+        }
+        else if (!Admin.HasPrivilege("Mm"))
+        {
+            PC.ClientMapVoteResponse(1); // Can't change maps
             return;
         }
     }
