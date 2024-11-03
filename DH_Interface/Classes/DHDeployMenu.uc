@@ -1908,7 +1908,7 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     NonSquadLeaderOnlyText="NON-LEADERS ONLY"
-    RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+    RecommendJoiningSquadText="It is HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional role options and closer deployment to the frontlines.||Do you want to automatically join a squad now?"
     UnassignedPlayersCaptionText="Unassigned"
 
     SurrenderButtonCooldownSeconds=30

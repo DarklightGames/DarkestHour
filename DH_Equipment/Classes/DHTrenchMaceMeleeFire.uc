@@ -42,4 +42,6 @@ defaultproperties
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
     TearDownSound=SoundGroup'DH_WeaponSounds.Shovel.shovel_hit'
+    PlayerStabSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
+    PlayerBashSound=SoundGroup'DH_WeaponSounds.Halloween.ZombieBash'
 }
