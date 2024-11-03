@@ -193,36 +193,39 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 CRI.TextColor = class'DHColor'.default.SquadColor;
             }
 
-            if (PRI.bIsDeveloper)
+            if (!PRI.bIsIncognito)
             {
-                CRI.Icon = default.DeveloperIconMaterial;
-                CRI.U = 0;
-                CRI.V = 0;
-                CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
-                CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
-            }
-            else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
-            {
-                switch (PRI.PatronTier)
+                if (PRI.bIsDeveloper)
                 {
-                    case PATRON_Lead:
-                        CRI.Icon = default.PatronLeadMaterial;
-                        break;
-                    case PATRON_Bronze:
-                        CRI.Icon = default.PatronBronzeMaterial;
-                        break;
-                    case PATRON_Silver:
-                        CRI.Icon = default.PatronSilverMaterial;
-                        break;
-                    case PATRON_Gold:
-                        CRI.Icon = default.PatronGoldMaterial;
-                        break;
+                    CRI.Icon = default.DeveloperIconMaterial;
+                    CRI.U = 0;
+                    CRI.V = 0;
+                    CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
+                    CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
                 }
+                else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
+                {
+                    switch (PRI.PatronTier)
+                    {
+                        case PATRON_Lead:
+                            CRI.Icon = default.PatronLeadMaterial;
+                            break;
+                        case PATRON_Bronze:
+                            CRI.Icon = default.PatronBronzeMaterial;
+                            break;
+                        case PATRON_Silver:
+                            CRI.Icon = default.PatronSilverMaterial;
+                            break;
+                        case PATRON_Gold:
+                            CRI.Icon = default.PatronGoldMaterial;
+                            break;
+                    }
 
-                CRI.U = 0;
-                CRI.V = 0;
-                CRI.UL = CRI.Icon.MaterialUSize() - 1;
-                CRI.VL = CRI.Icon.MaterialVSize() - 1;
+                    CRI.U = 0;
+                    CRI.V = 0;
+                    CRI.UL = CRI.Icon.MaterialUSize() - 1;
+                    CRI.VL = CRI.Icon.MaterialVSize() - 1;
+                }
             }
             break;
         case COLUMN_Role:

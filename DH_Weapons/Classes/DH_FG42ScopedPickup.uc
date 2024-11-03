@@ -8,6 +8,6 @@ class DH_FG42ScopedPickup extends DHWeaponPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_FG42ScopedWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.FG42'    // TODO: replace!
-    DrawScale=1.1   // TODO: get a different third person mesh, no wacky scaling
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.ZFG42_pickup'
+    DrawScale=1.1
 }

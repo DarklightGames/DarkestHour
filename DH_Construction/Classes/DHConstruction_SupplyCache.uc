@@ -165,6 +165,7 @@ defaultproperties
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
     ConstructionVerb="drop"
+    ExplosionDamageTraceOffset=(Z=40.0)
 
     // Essentially we are just making this a satchel explosion
     BrokenEmitterClass=class'ROEffects.ROSatchelExplosion'

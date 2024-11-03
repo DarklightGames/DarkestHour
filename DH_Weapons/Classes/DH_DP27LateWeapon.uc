@@ -5,8 +5,6 @@
 
 class DH_DP27LateWeapon extends DHFastAutoWeapon;
 
-var name MagRotationBone;
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -35,6 +33,22 @@ simulated function PostNetBeginPlay()
 simulated function ROIronSights()
 {
     Deploy();
+}
+
+// Modified to hide the bullet bone (see below).
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    super.BringUp(PrevWeapon);
+
+    if (InstigatorIsLocallyControlled())
+    {
+        // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
+        // rotation bone. Until this is fixed, we just hide the bullet for now.
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            SetBoneScale(0, 0.0, 'Round');
+        }
+    }
 }
 
 defaultproperties
@@ -101,5 +115,5 @@ defaultproperties
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="putaway_empty"
 
-    MagRotationBone="MagRotation"
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_MagazineAmmunition,Channel=2,Animation="DP27MagRotation",BoneName="MagRotation")
 }

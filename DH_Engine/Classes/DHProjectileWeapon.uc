@@ -38,6 +38,7 @@ var         name        BipodIdleAnim;
 var         name        BipodIdleEmptyAnim;
 var         name        BipodMagEmptyReloadAnim;
 var         name        BipodMagPartialReloadAnim;
+var         float       BipodDeployFOVDelay;        // delay before FOV changes when deploying bipod
 
 var         name        IronIdleAnim;               // anim for weapon idling while in iron sight view
 var         name        IronBringUp;                // anim for weapon being brought up to iron sight view
@@ -184,6 +185,8 @@ var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bu
 var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
 var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
 
+var     bool                    bAmmoAmountNotReplicated; // set on clients in multiplayer
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -261,7 +264,7 @@ simulated function CreateBipodPhysicsSimulation()
     }
 }
 
-event WeaponTick(float DeltaTime)
+simulated event WeaponTick(float DeltaTime)
 {
     super.WeaponTick(DeltaTime);
 
@@ -1505,6 +1508,7 @@ Begin:
         ZoomOut();
     }
     
+    Sleep(BipodDeployFOVDelay);
     SetPlayerFOV(PlayerDeployFOV);
 
     if (InstigatorIsLocalHuman())
@@ -3527,9 +3531,15 @@ simulated function UpdateWeaponComponentAnimations()
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
 {
-    local int i;
+    local int i, AmmoAmountOffset;
 
-    for (i = Max(0, AmmoAmount(0)); i < MGBeltArray.Length; ++i)
+    if (bAmmoAmountNotReplicated)
+    {
+        // Offset ammo count to account for replication delay.
+        AmmoAmountOffset = FireMode[0].AmmoPerFire;
+    }
+
+    for (i = Max(0, AmmoAmount(0) - AmmoAmountOffset); i < MGBeltArray.Length; ++i)
     {
         if (MGBeltArray[i] != none)
         {
@@ -3683,6 +3693,16 @@ exec simulated function DebugAddedYaw(int AddedYaw)
         {
             DHProjectileFire(FireMode[0]).AddedYaw = AddedYaw;
         }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (bAmmoAmountNotReplicated)
+    {
+        bAmmoAmountNotReplicated = false;
     }
 }
 

@@ -31,7 +31,7 @@ defaultproperties
     ProjectileDescriptions(2)="Canister"
 
     nProjectileDescriptions(0)="Sprgr.Kw.K."
-    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(1)="Gr.38 Hl/B"
     nProjectileDescriptions(2)="Kt.Kw.K"
 
     InitialPrimaryAmmo=24

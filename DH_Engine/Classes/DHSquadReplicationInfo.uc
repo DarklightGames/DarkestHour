@@ -808,6 +808,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 }
 
 // Changes the squad leader. Returns true if the squad leader was successfully changed.
+// NOTE: Duplicates functionality of `ComandeerSquad` function.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
     local DHBot Bot;
@@ -1117,6 +1118,10 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
         BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, PRI);
 
         UpdateSquadLeaderNoRallyPointsTime(PRI.Team.TeamIndex, PRI.SquadIndex);
+
+        // Reset the squad name to prevent squad leaders being blamed for
+        // unsavory names they can inherit.
+        SetName(TeamIndex, SquadIndex, "");
     }
 
     return bResult;
@@ -1908,7 +1913,7 @@ function SendSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, 
         return;
     }
 
-    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);  // TODO: have this determined by the signal class
+    Radius = class'DHUnits'.static.MetersToUnreal(SignalClass.default.SignalRadiusInMeters);
 
     foreach Sender.Pawn.RadiusActors(class'Pawn', OtherPawn, Radius)
     {
@@ -3177,6 +3182,14 @@ function ESquadPromotionRequestResult SendSquadPromotionRequest(DHPlayerReplicat
     SenderPC = DHPlayer(SenderPRI.Owner);
     RecipientPC = DHPlayer(RecipientPRI.Owner);
 
+    if (DHBot(RecipientPRI.Owner) != none)
+    {
+        // Automatically accept the request & make the bot the squad leader.
+        CommandeerSquad(RecipientPRI, TeamIndex, SquadIndex);
+
+        return SPPR_Sent;
+    }
+
     if (SenderPC == none || RecipientPC == none)
     {
         return SPPR_Fatal;
@@ -3388,7 +3401,7 @@ defaultproperties
     SquadMergeRequestResultStrings(3)="There is already an existing merge request for this squad."
     SquadMergeRequestResultStrings(4)="Squad merge request has been sent."
 
-    SquadPromotionRequestResultStrings(0)="An error occurred while sending the squad merge request."
+    SquadPromotionRequestResultStrings(0)="An error occurred while sending the squad promotion request."
     SquadPromotionRequestResultStrings(1)="There is already an existing squad leader promotion request for this player."
     SquadPromotionRequestResultStrings(2)="Squad leader promotion request has been sent."
 }

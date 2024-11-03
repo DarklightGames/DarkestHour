@@ -3762,6 +3762,36 @@ exec function MidGameVote()
     }
 }
 
+exec function ResetAllInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Objectives
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] != none)
+        {
+            GRI.DHObjectives[i].ResetInfluenceModifiers();
+        }
+    }
+
+    // Spawn points
+    for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none)
+        {
+            GRI.SpawnPoints[i].BaseInfluenceModifier = GRI.SpawnPoints[i].InitialBaseInfluenceModifier;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
 // Debug function that changes Danger Zone influence for objectives AND
 // main spawns.
 //
@@ -5070,7 +5100,25 @@ function NotifyLogout(Controller Exiting)
         }
     }
 
+    NeutralizeAndDestroyThrowableExplosiveProjectiles(PC.PlayerReplicationInfo);
+
     super.Destroyed();
+}
+
+// Neutralize and destroy any active throwable projectiles from this player.
+// This is to prevent players from team-killing with throwables and then logging out to avoid punishment.
+function NeutralizeAndDestroyThrowableExplosiveProjectiles(PlayerReplicationInfo PRI)
+{
+    local DHThrowableExplosiveProjectile TEP;
+
+    foreach DynamicActors(class'DHThrowableExplosiveProjectile', TEP)
+    {
+        if (PRI != none && TEP.SavedPRI == PRI)
+        {
+            TEP.bDud = true;
+            TEP.Destroy();
+        }
+    }
 }
 
 // Overriden to write out metrics data
@@ -5312,26 +5360,7 @@ event PostLogin(PlayerController NewPlayer)
 
             if (S != none)
             {
-                PRI.Deaths = S.Deaths;
-                PRI.DHKills = S.Kills;
-                PRI.Score = S.TotalScore;
-                PRI.TotalScore = S.TotalScore;
-
-                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
-                {
-                    PRI.CategoryScores[i] = S.CategoryScores[i];
-                }
-
-                Teams[S.TeamIndex].AddToTeam(PC);
-
-                PC.LastKilledTime = S.LastKilledTime;
-                PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.NextChangeTeamTime = S.NextChangeTeamTime;
-
-                if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
-                {
-                    PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
-                }
+                S.Load(PC);
             }
         }
 
@@ -5348,9 +5377,10 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-    }
+        class'DHGeolocationService'.static.GetIpData(PC);
 
-    class'DHGeolocationService'.static.GetIpData(PC);
+        PC.OnPlayerLogin();
+    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5384,6 +5414,7 @@ function Logout(Controller Exiting)
         return;
     }
 
+    // Save the current session info
     if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
         O = new class'DHPlayerSession';
@@ -5394,24 +5425,7 @@ function Logout(Controller Exiting)
 
     if (S != none)
     {
-        S.Deaths = PRI.Deaths;
-        S.Kills = PRI.DHKills;
-        S.TotalScore = PRI.TotalScore;
-
-        for (i = 0; i < arraycount(S.CategoryScores); ++i)
-        {
-            S.CategoryScores[i] = PRI.CategoryScores[i];
-        }
-
-        S.LastKilledTime = PC.LastKilledTime;
-        S.WeaponUnlockTime = PC.WeaponUnlockTime;
-        S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.NextChangeTeamTime = PC.NextChangeTeamTime;
-
-        if (PRI.Team != none)
-        {
-            S.TeamIndex = PRI.Team.TeamIndex;
-        }
+        S.Save(PC);
     }
 }
 
@@ -5498,8 +5512,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
-
                 if (C.IQManager != none)
                 {
                     C.IQManager.OnSpawn();
@@ -5534,7 +5546,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.ClientSetRotation(C.Pawn.Rotation);
 
     AddDefaultInventory(C.Pawn);
-    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
 
     if (C.IQManager != none)
     {
@@ -5542,21 +5553,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     return C.Pawn;
-}
-
-function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
-{
-    local DHPawn P;
-
-    P = DHPawn(C.Pawn);
-
-    // Set proper spawn kill protection times
-    if (P != none && SP != none)
-    {
-        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        P.SpawnPoint = SP;
-    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5862,8 +5858,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=6
-        Patch=1
+        Minor=9
+        Patch=2
         Prerelease=""
     End Object
     Version=VersionObject

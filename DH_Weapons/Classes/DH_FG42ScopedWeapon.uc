@@ -9,13 +9,14 @@ class DH_FG42ScopedWeapon extends DH_FG42Weapon;
 
 defaultproperties
 {   
-    ItemName="Fallschirmjägergewehr 42 (ZFG42)"
+    ItemName="FG 42 (ZFG42)"
+    NativeItemName="Fallschirmjägergewehr 42 (ZFG42)"
     FireModeClass(0)=class'DH_Weapons.DH_FG42ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_FG42ScopedAttachment'
     PickupClass=class'DH_Weapons.DH_FG42ScopedPickup'
 
-    Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42_scoped'   // TODO: replace
+    Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42_scoped'
 
     // Deploy
     IdleToBipodDeploy="deploy_scoped"
@@ -50,7 +51,11 @@ defaultproperties
     ScopeOverlaySize=0.32
     IronSightDisplayFOV=47.0
     IronSightDisplayFOVHigh=47.0
-    ScopePortalFOV=5.4  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
-    ScopePortalFOVHigh=5.4
     LensMaterialID=6
+
+    PlayerFOVZoom=15.0
+    ScopePortalFOV=5.7  //4.5 degrees, the value is higher than that because for some reason 3d scope appears with lower FOV than what is determined here
+    ScopePortalFOVHigh=5.7
+    PlayerIronsightFOV=60.0
+    bUsesIronsightFOV=true
 }

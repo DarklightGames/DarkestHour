@@ -8,6 +8,7 @@ class DHTab_GameSettings extends Settings_Tabs;
 var automated GUISectionBackground i_BG1, i_BG2, i_BG3;
 
 var automated DHmoEditBox       ed_PlayerName;
+var automated DHmoCheckBox      ch_Incognito;
 var automated DHmoComboBox      co_ViewFOV;
 var automated DHmoCheckBox      ch_NoGore;
 var automated DHmoCheckBox      ch_BayonetAtStart;
@@ -49,6 +50,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG3.ManageComponent(l_PlayerROID);
     i_BG3.ManageComponent(b_CopyPlayerROID);
+    i_BG3.ManageComponent(ch_Incognito);
     i_BG3.ManageComponent(ch_DynamicNetSpeed);
     i_BG3.ManageComponent(co_Netspeed);
     i_BG3.ManageComponent(co_PurgeCacheDays);
@@ -126,6 +128,22 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case co_AutomaticVehicleAlerts:
             co_AutomaticVehicleAlerts.SetIndex(int(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer AutomaticVehicleAlerts")));
             break;
+        
+        // Incognito
+        case ch_Incognito:
+            if (DHPlayer(PC) != none)
+            {
+                bOptionEnabled = DHPlayer(PC).bIsIncognito;
+            }
+            else
+            {
+                bOptionEnabled = class'DHPlayer'.default.bIsIncognito;
+            }
+
+            ch_Incognito.Checked(bOptionEnabled);
+
+            break;
+
         // Vehicle settings
         case ch_TankThrottle:
             if (DHPlayer(PC) != none)
@@ -277,6 +295,7 @@ function SaveSettings()
     local int              GoreLevel, NetSpeed, PurgeCacheDays;
     local bool             bTankThrottle, bVehicleThrottle, bManualReloading, bDynamicNetSpeed, bSaveConfig, bStaticSaveConfig;
     local bool             bSpawnWithBayonet, bLockTankOnEntry;
+    local bool             bIncognito;
     local byte             AutomaticVehicleAlerts;
 
     PC = PlayerOwner();
@@ -330,6 +349,8 @@ function SaveSettings()
         bSaveConfig = true;
     }
 
+    bIncognito = ch_Incognito.IsChecked();
+
     // Vehicle settings
     bTankThrottle    = ch_TankThrottle.IsChecked();
     bVehicleThrottle = ch_VehicleThrottle.IsChecked();
@@ -369,6 +390,13 @@ function SaveSettings()
             DHP.ServerSetAutomaticVehicleAlerts(AutomaticVehicleAlerts);
             bSaveConfig = true;
         }
+
+        if (DHP.bIsIncognito != bIncognito)
+        {
+            DHP.bIsIncognito = bIncognito;
+            DHP.ServerSetIncognitoMode(bIncognito);
+            bSaveConfig = true;
+        }
     }
     else
     {
@@ -399,6 +427,12 @@ function SaveSettings()
         if (class'DHPlayer'.default.AutomaticVehicleAlerts != AutomaticVehicleAlerts)
         {
             class'DHPlayer'.default.AutomaticVehicleAlerts = AutomaticVehicleAlerts;
+            bStaticSaveConfig = true;
+        }
+
+        if (class'DHPlayer'.default.bIsIncognito != bIncognito)
+        {
+            class'DHPlayer'.default.bIsIncognito = bIncognito;
             bStaticSaveConfig = true;
         }
 
@@ -463,6 +497,7 @@ function ResetClicked()
     class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
     class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
     class'DHPlayer'.static.ResetConfig("bLockTankOnEntry");
+    class'DHPlayer'.static.ResetConfig("bIsIncognito");
     class'PlayerController'.static.ResetConfig("bDynamicNetSpeed");
     class'Player'.static.ResetConfig("ConfiguredInternetSpeed");
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[0]);
@@ -478,6 +513,7 @@ function ResetClicked()
         DHP.bManualTankShellReloading = class'DHPlayer'.default.bManualTankShellReloading;
         DHP.bLockTankOnEntry = class'DHPlayer'.default.bLockTankOnEntry;
         DHP.AutomaticVehicleAlerts = class'DHPlayer'.default.AutomaticVehicleAlerts;
+        DHP.bIsIncognito = class'DHPlayer'.default.bIsIncognito;
     }
 
     for (i = 0; i < Components.Length; ++i)
@@ -604,6 +640,17 @@ defaultproperties
         OnLoadINI=InternalOnLoadINI
     End Object
     ch_TankThrottle=DHmoCheckBox'ThrottleTanks'
+
+    Begin Object Class=DHmoCheckBox Name=Incognito
+        Caption="Incognito Mode"
+        Hint="Do not display my Patron or Developer status on the scoreboard"
+        CaptionWidth=0.959
+        ComponentJustification=TXTA_Left
+        IniOption="@Internal"
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
+    End Object
+    ch_Incognito=DHmoCheckBox'Incognito'
 
     Begin Object Class=DHmoCheckBox Name=ThrottleOtherVehicles
         Caption="Incremental Throttle - Other Vehicles"

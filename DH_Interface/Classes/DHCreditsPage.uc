@@ -406,6 +406,7 @@ defaultproperties
     OtherContributors(9)="29th Infantry Division"
     OtherContributors(10)="Good Guys Gaming Community"
     OtherContributors(11)="ChrisMo1944"
+    OtherContributors(12)="Metallicafan212 for the fix to the SDK selection bug"
     
     SpecialThanks(0)="A huge thanks goes out to all the former members of the Darklight Games team. Without their years of hard work, we would never have made it to this point. We're eternally grateful."
     SpecialThanks(1)="All of our testers over the years. You've helped create a (mostly) bug free experience!"

@@ -7,6 +7,7 @@ class DHTab_Input extends ROTab_Input;
 
 var automated DHmoNumericEdit           nu_MousePollRate;
 var automated moFloatEdit               fl_IronSightFactor;
+var automated moFloatEdit               fl_BipodFactor;
 var automated moFloatEdit               fl_ScopedFactor;
 
 event InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -15,6 +16,7 @@ event InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG3.ManageComponent(nu_MousePollRate);
     i_BG3.ManageComponent(fl_IronSightFactor);
+    i_BG3.ManageComponent(fl_BipodFactor);
     i_BG3.ManageComponent(fl_ScopedFactor);
 }
 
@@ -36,9 +38,13 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case fl_IronSightFactor:
             fl_IronSightFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHISTurnSpeedFactor")),true);
             break;
+        case fl_BipodFactor:
+            fl_BipodFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHBipodTurnSpeedFactor")),true);
+            break;
         case fl_ScopedFactor:
             fl_ScopedFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor")),true);
             break;
+      
         default:
             super.InternalOnLoadINI(Sender, s);
     }
@@ -48,6 +54,7 @@ function ResetClicked()
 {
     class'PlayerInput'.static.ResetConfig("MouseSamplingTime");
     class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
+    class'DHPlayer'.static.ResetConfig("DHBipodTurnSpeedFactor");
     class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
 
     super.ResetClicked();
@@ -74,6 +81,16 @@ function OnInputChange(GUIComponent Sender)
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();
+            DHPlayer(PC).SaveConfig();
+        }
+    }
+    else if (Sender == fl_BipodFactor)
+    {
+        PC.ConsoleCommand("set DH_Engine.DHPlayer DHBipodTurnSpeedFactor" @ fl_BipodFactor.GetValue());
+
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).DHBipodTurnSpeedFactor = fl_BipodFactor.GetValue();
             DHPlayer(PC).SaveConfig();
         }
     }
@@ -429,6 +446,25 @@ defaultproperties
     End Object
     fl_IronSightFactor=InputIronSightFactor
 
+    Begin Object class=DHmoFloatEdit Name=InputIronSightBipodFactor
+        MinValue=0.01
+        MaxValue=1.0
+        Step=0.05
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.725
+        Caption="Bipod Sensitivity Factor"
+        OnCreateComponent=InputIronSightBipodFactor.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.324167
+        WinLeft=0.502344
+        WinWidth=0.421875
+        WinHeight=0.045352
+        TabOrder=12
+        OnChange=OnInputChange
+        OnLoadIni=InternalOnLoadINI
+    End Object
+    fl_BipodFactor=InputIronSightBipodFactor
+
     Begin Object class=DHmoFloatEdit Name=InputScopedFactor
         MinValue=0.01
         MaxValue=1.0
@@ -442,7 +478,7 @@ defaultproperties
         WinLeft=0.502344
         WinWidth=0.421875
         WinHeight=0.045352
-        TabOrder=12
+        TabOrder=13
         OnChange=OnInputChange
         OnLoadIni=InternalOnLoadINI
     End Object

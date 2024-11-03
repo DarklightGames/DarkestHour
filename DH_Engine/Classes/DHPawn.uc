@@ -570,17 +570,14 @@ simulated event AnimEnd(int Channel)
     local name  Anim;
     local float Frame, Rate;
 
-    WA = DHWeaponAttachment(WeaponAttachment);
-
     if (DrivenVehicle != none)
     {
-        if (HasAnim(DrivenVehicle.DriveAnim))
-        {
-            PlayAnim(DrivenVehicle.DriveAnim, 1.0,, 1);
-        }
+        return;
     }
     else if (Channel == 1 && WeaponState != GS_IgnoreAnimend)
     {
+        WA = DHWeaponAttachment(WeaponAttachment);
+
         if (WeaponState == GS_Ready)
         {
             AnimBlendToAlpha(1, 0.0, 0.12);
@@ -2953,7 +2950,7 @@ simulated function SetOverlayMaterial(Material Mat, float Time, bool bOverride)
     // an the overlay material is applied..
     for (i = 0; i < Skins.Length; ++i)
     {
-        if (Skins[i].IsA('Combiner'))
+        if (Skins[i] != none && Skins[i].IsA('Combiner'))
         {
             FB = new class'FinalBlend';
             FB.Material = Skins[i];
@@ -5373,6 +5370,33 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
+// Compute offset for drawing an inventory item
+//
+// Overriden to take into account the eye position on a server, as it's needed
+// for calculating the weapon location during leaning, going prone, etc.
+simulated function vector CalcDrawOffset(Inventory Inv)
+{
+	local vector DrawOffset;
+
+	if (Controller == none)
+    {
+		return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0,0,1);
+    }
+
+	DrawOffset = ((0.9 / Weapon.DisplayFOV * 100 * ModifiedPlayerViewOffset(Inv)) >> GetViewRotation());
+
+    DrawOffset += EyePosition();
+
+    if (IsLocallyControlled())
+    {
+        // Only relevant on a client
+        DrawOffset += WeaponBob(Inv.BobDamping);
+        DrawOffset += CameraShake();
+    }
+
+	return DrawOffset;
+}
+
 // Returns true if the player can switch the prone state - only valid on the client.
 // Modified to fix prone eye-height bug.
 simulated function bool CanProneTransition()
@@ -7495,7 +7519,7 @@ simulated function bool HasSquadmatesWithinDistance(float DistanceMeters)
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-        if (PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
+        if (OtherPRI != none && PRI != OtherPRI && PRI.Team.TeamIndex == OtherPRI.Team.TeamIndex && PRI.SquadIndex == OtherPRI.SquadIndex)
         {
             return true;
         }
