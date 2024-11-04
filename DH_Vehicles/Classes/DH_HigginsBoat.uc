@@ -2,38 +2,28 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO
+// [ ] Exhaust position
+// [ ] Fix waterline
+// [ ] Add floating animation
+// [ ] Fix karma collision box
+// [ ] Fix turret collision attachments
+// [ ] Add more passengers
+// [ ] Add sound for ramp up/down
+// [ ] Slow down ramp up/down animations
+// [ ] New UI art
+// [ ] Destroyed mesh
+// [ ] Fix dirt/water effects
+//==============================================================================
 
 class DH_HigginsBoat extends DHBoatVehicle;
 
-var     name        RampUpIdleAnim; // effectively replacements for BeginningIdleAnim, which is set to null (easier that overriding functions to stop unwanted BeginningIdleAnim)
-var     name        RampDownIdleAnim;
-
-// TODO: Just use animation notifies!
-var     Sound       RampOpenSound;
-var     Sound       RampCloseSound;
-
 var     Texture     BinocsOverlay;
 
-// Modified to loop either the ramp up or down idle animation based on current position index, & set the destroyed vehicle animation to be the same
-// But don't bother on dedicated server as (1) visuals aren't relevant & (2) due to continuous wave motion of animation, which starts at different times on server & net clients,
-// the position of the boat's collision is going to out of synch between server & clients whatever we do, so there's no point trying to match it
-simulated function PostNetBeginPlay()
+replication
 {
-    super.PostNetBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (DriverPositionIndex >= InitialPositionIndex)
-        {
-            DestroyedAnimName = RampUpIdleAnim;
-        }
-        else
-        {
-            DestroyedAnimName = RampDownIdleAnim;
-        }
-
-        LoopAnim(DestroyedAnimName);
-    }
+    reliable if(Role < ROLE_Authority)
+        ServerToggleRamp;
 }
 
 // Modified to handle binoculars overlay (same as in a vehicle weapon pawn)
@@ -71,33 +61,12 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position
-// Temporarily set InitialPositionIndex to ramp down position - a simple trick avoiding re-stating lengthy Super to stop it resetting position indexes to default ramp up position
-function KDriverEnter(Pawn P)
-{
-    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
-    {
-        InitialPositionIndex = DriverPositionIndex;
-    }
-
-    super.KDriverEnter(P);
-
-    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
-}
-
-// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
+// Modified to add a hint for how to raise & lower the ramp.
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHPC;
-
-    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
-    {
-        InitialPositionIndex = DriverPositionIndex;
-    }
-
+    
     super.ClientKDriverEnter(PC);
-
-    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
 
     DHPC = DHPlayer(PC);
 
@@ -105,34 +74,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         // Send hint so the player is told how to raise and lower the ramp.
         DHPC.QueueHint(42, false);
-    }
-}
-
-// Modified to to add ramp sounds // Matt: alternative would be to add these as notifies to the ramp animations
-simulated state ViewTransition
-{
-    simulated function HandleTransition()
-    {
-        local sound RampSound;
-
-        super.HandleTransition();
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex) // ramp lowering
-            {
-                RampSound = RampOpenSound;
-            }
-            else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex) // ramp raising
-            {
-                RampSound = RampCloseSound;
-            }
-
-            if (RampSound != none)
-            {
-                PlayOwnedSound(RampSound, SLOT_Misc, 0.7,, 150.0,, false);
-            }
-        }
     }
 }
 
@@ -232,32 +173,6 @@ function bool KDriverLeave(bool bForceLeave)
     return true;
 }
 
-// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
-function DriverLeft()
-{
-    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
-    {
-        InitialPositionIndex = DriverPositionIndex;
-    }
-
-    super.DriverLeft();
-
-    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
-}
-
-// Called by notifies from the animation
-simulated function RampUpIdle()
-{
-    LoopAnim(RampUpIdleAnim);
-    DestroyedAnimName = RampUpIdleAnim;
-}
-
-simulated function RampDownIdle()
-{
-    LoopAnim(RampDownIdleAnim);
-    DestroyedAnimName = RampDownIdleAnim;
-}
-
 // Matt: hack fix because of the way the Higgins boat has been modelled, which completely screws up the normal use of a collision static mesh in the animation mesh
 // Boat is modelled with the wrong rotation & Z location, so in the animation mesh it is given 90 degrees yaw, a little pitch & a Z axis translation
 // But the engine doesn't apply the rotation & translation to the col mesh, & also a col mesh doesn't move with the boat animation as it pitches & rolls
@@ -267,9 +182,6 @@ simulated function RampDownIdle()
 simulated function SpawnVehicleAttachments()
 {
     super.SpawnVehicleAttachments();
-
-    // The ramp rotation gets screwed up, so simply set it correctly using a literal (from trial & error!) instead of complex calcs
-    CollisionAttachments[0].Actor.SetRelativeRotation(rot(0, 0, 650));
 
     // Remove enough collision from the boat so it doesn't sink into the ground & it bumps into objects, but its crude collision boxes are ignored by projectiles
     // NB - can't just set in default props, as col meshes need to copy boat's intended collision settings when they spawn, so have to change these afterwards
@@ -284,6 +196,16 @@ function ServerStartEngine();
 // Emptied out so we don't damage things we run into
 event RanInto(Actor Other);
 
+exec function ROManualReload()
+{
+    ServerToggleRamp();
+}
+
+function ServerToggleRamp()
+{
+    VehicleComponentControllerActors[0].Toggle();
+}
+
 defaultproperties
 {
     // Vehicle properties
@@ -292,8 +214,8 @@ defaultproperties
     bIsApc=true
     bKeyVehicle=true // means we skip usual check for nearby friendly players before resetting empty vehicle & making it respawn
     VehicleMass=6.0
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
-    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
+    //CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
+    //CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
     bEngineOff=false
     bSavedEngineOff=false
     MaxDesireability=1.9
@@ -304,14 +226,13 @@ defaultproperties
     bHasSpawnKillPenalty=false
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    Mesh=SkeletalMesh'DH_HigginsBoat_anm.LCVP_body_ext'
+    //Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
     BeginningIdleAnim="" // easy way to stop unwanted BeginningIdleAnim being played in several functions without having to override them
-    RampUpIdleAnim="Ramp_idle_raised"
-    RampDownIdleAnim="Ramp_idle_dropped"
 
     // Vehicle weapons & passengers
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="TURRET_ATTACHMENT_L")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="TURRET_ATTACHMENT_R")
     PassengerPawns(0)=(AttachBone="passenger_L1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_L2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider2_idle")
     PassengerPawns(2)=(AttachBone="passenger_L3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider3_idle")
@@ -320,13 +241,12 @@ defaultproperties
     PassengerPawns(5)=(AttachBone="passenger_R3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider6_idle")
 
     // Driver
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Drop",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.LCVP_body_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Allied'
     DriverAttachmentBone="driver_player"
     DrivePos=(X=0.0,Y=0.0,Z=10.0)
     FPCamPos=(X=0.0,Y=0.0,Z=6.0) //lift the view a bit higher than "camera_driver" which is low
+    PlayerCameraBone="camera_driver"
     DriveAnim="stand_idlehip_satchel"
 
     // Movement
@@ -381,7 +301,7 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-    SteerBoneName="Master3z00"
+    SteerBoneName="STEERING_WHEEL"
     SteeringScaleFactor=2.0
 
     // HUD
@@ -403,15 +323,17 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.4
     VehicleHudOccupantsY(7)=0.5
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.higgins'
+    
+    VehicleComponentControllers(0)=(Channel=2,BoneName="RAMP",RaisingAnim="LCVP_RAMP_CLOSE",LoweringAnim="LCVP_RAMP_OPEN")
 
-    RampCloseSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
-    RampOpenSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
+    //RampCloseSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
+    //RampOpenSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
         bPoweredWheel=true
         SteerType=VST_Steered
-        BoneName="wheel_LF"
+        BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
@@ -421,7 +343,7 @@ defaultproperties
     Begin Object Class=SVehicleWheel Name=RFWheel
         bPoweredWheel=true
         SteerType=VST_Steered
-        BoneName="wheel_RF"
+        BoneName="WHEEL_F_R"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
@@ -430,7 +352,7 @@ defaultproperties
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         SteerType=VST_Inverted
-        BoneName="wheel_LR"
+        BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
@@ -440,7 +362,7 @@ defaultproperties
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         SteerType=VST_Inverted
-        BoneName="wheel_RR"
+        BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0

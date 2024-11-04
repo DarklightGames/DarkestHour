@@ -192,7 +192,7 @@ defaultproperties
     Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to squad leaders so they can call in long-range fire support!")
 
     Hints(40)=(Title="Vehicle Engines",Text="You have entered a vehicle. To start or stop the engine, press %FIRE%.")
-    Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. Lower the bow ramp by pressing %PREVWEAPON% so passengers and yourself can exit. To raise the bow ramp hit %NEXTWEAPON%.")
+    Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. You can lower and raise the bow ramp by pressing %ROMANUALRELOAD%.")
     Hints(43)=(Title="Resupply Trucks",Text="You are close to a resupply truck. Stand outside the back of the truck to resupply your ammunition.")
     Hints(44)=(Title="Resupply Trucks",Text="You are driving a resupply truck. This vehicle can resupply vehicles, mortars and infantry. Be sure to park it in a safe place.")
     Hints(46)=(Title="Externally Mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")

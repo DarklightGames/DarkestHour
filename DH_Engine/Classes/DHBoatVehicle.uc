@@ -7,7 +7,6 @@ class DHBoatVehicle extends DHVehicle
     abstract;
 
 var     Sound               WashSound;
-var     name                WashSoundBoneName;
 var     float               WashSoundRadius;
 var     ROSoundAttachment   WashSoundAttachment;
 

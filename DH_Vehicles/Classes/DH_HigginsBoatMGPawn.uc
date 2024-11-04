@@ -34,23 +34,22 @@ defaultproperties
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.Higgins_MG_1st',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.Higgins_MG_1st',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.Higgins_MG_1st',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.lcvp_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.lcvp_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.lcvp_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     BinocPositionIndex=2
     bDrawDriverInTP=true
     DrivePos=(X=0.0,Y=-7.0,Z=13.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
-    CameraBone="Camera_com"
+    CameraBone="CAMERA_COM"
     HUDOverlayClass=class'DH_Vehicles.DH_30Cal_VehHUDOverlay'
     HUDOverlayFOV=60.0
-    FirstPersonGunRefBone="1stperson_wep"
+    FirstPersonGunRefBone="CAMERA_COM"
     FirstPersonGunShakeScale=0.75
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
-    
     HudOverlayIdleAnim="bipod_idle"
     HudOverlayFireLoopAnim="deploy_shoot_loop"
     HudOverlayFireEndAnim="deploy_shoot_end"
