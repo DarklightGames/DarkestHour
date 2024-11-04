@@ -152,12 +152,12 @@ function bool Toggle()
     }
     else if (IsRaised())
     {
-        GotoState('Lowering');
+        Lower();
         return true;
     }
     else if (IsLowered())
     {
-        GotoState('Raising');
+        Raise();
         return true;
     }
 
