@@ -19,11 +19,11 @@ defaultproperties
     FireEffectOffset=(X=-12.0,Y=0.0,Z=41.0)
 
     // Turret armor
-    FrontArmorFactor=6.9
+    FrontArmorFactor=7.6
     RightArmorFactor=3.2
     LeftArmorFactor=3.2
     RearArmorFactor=8.0
-    FrontArmorSlope=45.0
+    FrontArmorSlope=11.0
     RightArmorSlope=5.0
     LeftArmorSlope=5.0
     FrontLeftAngle=325.0
