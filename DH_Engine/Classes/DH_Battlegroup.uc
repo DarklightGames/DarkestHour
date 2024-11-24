@@ -15,7 +15,7 @@ enum ETeam
 
 struct SquadRole
 {
-    var() int                           Limit;                   // How many of this squad type there can be
+    var() int                           Limit;                   // How many of this role there can be in the squad
     var() class<DHRoleInfo>             Role;
 };
 
@@ -24,20 +24,20 @@ struct SquadSelection
     var() string                       Name;
     var() string                       SquadTypeHint;
     var() class<DHSquadType>           SquadType;               // The Squad type class to use.
-    var() class<DHSquadIcon>           SquadTypeIcon;                    // The icon to use for this squad
-    // var() int                          SquadLimit;                   // How many of this squad type there can be
-    var() int                          SquadSize;                   // How many of this squad type there can be
-    var() SquadRole            Role1Leader;             // The Roles allowed within this class
-    var() SquadRole            Role2Asl;                // The Roles allowed within this class
-    var() array <SquadRole>    Role3Privates;            // The Roles allowed within this class
+    var() class<DHSquadIcon>           SquadTypeIcon;           // The icon to use for this squad
+    // var() int                          SquadLimit;           // How many of this squad type there can be
+    var() int                          SquadSize;               // How many players can be in the squad
+    var() SquadRole                    Role1Leader;             // The SL Role allowed
+    var() SquadRole                    Role2Asl;                // The ASL Role allowed
+    var() array <SquadRole>            Role3Privates;           // The Private roles allowed
 };
 
-var() ETeam                    NationTeam;                      // The nation this battlegroup is for
+var() ETeam                    NationTeam;                    // The nation this battlegroup is for
 var() SquadSelection           Squads[8];
-var() SquadRole                HQRole1SL;                     // The role for unassigned players
-var() SquadRole                HQRole2ASL;                     // The role for unassigned players
-var() array<SquadRole>         HQRolesPrivates;                     // The role for unassigned players
-var() array<SquadRole>         UnAssignedSquadRoles;                     // The role for unassigned players
+var() SquadRole                HQRole1SL;                     // The role for HQ SL
+var() SquadRole                HQRole2ASL;                    // The role for HQ ASL
+var() array<SquadRole>         HQRolesPrivates;               // The role for HQ Privates
+var() array<SquadRole>         UnAssignedSquadRoles;          // The roles for unassigned players
 
 const SQUAD_INDEX_HQ	= 8;
 const SQUAD_INDEX_UNASSIGNED = 9;
@@ -84,6 +84,17 @@ simulated function Material GetSquadTypeIcon(int SquadIndex)
     {
         return Squads[SquadIndex].SquadTypeIcon.default.Icon;
     }
+
+    if (SquadIndex == SQUAD_INDEX_HQ)
+    {
+        return Material'DH_InterfaceArt2_tex.Icons.platoon_hq';
+    }
+
+    if (IsSquadUnassigned(SquadIndex))
+    {
+        return Material'DH_InterfaceArt2_tex.Icons.squad';
+    }
+
     return Material'DH_InterfaceArt2_tex.Icons.squad';
 }
 
