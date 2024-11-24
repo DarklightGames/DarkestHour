@@ -40,10 +40,25 @@ struct RandomAttachOption
     var()   float               Probability;
 };
 
+struct GroupDepency
+{
+    var() int GroupIndex;   // The index of the group that must be met.
+    var() int OptionIndex;  // The index of the option that must be met, or -1 if any option in the group is valid.
+};
+
+enum GroupDependencyType
+{
+    GDT_None,
+    GDT_All,
+    GDT_Any,
+};
+
 // A group of attachment options. One of the options will be selected at random.
 struct RandomAttachmentGroup
 {
-    var() array<RandomAttachOption>  Options;   // Only the first 8 options will be used.
+    var() array<RandomAttachOption> Options;                // Only the first 8 options will be used.
+    var() GroupDependencyType       DependencyType;         // The group dependency type that must be met (i.e., none, all, any).
+    var() array<GroupDepency>       Dependencies;           // The dependency groups that must be met. Ensure that the group index is less than the group index of this group, or it will not be evaluated.
 };
 
 var() bool bDoRandomAttachments;
@@ -3056,7 +3071,8 @@ simulated function SpawnVehicleAttachments()
     local class<Actor>      AttachClass;
     local Actor             A;
     local float             RandomNumber, ProbabilitySum;
-    local int               i, j;
+    local int               i, j, DependenciesMet;
+    local bool              bHasDependencies, bDidMeetDependencies;
 
     // Treads & movement sound attachments
     if (Level.NetMode != NM_DedicatedServer)
@@ -3148,6 +3164,59 @@ simulated function SpawnVehicleAttachments()
                 RandomNumber = FRand();
 
                 RandomAttachmentGroupOptions[i] = -1;
+
+                DependenciesMet = 0;
+
+                // Check dependencies, if any exist.
+                for (j = 0; j < RandomAttachmentGroups[i].Dependencies.Length; ++j)
+                {
+                    // Check that the group index is less than the current group index. If it is not, throw an error.
+                    if (RandomAttachmentGroups[i].Dependencies[j].GroupIndex >= i)
+                    {
+                        // Give detailed error with indices.
+                        Warn("Random attachment group" @ i @ "has a dependency on group" @ RandomAttachmentGroups[i].Dependencies[j].GroupIndex @ "which is higher than the current group index.");
+                        break;
+                    }
+
+                    if (RandomAttachmentGroups[i].Dependencies[j].OptionIndex == -1)
+                    {
+                        // If the option index is -1, then any option in the group will satisfy the dependency.
+                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] != -1)
+                        {
+                            DependenciesMet++;
+                        }
+                    }
+                    else
+                    {
+                        // We are looking for a specific option in the group to satisfy the dependency.
+                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] == RandomAttachmentGroups[i].Dependencies[j].OptionIndex)
+                        {
+                            DependenciesMet++;
+                        }
+                    }
+                }
+
+                if (RandomAttachmentGroups[i].Dependencies.Length > 0)
+                {
+                    switch (RandomAttachmentGroups[i].DependencyType)
+                    {
+                        case GDT_All:
+                            bDidMeetDependencies = DependenciesMet == RandomAttachmentGroups[i].Dependencies.Length;
+                            break;
+                        case GDT_Any:
+                            bDidMeetDependencies = DependenciesMet > 0;
+                            break;
+                        case GDT_None:
+                            bDidMeetDependencies = DependenciesMet == 0;
+                            break;
+                    }
+
+                    if (!bDidMeetDependencies)
+                    {
+                        // Skip this group if dependencies are not met.
+                        continue;
+                    }
+                }
 
                 for (j = 0; j < RandomAttachmentGroups[i].Options.Length; ++j)
                 {
