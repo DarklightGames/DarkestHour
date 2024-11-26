@@ -1215,6 +1215,11 @@ simulated function bool IsASL()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsASL();
 }
 
+simulated function bool IsAbleToUseFireSupport()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
+}
+
 simulated function bool HasLimitedRole()
 {
     local DHRoleInfo RI;
@@ -2289,7 +2294,7 @@ simulated function bool IsArtilleryOperator()
 
 simulated function bool IsArtillerySpotter()
 {
-    return IsSquadLeader();
+    return IsSLorASL();
 }
 
 simulated function bool IsRadioman()
@@ -7586,7 +7591,7 @@ simulated function bool CanUseFireSupportMenu()
         P = DHPawn(Pawn);
     }
 
-    return P != none && IsSquadLeader();
+    return P != none && IsAbleToUseFireSupport();
 }
 
 function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float MapLocationY, optional vector L)
