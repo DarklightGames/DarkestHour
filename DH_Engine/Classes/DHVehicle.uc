@@ -48,9 +48,9 @@ struct GroupDepency
 
 enum GroupDependencyType
 {
-    GDT_None,
     GDT_All,
     GDT_Any,
+    GDT_None,
 };
 
 // A group of attachment options. One of the options will be selected at random.

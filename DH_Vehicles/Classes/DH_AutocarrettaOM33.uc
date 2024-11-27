@@ -3,22 +3,20 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_Fiat508CMTransport extends DHVehicle;
+class DH_AutocarrettaOM33 extends DHVehicle
+    abstract;
 
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Fiat 508CM"
+    VehicleNameString="Autocarretta OM33"
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.car_topdown'
 
     // Hull mesh
-    Mesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body'
-    Skins(0)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_tan'
-    Skins(1)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_tan'
-    Skins(2)=FinalBlend'DH_Fiat508CM_tex.fiat508.fiat508_windows_fb'
+    Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT'
 
     BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
 
@@ -29,7 +27,7 @@ defaultproperties
 
     // Driver
     bMultiPosition=false
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat508CM_anm.fiat508cm_body',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
+    DriverPositions(0)=(/*PositionMesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT',*/ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
     DrivePos=(Z=58)
     DriveRot=(Yaw=16384)
@@ -105,7 +103,7 @@ defaultproperties
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-106.231,Y=6.64981,Z=16.5879),ExhaustRotation=(Yaw=32768))
     SteerBoneName="STEERING_WHEEL"
-    SteerBoneAxis=AXIS_Z
+    SteerBoneAxis=AXIS_Y
 
     // HUD
     VehicleHudImage=Texture'DH_Fiat508CM_tex.interface.fiat508cm_icon'
@@ -120,22 +118,6 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.675
     SpawnOverlay(0)=Texture'DH_Fiat508CM_tex.fiat508cm_menu_icon'
 
-    // Attachments
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Fiat508cm_stc.attachments.fiat508cm_radio',AttachBone="BODY")
-
-    RandomAttachmentGroups(0)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_searchlight'))))
-    RandomAttachmentGroups(1)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_tools'))))
-    RandomAttachmentGroups(2)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_jerry_can'))))
-    RandomAttachmentGroups(3)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_windows'))))
-    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=3,OptionIndex=-1)),Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_roof'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights')),(Probability=0.5,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_Fiat508CM_stc.attachments.fiat508cm_headlights_protected'))))
-
-    RadioAttachmentClass=class'DH_Engine.DHRadio'
-    RadioAttachmentHeight=16.0
-    RadioAttachmentRadius=16.0
-    RadioAttachmentSoundRadius=20.0
-    RadioAttachmentBone="RADIO_ATTACHMENT"
-
     // Shadow
     ShadowZOffset=25
 
@@ -148,10 +130,10 @@ defaultproperties
         bPoweredWheel=true
         BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=22
-        SupportBoneName="SUSPENSION_F_L"
-        SupportBoneAxis=AXIS_X
-        // bLeftTrack=true
+        WheelRadius=24
+        // SupportBoneName="SUSPENSION_F_L"
+        // SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=LFWheel
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -159,9 +141,9 @@ defaultproperties
         bPoweredWheel=true
         BoneName="WHEEL_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=22
-        SupportBoneName="SUSPENSION_F_R"
-        SupportBoneAxis=AXIS_X
+        WheelRadius=24
+        // SupportBoneName="SUSPENSION_F_R"
+        // SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=RFWheel
     Begin Object Class=SVehicleWheel Name=LRWheel
@@ -169,9 +151,9 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=22
-        SupportBoneName="SUSPENSION_B_L"
-        SupportBoneAxis=AXIS_X
+        WheelRadius=24
+        // SupportBoneName="SUSPENSION_B_L"
+        // SupportBoneAxis=AXIS_X
         // bLeftTrack=true
     End Object
     Wheels(2)=LRWheel
@@ -180,9 +162,9 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=22
-        SupportBoneName="SUSPENSION_B_R"
-        SupportBoneAxis=AXIS_X
+        WheelRadius=24
+        // SupportBoneName="SUSPENSION_B_R"
+        // SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=RRWheel
 
