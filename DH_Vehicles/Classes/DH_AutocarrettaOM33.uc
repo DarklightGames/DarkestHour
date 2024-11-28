@@ -2,6 +2,34 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// MESH & RIGGING
+//==============================================================================
+// [ ] Fix mesh alignment issues on the cabin seat area
+// [ ] Suspension Rigging
+// [ ] Add the actual gun turret mesh (does this exist anywhere?)
+// [ ] Destroyed Mesh
+// [ ] Projectile collision mesh
+// [ ] Is there supposed to be a spare wheel?
+//==============================================================================
+// PROGRAMMING
+//==============================================================================
+// [ ] Slow down the vehicle
+// [ ] MG shell ejection?
+//==============================================================================
+// ANIMATIONS
+//==============================================================================
+// [ ] Passenger Animations
+// [ ] Turret gunner animations
+//==============================================================================
+// ART
+//==============================================================================
+// [ ] Textures
+// [ ] Interface Art
+//==============================================================================
+// ONCE COMPLETED
+//==============================================================================
+// [ ] Add to various levels
+//==============================================================================
 
 class DH_AutocarrettaOM33 extends DHVehicle
     abstract;
@@ -69,7 +97,7 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.95
     EngineHealth=10
     DamagedWheelSpeedFactor=0.3
-    VehHitpoints(0)=(PointRadius=25.0,PointBone="body",PointOffset=(X=58.0,Y=0.0,Z=42.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(0)=(PointRadius=21.0,PointBone="body",PointOffset=(X=84,Y=0,Z=55),DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineDamageFromGrenadeModifier=0.125
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
@@ -101,7 +129,7 @@ defaultproperties
     RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-106.231,Y=6.64981,Z=16.5879),ExhaustRotation=(Yaw=32768))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-18.147,Y=-8.59515,Z=30.609),ExhaustRotation=(Pitch=-16384,Yaw=-20000))
     SteerBoneName="STEERING_WHEEL"
     SteerBoneAxis=AXIS_Y
 
