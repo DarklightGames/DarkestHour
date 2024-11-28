@@ -4,12 +4,12 @@
 //==============================================================================
 // MESH & RIGGING
 //==============================================================================
-// [ ] Fix mesh alignment issues on the cabin seat area
 // [ ] Suspension Rigging
+// [ ] Fix mesh alignment issues on the cabin seat area
 // [ ] Add the actual gun turret mesh (does this exist anywhere?)
 // [ ] Destroyed Mesh
 // [ ] Projectile collision mesh
-// [ ] Is there supposed to be a spare wheel?
+// [ ] Fix karma box on support variant
 //==============================================================================
 // PROGRAMMING
 //==============================================================================
@@ -201,7 +201,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.325)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.35)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -217,3 +217,4 @@ defaultproperties
     KParams=KParams0
 }
 
+`
