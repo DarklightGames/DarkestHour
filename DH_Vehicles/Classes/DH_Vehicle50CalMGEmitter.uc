@@ -80,5 +80,5 @@ defaultproperties
     bUnlit=false
     bNoDelete=false
     bHardAttach=true
-    CullDistance=4000.0
+    CullDistance=1500.0     // ~25m
 }
