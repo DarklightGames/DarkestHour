@@ -4,17 +4,18 @@
 //==============================================================================
 // MESH & RIGGING
 //==============================================================================
-// [ ] Suspension Rigging
+// [x] Suspension Rigging
 // [ ] Fix mesh alignment issues on the cabin seat area
-// [ ] Add the actual gun turret mesh (does this exist anywhere?)
+// [ ] Add the actual gun turret mesh (Fiat 14/35)
 // [ ] Destroyed Mesh
-// [ ] Projectile collision mesh
+// [ ] Projectile collision mesh (both variants)
 // [ ] Fix karma box on support variant
 //==============================================================================
 // PROGRAMMING
 //==============================================================================
 // [ ] Slow down the vehicle
 // [ ] MG shell ejection?
+// [ ] Exit Positions
 //==============================================================================
 // ANIMATIONS
 //==============================================================================
@@ -57,10 +58,10 @@ defaultproperties
     bMultiPosition=false
     DriverPositions(0)=(/*PositionMesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT',*/ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(Z=58)
+    DrivePos=(X=64.53870,Y=-23.89339,Z=47.32056)
     DriveRot=(Yaw=16384)
-    DriverAttachmentBone="body"
-    DriveAnim="fiat508cm_driver"
+    DriverAttachmentBone="BODY"
+    DriveAnim="OM33_DRIVER"
 
     // Movement
     GearRatios(0)=-0.3
@@ -114,12 +115,8 @@ defaultproperties
     DestructionLinearMomentum=(Min=10.0,Max=50.0)
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
-    // Exit
-    ExitPositions(0)=(X=-4.0,Y=90.0,Z=30.0)     // driver
-    ExitPositions(1)=(X=-4.0,Y=-90.0,Z=30.0)    // front passenger
-    ExitPositions(2)=(X=-53.0,Y=90.0,Z=30.0)    // rear passenger right
-    ExitPositions(3)=(X=-53.0,Y=90.0,Z=30.0)    // rear passenger left
-    ExitPositions(4)=(X=-163.00,Y=0.00,Z=30.00) // rear (failsafe)
+    // Exit Positions
+    ExitPositions(0)=(X=60.0,Y=-90.0,Z=58.0)    // Driver
 
     // Sounds
     MaxPitchSpeed=350.0
@@ -159,8 +156,8 @@ defaultproperties
         BoneName="WHEEL_F_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=24
-        // SupportBoneName="SUSPENSION_F_L"
-        // SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSP_F_L"
+        SupportBoneAxis=AXIS_X
         bLeftTrack=true
     End Object
     Wheels(0)=LFWheel
@@ -170,8 +167,8 @@ defaultproperties
         BoneName="WHEEL_F_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=24
-        // SupportBoneName="SUSPENSION_F_R"
-        // SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSP_F_R"
+        SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=RFWheel
     Begin Object Class=SVehicleWheel Name=LRWheel
@@ -180,9 +177,8 @@ defaultproperties
         BoneName="WHEEL_B_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=24
-        // SupportBoneName="SUSPENSION_B_L"
-        // SupportBoneAxis=AXIS_X
-        // bLeftTrack=true
+        SupportBoneName="SUSP_B_L"
+        SupportBoneAxis=AXIS_X
     End Object
     Wheels(2)=LRWheel
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -191,8 +187,8 @@ defaultproperties
         BoneName="WHEEL_B_R"
         BoneRollAxis=AXIS_Y
         WheelRadius=24
-        // SupportBoneName="SUSPENSION_B_R"
-        // SupportBoneAxis=AXIS_X
+        SupportBoneName="SUSP_B_R"
+        SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=RRWheel
 
@@ -216,5 +212,3 @@ defaultproperties
     End Object
     KParams=KParams0
 }
-
-`
