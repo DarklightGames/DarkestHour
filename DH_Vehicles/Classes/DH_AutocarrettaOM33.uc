@@ -4,7 +4,6 @@
 //==============================================================================
 // MESH & RIGGING
 //==============================================================================
-// [x] Suspension Rigging
 // [ ] Fix mesh alignment issues on the cabin seat area
 // [ ] Add the actual gun turret mesh (Fiat 14/35)
 // [ ] Destroyed Mesh
@@ -24,7 +23,7 @@
 //==============================================================================
 // ART
 //==============================================================================
-// [ ] Textures
+// [ ] Fix grill texture (Matty)
 // [ ] Interface Art
 //==============================================================================
 // ONCE COMPLETED
@@ -58,8 +57,8 @@ defaultproperties
     bMultiPosition=false
     DriverPositions(0)=(/*PositionMesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT',*/ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
-    DrivePos=(X=64.53870,Y=-23.89339,Z=47.32056)
-    DriveRot=(Yaw=16384)
+    DrivePos=(X=64.53870,Y=23.89339,Z=105.32056)
+    DriveRot=(Yaw=0)
     DriverAttachmentBone="BODY"
     DriveAnim="OM33_DRIVER"
 

@@ -247,5 +247,5 @@ defaultproperties
     Records(108)=(VehicleNames=("semo47","semovente4732"),Variants=((ClassName="DH_Vehicles.DH_Semovente4732Destroyer")))
     Records(109)=(VehicleNames=("fiat508","fiat508cm"),Variants=((ClassName="DH_Vehicles.DH_Fiat508CMTransport_Green"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport",VariantName="desert"),(ClassName="DH_Vehicles.DH_Fiat508CMTransport_Camo",VariantName="camo")))
     // Records(110)=(VehicleNames=("r35","renault"),Variants=((ClassName="DH_Vehicles.DH_R35Tank")))
-    Records(111)=(VehicleNames=("om33"),Variants=((ClassName="DH_Vehicles.DH_AutocarrettaOM33Transport"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33Support",VariantName="support")))
+    Records(111)=(VehicleNames=("om33"),Variants=((ClassName="DH_Vehicles.DH_AutocarrettaOM33Transport"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33Support",VariantName="support"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33TransportCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33SupportCamo",VariantName="supportcamo"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33TransportGrey",VariantName="grey"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33SupportGrey",VariantName="supportgrey"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33TransportSnow",VariantName="snow"),(ClassName="DH_Vehicles.DH_AutocarrettaOM33SupportSnow",VariantName="supportsnow")))
 }
