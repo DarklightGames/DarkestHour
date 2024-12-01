@@ -3163,14 +3163,18 @@ simulated function SpawnVehicleAttachments()
                 ProbabilitySum = 0.0;
                 RandomNumber = FRand();
 
-                RandomAttachmentGroupOptions[i] = -1;
+                const OPTION_INDEX_NONE = -1;
+                const OPTION_INDEX_ANY = -2;
+
+                RandomAttachmentGroupOptions[i] = OPTION_INDEX_NONE;
 
                 DependenciesMet = 0;
 
                 // Check dependencies, if any exist.
                 for (j = 0; j < RandomAttachmentGroups[i].Dependencies.Length; ++j)
                 {
-                    // Check that the group index is less than the current group index. If it is not, throw an error.
+                    // Check that the group index is less than the current group index.
+                    // If it is not, throw an error.
                     if (RandomAttachmentGroups[i].Dependencies[j].GroupIndex >= i)
                     {
                         // Give detailed error with indices.
@@ -3178,10 +3182,10 @@ simulated function SpawnVehicleAttachments()
                         break;
                     }
 
-                    if (RandomAttachmentGroups[i].Dependencies[j].OptionIndex == -1)
+                    if (RandomAttachmentGroups[i].Dependencies[j].OptionIndex == OPTION_INDEX_ANY)
                     {
-                        // If the option index is -1, then any option in the group will satisfy the dependency.
-                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] != -1)
+                        // Any non-empty option in the group will satisfy the dependency.
+                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] != OPTION_INDEX_NONE)
                         {
                             DependenciesMet++;
                         }
@@ -3189,7 +3193,7 @@ simulated function SpawnVehicleAttachments()
                     else
                     {
                         // We are looking for a specific option in the group to satisfy the dependency.
-                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] == RandomAttachmentGroups[i].Dependencies[j].OptionIndex)
+                        if (RandomAttachmentGroupOptions[RandomAttachmentGroups[i].Dependencies[j].GroupIndex] == byte(RandomAttachmentGroups[i].Dependencies[j].OptionIndex))
                         {
                             DependenciesMet++;
                         }
