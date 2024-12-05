@@ -8,7 +8,7 @@ class DH_Fiat1435Gun extends DHATGun;
 defaultproperties
 {
     VehicleNameString="Fiat-Revelli Modello 14/35"
-    Mesh=SkeletalMesh'DH_Fiat1435_anm.fiat1435_tripod_world'
+    Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_TRIPOD_3RD'
     bCanBeRotated=true
     CollisionRadius=32.0
     CollisionHeight=32.0

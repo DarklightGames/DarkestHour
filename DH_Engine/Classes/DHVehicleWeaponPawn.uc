@@ -91,6 +91,15 @@ replication
         ServerToggleVehicleLock;
 }
 
+// Override this function in subclasses to do any special handling when the mesh is switched.
+simulated function OnSwitchMesh()
+{
+    if (DHVehicleWeapon(Gun) != none)
+    {
+        DHVehicleWeapon(Gun).OnSwitchMesh();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS ************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2233,18 +2242,20 @@ simulated function SetVehicleBaseMesh(bool bInternalMesh)
         if (M != none)
         {
             VehicleBase.LinkMesh(M);
+            OnSwitchMesh();
         }
     }
     else
     {
         VehicleBase.LinkMesh(VehicleBase.default.Mesh);
+        OnSwitchMesh();
     }
 }
 
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
-    local mesh    NewMesh;
+    local Mesh    NewMesh;
     local rotator WeaponYaw, WeaponPitch;
 
     if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
@@ -2264,7 +2275,7 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
         if (NewMesh != Gun.Mesh && NewMesh != none)
         {
             // Switch to the new mesh
-            Gun.LinkMesh(NewMesh);
+            Gun.LinkMesh(NewMesh, true);    // TODO: true, or have a callback that sets up the drivers again properly
 
             // Option to play any necessary animations to get the new mesh in the correct position, e.g. with switching to/from behind view
             if (bUpdateAnimations)
@@ -2284,6 +2295,8 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
                 Gun.SetBoneRotation(Gun.YawBone, WeaponYaw);
                 Gun.SetBoneRotation(Gun.PitchBone, WeaponPitch);
             }
+
+            OnSwitchMesh();
         }
     }
 }

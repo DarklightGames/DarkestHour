@@ -1,0 +1,60 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2023
+//==============================================================================
+
+class DHWeaponRangeMessage extends LocalMessage
+    abstract;
+
+static function string GetString(
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
+{
+    return string(Switch) $ "m"; // TODO: figure out how to pass the unit in here.
+}
+
+static function RenderComplexMessage(Canvas Canvas,
+                              out float XL,
+                              out float YL,
+                              optional string MessageString,
+                              optional int Switch,
+                              optional PlayerReplicationInfo RelatedPRI_1,
+                              optional PlayerReplicationInfo RelatedPRI_2,
+                              optional Object OptionalObject)
+{
+    local PlayerController PC;
+    local float X, Y;
+    local int i, j;
+    local array<string> Keys;
+
+    X = Canvas.ClipX * default.PosX;
+    Y = Canvas.ClipY * default.PosY;
+
+    MessageString = GetString(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+
+    const MESSAGE_MARGIN = 8;
+
+    Canvas.Font = class'DHHud'.static.GetConsoleFont(Canvas);
+
+    // TODO: fix the alignment
+    Canvas.TextSize(MessageString, XL, YL);
+    Canvas.SetPos(X - (XL / 2) - MESSAGE_MARGIN, Y - (YL / 2) - MESSAGE_MARGIN);
+    Canvas.DrawTile(Texture'Engine.BlackTexture', (MESSAGE_MARGIN * 2) + XL, (MESSAGE_MARGIN * 2) + YL, 0, 0, 1, 1);
+    Canvas.SetDrawColor(255, 255, 255);
+    Canvas.DrawTextJustified(MessageString, 1, 0, Y, Canvas.ClipX, Y + YL);
+}
+
+defaultproperties
+{
+    PosX=0.35
+    PosY=0.6
+    bComplexString=true
+    bIsConsoleMessage=false
+    bIsUnique=true
+    bFadeMessage=true
+    Lifetime=1.5
+    FontSize=0
+}

@@ -107,6 +107,12 @@ var array<SRangeTableRecord> RangeTable;
 var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
 var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
 
+// Projectile rotation mode.
+var enum EProjectileRotationMode {
+    PRM_CurrentAim,     // Use the `CurrentAim` to determine the rotation. Inaccurate, though this is the legacy behavior, but is kept for backwards compatibility reasons.
+    PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
+} ProjectileRotationMode;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -117,6 +123,8 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientSetReloadState;
 }
+
+simulated function OnSwitchMesh();
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
@@ -551,13 +559,13 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
     return WeaponFireLocation;
 }
 
-simulated function rotator GetWeaponFireRotation()
+simulated function Rotator GetWeaponFireRotation()
 {
     return rotator(vector(CurrentAim) >> Rotation);
 }
 
 // New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
-function rotator GetProjectileFireRotation(optional bool bAltFire)
+function Rotator GetProjectileFireRotation(optional bool bAltFire)
 {
     local float ProjectileSpread;
 
