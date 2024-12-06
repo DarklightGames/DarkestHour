@@ -9,7 +9,7 @@ var Actor TargetActor;
 var StaticMesh TargetStaticMesh;
 
 var bool bIsZoomed;
-var float ZoomFOV;
+var() float ZoomFOV;
 
 simulated function Destroyed()
 {
@@ -21,15 +21,58 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
+simulated function SetIsZoomed(bool bNewIsZoomed)
+{
+    local DHPlayer PC;
+
+    if (!IsLocallyControlled() || bIsZoomed == bNewIsZoomed)
+    {
+        return;
+    }
+
+    PC = DHPlayer(Controller);
+
+    if (bNewIsZoomed)
+    {
+        PC.DesiredFOV = ZoomFOV;
+    }
+    else
+    {
+        PC.DesiredFOV = PC.DefaultFOV;
+    }
+
+    bIsZoomed = bNewIsZoomed;
+}
+
+simulated function ToggleZoom()
+{
+    SetIsZoomed(!bIsZoomed);
+}
+
+simulated function ROIronSights()
+{
+    ToggleZoom();
+}
+
+// Debugging functions.
 simulated exec function SpawnRangeTarget()
 {
     local Coords MuzzleCoords;
     local Vector Direction, TargetLocation;
     local DH_Fiat1435MG MG;
+
+    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+    
     MG = DH_Fiat1435MG(Gun);
 
-    // TODO: spawn a target object at the range of the current range setting.
-    //  Make sure it is in the direction of the gun, at the same height as the muzzle.
+    if (Gun == none)
+    {
+        return;
+    }
+
     MuzzleCoords = Gun.GetBoneCoords(Gun.WeaponFireAttachmentBone);
 
     Direction = MuzzleCoords.XAxis;
@@ -47,33 +90,16 @@ simulated exec function SpawnRangeTarget()
     TargetActor.SetStaticMesh(TargetStaticMesh);
 }
 
-simulated function ROIronSights()
-{
-    local DHPlayer PC;
-
-    if (!IsLocallyControlled())
-    {
-        return;
-    }
-
-    PC = DHPlayer(Controller);
-
-    if (bIsZoomed)
-    {
-        PC.DesiredFOV = PC.DefaultFOV;
-    }
-    else
-    {
-        PC.DesiredFOV = ZoomFOV;
-    }
-
-    bIsZoomed = !bIsZoomed;
-}
-
 simulated exec function SetRangeTheta(float NewTheta)
 {
     local DH_Fiat1435MG MG;
     MG = DH_Fiat1435MG(Gun);
+
+    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+
     MG.RangeTable[MG.RangeIndex].AnimationTime = NewTheta;
     MG.UpdateRangeDriverFrameTarget();
 }
@@ -82,6 +108,11 @@ simulated exec function DumpRangeTable()
 {
     local int i;
     local DH_Fiat1435MG MG;
+
+    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
 
     MG = DH_Fiat1435MG(Gun);
 
@@ -109,11 +140,6 @@ defaultproperties
     DriveRot=(Pitch=0,Yaw=16384,Roll=0)
     BinocsDriveRot=(Pitch=0,Yaw=16384,Roll=0)
     DriveAnim="cv33_gunner_closed"
-    
-    // TODO: figure out what this is
-    FirstPersonGunRefBone="1stperson_wep"
-    FirstPersonGunShakeScale=2.5
-    FirstPersonOffsetZScale=3.0
     bHideMuzzleFlashAboveSights=true
 
     GunsightCameraBone="GUNSIGHT_CAMERA_WC"
@@ -122,6 +148,5 @@ defaultproperties
     //AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)   // todo: fill in
 
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
-
     ZoomFOV=65.0
 }
