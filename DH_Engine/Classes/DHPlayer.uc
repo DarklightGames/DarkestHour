@@ -2956,6 +2956,10 @@ exec simulated function ROIronSights()
     {
         Pawn.Weapon.ROIronSights();
     }
+    else if (Pawn != none && DHVehicleWeaponPawn(Pawn) != none)
+    {
+        DHVehicleWeaponPawn(Pawn).ROIronSights();
+    }
 }
 
 // Client function to fade from black

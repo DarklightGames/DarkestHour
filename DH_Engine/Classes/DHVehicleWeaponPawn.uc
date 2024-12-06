@@ -91,6 +91,9 @@ replication
         ServerToggleVehicleLock;
 }
 
+// Override this function in subclasses to do any special handling when the toggle iron-sights key is pressed.
+simulated function ROIronSights();
+
 // Override this function in subclasses to do any special handling when the mesh is switched.
 simulated function OnSwitchMesh()
 {

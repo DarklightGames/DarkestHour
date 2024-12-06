@@ -8,6 +8,9 @@ class DH_Fiat1435MGPawn extends DHVehicleMGPawn;
 var Actor TargetActor;
 var StaticMesh TargetStaticMesh;
 
+var bool bIsZoomed;
+var float ZoomFOV;
+
 simulated function Destroyed()
 {
     if (TargetActor != none)
@@ -42,6 +45,29 @@ simulated exec function SpawnRangeTarget()
 
     TargetActor = Spawn(class'DHRangeTargetActor', self,, TargetLocation, rotator(-Direction));
     TargetActor.SetStaticMesh(TargetStaticMesh);
+}
+
+simulated function ROIronSights()
+{
+    local DHPlayer PC;
+
+    if (!IsLocallyControlled())
+    {
+        return;
+    }
+
+    PC = DHPlayer(Controller);
+
+    if (bIsZoomed)
+    {
+        PC.DesiredFOV = PC.DefaultFOV;
+    }
+    else
+    {
+        PC.DesiredFOV = ZoomFOV;
+    }
+
+    bIsZoomed = !bIsZoomed;
 }
 
 simulated exec function SetRangeTheta(float NewTheta)
@@ -96,4 +122,6 @@ defaultproperties
     //AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)   // todo: fill in
 
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
+
+    ZoomFOV=65.0
 }

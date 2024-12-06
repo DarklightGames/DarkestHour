@@ -3,10 +3,15 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Add right-click to toggle zoom.
-// [ ] Add shell emitter
-// [ ] Add range calibration exec commands
-// [ ] Properly animate clips in clip driver
-// [ ] Have projectiles spawn from the muzzle bone rotation
+// [ ] Add shell emitter.
+// [ ] Properly animate clips in clip driver.
+// [ ] Have projectiles spawn from the muzzle bone rotation.
+// [ ] Force update clip driver when gun is reloaded.
+// [ ] Force update range driver when player enters the vehicle.
+// [ ] Try to fix "roll" issue with rotation (not critical, but would be nice).
+// [ ] Add a reload animation.
+// [ ] Interface art.
+// [ ] 
 //==============================================================================
 
 class DH_Fiat1435MG extends DHVehicleMG;
@@ -46,8 +51,8 @@ simulated function OnSwitchMesh()
 {
     super.OnSwitchMesh();
     
-    // TODO: only do this on the 1st person mesh.
     SetupAnimationDrivers();
+    UpdateRangeDriverFrameTarget();
 }
 
 function Fire(Controller C)
