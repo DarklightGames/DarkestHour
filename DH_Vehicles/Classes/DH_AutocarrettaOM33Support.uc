@@ -17,8 +17,29 @@ defaultproperties
 
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_AutocarrettaOMMGPawn',WeaponBone="TURRET_ATTACHMENT")
 
+    PassengerPawns(1)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_01",DrivePos=(X=-17.8056,Y=-22.1263,Z=107.282),DriveRot=(Yaw=32768))
+    PassengerPawns(2)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_02",DrivePos=(X=-17.8056,Y=22.1263,Z=107.282),DriveRot=(Yaw=32768))
+
     ExitPositions(1)=(X=-160,Y=0.0,Z=58.0)     // Gunner
     ExitPositions(2)=(X=60.0,Y=90.0,Z=58.0)    // Driver
     ExitPositions(3)=(X=-20,Y=90.0,Z=58.0)     // Passenger Right
     ExitPositions(4)=(X=-20,Y=-90.0,Z=58.0)    // Passenger Left
+
+    VehicleHudImage=Texture'DH_AutocarrettaOM_tex.Interface.om_support_clock'
+    SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.Interface.om_support_profile'
+
+    // Driver
+    VehicleHudOccupantsX(0)=0.575
+    VehicleHudOccupantsY(0)=0.37
+    // Gunner
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.7
+    // Front Passenger
+    VehicleHudOccupantsX(2)=0.425
+    VehicleHudOccupantsY(2)=0.37
+    // Flatbed Passengers
+    VehicleHudOccupantsX(3)=0.435
+    VehicleHudOccupantsY(3)=0.5
+    VehicleHudOccupantsX(4)=0.565
+    VehicleHudOccupantsY(4)=0.5
 }

@@ -6,8 +6,8 @@
 //==============================================================================
 // [ ] Fix mesh alignment issues on the cabin seat area
 // [ ] Add the actual gun turret mesh (Fiat 14/35)
-// [ ] Destroyed Mesh
-// [ ] Projectile collision mesh (both variants)
+// [~] Destroyed Mesh
+// [~] Projectile collision mesh (both variants)
 // [ ] Fix karma box on support variant
 //==============================================================================
 // PROGRAMMING
@@ -18,7 +18,7 @@
 //==============================================================================
 // ANIMATIONS
 //==============================================================================
-// [ ] Passenger Animations
+// [~] Passenger Animations
 // [ ] Turret gunner animations
 //==============================================================================
 // ART
@@ -47,14 +47,12 @@ defaultproperties
 
     BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
 
-    // Passengers
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_01")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_02")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_03")
+    // Front Passenger
+    PassengerPawns(0)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_FRONT",DrivePos=(X=64.5387,Y=-23.8934,Z=105.321))
 
     // Driver
     bMultiPosition=false
-    DriverPositions(0)=(/*PositionMesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT',*/ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
+    DriverPositions(0)=(ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true)
     InitialPositionIndex=0
     DrivePos=(X=64.53870,Y=23.89339,Z=105.32056)
     DriveRot=(Yaw=0)
