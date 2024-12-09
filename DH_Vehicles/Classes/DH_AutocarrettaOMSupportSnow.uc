@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_AutocarrettaOM33SupportSnow extends DH_AutocarrettaOM33Support;
+class DH_AutoCarrettaOMSupportSnow extends DH_AutoCarrettaOMSupport;
 
 defaultproperties
 {

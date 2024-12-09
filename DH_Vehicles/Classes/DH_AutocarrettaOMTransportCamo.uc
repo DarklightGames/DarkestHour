@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_AutocarrettaOM33TransportCamo extends DH_AutocarrettaOM33Transport;
+class DH_AutoCarrettaOMTransportCamo extends DH_AutoCarrettaOMTransport;
 
 defaultproperties
 {

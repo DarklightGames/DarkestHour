@@ -2,41 +2,41 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// REFERENCES
+//==============================================================================
+// [1] https://truck-encyclopedia.com/ww2/italy/Autocarreta-OM.php
+//==============================================================================
 // MESH & RIGGING
 //==============================================================================
-// [ ] Fix mesh alignment issues on the cabin seat area
 // [ ] Add the actual gun turret mesh (Fiat 14/35)
 // [~] Destroyed Mesh
-// [~] Projectile collision mesh (both variants)
-// [ ] Fix karma box on support variant
+// [ ] Re-export the skeletal meshes with the modified Blender
 //==============================================================================
 // PROGRAMMING
 //==============================================================================
 // [ ] Slow down the vehicle
-// [ ] MG shell ejection?
 // [ ] Exit Positions
 //==============================================================================
 // ANIMATIONS
 //==============================================================================
-// [~] Passenger Animations
 // [ ] Turret gunner animations
 //==============================================================================
 // ART
 //==============================================================================
-// [ ] Interface Art
+// [ ] Turret Interface Art (re-export support variant)
 //==============================================================================
 // ONCE COMPLETED
 //==============================================================================
 // [ ] Add to various levels
 //==============================================================================
 
-class DH_AutocarrettaOM33 extends DHVehicle
+class DH_AutoCarrettaOM extends DHVehicle
     abstract;
 
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Autocarretta OM33"
+    VehicleNameString="Autocarretta OM 36P"
     VehicleTeam=0
     VehicleMass=2.0
     ReinforcementCost=1
@@ -102,7 +102,7 @@ defaultproperties
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=70.0)
 
-    DestroyedVehicleMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_destroyed'   // TODO: replace
 
     // Vehicle destruction
     ExplosionDamage=50.0
@@ -200,7 +200,7 @@ defaultproperties
         bKNonSphericalInertia=true
         bHighDetailOnly=false
         bClientOnly=false
-        bKDoubleTickRate=false
+        bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
         KFriction=0.5

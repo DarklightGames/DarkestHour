@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_AutocarrettaOM33SupportGrey extends DH_AutocarrettaOM33Support;
+class DH_AutoCarrettaOMTransportGrey extends DH_AutoCarrettaOMTransport;
 
 defaultproperties
 {
@@ -13,5 +13,5 @@ defaultproperties
     Skins(0)=Texture'DH_AutocarrettaOM_tex.OM.OM_BaseVehicle_Grey'
     Skins(1)=Texture'DH_AutocarrettaOM_tex.OM.OM_Grill_Grey'
     Skins(2)=Texture'DH_AutocarrettaOM_tex.OM.OM_Wheels_Grey'
-    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM.OM_Flatbed_Grey'
+    Skins(3)=Texture'DH_AutocarrettaOM_tex.OM.OM_Passenger_Grey'
 }
