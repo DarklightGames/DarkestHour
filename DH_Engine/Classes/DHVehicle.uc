@@ -196,12 +196,17 @@ var     float                       ShadowZOffset;           // vertical positio
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
+var     int                                     SupplyAttachmentSupplyCountMax; // If non-zero, set the max supply count for this attachment.
 var     Vector                                  SupplyAttachmentOffset;
 var     Rotator                                 SupplyAttachmentRotation;
 var     StaticMesh                              SupplyAttachmentStaticMesh;
-var     int                                     SupplyDropInterval;        // the amount of seconds that must elapse between supply drops
-var     int                                     SupplyDropCountMax;         // How many supplies this vehicle can drop at a time.
-var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
+
+// TODO: These should just be on the attachment class, probably,
+// as there's no reason to have them on the vehicle class.
+var()   int                                     SupplyDropInterval;        // the amount of seconds that must elapse between supply drops
+var()   int                                     SupplyDropCountMax;         // How many supplies this vehicle can drop at a time.
+var()   int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
+
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
 var     float                                   ResupplyInterval;
@@ -3115,6 +3120,12 @@ simulated function SpawnVehicleAttachments()
             {
                 SupplyAttachment.SetTeamIndex(VehicleTeam);
                 SupplyAttachment.SetStaticMesh(SupplyAttachmentStaticMesh);
+
+                if (SupplyAttachmentSupplyCountMax > 0)
+                {
+                    SupplyAttachment.SetSupplyCountMax(SupplyAttachmentSupplyCountMax);
+                }
+
                 SupplyAttachment.SetInitialSupply();
             }
         }

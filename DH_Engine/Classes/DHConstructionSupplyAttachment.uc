@@ -118,7 +118,7 @@ function SetInitialSupply(optional int Amount)
     }
     else
     {
-        SetSupplyCount(default.SupplyCount);
+        SetSupplyCount(SupplyCountMax);
     }
 }
 
@@ -135,6 +135,12 @@ simulated function bool IsFull()
 simulated function float GetSupplyCount()
 {
     return SupplyCount;
+}
+
+function SetSupplyCountMax(int Amount)
+{
+    SupplyCountMax = Amount;
+    SetSupplyCount(FMin(SupplyCount, float(SupplyCountMax)));
 }
 
 function SetSupplyCount(float Amount)
