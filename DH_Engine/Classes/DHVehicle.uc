@@ -3119,7 +3119,7 @@ simulated function SpawnVehicleAttachments()
             }
         }
 
-        if (MapIconAttachmentClass != none && SupplyAttachment == none)
+        if (MapIconAttachmentClass != none && MapIconAttachment == none)
         {
             MapIconAttachment = Spawn(MapIconAttachmentClass, self);
 
