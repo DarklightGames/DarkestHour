@@ -191,7 +191,7 @@ defaultproperties
         bKNonSphericalInertia=true
         bHighDetailOnly=false
         bClientOnly=false
-        bKDoubleTickRate=false
+        bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
         KFriction=0.5
