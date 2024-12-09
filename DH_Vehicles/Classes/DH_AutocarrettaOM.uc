@@ -8,22 +8,12 @@
 //==============================================================================
 // MESH & RIGGING
 //==============================================================================
-// [ ] Add the actual gun turret mesh (Fiat 14/35)
-// [~] Destroyed Mesh
 // [ ] Re-export the skeletal meshes with the modified Blender
 //==============================================================================
 // PROGRAMMING
 //==============================================================================
 // [ ] Slow down the vehicle
 // [ ] Exit Positions
-//==============================================================================
-// ANIMATIONS
-//==============================================================================
-// [ ] Turret gunner animations
-//==============================================================================
-// ART
-//==============================================================================
-// [ ] Turret Interface Art (re-export support variant)
 //==============================================================================
 // ONCE COMPLETED
 //==============================================================================
@@ -66,7 +56,9 @@ defaultproperties
     GearRatios(3)=0.8
     GearRatios(4)=1.25
     TransRatio=0.18
-    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=7.0),(InVal=600.0,OutVal=4.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=1.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=100.0,OutVal=7.0),(InVal=300.0,OutVal=4.0),(InVal=600.0,OutVal=2.0),(InVal=1000.0,OutVal=1.0)))
+    ChangeDownPoint=500
+    ChangeUpPoint=1000
     ChassisTorqueScale=0.1
     TurnDamping=5.0
     SteerSpeed=64.0
@@ -76,7 +68,7 @@ defaultproperties
     EngineBrakeFactor=0.0002
     bHasHandbrake=true
     HandbrakeThresh=100.0
-    EngineRPMSoundRange=6000.0
+    EngineRPMSoundRange=4000.0
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.3),(InVal=800.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -100,9 +92,9 @@ defaultproperties
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
     DamagedEffectScale=0.8
-    DamagedEffectOffset=(X=60.0,Y=0.0,Z=70.0)
+    DamagedEffectOffset=(X=90.0,Y=0.0,Z=70.0)
 
-    DestroyedVehicleMesh=StaticMesh'DH_Fiat508CM_stc.fiat508cm_destroyed'   // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_DESTROYED_TRANSPORT'
 
     // Vehicle destruction
     ExplosionDamage=50.0

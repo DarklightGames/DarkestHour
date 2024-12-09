@@ -49,6 +49,11 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.5
     VehicleHudOccupantsX(3)=0.565
     VehicleHudOccupantsY(3)=0.5
+
+    DestroyedVehicleMesh=StaticMesh'DH_AutocarrettaOM_stc.OM33_DESTROYED_SUPPORT'
+    DestroyedMeshSkins(0)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_Flatbed_Green_D'
+    DestroyedMeshSkins(1)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_Wheels_Green_D'
+    DestroyedMeshSkins(2)=Combiner'DH_AutocarrettaOM_tex.Destroyed.OM_BaseVehicle_Green_D'
     
     // Logistics
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
