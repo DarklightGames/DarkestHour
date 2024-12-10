@@ -3077,7 +3077,7 @@ simulated function SpawnVehicleAttachments()
     local Actor             A;
     local float             RandomNumber, ProbabilitySum;
     local int               i, j, DependenciesMet;
-    local bool              bHasDependencies, bDidMeetDependencies;
+    local bool              bDidMeetDependencies;
 
     // Treads & movement sound attachments
     if (Level.NetMode != NM_DedicatedServer)

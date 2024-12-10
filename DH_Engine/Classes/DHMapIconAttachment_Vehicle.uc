@@ -68,8 +68,6 @@ function Timer()
 
 simulated function Color GetIconColor(DHPlayer PC)
 {
-    local Color C;
-
     // If the vehicle is owned by the enemy, the icon is red.
     // If the vehicle is owned by the player's team, the icon is blue if occupied, grey if not,
     // and green if the player is in the same squad.
