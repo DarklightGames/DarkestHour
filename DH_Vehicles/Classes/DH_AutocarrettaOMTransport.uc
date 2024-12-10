@@ -21,11 +21,10 @@ defaultproperties
     PassengerPawns(7)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_TRANSPORT_06",DrivePos=(X=-76.0907,Y=14.2551,Z=108.489))
     PassengerPawns(8)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_TRANSPORT_05",DrivePos=(X=-76.0907,Y=-14.2551,Z=108.489))
 
-    RandomAttachmentGroups(0)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_WINDSHIELD'))))
-    RandomAttachmentGroups(1)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_ROOF_PASSENGER')),(Probability=0.25,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_ROOF_CABIN'))))
-    RandomAttachmentGroups(2)=(Dependencies=((GroupIndex=0,OptionIndex=0)),Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SEARCHLIGHT'))))
+    RandomAttachmentGroups(0)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_WINDSHIELD'))))
+    RandomAttachmentGroups(1)=(Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_ROOF_PASSENGER'))))
+    RandomAttachmentGroups(2)=(Dependencies=((GroupIndex=0,OptionIndex=0)),Options=((Probability=0.9,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SEARCHLIGHT'))))
     RandomAttachmentGroups(3)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SPARE_WHEEL_1930S'))))
-    RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=0,OptionIndex=-1),(GroupIndex=1,OptionIndex=1)),Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_TENT_STRAPS'))))
 
     VehicleHudImage=Texture'DH_AutocarrettaOM_tex.Interface.om_transport_clock'
     SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.Interface.om_transport_profile'

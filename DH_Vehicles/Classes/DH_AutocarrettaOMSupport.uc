@@ -18,7 +18,7 @@ defaultproperties
     RandomAttachmentGroups(2)=(Dependencies=((GroupIndex=0,OptionIndex=0)),Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SEARCHLIGHT'))))
     RandomAttachmentGroups(3)=(Options=((Probability=0.75,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_SPARE_WHEEL_1920S'))))
     RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=0,OptionIndex=-1),(GroupIndex=1,OptionIndex=0)),Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_TENT_STRAPS'))))
-    RandomAttachmentGroups(5)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_LOGI',CullDistance=6000))))
+    RandomAttachmentGroups(5)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_LOGI',CullDistance=3000))))
 
     PassengerPawns(1)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_01",DrivePos=(X=-17.8056,Y=-22.1263,Z=107.282),DriveRot=(Yaw=32768))
     PassengerPawns(2)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_02",DrivePos=(X=-17.8056,Y=22.1263,Z=107.282),DriveRot=(Yaw=32768))
