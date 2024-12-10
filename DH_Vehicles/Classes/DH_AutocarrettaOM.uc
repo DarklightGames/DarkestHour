@@ -2,22 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// REFERENCES
-//==============================================================================
 // [1] https://truck-encyclopedia.com/ww2/italy/Autocarreta-OM.php
 //==============================================================================
 // MESH & RIGGING
 //==============================================================================
 // [ ] Re-export the skeletal meshes with the modified Blender
-//==============================================================================
-// PROGRAMMING
-//==============================================================================
-// [ ] Slow down the vehicle
-// [ ] Exit Positions
-//==============================================================================
-// ONCE COMPLETED
-//==============================================================================
-// [ ] Add to various levels
 //==============================================================================
 
 class DH_AutoCarrettaOM extends DHVehicle
@@ -34,8 +23,6 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_TRANSPORT_EXT'
-
-    BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
 
     // Front Passenger
     PassengerPawns(0)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_FRONT",DrivePos=(X=64.5387,Y=-23.8934,Z=105.321))
@@ -104,7 +91,7 @@ defaultproperties
     DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit Positions
-    ExitPositions(0)=(X=60.0,Y=-90.0,Z=58.0)    // Driver
+    ExitPositions(0)=(X=60.0,Y=90.0,Z=58.0)    // Driver
 
     // Sounds
     MaxPitchSpeed=350.0

@@ -20,17 +20,12 @@ defaultproperties
     RandomAttachmentGroups(4)=(Dependencies=((GroupIndex=0,OptionIndex=-1),(GroupIndex=1,OptionIndex=0)),Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_TENT_STRAPS'))))
     RandomAttachmentGroups(5)=(Options=((Probability=1.0,Attachment=(AttachBone="BODY",StaticMesh=StaticMesh'DH_AutocarrettaOM_stc.ATTACHMENTS.OM33_LOGI',CullDistance=6000))))
 
-    // TODO: add the logi attachment
-
-    //PassengerWeapons(0)=(WeaponPawnClass=class'DH_AutocarrettaOMMGPawn',WeaponBone="TURRET_ATTACHMENT")
-
     PassengerPawns(1)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_01",DrivePos=(X=-17.8056,Y=-22.1263,Z=107.282),DriveRot=(Yaw=32768))
     PassengerPawns(2)=(AttachBone="BODY",DriveAnim="OM33_PASSENGER_SUPPORT_02",DrivePos=(X=-17.8056,Y=22.1263,Z=107.282),DriveRot=(Yaw=32768))
 
-    ExitPositions(1)=(X=-160,Y=0.0,Z=58.0)     // Gunner
-    ExitPositions(2)=(X=60.0,Y=90.0,Z=58.0)    // Driver
-    ExitPositions(3)=(X=-20,Y=90.0,Z=58.0)     // Passenger Right
-    ExitPositions(4)=(X=-20,Y=-90.0,Z=58.0)    // Passenger Left
+    ExitPositions(1)=(X=60.0,Y=-90.0,Z=58.0)    // Front Passenger
+    ExitPositions(2)=(X=-20,Y=-90.0,Z=58.0)     // Rear Passenger Left
+    ExitPositions(3)=(X=-20,Y=90.0,Z=58.0)      // Rear Passenger Right
 
     VehicleHudImage=Texture'DH_AutocarrettaOM_tex.Interface.om_support_clock'
     SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.Interface.om_support_profile'
@@ -38,9 +33,6 @@ defaultproperties
     // Driver
     VehicleHudOccupantsX(0)=0.575
     VehicleHudOccupantsY(0)=0.37
-    // Gunner
-    // VehicleHudOccupantsX(1)=0.5
-    // VehicleHudOccupantsY(1)=0.7
     // Front Passenger
     VehicleHudOccupantsX(1)=0.425
     VehicleHudOccupantsY(1)=0.37

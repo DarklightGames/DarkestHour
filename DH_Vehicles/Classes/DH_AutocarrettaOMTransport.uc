@@ -30,6 +30,16 @@ defaultproperties
     VehicleHudImage=Texture'DH_AutocarrettaOM_tex.Interface.om_transport_clock'
     SpawnOverlay(0)=Texture'DH_AutocarrettaOM_tex.Interface.om_transport_profile'
 
+    ExitPositions(1)=(X=60.0,Y=-90.0,Z=58.0)    // Front Passenger
+    ExitPositions(2)=(X=0.0,Y=-90.0,Z=58.0)     // Front Row, Center
+    ExitPositions(3)=(X=0.0,Y=-90.0,Z=58.0)     // Front Row, Left
+    ExitPositions(4)=(X=0.0,Y=90.0,Z=58.0)      // Front Row, Right
+    ExitPositions(5)=(X=-75,Y=-90.0,Z=58.0)     // Middle Row, Center
+    ExitPositions(6)=(X=-75,Y=-90.0,Z=58.0)     // Middle Row, Left
+    ExitPositions(7)=(X=-75,Y=90.0,Z=58.0)      // Middle Row, Right
+    ExitPositions(8)=(X=-75,Y=90.0,Z=58.0)      // Back Row, Right
+    ExitPositions(9)=(X=-75,Y=-90.0,Z=58.0)     // Back Row, Left
+
     // Driver
     VehicleHudOccupantsX(0)=0.575
     VehicleHudOccupantsY(0)=0.34
