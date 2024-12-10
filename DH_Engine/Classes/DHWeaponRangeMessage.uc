@@ -25,10 +25,7 @@ static function RenderComplexMessage(Canvas Canvas,
                               optional PlayerReplicationInfo RelatedPRI_2,
                               optional Object OptionalObject)
 {
-    local PlayerController PC;
     local float X, Y;
-    local int i, j;
-    local array<string> Keys;
 
     X = Canvas.ClipX * default.PosX;
     Y = Canvas.ClipY * default.PosY;

@@ -736,15 +736,13 @@ Begin:
     }
 }
 
-// overriding DHVehicle.ViewTransition to enter 'Idle' state instead of ''
-simulated state ViewTransition
+simulated state LeavingViewTransition
 {
-Begin:
-    HandleTransition();
-    Sleep(ViewTransitionDuration);
-    GotoState('Idle');
+    simulated function BeginState()
+    {
+        GotoState('Idle');
+    }
 }
-
 
 // New state where mortar is being fired
 // Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)

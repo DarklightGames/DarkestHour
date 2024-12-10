@@ -56,8 +56,6 @@ function bool ShouldServerBeDisplayed(GameInfo.ServerResponseLine s)
 
 function MyOnReceivedServer(GameInfo.ServerResponseLine s)
 {
-    local int i;
-
     if (!ShouldServerBeDisplayed(s))
     {
         SetTimer(1.0);
