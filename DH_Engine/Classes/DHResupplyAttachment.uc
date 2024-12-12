@@ -94,14 +94,30 @@ function bool CanResupplyPawn(Pawn P)
 {
     local DHPlayerReplicationInfo PRI;
     local ROVehicle ROV;
+    local VehicleWeaponPawn VWP;
     local int i;
 
     if (P != none && (TeamIndex == NEUTRAL_TEAM_INDEX || P.GetTeamNum() == TeamIndex))
     {
+        ROV = ROVehicle(P);
+
+        // Do not resupply vehicles that use ammunition from another team.
+        if (ROV != none && ROV.default.VehicleTeam != TeamIndex)
+        {
+            return false;
+        }
+
+        VWP = ROVehicleWeaponPawn(P);
+
+        if (VWP != none &&
+            VWP.VehicleBase != none &&
+            VWP.VehicleBase.default.VehicleTeam != TeamIndex)
+        {
+            return false;
+        }
+
         if (SquadIndex >= 0)
         {
-            ROV = ROVehicle(P);
-
             if (ROV != none)
             {
                 // Check if any of the weapons are manned by a squad member.
@@ -178,7 +194,6 @@ function Timer()
 
     foreach RadiusActors(class'Pawn', recvr, CollisionRadius)
     {
-
         // This stops us from the vehicle resupplying itself.
         if (Base != none && Base == recvr)
         {

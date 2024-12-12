@@ -118,9 +118,24 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Overridden to bypass attaching as a driver and go straight to the gun
+function SetVehicleTeam(int TeamIndex)
+{
+    local int i;
+
+    VehicleTeam = TeamIndex;
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(VehicleTeam);
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun, and to update the owning team of the gun.
 function KDriverEnter(Pawn P)
 {
+    // Update the owning team of the gun.
+    SetVehicleTeam(P.GetTeamNum());
+
     if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
         WeaponPawns[0].KDriverEnter(P);
@@ -758,4 +773,5 @@ defaultproperties
 
     bShouldDrawPositionDots=false
     bShouldDrawOccupantList=false
+    bTeamLocked=false
 }
