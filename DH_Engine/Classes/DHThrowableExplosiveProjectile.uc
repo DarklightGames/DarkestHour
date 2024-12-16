@@ -17,6 +17,7 @@ var     float           ExplosionSoundRadius;
 var     class<Emitter>  ExplodeDirtEffectClass;
 var     class<Emitter>  ExplodeSnowEffectClass;
 var     class<Emitter>  ExplodeMidAirEffectClass;
+var     Vector          ExplodeEmitterOffset;
 
 var     class<Actor>    SplashEffect;  // water splash effect class
 var     Sound           WaterHitSound; // sound of this bullet hitting water
@@ -151,7 +152,7 @@ simulated function Destroyed()
 
     PlaySound(ExplosionSound[Rand(3)],, ExplosionSoundVolume,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
-    Start = Location + vect(0.0, 0.0, 32.0);
+    Start = Location + ExplodeEmitterOffset;
 
     DoShakeEffect();
 
@@ -1028,6 +1029,7 @@ defaultproperties
     LightHue=30
     LightSaturation=150
     LightRadius=5.0
+    ExplodeEmitterOffset=(z=32)
 
     // From deprecated ROThrowableExplosiveProjectile class:
     bNetTemporary=false

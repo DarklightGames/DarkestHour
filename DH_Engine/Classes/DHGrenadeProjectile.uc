@@ -107,7 +107,7 @@ defaultproperties
     // FuzeLengthRange=(Min=4.5,Max=5.5)
     Speed=1100.0
     MyDamageType=class'DHThrowableExplosiveDamageType'
-    ExplodeDirtEffectClass=class'GrenadeExplosion'
+    ExplodeDirtEffectClass=class'DHGrenadeEffect_Generic'
     ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
     ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
     ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
@@ -131,4 +131,5 @@ defaultproperties
     ShakeOffsetRate=(Z=200.0)
     ShakeOffsetTime=6.0
     ShakeScale=3.0
+    ExplodeEmitterOffset=(z=8)
 }
