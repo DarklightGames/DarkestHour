@@ -120,11 +120,6 @@ defaultproperties
         MaxParticles=15 // was 8
       
         StartSizeRange=(X=(Min=1.3,Max=2.8),Y=(Min=1.3,Max=2.8),Z=(Min=5.000000,Max=6.000000)) //increased size 
-        Sounds(0)=(Sound=Sound'DH_old_Inf_Weapons.Impact.impact_rock_1',Radius=(Min=20.000000,Max=50.000000),Pitch=(Min=1,Max=10.000000),Volume=(Min=0.700000,Max=1),Probability=(Min=0.200000,Max=0.400000))
-        Sounds(1)=(Sound=Sound'DH_old_Inf_Weapons.Impact.impact_rock_5',Radius=(Min=20.000000,Max=50.000000),Pitch=(Min=1,Max=10.000000),Volume=(Min=0.700000,Max=1),Probability=(Min=0.200000,Max=0.400000))
-        Sounds(2)=(Sound=Sound'DH_old_Inf_Weapons.Impact.impact_rock_3',Radius=(Min=20.000000,Max=50.000000),Pitch=(Min=1,Max=10.000000),Volume=(Min=0.700000,Max=1),Probability=(Min=0.200000,Max=0.400000))
-        CollisionSound=PTSC_LinearLocal
-        CollisionSoundProbability=(Min=0.800000,Max=1.000000)
         InitialParticlesPerSecond=64.000000
         DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.BulletHits.stonechunksfinal'
