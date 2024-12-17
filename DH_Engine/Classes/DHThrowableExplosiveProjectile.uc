@@ -1018,7 +1018,7 @@ defaultproperties
     ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ExplosionSoundVolume=5.0
     ExplosionSoundRadius=300.0
-    ExplosionDecal=class'ROEffects.grenademark_generic'
+    ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
     WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
