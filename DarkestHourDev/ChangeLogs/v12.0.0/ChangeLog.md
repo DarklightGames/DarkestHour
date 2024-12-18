@@ -16,7 +16,7 @@ The game has now been fully localized to Russian and Ukrainian. As a result, pla
 
 Historically, the game only had partial localization support for German. However, the localizations had never been updated after it's initial release well over a decade ago.
 
-We have developed a system for localization that will allow us to easily add more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
+We have developed a system for localization that will allow us to easily add localization for more languages in the future as well as keep the existing ones up to date as the game continues to evolve. We hope that this will make the game more accessible to players from all over the world.
 
 If you'd like to help us localize the game into your native language, please visit our [localization portal](https://weblate.darklightgames.com)!
 
@@ -138,7 +138,20 @@ This popular map has been re-imagined for the Italy expansion. The original map 
 [more]
 
 # Gameplay Changes
-* Vehicle passengers may no longer use the vehicle voice commands.
+* Players can now capture and use enemy stationary weapons. Note, however, that these weapons cannot be resupplied by the capturing team.
+* Vehicle passengers may no longer use vehicle voice commands intended for crew members only.
+* Squad leaders and assistant squad leaders are now given wire cutters by default.
+
+# Logistics Changes
+The construction loadouts system has been overhauled to allow for easier and more fine-grained control over what each team can build on a map.
+
+In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive project that was prone to human error and oversight.
+
+Now, we have per-nation default construction loadout limits, as well as retaining the ability to further restrict individual constructions on a per-level basis. This should dramatically reduce the amount of over-the-top "gun spam" that can occur.
+
+In addition, there are now hard limits on the amount of total constructions that can be built, whereas before there was only a soft limit that could be fairly easily bypassed. This new behavior mirrors the total & active limitations in the vehicle spawning system.
+
+[[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
 
 # Vehicles
 * Vehicle cannons can now be fired while the commander is looking through the periscope. [not actually done yet, but needs to be added for all the existing vehicles!]

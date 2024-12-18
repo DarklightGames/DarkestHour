@@ -36,7 +36,6 @@ var     class<Inventory>    ShovelClass;          // name of shovel class, so ca
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
 var     class<Inventory>    BinocsClass;
-
 var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
 
@@ -3216,6 +3215,7 @@ function AddDefaultInventory()
             CheckGiveShovel();
             CheckGiveBinocs();
             CheckGiveSmoke();
+            CheckGiveWirecutters();
 
             RI = GetRoleInfo();
 
@@ -3341,6 +3341,7 @@ function AddDefaultInventory()
             CheckGiveShovel();
             CheckGiveBinocs();
             CheckGiveSmoke();
+            CheckGiveWirecutters();
         }
     }
 
@@ -3455,6 +3456,18 @@ function CheckGiveSmoke()
     if (SquadMemberCount >= RequiredSquadMembersToReceiveColoredSmoke && ColoredSmokeGrenadeClass != none)
     {
         CreateInventory(string(ColoredSmokeGrenadeClass));
+    }
+}
+
+function CheckGiveWirecutters()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
+    {
+        CreateInventory("DH_Weapons.DHWirecuttersItem");
     }
 }
 
