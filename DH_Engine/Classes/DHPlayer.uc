@@ -4856,7 +4856,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelRadius(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
     local int       i;
