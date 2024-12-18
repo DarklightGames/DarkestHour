@@ -102,4 +102,6 @@ defaultproperties
     ShakeRotTime=7.0
 
     RotationsPerSecond=0.05
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }
