@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO: A lot of the special functionality should be moved to a separate
+//  subclass so that we can reuse all the new systems on other mounted MGs.
+//==============================================================================
 
 class DH_Fiat1435MGPawn extends DHVehicleMGPawn;
 
@@ -131,10 +134,8 @@ defaultproperties
     bMultiPosition=true
     // Because of the way that explosives work, we must say that the driver is not exposed so that
     // he is not killed by explosives while buttoned up.
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="cv33_gunner_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true)
     UnbuttonedPositionIndex=0
-    BinocPositionIndex=1
     bDrawDriverInTP=true
     DrivePos=(X=0,Y=0,Z=58)
     DriveRot=(Pitch=0,Yaw=16384,Roll=0)
@@ -148,5 +149,5 @@ defaultproperties
     //AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)   // todo: fill in
 
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
-    ZoomFOV=65.0
+    ZoomFOV=60.0
 }

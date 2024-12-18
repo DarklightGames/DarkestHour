@@ -2,16 +2,14 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Add right-click to toggle zoom.
-// [ ] Add shell emitter.
 // [ ] Properly animate clips in clip driver.
-// [ ] Have projectiles spawn from the muzzle bone rotation.
 // [ ] Force update clip driver when gun is reloaded.
 // [ ] Force update range driver when player enters the vehicle.
 // [ ] Try to fix "roll" issue with rotation (not critical, but would be nice).
 // [ ] Add a reload animation.
 // [ ] Interface art.
-// [ ] 
+// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no cooldown].
+// [ ] Attach clips as "bullets", same as on the first person weapons.
 //==============================================================================
 
 class DH_Fiat1435MG extends DHVehicleMG;
@@ -40,6 +38,14 @@ var name                    ClipBone;
 var name                    ClipAnim;
 var int                     ClipChannel;
 
+var class<RO3rdShellEject>  ShellEjectClass;
+var name                    ShellEjectBone;
+
+// Ammo rounds.
+var array<ROFPAmmoRound>    AmmoRounds;
+var StaticMesh              AmmoRoundStaticMesh;
+var array<name>             AmmoRoundBones;
+
 struct RangeTableItem
 {
     var() float Range;          // Range in the specified distance unit.
@@ -52,15 +58,74 @@ simulated function OnSwitchMesh()
     super.OnSwitchMesh();
     
     SetupAnimationDrivers();
+    InitializeAmmoRounds();
     UpdateRangeDriverFrameTarget();
+}
+
+simulated function DestroyAmmoRounds()
+{
+    local int i;
+
+    for (i = 0; i < AmmoRounds.Length; i++)
+    {
+        if (AmmoRounds[i] != none)
+        {
+            AmmoRounds[i].Destroy();
+        }
+    }
+
+    AmmoRounds.Length = 0;
+}
+
+simulated function InitializeAmmoRounds()
+{
+    local int i;
+
+    DestroyAmmoRounds();
+
+    for (i = 0; i < AmmoRoundBones.Length; i++)
+    {
+        AmmoRounds[i] = Spawn(class'ROFPAmmoRound', self);
+
+        if (AmmoRounds[i] == none)
+        {
+            continue;
+        }
+
+        AmmoRounds[i].bOwnerNoSee = false;
+
+        AttachToBone(AmmoRounds[i], AmmoRoundBones[i]);
+        AmmoRounds[i].SetStaticMesh(AmmoRoundStaticMesh);
+    }
 }
 
 function Fire(Controller C)
 {
+    local coords ShellEjectCoords;
+    local Actor ShellEjectActor;
+
     super.Fire(C);
     
     StartFiringAnimation();
-    UpdateClipDriver();
+
+    // TODO: make sure this will work in multiplayer; only have this run on the client. server doesn't care.
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (ShellEjectClass != none && ShellEjectBone != '')
+        {
+            ShellEjectCoords = GetBoneCoords(ShellEjectBone);
+
+            // TODO: rotation on this is wrong.
+            ShellEjectActor = Spawn(ShellEjectClass, self,, ShellEjectCoords.Origin, GetBoneRotation(ShellEjectBone));
+            //ShellEjectActor.Rotation = GetBoneRotation(Muzzle)
+
+            // The class defines bOwnerNoSee as true since this is meant only for third person, but we want to just
+            // reuse the same class for first person as well.
+            ShellEjectActor.bOwnerNoSee = false;
+        }
+    }
+    
+    UpdateClip();
 }
 
 function StartFiringAnimation()
@@ -152,20 +217,46 @@ simulated function UpdateRangeDriver()
     FreezeAnimAt(RangeDriverAnimationFrame, RangeDriverChannel);
 }
 
+simulated function UpdateAmmoRounds()
+{
+    local int i;
+    local int ClipsVisible;
+
+    ClipsVisible = Ceil(float(MainAmmoCharge[0]) / ROUNDS_PER_CLIP);
+
+    for (i = 0; i < AmmoRounds.Length; i++)
+    {
+        if (AmmoRounds[i] != none)
+        {
+            AmmoRounds[i].bHidden = AmmoRounds.Length - i > ClipsVisible;
+        }
+    }
+}
+
+simulated function UpdateClip()
+{
+    UpdateAmmoRounds();
+    UpdateClipDriver();
+}
+
 simulated function UpdateClipDriver()
 {
     const ROUNDS_PER_CLIP = 5;
     const CLIP_PER_MAG = 10;
-    const CLIP_DRIVER_FRAMES = 10;
+    const CLIP_DRIVER_FRAMES = 11;
 
     local float ClipFrame;
+    local int ClipsVisible;
+    local int TotalClips;
 
     if (ClipChannel == 0)
     {
         return;
     }
 
-    ClipFrame = (CLIP_DRIVER_FRAMES - 1) - (MainAmmoCharge[0] / ROUNDS_PER_CLIP);
+    TotalClips = default.MainAmmoCharge[0] / ROUNDS_PER_CLIP;
+    ClipsVisible = Ceil(float(MainAmmoCharge[0]) / ROUNDS_PER_CLIP);
+    ClipFrame = CLIP_DRIVER_FRAMES - (ClipsVisible + 1);
 
     FreezeAnimAt(ClipFrame, ClipChannel);
 }
@@ -263,4 +354,19 @@ defaultproperties
     ClipBone=CLIP
     ClipAnim=CLIP_DRIVER
     ClipChannel=3
+
+    ShellEjectBone=EJECTOR
+    ShellEjectClass=class'RO3rdShellEject762x25mm'
+
+    AmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_CLIP_CARTRIDGE_1ST'
+    AmmoRoundBones(0)="CLIP_CARTRIDGES_01"
+    AmmoRoundBones(1)="CLIP_CARTRIDGES_02"
+    AmmoRoundBones(2)="CLIP_CARTRIDGES_03"
+    AmmoRoundBones(3)="CLIP_CARTRIDGES_04"
+    AmmoRoundBones(4)="CLIP_CARTRIDGES_05"
+    AmmoRoundBones(5)="CLIP_CARTRIDGES_06"
+    AmmoRoundBones(6)="CLIP_CARTRIDGES_07"
+    AmmoRoundBones(7)="CLIP_CARTRIDGES_08"
+    AmmoRoundBones(8)="CLIP_CARTRIDGES_09"
+    AmmoRoundBones(9)="CLIP_CARTRIDGES_10"
 }
