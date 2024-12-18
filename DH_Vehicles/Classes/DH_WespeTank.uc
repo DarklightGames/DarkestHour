@@ -67,11 +67,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wespe_anm.WESPE_BODY_EXT'
-    // Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    // Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-    // Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    // Skins(3)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    // Skins(4)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(0)=Texture'DH_Wespe_tex.wespe.wespe_body_ext_camo'
     // CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
@@ -84,13 +80,10 @@ defaultproperties
     // PassengerPawns(4)=(AttachBone="body",DrivePos=(X=-120.0,Y=75.0,Z=40.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
 
     // Driver
-    UnbuttonedPositionIndex=0
+    UnbuttonedPositionIndex=2
     DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bExposed=true,bDrawOverlays=true)
     DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
-    DrivePos=(X=5.0,Y=0.0,Z=3.0)
-    FPCamPos=(X=-10.0,Y=0.0,Z=0.0)
-    OverlayFPCamPos=(X=4.0,Y=0.0,Z=0.0)
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=-47.6,LocationName="lower nose")
@@ -153,8 +146,8 @@ defaultproperties
     PlayerCameraBone="DRIVER_CAMERA"
 
     // Visual effects
-    LeftTreadIndex=3
-    RightTreadIndex=4
+    LeftTreadIndex=1
+    RightTreadIndex=2
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     TreadVelocityScale=130.0
