@@ -2200,7 +2200,7 @@ simulated function UpdatePrecacheMaterials()
 // Modified to include extra attachment
 simulated function DestroyAttachments()
 {
-    super. DestroyAttachments();
+    super.DestroyAttachments();
 
     if (DriverHatchFireEffect != none)
     {
