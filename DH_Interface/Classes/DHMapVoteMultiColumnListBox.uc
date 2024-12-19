@@ -5,6 +5,38 @@
 
 class DHMapVoteMultiColumnListBox extends MapVoteMultiColumnListBox;
 
+function InternalOnClick(GUIContextMenu Sender, int Index)
+{
+	local string MapName;
+
+    if (Sender == none || NotifyContextSelect(Sender, Index))
+    {
+        return;
+    }
+
+    if (Index == 0 && DHMapVotingPage(MenuOwner) != none)
+    {
+        DHMapVotingPage(MenuOwner).ForceMapVote(self);
+    }
+}
+
+function bool InternalOnOpen(GUIContextMenu Sender)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsAdmin();
+}
+
 function LoadList(VotingReplicationInfo LoadVRI)
 {
     local int i, g;
@@ -29,5 +61,11 @@ function LoadList(VotingReplicationInfo LoadVRI)
 
 defaultproperties
 {
-    ContextMenu=none
+    Begin Object Class=GUIContextMenu Name=AdminMapContextMenu
+		ContextItems(0)="ADMIN: Force map to this"
+        OnSelect=InternalOnClick
+        OnOpen=InternalOnOpen
+    End Object
+
+    ContextMenu=AdminMapContextMenu
 }
