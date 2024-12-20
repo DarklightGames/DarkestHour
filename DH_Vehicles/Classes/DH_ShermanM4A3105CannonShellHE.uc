@@ -23,10 +23,11 @@ defaultproperties
 
     //Effects
     DrawScale=1.5
-    ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
-    ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
-    ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
-    ExplosionSound(3)=SoundGroup'Artillery.explosions.explo04'
+    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
+    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
+    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
+    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
+    TransientSoundRadius=20000.0    // Match the transient sound radius of the 105mm off-map artillery shell
 
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
