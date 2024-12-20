@@ -249,6 +249,5 @@ defaultproperties
     // Records(110)=(VehicleNames=("r35","renault"),Variants=((ClassName="DH_Vehicles.DH_R35Tank")))
     Records(111)=(VehicleNames=("om36","om36p"),Variants=((ClassName="DH_Vehicles.DH_AutoCarrettaOMTransport"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportGrey",VariantName="grey"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMTransportSnow",VariantName="snow")))
     Records(112)=(VehicleNames=("om32"),Variants=((ClassName="DH_Vehicles.DH_AutoCarrettaOMSupport"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportCamo",VariantName="camo"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportGrey",VariantName="grey"),(ClassName="DH_Vehicles.DH_AutoCarrettaOMSupportSnow",VariantName="snow")))
-
-    Records(113)=(VehicleNames=("wespe"),Variants=((ClassName="DH_Vehicles.DH_WespeTank")))
+    Records(113)=(VehicleNames=("wespe"),Variants=((ClassName="DH_Vehicles.DH_WespeTank"),(ClassName="DH_Vehicles.DH_WespeTankCamoOne",VariantName="camo1"),(ClassName="DH_Vehicles.DH_WespeTankCamoTwo",VariantName="camo2"),(ClassName="DH_Vehicles.DH_WespeTankCamoThree",VariantName="camothree"),(ClassName="DH_Vehicles.DH_WespeTankWinter",VariantName="snow")))
 }

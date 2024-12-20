@@ -2,6 +2,20 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Interface Art
+// [ ] Rename Shells & Set up Classes/loadout
+// [ ] Fix view limits for gunner
+// [ ] Improve pitch & yaw dials
+// [ ] Interior model
+// [ ] Gunner animations
+// [ ] Destroyed mesh
+// [ ] Collision mesh (body & turret attachment)
+// [ ] Add to maps
+// [ ] Fix handling to be less bouncy
+// [ ] Fix muzzle smoke to use sideways smoke
+// [ ] Hit points
+// [ ] Damage effect positions
+//==============================================================================
 
 class DH_WespeTank extends DHArmoredVehicle;
 
@@ -68,6 +82,8 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wespe_anm.WESPE_BODY_EXT'
     Skins(0)=Texture'DH_Wespe_tex.wespe.wespe_body_ext_camo'
+    Skins(1)=Texture'DH_Wespe_tex.wespe.wespe_treads'
+    Skins(2)=Texture'DH_Wespe_tex.wespe.wespe_treads'
     // CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
@@ -148,9 +164,9 @@ defaultproperties
     // Visual effects
     LeftTreadIndex=1
     RightTreadIndex=2
-    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    TreadVelocityScale=130.0
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
+    TreadVelocityScale=110.0
     WheelRotationScale=42250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.30823,Y=37.3244,Z=60.6315),ExhaustRotation=(Pitch=0,Yaw=16384))
     LeftLeverBoneName=LEVER_L
@@ -182,26 +198,26 @@ defaultproperties
 
     // Visible wheels
     // TODO: why aren't the wheels spinning???
-    LeftWheelBones(0)=WHEEL_L_01
-    LeftWheelBones(1)=WHEEL_L_02
-    LeftWheelBones(2)=WHEEL_L_03
-    LeftWheelBones(3)=WHEEL_L_04
-    LeftWheelBones(4)=WHEEL_L_05
-    LeftWheelBones(5)=WHEEL_L_06
-    LeftWheelBones(6)=WHEEL_L_07
-    LeftWheelBones(7)=WHEEL_L_08
-    LeftWheelBones(8)=WHEEL_L_09
-    LeftWheelBones(9)=WHEEL_L_10
-    RightWheelBones(0)=WHEEL_R_01
-    RightWheelBones(1)=WHEEL_R_02
-    RightWheelBones(2)=WHEEL_R_03
-    RightWheelBones(3)=WHEEL_R_04
-    RightWheelBones(4)=WHEEL_R_05
-    RightWheelBones(5)=WHEEL_R_06
-    RightWheelBones(6)=WHEEL_R_07
-    RightWheelBones(7)=WHEEL_R_08
-    RightWheelBones(8)=WHEEL_R_09
-    RightWheelBones(9)=WHEEL_R_10
+    LeftWheelBones(0)="WHEEL_01_L"
+    LeftWheelBones(1)="WHEEL_02_L"
+    LeftWheelBones(2)="WHEEL_03_L"
+    LeftWheelBones(3)="WHEEL_04_L"
+    LeftWheelBones(4)="WHEEL_05_L"
+    LeftWheelBones(5)="WHEEL_06_L"
+    LeftWheelBones(6)="WHEEL_07_L"
+    LeftWheelBones(7)="WHEEL_08_L"
+    LeftWheelBones(8)="WHEEL_09_L"
+    LeftWheelBones(9)="WHEEL_10_L"
+    RightWheelBones(0)="WHEEL_01_R"
+    RightWheelBones(1)="WHEEL_02_R"
+    RightWheelBones(2)="WHEEL_03_R"
+    RightWheelBones(3)="WHEEL_04_R"
+    RightWheelBones(4)="WHEEL_05_R"
+    RightWheelBones(5)="WHEEL_06_R"
+    RightWheelBones(6)="WHEEL_07_R"
+    RightWheelBones(7)="WHEEL_08_R"
+    RightWheelBones(8)="WHEEL_09_R"
+    RightWheelBones(9)="WHEEL_10_R"
 
     ShadowZOffset=40.0
 
