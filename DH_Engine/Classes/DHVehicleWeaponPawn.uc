@@ -2062,7 +2062,7 @@ simulated function InitializeVehicleAndWeapon()
 simulated function SetPlayerPosition()
 {
     local name VehicleAnim, PlayerAnim;
-    local int  i;
+    local int  i, DriverAnimationChannel;
 
     // Fix driver attachment position - on replication, AttachDriver() only works if client has received Gun actor, which it may not have yet
     // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
@@ -2116,8 +2116,13 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & weapon are already in
         if (VehicleAnim != '' && Gun != none && Gun.HasAnim(VehicleAnim))
         {
-            Gun.PlayAnim(VehicleAnim);
-            Gun.SetAnimFrame(1.0);
+            if (DHVehicleWeapon(Gun) != none)
+            {
+                DriverAnimationChannel = DHVehicleWeapon(Gun).DriverAnimationChannel;
+            }
+
+            Gun.PlayAnim(VehicleAnim,,, DriverAnimationChannel);
+            Gun.SetAnimFrame(1.0, DriverAnimationChannel);
         }
 
         if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
