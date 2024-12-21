@@ -44,7 +44,7 @@ rem Flag arguments
 set arg_size=1
 
 if "%1"=="--help" set "help=1" & goto :next_arg
-if "%1"=="--no-confirm" set "no_kill=1" & goto :next_arg
+if "%1"=="--no-confirm" set "no_confirm=1" & goto :next_arg
 if "%1"=="--no-kill" set "no_kill=1" & goto :next_arg
 if "%1"=="--no-build" set "no_build=1" & goto :next_arg
 if "%1"=="--no-run" set "no_run=1" & goto :next_arg
@@ -84,25 +84,28 @@ if %ERRORLEVEL% neq 0 goto :build
 echo Found a running UCC process.
 
 rem Check safe mode
-if %safe% equ 0 goto :kill_ucc
+if %safe% equ 0 goto :prompt_kill_ucc
 if not exist %lock_file% (
     echo WARNING: Lock file '%lock_file%' not found, '--safe' flag is ignored.
-    goto :kill_ucc
+    goto :prompt_kill_ucc
 )
 
 rem Check if StdOut.log is used by another process
 echo Looking for compilation lock...
 powershell -Command "[System.IO.File]::Open('%lock_file%', 'Open', 'Write')" >nul 2>&1 
 if %ERRORLEVEL% equ 0 (
-    goto :kill_ucc
+    goto :prompt_kill_ucc
 )
 echo Lock found.
 echo Can't terminate UCC while it's compiling. Remove '--safe' flag if you want to kill it anyway.
 goto :error_exit
 
-:kill_ucc
+:prompt_kill_ucc
+if %no_confirm% neq 0 goto :kill_ucc
 choice /c yn /m "UCC process will be terminated. Do you wish to continue"
 if %ERRORLEVEL% neq 1 exit /b 1
+
+:kill_ucc
 echo Terminating the running UCC process...
 taskkill /im %ucc_task% /f >nul 2>&1
 
