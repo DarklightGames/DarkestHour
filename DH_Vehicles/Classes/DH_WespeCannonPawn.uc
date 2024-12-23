@@ -14,11 +14,11 @@ defaultproperties
     // spotting scope
     DriverPositions(1)=(ViewLocation=(Y=-19.8,Z=47.4),TransitionUpAnim="gunsight_out",ViewFOV=60.0,bDrawOverlays=true,bExposed=true)
     // kneeling
-    DriverPositions(2)=(DriverTransitionAnim="crouch_idle_binoc",TransitionDownAnim="gunsight_in",TransitionUpAnim="stand",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(2)=(DriverTransitionAnim="crouch_idle_binoc",TransitionDownAnim="gunsight_in",TransitionUpAnim="stand",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // standing
-    DriverPositions(3)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="sit",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+    DriverPositions(3)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="sit",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // binoculars
-    DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
+    DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=8192,ViewPitchDownLimit=57344,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
 
     UnbuttonedPositionIndex=0
     SpottingScopePositionIndex=1

@@ -4,17 +4,16 @@
 //==============================================================================
 // [ ] Interface Art
 // [ ] Rename Shells & Set up Classes/loadout
-// [ ] Fix view limits for gunner
 // [ ] Improve pitch & yaw dials
 // [ ] Interior model
 // [ ] Gunner animations
 // [ ] Destroyed mesh
-// [ ] Collision mesh (body & turret attachment)
 // [ ] Add to maps
 // [ ] Fix handling to be less bouncy
 // [ ] Fix muzzle smoke to use sideways smoke
 // [ ] Hit points
 // [ ] Damage effect positions
+// [ ] Factory classes
 //==============================================================================
 
 class DH_WespeTank extends DHArmoredVehicle;
