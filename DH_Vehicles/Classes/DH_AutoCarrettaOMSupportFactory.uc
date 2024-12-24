@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_AutoCarrettaOMSupportFactory extends DHVehicleFactory;
+class DH_AutoCarrettaOMSupportFactory extends DH_ItalianVehicles;
 
 defaultproperties
 {
