@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DH_CV33Tank_Camo2 extends DH_CV33Tank;
+class DH_CV33Tank_CamoTwo extends DH_CV33Tank;
 
 defaultproperties
 {
