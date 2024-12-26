@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 
-class DHMortarExplosion81mm extends Emitter;
+class DHMortarExplosion81mm extends DHMortarExplosion;
 
 defaultproperties
 {
@@ -63,7 +63,6 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter24
         UseDirectionAs=PTDU_UpAndNormal
         ProjectionNormal=(X=1.000000,Y=0.500000)
-        UseCollision=True
         UseColorScale=True
         FadeOut=True
         RespawnDeadParticles=False
@@ -361,4 +360,54 @@ defaultproperties
         VelocityLossRange=(Z=(Min=1.000000,Max=1.000000))
     End Object
     Emitters(11)=SpriteEmitter'SpriteEmitter11'
+    
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter12
+        UseCollision=True
+        UseCollisionPlanes=True
+        UseMaxCollisions=True
+        UseSpawnedVelocityScale=True
+        RespawnDeadParticles=False
+        UniformSize=True
+        Acceleration=(Z=-450.000000)
+        MaxCollisions=(Min=1.000000,Max=2.000000)
+        SpawnFromOtherEmitter=13
+        SpawnAmount=1
+        SpawnedVelocityScaleRange=(X=(Min=-7.000000,Max=7.000000),Y=(Min=-7.000000,Max=7.000000),Z=(Min=-7.000000,Max=7.000000))
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        MaxParticles=12
+        Name="Shrapnel"
+        StartLocationRange=(Z=(Min=100.000000,Max=200.000000))
+        StartSizeRange=(X=(Min=0.000000,Max=0.000000),Y=(Min=0.000000,Max=0.000000),Z=(Min=0.000000,Max=0.000000))
+        LifetimeRange=(Min=0.200000,Max=0.200000)
+        StartVelocityRange=(X=(Min=-3000.000000,Max=3000.000000),Y=(Min=-3000.000000,Max=3000.000000),Z=(Min=-100.000000,Max=1000.000000))
+        VelocityLossRange=(X=(Min=3.000000,Max=3.000000),Y=(Min=3.000000,Max=3.000000),Z=(Min=3.000000,Max=3.000000))
+    End Object
+    Emitters(12)=SpriteEmitter'SpriteEmitter12'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter13
+        FadeOut=True
+        RespawnDeadParticles=False
+        SpinParticles=True
+        UseSizeScale=True
+        UseRegularSizeScale=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.400000
+        FadeOutStartTime=0.285000
+        MaxParticles=12
+        Name="ShrapnelImpact"
+        SpinsPerSecondRange=(X=(Max=0.050000))
+        StartSpinRange=(X=(Min=-1.000000,Max=1.000000))
+        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=15.000000)
+        StartSizeRange=(X=(Min=1.000000,Max=2.000000),Y=(Min=1.000000,Max=2.000000),Z=(Min=1.000000,Max=2.000000))
+        InitialParticlesPerSecond=2.000000
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'Effects_Tex.explosions.LSmoke1'
+        LifetimeRange=(Min=1.500000,Max=1.500000)
+        InitialDelayRange=(Min=0.300000,Max=0.400000)
+    End Object
+    Emitters(13)=SpriteEmitter'SpriteEmitter13'  
 }
