@@ -2,18 +2,24 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// TODO
+//==============================================================================
 // [ ] Interface Art
 // [ ] Rename Shells & Set up Classes/loadout
 // [ ] Improve pitch & yaw dials
 // [ ] Interior model
 // [ ] Gunner animations
-// [ ] Destroyed mesh
+// [ ] Destroyed mesh (get rid of a few 1000 tris on this cause it's way too heavy atm)
 // [ ] Add to maps
 // [ ] Fix handling to be less bouncy
 // [ ] Fix muzzle smoke to use sideways smoke
 // [ ] Hit points
 // [ ] Damage effect positions
 // [ ] Factory classes
+//==============================================================================
+// BUGS
+//==============================================================================
+// [ ] water hit sound on the 105 shell can be heard from infinity
 //==============================================================================
 
 class DH_WespeTank extends DHArmoredVehicle;
