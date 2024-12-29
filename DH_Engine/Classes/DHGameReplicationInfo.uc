@@ -1927,11 +1927,11 @@ simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, 
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
     WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
 
-    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width * 0.5),
                      0.0,
                      1.0 - Width);
 
-    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height * 0.5),
                      0.0,
                      1.0 - Height);
 }

@@ -118,8 +118,8 @@ function UpdateSpawnPointPositions()
         b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
 
         // Hide if the button is not currently within the viewport.
-        X += b_SpawnPoints[i].WinWidth / 2;
-        Y += b_SpawnPoints[i].WinHeight / 2;
+        X += b_SpawnPoints[i].WinWidth * 0.5;
+        Y += b_SpawnPoints[i].WinHeight * 0.5;
         b_SpawnPoints[i].SetVisibility(X >= 0 && X <= 1.0 && Y >= 0.0 && Y <= 1.0);
     }
 }
