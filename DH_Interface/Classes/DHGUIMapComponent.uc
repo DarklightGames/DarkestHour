@@ -109,17 +109,17 @@ function UpdateSpawnPointPositions()
 
         GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth * ViewportScale, b_SpawnPoints[i].WinHeight * ViewportScale);
 
-        X = 1.0 - X;
-        Y = 1.0 - Y;
+        X = FClamp(1.0 - X - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierX * b_SpawnPoints[i].WinWidth * ViewPortScale, 0.0, 1.0);
+        Y = FClamp(1.0 - Y - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierY * b_SpawnPoints[i].WinHeight * ViewPortScale, 0.0, 1.0);
 
-        X = (X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-        Y = (Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+        X = (X - Viewport.Min.X) / ViewportScale;
+        Y = (Y - Viewport.Min.Y) / ViewportScale;
 
         b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
 
         // Hide if the button is not currently within the viewport.
-        X += b_SpawnPoints[i].WinWidth / 2;
-        Y += b_SpawnPoints[i].WinHeight / 2;
+        X += b_SpawnPoints[i].WinWidth * 0.5;
+        Y += b_SpawnPoints[i].WinHeight * 0.5;
         b_SpawnPoints[i].SetVisibility(X >= 0 && X <= 1.0 && Y >= 0.0 && Y <= 1.0);
     }
 }

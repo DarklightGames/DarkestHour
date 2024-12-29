@@ -31,6 +31,8 @@ var()   bool            bMainSpawn;      // is a main spawn for gametype: Advanc
 var()   bool            bAirborneSpawn;  // the spawn is located on a plane or in the air
 
 var     string          SpawnPointStyle; // style name to use for spawnpoints (can be overriden in GetMapStyleName())
+var     float           SpawnPointIconOffsetMultiplierX; // offset icon horizontally by a product of its width; TODO: Replace this with pixel size?
+var     float           SpawnPointIconOffsetMultiplierY; // offset icon vertically by a product of its height
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point

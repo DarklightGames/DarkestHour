@@ -302,7 +302,8 @@ simulated function GUIStyles GetStyle(GUIController GUIController, GUI.eFontScal
 
 defaultproperties
 {
-    SpawnPointStyle="DHSpawnButtonStyle"
+    SpawnPointStyle="DHSpawnVehicleButtonStyle"
+    SpawnPointIconOffsetMultiplierY=0.75
     bCombatSpawn=true
     bIsLowPriority=true
     bHasSpawnKillPenalty=true
