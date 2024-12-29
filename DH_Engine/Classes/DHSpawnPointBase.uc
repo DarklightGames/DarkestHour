@@ -70,7 +70,8 @@ var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
 
 // Danger zone
-var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone)   float BaseInfluenceModifier;
+var                 float InitialBaseInfluenceModifier;
 
 replication
 {
@@ -115,6 +116,18 @@ simulated event PostBeginPlay()
         {
             SetTimer(1.0, true);
         }
+
+        InitialBaseInfluenceModifier = BaseInfluenceModifier;
+    }
+}
+
+function Reset()
+{
+    super.Reset();
+
+    if (Role == ROLE_Authority)
+    {
+        BaseInfluenceModifier = InitialBaseInfluenceModifier;
     }
 }
 
@@ -214,7 +227,30 @@ function bool PerformSpawn(DHPlayer PC)
 }
 
 // Called when a spawn is spawned from this spawn point.
-function OnPawnSpawned(Pawn P);
+function OnPawnSpawned(Pawn P)
+{
+    local DHPawn DHP;
+    local Vehicle V;
+
+    V = Vehicle(P);
+
+    if (V != none)
+    {
+        DHP = DHPawn(V.Driver);
+    }
+    else
+    {
+        DHP = DHPawn(P);
+    }
+
+    if (DHP != none)
+    {
+        DHP.bCombatSpawned = bCombatSpawn;
+        DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnKillProtectionTime;
+        DHP.SpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+        DHP.SpawnPoint = self;
+    }
+}
 
 // Called when a pawn is spawn killed from this spawn point - override in child classes
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);

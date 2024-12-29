@@ -7,9 +7,6 @@ class DHVotingHandler extends xVotingHandler;
 
 var class<VotingReplicationInfo> VotingReplicationInfoClass;
 
-var config private int   PatronVoteModifiers[5];
-var config         float MaxVotePower;
-
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;
 
@@ -374,11 +371,87 @@ function string PrepMapStr(string MapName)
     return MapName;
 }
 
+// Immediately switch to a selected map from the vote list (initiated by an admin)
+function ForceMapVote(int MapIndex, int GameIndex, Actor Voter)
+{
+    local MapHistoryInfo MapInfo;
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+    local bool bSwapAndRestart;
+    local xAdminUser Admin;
+
+    PC = DHPlayer(Voter);
+
+    if (bLevelSwitchPending || PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none || !PRI.IsAdmin() || !IsValidVote(MapIndex, GameIndex))
+    {
+        return;
+    }
+
+    bSwapAndRestart = MapList[MapIndex].MapName == SwapAndRestartText;
+
+    // Ensure the admin has sufficient privileges
+    if (Level.NetMode != NM_Standalone)
+    {
+        Admin = Level.Game.AccessControl.GetLoggedAdmin(PC);
+
+        if (bSwapAndRestart)
+        {
+            if (!Admin.HasPrivilege("Mr"))
+            {
+                PC.ClientMapVoteResponse(0); // Can't restart maps
+                return;
+            }
+        }
+        else if (!Admin.HasPrivilege("Mm"))
+        {
+            PC.ClientMapVoteResponse(1); // Can't change maps
+            return;
+        }
+    }
+
+    // Notify players and log the map switch
+    TextMessage = lmsgAdminMapChange;
+    TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+    Level.Game.Broadcast(self, TextMessage);
+
+    Log("Admin " $
+        PRI.PlayerName $
+        " (" $
+        PC.GetPlayerIDHash() $
+        ") has forced map switch to " $
+        MapList[MapIndex].MapName $
+        "(" $
+        GameConfig[GameIndex].Acronym $
+        ")");
+
+    // Handle "Swap and restart" option
+    if (bSwapAndRestart)
+    {
+        ExitVoteAndSwap();
+        return;
+    }
+
+    // Travel to the new map
+    CloseAllVoteWindows();
+    bLevelSwitchPending = true;
+    MapInfo = History.PlayMap(MapList[MapIndex].MapName);
+    ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
+    Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
+    Level.ServerTravel(ServerTravelString, false); // change the map
+    SetTimer(1.0, true);
+}
+
 // Overridden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
 // also guts out other vote modes as we should only be using 1 in DH
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
-    local MapHistoryInfo MapInfo;
     local DHPlayer       P;
     local int            Index, VoteCount, PrevMapVote, PrevGameVote;
 
@@ -404,31 +477,6 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     // Check for invalid vote from unpatch players
     if (!IsValidVote(MapIndex, GameIndex))
     {
-        return;
-    }
-
-    if (!bIsReapplyingVotes && PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
-    {
-        TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
-        Level.Game.Broadcast(self, TextMessage);
-        Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
-
-        if (MapList[MapIndex].MapName == SwapAndRestartText)
-        {
-            ExitVoteAndSwap();
-
-            return;
-        }
-
-        CloseAllVoteWindows();
-        bLevelSwitchPending = true;
-        MapInfo = History.PlayMap(MapList[MapIndex].MapName);
-        ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
-        Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
-        Level.ServerTravel(ServerTravelString, false); // change the map
-        SetTimer(1.0, true);
-
         return;
     }
 
@@ -767,16 +815,7 @@ function TallyVotes(bool bForceMapSwitch)
 // DH function which will calculate a specific player's voting power
 function int GetPlayerVotePower(PlayerController Player)
 {
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
-
-    if (PRI == none)
-    {
-        return 0;
-    }
-
-    return 1 + PatronVoteModifiers[PRI.PatronTier];
+    return 1;
 }
 
 function ExitVoteAndSwap()
@@ -958,12 +997,4 @@ defaultproperties
     MapVoteIntervalDuration=3.0
     lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting another map!"
     SwapAndRestartText="DH-[Swap Teams and Restart]"
-
-    MaxVotePower=10
-
-    PatronVoteModifiers(0)=0    // Not Patron
-    PatronVoteModifiers(1)=1    // Lead
-    PatronVoteModifiers(2)=2    // Bronze
-    PatronVoteModifiers(3)=3    // Silver
-    PatronVoteModifiers(4)=4    // Gold
 }

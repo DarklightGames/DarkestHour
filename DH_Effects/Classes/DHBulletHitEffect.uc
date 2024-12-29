@@ -29,8 +29,9 @@ defaultproperties
     HitEffects(19)=(HitDecal=class'BulletHoleDirt',HitEffect=class'ROBulletHitMudEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Mud')               // Poop
 
     //DH Custom impacts
-    HitEffects(21)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitSandEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Gravel')           // Sand EST_Custom01
-    HitEffects(22)=(HitDecal=class'BulletHoleCloth',HitEffect=class'DHBulletHitSandBagEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Gravel')       //Sand Bags EST_Custom02
-    HitEffects(23)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'DHBulletHitBrickEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Asphalt')     //Brick EST_Custom03
-    HitEffects(24)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitHedgeEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Dirt')            //Hedgerow-Bush EST_Custom04
+    HitEffects(21)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitSandEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Gravel') // Sand EST_Custom01
+    HitEffects(22)=(HitDecal=class'BulletHoleCloth',HitEffect=class'DHBulletHitSandBagEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Gravel') //Sand Bags EST_Custom02
+    HitEffects(23)=(HitDecal=class'BulletHoleConcrete',HitEffect=class'DHBulletHitBrickEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Asphalt') //Brick EST_Custom03
+    HitEffects(24)=(HitDecal=class'BulletHoleDirt',HitEffect=class'DHBulletHitHedgeEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Dirt') //Hedgerow-Bush EST_Custom04
+    HitEffects(25)=(HitDecal=class'DHBulletHoleDev',HitEffect=class'DHBulletHitMetalArmorEffect',HitSound=Sound'ProjectileSounds.Bullets.Impact_Metal') //Purple Hit-Visibility decal (Dev) EST_Custom05
 }

@@ -39,6 +39,9 @@ var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
 var     int         OverlaySleeveTexNum;
 var     int         OverlayHandTexNum;
+var     name        OverlayPrimaryShellBone;
+var     name        OverlaySecondaryShellBone;
+var     bool        bSwapShellBonesBasedOnSelectedAmmo;
 
 // HUD
 var     texture     HUDArcTexture;           // the elevation display
@@ -381,6 +384,16 @@ function bool KDriverLeave(bool bForceLeave)
     }
 
     return false;
+}
+
+// Set the initial position of the player and the weapon
+simulated function SetPlayerPosition()
+{
+    super.SetPlayerPosition();
+
+    //  Hide the shell during inital setup because the inital idle animation is
+    //  not handled by PlayThirdPersonAnimations()
+    HideThirdPersonShell();
 }
 
 // Modified to match rotation to mortar's aimed direction, so player exits facing the same way as the mortar
@@ -779,6 +792,7 @@ simulated state Firing extends Busy
     }
 
 Begin:
+    SetFirstPersonShellDisplay();
     PlayFirstPersonAnimation(OverlayFiringAnim);
     SetCurrentAnimationIndex(FIRING_ANIM_INDEX);
 
@@ -927,6 +941,28 @@ simulated function int GetGunPitchMax()
 //  *********************************  ANIMATIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Display different shell models depending on the selected ammo type
+simulated function SetFirstPersonShellDisplay()
+{
+    if (!bSwapShellBonesBasedOnSelectedAmmo || VehWep == none || HUDOverlay == none)
+    {
+        return;
+    }
+
+    switch (VehWep.GetAmmoIndex())
+    {
+        case 0:
+            // Hide secondary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlaySecondaryShellBone);
+            break;
+        case 1:
+            // Hide primary
+            HUDOverlay.SetBoneScale(0, 0.0, OverlayPrimaryShellBone);
+            break;
+        default:
+    }
+}
+
 // New function to set a new CurrentAnimationIndex & play the relevant animations, & for a net client to replicate the CurrentAnimationIndex to the server
 simulated function SetCurrentAnimationIndex(byte AnimIndex)
 {
@@ -945,9 +981,25 @@ simulated function ServerSetCurrentAnimationIndex(byte AnimIndex)
     CurrentAnimationIndex = AnimIndex;
 }
 
+simulated function HideThirdPersonShell()
+{
+    local DHMortarVehicleWeapon MVH;
+
+    MVH = DHMortarVehicleWeapon(Gun);
+
+    if (MVH != none)
+    {
+        MVH.HideShell();
+    }
+}
+
 // New function to play current 1st person animations for the mortar & the operator ('Driver')
 simulated function PlayThirdPersonAnimations()
 {
+    // Hide the shell for all animations, as it's expected to only appear when
+    // it's loaded into a tube. The shell is made visible via notifies.
+    HideThirdPersonShell();
+
     switch (CurrentAnimationIndex)
     {
         case IDLE_ANIM_INDEX:

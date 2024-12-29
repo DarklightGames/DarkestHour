@@ -3762,6 +3762,36 @@ exec function MidGameVote()
     }
 }
 
+exec function ResetAllInfluences()
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Objectives
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] != none)
+        {
+            GRI.DHObjectives[i].ResetInfluenceModifiers();
+        }
+    }
+
+    // Spawn points
+    for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none)
+        {
+            GRI.SpawnPoints[i].BaseInfluenceModifier = GRI.SpawnPoints[i].InitialBaseInfluenceModifier;
+        }
+    }
+
+    GRI.DangerZoneUpdated();
+}
+
 // Debug function that changes Danger Zone influence for objectives AND
 // main spawns.
 //
@@ -5482,8 +5512,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
         {
             if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
-
                 if (C.IQManager != none)
                 {
                     C.IQManager.OnSpawn();
@@ -5518,7 +5546,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     C.ClientSetRotation(C.Pawn.Rotation);
 
     AddDefaultInventory(C.Pawn);
-    OnPawnSpawned(C, SpawnLocation, SpawnRotation, SP);
 
     if (C.IQManager != none)
     {
@@ -5526,21 +5553,6 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     }
 
     return C.Pawn;
-}
-
-function OnPawnSpawned(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
-{
-    local DHPawn P;
-
-    P = DHPawn(C.Pawn);
-
-    // Set proper spawn kill protection times
-    if (P != none && SP != none)
-    {
-        P.SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
-        P.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
-        P.SpawnPoint = SP;
-    }
 }
 
 // Modified so a silent admin can also pause a game when bAdminCanPause is true
@@ -5846,8 +5858,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=11
-        Minor=6
-        Patch=10
+        Minor=9
+        Patch=2
         Prerelease=""
     End Object
     Version=VersionObject
