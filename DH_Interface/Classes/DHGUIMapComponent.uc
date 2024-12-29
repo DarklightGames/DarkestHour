@@ -109,8 +109,8 @@ function UpdateSpawnPointPositions()
 
         GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth * ViewportScale, b_SpawnPoints[i].WinHeight * ViewportScale);
 
-        X = 1.0 - X - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierX * b_SpawnPoints[i].WinWidth * ViewPortScale;
-        Y = 1.0 - Y - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierY * b_SpawnPoints[i].WinHeight * ViewPortScale;
+        X = FClamp(1.0 - X - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierX * b_SpawnPoints[i].WinWidth * ViewPortScale, 0.0, 1.0);
+        Y = FClamp(1.0 - Y - GRI.SpawnPoints[i].SpawnPointIconOffsetMultiplierY * b_SpawnPoints[i].WinHeight * ViewPortScale, 0.0, 1.0);
 
         X = (X - Viewport.Min.X) / ViewportScale;
         Y = (Y - Viewport.Min.Y) / ViewportScale;
