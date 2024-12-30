@@ -294,23 +294,12 @@ simulated function int GetGunYawMax()
 
 simulated function int GetGunPitch()
 {
-    local int Pitch;
-
     if (VehWep == none)
     {
         return 0;
     }
 
-    Pitch = VehWep.CurrentAim.Pitch;
-
-    if (Pitch >= 32768)
-    {
-        Pitch -= 65536;
-    }
-
-    Pitch += GunPitchOffset;
-
-    return Pitch;
+    return Normalize(VehWep.CurrentAim).Pitch + GunPitchOffset;
 }
 
 simulated function int GetGunPitchMin()
