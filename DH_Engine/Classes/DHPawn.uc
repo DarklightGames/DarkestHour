@@ -3467,7 +3467,7 @@ function CheckGiveWirecutters()
 
     if (PRI != none && (PRI.IsSquadLeader() || PRI.IsASL()))
     {
-        CreateInventory("DH_Weapons.DHWirecuttersItem");
+        CreateInventory("DH_Equipment.DHWirecuttersItem");
     }
 }
 
