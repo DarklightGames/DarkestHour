@@ -83,7 +83,7 @@ defaultproperties
         StartSpinRange=(X=(Min=-0.500000,Max=1.000000))
         StartSizeRange=(X=(Min=1.500000,Max=3.000000))
         InitialParticlesPerSecond=1000.000000
-        Texture=Texture'DH_FX_Tex.debris.wood_chunks'
+        //Texture=Texture'DH_FX_Tex.debris.wood_chunks'*****
         TextureUSubdivisions=3
         TextureVSubdivisions=3
         LifetimeRange=(Min=2.000000,Max=3.000000)
