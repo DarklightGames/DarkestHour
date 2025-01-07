@@ -12,8 +12,8 @@ struct FontStyleItem {
     var int Resolution;
 };
 
-var string FontNames[29];
-var Font Fonts[29];
+var string FontNames[31];
+var Font Fonts[31];
 var FontStyleItem DHConsoleFontItems[5];
 var FontStyleItem DHConsoleFontDSItems[5];
 var FontStyleItem DHButtonFontItems[3];
@@ -25,6 +25,7 @@ var FontStyleItem DHMenuFontItems[3];
 var FontStyleItem DHMenuFontDSItems[3];
 var FontStyleItem DHSmallFontItems[3];
 var FontStyleItem DHSmallFontDSItems[3];
+var FontStyleItem DHTinyFontItems[3];
 
 static function Font GetFontByIndex(int i) {
     if (default.Fonts[i] == none) {
@@ -201,6 +202,21 @@ static function Font GetDHSmallFontDSByResolution(int Resolution) {
     return GetDHSmallFontDSByIndex(arraycount(default.DHSmallFontDSItems) - 1);
 }
 
+static function Font GetDHTinyFontByIndex(int i) {
+    return GetFontByIndex(default.DHTinyFontItems[i].FontIndex);
+}
+
+// Load a font by the nearest target resolution
+static function Font GetDHTinyFontByResolution(int Resolution) {
+    local int i;
+    for (i = 0; i < arraycount(default.DHTinyFontItems); i++) {
+        if (Resolution >= default.DHTinyFontItems[i].Resolution) {
+            return GetDHTinyFontByIndex(i);
+        }
+    }
+    return GetDHTinyFontByIndex(arraycount(default.DHTinyFontItems) - 1);
+}
+
 defaultproperties
 {
     FontNames(0)="DHFonts.InterA18"
@@ -232,6 +248,8 @@ defaultproperties
     FontNames(26)="DHFonts.SofiaSansCondensedADW100028"
     FontNames(27)="DHFonts.SofiaSansCondensedADW100022"
     FontNames(28)="DHFonts.SofiaSansCondensedADW100018"
+    FontNames(29)="DHFonts.InterA8"
+    FontNames(30)="DHFonts.InterA6"
     DHConsoleFontItems(0)=(FontIndex=0,Resolution=1440)
     DHConsoleFontItems(1)=(FontIndex=1,Resolution=1080)
     DHConsoleFontItems(2)=(FontIndex=1,Resolution=1024)
@@ -269,4 +287,7 @@ defaultproperties
     DHSmallFontDSItems(0)=(FontIndex=4,Resolution=1400)
     DHSmallFontDSItems(1)=(FontIndex=5,Resolution=1080)
     DHSmallFontDSItems(2)=(FontIndex=6,Resolution=900)
+    DHTinyFontItems(0)=(FontIndex=3,Resolution=1400)
+    DHTinyFontItems(1)=(FontIndex=29,Resolution=1080)
+    DHTinyFontItems(2)=(FontIndex=30,Resolution=900)
 }

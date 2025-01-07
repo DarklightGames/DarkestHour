@@ -1454,8 +1454,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
                 PlayerNumberText.Text = string(i + 1);
-                // TODO: we need an EVEN TINIER font
-                Canvas.Font = Canvas.TinyFont;
+
+                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipY);
+
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
             else
@@ -1508,7 +1509,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
                 PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
                 PlayerNumberText.text = string(i + 1);
-                Canvas.Font = Canvas.TinyFont;
+                Canvas.Font = class'DHFonts'.static.GetDHTinyFontByResolution(Canvas.ClipY);
                 DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
             }
         }
@@ -4024,6 +4025,9 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
         SRI = PC.SquadReplicationInfo;
     }
+    
+    // Set the font to be used to draw player icons.
+    C.Font = class'DHFonts'.static.GetDHTinyFontByResolution(C.ClipY);
 
     // Draw other squad leaders on map
     if (PRI.IsSLorASL() || PRI.IsRadioman())
@@ -4157,11 +4161,13 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconLargeScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale); // TODO: magic number
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, IconScale);
         }
     }
 }
 
+// Draws a player icon on the map.
+// For performance reasons, we expect that the Canvas font has already been set.
 function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, Box Viewport, float PlayerYaw, color Color, float TextureScale, optional string Text)
 {
     local Vector HUDLocation;
@@ -4182,7 +4188,7 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         HUDLocation = Location - MapCenter;
         HUDLocation.Z = 0.0;
         HUDLocation = GetAdjustedHudLocation(HUDLocation);
-        // TODO: text widget is gonna need to be adjusted also!
+
         PlayerNumberText.PosX = FClamp(HUDLocation.X / MyMapScale + 0.5, 0.0, 1.0);
         PlayerNumberText.PosY = FClamp(HUDLocation.Y / MyMapScale + 0.5, 0.0, 1.0);
         PlayerNumberText.PosX = (PlayerNumberText.PosX - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
@@ -4191,11 +4197,12 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
         if (PlayerNumberText.PosX >= 0.0 && PlayerNumberText.PosX <= 1.0 && PlayerNumberText.PosY >= 0.0 && PlayerNumberText.PosY <= 1.0)
         {
-            C.Font = GetTinyFont(C);
             DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
         }
     }
 
+    // This stops the engine from "instancing" the rotator texture.
+    // Without this, all player icons would have the same rotation.
     C.DrawVertical(0.0, 0.0);
 }
 
@@ -6127,7 +6134,7 @@ defaultproperties
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_UpperRight,PosX=1.0,PosY=0.001,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
-    PlayerNumberText=(RenderStyle=STY_Alpha,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),bDrawShadow=false)
+    PlayerNumberText=(RenderStyle=STY_Alpha,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,WrapHeight=1.0,Tints[0]=(B=0,G=0,R=0,A=255),Tints[1]=(B=0,G=0,R=0,A=255),bDrawShadow=false)
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
     MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

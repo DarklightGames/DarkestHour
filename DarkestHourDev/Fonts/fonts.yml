@@ -143,6 +143,12 @@ font_styles:
     drop_shadow:
       x: 1
       y: 1
+  DHTinyFont:
+    font: Inter
+    size:
+        method: proportional
+        baseline: 8
+        resolution_group: gui
 languages:
   en:
     name: English, French, German, Italian, Spanish
