@@ -124,6 +124,8 @@ function static string GetMenuName(DHActorProxy.Context Context)
 
 function UpdateAppearance()
 {
+    local int j;
+
     SetDrawType(DT_Mesh);
 
     if (ConstructionBaseMesh != none)
@@ -133,6 +135,15 @@ function UpdateAppearance()
     else
     {
         LinkMesh(VehicleClass.default.Mesh);
+
+        // Apply any skins that the vehicle has.
+        for (j = 0; j < VehicleClass.default.Skins.Length; ++j)
+        {
+            if (VehicleClass.default.Skins[j] != none)
+            {
+                Skins[j] = VehicleClass.default.Skins[j];
+            }
+        }
     }
 
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);

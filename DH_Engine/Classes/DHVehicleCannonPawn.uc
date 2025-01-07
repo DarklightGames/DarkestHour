@@ -17,7 +17,7 @@ var     int         RaisedPositionIndex;         // lowest position where comman
 // Camera & display
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
-var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
+var()   bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
 var     Texture     PeriscopeOverlay;            // overlay for commander's periscope
 var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     Texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
