@@ -10,6 +10,6 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
     VehicleClass=class'DH_Guns.DH_Model35Mortar'
     bIsArtillery=true
-    SupplyCost=750
+    SupplyCost=1000
     ProgressMax=8
 }
