@@ -1063,7 +1063,7 @@ def generate_font_scripts(args):
             '// To regenerate this file, run ./tools/localization/generate_fonts.bat',
             '//==============================================================================',
             '',
-            'class DHFonts extends Object',
+            f'class {unrealscript_fonts["class_name"]} extends Object',
             '    abstract;',
             '',
             'struct FontStyleItem {',
