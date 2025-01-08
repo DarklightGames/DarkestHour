@@ -17,6 +17,7 @@ from typing import Iterable, List, Optional, Set, Tuple, Union, Dict
 import yaml
 from fontTools.ttLib import TTFont
 from fontTools.unicode import Unicode
+import sys
 
 
 # Unreal has different extensions for different languages, so map the ISO 639-1 code to the extension.
@@ -694,11 +695,29 @@ def generate_font_scripts(args):
     # Load the YAML file
     mod = args.mod
 
-    root_path = (Path(os.path.dirname(__file__)) / '..' /  '..').absolute()
+    root_path = Path(args.root_path).absolute()
+
+    # Make sure that the root path exists and is a directory.
+    if not root_path.exists() or not root_path.is_dir():
+        print(f'Error: root path "{root_path}" does not exist or is not a directory', file=sys.stderr)
+        return
 
     mod_path = root_path / mod
+
+    # Make sure the mod path exists and is a directory.
+    if not mod_path.exists() or not mod_path.is_dir():
+        print(f'Error: mod path "{mod_path}" does not exist or is not a directory', file=sys.stderr)
+        return
+
     font_paths = mod_path / 'Fonts'
     fonts_config_path = font_paths / 'fonts.yml'
+
+    # Make sure the fonts.yml file exists.
+    if not fonts_config_path.exists():
+        # Print out to stderr so that it can be captured by the caller.
+        print(f'Error: fonts.yml not found at {fonts_config_path}', file=sys.stderr)
+        return
+
     import_font_script_path = font_paths / 'ImportFonts.exec.txt'
 
     with open(fonts_config_path, 'r') as file:
@@ -1245,6 +1264,7 @@ update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, ac
 update_keys_parser.set_defaults(func=update_keys)
 
 generate_font_scripts_parser = subparsers.add_parser('generate_font_scripts', help='Generate font scripts from a YAML file.')
+generate_font_scripts_parser.add_argument('root_path', help='The path of the game root directory.')
 generate_font_scripts_parser.add_argument('-m', '--mod', help='The name of the mod to generate font scripts for.', required=True)
 generate_font_scripts_parser.add_argument('-l', '--language_code', help='The language to generate font scripts for (ISO 639-1 codes)', required=False)
 generate_font_scripts_parser.set_defaults(func=generate_font_scripts)
