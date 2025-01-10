@@ -151,3 +151,25 @@ final static function float DialRounding(float X, float Span, optional bool bDeb
 
     return NormalizedAngularModifier;
 }
+
+// A "bi-laterial" linear interpolation function that is 0.0 at both Start and End,
+// and 1.0 between (Start + Tween) and (End - Tween).
+final static function float LerpBilateral(float T, float Start, float End, float Tween)
+{
+    if (T <= Start || T >= End)
+    {
+        return 0.0;
+    }
+    else if (T <= Start + Tween)
+    {
+        return (T - Start) / Tween;
+    }
+    else if (T >= End - Tween)
+    {
+        return (End - T) / Tween;
+    }
+    else
+    {
+        return 1.0;
+    }
+}

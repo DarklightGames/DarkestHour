@@ -4,14 +4,10 @@
 //==============================================================================
 // [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
 // [ ] Replace firing effects (use normal 8cm effects)
-//==============================================================================
-// Nice to Have
-//==============================================================================
 // [ ] Stop pitch/yaw noises when going into the firing mode
 //==============================================================================
 
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
-
 
 var     int     FiringDriverPositionIndex;      // The driver position index that allows the gun to be fired.
 
@@ -31,8 +27,6 @@ var()   float ProjectileLifeSpan;       // The life span of the projectile attac
 var     DHMortarHandsActor  HandsActor;             // The first person hands actor.
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
-var     int                 HandsHandsSkinIndex;    // The skin index for the hand.
-var     int                 HandsSleeveSkinIndex;   // The skin index for the sleeves on the hands.
 
 var()   Rotator             HandsRotationOffset;    // The rotation offset for the first person hands.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
@@ -171,11 +165,16 @@ simulated function InitializeVehicleAndWeapon()
     }
 }
 
-// TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
 simulated function InitializeHands()
 {
     local DHPlayer PC;
     local DHRoleInfo RI;
+
+    if (Gun == none)
+    {
+        Warn("No gun found for mortar cannon pawn!");
+        return;
+    }
 
     if (HandsActor != none)
     {
@@ -192,29 +191,12 @@ simulated function InitializeHands()
     }
 
     HandsActor.LinkMesh(HandsMesh);
-    HandsActor.bHidden = true;
 
-    // Apply the player's hands and sleeve texture texture to the hands mesh.
-    PC = DHPlayer(Controller);
-
-    if (PC != none)
-    {
-        RI = DHRoleInfo(PC.GetRoleInfo());
-    }
-
-    if (RI != none)
-    {
-        HandsActor.Skins[HandsHandsSkinIndex] = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
-        HandsActor.Skins[HandsSleeveSkinIndex] = RI.static.GetSleeveTexture();
-    }
-
-    if (Gun == none)
-    {
-        Warn("No gun found for mortar cannon pawn!");
-        return;
-    }
+    // Set the hands skin based on the player's role.
+    HandsActor.SetSkins(DHPlayer(Controller));
     
     Gun.AttachToBone(HandsActor, HandsAttachBone);
+
     HandsActor.SetRelativeLocation(vect(0, 0, 0));
     HandsActor.SetRelativeRotation(rot(0, 0, 0));
 
@@ -349,8 +331,6 @@ function ServerPlayThirdPersonFiringAnim(class<Projectile> ProjectileClass)
     // Increment counter so that remote clients are notified to play the firing animation.
     PlayerFireCount++;
     FiringProjectileMesh = ProjectileClass.default.StaticMesh;
-
-    // TODO: also set the static mesh we're to use.
 
     // Also play the firing animation on the server so that the hitboxes more or less line up (latency permitting).
     PlayThirdPersonFiringAnim();
@@ -611,7 +591,6 @@ defaultproperties
     HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_hands'
     HandsFireAnims=("FIRE_HANDS")
     HandsAttachBone="PITCH"
-    HandsSleeveSkinIndex=1
     HandsProjectileBone="PROJECTILE"
     HandsRotationOffset=(Yaw=-16384)
 

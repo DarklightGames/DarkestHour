@@ -94,21 +94,12 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
-struct SRangeTableRecord
-{
-    var float Mils;     // Pitch, in mils.
-    var float Range;    // Range, in meters.
-    var float TTI;      // Time-to-impact in seconds
-};
-
-var array<SRangeTableRecord> RangeTable;
-
 // Driver animation channel
 var     int         DriverAnimationChannel;      // animation channel index for driver camera bone
 var     name        DriverAnimationChannelBone;  // animation channel bone for driver camera
 
 // Projectile rotation mode.
-var enum EProjectileRotationMode {
+var() enum EProjectileRotationMode {
     PRM_CurrentAim,     // Use the `CurrentAim` to determine the rotation. Inaccurate, though this is the legacy behavior, but is kept for backwards compatibility reasons.
     PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
 } ProjectileRotationMode;
@@ -1358,6 +1349,11 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     }
 
     Canvas.DrawText(s);
+}
+
+simulated function bool IsReloading()
+{
+    return ReloadState < RL_ReadyToFire;
 }
 
 // State 'emptied out' as is deprecated as unnecessary in DH and should never be entered
