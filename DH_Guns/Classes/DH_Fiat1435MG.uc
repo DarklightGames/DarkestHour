@@ -6,12 +6,12 @@
 // [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no cooldown].
 // [ ] Third person handling animations (yaw driver!).
 // [ ] Using iron-sight zoom speed when using the zoom in/out (underlying function needs to be basically rewritten).
-// [ ] Collision meshes.
 // [ ] Muzzle flash too far forward.
 // [ ] Fix rig hierarchy so that dust cover animation works properly
 // [ ] Sound notification for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.
 // [ ] Fix timing of reload stages and remove the sounds.
+// [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
 //==============================================================================
 
@@ -451,7 +451,7 @@ defaultproperties
     FiringAnim=BOLT_FIRING
     FiringIdleAnim=BOLT_IDLE
     FiringChannel=2
-    FiringBone=BOLT
+    FiringBone=FIRING_ROOT
 
     ClipBone=CLIP
     ClipAnim=CLIP_DRIVER
@@ -476,4 +476,13 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_WC_COLLISION_YAW',AttachBone="MG_YAW")
 
     ProjectileRotationMode=PRM_MuzzleBone
+
+    // Regular MGs do not have collision on because it's assumed that they're a small part
+    // mounted on a larger vehicle. In this case, we want to have collision on because it's
+    // a standalone weapon.
+    bCollideActors=true
+    bBlockActors=true
+    bProjTarget=true
+    bBlockNonZeroExtentTraces=true
+    bBlockZeroExtentTraces=true
 }

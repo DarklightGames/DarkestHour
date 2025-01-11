@@ -286,4 +286,6 @@ defaultproperties
 
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
     ZoomFOV=60.0
+
+    TPCamLookat=(Z=-70.0)
 }
