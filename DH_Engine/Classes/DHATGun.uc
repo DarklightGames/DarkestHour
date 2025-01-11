@@ -429,7 +429,7 @@ simulated function ClientEnterRotation()
     RotationProjector.AttachActor(self);
     RotationProjector.SetBase(self);
     RotationProjector.bNoProjectOnOwner = true;
-    RotationProjector.MaterialBlendingOp = PB_AlphaBlend;
+    RotationProjector.MaterialBlendingOp = PB_None;
     RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
     RotationProjector.FOV = 1;
     RotationProjector.MaxTraceDistance = 1024.0;
