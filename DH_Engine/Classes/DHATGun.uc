@@ -120,8 +120,6 @@ function bool TryToDrive(Pawn P)
 
 function SetVehicleTeam(int TeamIndex)
 {
-    local int i;
-
     VehicleTeam = TeamIndex;
 
     if (MapIconAttachment != none)

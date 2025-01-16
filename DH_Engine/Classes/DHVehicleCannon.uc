@@ -109,12 +109,6 @@ var() array<SGunWheel> GunWheels;
 var int                 OldTotalRoundsRemaining;
 var int                 TotalRoundsRemaining;
 
-// Projectile rotation mode.
-var enum EProjectileRotationMode {
-    PRM_CurrentAim,     // Use the `CurrentAim` to determine the rotation. Inaccurate, though this is the legacy behavior, but is kept for backwards compatibility reasons.
-    PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
-} ProjectileRotationMode;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
