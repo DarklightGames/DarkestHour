@@ -1952,6 +1952,26 @@ simulated function vector GetWorldCoords(float X, float Y)
     return WorldLocation;
 }
 
+// Gets surface location from map coordinates
+simulated function vector GetWorldSurfaceCoords(float X, float Y, float TraceHeight)
+{
+    local vector TraceStart, TraceEnd, HitNormal, HitLocation;
+    local Actor HitActor;
+
+    TraceStart = GetWorldCoords(X, Y);
+    TraceStart.Z += TraceHeight;
+
+    TraceEnd = TraceStart + vect(0, 0, -1) * TraceHeight * 2;
+
+    foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (HitActor.bStatic && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
+        {
+            return HitLocation;
+        }
+    }
+}
+
 // This function will adjust a hud map location based on the rotation offset of
 // the overhead map.
 // NOTE: This is functionally identical to same function in ROHud. It has been

@@ -5,9 +5,10 @@
 
 class DHMapMarker_AdminParadrop extends DHMapMarker
     abstract;
+
 defaultproperties
 {
-    MarkerName="ADMIN: Paradrop"
+    MarkerName="ADMIN: Place paradrop mark"
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.paratroopers'
     IconColor=(R=0,G=204,B=255,A=255)
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
