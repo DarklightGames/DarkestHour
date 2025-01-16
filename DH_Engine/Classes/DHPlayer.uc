@@ -233,7 +233,8 @@ replication
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
-        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs;
+        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
+        ServerPlaceAdminSpawn,ServerDestroyAdminSpawn,ServerDestroyAllAdminSpawns;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -6252,6 +6253,64 @@ function ServerSquadSwapRallyPoints()
     }
 }
 
+// Place a spawn as an admin
+function ServerPlaceAdminSpawn(vector WorldLocation, byte TeamIndex)
+{
+    local DHSpawnPointBase AdminSpawn;
+
+    if (IsLoggedInAsAdmin() || IsDebugModeAllowed())
+    {
+        AdminSpawn = Spawn(class'DHSpawnPoint_Admin', none,, WorldLocation);
+        AdminSpawn.SetTeamIndex(TeamIndex);
+        AdminSpawn.SetIsActive(true);
+
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(2, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has placed a spawn on team" @ TeamIndex);
+    }
+}
+
+// Destroy an admin-placed spawn
+function ServerDestroyAdminSpawn(DHSpawnPoint_Admin AdminSpawn)
+{
+    if (AdminSpawn != none && (IsLoggedInAsAdmin() || IsDebugModeAllowed()))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(3, AdminSpawn.GetTeamIndex()), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has destroyed an admin spawn on team" @ AdminSpawn.GetTeamIndex());
+
+        AdminSpawn.Destroy();
+    }
+}
+
+// Destroy admin-placed spawns by team
+function ServerDestroyAllAdminSpawns(byte TeamIndex)
+{
+    local DHSpawnPoint_Admin AdminSpawn;
+    local bool bSpawnDestroyed;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHSpawnPoint_Admin', AdminSpawn)
+    {
+        if (AdminSpawn != none && AdminSpawn.GetTeamIndex() == TeamIndex)
+        {
+            AdminSpawn.Destroy();
+            bSpawnDestroyed = true;
+        }
+    }
+
+    if (bSpawnDestroyed)
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(4, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has has destroyed all admin spawns on team" @ TeamIndex);
+    }
+}
+
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -7263,6 +7322,15 @@ simulated function bool IsSquadLeader()
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     return PRI != none && PRI.IsSquadLeader();
+}
+
+simulated function bool IsLoggedInAsAdmin()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsLoggedInAsAdmin();
 }
 
 function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
