@@ -27,7 +27,7 @@ defaultproperties
     bMultiPosition=true
     // Because of the way that explosives work, we must say that the driver is not exposed so that
     // he is not killed by explosives while buttoned up.
-    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_int',bDrawOverlays=true)
+    DriverPositions(0)=(ViewFOV=72.0,PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_int',bDrawOverlays=true,ViewLocation=(X=0,Y=0,Z=-2.1875))
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_int',TransitionUpAnim="cv33_turret_open",DriverTransitionAnim="cv33_gunner_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=16384,ViewNegativeYawLimit=-16384)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_int',TransitionDownAnim="cv33_turret_close",DriverTransitionAnim="cv33_gunner_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_CV33_anm.cv33_turret_int',DriverTransitionAnim="cv33_gunner_binocs",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,bDrawOverlays=true)
