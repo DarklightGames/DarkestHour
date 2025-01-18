@@ -180,6 +180,8 @@ simulated function PostNetReceive()
 
         OnTotalRoundsRemainingChanged(TotalRoundsRemaining);
     }
+
+    UpdateGunWheels();
 }
 
 // Called when the total rounds remaining value changes on the client.
