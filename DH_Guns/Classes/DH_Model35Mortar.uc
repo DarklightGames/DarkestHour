@@ -29,4 +29,6 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_look'
 
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
+
+    DestructionEffectOffset=(Z=-60)
 }
