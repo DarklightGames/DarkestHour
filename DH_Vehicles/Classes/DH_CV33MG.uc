@@ -37,7 +37,7 @@ defaultproperties
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     WeaponFireAttachmentBone="MUZZLE_L"
-    WeaponFireOffset=16
+    WeaponFireOffset=0
 
     bHasMultipleBarrels=true
     Barrels(0)=(MuzzleBone="MUZZLE_L",EffectEmitterClass=class'DH_Effects.DH_VehicleFiat1435MGEmitter')    // TODO: replace emitter with a correctly timed one
