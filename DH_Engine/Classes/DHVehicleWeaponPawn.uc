@@ -2784,7 +2784,10 @@ simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
     {
         case ADT_Yaw:
             // 0.0 is full left, 1.0 is full right
-            Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            if (Gun != none)
+            {
+                Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            }
             break;
         case ADT_Pitch:
             Theta = 0.5; // TODO: figure this out
