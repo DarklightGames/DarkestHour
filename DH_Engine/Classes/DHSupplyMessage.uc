@@ -13,6 +13,30 @@ var localized string    NoSupplyCaches;
 var localized string    SupplyCacheEmpty;
 var localized string    SupplyCacheFull;
 var localized string    SupplyCacheFallbackName;
+var localized string    SuppliesRefunded;
+
+static function string GetStringFromSwitch(int Switch)
+{
+    switch (Switch)
+    {
+        case 0:
+            return default.SuppliesUnloaded;
+        case 1:
+            return default.SuppliesLoaded;
+        case 2:
+            return default.VehicleFull;
+        case 3:
+            return default.NoSupplyCaches;
+        case 4:
+            return default.VehicleEmpty;
+        case 5:
+            return default.SupplyCacheEmpty;
+        case 6:
+            return default.SupplyCacheFull;
+        case 7:
+            return default.SuppliesRefunded;
+    }
+}
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -23,34 +47,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     class'UInteger'.static.ToShorts(Switch, Switch1, SupplyCount);
     CSA = DHConstructionSupplyAttachment(OptionalObject);
 
-    switch (Switch1)
-    {
-        case 0:
-            S = default.SuppliesUnloaded;
-            break;
-        case 1:
-            S = default.SuppliesLoaded;
-            break;
-        case 2:
-            S = default.VehicleFull;
-            break;
-        case 3:
-            S = default.NoSupplyCaches;
-            break;
-        case 4:
-            S = default.VehicleEmpty;
-            break;
-        case 5:
-            S = default.SupplyCacheEmpty;
-            break;
-        case 6:
-            S = default.SupplyCacheFull;
-            break;
-        default:
-            break;
-    }
-
-    S = Repl(S, "{0}", SupplyCount);
+    S = Repl(GetStringFromSwitch(Switch1), "{0}", SupplyCount);
 
     if (CSA != none)
     {
@@ -74,5 +71,6 @@ defaultproperties
     SupplyCacheEmpty="The nearby supply cache is empty."
     SupplyCacheFull="The nearby supply cache is full."
     SupplyCacheFallbackName="supply cache"
+    SuppliesRefunded="{0} supplies have been refunded to nearby caches."
 }
 

@@ -506,7 +506,8 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     return Attachments;
 }
 
-function RefundSupplies(int InstigatorTeamIndex)
+// Returns the number of supply points that were refunded.
+function int RefundSupplies(Pawn Instigator)
 {
     local int i;
     local int MySupplyCost;
@@ -516,12 +517,7 @@ function RefundSupplies(int InstigatorTeamIndex)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
-    if (!WasCreatedByPlayer())
-    {
-        return;
-    }
-
-    if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
+    if (WasCreatedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
         Attachments = GetTouchingSupplyAttachments();
@@ -538,17 +534,26 @@ function RefundSupplies(int InstigatorTeamIndex)
             MySupplyCost -= SuppliesToRefund;
         }
     }
+
+    return SuppliesRefunded;
 }
 
-function TearDown(int InstigatorTeamIndex)
+function TearDown(Pawn Instigator)
 {
     local DHGameReplicationInfo GRI;
     local DH_LevelInfo LI;
     local int ConstructionIndex;
+    local int SuppliesRefunded;
 
     if (bShouldRefundSuppliesOnTearDown)
     {
-        RefundSupplies(InstigatorTeamIndex);
+        SuppliesRefunded = RefundSupplies(Instigator);
+
+        if (SuppliesRefunded > 0)
+        {
+            // Send a message to the instigating player about the amount of supplies that were refunded.
+            Instigator.ReceiveLocalizedMessage(class'DHsupplyMessage', class'UInteger'.static.FromShorts(7, SuppliesRefunded));
+        }
     }
 
     // Update the construction counts remaining in the GRI
@@ -561,9 +566,9 @@ function TearDown(int InstigatorTeamIndex)
     }
 
     // TODO: redundant lookups happening here.
-    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
+    ConstructionIndex = GRI.GetTeamConstructionIndex(Instigator.GetTeamNum(), Class);
 
-    if (!LI.IsConstructionUnlimited(InstigatorTeamIndex, Class))
+    if (!LI.IsConstructionUnlimited(Instigator.GetTeamNum(), Class))
     {
         if (ConstructionIndex != -1)
         {
@@ -630,7 +635,7 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            TearDown(InstigatedBy.GetTeamNum());
+            TearDown(InstigatedBy);
         }
         else if (Progress >= ProgressMax)
         {
