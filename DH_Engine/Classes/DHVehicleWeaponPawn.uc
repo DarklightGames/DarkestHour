@@ -2572,6 +2572,9 @@ exec function ShowColMesh()
 // New debug exec to set the projectile's launch position offset in the X axis
 exec function SetWeaponFireOffset(float NewValue)
 {
+    local DHVehicleMG MG;
+    local int i;
+
     if (IsDebugModeAllowed() && Gun != none)
     {
         Log(Gun.Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
@@ -2585,6 +2588,16 @@ exec function SetWeaponFireOffset(float NewValue)
         if (Gun.AmbientEffectEmitter != none)
         {
             Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
+        }
+
+        MG = DHVehicleMG(Gun);
+
+        if (MG != none)
+        {
+            for (i = 0; i < MG.Barrels.Length; ++i)
+            {
+                MG.Barrels[i].EffectEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
+            }
         }
     }
 }
