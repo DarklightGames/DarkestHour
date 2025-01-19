@@ -24,7 +24,7 @@ var()   float FiringCameraOutTime;      // How long it takes to interpolate the 
 var()   float ProjectileLifeSpan;       // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
-var     DHMortarHandsActor  HandsActor;             // The first person hands actor.
+var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
 
@@ -182,7 +182,7 @@ simulated function InitializeHands()
         HandsActor = none;
     }
 
-    HandsActor = Spawn(class'DHMortarHandsActor', self);
+    HandsActor = Spawn(class'DHFirstPersonHands', self);
 
     if (HandsActor == none)
     {

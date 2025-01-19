@@ -20,7 +20,7 @@ var() float ZoomFOV;
 var() name  ReloadCameraBone;
 
 // First Person Hands
-var DHMortarHandsActor  HandsActor;
+var DHFirstPersonHands  HandsActor;
 var Mesh                HandsMesh;
 var() name              HandsReloadSequence;
 var name                HandsAttachBone;
@@ -49,7 +49,7 @@ simulated function InitializeHands()
         HandsActor.Destroy();
     }
 
-    HandsActor = Spawn(class'DHMortarHandsActor', self);
+    HandsActor = Spawn(class'DHFirstPersonHands', self);
     HandsActor.LinkMesh(HandsMesh);
     HandsActor.PlayAnim('IDLE');
     HandsActor.SetSkins(DHPlayer(Controller));
@@ -63,11 +63,20 @@ simulated function InitializeHands()
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local DH_Fiat1435MG MG;
+
     super.ClientKDriverEnter(PC);
 
     if (IsLocallyControlled())
     {
         InitializeHands();
+
+        MG = DH_Fiat1435MG(Gun);
+
+        if (MG != none)
+        {
+            MG.UpdateClip();
+        }
     }
 }
 
@@ -272,8 +281,8 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true)
     UnbuttonedPositionIndex=0
     bDrawDriverInTP=true
-    DrivePos=(X=0,Y=0,Z=58)
-    DriveRot=(Pitch=0,Yaw=16384,Roll=0)
+    DrivePos=(X=-15.5622,Y=0,Z=29.7831)
+    DriveRot=(Pitch=0,Yaw=0,Roll=0)
     BinocsDriveRot=(Pitch=0,Yaw=16384,Roll=0)
     DriveAnim="cv33_gunner_closed"
     bHideMuzzleFlashAboveSights=true
@@ -282,10 +291,12 @@ defaultproperties
     CameraBone="GUNNER_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
 
-    //AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),FrameCount=32)   // todo: fill in
+    AnimationDrivers(0)=(Sequence="fiat1435_gunner_yaw_driver",FrameCount=20,Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=0))
 
     TargetStaticMesh=StaticMesh'DH_DebugTools.4MTARGET'
     ZoomFOV=60.0
 
     TPCamLookat=(Z=-70.0)
+
+    VehicleMGReloadTexture=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_reload'
 }

@@ -2,17 +2,21 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Interface art.
-// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no cooldown].
+// [ ] Fix incorrect offset of turret_placement bone.
+// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no
+//     cooldown].
 // [ ] Third person handling animations (yaw driver!).
-// [ ] Using iron-sight zoom speed when using the zoom in/out (underlying function needs to be basically rewritten).
-// [ ] Muzzle flash too far forward.
-// [ ] Fix rig hierarchy so that dust cover animation works properly
-// [ ] Sound notification for reload animation.
+// [ ] Sound notifications for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.
 // [ ] Fix timing of reload stages and remove the sounds.
 // [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
+// [ ] Hide hands actor in third person.
+// [ ] Gun looks wrong when out of ammo (bolt needs to be forward & clip needs
+//     to have fallen out?)
+// [ ] Animation bug when the gun is empty and you get onto it (clip does not
+//     animate) [half-reloads in general are busted]
+// [ ] Fix fucky geo on the hands.
 //==============================================================================
 
 class DH_Fiat1435MG extends DHVehicleMG;
@@ -246,7 +250,7 @@ simulated function Tick(float DeltaTime)
     local float T;
 
     // Only do all this crap if the local player is the driver.
-    if (RangeDriverChannel != 0 && WeaponPawn.IsLocallyControlled())
+    if (RangeDriverChannel != 0 && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
         if (RangeDriverAnimationFrameTarget != RangeDriverAnimationFrame)
         {
@@ -262,6 +266,8 @@ simulated function Tick(float DeltaTime)
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    PlayAnim('IDLE');
 
     SetupAnimationDrivers();
 }
@@ -444,7 +450,7 @@ defaultproperties
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
     WeaponFireAttachmentBone="MUZZLE_WC"
-    WeaponFireOffset=0
+    WeaponFireOffset=-10.0
 
     RangeDriverAnimationInterpDuration=0.5
 
@@ -485,4 +491,6 @@ defaultproperties
     bProjTarget=true
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
+
+    HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
 }
