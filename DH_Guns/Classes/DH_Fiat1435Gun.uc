@@ -15,7 +15,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Fiat1435MGPawn',WeaponBone=turret_placement)
     RotationsPerSecond=0.25
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.mg_topdown'
-
+    VehicleHudImage=Texture'DH_Fiat1435_tex.interface.fiat1435_tripod_icon'
+    VehicleHudTurret=TexRotator'DH_Fiat1435_tex.interface.fiat1435_turret_wc_icon_rot'
+    VehicleHudTurretLook=TexRotator'DH_Fiat1435_tex.interface.fiat1435_turret_wc_icon_look'
     // In order for the collision meshes to actually work, for some reason there needs to be karma shapes.
     // However, we don't actually want the gun to move, so we set the max speed and angular speed to 0.
     Begin Object Class=KarmaParamsRBFull Name=KParams0
