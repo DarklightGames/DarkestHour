@@ -20,7 +20,7 @@ var() float ZoomFOV;
 var() name  ReloadCameraBone;
 
 // First Person Hands
-var DHMortarHandsActor  HandsActor;
+var DHFirstPersonHands  HandsActor;
 var Mesh                HandsMesh;
 var() name              HandsReloadSequence;
 var name                HandsAttachBone;
@@ -49,7 +49,7 @@ simulated function InitializeHands()
         HandsActor.Destroy();
     }
 
-    HandsActor = Spawn(class'DHMortarHandsActor', self);
+    HandsActor = Spawn(class'DHFirstPersonHands', self);
     HandsActor.LinkMesh(HandsMesh);
     HandsActor.PlayAnim('IDLE');
     HandsActor.SetSkins(DHPlayer(Controller));

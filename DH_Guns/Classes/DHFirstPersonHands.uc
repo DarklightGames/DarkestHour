@@ -2,8 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// A first-person hands actor that can be attached to vehicles weapons to show
+// the player's hands when they are using the weapon.
+//==============================================================================
 
-class DHMortarHandsActor extends Actor;
+class DHFirstPersonHands extends Actor;
 
 var() int HandsSkinIndex;
 var() int SleeveSkinIndex;
