@@ -697,8 +697,11 @@ simulated function UpdateTracer()
 // Also removed similar reset of HitCount as that is only relevant to instant fire weapons, which aren't used in DH (makes no difference but it's tidier)
 function CeaseFire(Controller C, bool bWasAltFire)
 {
-//  FlashCount = 0;
-//  HitCount = 0;
+    // Set the flash count to zero so that native code will turn off the flash emitter for remote clients.
+    // Without this, the flash emitter will continue to play on remote clients while reloading.
+    // NOTE: The whole ServerCeaseFire thing can be probably be ripped out, but I don't have the time to test it, so it stays for now.
+    //  In the meantime, I know that adding this line here fixes the issue at least in my local dedicated server testing.
+    FlashCount = 0;
 
     if (AmbientEffectEmitter != none)
     {
