@@ -52,6 +52,7 @@ var localized string        AdminPlaceAxisSpawnText;
 var localized string        AdminDestroyAlliedSpawnsText;
 var localized string        AdminDestroyAxisSpawnsText;
 var localized string        AdminDestroySpawnText;
+var localized string        AdminTeleportText;
 
 var             bool                        bSelectArtilleryTarget;
 var             bool                        bDeselectArtilleryTarget;
@@ -584,6 +585,8 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     // Add extra items
     if (PRI.IsLoggedInAsAdmin())
     {
+        Sender.AddItem(default.AdminTeleportText);
+        Sender.AddItem("-");
         Sender.AddItem(default.AdminPlaceAlliedSpawnText);
         Sender.AddItem(default.AdminPlaceAxisSpawnText);
         Sender.AddItem("-");
@@ -625,15 +628,18 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
             switch (ExtrasMenuClickIndex)
             {
                 case 0:
+                    PC.ServerTeleportToMapLocation(MapClickLocation.X, MapClickLocation.Y);
+                    break;
+                case 2:
                     PC.ServerPlaceAdminSpawn(GRI.GetWorldSurfaceCoords(MapClickLocation.X, MapClickLocation.Y, ADMIN_SPAWN_TRACE_HEIGHT), ALLIES_TEAM_INDEX);
                     break;
-                case 1:
+                case 3:
                     PC.ServerPlaceAdminSpawn(GRI.GetWorldSurfaceCoords(MapClickLocation.X, MapClickLocation.Y, ADMIN_SPAWN_TRACE_HEIGHT), AXIS_TEAM_INDEX);
                     break;
-                case 3:
+                case 5:
                     PC.ServerDestroyAllAdminSpawns(ALLIES_TEAM_INDEX);
                     break;
-                case 4:
+                case 6:
                     PC.ServerDestroyAllAdminSpawns(AXIS_TEAM_INDEX);
                     break;
             }
@@ -865,6 +871,7 @@ defaultproperties
     AdminDestroyAlliedSpawnsText="ADMIN: Destroy ALLIED admin spawns"
     AdminDestroyAxisSpawnsText="ADMIN: Destroy AXIS admin spawns"
     AdminDestroySpawnText="ADMIN: Destroy spawn"
+    AdminTeleportText="ADMIN: Teleport here"
     RemoveText="Remove {0}"
     ActiveTargetSelectText="Select as Active Target"
     ActiveTargetDeselectText="Deselect Active Target"

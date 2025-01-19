@@ -234,7 +234,7 @@ replication
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
         ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
-        ServerPlaceAdminSpawn,ServerDestroyAdminSpawn,ServerDestroyAllAdminSpawns;
+        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -6308,6 +6308,37 @@ function ServerDestroyAllAdminSpawns(byte TeamIndex)
         // Notify everyone and log the event
         Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(4, TeamIndex), PlayerReplicationInfo);
         Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has has destroyed all admin spawns on team" @ TeamIndex);
+    }
+}
+
+// Moves the player to a location based on map coordinates
+function ServerTeleportToMapLocation(float X, float Y)
+{
+    local DHPawn P;
+    local DHGameReplicationInfo GRI;
+    local vector NewLocation;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    P = DHPawn(Pawn);
+
+    if (P == none)
+    {
+        return;
+    }
+
+    NewLocation = GRI.GetWorldSurfaceCoords(X, Y, 10000);
+    NewLocation.Z += 52;
+
+    if (P.SetLocation(NewLocation))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', 5, PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has teleported to" @ NewLocation);
     }
 }
 

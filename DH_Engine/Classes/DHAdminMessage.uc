@@ -11,6 +11,7 @@ var localized string PromotedToSquadLeaderMessage;
 var localized string PlacedSpawnMessage;
 var localized string DestroyedSpawnMessage;
 var localized string DestroyedAllSpawnsMessage;
+var localized string AdminTeleportedMessage;
 var localized string AlliedTeamNameGenitive;
 var localized string AxisTeamNameGenitive;
 
@@ -57,6 +58,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return Repl(Repl(default.DestroyedSpawnMessage, "{0}", RelatedPRI_1.PlayerName), "{1}", static.GetTeamName(ExtraValue));
         case 4:
             return Repl(Repl(default.DestroyedAllSpawnsMessage, "{0}", RelatedPRI_1.PlayerName), "{1}", static.GetTeamName(ExtraValue));
+        case 5:
+            return Repl(default.AdminTeleportedMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -73,6 +76,7 @@ defaultproperties
     PlacedSpawnMessage="Admin '{0}' has placed a spawn on {1} team."
     DestroyedSpawnMessage="Admin '{0}' has destroyed an admin-placed spawn on {1} team."
     DestroyedAllSpawnsMessage="Admin '{0}' destroyed all admin-placed spawns on {1} team."
+    AdminTeleportedMessage="Admin '{0}' has teleported."
     AlliedTeamNameGenitive="Allied"
     AxisTeamNameGenitive="Axis"
 
