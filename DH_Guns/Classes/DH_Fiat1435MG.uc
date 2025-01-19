@@ -246,7 +246,7 @@ simulated function Tick(float DeltaTime)
     local float T;
 
     // Only do all this crap if the local player is the driver.
-    if (RangeDriverChannel != 0 && WeaponPawn.IsLocallyControlled())
+    if (RangeDriverChannel != 0 && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
         if (RangeDriverAnimationFrameTarget != RangeDriverAnimationFrame)
         {
