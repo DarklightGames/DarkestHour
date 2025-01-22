@@ -39,6 +39,8 @@ var     Texture HudTexture;
 
 var     class<DHMapMarker_ArtilleryHit> HitMapMarkerClass;
 
+var     bool   bHitWater;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -116,15 +118,14 @@ simulated function Timer()
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
-    // Added splash if projectile hits a fluid surface
-    if (FluidSurfaceInfo(Other) != none)
-    {
-        CheckForSplash(Location);
-    }
-
-    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) && !Other.IsA('FluidSurfaceInfo'))
     {
         return;
+    }
+
+    if (Other.IsA('FluidSurfaceInfo'))
+    {
+        bHitWater = true;
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
@@ -265,9 +266,10 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
     local class<Emitter> HitEmitterClass;
     local sound          HitSound;
 
-    if (Level.NetMode != NM_DedicatedServer && !(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
+    if (Level.NetMode != NM_DedicatedServer)
     {
         GetHitSurfaceType(HitSurfaceType, HitNormal);
+
         GetHitSound(HitSound, HitSurfaceType);
         GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
 
@@ -556,44 +558,21 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        CheckForSplash(Location);
-        Explode(Location, vect(0.0, 0.0, 1.0));
-    }
-}
-
-// Added same as cannon shell to play a water splash effect
-simulated function CheckForSplash(vector SplashLocation)
-{
-    local Actor HitActor;
-
-    // No splash if detail settings are low, or if projectile is already in a water volume
-    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
-        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
-    {
-        bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)), SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
-        bTraceWater = false;
-
-        // We hit a water volume or a fluid surface, so play splash effects
-        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
-        {
-            if (HitWaterSound != none)
-            {
-                PlaySound(HitWaterSound);
-            }
-
-            if (HitWaterEmitterClass != none && EffectIsRelevant(HitLocation, false))
-            {
-                Spawn(HitWaterEmitterClass,,, HitLocation, rot(16384, 0, 0));
-            }
-        }
+        bHitWater = true;
+        GotoState('Whistle');
     }
 }
 
 // New function to get the surface type the projectile has hit
 simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
 {
-    local material M;
+    local Material M;
+
+    if (bHitWater)
+    {
+        HitSurfaceType = EST_Water;
+        return;
+    }
 
     Trace(HitLocation, HitNormal, Location - (16.0 * HitNormal), Location, false,, M);
 
