@@ -610,6 +610,11 @@ static function Font GetConsoleFont(Canvas C)
     return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
 }
 
+static function Font GetTinyFont(Canvas C)
+{
+    return class'DHFonts'.static.GetDHSmallFontDSByResolution(C.ClipY);
+}
+
 static function Font GetLargeMenuFont(Canvas C)
 {
     return class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.ClipY);
@@ -2180,21 +2185,6 @@ function MouseInterfaceStopCapturing()
 {
     ROPlayer(PlayerOwner).bHudCapturesMouseInputs = false;
     MouseInterfaceUnlockPlayerRotation();
-}
-
-static function Font GetTinyFont(Canvas C)
-{
-    local int FontSize;
-
-    FontSize = 6;
-
-    if (C.ClipX < 640.0) { FontSize++; }
-    if (C.ClipX < 800.0) { FontSize++; }
-    if (C.ClipX < 1024.0) { FontSize++; }
-    if (C.ClipX < 1280.0) { FontSize++; }
-    if (C.ClipX < 1600.0) { FontSize++; }
-
-    return LoadSmallFontStatic(Min(8, FontSize));
 }
 
 function GetPlayerNamePlateIcon(Pawn P, DHPlayerReplicationInfo OtherPRI, out Material IconMaterial, out Color IconMaterialColor)
