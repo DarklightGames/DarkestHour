@@ -3493,6 +3493,24 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
     }
 }
 
+// Destroys all leveler-placed artillery spawners to maintain the sanity of those testing.
+exec function StopArty()
+{
+    local Actor A;
+    local int Count;
+
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.IsA('DH_ArtilleryActor'))
+        {
+            A.Destroy();
+            ++Count;
+        }
+    }
+
+    Level.Game.Broadcast(self, "Destroyed" @ Count $ "artillery spawners");
+}
+
 // Function for changing the AlliesToAxisRatio for testing and real time balance changes
 exec function SetAlliesToAxisRatio(float Value)
 {
