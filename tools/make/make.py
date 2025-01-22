@@ -200,8 +200,6 @@ def main():
                            help='ignore package dependencies')
     argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
-    argparser.add_argument('-snapshot', required=False, action='store_true', default=False,
-                           help='compresses all build artifacts into a .zip file')
     argparser.add_argument('-debug', required=False, action='store_true', default=False,
                            help='compile debug packages (for use with UDebugger)')
     argparser.add_argument('-localize', required=False, action='store_true', default=False,
@@ -494,22 +492,6 @@ def main():
     # Exit with an error code if the build fails
     if not did_build_succeed:
         sys.exit(1)
-
-    # Create build snapshot
-    if args.snapshot:
-        # TODO: make sure that all of the necessary files are here
-        zf = zipfile.ZipFile(os.path.join(mod_dir, '{}.zip'.format(args.mod)), mode='w')
-        zf.write(manifest_path, os.path.relpath(manifest_path, mod_dir))
-        for package in default_packages:
-            package_name = os.path.basename(package)
-            package_path = os.path.join(mod_sys_dir, package_name + '.u')
-            i18n_path = os.path.splitext(package_path)[0] + '.int'
-            zf.write(package_path, os.path.relpath(package_path, mod_dir))
-            try:
-                zf.write(i18n_path, os.path.relpath(i18n_path, mod_dir))
-            except:
-                pass
-        zf.close()
 
 
 class BuildManifest:
