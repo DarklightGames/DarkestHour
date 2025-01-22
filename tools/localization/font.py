@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import List, Union, Tuple, Iterable, Optional, Dict
 from iso639 import Language
 from fontTools.ttLib import TTFont
-from fontTools.unicode import Unicode
 import yaml
 
 from unt import iso639_to_language_extension, read_unique_characters_from_unt_file
