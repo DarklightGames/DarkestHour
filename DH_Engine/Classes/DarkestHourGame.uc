@@ -2613,6 +2613,11 @@ state RoundInPlay
                     PlayerController(P).ClientReset();
                 }
 
+                if (DHPlayer(P) != none)
+                {
+                    DHPlayer(P).ClearMapMarkerCooldowns();
+                }
+
                 P.Reset();
             }
 
