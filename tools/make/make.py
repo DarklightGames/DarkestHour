@@ -202,8 +202,6 @@ def main():
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     argparser.add_argument('-debug', required=False, action='store_true', default=False,
                            help='compile debug packages (for use with UDebugger)')
-    argparser.add_argument('-localize', required=False, action='store_true', default=False,
-                           help='synchronize localization files from weblate submodule')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
