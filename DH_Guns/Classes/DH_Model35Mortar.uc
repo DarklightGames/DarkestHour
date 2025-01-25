@@ -7,7 +7,7 @@ class DH_Model35Mortar extends DHATGun;
 
 defaultproperties
 {
-    VehicleNameString="81/14 Model 35 Mortar"
+    VehicleNameString="Mortaio da 81/14 modello 35"
     VehicleTeam=0
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
