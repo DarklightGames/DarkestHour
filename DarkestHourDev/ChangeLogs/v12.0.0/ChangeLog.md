@@ -8,6 +8,10 @@ This has been a huge undertaking for our team, and speaking as the team lead, I'
 
 ## Meet the Italians
 
+[[ Have up-close screenshots of the Italians in action ]]
+
+* black shirts, tankers, radioman, MG guy, rifleman
+
 ## Interface
 
 ## Localization
@@ -24,11 +28,10 @@ If you'd like to help us localize the game into your native language, please vis
 
 The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the piece of equipment that they represent.
 
-To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while they will be colored blue if they are occupied. In addition, if they are being occupied by a squadmate, they will be colored green.
+To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while they will be colored blue if they are occupied. If they are being occupied by a squadmate, they will be colored green.
 
 Finally, all friendly vehicles will now be visible on the map at all times. We will keep an eye on if this has a negative impact on the usability of the map, and will adjust as necessary.
 
-[[pending]]
 The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
 
 ## Font Overhaul
@@ -37,7 +40,7 @@ To accommodate the localization efforts, all the game's fonts have been complete
 
 We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
 
-In addition, players who play at higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
+In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 [[ insert screenshots of the new fonts in action ]]
 
@@ -80,8 +83,8 @@ The Fiat-Rivelli 14/35 is a stationary tripod-mounted machine-gun. It can be dep
 
 This is the first stationary machine-gun to be added to the game, so it will be interesting to see how these will shape the battlefield.
 
-## 81/14 Mortar
-
+## Mortaio da 81 Mod. 35
+The most successful mortar of the Italian armed forces during the war.
 
 ## Weapons
 
@@ -166,14 +169,16 @@ In addition, there are now hard limits on the amount of total constructions that
 [[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
 
 # Vehicles
-* Vehicle cannons can now be fired while the commander is looking through the periscope. [not actually done yet, but needs to be added for all the existing vehicles!]
+* Vehicle cannons can now be fired while the commander is looking through the periscope.
+
+> This is implemented on new vehicles, but is not yet on pre-existing vehicles.
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 * The artillery response delay has been standardized to 15 seconds for all teams instead of relying on the length of the request sound effect.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands audio sources will now be properly attached to the player pawn instead of the the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.
