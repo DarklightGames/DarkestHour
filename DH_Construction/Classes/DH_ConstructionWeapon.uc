@@ -7,11 +7,55 @@ class DH_ConstructionWeapon extends DH_ProxyWeapon;
 
 var class<DHConstruction>       ConstructionClass;
 
+var Sound                       ClickSound;
+
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerCreateConstruction;
+}
+
+simulated function ClientPlayClickSound()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Instigator.Controller);
+
+    if (PC != none)
+    {
+        PC.ClientPlaySound(ClickSound);
+    }
+}
+
+// Overridden to cycle the variant of the construction proxy.
+exec simulated function SwitchFireMode()
+{
+    local DHConstructionProxy CP;
+
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP != none && CP.GetRuntimeData().bHasVariants)
+    {
+        CP.CycleVariant();
+
+        ClientPlayClickSound();
+    }
+}
+
+// Overridden to cycle the skin of the construction proxy.
+exec simulated function ROMGOperation()
+{
+    local DHConstructionProxy CP;
+
+    CP = DHConstructionProxy(ProxyCursor);
+
+    if (CP != none && CP.GetRuntimeData().bHasSkins)
+    {
+        CP.CycleSkin();
+
+        ClientPlayClickSound();
+    }
 }
 
 simulated function SetConstructionClass(class<DHConstruction> NewConstructionClass)
@@ -90,7 +134,7 @@ simulated function OnConfirmPlacement()
 
     if (CP != none)
     {
-        ServerCreateConstruction(CP.ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
+        ServerCreateConstruction(CP.ConstructionClass, CP.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation, CP.VariantIndex, CP.DefaultSkinIndex + CP.SkinIndex);
     }
 }
 
@@ -195,8 +239,7 @@ simulated function TraceFromPlayer(
     }
 }
 
-// TODO: This hardly seems like the right place to put the construction supply extraction logic!
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation)
+function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, Vector Location, Rotator Rotation, int VariantIndex, int SkinIndex)
 {
     local DHConstruction C;
     local DHPawn P;
@@ -214,6 +257,8 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     Context.TeamIndex = Instigator.GetTeamNum();
     Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = DHPlayer(Instigator.Controller);
+    Context.VariantIndex = VariantIndex;
+    Context.SkinIndex = SkinIndex;
 
     if (ConstructionClass.static.GetPlayerError(Context).Type != ERROR_None)
     {
@@ -269,6 +314,11 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
             Socket.Occupant = C;
         }
 
+        C.VariantIndex = VariantIndex;
+        C.SkinIndex = Context.SkinIndex;
+        
+        C.OnPlaced();
+
         if (!C.bIsNeutral)
         {
             C.SetTeamIndex(Instigator.GetTeamNum());
@@ -289,5 +339,12 @@ simulated function ResetCursor()
     {
         // This resets the proxy.
         CP.SetConstructionClass(CP.ConstructionClass);
+
+        ClientPlayClickSound();
     }
+}
+
+defaultproperties
+{
+    ClickSound=Sound'ROMenuSounds.msfxMouseClick'
 }

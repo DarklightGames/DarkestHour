@@ -26,8 +26,8 @@ defaultproperties
 
     GunOpticsClass=class'DH_Vehicles.DH_Cannone4732Optics'
     
-    AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="cannone4732_gunner_yaw",FrameCount=60,Channel=0)
-    AnimationDrivers(1)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=2,Max=2),Sequence="cannone4732_gunner_stand_yaw",FrameCount=60,Channel=2)
+    // AnimationDrivers(0)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=0,Max=1),Sequence="cannone4732_gunner_yaw",FrameCount=60,Channel=0)
+    // AnimationDrivers(1)=(Type=ADT_Yaw,DriverPositionIndexRange=(Min=2,Max=2),Sequence="cannone4732_gunner_stand_yaw",FrameCount=60,Channel=2)
 
     DrivePos=(Z=28.0)
 }

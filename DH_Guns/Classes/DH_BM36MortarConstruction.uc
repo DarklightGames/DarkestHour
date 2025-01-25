@@ -8,7 +8,7 @@ class DH_BM36MortarConstruction extends DHConstruction_Vehicle;
 defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
-    VehicleClass=class'DH_Guns.DH_BM36Mortar'
+    VehicleClasses(0)=(VehicleClass=class'DH_Guns.DH_BM36Mortar')
     bIsArtillery=true
     SupplyCost=750
     ProgressMax=8

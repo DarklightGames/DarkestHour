@@ -19,7 +19,8 @@
 // [ ] Fix fucky geo on the hands.
 //==============================================================================
 
-class DH_Fiat1435MG extends DHVehicleMG;
+class DH_Fiat1435MG extends DHVehicleMG
+    abstract;
 
 // Range Driver
 var name                    RangeDriverAnim;
@@ -57,6 +58,7 @@ var()   Rotator                 ShellEjectRotationOffset;
 var array<ROFPAmmoRound>    AmmoRounds;
 var StaticMesh              AmmoRoundStaticMesh;
 var array<name>             AmmoRoundBones;
+var int                     RoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
 // Range Table
 struct RangeTableItem
@@ -308,15 +310,15 @@ simulated function UpdateRangeDriver()
 simulated function UpdateAmmoRounds(int Ammo)
 {
     local int i;
-    local int ClipsVisible;
+    local int VisibleCount;
 
-    ClipsVisible = Ceil(float(Ammo) / ROUNDS_PER_CLIP);
+    VisibleCount = Ceil(float(Ammo) / RoundsInStaticMesh);
 
-    for (i = 0; i < AmmoRounds.Length; i++)
+    for (i = AmmoRounds.Length; i >= 0; --i)
     {
         if (AmmoRounds[i] != none)
         {
-            AmmoRounds[i].bHidden = AmmoRounds.Length - i > ClipsVisible;
+            AmmoRounds[i].bHidden = i >= VisibleCount;
         }
     }
 }
@@ -334,7 +336,6 @@ simulated function UpdateClip()
 
 simulated function UpdateClipDriver(int Ammo)
 {
-    const ROUNDS_PER_CLIP = 5;
     const CLIP_PER_MAG = 10;
     const CLIP_DRIVER_FRAMES = 11;
 
@@ -346,7 +347,7 @@ simulated function UpdateClipDriver(int Ammo)
         return;
     }
 
-    ClipsVisible = Ceil(float(Ammo) / ROUNDS_PER_CLIP);
+    ClipsVisible = Ceil(float(Ammo) / RoundsInStaticMesh);
     ClipFrame = CLIP_DRIVER_FRAMES - (ClipsVisible + 1);
 
     FreezeAnimAt(ClipFrame, ClipChannel);
@@ -406,7 +407,6 @@ simulated event ClipFill()
 
 defaultproperties
 {
-    ReloadSequence="RELOAD_WC"
     ReloadCameraTweenTime=0.5
 
     RangeDistanceUnit=DU_Meters
@@ -426,9 +426,8 @@ defaultproperties
     RangeTable(8)=(Range=900.0,AnimationTime=0.36)
     RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
 
-    Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_3RD'
-    YawBone=MG_YAW
-    PitchBone=MG_PITCH
+    YawBone="MG_YAW"
+    PitchBone="MG_PITCH"
 
     bLimitYaw=true
     MaxNegativeYaw=-2184    // -12 degrees
@@ -438,8 +437,6 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Guns.DH_Fiat1435Bullet'
-    InitialPrimaryAmmo=50
-    NumMGMags=20
     FireInterval=0.1    // 600rpm
     TracerProjectileClass=class'DH_Guns.DH_Fiat1435TracerBullet'
     TracerFrequency=7
@@ -449,37 +446,17 @@ defaultproperties
     FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
-    WeaponFireAttachmentBone="MUZZLE_WC"
-    WeaponFireOffset=-10.0
 
     RangeDriverAnimationInterpDuration=0.5
 
-    FiringAnim=BOLT_FIRING
-    FiringIdleAnim=BOLT_IDLE
+    FiringAnim="BOLT_FIRING"
+    FiringIdleAnim="BOLT_IDLE"
     FiringChannel=2
-    FiringBone=FIRING_ROOT
+    FiringBone="FIRING_ROOT"
 
-    ClipBone=CLIP
-    ClipAnim=CLIP_DRIVER
-    ClipChannel=3
-
-    ShellEjectBone=EJECTOR
+    ShellEjectBone="EJECTOR"
     ShellEjectClass=class'RO3rdShellEject762x54mm'
     ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
-
-    AmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_CLIP_CARTRIDGE_1ST'
-    AmmoRoundBones(0)="CLIP_CARTRIDGES_01"
-    AmmoRoundBones(1)="CLIP_CARTRIDGES_02"
-    AmmoRoundBones(2)="CLIP_CARTRIDGES_03"
-    AmmoRoundBones(3)="CLIP_CARTRIDGES_04"
-    AmmoRoundBones(4)="CLIP_CARTRIDGES_05"
-    AmmoRoundBones(5)="CLIP_CARTRIDGES_06"
-    AmmoRoundBones(6)="CLIP_CARTRIDGES_07"
-    AmmoRoundBones(7)="CLIP_CARTRIDGES_08"
-    AmmoRoundBones(8)="CLIP_CARTRIDGES_09"
-    AmmoRoundBones(9)="CLIP_CARTRIDGES_10"
-
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_WC_COLLISION_YAW',AttachBone="MG_YAW")
 
     ProjectileRotationMode=PRM_MuzzleBone
 
@@ -492,5 +469,5 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
 
-    HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
+    RoundsInStaticMesh=1
 }

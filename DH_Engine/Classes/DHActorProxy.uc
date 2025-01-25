@@ -29,6 +29,8 @@ struct Context
     var DHPlayer PlayerController;
     var Actor GroundActor;
     var Object OptionalObject;
+    var int VariantIndex;
+    var int SkinIndex;
 };
 
 function PostBeginPlay()
@@ -152,10 +154,12 @@ function static UpdateProxyMaterialColors(Actor A, Color Color)
 
                 if (FC != none)
                 {
-                    FC.Color1 = Color;
+                    // Interpolate between white and the specified color.
+                    // This allows the user to see the object's original color, which is needed when selecting skins.
+                    FC.Color1 = class'UColor'.static.Interp(0.25, class'UColor'.default.White, Color);
                     FC.Color1.A = 32;
 
-                    FC.Color2 = Color;
+                    FC.Color2 = class'UColor'.static.Interp(0.5, class'UColor'.default.White, Color);
                     FC.Color2.A = 128;
                 }
             }

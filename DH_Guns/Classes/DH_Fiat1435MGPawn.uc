@@ -6,7 +6,8 @@
 //  subclass so that we can reuse all the new systems on other mounted MGs.
 //==============================================================================
 
-class DH_Fiat1435MGPawn extends DHVehicleMGPawn;
+class DH_Fiat1435MGPawn extends DHVehicleMGPawn
+    abstract;
 
 // Debugging
 var Actor TargetActor;
@@ -269,25 +270,19 @@ defaultproperties
 {
     HandsMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_HANDS'
     HandsAttachBone="HANDS_ATTACHMENT"
-    HandsReloadSequence="RELOAD_WC"
 
-    GunClass=class'DH_Guns.DH_Fiat1435MG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true
     bMultiPosition=true
-    // Because of the way that explosives work, we must say that the driver is not exposed so that
-    // he is not killed by explosives while buttoned up.
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_1ST',bExposed=true)
     UnbuttonedPositionIndex=0
     bDrawDriverInTP=true
     DrivePos=(X=-15.5622,Y=0,Z=29.7831)
     DriveRot=(Pitch=0,Yaw=0,Roll=0)
     BinocsDriveRot=(Pitch=0,Yaw=16384,Roll=0)
-    DriveAnim="cv33_gunner_closed"
+    DriveAnim="cv33_gunner_closed"  // TODO: replace
     bHideMuzzleFlashAboveSights=true
 
-    GunsightCameraBone="GUNSIGHT_CAMERA_WC"
     CameraBone="GUNNER_CAMERA"
     ReloadCameraBone="RELOAD_CAMERA"
 
@@ -297,6 +292,4 @@ defaultproperties
     ZoomFOV=60.0
 
     TPCamLookat=(Z=-70.0)
-
-    VehicleMGReloadTexture=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_reload'
 }

@@ -7,7 +7,7 @@ class DH_Zis3GunLateConstruction extends DHConstruction_Vehicle;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_Zis3GunLate'
+    VehicleClasses(0)=(VehicleClass=class'DH_Guns.DH_Zis3GunLate')
     SupplyCost=1130
     ProgressMax=14
 }
