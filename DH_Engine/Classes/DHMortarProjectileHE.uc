@@ -7,15 +7,7 @@ class DHMortarProjectileHE extends DHMortarProjectile
     abstract;
 
 // Explosion effect emitters & sounds
-var     class<Emitter>  GroundExplosionEmitterClass;
-var     class<Emitter>  SnowExplosionEmitterClass;
-var     class<Emitter>  WaterExplosionEmitterClass;
-
-var     class<Emitter>      FlashEffectClass; //new for DH
-
-var     array<sound>    GroundExplosionSounds;
-var     array<sound>    SnowExplosionSounds;
-var     array<sound>    WaterExplosionSounds;
+var     class<DHHitEffect>      ImpactEffect; // effect to spawn when round hits something other than a vehicle (handles sound & visual effect)
 
 // View shake
 var     float           BlurTime;         // how long blur effect should last for this shell
@@ -80,15 +72,9 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
     // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
     if (Level.NetMode != NM_DedicatedServer)
     {
-        GetHitSurfaceType(HitSurfaceType, HitNormal);
-        GetExplosionSound(ExplosionSound, HitSurfaceType);
-        GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
-        GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
-
-        PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
-        Spawn(ExplosionEmitterClass, self,, HitLocation);
-        Spawn(FlashEffectClass, self,, HitLocation);
-        Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal));
+        //GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+        //Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
 
         DoShakeEffect();
     }
@@ -122,75 +108,12 @@ simulated function DoShakeEffect()
     }
 }
 
-// New function to appropriate explosion sound for shell hitting a given surface type
-simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
-            return;
-
-        case EST_Water:
-            ExplosionSound = WaterExplosionSounds[Rand(WaterExplosionSounds.Length)];
-            return;
-
-        default:
-            ExplosionSound = GroundExplosionSounds[Rand(GroundExplosionSounds.Length)];
-            return;
-    }
-}
-
-// New function to appropriate explosion effects emitter for shell hitting a given surface type
-simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionEmitterClass = SnowExplosionEmitterClass;
-            return;
-
-        case EST_Water:
-            ExplosionEmitterClass = WaterExplosionEmitterClass;
-            return;
-
-        default:
-            ExplosionEmitterClass = GroundExplosionEmitterClass;
-            return;
-    }
-}
-
-// New function to appropriate explosion decal for shell hitting a given surface type
-simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalClass, ESurfaceTypes SurfaceType)
-{
-    switch (SurfaceType)
-    {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionDecalClass = ExplosionDecalSnow;
-            return;
-
-        default:
-            ExplosionDecalClass = ExplosionDecal;
-            return;
-    }
-}
-
 defaultproperties
 {
     MyDamageType=class'DH_Engine.DHMortarDamageType'
     MomentumTransfer=75000.0
-
-    GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
-    SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
-    WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
-
-    FlashEffectClass=class'DH_Effects.DHFlashEffectMedium'
-
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    
+    ImpactEffect=class'DH_Effects.DHMortarHitEffect' //default for 60mm HE projectile
 
     HitMapMarkerClass=class'DH_Engine.DHMapMarker_ArtilleryHit_HE'
 
