@@ -24,6 +24,12 @@ simulated function Timer()
     bDynamicLight = false;
 }
 
+// Always have this be relevant because these things are huge and should always be seen.
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    return true;
+}
+
 defaultproperties
 {
     AutoDestroy=True
