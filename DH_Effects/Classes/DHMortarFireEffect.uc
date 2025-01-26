@@ -5,6 +5,24 @@
 
 class DHMortarFireEffect extends Emitter;
 
+//A flash of light when firing, similar to small arms WeaponLight firing effects
+simulated function PostBeginPlay()
+{
+    if (!Level.bDropDetail)
+    {
+        bDynamicLight = true;
+        SetTimer(0.15, false);
+    }
+    
+    LightBrightness = RandRange(96, 150);
+    Super.PostBeginPlay();
+}
+
+simulated function Timer()
+{
+    bDynamicLight = false;
+}
+
 defaultproperties
 {
     AutoDestroy=true
@@ -18,17 +36,19 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        ColorScale(0)=(Color=(B=255,G=255,R=255))
-        ColorScale(1)=(RelativeTime=1.0)
+        ColorScale(0)=(Color=(G=128,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(G=128,R=255,A=255))
+        Opacity=0.15
         MaxParticles=1
         DetailMode=DM_SuperHigh
         StartLocationShape=PTLS_Sphere
         StartSpinRange=(X=(Max=1.0))
         SizeScale(0)=(RelativeSize=0.15)
         SizeScale(1)=(RelativeTime=0.75,RelativeSize=0.5)
-        StartSizeRange=(X=(Max=60.0))
+        StartSizeRange=(X=(Min=20.0,Max=40.0))
         InitialParticlesPerSecond=5000.0
-        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
+        DrawStyle=PTDS_AlphaBlend
+        Texture=Texture'SpecialEffects.Flares.SoftFlare'
         LifetimeRange=(Min=0.25,Max=0.35)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
@@ -50,6 +70,7 @@ defaultproperties
         FadeOutStartTime=0.1025
         FadeInEndTime=0.05
         MaxParticles=1
+        StartLocationRange=(X=(Max=10.000000))
         SizeScale(1)=(RelativeTime=0.25,RelativeSize=0.25)
         SizeScale(2)=(RelativeTime=1.0,RelativeSize=0.5)
         InitialParticlesPerSecond=30.0
@@ -90,4 +111,36 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.0)
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
+    Begin Object Class=SparkEmitter Name=SparkEmitter0
+        LineSegmentsRange=(Min=1.000000,Max=1.000000)
+        TimeBeforeVisibleRange=(Min=0.100000,Max=0.100000)
+        TimeBetweenSegmentsRange=(Min=0.050000,Max=0.100000)
+        UseColorScale=True
+        RespawnDeadParticles=False
+        AutomaticInitialSpawning=False
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=0.382143,Color=(B=64,G=128,R=255,A=255))
+        ColorScale(2)=(RelativeTime=1.000000,Color=(R=255,A=255))
+        name="sparks"
+        UseRotationFrom=PTRS_Actor
+        MaxParticles=5
+        StartLocationRange=(X=(Max=50.000000))
+        InitialParticlesPerSecond=100.000000
+        Texture=Texture'Effects_Tex.explosions.fire_quad'
+        LifetimeRange=(Min=0.150000,Max=0.250000)
+        StartVelocityRange=(X=(Min=50.000000,Max=300.000000),Y=(Min=-95.000000,Max=85.000000),Z=(Min=-85.000000,Max=95.000000))
+    End Object
+    Emitters(3)=SparkEmitter'SparkEmitter0'
+
+    bMovable=true
+    bDynamicLight=false
+
+    LightEffect=LE_NonIncidence
+    LightType=LT_Steady
+    LightRadius = 9.0
+    LightHue = 20
+    LightSaturation = 28
+    AmbientGlow = 254
+    LightCone = 8
 }

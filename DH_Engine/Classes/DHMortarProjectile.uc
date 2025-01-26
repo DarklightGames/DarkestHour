@@ -17,7 +17,7 @@ var     float   DudChance;
 var     class<Emitter>  FireEmitterClass;
 var     sound   DescendingSound;
 
-// Impact effects & sounds
+// Impact effects & sounds for a dud round
 var     class<Emitter>  HitDirtEmitterClass;
 var     class<Emitter>  HitSnowEmitterClass;
 var     class<Emitter>  HitWoodEmitterClass;
