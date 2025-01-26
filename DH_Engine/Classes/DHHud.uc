@@ -681,6 +681,25 @@ event PostRender(Canvas Canvas)
         PawnOwner.DrawHud(Canvas);
     }
 
+    if (bShowScoreBoard)
+    {
+        DrawFadeEffect(Canvas);
+
+        if (ScoreBoard != none)
+        {
+            TempModulate = Canvas.ColorModulate;
+            Canvas.ColorModulate = OldModulate;
+            ScoreBoard.DrawScoreboard(Canvas);
+
+            if (Scoreboard.bDisplayMessages)
+            {
+                DisplayMessages(Canvas);
+            }
+
+            Canvas.ColorModulate = TempModulate;
+        }
+    }
+
     if (bShowDebugInfo)
     {
         if (PlayerOwner != none)
@@ -704,25 +723,7 @@ event PostRender(Canvas Canvas)
     }
     else if (!bHideHud)
     {
-        if (bShowScoreBoard)
-        {
-            DrawFadeEffect(Canvas);
-
-            if (ScoreBoard != none)
-            {
-                TempModulate = Canvas.ColorModulate;
-                Canvas.ColorModulate = OldModulate;
-                ScoreBoard.DrawScoreboard(Canvas);
-
-                if (Scoreboard.bDisplayMessages)
-                {
-                    DisplayMessages(Canvas);
-                }
-
-                Canvas.ColorModulate = TempModulate;
-            }
-        }
-        else
+        if (!bShowScoreBoard)
         {
             // Modified to only show the spectating HUD if we are actually
             // spectating, not if we are dead and viewing from first-person.
