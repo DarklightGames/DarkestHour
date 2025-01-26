@@ -34,6 +34,7 @@ defaultproperties
     HitEffects(23)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHMortarExplosion60mmBrick',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')      // Brick EST_Custom03
     HitEffects(24)=(HitDecal=class'ArtilleryMarkDirt',HitEffect=class'DHMortarExplosion60mm',HitSound=SoundGroup'Inf_Weapons.F1.f1_explode01')       // Hedgerow-Bush EST_Custom04
 
-    //MinSoundRadius=5300.0
-    //MaxSoundRadius=5500.0
+    TransientSoundVolume=3.0
+    MinSoundRadius=5300.0
+    MaxSoundRadius=5500.0
 }
