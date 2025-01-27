@@ -4,16 +4,15 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Rename Shells & Set up Classes/loadout
 // [ ] Gunner animations
-// [ ] Destroyed mesh (get rid of a few 1000 tris on this cause it's way too heavy atm)
-// [ ] Add to maps
+// [ ] Rename Shells & Set up Classes/loadout
 // [ ] Fix handling to be less bouncy
-// [ ] Fix muzzle smoke to use sideways smoke
+// [ ] Fix muzzle smoke to use sideways smoke (do we even have this?)
 // [ ] Hit points
 // [ ] Damage effect positions
-// [ ] Factory classes
-// [ ] Destroyed track statics
+// [ ] Armor values
+// [ ] Add to maps
+// [ ] Exit positions
 //==============================================================================
 // BUGS
 //==============================================================================
@@ -88,7 +87,10 @@ defaultproperties
     Skins(1)=Texture'DH_Wespe_tex.wespe.wespe_treads'
     Skins(2)=Texture'DH_Wespe_tex.wespe.wespe_treads'
     Skins(3)=Texture'DH_Wespe_tex.wespe.wespe_body_int'
-    // CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
+
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_front',AttachBone="driver_hatch_front")
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_top_front',AttachBone="driver_hatch_top_01")
+    CollisionAttachments(2)=(StaticMesh=StaticMesh'DH_Wespe_stc.wespe_hatch_collision_top_back',AttachBone="driver_hatch_top_02")
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WespeCannonPawn',WeaponBone="turret_placement")
@@ -150,7 +152,7 @@ defaultproperties
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_destro'
+    DestroyedVehicleMesh=StaticMesh'DH_Wespe_stc.WESPE_DESTROYED'
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
     RightTrackSoundBone="DRIVE_WHEEL_R"
