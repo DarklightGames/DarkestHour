@@ -2,20 +2,27 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
-// [ ] Add right-click to toggle zoom.
-// [ ] Add shell emitter.
-// [ ] Properly animate clips in clip driver.
-// [ ] Have projectiles spawn from the muzzle bone rotation.
-// [ ] Force update clip driver when gun is reloaded.
-// [ ] Force update range driver when player enters the vehicle.
-// [ ] Try to fix "roll" issue with rotation (not critical, but would be nice).
-// [ ] Add a reload animation.
-// [ ] Interface art.
-// [ ] 
+// [ ] Fix incorrect offset of turret_placement bone.
+// [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no
+//     cooldown].
+// [ ] Third person handling animations (yaw driver!).
+// [ ] Sound notifications for reload animation.
+// [ ] Maybe make a little "ping" sound when the clip cycles.
+// [ ] Fix timing of reload stages and remove the sounds.
+// [ ] Destroyed mesh.
+// [ ] Make sure it all works in MP.
+// [ ] Hide hands actor in third person.
+// [ ] Gun looks wrong when out of ammo (bolt needs to be forward & clip needs
+//     to have fallen out?)
+// [ ] Animation bug when the gun is empty and you get onto it (clip does not
+//     animate) [half-reloads in general are busted]
+// [ ] Fix fucky geo on the hands.
 //==============================================================================
 
-class DH_Fiat1435MG extends DHVehicleMG;
+class DH_Fiat1435MG extends DHVehicleMG
+    abstract;
 
+// Range Driver
 var name                    RangeDriverAnim;
 var int                     RangeDriverAnimFrameCount;
 var int                     RangeDriverChannel;
@@ -31,15 +38,29 @@ var private float           RangeDriverAnimationTimeSecondsEnd;
 
 var() float                 RangeDriverAnimationInterpDuration;
 
+// Firing Animation
 var int                     FiringChannel;
 var name                    FiringBone;
 var name                    FiringAnim;
 var name                    FiringIdleAnim;
 
+// Clip Animation
 var name                    ClipBone;
 var name                    ClipAnim;
 var int                     ClipChannel;
 
+// Shell Ejection
+var()   class<RO3rdShellEject>  ShellEjectClass;
+var()   name                    ShellEjectBone;
+var()   Rotator                 ShellEjectRotationOffset;
+
+// Ammo Round
+var array<ROFPAmmoRound>    AmmoRounds;
+var StaticMesh              AmmoRoundStaticMesh;
+var array<name>             AmmoRoundBones;
+var int                     RoundsInStaticMesh; // The number of rounds depicted in the static mesh.
+
+// Range Table
 struct RangeTableItem
 {
     var() float Range;          // Range in the specified distance unit.
@@ -47,20 +68,90 @@ struct RangeTableItem
 };
 var array<RangeTableItem> RangeTable;
 
+// Reload
+var()   name                    ReloadSequence;
+var     float                   ReloadStartTimeSeconds; // The time that the reload animation started.
+var     float                   ReloadEndTimeSeconds;   // The time that the reload animation will end.
+var()   float                   ReloadCameraTweenTime;  // The time that the camera will tween back to the player's view.
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        RangeIndex;
+}
+
 simulated function OnSwitchMesh()
 {
     super.OnSwitchMesh();
     
     SetupAnimationDrivers();
+    InitializeAmmoRounds();
     UpdateRangeDriverFrameTarget();
+}
+
+simulated function DestroyAmmoRounds()
+{
+    local int i;
+
+    for (i = 0; i < AmmoRounds.Length; i++)
+    {
+        if (AmmoRounds[i] != none)
+        {
+            AmmoRounds[i].Destroy();
+        }
+    }
+
+    AmmoRounds.Length = 0;
+}
+
+simulated function InitializeAmmoRounds()
+{
+    local int i;
+
+    DestroyAmmoRounds();
+
+    for (i = 0; i < AmmoRoundBones.Length; i++)
+    {
+        AmmoRounds[i] = Spawn(class'ROFPAmmoRound', self);
+
+        if (AmmoRounds[i] == none)
+        {
+            continue;
+        }
+
+        AmmoRounds[i].bOwnerNoSee = false;
+
+        AttachToBone(AmmoRounds[i], AmmoRoundBones[i]);
+        AmmoRounds[i].SetStaticMesh(AmmoRoundStaticMesh);
+    }
 }
 
 function Fire(Controller C)
 {
+    local coords ShellEjectCoords;
+    local Actor ShellEjectActor;
+
     super.Fire(C);
     
     StartFiringAnimation();
-    UpdateClipDriver();
+
+    // TODO: make sure this will work in multiplayer; only have this run on the client. server doesn't care.
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (ShellEjectClass != none && ShellEjectBone != '')
+        {
+            ShellEjectCoords = GetBoneCoords(ShellEjectBone);
+
+            ShellEjectActor = Spawn(ShellEjectClass, self,, ShellEjectCoords.Origin, GetBoneRotation(ShellEjectBone));
+            ShellEjectActor.SetRotation(ShellEjectActor.Rotation + ShellEjectRotationOffset);
+
+            // The class defines bOwnerNoSee as true since this is meant only for third person, but we want to just
+            // reuse the same class for first person as well.
+            ShellEjectActor.bOwnerNoSee = false;
+        }
+    }
+    
+    UpdateClip();
 }
 
 function StartFiringAnimation()
@@ -86,12 +177,74 @@ function CeaseFire(Controller C, Bool bWasAltFire)
     StopFiringAnimation();
 }
 
-simulated function SetRangeDriverFrameTarget(float NewFrameTarget)
+simulated function SetRangeDriverFrameTarget(float NewFrameTarget, optional float InterpDuration)
 {
     RangeDriverAnimationFrameStart = RangeDriverAnimationFrame;
     RangeDriverAnimationFrameTarget = NewFrameTarget;
     RangeDriverAnimationTimeSecondsStart = Level.TimeSeconds;
-    RangeDriverAnimationTimeSecondsEnd = RangeDriverAnimationTimeSecondsStart + RangeDriverAnimationInterpDuration;
+    RangeDriverAnimationTimeSecondsEnd = RangeDriverAnimationTimeSecondsStart + InterpDuration;
+}
+
+simulated state Reloading
+{
+    // Don't allow the player to change the range while reloading.
+    simulated function DecrementRange();
+    simulated function IncrementRange();
+    
+    simulated function BeginState()
+    {
+        local DH_Fiat1435MGPawn MGPawn;
+
+        MGPawn = DH_Fiat1435MGPawn(WeaponPawn);
+
+        // Disable the clip driver.
+        if (ClipChannel != 0)
+        {
+            AnimBlendParams(ClipChannel, 0.0,,, ClipBone);
+        }
+
+        // Disable the firing driver (since this controls the bolt and we animate the bolt in the reload animation).
+        if (FiringChannel != 0)
+        {
+            AnimBlendParams(FiringChannel, 0.0,,, FiringBone);
+        }
+
+        // For simplicity, just have a single reload phase.
+        ReloadStartTimeSeconds = Level.TimeSeconds;
+        ReloadEndTimeSeconds = Level.TimeSeconds + GetAnimDuration(ReloadSequence);
+
+        PlayAnim(ReloadSequence, 1.0, 0.0, 0.0);
+
+        // Zoom out.
+        if (MGPawn != none)
+        {
+            MGPawn.PlayHandsReloadAnim();
+
+            MGPawn.SetIsZoomed(false);
+        }
+    }
+
+    simulated function EndState()
+    {
+        // Enable the clip driver.
+        if (ClipChannel != 0)
+        {
+            AnimBlendParams(ClipChannel, 1.0,,, ClipBone);
+
+            // Force the clip into the "full" position.
+            FreezeAnimAt(0.0, ClipChannel);
+        }
+
+        // Enable the firing driver.
+        if (FiringChannel != 0)
+        {
+            AnimBlendParams(FiringChannel, 1.0,,, FiringBone);
+        }
+    }
+
+Begin:
+    Sleep(GetAnimDuration(ReloadSequence));
+    GotoState('');
 }
 
 simulated function Tick(float DeltaTime)
@@ -99,7 +252,7 @@ simulated function Tick(float DeltaTime)
     local float T;
 
     // Only do all this crap if the local player is the driver.
-    if (RangeDriverChannel != 0 && WeaponPawn.IsLocallyControlled())
+    if (RangeDriverChannel != 0 && WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
         if (RangeDriverAnimationFrameTarget != RangeDriverAnimationFrame)
         {
@@ -115,6 +268,8 @@ simulated function Tick(float DeltaTime)
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    PlayAnim('IDLE');
 
     SetupAnimationDrivers();
 }
@@ -138,7 +293,7 @@ simulated function SetupAnimationDrivers()
     {
         AnimBlendParams(ClipChannel, 1.0,,, ClipBone);
         PlayAnim(ClipAnim, 0.0, 0.0, ClipChannel);
-        UpdateClipDriver();
+        UpdateClipDriver(MainAmmoCharge[0]);
     }
 }
 
@@ -152,20 +307,48 @@ simulated function UpdateRangeDriver()
     FreezeAnimAt(RangeDriverAnimationFrame, RangeDriverChannel);
 }
 
-simulated function UpdateClipDriver()
+simulated function UpdateAmmoRounds(int Ammo)
 {
-    const ROUNDS_PER_CLIP = 5;
+    local int i;
+    local int VisibleCount;
+
+    VisibleCount = Ceil(float(Ammo) / RoundsInStaticMesh);
+
+    for (i = AmmoRounds.Length; i >= 0; --i)
+    {
+        if (AmmoRounds[i] != none)
+        {
+            AmmoRounds[i].bHidden = i >= VisibleCount;
+        }
+    }
+}
+
+simulated function UpdateClipWithAmmo(int Ammo)
+{
+    UpdateAmmoRounds(Ammo);
+    UpdateClipDriver(Ammo);
+}
+
+simulated function UpdateClip()
+{
+    UpdateClipWithAmmo(MainAmmoCharge[0]);
+}
+
+simulated function UpdateClipDriver(int Ammo)
+{
     const CLIP_PER_MAG = 10;
-    const CLIP_DRIVER_FRAMES = 10;
+    const CLIP_DRIVER_FRAMES = 11;
 
     local float ClipFrame;
+    local int ClipsVisible;
 
     if (ClipChannel == 0)
     {
         return;
     }
 
-    ClipFrame = (CLIP_DRIVER_FRAMES - 1) - (MainAmmoCharge[0] / ROUNDS_PER_CLIP);
+    ClipsVisible = Ceil(float(Ammo) / RoundsInStaticMesh);
+    ClipFrame = CLIP_DRIVER_FRAMES - (ClipsVisible + 1);
 
     FreezeAnimAt(ClipFrame, ClipChannel);
 }
@@ -173,17 +356,17 @@ simulated function UpdateClipDriver()
 simulated function RangeIndexChanged()
 {
     // Send a message to the player's HUD.
-    if (WeaponPawn != none)
+    if (WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
         WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', RangeTable[RangeIndex].Range);
     }
 
-    UpdateRangeDriverFrameTarget();
+    UpdateRangeDriverFrameTarget(RangeDriverAnimationInterpDuration);
 }
 
-simulated function UpdateRangeDriverFrameTarget()
+simulated function UpdateRangeDriverFrameTarget(optional float InterpDuration)
 {
-    SetRangeDriverFrameTarget(RangeTable[RangeIndex].AnimationTime * (RangeDriverAnimFrameCount - 1));
+    SetRangeDriverFrameTarget(RangeTable[RangeIndex].AnimationTime * (RangeDriverAnimFrameCount - 1), InterpDuration);
 }
 
 simulated function DecrementRange()
@@ -208,8 +391,24 @@ simulated function IncrementRange()
     }
 }
 
+simulated function StartReload(optional bool bResumingPausedReload)
+{
+    super.StartReload(bResumingPausedReload);
+
+    // TODO: only do this if we're locally controlled.
+    GotoState('Reloading');
+}
+
+// Called from animation when the clip goes out of view.
+simulated event ClipFill()
+{
+    UpdateClipWithAmmo(InitialPrimaryAmmo);
+}
+
 defaultproperties
 {
+    ReloadCameraTweenTime=0.5
+
     RangeDistanceUnit=DU_Meters
     RangeDriverAnim="SIGHT_DRIVER"
     RangeDriverAnimFrameCount=10
@@ -227,9 +426,8 @@ defaultproperties
     RangeTable(8)=(Range=900.0,AnimationTime=0.36)
     RangeTable(9)=(Range=1000.0,AnimationTime=0.41)
 
-    Mesh=SkeletalMesh'DH_Fiat1435_anm.FIAT1435_GUN_WC_3RD'
-    YawBone=MG_YAW
-    PitchBone=MG_PITCH
+    YawBone="MG_YAW"
+    PitchBone="MG_PITCH"
 
     bLimitYaw=true
     MaxNegativeYaw=-2184    // -12 degrees
@@ -239,8 +437,6 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Guns.DH_Fiat1435Bullet'
-    InitialPrimaryAmmo=50
-    NumMGMags=20
     FireInterval=0.1    // 600rpm
     TracerProjectileClass=class'DH_Guns.DH_Fiat1435TracerBullet'
     TracerFrequency=7
@@ -250,17 +446,28 @@ defaultproperties
     FireEndSound=SoundGroup'DH_MN_InfantryWeapons_sound.Breda38FireLoopEnd'
     ShakeRotMag=(X=30.0,Y=30.0,Z=30.0)
     ShakeOffsetMag=(X=0.02,Y=0.02,Z=0.02)
-    WeaponFireAttachmentBone=MUZZLE_WC
-    WeaponFireOffset=0
 
     RangeDriverAnimationInterpDuration=0.5
 
-    FiringAnim=BOLT_FIRING
-    FiringIdleAnim=BOLT_IDLE
+    FiringAnim="BOLT_FIRING"
+    FiringIdleAnim="BOLT_IDLE"
     FiringChannel=2
-    FiringBone=BOLT
+    FiringBone="FIRING_ROOT"
 
-    ClipBone=CLIP
-    ClipAnim=CLIP_DRIVER
-    ClipChannel=3
+    ShellEjectBone="EJECTOR"
+    ShellEjectClass=class'RO3rdShellEject762x54mm'
+    ShellEjectRotationOffset=(Pitch=-16384,Yaw=16384)
+
+    ProjectileRotationMode=PRM_MuzzleBone
+
+    // Regular MGs do not have collision on because it's assumed that they're a small part
+    // mounted on a larger vehicle. In this case, we want to have collision on because it's
+    // a standalone weapon.
+    bCollideActors=true
+    bBlockActors=true
+    bProjTarget=true
+    bBlockNonZeroExtentTraces=true
+    bBlockZeroExtentTraces=true
+
+    RoundsInStaticMesh=1
 }

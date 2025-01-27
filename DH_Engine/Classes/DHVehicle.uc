@@ -265,6 +265,8 @@ var Sound BuzzSound;
 
 var     bool        bUsesCodedDestroyedSkins;   // Uses code to create a combiner for the destroyed mesh skins, rather than using one from a texture package.
 
+var     Vector      DestructionEffectOffset;    // Offset for the destruction effect emitter
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -2764,6 +2766,7 @@ simulated event ClientVehicleExplosion(bool bFinal)
 
     DestructionEffect.LifeSpan = TimeTilDissapear;
     DestructionEffect.SetBase(self);
+    DestructionEffect.SetRelativeLocation(DestructionEffectOffset);
 }
 
 // Modified to make sure driver's health is no more than zero on a net client, in case that isn't replicated until later

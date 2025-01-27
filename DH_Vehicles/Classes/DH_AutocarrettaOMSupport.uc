@@ -9,7 +9,7 @@ class DH_AutoCarrettaOMSupport extends DH_AutocarrettaOM;
 
 defaultproperties
 {
-    VehicleNameString="Autocarretta OM 32"
+    VehicleNameString="Autocarretta OM 36Mt (Logistics)"
 
     Mesh=SkeletalMesh'DH_AutocarrettaOM_anm.OM33_BODY_SUPPORT_EXT'
     

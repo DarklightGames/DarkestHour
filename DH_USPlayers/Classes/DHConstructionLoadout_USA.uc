@@ -32,7 +32,7 @@ defaultproperties
     // Guns
     Constructions(13)=(ConstructionClass=class'DH_AT57GunConstruction',Limit=5,MaxActive=-1)
     Constructions(14)=(ConstructionClass=class'DH_M5GunConstruction',Limit=3,MaxActive=-1)
-    Constructions(15)=(ConstructionClass=class'DH_M45QuadmountGunConstruction',Limit=2,MaxActive=-1)
+    Constructions(15)=(ConstructionClass=class'DH_M45QuadmountGunConstruction',Limit=1,MaxActive=-1)
     Constructions(16)=(ConstructionClass=class'DH_M1MortarConstruction',Limit=3,MaxActive=-1)
     Constructions(17)=(ConstructionClass=class'DH_M116GunConstruction',Limit=3,MaxActive=-1)
 }

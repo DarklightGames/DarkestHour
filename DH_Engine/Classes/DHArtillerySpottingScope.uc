@@ -386,7 +386,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
 
     C.SetDrawColor(White.R, White.G, White.B, White.A);
-    C.Font = C.MedFont;
+    C.Font = class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.SizeY);;
 
     MaxLines = arraycount(TargetWidgetLayout.LineConfig);
 
@@ -899,7 +899,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     }
 
     CurrentPitch = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitch(), AU_Unreal, PitchAngleUnit);
-    GunPitchOffset = class'UUnits'.static.ConvertAngleUnit(VWP.VehicleBase.Rotation.Pitch, AU_Unreal, PitchAngleUnit);
+    GunPitchOffset = class'UUnits'.static.ConvertAngleUnit(Normalize(VWP.VehicleBase.Rotation).Pitch, AU_Unreal, PitchAngleUnit);
     CurrentPitch = class'UMath'.static.Floor(CurrentPitch + GunPitchOffset, PitchScaleStep);
 
     GunPitchMin = class'UUnits'.static.ConvertAngleUnit(VWP.GetGunPitchMin(), AU_Unreal, PitchAngleUnit) + GunPitchOffset;

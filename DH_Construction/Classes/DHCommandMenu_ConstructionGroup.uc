@@ -2,13 +2,16 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// This is the command menu for listing the construction options in a group
+// (e.g., defenses, guns etc.)
+//==============================================================================
 
 class DHCommandMenu_ConstructionGroup extends DHCommandMenu
     dependson(DHConstruction);
 
-#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
-
 var Material SuppliesIcon;
+var Material SquadIcon;
+var Material DisabledIcon;
 
 var localized string NotAvailableText;
 var localized string TeamLimitText;
@@ -179,19 +182,19 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     {
         case ERROR_RestrictedType:
         case ERROR_Fatal:
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoIcon = default.DisabledIcon;
             ORI.InfoText[0] = default.NotAvailableText;
             break;
         case ERROR_PlayerBusy:
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoIcon = default.DisabledIcon;
             ORI.InfoText[0] = default.BusyText;
             break;
         case ERROR_MaxActive:
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoIcon = default.DisabledIcon;
             ORI.InfoText[0] = default.TeamLimitText;
             break;
         case ERROR_Exhausted:
-            ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+            ORI.InfoIcon = default.DisabledIcon;
             ORI.InfoText[0] = default.ExhaustedText;
             break;
         case ERROR_SquadTooSmall:
@@ -200,7 +203,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
             }
 
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+            ORI.InfoIcon = default.SquadIcon;
             ORI.InfoText[0] = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
             break;
         default:
@@ -233,6 +236,8 @@ function bool ShouldHideMenu()
 defaultproperties
 {
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
+    SquadIcon=Texture'DH_InterfaceArt2_tex.Icons.squad'
+    DisabledIcon=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
     ExhaustedText="Exhausted"
@@ -240,4 +245,3 @@ defaultproperties
     BusyText="Busy"
     SlotCountOverride=8
 }
-

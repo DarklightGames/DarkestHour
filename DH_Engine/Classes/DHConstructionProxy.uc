@@ -12,7 +12,17 @@ var Rotator                 Direction;
 var Actor                   GroundActor;
 var Vector                  GroundNormal;
 
+var int                     VariantIndex;       // The current selected variant index.
+var int                     DefaultSkinIndex;   // The default skin index for the current variant.
+var int                     SkinIndex;          // The current selected skin index. This is unbounded here, but modulo'd downstream.
+
 var DHConstruction.ConstructionError    ProxyError;
+var private DHConstruction.RuntimeData  RuntimeData;
+
+function DHConstruction.RuntimeData GetRuntimeData()
+{
+    return RuntimeData;
+}
 
 function DHActorProxy.Context GetContext()
 {
@@ -22,34 +32,66 @@ function DHActorProxy.Context GetContext()
     Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = PlayerOwner;
     Context.GroundActor = GroundActor;
+    Context.VariantIndex = VariantIndex;
+    Context.SkinIndex = DefaultSkinIndex + SkinIndex;
 
     return Context;
 }
 
 final function SetConstructionClass(class<DHConstruction> ConstructionClass)
 {
-    local DHConstruction.ConstructionError E;
-
     if (ConstructionClass == none)
     {
         Warn("Cannot set the construction class to none");
         return;
     }
 
+    // Reset the variant and skin indices.
+    VariantIndex = 0;
+    SkinIndex = 0;
+
     self.ConstructionClass = ConstructionClass;
 
-    UpdateCollisionSize();
-    DestroyAttachments();
-
-    // Update ourselves using the function in the construction class
-    ConstructionClass.static.UpdateProxy(self);
+    UpdateDefaultSkinIndex();
+    UpdateAppearance();
 
     // Initialize the local rotation based on the parameters in the new construction class
     LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
+}
 
-    // Set the error to none so that our material colors get initialized properly
-    E.Type = ERROR_None;
-    SetProxyError(E);
+final function UpdateDefaultSkinIndex()
+{
+    DefaultSkinIndex = ConstructionClass.static.GetDefaultSkinIndexForVariant(GetContext(), VariantIndex);
+}
+
+final function CycleVariant()
+{
+    VariantIndex++;
+
+    UpdateDefaultSkinIndex();
+    UpdateAppearance();
+}
+
+final function CycleSkin()
+{
+    SkinIndex++;
+
+    UpdateAppearance();
+}
+
+final function UpdateAppearance()
+{
+    UpdateCollisionSize();
+    DestroyAttachments();
+
+    // Update ourselves using the function in the construction class.
+    ConstructionClass.static.UpdateProxy(self);
+
+    // Update the runtime data.
+    RuntimeData = ConstructionClass.static.CreateProxyRuntimeData(self);
+
+    // Set the error to none so that our material colors get initialized properly.
+    UpdateError(true);
 }
 
 function UpdateCollisionSize()
@@ -106,7 +148,7 @@ function Tick(float DeltaTime)
     UpdateError();
 }
 
-function UpdateError()
+function UpdateError(optional bool bForceUpdate)
 {
     local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
 
@@ -128,7 +170,7 @@ function UpdateError()
         NewProxyError = ProvisionalPositionError;
     }
 
-    if (ProxyError != NewProxyError)
+    if (bForceUpdate || ProxyError != NewProxyError)
     {
         SetProxyError(NewProxyError);
     }

@@ -29,6 +29,12 @@ static function string GetHeaderString(
     return default.HeaderText;
 }
 
+// Override in subclasses to hide controls based on the context.
+static function bool ShouldShowControl(int Index, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    return true;
+}
+
 static function RenderComplexMessage(Canvas Canvas,
                               out float XL,
                               out float YL,
@@ -65,6 +71,11 @@ static function RenderComplexMessage(Canvas Canvas,
     // Draw the controls.
     for (i = 0; i < default.Controls.Length; ++i)
     {
+        if (!ShouldShowControl(i, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject))
+        {
+            continue;
+        }
+
         Keys.Length = 0;
 
         for (j = 0; j < default.Controls[i].Keys.Length; ++j)

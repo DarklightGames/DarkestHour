@@ -215,4 +215,5 @@ defaultproperties
     Hints(64)=(Title="Barrel Destroyed",Text="Your weapon's barrel has been destroyed by overheating! You can no longer fire this weapon.")
 
     Hints(65)=(Title="Semovente da 90/53",Text="Although the Semovente da 90/53 has a powerful gun, it has a very limited ammunition rack. Make every shot count!")
+    Hints(66)=(Title="Incoming!",Text="You have just launched a mortar round straight up into the air. You may want to take cover!")
 }

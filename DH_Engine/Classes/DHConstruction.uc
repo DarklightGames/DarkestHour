@@ -246,6 +246,18 @@ struct SConstructionSocket
 };
 var array<SConstructionSocket> ConstructionSockets;
 
+// Cached values that are calculated only when needed (e.g., when any of the user-editable properties change such as variant or skin)
+struct RuntimeData
+{
+    var string  MenuName;           // The name to display on the interface. Calculated sparingly as it can 
+    var bool    bHasVariants;       // If true, this construction has variants (e.g., an AT gun with a different mount)
+    var bool    bHasSkins;          // If true, this construction has skins for the selected variant.
+};
+
+// Variant & Skin Index
+var int VariantIndex;
+var int SkinIndex;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -264,6 +276,7 @@ static function bool IsProxyClass(DHActorProxy.Context Context)
     return GetConstructionClass(Context) != default.Class;
 }
 
+simulated function OnPlaced();
 simulated function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 simulated function OnTeamIndexChanged();
@@ -506,7 +519,8 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments()
     return Attachments;
 }
 
-function RefundSupplies(int InstigatorTeamIndex)
+// Returns the number of supply points that were refunded.
+function int RefundSupplies(Pawn Instigator)
 {
     local int i;
     local int MySupplyCost;
@@ -516,12 +530,7 @@ function RefundSupplies(int InstigatorTeamIndex)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
-    if (!WasCreatedByPlayer())
-    {
-        return;
-    }
-
-    if (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == InstigatorTeamIndex)
+    if (WasCreatedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
         Attachments = GetTouchingSupplyAttachments();
@@ -538,17 +547,26 @@ function RefundSupplies(int InstigatorTeamIndex)
             MySupplyCost -= SuppliesToRefund;
         }
     }
+
+    return SuppliesRefunded;
 }
 
-function TearDown(int InstigatorTeamIndex)
+function TearDown(Pawn Instigator)
 {
     local DHGameReplicationInfo GRI;
     local DH_LevelInfo LI;
     local int ConstructionIndex;
+    local int SuppliesRefunded;
 
     if (bShouldRefundSuppliesOnTearDown)
     {
-        RefundSupplies(InstigatorTeamIndex);
+        SuppliesRefunded = RefundSupplies(Instigator);
+
+        if (SuppliesRefunded > 0)
+        {
+            // Send a message to the instigating player about the amount of supplies that were refunded.
+            Instigator.ReceiveLocalizedMessage(class'DHsupplyMessage', class'UInteger'.static.FromShorts(7, SuppliesRefunded));
+        }
     }
 
     // Update the construction counts remaining in the GRI
@@ -561,9 +579,9 @@ function TearDown(int InstigatorTeamIndex)
     }
 
     // TODO: redundant lookups happening here.
-    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
+    ConstructionIndex = GRI.GetTeamConstructionIndex(Instigator.GetTeamNum(), Class);
 
-    if (!LI.IsConstructionUnlimited(InstigatorTeamIndex, Class))
+    if (!LI.IsConstructionUnlimited(Instigator.GetTeamNum(), Class))
     {
         if (ConstructionIndex != -1)
         {
@@ -630,7 +648,7 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            TearDown(InstigatedBy.GetTeamNum());
+            TearDown(InstigatedBy);
         }
         else if (Progress >= ProgressMax)
         {
@@ -981,12 +999,12 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     return none;
 }
 
-function static string GetMenuName(DHActorProxy.Context Context)
+static function string GetMenuName(DHActorProxy.Context Context)
 {
     return default.MenuName;
 }
 
-function static Material GetMenuIcon(DHActorProxy.Context Context)
+static function Material GetMenuIcon(DHActorProxy.Context Context)
 {
     return default.MenuIcon;
 }
@@ -996,13 +1014,13 @@ simulated static function int GetSupplyCost(DHActorProxy.Context Context)
     return default.SupplyCost;
 }
 
-function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;
 }
 
-function static bool ShouldShowOnMenu(DHActorProxy.Context Context)
+static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -1027,7 +1045,7 @@ static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
+static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHPawn P;
     local DHConstructionManager CM;
@@ -1131,7 +1149,7 @@ simulated function Reset()
 
 // Override to set a new proxy appearance if you require something more
 // complex than a simple static mesh.
-function static UpdateProxy(DHActorProxy CP)
+static function UpdateProxy(DHActorProxy CP)
 {
     local int i;
     local array<Material> StaticMeshSkins;
@@ -1147,12 +1165,25 @@ function static UpdateProxy(DHActorProxy CP)
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
+// Override to output if the construction class has variants or skins.
+static function RuntimeData CreateProxyRuntimeData(DHConstructionProxy CP)
+{
+    local RuntimeData RuntimeData;
+
+    RuntimeData.MenuName = GetMenuName(CP.GetContext());
+
+    return RuntimeData;
+}
+
+// Override to return the default skin index for the selected variant.
+static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, int VariantIndex);
+
+static function StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
 {
     return static.GetConstructedStaticMesh(Context);
 }
 
-function static Vector GetPlacementOffset(DHActorProxy.Context Context)
+static function Vector GetPlacementOffset(DHActorProxy.Context Context)
 {
     return default.PlacementOffset;
 }
@@ -1292,6 +1323,8 @@ simulated function DHActorProxy.Context GetContext()
     Context.TeamIndex = GetTeamIndex();
     Context.LevelInfo = LevelInfo;
     Context.GroundActor = Owner;
+    Context.VariantIndex = VariantIndex;
+    Context.SkinIndex = SkinIndex;
 
     return Context;
 }

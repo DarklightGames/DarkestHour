@@ -5,6 +5,9 @@ import shutil
 from multiprocessing import Process
 
 
+SAFE_NUM_OF_CLIENTS = 3 # maximum allowed clients without --unsafe flag
+
+
 def spawn_client(args, index):
     cloned_client_path = f'{os.path.splitext(args.client_path)[0]}_{index}.exe'
     shutil.copyfile(args.client_path, cloned_client_path)
@@ -24,21 +27,25 @@ def main():
     parser.add_argument('--server_path', default='System\\ucc.exe')
     parser.add_argument('server_args')
     parser.add_argument('--client_path', default='System\\RedOrchestraLargeAddressAware.exe')
+    parser.add_argument('--clients', type=int)
     parser.add_argument('--multihome', default='127.0.0.1')
-    parser.add_argument('--pktlag', default=50)
-    parser.add_argument('--pktloss', default=1)
-    parser.add_argument('--unsafe', default=False)
+    parser.add_argument('--pktlag', type=int, default=50)
+    parser.add_argument('--pktloss', type=int, default=1)
+    parser.add_argument('--unsafe', action='store_true')
     args = parser.parse_args()
 
+    number_of_clients = args.clients
+    
     # get input from the about how many users they want to test
-    while True:
+    while number_of_clients is None:
         try:
             number_of_clients = int(input('Enter the number of clients you would like to spawn:'))
-            if not args.unsafe and number_of_clients > 3:
-                print('Number of clients is too high in unsafe mode. Use --unsafe to unlock unlimited client spawning')
-            break
         except ValueError as e:
             print('Unrecognized number, try again.')
+    
+    if not args.unsafe and number_of_clients > SAFE_NUM_OF_CLIENTS:
+        print('Number of clients is too high in unsafe mode. Use --unsafe to unlock unlimited client spawning')
+        os._exit(1)
 
     server_args = [
         args.server_path,

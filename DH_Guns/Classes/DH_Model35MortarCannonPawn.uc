@@ -3,15 +3,13 @@
 // Darklight Games (c) 2008-2023
 //==============================================================================
 // [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
-// [ ] Replace firing effects
-// [ ] Add mortar player idle & firing animations
-//==============================================================================
-// Nice to Have
-//==============================================================================
+// [ ] Replace firing effects (use normal 8cm effects)
 // [ ] Stop pitch/yaw noises when going into the firing mode
 //==============================================================================
 
 class DH_Model35MortarCannonPawn extends DHATGunCannonPawn;
+
+var     int     FiringDriverPositionIndex;      // The driver position index that allows the gun to be fired.
 
 var     float   FiringStartTimeSeconds;         // The time at which the firing animation started, relative to Level.TimeSeconds.
 var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
@@ -23,18 +21,24 @@ var()   name  GunFireAnim;              // The firing animation to play on the g
 var()   name  OverlayFiringAnimName;    // The name of the firing animation on the overlay mesh.
 var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
 var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+var()   float ProjectileLifeSpan;       // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
-var     DHMortarHandsActor  HandsActor;             // The first person hands actor.
+var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
-var     int                 HandsHandsSkinIndex;    // The skin index for the hand.
-var     int                 HandsSleeveSkinIndex;   // The skin index for the sleeves on the hands.
 
 var()   Rotator             HandsRotationOffset;    // The rotation offset for the first person hands.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
 var()   name                HandsProjectileBone;    // The bone to attach the first person projectile to.
 var()   array<name>         HandsFireAnims;         // The first person firing animations (selected randomly; make sure they are all the same length!).
+
+struct FireAnim
+{
+    var float Angle;
+    var name AnimName;
+};
+var private array<FireAnim> PlayerFireAnims;
 
 struct SAnimationDriver
 {
@@ -45,6 +49,42 @@ struct SAnimationDriver
 };
 
 var SAnimationDriver PitchAnimationDriver;
+
+// Used for triggering the firing animation on the client since
+// server-to-client functions are for the owning client only.
+var byte PlayerFireCount;
+var byte OldPlayerFireCount;
+var StaticMesh FiringProjectileMesh;
+
+replication
+{
+    reliable if (Role < ROLE_Authority)
+        ServerPlayThirdPersonFiringAnim;
+    reliable if (Role == ROLE_Authority)
+        PlayerFireCount, FiringProjectileMesh;
+}
+
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (RemoteRole != ROLE_Authority)
+    {
+        OldPlayerFireCount = PlayerFireCount;
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (PlayerFireCount != OldPlayerFireCount)
+    {
+        OldPlayerFireCount = PlayerFireCount;
+
+        PlayThirdPersonFiringAnim();
+    }
+}
 
 exec function CalibrateMortar(string AngleUnitString, int Samples)
 {
@@ -125,11 +165,16 @@ simulated function InitializeVehicleAndWeapon()
     }
 }
 
-// TODO: When getting on and off this pawn, create and delete the hands actor (also if the player dies).
 simulated function InitializeHands()
 {
     local DHPlayer PC;
     local DHRoleInfo RI;
+
+    if (Gun == none)
+    {
+        Warn("No gun found for mortar cannon pawn!");
+        return;
+    }
 
     if (HandsActor != none)
     {
@@ -137,7 +182,7 @@ simulated function InitializeHands()
         HandsActor = none;
     }
 
-    HandsActor = Spawn(class'DHMortarHandsActor', self);
+    HandsActor = Spawn(class'DHFirstPersonHands', self);
 
     if (HandsActor == none)
     {
@@ -146,29 +191,12 @@ simulated function InitializeHands()
     }
 
     HandsActor.LinkMesh(HandsMesh);
-    HandsActor.bHidden = true;
 
-    // Apply the player's hands and sleeve texture texture to the hands mesh.
-    PC = DHPlayer(Controller);
-
-    if (PC != none)
-    {
-        RI = DHRoleInfo(PC.GetRoleInfo());
-    }
-
-    if (RI != none)
-    {
-        HandsActor.Skins[HandsHandsSkinIndex] = RI.GetHandTexture(class'DH_LevelInfo'.static.GetInstance(Level));
-        HandsActor.Skins[HandsSleeveSkinIndex] = RI.static.GetSleeveTexture();
-    }
-
-    if (Gun == none)
-    {
-        Warn("No gun found for mortar cannon pawn!");
-        return;
-    }
+    // Set the hands skin based on the player's role.
+    HandsActor.SetSkins(DHPlayer(Controller));
     
     Gun.AttachToBone(HandsActor, HandsAttachBone);
+
     HandsActor.SetRelativeLocation(vect(0, 0, 0));
     HandsActor.SetRelativeRotation(rot(0, 0, 0));
 
@@ -200,10 +228,15 @@ simulated function UpdateHandsProjectileStaticMesh()
 
 simulated function Fire(optional float F)
 {
-    // If the driver is in the spotting scope position, move down to the position where the mortar can be fired.
-    if (DriverPositionIndex == SpottingScopePositionIndex)
+    // If the driver is not in the firing position, switch positions in the direction of the firing position.
+    if (DriverPositionIndex < FiringDriverPositionIndex)
     {
         NextWeapon();
+        return;
+    }
+    else if (DriverPositionIndex > FiringDriverPositionIndex)
+    {
+        PrevWeapon();
         return;
     }
 
@@ -213,6 +246,94 @@ simulated function Fire(optional float F)
     }
 
     GotoState('Firing');
+}
+
+// Get the firing animations to play based on the gun pitch.
+// Anim1 is the base animation, or the one that is closest to the current pitch.
+// Anim2 is the next animation to blend into.
+// BlendAlpha is the alpha value to blend between the two animations.
+simulated function GetFireAnims(out name AnimName1, out name AnimName2, out float BlendAlpha)
+{
+    local int i, j;
+    local float Pitch;
+
+    Pitch = class'UUnits'.static.UnrealToDegrees(GetGunPitch());
+
+    if (Pitch < PlayerFireAnims[0].Angle)
+    {
+        AnimName1 = PlayerFireAnims[0].AnimName;
+        AnimName2 = PlayerFireAnims[0].AnimName;
+        BlendAlpha = 0.0;
+        return;
+    }
+    else if (Pitch > PlayerFireAnims[PlayerFireAnims.Length - 1].Angle)
+    {
+        AnimName1 = PlayerFireAnims[PlayerFireAnims.Length - 1].AnimName;
+        AnimName2 = PlayerFireAnims[PlayerFireAnims.Length - 1].AnimName;
+        BlendAlpha = 0.0;
+        return;
+    }
+
+    // Find the two animations to blend between.
+    for (i = 0; i < PlayerFireAnims.Length - 1; ++i)
+    {
+        j = Min(i + 1, PlayerFireAnims.Length - 1);
+
+        if (Pitch >= PlayerFireAnims[i].Angle && Pitch <= PlayerFireAnims[j].Angle)
+        {
+            AnimName1 = PlayerFireAnims[i].AnimName;
+            AnimName2 = PlayerFireAnims[j].AnimName;
+
+            if (i == j)
+            {
+                BlendAlpha = 0.0;
+            }
+            else
+            {
+                BlendAlpha = (Pitch - PlayerFireAnims[i].Angle) / (PlayerFireAnims[j].Angle - PlayerFireAnims[i].Angle);
+            }
+
+            break;
+        }
+    }
+}
+
+simulated function PlayThirdPersonFiringAnim()
+{
+    local name AnimName1, AnimName2;
+    local float BlendAlpha;
+    local DHDecoAttachment ProjectileMesh;
+
+    if (Driver == none)
+    {
+        return;
+    }
+
+    GetFireAnims(AnimName1, AnimName2, BlendAlpha);
+
+    Driver.PlayAnim(AnimName1);
+    Driver.AnimBlendParams(1, BlendAlpha, 0.2, 0.2, '');
+    Driver.PlayAnim(AnimName2, 1.0, 0.0, 1);
+
+    // Spawn the projectile mesh on the client for the firing animation.
+    ProjectileMesh = Spawn(class'DHDecoAttachment', self);
+    ProjectileMesh.SetStaticMesh(FiringProjectileMesh);
+
+    Driver.AttachToBone(ProjectileMesh, 'weapon_rhand');
+    
+    ProjectileMesh.SetRelativeLocation(vect(0, 0, 0));
+    ProjectileMesh.SetRelativeRotation(rot(0, 0, 0));
+    ProjectileMesh.LifeSpan = ProjectileLifeSpan;
+}
+
+function ServerPlayThirdPersonFiringAnim(class<Projectile> ProjectileClass)
+{
+    // Increment counter so that remote clients are notified to play the firing animation.
+    PlayerFireCount++;
+    FiringProjectileMesh = ProjectileClass.default.StaticMesh;
+
+    // Also play the firing animation on the server so that the hitboxes more or less line up (latency permitting).
+    PlayThirdPersonFiringAnim();
 }
 
 // New state for the mortar to play the firing animation.
@@ -225,12 +346,6 @@ simulated state Firing
     function bool KDriverLeave(bool bForceLeave) { return false; }
     simulated function NextWeapon() { }
     simulated function PrevWeapon() { }
-
-    simulated function DrawHUD(Canvas Canvas)
-    {
-        // TODO: add in the drawing of the HUDOverlay actor for the mortar.
-        super.DrawHUD(Canvas);
-    }
 
     // Calculate the linear interpolation value for the camera position and rotation.
     simulated function float GetCameraInterpolationTheta()
@@ -264,7 +379,6 @@ simulated state Firing
         local Rotator NormalCameraRotation, FiringCameraRotation;
         local Coords FiringCameraBoneCoords;
 
-        // TODO: calculate firing camera position and rotation.
         FiringCameraBoneCoords = Gun.GetBoneCoords(FiringCameraBone);
         FiringCameraLocation = FiringCameraBoneCoords.Origin;
 
@@ -283,7 +397,6 @@ simulated state Firing
         global.SpecialCalcFirstPersonView(PC, ViewActor, NormalCameraLocation, NormalCameraRotation);
 
         // Hide the hands mesh if the camera is not fully in the firing position.
-        // TODO: also need to do the projectile mesh!)
         HandsActor.bHidden = Theta < 1.0;
 
         ViewActor = self;
@@ -291,7 +404,7 @@ simulated state Firing
         CameraRotation = QuatToRotator(QuatSlerp(QuatFromRotator(NormalCameraRotation), QuatFromRotator(FiringCameraRotation), Theta));
 
         // Neutralize the roll to prevent motion sickness.
-        CameraRotation.Roll = 0;
+        CameraRotation.Roll = CameraRotation.Roll * (1.0 - Theta);
 
         // Finalise the camera with any shake
         CameraLocation += PC.ShakeOffset >> PC.Rotation;
@@ -300,8 +413,21 @@ simulated state Firing
 
     simulated function BeginState()
     {
+        local DHPlayer PC;
+        
+        PC = DHPlayer(Controller);
+
         if (IsLocallyControlled())
         {
+            // Trigger the firing animation on the driver.
+            ServerPlayThirdPersonFiringAnim(Gun.ProjectileClass);
+
+            if (PC != none && GetGunPitch() > class'UUnits'.static.DegreesToUnreal(89))
+            {
+                // "You have just launched a mortar round straight up into the air. You may want to take cover!"
+                PC.QueueHint(66, true);
+            }
+
             if (Gun != none)
             {
                 Gun.PlayAnim(GunFireAnim, 1.0, 0.0, FiringCameraBoneChannel);
@@ -417,13 +543,13 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Model35MortarCannon'
 
     // Spotting Scope
-    DriverPositions(0)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
     // Kneeling
-    DriverPositions(1)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(1)=(DriverTransitionAnim="model35mortar_sit",TransitionUpAnim="raise",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // Standing
-    DriverPositions(2)=(DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(DriverTransitionAnim="model35mortar_stand",TransitionDownAnim="lower",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     // Binoculars
-    DriverPositions(3)=(DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(3)=(DriverTransitionAnim="model35mortar_binocs",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 
     PlayerCameraBone="CAMERA_COM"
     CameraBone="GUNSIGHT_CAMERA"
@@ -435,10 +561,11 @@ defaultproperties
     RaisedPositionIndex=2
     BinocPositionIndex=3
 
-    bLockCameraDuringTransition=true
+    bLockCameraDuringTransition=false
 
-    DrivePos=(X=0,Y=0.0,Z=60.0)
-    DriveAnim="crouch_idle_binoc"
+    DrivePos=(X=28.60893,Y=0.68,Z=53.0)   // setdrivepos 28.60893 0.68 53.0
+    DriveRot=(Yaw=16384)
+    DriveAnim="model35mortar_idle"
 
     OverlayCorrectionX=0
     OverlayCorrectionY=0
@@ -464,9 +591,31 @@ defaultproperties
     HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_hands'
     HandsFireAnims=("FIRE_HANDS")
     HandsAttachBone="PITCH"
-    HandsSleeveSkinIndex=1
     HandsProjectileBone="PROJECTILE"
     HandsRotationOffset=(Yaw=-16384)
 
     FireDelaySeconds=2.35
+
+    // Player firing animations.
+    PlayerFireAnims(0)=(Angle=40,AnimName="model35mortar_fire_40")
+    PlayerFireAnims(1)=(Angle=45,AnimName="model35mortar_fire_45")
+    PlayerFireAnims(2)=(Angle=50,AnimName="model35mortar_fire_50")
+    PlayerFireAnims(3)=(Angle=55,AnimName="model35mortar_fire_55")
+    PlayerFireAnims(4)=(Angle=60,AnimName="model35mortar_fire_60")
+    PlayerFireAnims(5)=(Angle=65,AnimName="model35mortar_fire_65")
+    PlayerFireAnims(6)=(Angle=70,AnimName="model35mortar_fire_70")
+    PlayerFireAnims(7)=(Angle=75,AnimName="model35mortar_fire_75")
+    PlayerFireAnims(8)=(Angle=80,AnimName="model35mortar_fire_80")
+    PlayerFireAnims(9)=(Angle=85,AnimName="model35mortar_fire_85")
+    PlayerFireAnims(10)=(Angle=90,AnimName="model35mortar_fire_90")
+
+    // Timed to coincide with the round disappearing into the tube.
+    // Because of the wonky fake IK setup we have, the round can sometimes not align perfectly with the tube
+    // so it's best to just hide it once it enters the tube.
+    ProjectileLifeSpan=2.05
+
+    bNetNotify=true
+
+    TPCamLookat=(X=0,Y=0,Z=-70)
+    FiringDriverPositionIndex=1
 }

@@ -7,6 +7,6 @@ class DH_Italian extends DHSPECIES_Human;
 
 defaultproperties
 {
-    MaleVoice="DH_ItalyPlayers.DHItalianVoice"
-    FemaleVoice="DH_ItalyPlayers.DHItalianVoice"
+    MaleVoice="DH_ItalyPlayers.DHItalyVoice"
+    FemaleVoice="DH_ItalyPlayers.DHItalyVoice"
 }

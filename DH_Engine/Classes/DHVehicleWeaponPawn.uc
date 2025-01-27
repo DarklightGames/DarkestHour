@@ -294,23 +294,12 @@ simulated function int GetGunYawMax()
 
 simulated function int GetGunPitch()
 {
-    local int Pitch;
-
     if (VehWep == none)
     {
         return 0;
     }
 
-    Pitch = VehWep.CurrentAim.Pitch;
-
-    if (Pitch >= 32768)
-    {
-        Pitch -= 65536;
-    }
-
-    Pitch += GunPitchOffset;
-
-    return Pitch;
+    return Normalize(VehWep.CurrentAim).Pitch + GunPitchOffset;
 }
 
 simulated function int GetGunPitchMin()
@@ -2062,7 +2051,7 @@ simulated function InitializeVehicleAndWeapon()
 simulated function SetPlayerPosition()
 {
     local name VehicleAnim, PlayerAnim;
-    local int  i;
+    local int  i, DriverAnimationChannel;
 
     // Fix driver attachment position - on replication, AttachDriver() only works if client has received Gun actor, which it may not have yet
     // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
@@ -2116,8 +2105,13 @@ simulated function SetPlayerPosition()
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & weapon are already in
         if (VehicleAnim != '' && Gun != none && Gun.HasAnim(VehicleAnim))
         {
-            Gun.PlayAnim(VehicleAnim);
-            Gun.SetAnimFrame(1.0);
+            if (DHVehicleWeapon(Gun) != none)
+            {
+                DriverAnimationChannel = DHVehicleWeapon(Gun).DriverAnimationChannel;
+            }
+
+            Gun.PlayAnim(VehicleAnim,,, DriverAnimationChannel);
+            Gun.SetAnimFrame(1.0, DriverAnimationChannel);
         }
 
         if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
@@ -2578,6 +2572,9 @@ exec function ShowColMesh()
 // New debug exec to set the projectile's launch position offset in the X axis
 exec function SetWeaponFireOffset(float NewValue)
 {
+    local DHVehicleMG MG;
+    local int i;
+
     if (IsDebugModeAllowed() && Gun != none)
     {
         Log(Gun.Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
@@ -2591,6 +2588,16 @@ exec function SetWeaponFireOffset(float NewValue)
         if (Gun.AmbientEffectEmitter != none)
         {
             Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
+        }
+
+        MG = DHVehicleMG(Gun);
+
+        if (MG != none)
+        {
+            for (i = 0; i < MG.Barrels.Length; ++i)
+            {
+                MG.Barrels[i].EffectEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
+            }
         }
     }
 }
@@ -2790,7 +2797,10 @@ simulated function float GetAnimationDriverTheta(EAnimationDriverType Type)
     {
         case ADT_Yaw:
             // 0.0 is full left, 1.0 is full right
-            Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            if (Gun != none)
+            {
+                Theta = float(GetGunYaw() - Gun.MaxNegativeYaw) / (Gun.MaxPositiveYaw - Gun.MaxNegativeYaw);
+            }
             break;
         case ADT_Pitch:
             Theta = 0.5; // TODO: figure this out

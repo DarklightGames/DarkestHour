@@ -1927,11 +1927,11 @@ simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, 
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
     WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
 
-    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width * 0.5),
                      0.0,
                      1.0 - Width);
 
-    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height * 0.5),
                      0.0,
                      1.0 - Height);
 }
@@ -1950,6 +1950,26 @@ simulated function vector GetWorldCoords(float X, float Y)
     WorldLocation += MapCenter;
 
     return WorldLocation;
+}
+
+// Gets surface location from map coordinates
+simulated function vector GetWorldSurfaceCoords(float X, float Y, float TraceHeight)
+{
+    local vector TraceStart, TraceEnd, HitNormal, HitLocation;
+    local Actor HitActor;
+
+    TraceStart = GetWorldCoords(X, Y);
+    TraceStart.Z += TraceHeight;
+
+    TraceEnd = TraceStart + vect(0, 0, -1) * TraceHeight * 2;
+
+    foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (HitActor.bStatic && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
+        {
+            return HitLocation;
+        }
+    }
 }
 
 // This function will adjust a hud map location based on the rotation offset of

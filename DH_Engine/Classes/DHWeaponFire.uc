@@ -249,6 +249,12 @@ simulated function EjectShell()
             EjectRot = Rotator(Y) + ShellEjectors[i].RotOffsetIron;
         }
 
+        if (Shell == none)
+        {
+            // Failed to spawn the shell, so skip this ejector.
+            continue;
+        }
+
         EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
         EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
         EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);

@@ -20,8 +20,6 @@ defaultproperties
     Skins(1)=Texture'DH_Fiat508CM_tex.fiat508.fiat508cm_gear_tan'
     Skins(2)=FinalBlend'DH_Fiat508CM_tex.fiat508.fiat508_windows_fb'
 
-    BeginningIdleAnim="driver_hatch_idle_close" // TODO: there is no anim here soooo?
-
     // Passengers
     PassengerPawns(0)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_01")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(Z=58),DriveRot=(Yaw=16384),InitialViewRotationOffset=(Yaw=-16384),DriveAnim="fiat508cm_passenger_02")

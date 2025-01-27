@@ -16,7 +16,9 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_yaw_collision',AttachBone="GUN_YAW")
     CollisionStaticMeshes(1)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_pitch_collision',AttachBone="GUN_PITCH")
     CollisionStaticMeshes(2)=(CollisionStaticMesh=StaticMesh'DH_Cannone4732_stc.collision.cannone4732_turret_barrel_collision',AttachBone="BARREL")
-    
+
+    WeaponFireAttachmentBone="muzzle"
+
     GunnerAttachmentBone="turret"
     
     ShootAnim="shoot"
@@ -102,4 +104,6 @@ defaultproperties
     ShakeRotTime=7.0
 
     RotationsPerSecond=0.05
+
+    ProjectileRotationMode=PRM_MuzzleBone
 }

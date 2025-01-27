@@ -11,14 +11,12 @@ defaultproperties
     
     // Gunsight
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=24.0,TransitionUpAnim="gunsight_out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-    // Neutral
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=90.0,TransitionUpAnim="periscope_in",TransitionDownAnim="gunsight_in",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=false)
     // Periscope
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=40.0,TransitionDownAnim="periscope_out",TransitionUpAnim="open",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,DriverTransitionAnim="fiatl640_gunner_close")
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=40.0,TransitionDownAnim="gunsight_in",TransitionUpAnim="open",ViewPitchUpLimit=2366,ViewPitchDownLimit=63170,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,DriverTransitionAnim="fiatl640_gunner_close")
     // Exposed
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=90.0,TransitionDownAnim="close",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,DriverTransitionAnim="fiatl640_gunner_open")
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',TransitionDownAnim="close",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,DriverTransitionAnim="fiatl640_gunner_open")
     // Binocs
-    DriverPositions(4)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=12.0,ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true,DriverTransitionAnim="fiatl640_gunner_binocs")
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_FiatL640_anm.fiatl640_turret_int',ViewFOV=12.0,ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true,DriverTransitionAnim="fiatl640_gunner_binocs")
     
     bManualTraverseOnly=true
     DrivePos=(X=0.0,Y=0.0,Z=58.0)
@@ -30,7 +28,7 @@ defaultproperties
     OverlayCorrectionX=-4.0
     OverlayCorrectionY=12.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'  // TODO: we need one made, or do it programmatically
-    BinocPositionIndex=4
+    BinocPositionIndex=3
     AmmoShellTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_icon'
     AmmoShellReloadTexture=Texture'DH_FiatL640_tex.interface.breda2065_ammo_reload'
     FireImpulse=(X=-5000.0)
@@ -42,5 +40,5 @@ defaultproperties
     PeriscopeCameraBone="PERISCOPE_CAMERA"
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
     PeriscopeSize=0.65
-    PeriscopePositionIndex=2
+    PeriscopePositionIndex=1
 }

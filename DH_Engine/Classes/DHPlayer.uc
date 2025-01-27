@@ -35,9 +35,25 @@ enum EAutomaticVehicleAlerts
     AVAM_Always
 };
 
+enum EMapMarkerCooldownType
+{
+    MMCT_Class,
+    MMCT_Group
+};
+
+struct MapMarkerCooldown
+{
+    var EMapMarkerCooldownType Type;
+    var class<DHMapMarker> MarkerClass;
+    var byte GroupIndex;
+    var int ExpiryTime;
+};
+
 var     array<class<DHMapMarker> >                              PersonalMapMarkerClasses;
 var     private array<DHGameReplicationInfo.MapMarker>          PersonalMapMarkers;
-var     Hashtable_string_int                                    MapMarkerCooldowns;
+
+const MAX_MAP_MARKER_COOLDOWNS = 8;
+var     private MapMarkerCooldown                               MapMarkerCooldowns[MAX_MAP_MARKER_COOLDOWNS];
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -208,7 +224,8 @@ replication
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
         NextSquadRallyPointTime, SquadRallyPointCount,
-        bSurrendered, bIQManaged, ArtillerySupportSquadIndex;
+        bSurrendered, bIQManaged, ArtillerySupportSquadIndex,
+        MapMarkerCooldowns;
 
     reliable if (bNetInitial && bNetOwner && bNetDirty && Role == ROLE_Authority)
         MinIQToGrowHead;
@@ -233,7 +250,8 @@ replication
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerTeamSurrenderRequest, ServerParadropPlayer, ServerParadropSquad, ServerParadropTeam,
         ServerNotifyRoles, ServerSaveArtilleryTarget, ServerSaveArtillerySupportSquadIndex,
-        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs;
+        ServerSetAutomaticVehicleAlerts, ServerSetClientGUID, ServerListClientGUIDs,
+        ServerPlaceAdminSpawn, ServerDestroyAdminSpawn, ServerDestroyAllAdminSpawns, ServerTeleportToMapLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -246,7 +264,7 @@ replication
         ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientReceiveSquadPromotionRequest, ClientSendSquadPromotionRequestResult,
         ClientTeamSurrenderResponse,
-        ClientReceiveVotePrompt, ClientSetMapMarkerClassLock,
+        ClientReceiveVotePrompt,
         ClientAddPersonalMapMarker;
 
     unreliable if (Role < ROLE_Authority)
@@ -317,8 +335,6 @@ simulated event PostBeginPlay()
             IQManager = Spawn(class'DHIQManager', self);
         }
     }
-
-    MapMarkerCooldowns = class'Hashtable_string_int'.static.Create(256);
 }
 
 simulated function InitializeMapDatabase()
@@ -4804,7 +4820,7 @@ exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, str
 }
 
 // New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
-exec function SetHudEnginePos(string NewPosX, string NewPosY, string NewScale)
+exec function SetHudEnginePos(string NewPosX, string NewPosY)
 {
     local DHVehicle V;
 
@@ -4856,7 +4872,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelRadius(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
     local int       i;
@@ -6252,6 +6268,95 @@ function ServerSquadSwapRallyPoints()
     }
 }
 
+// Place a spawn as an admin
+function ServerPlaceAdminSpawn(vector WorldLocation, byte TeamIndex)
+{
+    local DHSpawnPointBase AdminSpawn;
+
+    if (IsLoggedInAsAdmin() || IsDebugModeAllowed())
+    {
+        AdminSpawn = Spawn(class'DHSpawnPoint_Admin', none,, WorldLocation);
+        AdminSpawn.SetTeamIndex(TeamIndex);
+        AdminSpawn.SetIsActive(true);
+
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(2, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has placed a spawn on team" @ TeamIndex);
+    }
+}
+
+// Destroy an admin-placed spawn
+function ServerDestroyAdminSpawn(DHSpawnPoint_Admin AdminSpawn)
+{
+    if (AdminSpawn != none && (IsLoggedInAsAdmin() || IsDebugModeAllowed()))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(3, AdminSpawn.GetTeamIndex()), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has destroyed an admin spawn on team" @ AdminSpawn.GetTeamIndex());
+
+        AdminSpawn.Destroy();
+    }
+}
+
+// Destroy admin-placed spawns by team
+function ServerDestroyAllAdminSpawns(byte TeamIndex)
+{
+    local DHSpawnPoint_Admin AdminSpawn;
+    local bool bSpawnDestroyed;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHSpawnPoint_Admin', AdminSpawn)
+    {
+        if (AdminSpawn != none && AdminSpawn.GetTeamIndex() == TeamIndex)
+        {
+            AdminSpawn.Destroy();
+            bSpawnDestroyed = true;
+        }
+    }
+
+    if (bSpawnDestroyed)
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', class'UInteger'.static.FromShorts(4, TeamIndex), PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has has destroyed all admin spawns on team" @ TeamIndex);
+    }
+}
+
+// Moves the player to a location based on map coordinates
+function ServerTeleportToMapLocation(float X, float Y)
+{
+    local DHPawn P;
+    local DHGameReplicationInfo GRI;
+    local vector NewLocation;
+
+    if (!IsLoggedInAsAdmin() && !IsDebugModeAllowed())
+    {
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    P = DHPawn(Pawn);
+
+    if (P == none)
+    {
+        return;
+    }
+
+    NewLocation = GRI.GetWorldSurfaceCoords(X, Y, 10000);
+    NewLocation.Z += 52;
+
+    if (P.SetLocation(NewLocation))
+    {
+        // Notify everyone and log the event
+        Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', 5, PlayerReplicationInfo);
+        Log("Admin '" $ PlayerReplicationInfo.PlayerName $ "' (" $ GetPlayerIDHash() $ ") has teleported to" @ NewLocation);
+    }
+}
+
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -7265,6 +7370,15 @@ simulated function bool IsSquadLeader()
     return PRI != none && PRI.IsSquadLeader();
 }
 
+simulated function bool IsLoggedInAsAdmin()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsLoggedInAsAdmin();
+}
+
 function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
                                       PlayerReplicationInfo Recipient,
                                       name messagetype, byte messageID,
@@ -7640,7 +7754,7 @@ function AddMarker(class<DHMapMarker> MarkerClass, float MapLocationX, float Map
 
     if (MarkerClass.default.Cooldown > 0)
     {
-        MapMarkerPlacingLockTimeout = GetLockingTimeout(MarkerClass);
+        MapMarkerPlacingLockTimeout = GetMapMarkerLockExpiryTime(MarkerClass) - GRI.ElapsedTime;
 
         if (MapMarkerPlacingLockTimeout > 0)
         {
@@ -7722,33 +7836,38 @@ exec function DebugStartRound()
     }
 }
 
-function int GetLockingTimeout(class<DHMapMarker> MapMarkerClass)
+simulated function int GetMapMarkerLockExpiryTime(class<DHMapMarker> MapMarkerClass)
 {
-    local DHGameReplicationInfo GRI;
-    local int ExpiryTime;
+    local int i;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (MapMarkerClass.default.Cooldown > 0)
+    if (MapMarkerClass.default.Cooldown == 0)
     {
-        switch(MapMarkerClass.default.OverwritingRule)
-        {
-            case UNIQUE:
-                MapMarkerCooldowns.Get("" $ MapMarkerClass, ExpiryTime);
-                return ExpiryTime - GRI.ElapsedTime;
-            case UNIQUE_PER_GROUP:
-                // to do: implement an int->int hashmap & use it here
-                MapMarkerCooldowns.Get("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
-                return ExpiryTime - GRI.ElapsedTime;
-        }
+        return 0;
+    }
+    
+    switch(MapMarkerClass.default.OverwritingRule)
+    {
+        case UNIQUE:
+            for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+            {
+                if (MapMarkerCooldowns[i].Type == MMCT_Class && MapMarkerCooldowns[i].MarkerClass == MapMarkerClass)
+                {
+                    return MapMarkerCooldowns[i].ExpiryTime;
+                }
+            }
+            break;
+        case UNIQUE_PER_GROUP:
+            for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+            {
+                if (MapMarkerCooldowns[i].Type == MMCT_Group && MapMarkerCooldowns[i].GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    return MapMarkerCooldowns[i].ExpiryTime;
+                }
+            }
+            break;
     }
 
     return 0;
-}
-
-function ClientSetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
-{
-    SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
 }
 
 function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
@@ -7765,32 +7884,81 @@ function LockMapMarkerPlacing(class<DHMapMarker> MapMarkerClass)
 
     ExpiryTime = GRI.ElapsedTime + MapMarkerClass.default.Cooldown;
 
-    if (MapMarkerClass.default.Scope != PERSONAL)
+    if (Role == ROLE_Authority)
     {
-        // We are on the server at this point, as this function is called from OnMapMarkerPlaced
-        // which for non-personal markers is executed on the server.
-        // Save the lock expiry time on the client.
-        ClientSetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
-    }
-    else
-    {
-        // We are on the client here anyway.
         SetMapMarkerClassLock(MapMarkerClass, ExpiryTime);
     }
+}
 
-    return;
+simulated function int GetMapMarkerCooldownIndex(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        switch (MapMarkerClass.default.OverwritingRule)
+        {
+            case UNIQUE:
+                if (MapMarkerCooldowns[i].Type == MMCT_Class && MapMarkerCooldowns[i].MarkerClass == MapMarkerClass)
+                {
+                    return i;
+                }
+                break;
+            case UNIQUE_PER_GROUP:
+                if (MapMarkerCooldowns[i].Type == MMCT_Group && MapMarkerCooldowns[i].GroupIndex == MapMarkerClass.default.GroupIndex)
+                {
+                    return i;
+                }
+                break;
+        }
+    }
+
+    // Couldn't find a relevant cooldown entry. Find one that is no longer valid and return it.
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        if (GameReplicationInfo.ElapsedTime >= MapMarkerCooldowns[i].ExpiryTime)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 function SetMapMarkerClassLock(class <DHMapMarker> MapMarkerClass, int ExpiryTime)
 {
+    local int Index;
+
+    Index = GetMapMarkerCooldownIndex(MapMarkerClass);
+
+    if (Index == -1)
+    {
+        Warn("Failed to find a valid cooldown entry for map marker class " @ MapMarkerClass @ ".");
+        Index = 0;
+    }
+
     switch (MapMarkerClass.default.OverwritingRule)
     {
         case UNIQUE:
-            MapMarkerCooldowns.Put("" $ MapMarkerClass, ExpiryTime);
+            MapMarkerCooldowns[Index].Type = MMCT_Class;
+            MapMarkerCooldowns[Index].MarkerClass = MapMarkerClass;
             break;
         case UNIQUE_PER_GROUP:
-            MapMarkerCooldowns.Put("" $ MapMarkerClass.default.GroupIndex, ExpiryTime);
+            MapMarkerCooldowns[Index].Type = MMCT_Group;
+            MapMarkerCooldowns[Index].GroupIndex = MapMarkerClass.default.GroupIndex;
             break;
+    }
+    
+    MapMarkerCooldowns[Index].ExpiryTime = ExpiryTime;
+}
+
+function ClearMapMarkerCooldowns()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(MapMarkerCooldowns); i++)
+    {
+        MapMarkerCooldowns[i].ExpiryTime = 0;
     }
 }
 

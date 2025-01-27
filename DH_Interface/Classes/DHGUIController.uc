@@ -434,6 +434,7 @@ defaultproperties
     DefaultStyleNames(97)="DH_Interface.DHStyle_MouseOverLabel"
     DefaultStyleNames(98)="DH_Interface.DHStyle_ContextMenu"
     DefaultStyleNames(99)="DH_Interface.DHStyle_ContextMenuSelection"
+    DefaultStyleNames(100)="DH_Interface.DHStyle_SpawnAdminButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

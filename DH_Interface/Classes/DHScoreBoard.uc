@@ -193,7 +193,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             {
                 CRI.TextColor = class'DHColor'.default.SelfColor;
             }
-            else if (PRI.IsInSquad() && (MyPRI != PRI || class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, PRI)))
+            else if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, PRI))
             {
                 CRI.TextColor = class'DHColor'.default.SquadColor;
             }

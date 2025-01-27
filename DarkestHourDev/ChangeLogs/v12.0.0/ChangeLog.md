@@ -8,6 +8,10 @@ This has been a huge undertaking for our team, and speaking as the team lead, I'
 
 ## Meet the Italians
 
+[[ Have up-close screenshots of the Italians in action ]]
+
+* black shirts, tankers, radioman, MG guy, rifleman
+
 ## Interface
 
 ## Localization
@@ -24,11 +28,10 @@ If you'd like to help us localize the game into your native language, please vis
 
 The map icons for vehicles and stationary weapons have been completely overhauled to be more accurate to the piece of equipment that they represent.
 
-To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while they will be colored blue if they are occupied. In addition, if they are being occupied by a squadmate, they will be colored green.
+To help with battlefield awareness, friendly guns & vehicle icons are now color-coded to indicate their status. For example, unoccupied anti-tank guns will now be colored grey, while they will be colored blue if they are occupied. If they are being occupied by a squadmate, they will be colored green.
 
 Finally, all friendly vehicles will now be visible on the map at all times. We will keep an eye on if this has a negative impact on the usability of the map, and will adjust as necessary.
 
-[[pending]]
 The icon used for vehicle spawn points has been modified so as not to obscure the icon for the vehicle itself, so you should have a better idea of what kind of vehicle you're spawning into.
 
 ## Font Overhaul
@@ -37,15 +40,12 @@ To accommodate the localization efforts, all the game's fonts have been complete
 
 We have tried to keep the original aesthetic of the fonts while making them more readable and consistent. For example, drop-shadowing is now applied more consistently across the UI, making the text easier to read.
 
-In addition, players who play at higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
+In addition, text will scale more consistently based on the resolution. As a result, players using higher resolutions (e.g. 2K) will be pleased to find that the game's fonts are no longer unreadably small.
 
 [[ insert screenshots of the new fonts in action ]]
 
 ## Vehicles
 This update sees the addition of 8 brand new vehicles to the game; 7 of which are unique to the Italian faction.
-
-### DUKW
-The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
 
 ### Carro Velocce 33 (CV-33, L3/33)
 One of the smallest armored vehicles fielded by any nation during the war, this tankette is nimble and lightly armored. It is armed with two 6.5mm machine-guns. Despite it's diminutive stature, it excels at scouting and harassing enemy infantry and light vehicles while keeping a very low profile.
@@ -70,6 +70,9 @@ The workhorse hauler of the Italian army, the Fiat 626 is capable of carrying a 
 ### Fiat 508CM
 The Fiat 508CM is a light utility vehicle used mainly as a scouting and staff car. One unique feature of the Fiat 508CM is that it has a working radio in the back seat, allowing squad leaders to call in artillery strikes from the front lines.  
 
+### DUKW
+The DUKW is a versatile amphibious vehicle used by the United States landing forces in Sicily to transports troops and supplies to the landing beaches and beyond. It's enormous size and poor maneuverability makes it difficult to use inland, so it's better suited for the open sea.
+
 ## Guns
 
 ## Cannone da 47/32
@@ -80,8 +83,8 @@ The Fiat-Rivelli 14/35 is a stationary tripod-mounted machine-gun. It can be dep
 
 This is the first stationary machine-gun to be added to the game, so it will be interesting to see how these will shape the battlefield.
 
-## 81/14 Mortar
-
+## Mortaio da 81 Mod. 35
+The most successful mortar of the Italian armed forces during the war.
 
 ## Weapons
 
@@ -107,7 +110,7 @@ Originally of Polish origin as the Wz. 35, the Fucile Controcarro 35(P) is a bol
 This compact semi-automatic pistol was the standard sidearm of the Italian army. Despite it's relatively underpowered .380 ACP cartridge, it's small size and light weight made it a popular choice for officers and other personnel who needed a sidearm that was easy to carry.
 
 ### SRCM Mod. 35
-Dubbed the "red devil" by the Allies, the SRCM Mod. 35 was one of the standard hand grenades used by the Italian army. Unlike the grenades used by other nations, it uses an impact fuse, making it extremely dangerous to use in close quarters. The impact fuzes had a habit of not detonating when landing on soft ground, leaving a live grenade on the ground that could blow up if disturbed.
+Dubbed the "red devil" by the Allies, the SRCM Mod. 35 was one of the standard hand grenades used by the Italian army. Unlike the standard grenades used by other nations, it uses an impact fuse, making it extremely dangerous to use in close quarters. The impact fuzes had a habit of not detonating when landing on soft ground, leaving a live grenade on the ground that could blow up if disturbed.
 
 ### SRCM Mod. 35 (Incendiary Smoke)
 The SRCM Mod. 35 (Incendiary Smoke) is a variant of the standard hand grenade that produces a thick cloud of white phosphorus smoke when detonated. In addition to it's typical use as a smoke screen, the white phosphorus can cause severe burns to anyone unfortunate enough to be near the detonation, as well as being a potentially lethal choking hazard.
@@ -143,6 +146,18 @@ This popular map has been re-imagined for the Italy expansion. The original map 
 * Squad leaders and assistant squad leaders are now given wire cutters by default.
 
 # Logistics Changes
+
+## New Variant & Skin System
+Players can now select different variants and skins for guns placed in the world. 
+
+For example, the Cannone 47/32 has two variants, one with wheels and one without, this selection affects how high the gun sits.
+
+[[ INSERT GIF OF CHANGING GUN VARIANTS ]]
+
+Skins are also selectable, although winter skins will only be available on winter maps.
+
+## Category & Limits Overhaul
+
 The construction loadouts system has been overhauled to allow for easier and more fine-grained control over what each team can build on a map.
 
 In the past, constructions could only be limited by "category" (e.g., light anti-tank guns, heavy anti-tank guns, etc.), and had to be defined per-level, which was a manual and time intensive project that was prone to human error and oversight.
@@ -154,14 +169,16 @@ In addition, there are now hard limits on the amount of total constructions that
 [[ INSERT GIF OF NEW GUN CONSTRUCTION MENU SHOWING LIMITS ]]
 
 # Vehicles
-* Vehicle cannons can now be fired while the commander is looking through the periscope. [not actually done yet, but needs to be added for all the existing vehicles!]
+* Vehicle cannons can now be fired while the commander is looking through the periscope.
+
+> This is implemented on new vehicles, but is not yet on pre-existing vehicles.
 
 # Miscellaneous
 * Grenades that have a "spoon" will now have the spoon fly off when the grenade is thrown (e.g., Mk. II grenade, F1 grenade etc.)
 * The artillery response delay has been standardized to 15 seconds for all teams instead of relying on the length of the request sound effect.
 
 # Bug Fixes
-* Voice commands audio sources will now be properly parented to the player pawn instead of the the location of the player when they issued the command.
+* Voice commands audio sources will now be properly attached to the player pawn instead of the the location of the player when they issued the command.
 * Voice commands will no longer continue to play after the player has died.
 * Patron spotting signals will now be properly displayed in-world and send a voice command.
 * Fixed a bug where it was possible for boat vehicles to become immobile if the driver ever left the driver's seat.

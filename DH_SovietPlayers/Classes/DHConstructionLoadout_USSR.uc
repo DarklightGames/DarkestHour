@@ -30,6 +30,7 @@ defaultproperties
     Constructions(12)=(ConstructionClass=class'DHConstruction_DragonsTooth',Limit=-1,MaxActive=-1)
 
     // Guns
+    // TODO: there are also "late" versions; maybe just make them variants.
     Constructions(13)=(ConstructionClass=class'DH_Zis3GunConstruction',Limit=5,MaxActive=-1)
     Constructions(14)=(ConstructionClass=class'DH_Zis2GunConstruction',Limit=3,MaxActive=-1)
     Constructions(15)=(ConstructionClass=class'DH_M1927GunConstruction',Limit=5,MaxActive=-1)
