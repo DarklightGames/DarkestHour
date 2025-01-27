@@ -7,12 +7,11 @@ class DH_WespeArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {
-    // to do: replace with some cool American overlay (maybe just the springfield sight)
     SpottingScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
 
-    YawScaleStep=1.0
-    YawAngleUnit=AU_Degrees
-    PitchScaleStep=10.0
+    YawScaleStep=10.0
+    YawAngleUnit=AU_Milliradians
+    PitchScaleStep=5.0
 
     RangeTable(0)=(Pitch=0,Range=115)
     RangeTable(1)=(Pitch=25,Range=200)
@@ -40,13 +39,13 @@ defaultproperties
     RangeTable(23)=(Pitch=575,Range=1925)
     RangeTable(24)=(Pitch=600,Range=1955)
 
-    NumberOfPitchSegments=6
-    PitchSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
+    NumberOfPitchSegments=4
+    PitchSegmentSchema(0)=(Shape=LongTick,bShouldDrawLabel=true)
     PitchSegmentSchema(1)=(Shape=ShortTick)
     PitchSegmentSchema(2)=(Shape=ShortTick)
     PitchSegmentSchema(3)=(Shape=ShortTick)
     PitchSegmentSchema(4)=(Shape=ShortTick)
-    PitchSegmentSchema(5)=(Shape=MediumLengthTick)
+    PitchSegmentSchema(5)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     PitchSegmentSchema(6)=(Shape=ShortTick)
     PitchSegmentSchema(7)=(Shape=ShortTick)
     PitchSegmentSchema(8)=(Shape=ShortTick)
@@ -54,12 +53,12 @@ defaultproperties
 
     PitchIndicatorLength=320
 
-    NumberOfYawSegments=3
+    NumberOfYawSegments=4
     YawSegmentSchema(0)=(Shape=MediumLengthTick,bShouldDrawLabel=true)
     YawSegmentSchema(1)=(Shape=ShortTick)
     YawSegmentSchema(2)=(Shape=ShortTick)
     YawSegmentSchema(3)=(Shape=ShortTick)
     YawSegmentSchema(4)=(Shape=ShortTick)
 
-    YawIndicatorLength=160
+    YawIndicatorLength=200
 }

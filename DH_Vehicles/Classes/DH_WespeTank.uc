@@ -4,10 +4,7 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Interface Art
 // [ ] Rename Shells & Set up Classes/loadout
-// [ ] Improve pitch & yaw dials
-// [ ] Interior model
 // [ ] Gunner animations
 // [ ] Destroyed mesh (get rid of a few 1000 tris on this cause it's way too heavy atm)
 // [ ] Add to maps
@@ -16,6 +13,7 @@
 // [ ] Hit points
 // [ ] Damage effect positions
 // [ ] Factory classes
+// [ ] Destroyed track statics
 //==============================================================================
 // BUGS
 //==============================================================================
@@ -89,22 +87,32 @@ defaultproperties
     Skins(0)=Texture'DH_Wespe_tex.wespe.wespe_body_ext_camo'
     Skins(1)=Texture'DH_Wespe_tex.wespe.wespe_treads'
     Skins(2)=Texture'DH_Wespe_tex.wespe.wespe_treads'
+    Skins(3)=Texture'DH_Wespe_tex.wespe.wespe_body_int'
     // CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WespeCannonPawn',WeaponBone="turret_placement")
-    // PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestMGPawn',WeaponBone="mg_placement")
-    // PassengerPawns(0)=(AttachBone="body",DrivePos=(X=40.0,Y=-65.0,Z=10.0),DriveRot=(Yaw=24576),DriveAnim="VHalftrack_Rider6_idle")
-    // PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-45.0,Y=60.0,Z=10.0),DriveRot=(Yaw=-8192),DriveAnim="VHalftrack_Rider1_idle")
-    // PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-120.0,Y=-75.0,Z=40.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider2_idle")
-    // PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-170,Y=0.0,Z=25.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    // PassengerPawns(4)=(AttachBone="body",DrivePos=(X=-120.0,Y=75.0,Z=40.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+
+    LeftTrackSoundBone=
 
     // Driver
-    UnbuttonedPositionIndex=2
-    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bExposed=true,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
-    DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
+    UnbuttonedPositionIndex=3
+    InitialPositionIndex=2
+    PeriscopePositionIndex=1
+    PeriscopeCameraBone="PERISCOPE_CAMERA"
+
+    bLockCameraDuringTransition=true
+
+    BeginningIdleAnim="idle"
+
+    // open front hatch
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="hatch_close",ViewPitchUpLimit=4096,ViewPitchDownLimit=61440,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-8192,bExposed=true)
+    // periscope
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="overlay_out",TransitionDownAnim="hatch_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    // neutral
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="raise",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000)
+    // turned out
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000,bExposed=true)
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=-47.6,LocationName="lower nose")
@@ -175,34 +183,27 @@ defaultproperties
     WheelRotationScale=42250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.30823,Y=37.3244,Z=60.6315),ExhaustRotation=(Pitch=0,Yaw=16384))
     LeftLeverBoneName=LEVER_L
-    LeftLeverAxis=AXIS_X
+    LeftLeverAxis=AXIS_Z
     RightLeverBoneName=LEVER_R
-    RightLeverAxis=AXIS_X
+    RightLeverAxis=AXIS_Z
 
     // HUD
-    VehicleHudImage=Texture'DH_M7Priest_tex.interface.priest_body'
-    VehicleHudTurret=TexRotator'DH_M7Priest_tex.interface.priest_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.interface.priest_turret_look'
-    VehicleHudTreadsPosY=0.51
-    VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsY(0)=0.37
-    VehicleHudOccupantsX(1)=0.43
-    VehicleHudOccupantsX(2)=0.62
-    VehicleHudOccupantsY(2)=0.40
-    VehicleHudOccupantsX(3)=0.39
-    VehicleHudOccupantsY(3)=0.44
-    VehicleHudOccupantsX(4)=0.60
-    VehicleHudOccupantsY(4)=0.56
-    VehicleHudOccupantsX(5)=0.37
-    VehicleHudOccupantsY(5)=0.74
-    VehicleHudOccupantsX(6)=0.50
-    VehicleHudOccupantsY(6)=0.8
-    VehicleHudOccupantsX(7)=0.63
-    VehicleHudOccupantsY(7)=0.74
-    SpawnOverlay(0)=Material'DH_M7Priest_tex.interface.priest'
+    VehicleHudImage=Texture'DH_Wespe_tex.interface.wespe_body_icon'
+    VehicleHudTurret=TexRotator'DH_Wespe_tex.interface.wespe_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Wespe_tex.interface.wespe_turret_look'
+    VehicleHudTreadsPosX(0)=0.325
+    VehicleHudTreadsPosX(1)=0.675
+    VehicleHudTreadsPosY=0.5
+    VehicleHudTreadsScale=0.725
+    VehicleHudOccupantsX(0)=0.455
+    VehicleHudOccupantsY(0)=0.3
+    VehicleHudOccupantsX(1)=0.4
+    VehicleHudOccupantsY(1)=0.7
+    SpawnOverlay(0)=Material'DH_Wespe_tex.interface.wespe_profile_icon'
+    VehicleHudEngineX=0.5
+    VehicleHudEngineY=0.75
 
     // Visible wheels
-    // TODO: why aren't the wheels spinning???
     LeftWheelBones(0)="WHEEL_01_L"
     LeftWheelBones(1)="WHEEL_02_L"
     LeftWheelBones(2)="WHEEL_03_L"
