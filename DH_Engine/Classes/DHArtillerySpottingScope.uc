@@ -386,7 +386,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
     CurrentYaw = int(class'UMath'.static.Floor(CurrentYaw, YawScaleStep));
 
     C.SetDrawColor(White.R, White.G, White.B, White.A);
-    C.Font = C.MedFont;
+    C.Font = class'DHFonts'.static.GetDHConsoleFontDSByResolution(C.SizeY);;
 
     MaxLines = arraycount(TargetWidgetLayout.LineConfig);
 
