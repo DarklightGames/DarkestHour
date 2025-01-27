@@ -93,8 +93,6 @@ defaultproperties
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WespeCannonPawn',WeaponBone="turret_placement")
 
-    LeftTrackSoundBone=
-
     // Driver
     UnbuttonedPositionIndex=3
     InitialPositionIndex=2
@@ -153,6 +151,11 @@ defaultproperties
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_destro'
+
+    LeftTrackSoundBone="DRIVE_WHEEL_L"
+    RightTrackSoundBone="DRIVE_WHEEL_R"
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_Wespe_stc.wespe_track_destroyed_l'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_Wespe_stc.wespe_track_destroyed_r'
 
     // Exit
     ExitPositions(0)=(X=50.0,Y=-140.0,Z=58.0)
