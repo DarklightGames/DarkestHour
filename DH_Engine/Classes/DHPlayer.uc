@@ -4820,7 +4820,7 @@ exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, str
 }
 
 // New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
-exec function SetHudEnginePos(string NewPosX, string NewPosY, string NewScale)
+exec function SetHudEnginePos(string NewPosX, string NewPosY)
 {
     local DHVehicle V;
 
