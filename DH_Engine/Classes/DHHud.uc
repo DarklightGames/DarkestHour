@@ -223,7 +223,7 @@ function DrawDebugInformation(Canvas C)
     C.SetPos(X, Y);
     C.DrawTextClipped(S);
 
-    S = class'DHBuildManifest'.default.Version.ToString();
+    S = class'DHBuildManifest'.default.Version.ToString() @ "(" $ class'DHBuildManifest'.default.GitBranch $ ")";
     C.TextSize(S, StrX, StrY);
     Y += StrY;
     X = C.ClipX - StrX - MARGIN;
