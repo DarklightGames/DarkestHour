@@ -3508,7 +3508,7 @@ exec function StopArty()
         }
     }
 
-    Level.Game.Broadcast(self, "Destroyed" @ Count $ "artillery spawners");
+    Level.Game.Broadcast(self, "Destroyed" @ Count @ "artillery spawners");
 }
 
 // Function for changing the AlliesToAxisRatio for testing and real time balance changes
