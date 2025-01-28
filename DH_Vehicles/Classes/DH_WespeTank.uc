@@ -4,15 +4,13 @@
 //==============================================================================
 // TODO
 //==============================================================================
-// [ ] Gunner animations
 // [ ] Rename Shells & Set up Classes/loadout
 // [ ] Fix handling to be less bouncy
 // [ ] Fix muzzle smoke to use sideways smoke (do we even have this?)
-// [ ] Hit points
 // [ ] Damage effect positions
 // [ ] Armor values
-// [ ] Add to maps
 // [ ] Exit positions
+// [ ] Add to maps
 //==============================================================================
 // BUGS
 //==============================================================================
@@ -144,9 +142,11 @@ defaultproperties
     EngineHealth=300
     EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
     DisintegrationHealth=-800.0 //petrol
-    VehHitpoints(0)=(PointRadius=30.0,PointBone="hp_engine")
-    VehHitpoints(1)=(PointRadius=15.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(HitPointType=HP_Engine,PointRadius=30.0,PointBone="body",PointOffset=(X=-22.0,Z=52.0))
+    VehHitpoints(1)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-117,Y=50,Z=78),DamageMultiplier=5.0)
+    VehHitpoints(2)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-77,Y=50,Z=78),DamageMultiplier=5.0)
+    VehHitpoints(3)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-117,Y=-50,Z=78),DamageMultiplier=5.0)
+    VehHitpoints(4)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-77,Y=-50,Z=78),DamageMultiplier=5.0)
     TreadHitMaxHeight=-30.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
