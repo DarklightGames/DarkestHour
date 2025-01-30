@@ -28,23 +28,23 @@ defaultproperties
     CustomPitchDownLimit=64625 // -5 degrees
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellSmoke'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellHE'
+    // SecondaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellSmoke'
+    // TertiaryProjectileClass=class'DH_Vehicles.DH_LeFH18CannonShellAP'
 
-    ProjectileDescriptions(0)="HE-T"
-    ProjectileDescriptions(1)="WP"
-    ProjectileDescriptions(2)="HEAT"
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(2)="AP"
 
-    nProjectileDescriptions(0)="M1 HE-T"
-    nProjectileDescriptions(1)="M60 WP"
-    nProjectileDescriptions(2)="M67 HEAT"
+    nProjectileDescriptions(0)="F.H.Gr."
+    nProjectileDescriptions(1)="F.H.Gr.Nb."
+    nProjectileDescriptions(2)="Pz.Gr."
 
-    InitialPrimaryAmmo=22
-    InitialSecondaryAmmo=4
+    InitialPrimaryAmmo=18
+    InitialSecondaryAmmo=8
     InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=22
-    MaxSecondaryAmmo=4
+    MaxPrimaryAmmo=18
+    MaxSecondaryAmmo=8
     MaxTertiaryAmmo=4
     Spread=0.01
     SecondarySpread=0.005
@@ -73,6 +73,8 @@ defaultproperties
 
     ShootAnim=FIRE
     ShootAnimBoneName=BARREL
+
+    GunnerAttachmentBone="TURRET"
 
     ProjectileRotationMode=PRM_MuzzleBone
 

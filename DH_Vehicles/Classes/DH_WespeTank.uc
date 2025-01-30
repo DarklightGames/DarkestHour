@@ -103,13 +103,9 @@ defaultproperties
 
     BeginningIdleAnim="idle"
 
-    // open front hatch
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="hatch_close",ViewPitchUpLimit=4096,ViewPitchDownLimit=61440,ViewPositiveYawLimit=8192,ViewNegativeYawLimit=-8192,bExposed=true)
-    // periscope
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="overlay_out",TransitionDownAnim="hatch_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bDrawOverlays=true)
-    // neutral
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionUpAnim="raise",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000)
-    // turned out
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Wespe_anm.wespe_body_int',TransitionDownAnim="lower",ViewPitchUpLimit=8192,ViewPitchDownLimit=56000,ViewPositiveYawLimit=22000,ViewNegativeYawLimit=-22000,bExposed=true)
 
     // Hull armor
@@ -135,23 +131,27 @@ defaultproperties
     TransRatio=0.1
 
     // Damage
-    // pros: 7 men crew;
-    // cons: 105mm ammorack is more likely to explode; petrol fuel
     Health=620
     HealthMax=620.0
     EngineHealth=300
-    EngineToHullFireChance=0.1  //increased from 0.05 for all petrol engines
-    DisintegrationHealth=-800.0 //petrol
+    EngineToHullFireChance=0.1
+    DisintegrationHealth=-800.0
     VehHitpoints(0)=(HitPointType=HP_Engine,PointRadius=30.0,PointBone="body",PointOffset=(X=-22.0,Z=52.0))
     VehHitpoints(1)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-117,Y=50,Z=78),DamageMultiplier=5.0)
     VehHitpoints(2)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-77,Y=50,Z=78),DamageMultiplier=5.0)
     VehHitpoints(3)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-117,Y=-50,Z=78),DamageMultiplier=5.0)
     VehHitpoints(4)=(HitPointType=HP_AmmoStore,PointRadius=20.0,PointBone="body",PointOffset=(X=-77,Y=-50,Z=78),DamageMultiplier=5.0)
+    VehHitpoints(5)=(HitPointType=HP_AmmoStore,PointRadius=16.0,PointBone="body",PointOffset=(X=-124,Y=-26,Z=52),DamageMultiplier=5.0)
+    VehHitpoints(6)=(HitPointType=HP_AmmoStore,PointRadius=16.0,PointBone="body",PointOffset=(X=-124,Y=26,Z=52),DamageMultiplier=5.0)
     TreadHitMaxHeight=-30.0
+
+    // TODO: set these
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
+
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
+
     DestroyedVehicleMesh=StaticMesh'DH_Wespe_stc.WESPE_DESTROYED'
 
     LeftTrackSoundBone="DRIVE_WHEEL_L"
