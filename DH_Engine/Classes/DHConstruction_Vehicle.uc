@@ -117,6 +117,11 @@ function static UpdateProxy(DHActorProxy AP)
     AP.SetDrawType(DT_Mesh);
     AP.LinkMesh(VehicleClass.default.Mesh);
 
+    if (AP.HasAnim(VehicleClass.default.BeginningIdleAnim))
+    {
+        AP.PlayAnim(VehicleClass.default.BeginningIdleAnim);
+    }
+
     for (j = 0; j < VehicleClass.default.Skins.Length; ++j)
     {
         if (VehicleClass.default.Skins[j] != none)
@@ -206,6 +211,11 @@ function UpdateAppearance()
     else
     {
         LinkMesh(VehicleClass.default.Mesh);
+
+        if (HasAnim(VehicleClass.default.BeginningIdleAnim))
+        {
+            PlayAnim(VehicleClass.default.BeginningIdleAnim);
+        }
 
         if (Role == ROLE_Authority)
         {
