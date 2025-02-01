@@ -182,11 +182,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 // Despite the name, this function is used to update the gun's rotation.
 public function UpdateRocketAcceleration(Float DeltaTime, Float YawChange, Float PitchChange)
 {
+    PitchChange *= 0.5;
+
     // If we are reloading, don't allow the player to rotate the gun.
     if (IsReloading())
     {
-        YawChange = 0;
         PitchChange = 0;
+        YawChange = 0;
     }
 
     if (bIsZoomed)
@@ -196,6 +198,18 @@ public function UpdateRocketAcceleration(Float DeltaTime, Float YawChange, Float
     }
 
     super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+}
+
+// Pitch is handled with W/S keys.
+function HandleTurretRotation(Float DeltaTime, Float YawChange, Float PitchChange)
+{
+    UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
+
+    if (IsHumanControlled())
+    {
+        PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+    }
 }
 
 // Debugging functions.
