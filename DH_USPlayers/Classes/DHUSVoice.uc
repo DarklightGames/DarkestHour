@@ -5,6 +5,20 @@
 
 class DHUSVoice extends DHVoicePack;
 
+static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNationClass)
+{
+    if (EnemyNationClass.Name == 'DHNation_Germany')
+    {
+        return Class'DHUSVoice_GER';
+    }
+    else if (EnemyNationClass.Name == 'DHNation_Italy')
+    {
+        return Class'DHUSVoice_ITA';
+    }
+
+    return default.Class;
+}
+
 defaultproperties
 {
     SupportSound(0)=SoundGroup'DH_US_Voice_Infantry.requests.need_help'
