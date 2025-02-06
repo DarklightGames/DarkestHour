@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // To allow for easier navigation of the construction menus, we break the the
 // constructions down into groups. We allow constructions to assign themselves

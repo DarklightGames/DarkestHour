@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Deprecated since the US did not have the M1919A6 in Sicily.
 // We can add this back in when we get the M1919A4 added.

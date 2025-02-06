@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Replace pitch/yaw sounds with squeaking wheels used on the other mortars
 // [ ] Replace firing effects (use normal 8cm effects)

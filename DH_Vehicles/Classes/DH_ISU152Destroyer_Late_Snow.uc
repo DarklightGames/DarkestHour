@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_ISU152Destroyer_Late_Snow extends DH_ISU152Destroyer_Snow; // late war vehicle with APBC rounds instead of AP

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://web.archive.org/web/20170505040922/http://www.quarryhs.co.uk/ammotable6.html
 // [2] https://en.wikipedia.org/wiki/Cannone_da_47/32#Characteristics

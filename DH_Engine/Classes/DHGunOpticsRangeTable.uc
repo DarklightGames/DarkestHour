@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Used for storing the range values for the optics. This is more ergonomic than
 // declaring it in the optics class as a nested array and makes it easier to

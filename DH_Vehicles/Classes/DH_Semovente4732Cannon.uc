@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://comandosupremo.com/forums/index.php?threads/italian-armor-piercing-ammunition-perforanti-effetto-pronto-and-ep-speciale.52
 //==============================================================================

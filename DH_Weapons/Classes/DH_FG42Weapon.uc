@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // The FG-42 has a unique bolt operation. It operates in open-bolt while in
 // automatic mode and closed bolt in single-fire mode.

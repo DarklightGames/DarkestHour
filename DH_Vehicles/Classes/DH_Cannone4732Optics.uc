@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // There are no reliable sources for what the actual optics looked like for
 // the Cannone da 47/32, made even more difficult by the fact that the vehicle

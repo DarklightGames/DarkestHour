@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // TODO: A lot of the special functionality should be moved to a separate
 //  subclass so that we can reuse all the new systems on other mounted MGs.

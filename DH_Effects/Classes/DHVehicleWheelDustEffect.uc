@@ -1,6 +1,6 @@
 //=============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //=============================================================================
 // This is all a bit of a hack until we can come up with a better solution.
 // We need to be able to reset the dirt color of the wheel dust effect when
