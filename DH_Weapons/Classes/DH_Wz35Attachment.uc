@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2023
 //==============================================================================
+// [ ] Third person animations are not done yet.
+//==============================================================================
 
 class DH_Wz35Attachment extends DHWeaponAttachment;
 
@@ -13,6 +15,9 @@ defaultproperties
     MuzzleBoneName="MUZZLE"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
     bRapidFire=false
+
+    ShellEjectionBoneName=""        // No shell ejection bone?
+    bAnimNotifiedShellEjects=true   // Only eject shells when bolting.
 
     WA_Idle="idle_wz35"
     WA_IdleEmpty="idle_open"
@@ -118,10 +123,10 @@ defaultproperties
     PA_StandWeaponUnDeployAnim="stand_idlehip_wz35"
     PA_ProneWeaponUnDeployAnim="prone_idle_wz35"
     PA_Fire="stand_shoothip_wz35"
-    PA_IronFire="stand_shootiron_wz35"
+    PA_IronFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
     PA_CrouchFire="crouch_shootiron_wz35"
     PA_ProneFire="prone_shoot_wz35"
-    PA_DeployedFire="stand_shootiron_wz35"
+    PA_DeployedFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
     PA_CrouchDeployedFire="crouch_shootiron_wz35"
     PA_ProneDeployedFire="prone_shoot_wz35"
 
