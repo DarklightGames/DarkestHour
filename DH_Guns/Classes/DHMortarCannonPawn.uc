@@ -379,6 +379,8 @@ simulated state Firing
         local Rotator NormalCameraRotation, FiringCameraRotation;
         local Coords FiringCameraBoneCoords;
 
+        // TODO: convert this to be attached to be on the hands mesh.
+        // this will negate the need for mortar-specific camera animations.
         FiringCameraBoneCoords = Gun.GetBoneCoords(FiringCameraBone);
         FiringCameraLocation = FiringCameraBoneCoords.Origin;
 
