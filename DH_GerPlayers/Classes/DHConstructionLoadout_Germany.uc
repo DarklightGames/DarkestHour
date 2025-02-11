@@ -36,5 +36,5 @@ defaultproperties
     Constructions(17)=(ConstructionClass=class'DH_Flak38GunConstruction',Limit=5,MaxActive=-1)
     Constructions(18)=(ConstructionClass=class'DH_Flak88GunConstruction',Limit=5,MaxActive=-1)
     Constructions(19)=(ConstructionClass=class'DH_Leig18GunConstruction',Limit=3,MaxActive=-1)
-    Constructions(20)=(ConstructionClass=class'DH_Granatwerfer34MortarConstruction',Limit=3,MaxActive=-1)
+    // Constructions(20)=(ConstructionClass=class'DH_Granatwerfer34MortarConstruction',Limit=3,MaxActive=-1)
 }
