@@ -100,4 +100,7 @@ defaultproperties
     EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
     // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
+
+    FireBlurScale=0.5
+    FireBlurTime=0.4
 }

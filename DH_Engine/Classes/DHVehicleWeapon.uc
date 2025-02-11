@@ -104,6 +104,10 @@ var() enum EProjectileRotationMode {
     PRM_MuzzleBone,     // Use the muzzle bone coordinates to determine the rotation. Accurate, but requires the muzzle bone to be axis-aligned.
 } ProjectileRotationMode;
 
+// Blur effects when the weapon is fired.
+var()   float               FireBlurTime;
+var()   float               FireBlurScale;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -612,6 +616,8 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 // and to enable MG muzzle flash (AmbientEffectEmitter) for listen server host firing own weapon, which the original code misses out
 simulated function OwnerEffects()
 {
+    local ROPlayer PC;
+
     if (Role < ROLE_Authority)
     {
         // Stop the firing effects if shouldn't be able to fire, or if player moves to ineligible firing position while holding down fire button
@@ -655,6 +661,16 @@ simulated function OwnerEffects()
         }
 
         FlashMuzzleFlash(bIsAltFire);
+    }
+
+    if (WeaponPawn.IsLocallyControlled() && FireBlurTime > 0.0)
+    {
+        PC = ROPlayer(WeaponPawn.Controller);
+
+        if (PC != none)
+        {
+            PC.AddBlur(FireBlurTime, FireBlurScale);
+        }
     }
 
     if (Level.NetMode != NM_DedicatedServer) // added this check as effects have no relevance on server
