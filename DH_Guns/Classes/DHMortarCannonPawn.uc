@@ -194,6 +194,8 @@ simulated function InitializeHands()
 
     // Set the hands skin based on the player's role.
     HandsActor.SetSkins(DHPlayer(Controller));
+
+    HandsActor.bHidden = true;
     
     Gun.AttachToBone(HandsActor, HandsAttachBone);
 
