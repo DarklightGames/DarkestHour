@@ -93,8 +93,6 @@ simulated function WorkBolt()
     {
         GotoState('WorkingBolt');
 
-        PlayerViewZoom(false);
-
         if (Role < ROLE_Authority)
         {
             ServerWorkBolt();
@@ -151,6 +149,12 @@ simulated state WorkingBolt extends WeaponBusy
 
     simulated function BeginState()
     {
+        // TODO: don't do this unless we're using a textured scope
+        if (InstigatorIsLocallyControlled() && bUsingSights && bHasScope && ScopeDetail == RO_TextureScope)
+        {
+            PlayerViewZoom(false);
+        }
+
         if (bUsingSights || Instigator.bBipodDeployed)
         {
             if (HasAnim(BoltIronLastAnim) && AmmoAmount(0) == 1)
