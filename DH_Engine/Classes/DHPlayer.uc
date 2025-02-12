@@ -8153,7 +8153,7 @@ defaultproperties
     // FOV
     ViewFOVMin=80.0
     ViewFOVMax=100.0
-    ConfigViewFOV=85.0
+    ConfigViewFOV=90.0
 
     // Admin-initialed paradrops
     ParadropMarkerClass=class'DH_Engine.DHMapMarker_AdminParadrop'
