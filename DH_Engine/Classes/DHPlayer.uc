@@ -8191,4 +8191,6 @@ defaultproperties
     LastTeamKillTimeSeconds=-100000
 
     AutomaticVehicleAlerts=1 // AVAM_OnlyWithCrew
+
+    bSpawnWithBayonet=true
 }
