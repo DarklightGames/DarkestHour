@@ -23,9 +23,6 @@ defaultproperties
     // Collision meshes
     //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
 
-    // Animation
-    ShootIntermediateAnim="shoot_close" // TODO: this thing has no shoot animation
-
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
     GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
@@ -44,29 +41,24 @@ defaultproperties
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
-    ProjectileDescriptions(2)="HE-L"
 
-    nProjectileDescriptions(0)="Bomba g. a. da 81"
-    nProjectileDescriptions(1)="Bomba Fumogena"
-    nProjectileDescriptions(2)="Bomba gr. c. da 81"
+    nProjectileDescriptions(0)="Wgr. 38"
+    nProjectileDescriptions(1)="Wgr. 38 Nb."
 
-    PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'  
+    PrimaryProjectileClass=class'DH_Guns.DH_Granatwerfer34ProjectileHE'
+    SecondaryProjectileClass=class'DH_Guns.DH_Granatwerfer34ProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=2
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
-    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
 
     Spread=0.01
     SecondarySpread=0.01
     TertiarySpread=0.01
 
     // Weapon fire
-    WeaponFireOffset=16.0  // TODO: REPLACE
-    AddedPitch=0  // TODO: REPLACE
+    WeaponFireOffset=16.0
+    AddedPitch=0
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
@@ -96,6 +88,5 @@ defaultproperties
     ShakeRotTime=5.0
 
     EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
 }

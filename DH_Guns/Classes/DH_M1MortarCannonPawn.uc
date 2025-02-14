@@ -19,7 +19,7 @@ defaultproperties
     PlayerCameraBone="US_CAMERA_COM"
     CameraBone="US_GUNSIGHT_CAMERA"
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
+    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
 
     // Spotting Scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.m1mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)

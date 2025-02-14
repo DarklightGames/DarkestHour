@@ -2,10 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [1] https://texashistory.unt.edu/ark:/67531/metapth46561/
+// Fix view limits on the mesh, it's disappearing still
 //==============================================================================
 
-class DH_Model35MortarCannon extends DHATGunCannon;
+class DH_ML3InchCannon extends DHATGunCannon;
 
 // Ignore manual reloading functionality for mortars.
 simulated function bool PlayerUsesManualReloading()
@@ -16,56 +16,52 @@ simulated function bool PlayerUsesManualReloading()
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_tube_ext'
-    Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
+    Mesh=SkeletalMesh'DH_ML3InchMortar_anm.ML3INCH_TUBE_EXT'
+    //Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
 
     WeaponFireAttachmentBone="MUZZLE"
-    GunnerAttachmentBone="YAW"
+    GunnerAttachmentBone="GUN_YAW"
 
     // Collision meshes
-    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.ml3inch_tube_collision',AttachBone="GUN_PITCH")
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
-    GunWheels(1)=(RotationType=ROTATION_PITCH,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
-    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="SIGHT_TOP",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
+    GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT_PIVOT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
+    GunWheels(1)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
+    GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_X) // [1] 12 mils per turn.
 
     // Turret movement
     ManualRotationsPerSecond=0.0125
-    MaxPositiveYaw=782.6    // +/- 4.3 degrees
-    MaxNegativeYaw=-782.6
-    YawStartConstraint=-782.6
-    YawEndConstraint=782.6
-    CustomPitchUpLimit=9102
+    MaxPositiveYaw=1001    // +/- 5.5 degrees
+    MaxNegativeYaw=-1001
+    YawStartConstraint=-1001
+    YawEndConstraint=1001
+    CustomPitchUpLimit=6370 // 45-80 degrees
     CustomPitchDownLimit=65535
     RotationsPerSecond=0.0125
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
-    ProjectileDescriptions(2)="HE-L"
 
-    nProjectileDescriptions(0)="Bomba g. a. da 81"
-    nProjectileDescriptions(1)="Bomba Fumogena"
-    nProjectileDescriptions(2)="Bomba gr. c. da 81"
+    // TODO: replace names, projectiles etc.
+    nProjectileDescriptions(0)="HE"
+    nProjectileDescriptions(1)="Phosphorus"
 
-    PrimaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileSmoke'
-    TertiaryProjectileClass=class'DH_Guns.DH_Model35MortarProjectileHEBig'  
+    PrimaryProjectileClass=class'DH_Guns.DH_ML3InchMortarProjectileHE'
+    SecondaryProjectileClass=class'DH_Guns.DH_ML3InchMortarProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=2
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
-    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
 
     Spread=0.01
     SecondarySpread=0.01
     TertiarySpread=0.01
 
     // Weapon fire
-    WeaponFireOffset=16.0  // TODO: REPLACE
-    AddedPitch=0  // TODO: REPLACE
+    WeaponFireOffset=16.0
+    AddedPitch=0
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_MortarSounds.Fire.81mm_mortar_fire_01'
@@ -79,8 +75,8 @@ defaultproperties
     ResupplyInterval=12.0
 
     // No 
-    YawBone="YAW"
-    PitchBone="PITCH"
+    YawBone="GUN_YAW"
+    PitchBone="GUN_PITCH"
 
     DriverAnimationChannelBone="CAMERA_COM"
     DriverAnimationChannel=2    // 1 is used for the pitching driver
@@ -95,9 +91,5 @@ defaultproperties
     ShakeRotTime=5.0
 
     EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
-
-    FireBlurScale=0.5
-    FireBlurTime=0.4
 }

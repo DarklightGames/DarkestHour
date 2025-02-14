@@ -15,10 +15,8 @@ var     float   FiringStartTimeSeconds;         // The time at which the firing 
 var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
 var()   float   FireDelaySeconds;               // The amount of time to wait into the firing animation before actually firing the round.
 
-var()   name  FiringCameraBone;         // The name of the bone to use for the camera while firing.
-var()   int   FiringCameraBoneChannel;  // The channel to use for the firing camera bone.
-var()   name  GunFireAnim;              // The firing animation to play on the gun mesh.
-var()   name  OverlayFiringAnimName;    // The name of the firing animation on the overlay mesh.
+var()   name  HandsFiringCameraBone;    // The name of the bone to use for the camera while firing.
+var()   name  HandsFiringAnimName;      // The name of the firing animation on the hands mesh.
 var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
 var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
 var()   float ProjectileLifeSpan;       // The life span of the projectile attached to the gunner's hand.
@@ -28,10 +26,9 @@ var     DHFirstPersonHands  HandsActor;             // The first person hands ac
 var     Mesh                HandsMesh;              // The first person hands mesh.
 var     DHDecoAttachment    HandsProjectile;        // The first person projectile.
 
-var()   Rotator             HandsRotationOffset;    // The rotation offset for the first person hands.
+var()   Vector              HandsRelativeLocation;  // The location of the hands in actor relation to it's attachment bone.
 var()   name                HandsAttachBone;        // The bone to attach the first person hands to.
 var()   name                HandsProjectileBone;    // The bone to attach the first person projectile to.
-var()   array<name>         HandsFireAnims;         // The first person firing animations (selected randomly; make sure they are all the same length!).
 
 struct FireAnim
 {
@@ -62,6 +59,17 @@ replication
         ServerPlayThirdPersonFiringAnim;
     reliable if (Role == ROLE_Authority)
         PlayerFireCount, FiringProjectileMesh;
+}
+
+// TODO: move this to the base class, add sanity checks.
+simulated exec function HandsRelPos(float X)
+{
+    HandsRelativeLocation.X = X;
+
+    if (HandsActor != none)
+    {
+        HandsActor.SetRelativeLocation(HandsRelativeLocation);
+    }
 }
 
 simulated function PostNetBeginPlay()
@@ -156,12 +164,8 @@ simulated function InitializeVehicleAndWeapon()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SetupFiringCameraChannel();
         SetupGunAnimationDrivers();
         UpdateGunAnimationDrivers();
-
-        // Record the duration of the firing animation.
-        OverlayFiringAnimDuration = Gun.GetAnimDuration(GunFireAnim);
     }
 }
 
@@ -190,16 +194,15 @@ simulated function InitializeHands()
         return;
     }
 
-    HandsActor.LinkMesh(HandsMesh);
-
     // Set the hands skin based on the player's role.
+    HandsActor.LinkMesh(HandsMesh);
     HandsActor.SetSkins(DHPlayer(Controller));
 
     HandsActor.bHidden = true;
     
     Gun.AttachToBone(HandsActor, HandsAttachBone);
 
-    HandsActor.SetRelativeLocation(vect(0, 0, 0));
+    HandsActor.SetRelativeLocation(HandsRelativeLocation);
     HandsActor.SetRelativeRotation(rot(0, 0, 0));
 
     if (HandsProjectile != none)
@@ -218,6 +221,9 @@ simulated function InitializeHands()
         HandsProjectile.SetRelativeLocation(vect(0, 0, 0));
         HandsProjectile.SetRelativeRotation(rot(0, 0, 0));
     }
+
+    // Record the duration of the firing animation.
+    OverlayFiringAnimDuration = HandsActor.GetAnimDuration(HandsFiringAnimName);
 }
 
 simulated function UpdateHandsProjectileStaticMesh()
@@ -383,7 +389,7 @@ simulated state Firing
 
         // TODO: convert this to be attached to be on the hands mesh.
         // this will negate the need for mortar-specific camera animations.
-        FiringCameraBoneCoords = Gun.GetBoneCoords(FiringCameraBone);
+        FiringCameraBoneCoords = HandsActor.GetBoneCoords(HandsFiringCameraBone);
         FiringCameraLocation = FiringCameraBoneCoords.Origin;
 
         // Convert the X, Y and Z axis from the bone coords to a quaternion.
@@ -432,14 +438,9 @@ simulated state Firing
                 PC.QueueHint(66, true);
             }
 
-            if (Gun != none)
+            if (HandsActor != none)
             {
-                Gun.PlayAnim(GunFireAnim, 1.0, 0.0, FiringCameraBoneChannel);
-            }
-
-            if (HandsActor != none && HandsFireAnims.Length > 0)
-            {
-                HandsActor.PlayAnim(HandsFireAnims[Rand(HandsFireAnims.Length)], 1.0, 0.0, 0);
+                HandsActor.PlayAnim(HandsFiringAnimName, 1.0, 0.0);
             }
 
             // TODO: turn off the rotate sound
@@ -464,11 +465,6 @@ Begin:
 function SuperFire()
 {
     super.Fire();
-}
-
-simulated function SetupFiringCameraChannel()
-{
-    Gun.AnimBlendParams(FiringCameraBoneChannel, 1.0, 0.0, 0.0, FiringCameraBone);
 }
 
 simulated function SetupGunAnimationDrivers()

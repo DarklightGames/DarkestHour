@@ -47,21 +47,18 @@ defaultproperties
     AmmoShellReloadTextures(1)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
     AmmoShellReloadTextures(2)=Texture'DH_Model35Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
+    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
 
     GunPitchOffset=7280 // +40 degrees
 
     FiringCameraInTime=0.65
     FiringCameraOutTime=1.0
-    FiringCameraBone="MY_COOL_CAMERA"
-    FiringCameraBoneChannel=3
-    GunFireAnim="FIRINGCAMERA"
+    HandsFiringCameraBone="CAMERA"
+    HandsFiringAnimName="FIRE_HANDS"
 
-    HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_hands'
-    HandsFireAnims=("FIRE_HANDS")
-    HandsAttachBone="PITCH"
+    HandsMesh=SkeletalMesh'DH_Model35Mortar_anm.MORTAR_FIRST_PERSON_HANDS'
+    HandsAttachBone="MUZZLE"
     HandsProjectileBone="PROJECTILE"
-    HandsRotationOffset=(Yaw=-16384)
 
     FireDelaySeconds=2.35
 

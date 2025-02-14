@@ -18,7 +18,7 @@ defaultproperties
     PlayerCameraBone="RU_CAMERA_COM"
     CameraBone="RU_GUNSIGHT_CAMERA"
 
-    ArtillerySpottingScopeClass=class'DH_Guns.DHArtillerySpottingScope_Model35Mortar'
+    ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
 
     // Spotting Scope
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.bm36mortar_tube_ext')
