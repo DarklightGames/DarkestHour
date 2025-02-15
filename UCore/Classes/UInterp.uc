@@ -7,9 +7,41 @@
 class UInterp extends Object
     abstract;
 
+
+enum EInterpolationType
+{
+    INTERP_Step,
+    INTERP_Linear,
+    INTERP_SmoothStep,
+    INTERP_Cosine,
+    INTERP_Acceleration,
+    INTERP_Deceleration,
+};
+
 final static function float MapRangeClamped(float Value, float InRangeA, float InRangeB, float OutRangeA, float OutRangeB)
 {
     return OutRangeA + (OutRangeB - OutRangeA) * FClamp((Value - InRangeA) / (InRangeB - InRangeA), 0.0, 1.0);
+}
+
+final static function float Interpolate(float T, float A, float B, EInterpolationType Type)
+{
+    switch (Type)
+    {
+        case INTERP_Step:
+            return Step(T, A, B);
+        case INTERP_Linear:
+            return Linear(T, A, B);
+        case INTERP_SmoothStep:
+            return SmoothStep(T, A, B);
+        case INTERP_Cosine:
+            return Cosine(T, A, B);
+        case INTERP_Acceleration:
+            return Acceleration(T, A, B);
+        case INTERP_Deceleration:
+            return Deceleration(T, A, B);
+        default:
+            return Linear(T, A, B);
+    }
 }
 
 final static function float Step(float T, float A, float B)

@@ -910,7 +910,7 @@ defaultproperties
         Caption="Resolution"
         OnCreateComponent=VideoResolution.InternalOnCreateComponent
         IniOption="@INTERNAL"
-        IniDefault="640x480"
+        IniDefault="1600x900"
         TabOrder=1
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
@@ -935,7 +935,7 @@ defaultproperties
         Caption="Game details"
         OnCreateComponent=GlobalDetails.InternalOnCreateComponent
         IniOption="@Internal"
-        IniDefault="Higher"
+        IniDefault="Highest"
         TabOrder=3
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI

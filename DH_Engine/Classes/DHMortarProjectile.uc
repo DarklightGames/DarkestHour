@@ -180,7 +180,21 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     self.HitNormal = Normal(HitLocation - Other.Location);
 
-    GotoState('Whistle');
+    MortarExplode();
+}
+
+simulated function MortarExplode()
+{
+    if (Velocity.Z < 0)
+    {
+        // If the mortar is descending, go to the whistle state.
+        GotoState('Whistle');
+    }
+    else
+    {
+        // Otherwise, explode immediately.
+        Explode(Location, HitNormal);
+    }
 }
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
@@ -188,7 +202,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     self.HitNormal = HitNormal;
 
-    GotoState('Whistle');
+    MortarExplode();
 }
 
 // New state that is entered when shell lands - it just plays the DescendingSound & sets a timer to make the shell explode at the end of the sound
@@ -197,16 +211,17 @@ simulated state Whistle
 {
     simulated function BeginState()
     {
-        local float Pitch;
+        local float Pitch, Volume;
 
         SetPhysics(PHYS_None);
         Velocity = vect(0.0, 0.0, 0.0);
+
         SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            GetDescendingSoundPitch(Pitch, Location);
-            PlaySound(DescendingSound, SLOT_None, 8.0, false, 512.0, Pitch, true);
+            GetDescendingSoundPitchAndVolume(Pitch, Volume);
+            PlaySound(DescendingSound, SLOT_None, Volume, false, 512.0, Pitch, true);
         }
     }
 
@@ -559,7 +574,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
         bHitWater = true;
-        GotoState('Whistle');
+        MortarExplode();
     }
 }
 
@@ -637,22 +652,38 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
     }
 }
 
-// New function to adjust pitch of shell's descent sound - rounds far away will seem to drone, while being close to the descent will make the sounds scream
-simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation)
+// Gets the pitch and volume of shell's descent sound.
+// Rounds far away will seem to drone, while being close to the descent will make the sounds scream.
+// When you're immediately under the shell, there is actually no sound at all, so fade out the sound the closer we are.
+simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float Volume)
 {
-    local Pawn   P;
-    local vector CameraLocation;
-    local float  ClampedDistance;
+    local float Distance;
 
-    Pitch = 0.875;
-    P = Level.GetLocalPlayerController().Pawn;
+    const PITCH_DISTANCE_METERS_MIN = 10;
+    const PITCH_DISTANCE_METERS_MAX = 50;
+    const PITCH_MIN = 0.875;
+    const PITCH_MAX = 1.125;
+    const VOLUME_DISTANCE_METERS_MIN = 10;
+    const VOLUME_DISTANCE_METERS_MAX = 20;
+    const VOLUME_MIN = 0.0;
+    const VOLUME_MAX = 1.0;
 
-    if (P != none)
-    {
-        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-        ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += ((5249.0 - ClampedDistance) / 5249.0) * 0.25;
-    }
+    Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
+    
+    Pitch = class'UInterp'.static.MapRangeClamped(
+        Distance, 
+        PITCH_DISTANCE_METERS_MIN, 
+        PITCH_DISTANCE_METERS_MAX, 
+        PITCH_MAX,
+        PITCH_MIN
+    );
+    Volume = class'UInterp'.static.MapRangeClamped(
+        Distance,
+        VOLUME_DISTANCE_METERS_MIN,
+        VOLUME_DISTANCE_METERS_MAX,
+        VOLUME_MIN,
+        VOLUME_MAX
+    );
 }
 
 // New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. undeployed mortar
@@ -664,51 +695,10 @@ simulated function UpdateInstigator()
     }
 }
 
-// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
-// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
-// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
 {
-    local PlayerController PC;
-
-    // Only relevant on a dedicated server if the bForceDedicated option has been passed
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        return bForceDedicated;
-    }
-
-    if (Role < ROLE_Authority)
-    {
-        // Always relevant for the owning net player, i.e. the player that fired the projectile
-        if (Instigator != none && Instigator.IsHumanControlled())
-        {
-            return true;
-        }
-
-        // Not relevant to other net clients if the projectile has not been drawn on their screen recently (within last 3 seconds)
-        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
-        {
-            return false;
-        }
-    }
-
-    PC = Level.GetLocalPlayerController();
-
-    if (PC == none || PC.ViewTarget == none)
-    {
-        return false;
-    }
-
-    // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
-    // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
-    // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
-    {
-        return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
-    }
-
-    // Effect relevance is based on normal distance check
-    return CheckMaxEffectDistance(PC, SpawnLocation);
+    // More effects should always be relevant as they are large and long-lasting.
+    return true;
 }
 
 defaultproperties

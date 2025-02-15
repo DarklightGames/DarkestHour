@@ -3,10 +3,13 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_FiatL640CannonPawn extends DH_Autoblinda41CannonPawn;
+class DHMortar extends DHATGun
+    abstract;
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=2
-    GunClass=class'DH_Vehicles.DH_FiatL640Cannon'
+    bCanBeRotated=true
+    bIsArtilleryVehicle=true
+    bTeamLocked=false
+    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 }

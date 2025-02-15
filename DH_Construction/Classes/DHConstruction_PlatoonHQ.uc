@@ -84,7 +84,7 @@ simulated function OnConstructed()
         if (SpawnPoint != none)
         {
             // "A Platoon HQ has been constructed and will be established in N seconds."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 4,,, self);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -159,7 +159,7 @@ simulated state Broken
         if (SpawnPoint != none)
         {
             // "A Platoon HQ has been destroyed."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 3,,, self);
         }
 
         DestroyAttachments();
@@ -195,7 +195,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     {
         C = DHConstruction(A);
 
-        if (C != none && !C.IsInState('Dummy') && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
         {
             bFoundFriendlyDuplicate = true;
             break;

@@ -1,12 +1,13 @@
+
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_FiatL640CannonPawn extends DH_Autoblinda41CannonPawn;
+class DH_Granatwerfer34MortarWinter extends DH_Granatwerfer34Mortar;
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=2
-    GunClass=class'DH_Vehicles.DH_FiatL640Cannon'
+    Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_winter'
+    CannonSkins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_winter'
 }

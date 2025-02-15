@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHArtillerySpottingScope_Model35Mortar extends DHArtillerySpottingScope;
+class DH_Model35MortarArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {

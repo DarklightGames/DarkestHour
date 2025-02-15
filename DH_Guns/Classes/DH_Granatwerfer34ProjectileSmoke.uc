@@ -3,10 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_FiatL640CannonPawn extends DH_Autoblinda41CannonPawn;
+class DH_Granatwerfer34ProjectileSmoke extends DHMortarProjectileSmoke;
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=2
-    GunClass=class'DH_Vehicles.DH_FiatL640Cannon'
+    Speed=6500
+    MaxSpeed=6500
+    StaticMesh=StaticMesh'DH_Model35Mortar_stc.projectiles.DE_SMOKE_WGR38'
 }

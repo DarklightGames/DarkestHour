@@ -123,6 +123,8 @@ simulated state Constructed
 
 simulated function OnBroken()
 {
+    super.OnBroken();
+
     DestroySupplyAttachment();
 }
 
