@@ -180,7 +180,21 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     self.HitNormal = Normal(HitLocation - Other.Location);
 
-    GotoState('Whistle');
+    MortarExplode();
+}
+
+simulated function MortarExplode()
+{
+    if (Velocity.Z < 0)
+    {
+        // If the mortar is descending, go to the whistle state.
+        GotoState('Whistle');
+    }
+    else
+    {
+        // Otherwise, explode immediately.
+        Explode(Location, HitNormal);
+    }
 }
 
 // Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
@@ -188,7 +202,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     self.HitNormal = HitNormal;
 
-    GotoState('Whistle');
+    MortarExplode();
 }
 
 // New state that is entered when shell lands - it just plays the DescendingSound & sets a timer to make the shell explode at the end of the sound
@@ -559,7 +573,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     if (NewVolume != none && NewVolume.bWaterVolume)
     {
         bHitWater = true;
-        GotoState('Whistle');
+        MortarExplode();
     }
 }
 
