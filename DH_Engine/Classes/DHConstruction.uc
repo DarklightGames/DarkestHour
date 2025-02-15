@@ -258,6 +258,10 @@ struct RuntimeData
 var int VariantIndex;
 var int SkinIndex;
 
+// Debugging
+var bool bSinglePlayerOnly;  // If true, this construction can only be placed in single player mode.
+                             // Used to prevent players from placing constructions that are not yet ready for multiplayer.
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1025,6 +1029,11 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
     local DHPlayerReplicationInfo PRI;
 
     PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
+
+    if (default.bSinglePlayerOnly && (Context.LevelInfo != none && Context.LevelInfo.Level.NetMode != NM_Standalone))
+    {
+        return false;
+    }
 
     // Only show constructions the player is allowed to place
     if (PRI != none)
