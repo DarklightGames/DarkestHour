@@ -242,6 +242,7 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
 }
 
 // Returns the maximum active limit for a team's construction class.
+// If the value is -1, there is no limit to the number of active constructions.
 simulated function int GetConstructionMaxActive(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
     local int ConstructionIndex;

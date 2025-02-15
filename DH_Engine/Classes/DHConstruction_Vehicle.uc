@@ -172,7 +172,7 @@ function static UpdateProxy(DHActorProxy AP)
     }
 }
 
-function static string GetMenuName(DHActorProxy.Context Context)
+static function string GetMenuName(DHActorProxy.Context Context)
 {
     local class<DHVehicle> VC;
 
