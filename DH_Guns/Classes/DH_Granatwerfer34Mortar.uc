@@ -2,10 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Destroyed mesh
-// [ ] HUD images
-// [ ] Maybe a slightly different sound
-// [ ] Color variants
+// [ ] Destroyed mesh & textures
+// [ ] Tweak third person animations
 //==============================================================================
 
 class DH_Granatwerfer34Mortar extends DHMortar;
@@ -16,6 +14,8 @@ defaultproperties
     VehicleTeam=0
     Mesh=SkeletalMesh'DH_Granatwerfer34_anm.grw34_body_ext'
     Skins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
+    CannonSkins(0)=Texture'DH_Granatwerfer34_tex.grw34_ext_yellow'
+
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Granatwerfer34CannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0

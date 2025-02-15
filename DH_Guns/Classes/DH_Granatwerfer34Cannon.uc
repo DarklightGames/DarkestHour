@@ -21,7 +21,7 @@ defaultproperties
     GunnerAttachmentBone="GUN_YAW"
 
     // Collision meshes
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.GRW34_GUN_COLLISION',AttachBone="GUN_PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
