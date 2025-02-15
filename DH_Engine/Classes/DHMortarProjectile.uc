@@ -211,16 +211,17 @@ simulated state Whistle
 {
     simulated function BeginState()
     {
-        local float Pitch;
+        local float Pitch, Volume;
 
         SetPhysics(PHYS_None);
         Velocity = vect(0.0, 0.0, 0.0);
+
         SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            GetDescendingSoundPitch(Pitch, Location);
-            PlaySound(DescendingSound, SLOT_None, 8.0, false, 512.0, Pitch, true);
+            GetDescendingSoundPitchAndVolume(Pitch, Volume);
+            PlaySound(DescendingSound, SLOT_None, Volume, false, 512.0, Pitch, true);
         }
     }
 
@@ -651,22 +652,38 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
     }
 }
 
-// New function to adjust pitch of shell's descent sound - rounds far away will seem to drone, while being close to the descent will make the sounds scream
-simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation)
+// Gets the pitch and volume of shell's descent sound.
+// Rounds far away will seem to drone, while being close to the descent will make the sounds scream.
+// When you're immediately under the shell, there is actually no sound at all, so fade out the sound the closer we are.
+simulated function GetDescendingSoundPitchAndVolume(out float Pitch, out float Volume)
 {
-    local Pawn   P;
-    local vector CameraLocation;
-    local float  ClampedDistance;
+    local float Distance;
 
-    Pitch = 0.875;
-    P = Level.GetLocalPlayerController().Pawn;
+    const PITCH_DISTANCE_METERS_MIN = 10;
+    const PITCH_DISTANCE_METERS_MAX = 50;
+    const PITCH_MIN = 0.875;
+    const PITCH_MAX = 1.125;
+    const VOLUME_DISTANCE_METERS_MIN = 10;
+    const VOLUME_DISTANCE_METERS_MAX = 20;
+    const VOLUME_MIN = 0.0;
+    const VOLUME_MAX = 1.0;
 
-    if (P != none)
-    {
-        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-        ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += ((5249.0 - ClampedDistance) / 5249.0) * 0.25;
-    }
+    Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - Level.GetLocalPlayerController().CalcViewLocation));
+    
+    Pitch = class'UInterp'.static.MapRangeClamped(
+        Distance, 
+        PITCH_DISTANCE_METERS_MIN, 
+        PITCH_DISTANCE_METERS_MAX, 
+        PITCH_MAX,
+        PITCH_MIN
+    );
+    Volume = class'UInterp'.static.MapRangeClamped(
+        Distance,
+        VOLUME_DISTANCE_METERS_MIN,
+        VOLUME_DISTANCE_METERS_MAX,
+        VOLUME_MIN,
+        VOLUME_MAX
+    );
 }
 
 // New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. undeployed mortar
