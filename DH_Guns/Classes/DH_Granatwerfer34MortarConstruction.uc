@@ -15,5 +15,4 @@ defaultproperties
     bIsArtillery=true
     SupplyCost=1000
     ProgressMax=8
-    bSinglePlayerOnly=true
 }
