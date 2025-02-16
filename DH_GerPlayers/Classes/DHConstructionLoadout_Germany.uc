@@ -30,11 +30,11 @@ defaultproperties
     Constructions(12)=(ConstructionClass=class'DHConstruction_Hedgehog',Limit=-1,MaxActive=-1)
     Constructions(13)=(ConstructionClass=class'DHConstruction_DragonsTooth',Limit=-1,MaxActive=-1)
 
-    Constructions(14)=(ConstructionClass=class'DH_Pak38ATGunConstruction',Limit=5,MaxActive=-1)
-    Constructions(15)=(ConstructionClass=class'DH_Pak40ATGunConstruction',Limit=5,MaxActive=-1)
-    Constructions(16)=(ConstructionClass=class'DH_Pak43ATGunConstruction',Limit=5,MaxActive=-1)
-    Constructions(17)=(ConstructionClass=class'DH_Flak38GunConstruction',Limit=5,MaxActive=-1)
-    Constructions(18)=(ConstructionClass=class'DH_Flak88GunConstruction',Limit=5,MaxActive=-1)
-    Constructions(19)=(ConstructionClass=class'DH_Leig18GunConstruction',Limit=3,MaxActive=-1)
+    Constructions(14)=(ConstructionClass=class'DH_Pak38ATGunConstruction',Limit=3,MaxActive=-1)
+    Constructions(15)=(ConstructionClass=class'DH_Pak40ATGunConstruction',Limit=3,MaxActive=-1)
+    Constructions(16)=(ConstructionClass=class'DH_Pak43ATGunConstruction',Limit=1,MaxActive=-1)
+    Constructions(17)=(ConstructionClass=class'DH_Flak38GunConstruction',Limit=2,MaxActive=-1)
+    Constructions(18)=(ConstructionClass=class'DH_Flak88GunConstruction',Limit=2,MaxActive=-1)
+    Constructions(19)=(ConstructionClass=class'DH_Leig18GunConstruction',Limit=2,MaxActive=-1)
     Constructions(20)=(ConstructionClass=class'DH_Granatwerfer34MortarConstruction',Limit=3,MaxActive=-1)
 }
