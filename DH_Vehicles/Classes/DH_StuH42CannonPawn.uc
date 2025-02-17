@@ -13,5 +13,4 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int')
     DriverPositions(4)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int')
-    DriverPositions(5)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int')
 }
