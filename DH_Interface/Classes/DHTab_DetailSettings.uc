@@ -19,6 +19,8 @@ var int                         CorpseStayNum;
 
 var bool                        bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
 
+var localized string            NoneText;
+
 function SetupPositions()
 {
     super.SetupPositions();
@@ -83,6 +85,21 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
     if (Options.Length == 0)
     {
         GetComboOptions(Combo, Options);
+    }
+
+    // Multi-sampling and aniostropy options hard-coded the "None" option so that it was not localizable.
+    // This replaces the hard-coded "None" with the localized "None" text.
+    switch (Combo)
+    {
+        case co_MultiSamples:
+        case co_Anisotropy:
+            if (Options[0].Item == "None")
+            {
+                Options[0].Item = NoneText;
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -838,6 +855,8 @@ defaultproperties
     DisplayModes(13)=(Width=2560,Height=1440)
     DisplayModes(14)=(Width=3440,Height=1440)
     DisplayModes(15)=(Width=3840,Height=2160)
+
+    NoneText="None"
 
     // Background for left side "Basic Rendering"
     Begin Object Class=DHGUISectionBackground Name=sbSection1
