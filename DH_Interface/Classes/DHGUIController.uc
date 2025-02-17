@@ -355,7 +355,7 @@ defaultproperties
     ImageList(7)=Texture'InterfaceArt_tex.Menu.DownMark'
     DefaultStyleNames(0)="ROInterface.ROSTY2CloseButton"
     DefaultStyleNames(1)="ROInterface.ROSTY_RoundScaledButton"
-    DefaultStyleNames(2)="ROInterface.ROSTY2SquareButton"
+    DefaultStyleNames(2)="DH_Interface.DHStyle_SquareButton"
     DefaultStyleNames(3)="ROInterface.ROSTY_ListBox"
     DefaultStyleNames(4)="ROInterface.ROSTY2ScrollZone"
     DefaultStyleNames(5)="ROInterface.ROSTY2TextButton"
@@ -441,6 +441,7 @@ defaultproperties
     MapVotingMenu="DH_Interface.DHMapVotingPage"
     EditFavoriteMenu="DH_Interface.DHEditFavoritePage"
     NetworkMsgMenu="DH_Interface.DHNetworkStatusMsg"
+	QuestionMenuClass="DH_Interface.DHGUIQuestionPage"
     MainMenuOptions(0)="DH_Interface.DHServerBrowser"
     MainMenuOptions(1)="DH_Interface.DHGamePageMP"
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"
