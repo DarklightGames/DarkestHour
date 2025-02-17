@@ -426,7 +426,7 @@ simulated private function SendRangeMessage()
     // Send a message to the player's HUD.
     if (WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
-        WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', RangeTable[RangeIndex].Range);
+        WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', class'UInteger'.static.FromShorts(RangeTable[RangeIndex].Range, int(RangeDistanceUnit)));
     }
 }
 

@@ -63,7 +63,7 @@ var int                 RequiredSquadMembers;
 var int                 Cooldown;               // [s] reenabling interval between adding two consequent markers
 var int                 ActivationTimeout;      // [s] how long it takes after placing for this marker to become activated
 
-var     string          CalculatingString;
+var localized string    CalculatingString;
 
 enum EMarkerType
 {

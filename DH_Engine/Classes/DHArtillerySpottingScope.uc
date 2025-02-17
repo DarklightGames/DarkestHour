@@ -101,6 +101,10 @@ var     array<float>                    YawTicksShading;  // used by target tick
 var     array<float>                    YawTicksCurvature;
 var     array<float>                    PitchTicksCurvature;
 
+var localized string SquadText;
+var localized string SelectedTargetText;
+var localized string MeasurementToolText;
+
 enum ETargetWidgetLineType
 {
     TWLT_Header,
@@ -406,7 +410,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
-                        Labels[0] = "SELECTED TARGET";
+                        Labels[0] = SelectedTargetText;
 
                         if (TargetInfo.MarkersTotal > 1)
                         {
@@ -415,7 +419,7 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                         }
                         break;
                     case MT_Measurement:
-                        Labels[0] = "MEASUREMENT TOOL";
+                        Labels[0] = MeasurementToolText;
                         break;
                     case MT_Measurement:
                         break;
@@ -426,12 +430,12 @@ function DrawTargetWidget(DHPlayer PC, Canvas C, float X, float Y, STargetInfo T
                 switch (TargetInfo.Marker.MapMarkerClass.default.Type)
                 {
                     case MT_OnMapArtilleryRequest:
-                        Labels[0] = "Squad: ";
+                        Labels[0] = SquadText $ ": ";
                         Labels[1] = TargetInfo.SquadName @ "-" @ TargetInfo.Marker.MapMarkerClass.default.MarkerName;
                         LabelColors[1] = Green;
                         break;
                     case MT_Measurement:
-                        Labels[0] = "Ruler marker";
+                        Labels[0] = class'DHMapMarker_Ruler'.default.MarkerName;
                         break;
                     default:
                         break;
@@ -1089,4 +1093,8 @@ defaultproperties
 
     GradientOverlayX=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_x'
     GradientOverlayY=Texture'DH_InterfaceArt2_tex.Artillery.dials_gradient_y'
+
+    SelectedTargetText="Selected Target"
+    MeasurementToolText="Measurement Tool"
+    SquadText="Squad"
 }

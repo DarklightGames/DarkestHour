@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHWeaponRangeMessage extends LocalMessage
+    dependson(DHUnits)
     abstract;
 
 static function string GetString(
@@ -13,7 +14,9 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    return string(Switch) $ "m"; // TODO: figure out how to pass the unit in here.
+    local int Range, Unit;
+    class'UInteger'.static.ToShorts(Switch, Range, Unit);
+    return string(Range) $ class'DHUnits'.static.GetDistanceUnitString(EDistanceUnit(Unit));
 }
 
 static function RenderComplexMessage(Canvas Canvas,
