@@ -10,6 +10,7 @@ var automated       DHmoComboBox            co_Difficulty;
 var array<float>    Difficulties;
 var bool            bHideDifficultyControl;
 
+var localized string MapCaptionText;
 var localized string MapAuthorText;
 var localized string MapPlayersText;
 var localized string MapPlayersRangeText;
@@ -207,7 +208,7 @@ function SilentSetDifficulty(int index)
     co_Difficulty.SilentSetIndex(index);
 }
 
-// Modified to proper localize the author & player count.
+// Modified to properly localize the author & player count.
 function ReadMapInfo(string MapName)
 {
     local string mDesc;
@@ -266,6 +267,12 @@ function ReadMapInfo(string MapName)
     {
         l_MapAuthor.Caption = "";
     }
+}
+
+// Modified to properly localize this caption.
+function SetGameTypeCaption()
+{
+    sb_Selection.Caption = Repl(MapCaptionText, "{game}", CurrentGameType.GameName);
 }
 
 defaultproperties
@@ -416,4 +423,5 @@ defaultproperties
     MapPlayersText="{min} players"
     MapPlayersRangeText="{min}-{max} players"
     MapAuthorText="Author: {author}"
+    MapCaptionText="{game} Maps"
 }
