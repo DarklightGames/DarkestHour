@@ -354,6 +354,13 @@ function SaveSettings()
             bSave = true;
         }
 
+        if (PC != none && PC.bUseNativeItemNames != bUseNativeItemNames)
+        {
+            PC.bUseNativeItemNames = bUseNativeItemNames;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeItemNames" @ string(bUseNativeItemNames));
+            bSave = true;
+        }
+        
         if (bSave)
         {
             H.SaveConfig();
