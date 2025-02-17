@@ -17,13 +17,17 @@ defaultproperties
         OnKeyType=cMyEditBox.InternalOnKeyType
         OnKeyEvent=cMyEditBox.InternalOnKeyEvent
     End Object
-    MyEditBox=DHGUIEditBox'DH_Interface.DHGUINumericEdit.cMyEditBox'
-    Begin Object Class=GUISpinnerButton Name=cMySpinner
+    MyEditBox=cMyEditBox
+    Begin Object Class=DHGUISpinnerButton Name=cMySpinner
         StyleName="DHSpinner"
         bTabStop=false
         bNeverScale=true
         OnClick=cMySpinner.InternalOnClick
         OnKeyEvent=cMySpinner.InternalOnKeyEvent
     End Object
-    MySpinner=GUISpinnerButton'DH_Interface.DHGUINumericEdit.cMySpinner'
+    MySpinner=cMySpinner
+
+    Begin Object Class=DHGUIToolTip Name=GUIButtonTooltip
+	End Object
+	ToolTip=GUIButtonTooltip
 }
