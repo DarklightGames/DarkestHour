@@ -13,6 +13,7 @@ from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
 from typing import List, Optional, Tuple
 from unt import iso639_to_language_extension
+import yaml
 
 
 grammar = Grammar(
@@ -564,6 +565,12 @@ def sync(args):
     files_processed = 0
     language_files_processed = dict()
 
+    localization_config_path = os.path.join(root_path, args.mod, 'localization.yml')
+
+    with open(localization_config_path, 'r') as file:
+        localization_data = yaml.load(file, Loader=yaml.FullLoader)
+        sync_languages = set(localization_data['languages'])
+
     for filename in glob.glob(pattern, recursive=True):
 
         if args.filter is not None and not fnmatch.fnmatch(filename, args.filter):
@@ -584,8 +591,13 @@ def sync(args):
             continue
 
         # Skip this file if the language code doesn't match the one we're looking for.
-        if args.language_code is not None and args.language_code != language.part1:
-            continue
+        if args.language_code is not None:
+            if args.language_code != language.part1:
+                continue
+        else:
+            if language.part1 not in sync_languages:
+                # Language is not in the list of languages to sync.
+                continue
 
         if args.verbose:
             print(f'Processing {filename} - {language.name} ({language.part1})')

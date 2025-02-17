@@ -1,0 +1,4 @@
+languages:  # The list of languages that will have their localization files generated using the synchronization tool.
+  - en  # English
+  - ru  # Russian
+  - uk  # Ukrainian
