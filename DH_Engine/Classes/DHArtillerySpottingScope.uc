@@ -144,7 +144,7 @@ function CreateRenderTable(Canvas C)
     RenderTable.Font = class'DHHud'.static.GetTinyFont(C);
     RenderTable.Columns.Insert(0, 2);
 
-    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ class'DHUnits'.static.GetDistanceUnitString(DistanceUnit) $ ")";
+    RenderTable.Columns[0].Header = RangeHeaderString @  "(" $ class'DHUnits'.static.GetDistanceUnitSymbol(DistanceUnit) $ ")";
     RenderTable.Columns[0].TextColor = class'UColor'.default.White;
     RenderTable.Columns[0].Width = 80;
     RenderTable.Columns[0].HeaderJustification = 2;

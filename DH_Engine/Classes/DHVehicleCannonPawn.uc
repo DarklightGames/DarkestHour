@@ -32,7 +32,7 @@ var     Texture     AmmoShellReloadTextures[3];
 var     Texture             CannonScopeCenter;          // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
 var     float               RangePositionX;             // X & Y positioning of range text (0.0 to 1.0)
 var     float               RangePositionY;
-var     localized string    RangeText;                  // metres or yards
+var     DHUnits.EDistanceUnit   RangeUnit;
 var     bool                bIsPeriscopicGunsight;      // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
@@ -362,11 +362,14 @@ function DrawGunsightRangeSetting(Canvas C)
 {
     local float XL, YL, MapX, MapY;
     local color SavedColor, WhiteColor;
+    local string RangeUnitName;
 
     if (Cannon == none || Cannon.RangeSettings.Length <= 0)
     {
         return;
     }
+
+    RangeUnitName = class'DHUnits'.static.GetDistanceUnitName(RangeUnit);
 
     C.Style = ERenderStyle.STY_Normal;
     SavedColor = C.DrawColor;
@@ -376,8 +379,8 @@ function DrawGunsightRangeSetting(Canvas C)
     MapY = RangePositionY * C.ClipY;
     C.SetPos(MapX, MapY);
     C.Font = class'DHHud'.static.GetSmallMenuFont(C);
-    C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
-    C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+    C.StrLen(Cannon.GetRange() @ RangeUnitName, XL, YL);
+    C.DrawTextJustified(Cannon.GetRange() @ RangeUnitName, 2, MapX, MapY, MapX + XL, MapY + YL);
     C.DrawColor = SavedColor;
 }
 
@@ -1381,7 +1384,7 @@ defaultproperties
 
     // Gunsight overlay
     GunsightSize=0.5
-    RangeText="metres"
+    RangeUnit=DU_Meters
     RangePositionX=0.16
     RangePositionY=0.2
 

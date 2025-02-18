@@ -1934,7 +1934,9 @@ function DebugModifyAddedPitch(int PitchAdjustment)
                 {
                     ShellClass.default.MechanicalRanges[i].RangeValue += PitchAdjustment;
 
-                    Instigator.ClientMessage("New added pitch for range" @ RangeSettings[CurrentRangeIndex] @ DHVehicleCannonPawn(Instigator).RangeText
+                    Instigator.ClientMessage(
+                        "New added pitch for range" @ RangeSettings[CurrentRangeIndex]
+                        @ class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit)
                         @ "(MechanicalRanges[" $ i $ "]) =" @ ShellClass.default.MechanicalRanges[i].RangeValue);
 
                     break;
@@ -1976,13 +1978,13 @@ function BeginAutoDebugRange()
     }
 
     // Calculate the target range in UU
-    if (WeaponPawn.IsA('DHVehicleCannonPawn') && DHVehicleCannonPawn(WeaponPawn).RangeText ~= "metres")
+    if (DHVehicleCannonPawn(WeaponPawn) != none)
     {
-        RangeUU = class'DHUnits'.static.MetersToUnreal(Max(GetRange(), 10));
+        RangeUU = class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DHVehicleCannonPawn(WeaponPawn).RangeUnit, DU_Unreal);
     }
     else
     {
-        RangeUU = Max(GetRange(), 10) * 55.18654;
+        RangeUU = class'DHUnits'.static.ConvertDistance(Max(GetRange(), 10), DU_Unreal, DU_Yards);
     }
 
     // Calculate required position for target wall & spawn it
@@ -2095,7 +2097,7 @@ function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
                     bDebugRangeAutomatically = false;
 
                     MessageText = Tag @ ProjectileDescriptions[GetAmmoIndex()] $ ": Best pitch adjustment for RangeSettings["
-                        $ CurrentRangeIndex $ "] of" @ GetRange() @ DHVehicleCannonPawn(Instigator).RangeText @ "=" @ FinalPitchAdjustment;
+                        $ CurrentRangeIndex $ "] of" @ GetRange() @ class'DHUnits'.static.GetDistanceUnitName(DHVehicleCannonPawn(Instigator).RangeUnit) @ "=" @ FinalPitchAdjustment;
                 }
             }
             // Somehow we couldn't trace the target wall, so we'd better exit debugging

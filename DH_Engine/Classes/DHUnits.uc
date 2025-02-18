@@ -13,29 +13,29 @@ enum EDistanceUnit
     DU_Yards,
 };
 
-var float UnrealDistanceConversion[3];
+struct DistanceUnit
+{
+    var localized string Name;
+    var localized string Symbol;
+    var float Conversion;           // Conversion factor to Unreal units.
+};
 
-var localized string UnrealDistanceSymbol;
-var localized string MetersSymbol;
-var localized string YardsSymbol;
+var array<DistanceUnit> DistanceUnits;
 
 final static function float ConvertDistance(float Distance, EDistanceUnit FromUnit, EDistanceUnit ToUnit)
 {
     // First convert to Unreal units, then convert to the desired unit.
-    return (Distance / default.UnrealDistanceConversion[FromUnit]) * default.UnrealDistanceConversion[ToUnit];
+    return (Distance / default.DistanceUnits[int(FromUnit)].Conversion) * default.DistanceUnits[int(ToUnit)].Conversion;
 }
 
-final static function string GetDistanceUnitString(EDistanceUnit Unit)
+final static function string GetDistanceUnitSymbol(EDistanceUnit Unit)
 {
-    switch (Unit)
-    {
-        case DU_Unreal:
-            return default.UnrealDistanceSymbol;
-        case DU_Meters:
-            return default.MetersSymbol;
-        case DU_Yards:
-            return default.YardsSymbol;
-    }
+    return default.DistanceUnits[int(Unit)].Symbol;
+}
+
+final static function string GetDistanceUnitName(EDistanceUnit Unit)
+{
+    return default.DistanceUnits[int(Unit)].Name;
 }
 
 final static function float MetersToUnreal(coerce float Meters)
@@ -50,11 +50,7 @@ final static function float UnrealToMeters(coerce float Unreal)
 
 defaultproperties
 {
-    UnrealDistanceSymbol="uu"
-    MetersSymbol="m"
-    YardsSymbol="yd"
-
-    UnrealDistanceConversion(0)=1.0 // Unreal
-    UnrealDistanceConversion(1)=0.01656945917285259809119830328738 // Meters
-    UnrealDistanceConversion(2)=0.01812058089769531724759219519617 // Yards
+    DistanceUnits(0)=(Name="Unreal Units",Symbol="uu",Conversion=1.0)
+    DistanceUnits(1)=(Name="Meters",Symbol="m",Conversion=0.01656945917285259809119830328738)
+    DistanceUnits(2)=(Name="Yards",Symbol="yd",Conversion=0.01812058089769531724759219519617)
 }

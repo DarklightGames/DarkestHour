@@ -16,7 +16,7 @@ static function string GetString(
 {
     local int Range, Unit;
     class'UInteger'.static.ToShorts(Switch, Range, Unit);
-    return string(Range) $ class'DHUnits'.static.GetDistanceUnitString(EDistanceUnit(Unit));
+    return string(Range) $ class'DHUnits'.static.GetDistanceUnitSymbol(EDistanceUnit(Unit));
 }
 
 static function RenderComplexMessage(Canvas Canvas,

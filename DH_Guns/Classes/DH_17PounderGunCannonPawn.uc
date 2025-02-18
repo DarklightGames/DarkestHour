@@ -17,7 +17,7 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_background'
     CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_mover'
     GunsightSize=0.459 // 13 degrees visible FOV at 3x magnification (No.51 sight)
-    RangeText="Yards"
+    RangeUnit=DU_Yards
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
 }
