@@ -21,3 +21,4 @@ System/dh_server_launcher.bat
 !DarkestHourDev/Fonts/*
 !DarkestHourDev/ChangeLogs/*
 !DarkestHourDev/BDK/*
+!DarkestHourDev/localization.yml
