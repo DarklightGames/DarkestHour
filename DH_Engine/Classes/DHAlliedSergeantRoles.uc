@@ -12,8 +12,6 @@ defaultproperties
     bRequiresSLorASL=true
     MyName="Sergeant"
     AltName="Sergeant"
-    Article="a "
-    PluralName="Sergeants"
     Limit=2
     bSpawnWithExtraAmmo=true
 }

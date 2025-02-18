@@ -10,7 +10,5 @@ defaultproperties
 {
     MyName="Rifleman"
     AltName="Schütze"
-    Article="a "
-    PluralName="Riflemen"
     bSpawnWithExtraAmmo=true
 }

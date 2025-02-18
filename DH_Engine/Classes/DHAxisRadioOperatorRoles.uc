@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Radio Operator"
     AltName="Funktruppe"
-    Article="a "
-    PluralName="Radio Operator"
     Limit=1
     bCarriesRadio=true
     bCanBeSquadLeader=false

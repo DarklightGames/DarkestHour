@@ -10,7 +10,6 @@ defaultproperties
 {
     MyName="Lance Corporal"
     AltName="Lance Corporal"
-    PluralName="Lance Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')

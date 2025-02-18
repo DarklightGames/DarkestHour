@@ -12,8 +12,6 @@ defaultproperties
     bExemptSquadRequirement=true
     MyName="Mortar Operator"
     AltName="Mortar Operator"
-    Article="a "
-    PluralName="Mortar Operators"
     Limit=1
     AddedRoleRespawnTime=10
     bCanBeSquadLeader=false

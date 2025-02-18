@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Assault Trooper"
     AltName="Stoﬂtruppe"
-    Article="an "
-    PluralName="Assault Troopers"
     Limit=3
     bSpawnWithExtraAmmo=true
 }

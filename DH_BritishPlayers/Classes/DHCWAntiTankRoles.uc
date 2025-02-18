@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Tank Hunter"
     AltName="Tank Hunter"
-    Article="a "
-    PluralName="Tank Hunters"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')

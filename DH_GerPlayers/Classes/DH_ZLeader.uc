@@ -15,8 +15,6 @@ defaultproperties
 
     MyName="Zombie Leader"
     AltName="Zombie Leader"
-    Article=""
-    PluralName=""
     Limit=1
 
     bIsLeader=true

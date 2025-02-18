@@ -11,8 +11,6 @@ defaultproperties
     bRequiresSLorASL=true
     MyName="Corporal"
     AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
     Limit=2
     bSpawnWithExtraAmmo=true
 }

@@ -12,8 +12,6 @@ defaultproperties
     bExemptSquadRequirement=true
     MyName="Tank Crewman"
     AltName="Tank Crewman"
-    Article="a "
-    PluralName="Tank Crewmen"
     Limit=3
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=15

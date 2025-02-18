@@ -2888,7 +2888,7 @@ function MaybeInvalidateRole(DHPlayer PC)
 
     if (PC.GetRoleEnabledResult(RI) != RER_Enabled)
     {
-        // "You are no longer qualified to be {article} {name}."
+        // "You are no longer qualified to be {name}."
         PC.ReceiveLocalizedMessage(class'DHGameMessage', 24,,, RI);
 
         DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());

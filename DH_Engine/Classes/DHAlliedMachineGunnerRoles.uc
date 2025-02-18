@@ -11,8 +11,6 @@ defaultproperties
     bIsGunner=true
     MyName="Machine-Gunner"
     AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
     Limit=1
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=20

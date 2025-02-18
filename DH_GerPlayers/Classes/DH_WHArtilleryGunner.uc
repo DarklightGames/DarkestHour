@@ -9,8 +9,6 @@ defaultproperties
 {
     MyName="Artillery Gunner"
     AltName="Artillerie Schütze"
-    Article="a "
-    PluralName="Artillery Gunners"
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn')
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'

@@ -12,8 +12,6 @@ defaultproperties
 
     MyName="Berserker"
     AltName="Berserker"
-    Article="a "
-    PluralName="Berserkers"
     bSpawnWithExtraAmmo=true
 
     VoiceType="DH_GerPlayers.DHZVoice"

@@ -11,8 +11,6 @@ defaultproperties
     bIsGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
-    Article="an "
-    PluralName="Anti-Tank Soldiers"
     Limit=1
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=15

@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Combat Engineer"
     AltName="Combat Engineer"
-    Article="a "
-    PluralName="Combat Engineers"
     Limit=2
     bSpawnWithExtraAmmo=true
     AddedRoleRespawnTime=15

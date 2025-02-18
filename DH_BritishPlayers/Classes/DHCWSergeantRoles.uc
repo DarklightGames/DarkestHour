@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Corporal"
     AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1928_20rndWeapon')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_M1928_30rndWeapon')

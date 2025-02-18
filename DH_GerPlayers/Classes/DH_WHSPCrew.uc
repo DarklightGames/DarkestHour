@@ -9,8 +9,6 @@ defaultproperties
 {
     MyName="Assault Gun Crewman"
     AltName="Stugbesatzung"
-    Article="a "
-    PluralName="Assault Gun Crewmen"
 
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSPGunCrewPawn')
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
