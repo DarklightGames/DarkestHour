@@ -287,7 +287,6 @@ defaultproperties
     bPassengerOnly=true
     bSinglePositionExposed=true
     bUseDriverHeadBoneCam=true
-    HudName="Rider"
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
     PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'

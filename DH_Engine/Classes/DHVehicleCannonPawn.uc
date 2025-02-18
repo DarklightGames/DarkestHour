@@ -1378,7 +1378,6 @@ defaultproperties
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
     AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="Cmdr"
 
     // Gunsight overlay
     GunsightSize=0.5

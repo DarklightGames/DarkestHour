@@ -626,5 +626,4 @@ defaultproperties
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="MG"
 }
