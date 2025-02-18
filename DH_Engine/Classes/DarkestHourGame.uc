@@ -2398,7 +2398,7 @@ function UpdatePlayerScore(Controller C)
 }
 
 // Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
-// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out for itself whether it needs to display a suicide message
+// Also to pass Killer's PRI even if Killer is same as Killed, so RODeathMessage class can work out for itself whether it needs to display a suicide message
 // And fixed bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
 function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
 {
@@ -5810,7 +5810,6 @@ defaultproperties
     VotingHandlerClass=class'DH_Engine.DHVotingHandler'
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
-    DeathMessageClass=class'DH_Engine.DHDeathMessage'
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'

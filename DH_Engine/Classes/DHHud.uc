@@ -509,12 +509,6 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 
     IndexPosition = DHObituaries.Length;
     DHObituaries[IndexPosition] = O;
-
-    // Save console death message in a paired ConsoleDeathMessages array
-    if (!class'DHDeathMessage'.default.bNoConsoleDeathMessages)
-    {
-        ConsoleDeathMessages[IndexPosition] = class'DHDeathMessage'.static.GetString(0, Killer, Victim, DamageType);
-    }
 }
 
 // Modified to correct bug that sometimes screwed up layout of critical message,
