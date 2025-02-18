@@ -105,3 +105,8 @@ simulated function Tick(float DeltaTime)
         TickedReplicationQueue.Remove(i,1);
     }
 }
+
+defaultproperties
+{
+    bEnableSinglePlayerVoting=true
+}
