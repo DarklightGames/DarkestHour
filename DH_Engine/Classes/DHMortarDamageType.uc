@@ -14,9 +14,6 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.8
-    DeathString="%o was blown up by %k's mortar shell."
-    MaleSuicide="%o was blown up by his own mortar shell."
-    FemaleSuicide="%o was blown up by her own mortar shell."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

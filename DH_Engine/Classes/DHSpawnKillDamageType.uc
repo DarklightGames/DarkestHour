@@ -9,7 +9,4 @@ class DHSpawnKillDamageType extends DHInstantObituaryDamageTypes
 defaultproperties
 {
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.spawnkill'
-    DeathString="%o was spawn killed by %k."
-    MaleSuicide="%o spawn killed himself."
-    FemaleSuicide="%o spawn killed herself."
 }

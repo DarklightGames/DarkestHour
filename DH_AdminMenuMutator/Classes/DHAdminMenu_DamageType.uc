@@ -10,7 +10,6 @@ class DHAdminMenu_DamageType extends DamageType
 
 defaultproperties
 {
-    DeathString="%o was re-spawned by an admin"
     bLocationalHit=false
     bCausesBlood=false
     GibModifier=0.0

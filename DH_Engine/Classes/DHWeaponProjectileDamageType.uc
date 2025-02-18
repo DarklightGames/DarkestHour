@@ -15,10 +15,6 @@ defaultproperties
     // Previously APCs or AT guns relied on a minimum APCDamageModifier threshold in the TakeDamage() function, preventing damage by bullets
     // But it's much cleaner simply to give bullets a zero APCDamageModifier (& override if required for more powerful bullets, e.g. armour piercing bullets)
     VehicleDamageModifier=0.1
-
-    DeathString="%o was killed by %k's %w."
-    MaleSuicide="%o was killed by his own %w."
-    FemaleSuicide="%o was killed by her own %w."
     KDamageImpulse=2250.0 // default for full power rifle ammo
     GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
