@@ -93,8 +93,6 @@ simulated function WorkBolt()
     {
         GotoState('WorkingBolt');
 
-        PlayerViewZoom(false);
-
         if (Role < ROLE_Authority)
         {
             ServerWorkBolt();

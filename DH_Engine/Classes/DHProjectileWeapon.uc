@@ -530,7 +530,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
             bDrawingFirstPerson = false;
         }
-        else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed && !IsInState('WorkingBolt')) // TODO: don't render this while we're bolting the weapon.
+        else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed)
         {
             Canvas.DrawColor.A = 255;
             Canvas.Style = ERenderStyle.STY_Alpha;
