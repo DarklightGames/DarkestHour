@@ -1,4 +1,23 @@
-languages:  # The list of languages that will have their localization files generated using the synchronization tool.
-  - en  # English
-  - ru  # Russian
-  - uk  # Ukrainian
+# The path to the Weblate repository, relative to the root path of the invoking command.
+repository:
+  path: submodules/weblate-darklightgames
+export:
+  # Package patterns for source .int files, relative to root path of the invoking command.
+  input_patterns:
+    - DarkestHourDev/System/*.*t
+    - System/Core.*t
+    - System/Engine.*t
+    - System/GUI2K4.*t
+    - System/ROEngine.*t
+    - System/ROInterface.*t
+    - System/XInterface.*t
+    - System/XVoting.*t
+  # The pattern to use for the output file names, relative to the Weblate repository.
+  # Use {l} to substitute the ISO-3608 language code (e.g., "English" -> "en").
+  # Use {f} to substitute the filename (e.g., "Core.int" -> "Core").
+  output_pattern: "{f}/{f}.{l}.po"
+sync:
+  # The list of languages that will be processed by the sync command.
+  languages:
+    - ru  # Russian
+    - uk  # Ukrainian

@@ -1,6 +1,7 @@
 import argparse
-import fnmatch
 import glob
+from pathlib import Path
+
 import git
 import polib
 import os
@@ -267,7 +268,7 @@ def po_to_unt(contents: str) -> str:
     return '\n'.join(lines)
 
 
-def command_export(args):
+def command_export_file(args):
     input_path = args.input_path
     basename, extension = os.path.splitext(os.path.basename(input_path))
 
@@ -314,86 +315,6 @@ def get_language_from_unt_extension(extension: str) -> Optional[Language]:
 
     # Look up the language code in the ISO 639-1 table.
     return Language.from_part1(language_code)
-
-
-def command_import_directory(args):
-    """
-    Convert all .po files in a directory to Unreal translation files (.int, .det, etc.).
-    """
-    input_path = args.input_path
-
-    # Make sure the input path is a directory.
-    if not os.path.isdir(input_path):
-        print(f'"{input_path}" is not a directory')
-        return
-
-    count = 0
-    pattern = f'{input_path}\\*\\*.po'
-
-    for filename in glob.glob(pattern, recursive=True):
-        basename = os.path.basename(filename)
-
-        # Get the language code from the filename.
-        regex = r'([^\.]+)\.([a-z]{2})\.po$'
-        match = re.search(regex, basename)
-
-        if match is None:
-            print(f'Failed to parse language code from filename "{basename}"')
-            continue
-
-        basename = match.group(1)
-        language_code = match.group(2)
-
-        # Look up the language code in the ISO 639-1 table.
-        try:
-            language = Language.from_part1(language_code)
-        except LanguageNotFoundError:
-            print(f'Unknown language code {language_code} for file {filename}')
-            continue
-
-        # Skip this file if the language code doesn't match the one we're looking for.
-        if args.language_code is not None and args.language_code != language_code:
-            if args.verbose:
-                print(f'Skipping {filename}, language code {language_code} does not match {args.language_code}')
-            continue
-
-        if language_code == 'en':
-            # In Unreal, English is "international", or "in".
-            language_code = 'in'
-
-        if args.verbose:
-            print(f'Processing {filename} - {language.name} ({language_code})')
-
-        input_filename = os.path.join(input_path, filename)
-
-        with open(input_filename, 'r', encoding='utf-8') as file:
-            try:
-                # Parse the Unreal translation file to a list of key-value pairs.
-                unt_contents = po_to_unt(file.read())
-            except RuntimeError as e:
-                print(f'Failed to parse file {filename}: {e}')
-                continue
-
-            output_path = args.output_path
-            output_path = output_path.replace('{l}', language_code)
-            output_path = output_path.replace('{f}', basename)
-
-            if not args.dry:
-                os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-                if args.verbose:
-                    print(f'Writing to {output_path}')
-
-                # Note: we use utf-8-sig to write the file because Unreal Tournament expects the file to be encoded with
-                # utf-8 with a BOM (byte order mark).
-                with open(output_path, 'wb') as output_file:
-                    # Write the BOM.
-                    output_file.write(b'\xff\xfe')
-                    output_file.write(unt_contents.encode('utf-16-le'))
-
-                count += 1
-
-    print(f'Imported {count} file(s)')
 
 
 def update_keys(args, source_language_code: str = 'en'):
@@ -462,100 +383,105 @@ def update_keys(args, source_language_code: str = 'en'):
                     output_po.save(output_filename)
 
 
-def command_export_directory(args):
-    input_path = args.input_path
+def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
+    if mod is not None:
+        path /= mod
 
-    # Make sure the input path is a directory.
-    if not os.path.isdir(input_path):
-        print(f'"{input_path}" is not a directory')
-        return
+    localization_config_path = path / 'localization.yml'
+
+    # Make sure the configuration file exists.
+    if not localization_config_path.is_file():
+        raise FileNotFoundError(f'Configuration file {localization_config_path} not found')
+
+    # Load the YAML configuration file.
+    with open(str(localization_config_path), 'r') as file:
+        localization_data = yaml.load(file, Loader=yaml.FullLoader)
+
+    return localization_data
+
+
+def command_export(args):
+    root_path = Path(args.path).absolute().resolve()
+    localization_data = read_localization_config(root_path, args.mod)
+
+    input_patterns = localization_data['export']['input_patterns']
 
     count = 0
 
-    for filename in glob.glob(f'{input_path}/*.*t'):
-        filename = os.path.relpath(filename, input_path)
-        basename, extension = os.path.splitext(filename)
+    for pattern in input_patterns:
+        glob_pattern = str(root_path / pattern)
+        for input_path in glob.glob(glob_pattern):
+            # Get the file name without the path.
+            filename = Path(input_path).name
+            basename, extension = os.path.splitext(filename)
 
-        if args.filter is not None and not fnmatch.fnmatch(filename, args.filter):
-            continue
-
-        # Look up the language code in the ISO 639-1 table.
-        try:
-            language = get_language_from_unt_extension(extension)
-        except LanguageNotFoundError:
-            print(f'Unknown language code for file {filename}')
-            continue
-
-        # Skip this file if the language code doesn't match the one we're looking for.
-        if args.language_code is not None and args.language_code != language.part1:
-            if args.verbose:
-                print(f'Skipping {filename}, language code {language.part1} does not match {args.language_code}')
-            continue
-
-        if args.verbose:
-            print(f'Processing {filename} - {language.name} ({language.part1})')
-
-        input_filename = os.path.join(input_path, filename)
-
-        # This is a bit of a hack, but our .int files are windows-1252, and all others are supposed to be utf-16-le.
-        with open(input_filename, 'rb') as file:
+            # Look up the language code in the ISO 639-1 table.
             try:
-                # Look for the BOM.
-                bom = file.read(2)
+                language = get_language_from_unt_extension(extension)
+            except LanguageNotFoundError:
+                print(f'Unknown language code for file {filename}')
+                continue
 
-                if bom == b'\xff\xfe':
-                    # utf-16-le
-                    file.seek(2)
-                    unt_contents = file.read().decode('utf-16-le')
-                else:
-                    # windows-1252
-                    file.seek(0)
-                    unt_contents = file.read().decode('windows-1252')
-
-                # Parse the Unreal translation file to a list of key-value pairs.
-                key_value_pairs = parse_unt(unt_contents)
-            except RuntimeError as e:
-                print(f'Failed to parse file {filename}: {e}')
+            # Skip this file if the language code doesn't match the one we're looking for.
+            if args.language_code is not None and args.language_code != language.part1:
+                if args.verbose:
+                    print(f'Skipping {filename}, language code {language.part1} does not match {args.language_code}')
                 continue
 
             if args.verbose:
-                print(f'Found {len(key_value_pairs)} key-value pairs')
+                print(f'Processing {filename} - {language.name} ({language.part1})')
 
-            output_filename = args.pattern
-            output_filename = output_filename.replace('{l}', language.part1)
-            output_filename = output_filename.replace('{f}', basename)
+            # This is a bit of a hack, but our .int files are windows-1252, and all others are supposed to be utf-16-le.
+            with open(input_path, 'rb') as file:
+                try:
+                    # Look for the BOM.
+                    bom = file.read(2)
 
-            output_path = os.path.join(args.output_directory, output_filename)
+                    if bom == b'\xff\xfe':
+                        # utf-16-le
+                        file.seek(2)
+                        unt_contents = file.read().decode('utf-16-le')
+                    else:
+                        # windows-1252
+                        file.seek(0)
+                        unt_contents = file.read().decode('windows-1252')
 
-            if not args.dry:
-                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                    # Parse the Unreal translation file to a list of key-value pairs.
+                    key_value_pairs = parse_unt(unt_contents)
+                except RuntimeError as e:
+                    print(f'Failed to parse file {filename}: {e}')
+                    continue
 
                 if args.verbose:
-                    print(f'Writing to {output_path}')
+                    print(f'Found {len(key_value_pairs)} key-value pairs')
 
-                write_po(output_path, key_value_pairs, language.part1)
+                output_filename = localization_data['export']['output_pattern']
+                output_filename = output_filename.replace('{l}', language.part1)
+                output_filename = output_filename.replace('{f}', basename)
 
-                count += 1
+                repository_path = root_path / localization_data['repository']['path']
+                output_path = repository_path / output_filename
+
+                if not args.dry:
+                    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+                    if args.verbose:
+                        print(f'Writing to {output_path}')
+
+                    write_po(output_path, key_value_pairs, language.part1)
+
+                    count += 1
 
     print(f'Exported {count} file(s)')
 
 
-def update(args):
-    # Update the submodule.
-    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    repository_path = os.path.join(root_path)
-
-    repo = git.Repo(repository_path)
-    for submodule in repo.submodules:
-        submodule.update(init=True, recursive=True)
-
-
 def sync(args):
-    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    repository_path = os.path.join(root_path, 'submodules', 'weblate-darklightgames')
+    root_path = Path(args.path).absolute().resolve()
+    localization_data = read_localization_config(root_path, args.mod)
+    repository_path = root_path / localization_data['repository']['path']
 
     # For each .po file in the repository, convert it to a .xxt file and move it to the System folder inside the mod.
-    pattern = f'{repository_path}\\**\\*.po'
+    pattern = str(repository_path / '**' / '*.po')
 
     # Print out the latest commit info (author, date, message etc.)
     repo = git.Repo(repository_path)
@@ -564,20 +490,13 @@ def sync(args):
 
     files_processed = 0
     language_files_processed = dict()
-
-    localization_config_path = os.path.join(root_path, args.mod, 'localization.yml')
-
-    with open(localization_config_path, 'r') as file:
-        localization_data = yaml.load(file, Loader=yaml.FullLoader)
-        sync_languages = set(localization_data['languages'])
+    sync_languages = set(localization_data['sync']['languages'])
 
     for filename in glob.glob(pattern, recursive=True):
 
-        if args.filter is not None and not fnmatch.fnmatch(filename, args.filter):
-            continue
-
         # Get the base name of the file and separate out the language code.
         basename = os.path.basename(filename)
+        # TODO: have this regex be part of the configuration file.
         regex = r'([^\.]+)\.([a-z]{2})\.po$'
         match = re.search(regex, basename)
         basename = match.group(1)
@@ -632,49 +551,21 @@ def sync(args):
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
 
-# Make two commands with subparsers: import and export
 subparsers = argparse.add_subparsers(dest='command', required=True)
 
-# Add the export command
-export_parser = subparsers.add_parser('export', help='Export an Unreal Tournament translation file to a .po file')
-export_parser.add_argument('input_path')
-export_parser.add_argument('output_path')
+# Add the file export command
+file_export_parser = subparsers.add_parser('export_file', help='Export an Unreal Tournament translation file to a .po file')
+file_export_parser.add_argument('input_path')
+file_export_parser.add_argument('output_path')
+file_export_parser.set_defaults(func=command_export_file)
+
+export_parser = subparsers.add_parser('export', help='Export all Unreal Tournament translation files in a directory to .po files')
+export_parser.add_argument('path', default='.', help='The game\'s root directory')
+export_parser.add_argument('--mod', help='The path to the configuration file', required=False)
+export_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+export_parser.add_argument('-l', '--language_code', help='The language to export (ISO 639-1 codes)', required=False)
+export_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 export_parser.set_defaults(func=command_export)
-
-export_directory_parser = subparsers.add_parser('export_directory', help='Export all Unreal Tournament translation files in a directory to .po files')
-export_directory_parser.add_argument('input_path',
-                                     help='The directory to search for Unreal Tournament translation files'
-                                     )
-export_directory_parser.add_argument('-o', '--output_directory',
-                                     help='The directory to write the .po files to',
-                                     required=True
-                                     )
-export_directory_parser.add_argument('-p', '--pattern',
-                                     help='The pattern to use for the output file names. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
-                                     default='{f}/{f}.{l}.po',
-                                     required=False
-                                     )
-export_directory_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
-export_directory_parser.add_argument('-l', '--language_code', help='The language to export (ISO 639-1 codes)', required=False)
-export_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
-export_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
-export_directory_parser.add_argument('-f', '--filter', help='Filter the files to export by a glob pattern', required=False)
-export_directory_parser.set_defaults(func=command_export_directory)
-
-import_directory_parser = subparsers.add_parser('import_directory', help='Import all .po files in a directory to Unreal Tournament translation files')
-import_directory_parser.add_argument('input_path',
-                                     help='The directory to search for .po files'
-                                     )
-import_directory_parser.add_argument('-o', '--output_path',
-                                        help='The pattern to use for the output path. Use {l} to substitute the ISO-3608 language code and {f} to substitute the filename.',
-                                        default='{f}.{l}',
-                                        required=False
-                                        )
-import_directory_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
-import_directory_parser.add_argument('-l', '--language_code', help='The language to import (ISO 639-1 codes)', required=False)
-import_directory_parser.add_argument('-w', '--overwrite', help='Overwrite existing files', default=False, action='store_true', required=False)
-import_directory_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
-import_directory_parser.set_defaults(func=command_import_directory)
 
 update_keys_parser = subparsers.add_parser('update_keys', help='Update the keys in a directory of .po files to match the keys in another directory of .po files.')
 update_keys_parser.add_argument('input_directory', help='The directory to read the keys from.')
@@ -683,15 +574,13 @@ update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, ac
 update_keys_parser.set_defaults(func=update_keys)
 
 sync_parser = subparsers.add_parser('sync', help='Sync a Git repository with a directory of .po files.')
-sync_parser.add_argument('-m', '--mod', help='The name of the mod to sync.', required=True)
+sync_parser.add_argument('path', help='The game\'s root directory')
+sync_parser.add_argument('-m', '--mod', help='The name of the mod to sync.', required=False)
+sync_parser.add_argument('-a', '--all', help='Sync all available translations, regardless of the configuration.', default=False, action='store_true', required=False)
 sync_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 sync_parser.add_argument('-l', '--language_code', help='The language to sync (ISO 639-1 codes)', required=False)
 sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
-sync_parser.add_argument('-f', '--filter', help='Filter the files to sync by a glob pattern', required=False)
 sync_parser.set_defaults(func=sync)
-
-update_parser = subparsers.add_parser('update', help='Update the submodule.')
-update_parser.set_defaults(func=update)
 
 
 if __name__ == '__main__':
