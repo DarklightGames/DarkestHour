@@ -153,9 +153,6 @@ event InitGame(string Options, out string Error)
     // This command will unlock a server so it can allow clients to have more
     // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
-
-    // Initialize geolocation service (verifies cache integrity)
-    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -5344,7 +5341,6 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-        class'DHGeolocationService'.static.GetIpData(PC);
 
         PC.OnPlayerLogin();
     }

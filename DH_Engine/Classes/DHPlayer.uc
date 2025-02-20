@@ -7612,66 +7612,6 @@ function SendVehicleVoiceMessage(PlayerReplicationInfo Sender,
     }
 }
 
-exec function TestIp(string IpAddress)
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
-    }
-}
-
-exec function IpCache()
-{
-    if (Level.NetMode == NM_Standalone)
-    {
-        class'DHGeolocationService'.static.DumpCache();
-    }
-}
-
-exec function SetCountry(string CountryCode)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-        PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
-    }
-}
-
-exec function IpFuzz(int Iterations)
-{
-    local int Result;
-    local string IpAddress, CountryCode;
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        if (Iterations == 0)
-        {
-            Iterations = 1000;
-        }
-
-        while (Iterations-- > 0)
-        {
-            IpAddress = Rand(256) $ "." $ Rand(256) $ "." $ Rand(256) $ "." $ Rand(256);
-            CountryCode = class'DHGeolocationService'.default.CountryCodes[Rand(class'DHGeolocationService'.default.CountryCodes.Length)];
-
-            class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
-
-            // Once more to test that it can't be inserted twice!
-            Result = class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
-
-            if (Result != -1)
-            {
-                Warn("BAD RESULT" @ RESULT);
-            }
-        }
-
-        class'DHGeolocationService'.static.StaticSaveConfig();
-    }
-}
-
 simulated function GetEyeTraceLocation(out vector HitLocation, out vector HitNormal, optional out Actor HitActor)
 {
     local vector TraceStart, TraceEnd;
