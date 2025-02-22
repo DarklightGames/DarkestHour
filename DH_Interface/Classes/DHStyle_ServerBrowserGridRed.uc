@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHStyle_ServerBrowserGridRed extends ROSTY_ServerBrowserGrid;
+class DHStyle_ServerBrowserGridRed extends DHStyle_ServerBrowserGrid;
 
 defaultproperties
 {
