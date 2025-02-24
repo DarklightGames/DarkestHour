@@ -4,14 +4,14 @@ repository:
 export:
   # Package patterns for source .int files, relative to root path of the invoking command.
   input_patterns:
-    - DarkestHourDev/System/*.*t
-    - System/Core.*t
-    - System/Engine.*t
-    - System/GUI2K4.*t
-    - System/ROEngine.*t
-    - System/ROInterface.*t
-    - System/XInterface.*t
-    - System/XVoting.*t
+    - DarkestHourDev/System/*.int
+    - System/Core.int
+    - System/Engine.int
+    - System/GUI2K4.int
+    - System/ROEngine.int
+    - System/ROInterface.int
+    - System/XInterface.int
+    - System/XVoting.int
   # The pattern to use for the output file names, relative to the Weblate repository.
   # Use {l} to substitute the ISO-3608 language code (e.g., "English" -> "en").
   # Use {f} to substitute the filename (e.g., "Core.int" -> "Core").

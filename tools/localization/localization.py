@@ -1,5 +1,6 @@
 import argparse
 import glob
+import logging
 from pathlib import Path
 
 import git
@@ -13,7 +14,7 @@ from parsimonious.exceptions import IncompleteParseError, ParseError
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor
 from typing import List, Optional, Tuple
-from unt import iso639_to_language_extension
+from unt import iso639_to_language_extension, unt_from_key_value_pairs
 import yaml
 
 
@@ -139,25 +140,28 @@ def parse_unt(contents: str) -> List[Tuple[str, str]]:
     return key_value_pairs
 
 
+def kvp_to_po_contents(key_value_pairs: list, language_code: str) -> str:
+    lines = [
+        "msgid \"\"",
+        "msgstr \"\"",
+        f"\"Language: {language_code}\\n\"",
+        "\"MIME-Version: 1.0\\n\"",
+        "\"Content-Type: text/plain\\n\"",
+        "\"Content-Transfer-Encoding: 8bit; charset=UTF-8\\n\"",
+        ""
+    ]
+
+    for key, value in key_value_pairs:
+        lines.append(f'msgid "{key}"')
+        lines.append(f'msgstr "{value}"')
+        lines.append('')
+
+    return '\n'.join(lines)
+
+
 def write_po(path: str, key_value_pairs: list, language_code: str):
     with open(path, 'wb') as f:
-        lines = [
-            "msgid \"\"",
-            "msgstr \"\"",
-            f"\"Language: {language_code}\\n\"",
-            "\"MIME-Version: 1.0\\n\"",
-            "\"Content-Type: text/plain\\n\"",
-            "\"Content-Transfer-Encoding: 8bit; charset=UTF-8\\n\"",
-            ""
-        ]
-
-        for key, value in key_value_pairs:
-            lines.append(f'msgid "{key}"')
-            lines.append(f'msgstr "{value}"')
-            lines.append('')
-
-        contents = '\n'.join(lines)
-
+        contents = kvp_to_po_contents(key_value_pairs, language_code)
         f.write(contents.encode('utf-8'))
 
 
@@ -317,72 +321,6 @@ def get_language_from_unt_extension(extension: str) -> Optional[Language]:
     return Language.from_part1(language_code)
 
 
-def update_keys(args, source_language_code: str = 'en'):
-    """
-    This function was made for the purpose of fixing the key format in the .po files for dynamic arrays.
-    In the original export, dynamic arrays were indistinguishable from static arrays, so re-ingested .po files would
-    result in the loss of dynamic array data.
-
-    This does a simple key substitution where it converts each msgid to a regex pattern, substituting square brackets
-    for angle brackets. Then, it searches for each pattern in the output file and replaces it with the updated msgid
-    from the input file.
-    """
-    input_directory = args.input_directory
-    output_directory = args.output_directory
-
-    # Read each .po file, recursively, in the input directory.
-    # Match it to a file in the output directory with the same relative path.
-    # Assume the order is the same, and update the msgid in the output file with the msgid in the input file.
-    input_glob_pathname = f'{input_directory}/**/*.{source_language_code}.po'
-
-    for input_filename in glob.glob(input_glob_pathname, recursive=True):
-        relative_input_filename = os.path.relpath(input_filename, input_directory)
-
-        # Get the base name of the file and separate out the language code.
-        basename = os.path.basename(input_filename)
-        regex = r'([^\.]+)\.([a-z]{2})\.po$'
-        match = re.search(regex, basename)
-        basename = match.group(1)
-
-        print(basename)
-
-        with open(input_filename, 'r') as input_file:
-            input_contents = input_file.read()
-            po = polib.pofile(input_contents)
-
-            # Turn each string into a regex pattern, and make it so that square and angle brackets are interchangeable.
-            msgid_patterns = list()
-            for entry in po:
-                pattern = entry.msgid.replace('<', '[').replace('>', ']')
-                pattern = re.escape(pattern).replace('\[', '[\[<]').replace('\]', '[\]>]')
-                # Surround the pattern with ^ and $ to make sure it matches the entire string.
-                pattern = f'^{pattern}$'
-                msgid_patterns.append((entry.msgid, pattern))
-
-            output_glob_pathname = f'{output_directory}/{basename}/{basename}.??.po'
-
-            # Iterate over each language file that matches the input file's relative path.
-            for output_filename in glob.glob(output_glob_pathname, recursive=True):
-                print(output_filename)
-                output_msgid_patterns = msgid_patterns.copy()
-                with open(output_filename, 'r', encoding='utf-8') as output_file:
-                    output_contents = output_file.read()
-                    output_po = polib.pofile(output_contents, encoding='utf-8')
-
-                for output_entry in output_po:
-                    for msgid_index, (msgid, pattern) in enumerate(output_msgid_patterns):
-                        match = re.match(pattern, output_entry.msgid)
-                        if msgid != output_entry.msgid and match:
-                            print(f'{output_entry.msgid} -> {msgid}')
-                            output_entry.msgid = msgid
-                            # Remove the pattern from the list so that we don't match it again.
-                            del output_msgid_patterns[msgid_index]
-                            break
-
-                if not args.dry:
-                    output_po.save(output_filename)
-
-
 def read_localization_config(path: Path, mod: Optional[str] = None) -> dict:
     if mod is not None:
         path /= mod
@@ -406,6 +344,11 @@ def command_export(args):
 
     input_patterns = localization_data['export']['input_patterns']
 
+    # Swap out the extension in the input patterns for the target language's extension.
+    if args.language_code is not None:
+        target_language_extension = iso639_to_language_extension[args.language_code]
+        input_patterns = [Path(input_pattern).with_suffix(f'.{target_language_extension}') for input_pattern in input_patterns]
+
     count = 0
 
     for pattern in input_patterns:
@@ -422,57 +365,59 @@ def command_export(args):
                 print(f'Unknown language code for file {filename}')
                 continue
 
-            # Skip this file if the language code doesn't match the one we're looking for.
-            if args.language_code is not None and args.language_code != language.part1:
-                if args.verbose:
-                    print(f'Skipping {filename}, language code {language.part1} does not match {args.language_code}')
-                continue
-
             if args.verbose:
                 print(f'Processing {filename} - {language.name} ({language.part1})')
 
-            # This is a bit of a hack, but our .int files are windows-1252, and all others are supposed to be utf-16-le.
-            with open(input_path, 'rb') as file:
-                try:
-                    # Look for the BOM.
-                    bom = file.read(2)
+            try:
+                key_value_pairs = read_unt(input_path)
+            except RuntimeError as e:
+                print(f'Failed to parse file {filename}: {e}')
+                continue
 
-                    if bom == b'\xff\xfe':
-                        # utf-16-le
-                        file.seek(2)
-                        unt_contents = file.read().decode('utf-16-le')
-                    else:
-                        # windows-1252
-                        file.seek(0)
-                        unt_contents = file.read().decode('windows-1252')
+            if args.verbose:
+                print(f'Found {len(key_value_pairs)} key-value pairs')
 
-                    # Parse the Unreal translation file to a list of key-value pairs.
-                    key_value_pairs = parse_unt(unt_contents)
-                except RuntimeError as e:
-                    print(f'Failed to parse file {filename}: {e}')
-                    continue
+            output_filename = localization_data['export']['output_pattern']
+            output_filename = output_filename.replace('{l}', language.part1)
+            output_filename = output_filename.replace('{f}', basename)
+
+            repository_path = root_path / localization_data['repository']['path']
+            output_path = repository_path / output_filename
+
+            if not args.dry:
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
                 if args.verbose:
-                    print(f'Found {len(key_value_pairs)} key-value pairs')
+                    print(f'Writing to {output_path}')
 
-                output_filename = localization_data['export']['output_pattern']
-                output_filename = output_filename.replace('{l}', language.part1)
-                output_filename = output_filename.replace('{f}', basename)
+                write_po(output_path, key_value_pairs, language.part1)
 
-                repository_path = root_path / localization_data['repository']['path']
-                output_path = repository_path / output_filename
-
-                if not args.dry:
-                    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-                    if args.verbose:
-                        print(f'Writing to {output_path}')
-
-                    write_po(output_path, key_value_pairs, language.part1)
-
-                    count += 1
+                count += 1
 
     print(f'Exported {count} file(s)')
+
+
+def read_unt(path: str) -> List[Tuple[str, str]]:
+    with open(path, 'rb') as file:
+        # Look for the BOM.
+        bom = file.read(2)
+        if bom == b'\xff\xfe':
+            # utf-16-le
+            file.seek(2)
+            unt_contents = file.read().decode('utf-16-le')
+        else:
+            # windows-1252
+            file.seek(0)
+            unt_contents = file.read().decode('windows-1252')
+        # Parse the Unreal translation file to a list of key-value pairs.
+        key_value_pairs = parse_unt(unt_contents)
+        return key_value_pairs
+
+
+def write_unt(path: str, unt_contents: str):
+    with open(path, 'wb') as file:
+        file.write(b'\xff\xfe')  # Byte-order-mark.
+        file.write(unt_contents.encode('utf-16-le'))
 
 
 def sync(args):
@@ -533,9 +478,7 @@ def sync(args):
             if args.verbose:
                 print(f'Writing to {output_path}')
 
-            with open(output_path, 'wb') as output_file:
-                output_file.write(b'\xff\xfe')  # Byte-order-mark.
-                output_file.write(unt_contents.encode('utf-16-le'))
+            write_unt(output_path, unt_contents)
 
         if language not in language_files_processed:
             language_files_processed[language] = 0
@@ -548,39 +491,102 @@ def sync(args):
         print(f'{language_code.name}: {count} file(s)')
 
 
+# Compare
+def remove_redundant_strings(args):
+    root_path = Path(args.path).absolute().resolve()
+    localization_data = read_localization_config(root_path, args.mod)
+
+    source_input_patterns = localization_data['export']['input_patterns']
+
+    # Get target language extension.
+    target_language_extension = iso639_to_language_extension[args.target_language_code]
+
+    # Swap out the extension in the input patterns for the target language's extension.
+    target_input_patterns = [os.path.splitext(p)[0] + '.' + target_language_extension for p in source_input_patterns]
+
+    for input_pattern in target_input_patterns:
+        glob_pattern = str(root_path / input_pattern)
+        # Swap out the extension for the target language.
+        for target_input_path in glob.glob(glob_pattern):
+            target_input_path = Path(target_input_path)
+            ext = os.path.splitext(target_input_path)[1][1:]
+            if ext != target_language_extension:
+                continue
+            # Find the corresponding source language file.
+            source_input_path = Path(target_input_path).with_suffix(f'.int')
+            if not source_input_path.is_file():
+                if args.verbose:
+                    logging.warn(f'Could not find source language file for {target_input_path}, skipping')
+                continue
+
+            if args.verbose:
+                print(f'Comparing {source_input_path} with {target_input_path}')
+
+            # Read the contents of both files and store their key-value pairs in dictionaries.
+            source_key_value_pairs = OrderedDict()
+            for k, v in read_unt(str(source_input_path)):
+                source_key_value_pairs[k] = v
+
+            target_key_value_pairs = OrderedDict()
+            for k, v in read_unt(str(target_input_path)):
+                target_key_value_pairs[k] = v
+
+            # Find the keys in the target file that have the same value as the source file.
+            redundant_keys = [k for k, v in target_key_value_pairs.items() if k in source_key_value_pairs and source_key_value_pairs[k] == v]
+
+            if redundant_keys:
+                print(f'Found {len(redundant_keys)} redundant key(s)')
+
+            for key in redundant_keys:
+                target_key_value_pairs.pop(key)
+
+            forbidden_keys = ['FontArrayNames', 'FontName', 'credits_lines', 'MaleSuicide', 'FemaleSuicide', 'DeathString', 'DesignModeHints']
+
+            # Also remove any keys that have any fragments of the forbidden keys.
+            for key in list(target_key_value_pairs.keys()):
+                if any(fk in key for fk in forbidden_keys):
+                    target_key_value_pairs.pop(key)
+
+            if not args.dry:
+                unt_contents = unt_from_key_value_pairs(target_key_value_pairs.items())
+                write_unt(str(target_input_path), unt_contents)
+
 # Create the top-level parser
 argparse = argparse.ArgumentParser(prog='u18n', description='Unreal Tournament localization file utilities')
 
 subparsers = argparse.add_subparsers(dest='command', required=True)
 
 # Add the file export command
-file_export_parser = subparsers.add_parser('export_file', help='Export an Unreal Tournament translation file to a .po file')
+file_export_parser = subparsers.add_parser('export_file', help='Export an Unreal translation file to a .po file')
 file_export_parser.add_argument('input_path')
 file_export_parser.add_argument('output_path')
 file_export_parser.set_defaults(func=command_export_file)
 
-export_parser = subparsers.add_parser('export', help='Export all Unreal Tournament translation files in a directory to .po files')
+export_parser = subparsers.add_parser('export', help='Export all Unreal translation files in a directory to .po files')
 export_parser.add_argument('path', default='.', help='The game\'s root directory')
-export_parser.add_argument('--mod', help='The path to the configuration file', required=False)
+export_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
 export_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 export_parser.add_argument('-l', '--language_code', help='The language to export (ISO 639-1 codes)', required=False)
 export_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 export_parser.set_defaults(func=command_export)
 
-update_keys_parser = subparsers.add_parser('update_keys', help='Update the keys in a directory of .po files to match the keys in another directory of .po files.')
-update_keys_parser.add_argument('input_directory', help='The directory to read the keys from.')
-update_keys_parser.add_argument('output_directory', help='The directory to write the keys to.')
-update_keys_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
-update_keys_parser.set_defaults(func=update_keys)
-
 sync_parser = subparsers.add_parser('sync', help='Sync a Git repository with a directory of .po files.')
 sync_parser.add_argument('path', help='The game\'s root directory')
-sync_parser.add_argument('-m', '--mod', help='The name of the mod to sync.', required=False)
+sync_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
 sync_parser.add_argument('-a', '--all', help='Sync all available translations, regardless of the configuration.', default=False, action='store_true', required=False)
 sync_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
 sync_parser.add_argument('-l', '--language_code', help='The language to sync (ISO 639-1 codes)', required=False)
 sync_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
 sync_parser.set_defaults(func=sync)
+
+cleanup_parser = subparsers.add_parser('cleanup', help='Remove redundant strings from Unreal translation files.')
+cleanup_parser.add_argument('path', help='The game\'s root directory')
+cleanup_parser.add_argument('-m', '--mod', help='The name of the mod directory', required=False)
+cleanup_parser.add_argument('-s', '--source_language_code', help='The source language (ISO 639-1 codes)', required=False, default='en')
+cleanup_parser.add_argument('-t', '--target_language_code', help='The target language (ISO 639-1 codes)', required=True)
+cleanup_parser.add_argument('-d', '--dry', help='Dry run', default=False, action='store_true', required=False)
+cleanup_parser.add_argument('-v', '--verbose', help='Verbose output', default=False, action='store_true', required=False)
+cleanup_parser.set_defaults(func=remove_redundant_strings)
 
 
 if __name__ == '__main__':
