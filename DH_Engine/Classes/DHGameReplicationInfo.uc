@@ -2437,12 +2437,12 @@ defaultproperties
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
     MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
     MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Squad_Attention"
-    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_CommandPost"
     MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
     MapMarkerClassNameS(6)="DH_Engine.DHMapMarker_Enemy_Vehicle"
     MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_Tank"
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_CommandPost"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
 
     // Danger Zone

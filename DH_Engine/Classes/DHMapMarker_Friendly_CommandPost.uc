@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHMapMarker_Friendly_PlatoonHQ extends DHMapMarker_Friendly
+class DHMapMarker_Friendly_CommandPost extends DHMapMarker_Friendly
     abstract;
 
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
@@ -14,7 +14,6 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 defaultproperties
 {
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
-    MarkerName="Request Platoon HQ"
+    MarkerName="Request Command Post"
     LifetimeSeconds=300
 }
-

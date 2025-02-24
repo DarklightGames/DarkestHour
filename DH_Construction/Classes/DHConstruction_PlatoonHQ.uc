@@ -60,7 +60,7 @@ simulated state Constructed
 
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
-            // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
+            // "You must have another teammate nearby to deconstruct an enemy Command Post!"
             P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
         }
 
@@ -83,7 +83,7 @@ simulated function OnConstructed()
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been constructed and will be established in N seconds."
+            // "A Command Post has been constructed and will be established in N seconds."
             class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 4,,, self);
 
             TraceStart = Location + vect(0, 0, 32);
@@ -123,7 +123,7 @@ simulated function OnConstructed()
             Warn("Failed to spawn a radio attachment!");
         }
 
-        // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+        // TODO: Find any nearby friendly "Build Command Post" icons within 50m and remove them.
     }
 
     if (Radio != none)
@@ -158,7 +158,7 @@ simulated state Broken
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been destroyed."
+            // "A Command Post has been destroyed."
             class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 3,,, self);
         }
 

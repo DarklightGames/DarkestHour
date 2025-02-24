@@ -228,7 +228,7 @@ defaultproperties
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
     VehicleTeamKilledMessage="{0} killed a friendly {1}."
-    NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
+    NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Command Post!"
     RoleInvalidatedMessage="You are no longer qualified to be {name}."
 
     // These are Red Ochestra strings that needed to be overriden because they were sentence fragments.

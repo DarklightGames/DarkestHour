@@ -80,7 +80,7 @@ function Timer()
         {
             bIsEstablished = true;
 
-            // "A Platoon HQ has been established."
+            // "A Command Post has been established."
             class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 0,,, self);
         }
     }
