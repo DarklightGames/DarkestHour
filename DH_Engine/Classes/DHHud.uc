@@ -99,7 +99,6 @@ var     SpriteWidget        MapMarkerIcon;
 var     SpriteWidget        MapIconAttachmentIcon;
 
 // Death messages
-var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
 var     array<DHObituary>   DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var     float               ObituaryFadeInTime;     // for some added suspense:
 var     float               ObituaryDelayTime;
@@ -464,9 +463,6 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 }
 
 // Modified to use new DHObituaries array instead of RO's Obituaries array
-// Also to save a console death message in a paired ConsoleDeathMessages array,
-// so it can be displayed later, only when the delayed screen death message is
-// shown.
 function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
     local DHObituary    O;
@@ -4371,11 +4367,6 @@ function DisplayMessages(Canvas C)
         if (Level.TimeSeconds > DHObituaries[i].EndOfLife)
         {
             DHObituaries.Remove(i, 1);
-
-            if (i < ConsoleDeathMessages.Length)
-            {
-                ConsoleDeathMessages.Remove(i, 1);
-            }
         }
     }
 
@@ -4458,17 +4449,6 @@ function DisplayMessages(Canvas C)
         }
 
         Y += 44.0 * Scale;
-
-        // If paired console death message hasn't been shown yet, do it now
-        if (ConsoleDeathMessages[i] != "")
-        {
-            if (PlayerConsole != none)
-            {
-                PlayerConsole.Message(ConsoleDeathMessages[i], 0.0);
-            }
-
-            ConsoleDeathMessages[i] = ""; // clear the message string, so this isn't repeated
-        }
     }
 }
 
