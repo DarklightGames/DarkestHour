@@ -281,13 +281,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
         if (VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle || (LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles))
         {
-            DHV.SpawnPointAttachment = DHSpawnPoint_Vehicle(DHV.SpawnAttachment(class'DHSpawnPoint_Vehicle'));
-            DHV.SpawnPointAttachment.Vehicle = DHV;
-            DHV.SpawnPointAttachment.VehicleClass = DHV.Class;
-            DHV.SpawnPointAttachment.SetTeamIndex(DHV.default.VehicleTeam);
-            DHV.SpawnPointAttachment.SetIsActive(true);
-            DHV.SpawnPointAttachment.bHasSpawnKillPenalty = DHV.default.bHasSpawnKillPenalty;
-            DHV.SpawnPointattachment.bIsTemporary = !VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle;
+            DHV.CreateSpawnPointAttachment(!VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle);
         }
 
         // Set spawn protection variables for the vehicle

@@ -4551,6 +4551,36 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     super.DisplayDebug(Canvas, YL, YPos);
 }
 
+function CreateSpawnPointAttachment(bool bIsTemporary)
+{
+    if (SpawnPointAttachment != none)
+    {
+        SpawnPointAttachment.Destroy();
+    }
+
+    SpawnPointAttachment = DHSpawnPoint_Vehicle(SpawnAttachment(class'DHSpawnPoint_Vehicle'));
+
+    if (SpawnPointAttachment == none)
+    {
+        Warn("Failed to create SpawnPointAttachment for" @ VehicleNameString);
+        return;
+    }
+
+    SpawnPointAttachment.Vehicle = self;
+    SpawnPointAttachment.VehicleClass = Class;
+    SpawnPointAttachment.SetTeamIndex(default.VehicleTeam);
+    SpawnPointAttachment.SetIsActive(true);
+    SpawnPointAttachment.bHasSpawnKillPenalty = default.bHasSpawnKillPenalty;
+    SpawnPointattachment.bIsTemporary = bIsTemporary;
+}
+
+// Returns whether or not a player should spawn inside the vehicle when using its spawn point.
+// Override in subclasses for special behavior (i.e., always spawning inside boats while on the water).
+function bool ShouldPlayersSpawnInsideVehicle()
+{
+    return !bEngineOff;
+}
+
 defaultproperties
 {
     // Miscellaneous
