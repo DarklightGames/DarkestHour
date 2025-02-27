@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This is a spawn point that gets attached to "spawn vehicles" like the
 // halftracks.
@@ -227,7 +227,7 @@ function bool PerformSpawn(DHPlayer PC)
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
         // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
-        if (Vehicle.bEngineOff)
+        if (!Vehicle.ShouldPlayersSpawnInsideVehicle())
         {
             ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
             class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations

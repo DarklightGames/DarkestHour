@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_KV1sCannon_Late extends DH_KV1sCannon; //KV-1s entered service in 1942, 76mm subcaliber ammo was only adopted in 1943, so i am making 2 different versions

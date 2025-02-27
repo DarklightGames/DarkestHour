@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionLoadout_USA extends DHConstructionLoadout
@@ -35,4 +35,5 @@ defaultproperties
     Constructions(15)=(ConstructionClass=class'DH_M45QuadmountGunConstruction',Limit=1,MaxActive=-1)
     Constructions(16)=(ConstructionClass=class'DH_M1MortarConstruction',Limit=3,MaxActive=-1)
     Constructions(17)=(ConstructionClass=class'DH_M116GunConstruction',Limit=3,MaxActive=-1)
+    Constructions(18)=(ConstructionClass=class'DH_M1919A4GunConstruction',Limit=6,MaxActive=-1)
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Engine Sounds (Napoleon)
 // [ ] Add hitpoint for the supply cache on the support version

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Model35Mortar extends DHATGun;
+class DH_Model35Mortar extends DHMortar;
 
 defaultproperties
 {
@@ -12,9 +12,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Model35Mortar_anm.model35mortar_base'
     Skins(0)=Texture'DH_Model35Mortar_tex.Model35.Model35Mortar_ext'
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Model35MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
-    bCanBeRotated=true
-    bIsArtilleryVehicle=true
-    bTeamLocked=false
     CollisionRadius=32.0
     CollisionHeight=8.0
     // Reversed because the gunner uses index 1.
@@ -27,8 +24,6 @@ defaultproperties
     VehicleHudImage=Texture'DH_Model35Mortar_tex.interface.model35mortar_body_icon'
     VehicleHudTurret=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_rot'
     VehicleHudTurretLook=TexRotator'DH_Model35Mortar_tex.interface.model35mortar_tube_icon_look'
-
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.mortar_topdown'
 
     DestructionEffectOffset=(Z=-60)
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Halloween Special 2020
 
@@ -15,8 +15,6 @@ defaultproperties
 
     MyName="Zombie Leader"
     AltName="Zombie Leader"
-    Article=""
-    PluralName=""
     Limit=1
 
     bIsLeader=true

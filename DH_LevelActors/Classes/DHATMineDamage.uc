@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHATMineDamage extends ROTankShellExplosionDamage
@@ -13,7 +13,6 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=0.85
     TreadDamageModifier=1.0
-    DeathString="%o was ripped apart by an anti-tank mine."
     bLocationalHit=true
     KDeathVel=300.0
     KDeathUpKick=100.0

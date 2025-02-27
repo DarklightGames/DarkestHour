@@ -1,6 +1,8 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Copyright (c) Darklight Games.  All rights reserved.
+//==============================================================================
+// Voice lines to use when facing Soviet forces.
 //==============================================================================
 
 class DHItalyVoice_RUS extends DHItalyVoice;

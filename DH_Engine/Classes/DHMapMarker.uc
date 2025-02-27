@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHMapMarker extends Object
@@ -63,7 +63,7 @@ var int                 RequiredSquadMembers;
 var int                 Cooldown;               // [s] reenabling interval between adding two consequent markers
 var int                 ActivationTimeout;      // [s] how long it takes after placing for this marker to become activated
 
-var     string          CalculatingString;
+var localized string    CalculatingString;
 
 enum EMarkerType
 {
@@ -252,7 +252,7 @@ static function string GetDistanceString(DHPlayer PC, DHGameReplicationInfo.MapM
 
     Distance = class'DHUnits'.static.UnrealToMeters(VSize(V));
 
-    return (Distance / 5) * 5 $ class'DHUnits'.default.MetersSymbol;
+    return (Distance / 5) * 5 $ class'DHUnits'.static.GetDistanceUnitSymbol(DU_Meters);
 }
 
 defaultproperties

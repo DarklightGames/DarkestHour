@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHMapMarker_Friendly_PlatoonHQ extends DHMapMarker_Friendly
+class DHMapMarker_Enemy_CommandPost extends DHMapMarker_Enemy
     abstract;
 
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
@@ -14,7 +14,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 defaultproperties
 {
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
-    MarkerName="Request Platoon HQ"
-    LifetimeSeconds=300
+    MarkerName="Enemy Command Post"
+    LifetimeSeconds=600
+    SpottingConsoleCommand="SPEECH SUPPORT 6"
 }
-

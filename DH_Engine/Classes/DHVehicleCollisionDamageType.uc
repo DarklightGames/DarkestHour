@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleCollisionDamageType extends ROWeaponDamageType
@@ -13,9 +13,6 @@ defaultproperties
     VehicleDamageModifier=0.5
     TreadDamageModifier=0.75
     bCauseViewJarring=true
-    DeathString="%o was killed in a crash with %k's vehicle."
-    MaleSuicide="%o was killed in a vehicle crash."
-    FemaleSuicide="%o was killed in a vehicle crash."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

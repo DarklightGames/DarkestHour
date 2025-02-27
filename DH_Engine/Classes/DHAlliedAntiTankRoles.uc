@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAlliedAntiTankRoles extends DHAlliedRoles
@@ -11,8 +11,6 @@ defaultproperties
     bIsGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
-    Article="an "
-    PluralName="Anti-Tank Soldiers"
     Limit=1
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=15

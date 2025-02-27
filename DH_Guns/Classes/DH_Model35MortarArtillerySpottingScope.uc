@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHArtillerySpottingScope_Model35Mortar extends DHArtillerySpottingScope;
+class DH_Model35MortarArtillerySpottingScope extends DHArtillerySpottingScope;
 
 defaultproperties
 {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAlliedMachineGunnerRoles extends DHAlliedRoles
@@ -11,8 +11,6 @@ defaultproperties
     bIsGunner=true
     MyName="Machine-Gunner"
     AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
     Limit=1
     bCanCarryExtraAmmo=false
     AddedRoleRespawnTime=20

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame
@@ -153,9 +153,6 @@ event InitGame(string Options, out string Error)
     // This command will unlock a server so it can allow clients to have more
     // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
-
-    // Initialize geolocation service (verifies cache integrity)
-    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -2398,7 +2395,7 @@ function UpdatePlayerScore(Controller C)
 }
 
 // Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
-// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out for itself whether it needs to display a suicide message
+// Also to pass Killer's PRI even if Killer is same as Killed, so RODeathMessage class can work out for itself whether it needs to display a suicide message
 // And fixed bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
 function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
 {
@@ -5344,7 +5341,6 @@ event PostLogin(PlayerController NewPlayer)
     if (PC != none)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
-        class'DHGeolocationService'.static.GetIpData(PC);
 
         PC.OnPlayerLogin();
     }
@@ -5775,7 +5771,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Gï¿½nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -5784,10 +5780,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Mï¿½ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grï¿½schke"
-    GermanNames(12)="Wilhelm Krï¿½ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -5810,7 +5806,6 @@ defaultproperties
     VotingHandlerClass=class'DH_Engine.DHVotingHandler'
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
-    DeathMessageClass=class'DH_Engine.DHDeathMessage'
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'

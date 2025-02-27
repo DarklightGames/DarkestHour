@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAlliedEngineerRoles extends DHAlliedRoles
@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Combat Engineer"
     AltName="Combat Engineer"
-    Article="a "
-    PluralName="Combat Engineers"
     Limit=2
     bSpawnWithExtraAmmo=true
     AddedRoleRespawnTime=15

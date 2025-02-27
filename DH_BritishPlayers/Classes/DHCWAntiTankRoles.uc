@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHCWAntiTankRoles extends DHAlliedAntiTankRoles
@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Tank Hunter"
     AltName="Tank Hunter"
-    Article="a "
-    PluralName="Tank Hunters"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_StenMkIIIWeapon')

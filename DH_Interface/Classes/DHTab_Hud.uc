@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHTab_Hud extends ROTab_Hud;
@@ -354,6 +354,13 @@ function SaveSettings()
             bSave = true;
         }
 
+        if (PC != none && PC.bUseNativeItemNames != bUseNativeItemNames)
+        {
+            PC.bUseNativeItemNames = bUseNativeItemNames;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeItemNames" @ string(bUseNativeItemNames));
+            bSave = true;
+        }
+        
         if (bSave)
         {
             H.SaveConfig();

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHPassengerPawn extends DHVehicleWeaponPawn
@@ -287,7 +287,6 @@ defaultproperties
     bPassengerOnly=true
     bSinglePositionExposed=true
     bUseDriverHeadBoneCam=true
-    HudName="Rider"
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
     PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'

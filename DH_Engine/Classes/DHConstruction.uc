@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -249,7 +249,7 @@ var array<SConstructionSocket> ConstructionSockets;
 // Cached values that are calculated only when needed (e.g., when any of the user-editable properties change such as variant or skin)
 struct RuntimeData
 {
-    var string  MenuName;           // The name to display on the interface. Calculated sparingly as it can 
+    var string  MenuName;           // The name to display on the interface.
     var bool    bHasVariants;       // If true, this construction has variants (e.g., an AT gun with a different mount)
     var bool    bHasSkins;          // If true, this construction has skins for the selected variant.
 };
@@ -257,6 +257,13 @@ struct RuntimeData
 // Variant & Skin Index
 var int VariantIndex;
 var int SkinIndex;
+
+// When true, this construction is "active" and counts towards the owning team's active limit.
+var bool bIsActive;
+
+// Debugging
+var bool bSinglePlayerOnly;  // If true, this construction can only be placed in single player mode.
+                             // Used to prevent players from placing constructions that are not yet ready for multiplayer.
 
 replication
 {
@@ -288,6 +295,7 @@ simulated function bool IsConstructed() { return false; }
 simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
 simulated function bool CanBeCut() { return false; }
+simulated function bool IsDummy() { return false; }
 
 final simulated function int GetTeamIndex()
 {
@@ -323,14 +331,13 @@ simulated function PostBeginPlay()
     Disable('Tick');
 
     LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Manager = class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Role == ROLE_Authority)
     {
         SetTeamIndex(int(TeamOwner));
         Health = HealthMax;
     }
-
-    Manager = class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Manager != none)
     {
@@ -392,11 +399,67 @@ simulated function DestroyConstructionSockets()
     }
 }
 
-// Called when this construction is spawned by a player
-function OnSpawnedByPlayer(DHPlayer PC)
+// Called when this construction is placed by a player to update the active and remaining counts.
+function Activate(int InstigatorTeamIndex)
 {
     local DHGameReplicationInfo GRI;
     local int ConstructionIndex;
+
+    if (bIsActive)
+    {
+        return;
+    }
+
+    if (!IsPlacedByPlayer())
+    {
+        Warn("Activate call was attempted on a non-player placed construction!");
+        return;
+    }
+    
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    ConstructionIndex = GRI.GetTeamConstructionIndex(InstigatorTeamIndex, Class);
+
+    if (ConstructionIndex != -1)
+    {
+        // Decrement the remaining count of this construction type.
+        GRI.Constructions[ConstructionIndex].Remaining = Max(0, int(GRI.Constructions[ConstructionIndex].Remaining) - 1);
+        GRI.Constructions[ConstructionIndex].Active += 1;
+    }
+
+    bIsActive = true;
+}
+
+// Called when this construction is torn down, broken or destroyed.
+// `bInstigatorIsFriendly` indicates if this deactivation was caused by friendly action,
+// used to determine if the Remaining count should be incremented.
+function Deactivate(optional bool bInstigatorIsFriendly)
+{
+    local DHGameReplicationInfo GRI;
+    local int ConstructionIndex;
+
+    if (Role != ROLE_Authority)
+    {
+        // Only the server can deactivate constructions.
+        return;
+    }
+
+    if (!bIsActive)
+    {
+        // We are not active, so we can't deactivate.
+        return;
+    }
+
+    if (!IsPlacedByPlayer())
+    {
+        // We don't care about non-player placed constructions.
+        return;
+    }
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -405,13 +468,32 @@ function OnSpawnedByPlayer(DHPlayer PC)
         return;
     }
 
-    ConstructionIndex = GRI.GetTeamConstructionIndex(PC.GetTeamNum(), Class);
+    ConstructionIndex = GRI.GetTeamConstructionIndex(TeamIndex, Class);
 
     if (ConstructionIndex != -1)
     {
-        // Decrement the remaining count of this construction type.
-        GRI.Constructions[ConstructionIndex].Remaining = Max(0, GRI.Constructions[ConstructionIndex].Remaining - 1);
+        // Increment the remaining count of this construction type.
+        GRI.Constructions[ConstructionIndex].Active = Max(0, int(GRI.Constructions[ConstructionIndex].Active) - 1);
+
+        if (bInstigatorIsFriendly)
+        {
+            // Instigator is friendly, so increment the remaining count (i.e., put it back in the pool).
+            GRI.Constructions[ConstructionIndex].Remaining += 1;
+        }
     }
+
+    bIsActive = false;
+}
+
+// Called when this construction is spawned by a player
+function OnSpawnedByPlayer(DHPlayer PC)
+{
+    if (PC == none)
+    {
+        return;
+    }
+    
+    Activate(PC.GetTeamNum());
 }
 
 // Terrain poking is wacky. Here's a few things you should know before using
@@ -467,6 +549,11 @@ simulated state Dummy
         DestroyConstructionSockets();
     }
 
+    simulated function bool IsDummy()
+    {
+        return true;
+    }
+
     // Take no damage.
     function TakeDamage(int Damage, Pawn EventInstigator, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex);
 
@@ -500,6 +587,8 @@ simulated event Destroyed()
 
     DestroyConstructionSockets();
 
+    Deactivate(false);
+
     super.Destroyed();
 }
 
@@ -530,7 +619,7 @@ function int RefundSupplies(Pawn Instigator)
 
     MySupplyCost = GetSupplyCost(GetContext());
 
-    if (WasCreatedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
+    if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
         // Sort the supply attachments by priority.
         Attachments = GetTouchingSupplyAttachments();
@@ -553,9 +642,6 @@ function int RefundSupplies(Pawn Instigator)
 
 function TearDown(Pawn Instigator)
 {
-    local DHGameReplicationInfo GRI;
-    local DH_LevelInfo LI;
-    local int ConstructionIndex;
     local int SuppliesRefunded;
 
     if (bShouldRefundSuppliesOnTearDown)
@@ -569,28 +655,14 @@ function TearDown(Pawn Instigator)
         }
     }
 
-    // Update the construction counts remaining in the GRI
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (GRI == none || LI == none)
-    {
-        return;
-    }
-
-    // TODO: redundant lookups happening here.
-    ConstructionIndex = GRI.GetTeamConstructionIndex(Instigator.GetTeamNum(), Class);
-
-    if (!LI.IsConstructionUnlimited(Instigator.GetTeamNum(), Class))
-    {
-        if (ConstructionIndex != -1)
-        {
-            GRI.Constructions[ConstructionIndex].Remaining = Min(LI.ConstructionsEvaluated[ConstructionIndex].Limit, GRI.Constructions[ConstructionIndex].Remaining + 1);
-        }
-    }
-
     if (IsPlacedByPlayer())
     {
+        if (Instigator.GetTeamNum() == TeamIndex)
+        {
+            // Deactivate with friendly instigator (i.e., put the construction back in the remaining pool).
+            Deactivate(true);
+        }
+
         Destroy();
     }
     else
@@ -709,6 +781,9 @@ Begin:
 
 simulated function bool IsPlacedByPlayer()
 {
+    // Dynamically placed actors are owned by the LevelInfo. If it was placed
+    // in-editor, it will not have an owner. This is a nice implicit way of
+    // knowing if something was created in-editor or not.
     return Owner != none;
 }
 
@@ -919,6 +994,11 @@ simulated state Broken
             }
         }
 
+        if (Role == ROLE_Authority)
+        {
+            Deactivate(false);
+        }
+
         OnBroken();
     }
 
@@ -1026,6 +1106,11 @@ static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 
     PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
 
+    if (default.bSinglePlayerOnly && (Context.LevelInfo != none && Context.LevelInfo.Level.NetMode != NM_Standalone))
+    {
+        return false;
+    }
+
     // Only show constructions the player is allowed to place
     if (PRI != none)
     {
@@ -1089,15 +1174,6 @@ static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    MaxActive = Context.LevelInfo.GetConstructionMaxActive(Context.TeamIndex, default.Class);
-
-    if (MaxActive >= 0 && CM.CountOf(P.GetTeamNum(), default.Class) >= MaxActive)
-    {
-        E.Type = ERROR_MaxActive;
-        E.OptionalInteger = MaxActive;
-        return E;
-    }
-
     SRI = Context.PlayerController.SquadReplicationInfo;
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(Context.PlayerController.GameReplicationInfo);
@@ -1105,6 +1181,15 @@ static function ConstructionError GetPlayerError(DHActorProxy.Context Context)
     if (PRI == none || SRI == none || GRI == none || !IsPlaceableByPlayer(PRI))
     {
         E.Type = ERROR_Fatal;
+        return E;
+    }
+
+    MaxActive = Context.LevelInfo.GetConstructionMaxActive(Context.TeamIndex, default.Class);
+
+    if (MaxActive >= 0 && GRI.GetTeamConstructionActive(Context.TeamIndex, default.Class) >= MaxActive)
+    {
+        E.Type = ERROR_MaxActive;
+        E.OptionalInteger = MaxActive;
         return E;
     }
 
@@ -1299,15 +1384,7 @@ function BreakMe()
 
 simulated function bool ShouldDestroyOnReset()
 {
-    return WasCreatedByPlayer();
-}
-
-simulated function bool WasCreatedByPlayer()
-{
-    // Dynamically placed actors are owned by the LevelInfo. If it was placed
-    // in-editor, it will not have an owner. This is a nice implicit way of
-    // knowing if something was created in-editor or not.
-    return Owner != none;
+    return IsPlacedByPlayer();
 }
 
 simulated function GetTerrainPokeParameters(out int Radius, out int Depth)

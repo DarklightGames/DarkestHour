@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleMGPawn extends DHVehicleWeaponPawn
@@ -626,5 +626,4 @@ defaultproperties
     CameraBone="mg_yaw"
     FirstPersonGunShakeScale=1.0
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    HudName="MG"
 }

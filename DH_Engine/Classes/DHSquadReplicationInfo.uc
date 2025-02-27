@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSquadReplicationInfo extends ReplicationInfo;
@@ -2888,7 +2888,7 @@ function MaybeInvalidateRole(DHPlayer PC)
 
     if (PC.GetRoleEnabledResult(RI) != RER_Enabled)
     {
-        // "You are no longer qualified to be {article} {name}."
+        // "You are no longer qualified to be {name}."
         PC.ReceiveLocalizedMessage(class'DHGameMessage', 24,,, RI);
 
         DefaultRoleIndex = GRI.GetDefaultRoleIndexForTeam(PC.GetTeamNum());

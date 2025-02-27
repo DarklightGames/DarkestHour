@@ -1,19 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// [ ] Fix incorrect offset of turret_placement bone.
 // [ ] Overheating barrels?? [kind of OP to have basically infinite ammo with no
 //     cooldown].
-// [ ] Third person handling animations (yaw driver!).
+// [ ] *maybe* mid-clip reloading.
 // [ ] Sound notifications for reload animation.
 // [ ] Maybe make a little "ping" sound when the clip cycles.
 // [ ] Fix timing of reload stages and remove the sounds.
 // [ ] Destroyed mesh.
 // [ ] Make sure it all works in MP.
 // [ ] Hide hands actor in third person.
-// [ ] Gun looks wrong when out of ammo (bolt needs to be forward & clip needs
-//     to have fallen out?)
 // [ ] Animation bug when the gun is empty and you get onto it (clip does not
 //     animate) [half-reloads in general are busted]
 // [ ] Fix fucky geo on the hands.
@@ -44,6 +41,13 @@ var name                    FiringBone;
 var name                    FiringAnim;
 var name                    FiringIdleAnim;
 
+// Belt Animations
+var int                     BeltChannel;
+var name                    BeltBone;
+var name                    BeltIdleAnimation;
+var name                    BeltFireLoopAnimation;
+var name                    BeltFireEndAnimation;
+
 // Clip Animation
 var name                    ClipBone;
 var name                    ClipAnim;
@@ -58,6 +62,15 @@ var()   Rotator                 ShellEjectRotationOffset;
 var array<ROFPAmmoRound>    AmmoRounds;
 var StaticMesh              AmmoRoundStaticMesh;
 var array<name>             AmmoRoundBones;
+var Rotator                 AmmoRoundRelativeRotation;
+
+// Empty Ammo Rounds
+// This is used for things like the Fiat 14/35 where the empty belt links stay attached to the rest of the belt.
+var array<ROFPAmmoRound>    EmptyAmmoRounds;
+var StaticMesh              EmptyAmmoRoundStaticMesh;
+var array<name>             EmptyAmmoRoundBones;
+var() Rotator               EmptyAmmoRoundRelativeRotation;
+
 var int                     RoundsInStaticMesh; // The number of rounds depicted in the static mesh.
 
 // Range Table
@@ -86,6 +99,7 @@ simulated function OnSwitchMesh()
     
     SetupAnimationDrivers();
     InitializeAmmoRounds();
+    UpdateClip();
     UpdateRangeDriverFrameTarget();
 }
 
@@ -102,6 +116,16 @@ simulated function DestroyAmmoRounds()
     }
 
     AmmoRounds.Length = 0;
+
+    for (i = 0; i < EmptyAmmoRounds.Length; i++)
+    {
+        if (EmptyAmmoRounds[i] != none)
+        {
+            EmptyAmmoRounds[i].Destroy();
+        }
+    }
+
+    EmptyAmmoRounds.Length = 0;
 }
 
 simulated function InitializeAmmoRounds()
@@ -123,6 +147,24 @@ simulated function InitializeAmmoRounds()
 
         AttachToBone(AmmoRounds[i], AmmoRoundBones[i]);
         AmmoRounds[i].SetStaticMesh(AmmoRoundStaticMesh);
+        AmmoRounds[i].SetRelativeRotation(AmmoRoundRelativeRotation);
+    }
+
+    for (i = 0; i < EmptyAmmoRoundBones.Length; i++)
+    {
+        EmptyAmmoRounds[i] = Spawn(class'ROFPAmmoRound', self);
+
+        if (EmptyAmmoRounds[i] == none)
+        {
+            continue;
+        }
+
+        EmptyAmmoRounds[i].bOwnerNoSee = false;
+
+        AttachToBone(EmptyAmmoRounds[i], EmptyAmmoRoundBones[i]);
+
+        EmptyAmmoRounds[i].SetStaticMesh(EmptyAmmoRoundStaticMesh);
+        EmptyAmmoRounds[i].SetRelativeRotation(EmptyAmmoRoundRelativeRotation);
     }
 }
 
@@ -160,6 +202,11 @@ function StartFiringAnimation()
     {
         LoopAnim(FiringAnim, 1.0, 0.0, FiringChannel);
     }
+
+    if (BeltChannel != 0)
+    {
+        LoopAnim(BeltFireLoopAnimation, 1.0, 0.0, BeltChannel);
+    }
 }
 
 function StopFiringAnimation()
@@ -167,6 +214,11 @@ function StopFiringAnimation()
     if (FiringChannel != 0)
     {
         PlayAnim(FiringIdleAnim, 1.0, 0.0, FiringChannel);
+    }
+
+    if (BeltChannel != 0)
+    {
+        PlayAnim(BeltIdleAnimation, 1.0, 0.125, BeltChannel);
     }
 }
 
@@ -295,6 +347,12 @@ simulated function SetupAnimationDrivers()
         PlayAnim(ClipAnim, 0.0, 0.0, ClipChannel);
         UpdateClipDriver(MainAmmoCharge[0]);
     }
+
+    if (BeltChannel != 0)
+    {
+        AnimBlendParams(BeltChannel, 1.0,,, BeltBone);
+        PlayAnim(BeltIdleAnimation, 0.0, 0.0, BeltChannel);
+    }
 }
 
 simulated function UpdateRangeDriver()
@@ -310,15 +368,25 @@ simulated function UpdateRangeDriver()
 simulated function UpdateAmmoRounds(int Ammo)
 {
     local int i;
-    local int VisibleCount;
+    local int VisibleCount, ExpendedCount;
 
     VisibleCount = Ceil(float(Ammo) / RoundsInStaticMesh);
 
-    for (i = AmmoRounds.Length; i >= 0; --i)
+    for (i = AmmoRounds.Length - 1; i >= 0; --i)
     {
         if (AmmoRounds[i] != none)
         {
             AmmoRounds[i].bHidden = i >= VisibleCount;
+        }
+    }
+
+    ExpendedCount = InitialPrimaryAmmo - Ammo;
+
+    for (i = 0; i < EmptyAmmoRounds.Length; i++)
+    {
+        if (EmptyAmmoRounds[i] != none)
+        {
+            EmptyAmmoRounds[i].bHidden = i >= ExpendedCount;
         }
     }
 }
@@ -353,14 +421,17 @@ simulated function UpdateClipDriver(int Ammo)
     FreezeAnimAt(ClipFrame, ClipChannel);
 }
 
-simulated function RangeIndexChanged()
+simulated private function SendRangeMessage()
 {
     // Send a message to the player's HUD.
     if (WeaponPawn != none && WeaponPawn.IsLocallyControlled())
     {
-        WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', RangeTable[RangeIndex].Range);
+        WeaponPawn.ReceiveLocalizedMessage(class'DHWeaponRangeMessage', class'UInteger'.static.FromShorts(RangeTable[RangeIndex].Range, int(RangeDistanceUnit)));
     }
+}
 
+simulated function RangeIndexChanged()
+{
     UpdateRangeDriverFrameTarget(RangeDriverAnimationInterpDuration);
 }
 
@@ -378,6 +449,8 @@ simulated function DecrementRange()
         RangeIndex--;
         RangeIndexChanged();
     }
+
+    SendRangeMessage();
 }
 
 simulated function IncrementRange()
@@ -389,6 +462,8 @@ simulated function IncrementRange()
         RangeIndex++;
         RangeIndexChanged();
     }
+
+    SendRangeMessage();
 }
 
 simulated function StartReload(optional bool bResumingPausedReload)

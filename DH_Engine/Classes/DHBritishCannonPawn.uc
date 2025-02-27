@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHBritishCannonPawn extends DHVehicleCannonPawn
@@ -8,7 +8,7 @@ class DHBritishCannonPawn extends DHVehicleCannonPawn
 
 defaultproperties
 {
-    RangeText="yards"
+    RangeUnit=DU_Yards
     RangePositionX=0.1
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
 }

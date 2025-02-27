@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
@@ -60,7 +60,7 @@ simulated state Constructed
 
         if (Role == ROLE_Authority && bShouldSendErrorMessage)
         {
-            // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
+            // "You must have another teammate nearby to deconstruct an enemy Command Post!"
             P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
         }
 
@@ -83,8 +83,8 @@ simulated function OnConstructed()
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been constructed and will be established in N seconds."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+            // "A Command Post has been constructed and will be established in N seconds."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 4,,, self);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -123,7 +123,7 @@ simulated function OnConstructed()
             Warn("Failed to spawn a radio attachment!");
         }
 
-        // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+        // TODO: Find any nearby friendly "Build Command Post" icons within 50m and remove them.
     }
 
     if (Radio != none)
@@ -158,8 +158,8 @@ simulated state Broken
 
         if (SpawnPoint != none)
         {
-            // "A Platoon HQ has been destroyed."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+            // "A Command Post has been destroyed."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 3,,, self);
         }
 
         DestroyAttachments();
@@ -195,7 +195,7 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     {
         C = DHConstruction(A);
 
-        if (C != none && !C.IsInState('Dummy') && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        if (C != none && !C.IsDummy() && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
         {
             bFoundFriendlyDuplicate = true;
             break;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://texashistory.unt.edu/ark:/67531/metapth46561/
 //==============================================================================
@@ -24,9 +24,6 @@ defaultproperties
 
     // Collision meshes
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Model35Mortar_stc.Collision.model35mortar_tube_collision',AttachBone="PITCH")
-
-    // Animation
-    ShootIntermediateAnim="shoot_close" // TODO: this thing has no shoot animation
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
@@ -100,4 +97,7 @@ defaultproperties
     EffectEmitterClass=class'DH_Effects.DHMortarFireEffect'
     // TODO: maybe get a dust emitter for this.
     CannonDustEmitterClass=None
+
+    FireBlurScale=0.5
+    FireBlurTime=0.4
 }

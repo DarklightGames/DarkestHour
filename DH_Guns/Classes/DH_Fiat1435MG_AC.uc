@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Air-cooled, belt-fed version of the Fiat 14/35 MG
 //==============================================================================
@@ -41,6 +41,39 @@ defaultproperties
     AmmoRoundBones(10)="BELT_11"
     AmmoRoundBones(11)="BELT_12"
     AmmoRoundBones(12)="BELT_13"
+    AmmoRoundBones(13)="BELT_14"
+    AmmoRoundBones(14)="BELT_15"
     // CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_GUN_WC_COLLISION_YAW',AttachBone="MG_YAW")
     // HudAltAmmoIcon=Texture'DH_Fiat1435_tex.fiat1435_wc_ammo_icon'
+
+    EmptyAmmoRoundStaticMesh=StaticMesh'DH_Fiat1435_stc.FIAT1435_BELT_LINK_EMPTY_1ST'
+    EmptyAmmoRoundBones(0)="BELT_EMPTY_01"
+    EmptyAmmoRoundBones(1)="BELT_EMPTY_02"
+    EmptyAmmoRoundBones(2)="BELT_EMPTY_03"
+    EmptyAmmoRoundBones(3)="BELT_EMPTY_04"
+    EmptyAmmoRoundBones(4)="BELT_EMPTY_05"
+    EmptyAmmoRoundBones(5)="BELT_EMPTY_06"
+    EmptyAmmoRoundBones(6)="BELT_EMPTY_07"
+    EmptyAmmoRoundBones(7)="BELT_EMPTY_08"
+    EmptyAmmoRoundBones(8)="BELT_EMPTY_09"
+    EmptyAmmoRoundBones(9)="BELT_EMPTY_10"
+    EmptyAmmoRoundBones(10)="BELT_EMPTY_11"
+    EmptyAmmoRoundBones(11)="BELT_EMPTY_12"
+    EmptyAmmoRoundBones(12)="BELT_EMPTY_13"
+    EmptyAmmoRoundBones(13)="BELT_EMPTY_14"
+    EmptyAmmoRoundBones(14)="BELT_EMPTY_15"
+    EmptyAmmoRoundBones(15)="BELT_EMPTY_16"
+    EmptyAmmoRoundBones(16)="BELT_EMPTY_17"
+    EmptyAmmoRoundBones(17)="BELT_EMPTY_18"
+    EmptyAmmoRoundBones(18)="BELT_EMPTY_19"
+    EmptyAmmoRoundBones(19)="BELT_EMPTY_20"
+    EmptyAmmoRoundBones(20)="BELT_EMPTY_21"
+    
+    EmptyAmmoRoundRelativeRotation=(Roll=32768)
+
+    BeltChannel=3
+    BeltBone="BELT_ROOT"
+    BeltIdleAnimation="BELT_IDLE"
+    BeltFireLoopAnimation="BELT_FIRE_LOOP"
+    BeltFireEndAnimation="BELT_FIRE_END"
 }

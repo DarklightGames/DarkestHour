@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
@@ -80,8 +80,8 @@ function Timer()
         {
             bIsEstablished = true;
 
-            // "A Platoon HQ has been established."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 0);
+            // "A Command Post has been established."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHCommandPostMessage', 0,,, self);
         }
     }
 

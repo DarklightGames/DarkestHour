@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [1] https://en.wikipedia.org/wiki/Cannone_da_90/53
 // [2] https://tanks-encyclopedia.com/semovente-m41m-da-90-53/

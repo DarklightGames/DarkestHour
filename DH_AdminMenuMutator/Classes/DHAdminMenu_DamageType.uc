@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 // Gives a specific death message ("PlayerName was re-spawned by an admin")
@@ -10,7 +10,6 @@ class DHAdminMenu_DamageType extends DamageType
 
 defaultproperties
 {
-    DeathString="%o was re-spawned by an admin"
     bLocationalHit=false
     bCausesBlood=false
     GibModifier=0.0

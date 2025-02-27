@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVotingReplicationInfo extends VotingReplicationInfo
@@ -104,4 +104,9 @@ simulated function Tick(float DeltaTime)
     {
         TickedReplicationQueue.Remove(i,1);
     }
+}
+
+defaultproperties
+{
+    bEnableSinglePlayerVoting=true
 }

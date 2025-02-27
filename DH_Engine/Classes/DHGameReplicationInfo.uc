@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -142,6 +142,7 @@ var localized string    ReinforcementsInfiniteText;
 // Holds the runtime status of the construction classes.
 struct ConstructionInfo
 {
+    var byte Active;
     var byte Remaining;
 };
 
@@ -347,6 +348,7 @@ function ResetConstructionRuntimeInfo()
     {
         for (i = 0; i < LI.ConstructionsEvaluated.Length; ++i)
         {
+            Constructions[i].Active = 0;
             Constructions[i].Remaining = LI.ConstructionsEvaluated[i].Limit;
         }
 
@@ -371,7 +373,6 @@ simulated function int GetTeamConstructionIndex(int TeamIndex, class<DHConstruct
 // Returns whether a team has any construction remaining of a certain class.
 simulated function bool HasTeamConstructionRemaining(int TeamIndex, class<DHConstruction> ConstructionClass)
 {
-    // TODO: check if this is an unlimited construction
     local int ConstructionIndex;
     local DH_LevelInfo LevelInfo;
 
@@ -408,6 +409,23 @@ simulated function int GetTeamConstructionRemaining(int TeamIndex, class<DHConst
     }
 
     return Constructions[ConstructionIndex].Remaining;
+}
+
+// Returns the active construction count for a team of a certain class, or -1 if the class construction is unlimited.
+simulated function int GetTeamConstructionActive(int TeamIndex, class<DHConstruction> ConstructionClass)
+{
+    local int ConstructionIndex;
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+    ConstructionIndex = GetTeamConstructionIndex(TeamIndex, ConstructionClass);
+
+    if (ConstructionIndex == -1 || LI.ConstructionsEvaluated[ConstructionIndex].MaxActive == -1)
+    {
+        return -1;
+    }
+
+    return Constructions[ConstructionIndex].Active;
 }
 
 simulated function PostNetBeginPlay()
@@ -2419,12 +2437,12 @@ defaultproperties
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
     MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
     MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Squad_Attention"
-    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_CommandPost"
     MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
     MapMarkerClassNameS(6)="DH_Engine.DHMapMarker_Enemy_Vehicle"
     MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_Tank"
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_CommandPost"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
 
     // Danger Zone

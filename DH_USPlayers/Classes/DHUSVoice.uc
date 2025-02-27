@@ -1,9 +1,23 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHUSVoice extends DHVoicePack;
+
+static function class<DHVoicePack> GetVoicePackClass(class<DHNation> EnemyNationClass)
+{
+    if (EnemyNationClass.Name == 'DHNation_Germany')
+    {
+        return Class'DHUSVoice_GER';
+    }
+    else if (EnemyNationClass.Name == 'DHNation_Italy')
+    {
+        return Class'DHUSVoice_ITA';
+    }
+
+    return default.Class;
+}
 
 defaultproperties
 {

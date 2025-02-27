@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHAxisAssaultRoles extends DHAxisRoles
@@ -10,8 +10,6 @@ defaultproperties
 {
     MyName="Assault Trooper"
     AltName="Stoﬂtruppe"
-    Article="an "
-    PluralName="Assault Troopers"
     Limit=3
     bSpawnWithExtraAmmo=true
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Fix engine fire position
 // [ ] Fix passengers all facing wild directions by default [why did this happen?]
@@ -203,6 +203,18 @@ simulated function Sound GetShutDownSound()
     {
         return GroundShutDownSound;
     }
+}
+
+// Vehicle is amphibious, so players should spawn inside the vehicle when it's in water
+// before all other considerations.
+function bool ShouldPlayersSpawnInsideVehicle()
+{
+    if (bIsInWater)
+    {
+        return true;
+    }
+
+    return super.ShouldPlayersSpawnInsideVehicle();
 }
 
 defaultproperties

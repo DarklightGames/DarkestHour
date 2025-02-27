@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHScoreBoard extends ROScoreBoard;
@@ -40,7 +40,6 @@ var Material PatronLeadMaterial,
              PatronGoldMaterial;
 
 var Material DeveloperIconMaterial;
-var Material FlagsTexture;
 
 enum EScoreboardColumnType
 {
@@ -52,7 +51,6 @@ enum EScoreboardColumnType
     COLUMN_PointsCombat,
     COLUMN_PointsSupport,
     COLUMN_Deaths,
-    COLUMN_Flag,
     COLUMN_Ping
 };
 
@@ -268,36 +266,9 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
         case COLUMN_Deaths:
             CRI.Text = string(int(PRI.Deaths));
             break;
-        case COLUMN_Flag:
-            CRI.Text = "";
-            if (PRI.CountryIndex >= 0)
-            {
-                CRI.Icon = default.FlagsTexture;
-                GetFlagCoordinates(PRI.CountryIndex, CRI.U, CRI.V, CRI.UL, CRI.VL);
-            }
-            break;
         default:
             break;
     }
-}
-
-static function GetFlagCoordinates(int CountryIndex, out float U, out float V, out float UL, out float VL)
-{
-    const FLAG_WIDTH = 24;
-    const FLAG_HEIGHT = 16;
-    const COLUMN_COUNT = 16;
-    const ATLAS_WIDTH = 512;
-    const ATLAS_HEIGHT = 256;
-
-    local int RowIndex, ColumnIndex;
-
-    RowIndex = CountryIndex / COLUMN_COUNT;
-    ColumnIndex = CountryIndex % COLUMN_COUNT;
-
-    U = ColumnIndex * FLAG_WIDTH;
-    V = RowIndex * FLAG_HEIGHT;
-    UL = FLAG_WIDTH - 1;
-    VL = FLAG_HEIGHT - 1;
 }
 
 // Modified to create a special 'PRIComparator' object that is used to efficiently sort each team array, with variable methods of sorting
@@ -1112,14 +1083,13 @@ defaultproperties
 
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=5.0)
-    ScoreboardColumns(2)=(Title="",Type=COLUMN_Flag,Width=0.75)
-    ScoreboardColumns(3)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
-    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_combat')
-    ScoreboardColumns(5)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_support')
-    ScoreboardColumns(6)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(7)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(8)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
-    ScoreboardColumns(9)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
+    ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
+    ScoreboardColumns(3)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_combat')
+    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_support')
+    ScoreboardColumns(5)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(6)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(7)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
+    ScoreboardColumns(8)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
 
     ScoreboardLabelColor=(R=128,G=128,B=128)
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
@@ -1144,5 +1114,4 @@ defaultproperties
     PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Silver'
     PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
-    FlagsTexture=Texture'DH_InterfaceArt2_tex.Scoreboard.Flags'
 }

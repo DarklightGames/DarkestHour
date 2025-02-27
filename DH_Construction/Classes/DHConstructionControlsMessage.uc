@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstructionControlsMessage extends DHControlsMessage
@@ -38,7 +38,7 @@ defaultproperties
     Controls(0)=(Keys=("FIRE"),Text="Confirm")
     Controls(1)=(Keys=("ROIRONSIGHTS"),Text="Cancel")
     Controls(2)=(Keys=("LEANLEFT","LEANRIGHT"),Text="Rotate")
-    Controls(3)=(Keys=("ROMANUALRELOAD"),Text="Reset Rotation")
+    Controls(3)=(Keys=("ROMANUALRELOAD"),Text="Reset")
     Controls(4)=(Keys=("SWITCHFIREMODE"),Text="Change Variant")
     Controls(5)=(Keys=("ROMGOPERATION"),Text="Change Skin")
 }

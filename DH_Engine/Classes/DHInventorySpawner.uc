@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHInventorySpawner extends Actor
@@ -42,7 +42,8 @@ var array<Actor>        Proxies;
 var class<Actor>        ProxyClass;
 var StaticMesh          ProxyStaticMesh;
 
-var localized string    ContainerNoun;
+var localized string    MenuNoun;
+var localized string    MenuNameFormat;
 
 // Client-side variable for keeping track if the box is open or closed.
 var bool                bIsOpen;
@@ -359,7 +360,13 @@ simulated event Destroyed()
 
 static function string GetMenuName(DHPlayer PC)
 {
-    return PC.GetInventoryName(default.WeaponClass) @ default.ContainerNoun;
+    local string S;
+    
+    S = default.MenuNameFormat;
+    S = Repl(S, "{name}", PC.GetInventoryName(default.WeaponClass));
+    S = Repl(S, "{noun}", default.MenuNoun);
+
+    return S;
 }
 
 defaultproperties
@@ -378,7 +385,8 @@ defaultproperties
     ExhaustedLifespan=15.0
     UsesMax=-1
     ProxyClass=class'DHWeaponPickupSpawnerProxy'
-    ContainerNoun="crate"
+    MenuNoun="Crate"
+    MenuNameFormat="{name} {noun}"
     OpenAnimation="open"
     CloseAnimation="close"
     OpenedAnimation="opened"
@@ -387,4 +395,3 @@ defaultproperties
     bIsTeamLocked=false
     TeamOwner=TEAM_Neutral
 }
-

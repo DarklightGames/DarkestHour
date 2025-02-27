@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHSOVCorporalRoles extends DHAlliedCorporalRoles
@@ -9,7 +9,6 @@ class DHSOVCorporalRoles extends DHAlliedCorporalRoles
 defaultproperties
 {
     MyName="Fireteam leader"
-    PluralName="Fireteam leaders"
     AltName="Komandir zvena"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')

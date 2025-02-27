@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DH_50CalDamType extends DHLargeCaliberDamageType
@@ -14,9 +14,6 @@ defaultproperties
     VehicleDamageModifier=0.12
     TreadDamageModifier=0.07  // 0.5 in 234/1, 1.0 in PTRD
     WeaponClass=class'DH_Weapons.DH_30calWeapon' // 50 cal is vehicle only & doesn't have a WeaponClass in DH_Weapons - never mind, just use dummy class & 50 cal specific death strings
-    DeathString="%o was killed by %k's .50 cal machine gun."
-    FemaleSuicide="%o was killed by her own .50 cal machine gun."
-    MaleSuicide="%o was killed by his own .50 cal machine gun."
     GibModifier=2.0            // 0 in 30cal, 4 in PTRD
     GibPerterbation=0.09       // weapon default is 0.06, 0.15 in PTRD (but that value is used by explosives, so is too high)
     VehicleMomentumScaling=0.2 // 0.3 in 234/1, 0.6 in PTRD, 1.3 is default for tank cannon

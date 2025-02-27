@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleFactory extends ROVehicleFactory
@@ -13,6 +13,10 @@ var     bool    bControlledBySpawnPoint; // flags that this factory is activated
 
 var()   bool    bStartsWithDamagedTreadLeft;
 var()   bool    bStartsWithDamagedTreadRight;
+
+// If true, the vehicle will have a spawn point attachment created.
+// Useful for initial spawn points when there are no land-based spawns (i.e. beach landings).
+var()   bool    bIsSpawnVehicle;
 
 // Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
 // And we no longer call StaticPrecache on the VehicleClass from here, as that gets done in our UpdatePrecacheMaterials(), so we don't want to do it twice
@@ -80,7 +84,20 @@ event VehicleDestroyed(Vehicle V)
 // in subclasses.
 function VehicleSpawned(Vehicle V)
 {
+    local DHVehicle DHV;
     local DHArmoredVehicle AV;
+    local DH_LevelInfo LI;
+
+    DHV = DHVehicle(V);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (DHV != none && bIsSpawnVehicle)
+    {
+        if (LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles)
+        {
+            DHV.CreateSpawnPointAttachment(true);
+        }
+    }
 
     AV = DHArmoredVehicle(V);
 

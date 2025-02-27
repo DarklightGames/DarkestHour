@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponBayonetDamageType extends ROWeaponBayonetDamageType
@@ -9,9 +9,6 @@ class DHWeaponBayonetDamageType extends ROWeaponBayonetDamageType
 defaultproperties
 {
     VehicleDamageModifier=0.0
-    DeathString="%o was skewered on %k's %w bayonet."
-    MaleSuicide="%o skewered himself on his own %w bayonet."
-    FemaleSuicide="%o skewered herself on her own %w bayonet."
     GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
     KDamageImpulse=400.0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // [ ] Add positional offset to turret angle calculations to fix hit detection
 //     issues (probably not worth it since there's almost no armor anyways)

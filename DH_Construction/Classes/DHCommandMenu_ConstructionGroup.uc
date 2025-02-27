@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // This is the command menu for listing the construction options in a group
 // (e.g., defenses, guns etc.)
@@ -18,6 +18,7 @@ var localized string TeamLimitText;
 var localized string BusyText;
 var localized string ExhaustedText;
 var localized string RemainingText;
+var localized string MaxActiveText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHActorProxy.Context Context;
@@ -151,7 +152,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local class<DHConstruction> ConstructionClass;
     local DHConstruction.ConstructionError E;
     local DHPlayer PC;
-    local int SquadMemberCount, Remaining;
+    local int SquadMemberCount, Remaining, Active, MaxActive, InfoTextIndex;
     local DHGameReplicationInfo GRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
@@ -218,9 +219,21 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     {
         Remaining = GRI.GetTeamConstructionRemaining(PC.GetTeamNum(), ConstructionClass);
 
+        InfoTextIndex = 1;
+
         if (Remaining != -1)
         {
-            ORI.InfoText[1] = Repl(default.RemainingText, "{0}", string(Remaining));
+            ORI.InfoText[InfoTextIndex] = Repl(default.RemainingText, "{0}", string(Remaining));
+            ++InfoTextIndex;
+        }
+
+        MaxActive = Context.LevelInfo.GetConstructionMaxActive(PC.GetTeamNum(), ConstructionClass);
+
+        if (MaxActive != -1)
+        {
+            Active = GRI.GetTeamConstructionActive(PC.GetTeamNum(), ConstructionClass);
+            ORI.InfoText[InfoTextIndex] = Repl(Repl(default.MaxActiveText, "{0}", string(Active)), "{1}", string(MaxActive));
+            ++InfoTextIndex;
         }
     }
 }
@@ -242,6 +255,7 @@ defaultproperties
     TeamLimitText="Limit Reached"
     ExhaustedText="Exhausted"
     RemainingText="{0} Remaining"
+    MaxActiveText="{0}/{1} Active"
     BusyText="Busy"
     SlotCountOverride=8
 }

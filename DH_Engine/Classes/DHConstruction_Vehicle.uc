@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHConstruction_Vehicle extends DHConstruction
@@ -117,6 +117,11 @@ function static UpdateProxy(DHActorProxy AP)
     AP.SetDrawType(DT_Mesh);
     AP.LinkMesh(VehicleClass.default.Mesh);
 
+    if (AP.HasAnim(VehicleClass.default.BeginningIdleAnim))
+    {
+        AP.PlayAnim(VehicleClass.default.BeginningIdleAnim);
+    }
+
     for (j = 0; j < VehicleClass.default.Skins.Length; ++j)
     {
         if (VehicleClass.default.Skins[j] != none)
@@ -167,7 +172,7 @@ function static UpdateProxy(DHActorProxy AP)
     }
 }
 
-function static string GetMenuName(DHActorProxy.Context Context)
+static function string GetMenuName(DHActorProxy.Context Context)
 {
     local class<DHVehicle> VC;
 
@@ -206,6 +211,11 @@ function UpdateAppearance()
     else
     {
         LinkMesh(VehicleClass.default.Mesh);
+
+        if (HasAnim(VehicleClass.default.BeginningIdleAnim))
+        {
+            PlayAnim(VehicleClass.default.BeginningIdleAnim);
+        }
 
         if (Role == ROLE_Authority)
         {
@@ -442,7 +452,6 @@ defaultproperties
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
-    DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
     bCanOnlyPlaceOnTerrain=false
     Stages(0)=(Progress=0)

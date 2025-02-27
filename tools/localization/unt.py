@@ -1,7 +1,7 @@
 import re
 from collections import OrderedDict
 from configparser import RawConfigParser, MissingSectionHeaderError
-from typing import Tuple, List, Set
+from typing import Tuple, List, Set, Iterable
 
 import polib
 from parsimonious.exceptions import IncompleteParseError, ParseError
@@ -228,17 +228,14 @@ def _add_entry(msgid: str, msgstr: str, sections):
     target[target_key] = msgstr
 
 
-def po_to_unt(contents: str) -> str:
-    po = polib.pofile(contents)
-
+def unt_from_key_value_pairs(key_value_pairs: Iterable[Tuple[str, str]]) -> str:
     sections = OrderedDict()
 
-    # Add each entry.
-    for entry in po:
+    for key, value in key_value_pairs:
         try:
-            _add_entry(entry.msgid, entry.msgstr, sections)
+            _add_entry(key, value, sections)
         except Exception as e:
-            print(f'Failed to add entry {entry.msgid}: {e}')
+            print(f'Failed to add entry {key}: {e}')
 
     def write_key_value_pairs_recursive(key_value_pairs, parent_key=None):
         for key, value in key_value_pairs:
@@ -270,6 +267,17 @@ def po_to_unt(contents: str) -> str:
         lines.append('')
 
     return '\n'.join(lines)
+
+
+def po_to_unt(contents: str) -> str:
+    po = polib.pofile(contents)
+
+    # Convert PO to key-value pairs.
+    key_value_pairs = []
+    for entry in po:
+        key_value_pairs.append((entry.msgid, entry.msgstr))
+
+    return unt_from_key_value_pairs(key_value_pairs)
 
 
 def read_unique_characters_from_unt_file(path: str) -> Set[int]:

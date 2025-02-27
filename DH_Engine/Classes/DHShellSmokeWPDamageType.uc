@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHShellSmokeWPDamageType extends DHShellExplosionDamageType
@@ -9,9 +9,6 @@ class DHShellSmokeWPDamageType extends DHShellExplosionDamageType
 defaultproperties
 {
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill'
-    DeathString="%o was burned by white phosphorus that %k launched."
-    MaleSuicide="%o burned himself to a crisp."
-    FemaleSuicide="%o burned herself to a crisp."
     bLocationalHit=false
     GibModifier=0.0
 

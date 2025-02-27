@@ -1,9 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHWeaponRangeMessage extends LocalMessage
+    dependson(DHUnits)
     abstract;
 
 static function string GetString(
@@ -13,7 +14,9 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    return string(Switch) $ "m"; // TODO: figure out how to pass the unit in here.
+    local int Range, Unit;
+    class'UInteger'.static.ToShorts(Switch, Range, Unit);
+    return string(Range) $ class'DHUnits'.static.GetDistanceUnitSymbol(EDistanceUnit(Unit));
 }
 
 static function RenderComplexMessage(Canvas Canvas,

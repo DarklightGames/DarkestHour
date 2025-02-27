@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
 class DHVehicleBurningDamageType extends ROWeaponDamageType
@@ -12,9 +12,6 @@ defaultproperties
     TankDamageModifier=1.0
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
-    DeathString="%o was burned up in a vehicle fire that %k started."
-    MaleSuicide="%o burned up in a vehicle fire."
-    FemaleSuicide="%o burned up in a vehicle fire."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

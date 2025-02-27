@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2023
+// Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
