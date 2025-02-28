@@ -9,7 +9,6 @@
 // [ ] Fix muzzle smoke to use sideways smoke (do we even have this?)
 // [ ] Damage effect positions
 // [ ] Armor values
-// [ ] Exit positions
 // [ ] Add to maps
 //==============================================================================
 // BUGS
@@ -160,14 +159,14 @@ defaultproperties
     DamagedTrackStaticMeshRight=StaticMesh'DH_Wespe_stc.wespe_track_destroyed_r'
 
     // Exit
-    ExitPositions(0)=(X=50.0,Y=-140.0,Z=58.0)
-    ExitPositions(1)=(X=-50.0,Y=-140.0,Z=58.0)
-    ExitPositions(2)=(X=0.0,Y=140.0,Z=58.0)
-    ExitPositions(3)=(X=15.0,Y=-140.0,Z=58.0)
-    ExitPositions(4)=(X=-52.0,Y=140.0,Z=58.0)
-    ExitPositions(5)=(X=-120.0,Y=-140.0,Z=58.0)
-    ExitPositions(6)=(X=-255.0,Y=0.0,Z=58.0)
-    ExitPositions(7)=(X=-120.0,Y=140.0,Z=58.0)
+    ExitPositions(0)=(X=50.0,Y=-130.0,Z=58.0)
+    ExitPositions(1)=(X=-200.0,Y=0.0,Z=58.0)
+    ExitPositions(2)=(X=-50.0,Y=-130.0,Z=58.0)
+    ExitPositions(3)=(X=0.0,Y=130.0,Z=58.0)
+    ExitPositions(4)=(X=15.0,Y=-130.0,Z=58.0)
+    ExitPositions(5)=(X=-52.0,Y=130.0,Z=58.0)
+    ExitPositions(6)=(X=-120.0,Y=-130.0,Z=58.0)
+    ExitPositions(7)=(X=-120.0,Y=130.0,Z=58.0)
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
