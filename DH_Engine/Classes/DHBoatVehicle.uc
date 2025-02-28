@@ -133,4 +133,7 @@ defaultproperties
     ViewShakeOffsetFreq=7.0
 
     WaterMovementState=PlayerDriving
+
+    bEngineOff=false
+    bSavedEngineOff=false
 }

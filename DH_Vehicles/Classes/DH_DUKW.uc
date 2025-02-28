@@ -205,6 +205,18 @@ simulated function Sound GetShutDownSound()
     }
 }
 
+// Vehicle is amphibious, so players should spawn inside the vehicle when it's in water
+// before all other considerations.
+function bool ShouldPlayersSpawnInsideVehicle()
+{
+    if (bIsInWater)
+    {
+        return true;
+    }
+
+    return super.ShouldPlayersSpawnInsideVehicle();
+}
+
 defaultproperties
 {
     bIsAmphibious=true

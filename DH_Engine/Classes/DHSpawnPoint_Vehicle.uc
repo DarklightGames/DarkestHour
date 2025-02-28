@@ -227,7 +227,7 @@ function bool PerformSpawn(DHPlayer PC)
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
         // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
-        if (Vehicle.bEngineOff)
+        if (!Vehicle.ShouldPlayersSpawnInsideVehicle())
         {
             ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
             class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations
