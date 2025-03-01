@@ -3,16 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHAxisMortarmanRoles extends DHAxisRoles
+class DHMortarConstruction extends DHConstruction_Vehicle
     abstract;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    bExemptSquadRequirement=true
-    MyName="Mortar Operator"
-    AltName="Werferschütze"
-    Limit=1
-    AddedRoleRespawnTime=10
-    bCanBeSquadLeader=false
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
+    bIsArtillery=true
+    ProxyTraceDepthMeters=2.0
 }

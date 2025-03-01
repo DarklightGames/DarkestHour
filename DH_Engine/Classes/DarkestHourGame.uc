@@ -2268,25 +2268,6 @@ function UpdateArtilleryAvailability()
         return;
     }
 
-    // Check if mortars are enabled (on-map artillery part 1.)
-    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-    {
-        if (DHAxisMortarmanRoles(GRI.DHAxisRoles[i]) != none)
-        {
-            GRI.bOnMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
-            break;
-        }
-    }
-
-    for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-    {
-        if (DHAlliedMortarmanRoles(GRI.DHAlliesRoles[i]) != none)
-        {
-            GRI.bOnMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
-            break;
-        }
-    }
-
     // Check if artillery vehicles are enabled (on-map artillery part 2.)
     for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); ++i)
     {

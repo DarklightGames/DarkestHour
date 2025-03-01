@@ -233,7 +233,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
-        ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
+        ServerLoadATAmmo, ServerSetBayonetAtSpawn,
         ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
@@ -1275,10 +1275,6 @@ exec function ThrowMGAmmo()
                 ServerLoadATAmmo(OtherPawn);
             }
         }
-        else if (DHMortarVehicle(MyPawn.AutoTraceActor) != none)
-        {
-            ServerThrowMortarAmmo(DHMortarVehicle(ROPawn(Pawn).AutoTraceActor));
-        }
     }
 }
 
@@ -1299,22 +1295,6 @@ function ServerThrowMGAmmo(Pawn Gunner)
             P.LoadWeapon(OtherP);
         }
     }
-}
-
-function ServerThrowMortarAmmo(Pawn Gunner)
-{
-    local DHPawn P;
-    local DHMortarVehicle M;
-
-    P = DHPawn(Pawn);
-    M = DHMortarVehicle(Gunner);
-
-    if (P == none || M == none || M.OwningPawn == P)
-    {
-        return;
-    }
-
-    P.TossMortarVehicleAmmo(M);
 }
 
 function ServerLoadATAmmo(Pawn Gunner)

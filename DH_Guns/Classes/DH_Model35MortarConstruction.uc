@@ -3,13 +3,11 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Model35MortarConstruction extends DHConstruction_Vehicle;
+class DH_Model35MortarConstruction extends DHMortarConstruction;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
     VehicleClasses(0)=(VehicleClass=class'DH_Guns.DH_Model35Mortar')
-    bIsArtillery=true
     SupplyCost=1000
     ProgressMax=8
 }

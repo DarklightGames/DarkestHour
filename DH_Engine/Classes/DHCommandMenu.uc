@@ -30,6 +30,7 @@ struct Option
     var Object OptionalObject;
     var Color IconColor;    // If unspecified, will default to white.
     var int OptionalInteger;
+    var float HoldTime; // If non-zero, the amount of time the player must hold the button to select this option.
 };
 
 var array<Option> Options;
@@ -153,6 +154,7 @@ function OnPop()
 function bool IsOptionDisabled(int OptionIndex);
 function bool ShouldHideMenu();
 function bool IsOptionHidden(int OptionIndex) { return false; } // This will only get run once when the menu is pushed onto the stack.
+function float GetOptionHoldTime(int OptionIndex) { return Options[OptionIndex].HoldTime; }
 
 function OnActive();                    // Called when a menu becomes the topmost menu on the stack
 function OnPassive();                   // Called when a menu is no longer the topmost menu on the stack

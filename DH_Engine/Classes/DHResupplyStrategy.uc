@@ -90,24 +90,12 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
                 bResupplied = true;
             }
         }
-
-        // Resupply player carrying a mortar
-        if (CanResupplyType(SourceType, RT_Mortars) && P != none)
-        {
-            RI = P.GetRoleInfo();
-            bResupplied = bResupplied || RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition();
-        }
     }
     else if (V != none)
     {
         // Resupply vehicles
-        if (CanResupplyType(SourceType, RT_Vehicles) && !V.IsA('DHMortarVehicle'))
+        if (CanResupplyType(SourceType, RT_Vehicles))
         {
-            bResupplied = bResupplied || V.ResupplyAmmo();
-        }
-        else if (CanResupplyType(SourceType, RT_Mortars) && V.IsA('DHMortarVehicle'))
-        {
-            // Resupply deployed mortar
             bResupplied = bResupplied || V.ResupplyAmmo();
         }
     }

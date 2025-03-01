@@ -21,7 +21,7 @@ defaultproperties
     GunnerAttachmentBone="GUN_YAW"
 
     // Collision meshes
-    //CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.Collision.M2mortar_tube_collision',AttachBone="PITCH")
+    CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.Collision.M2MORTAR_COLLISION_GUN',AttachBone="GUN_PITCH")
 
     // Gun Wheels
     GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
@@ -46,8 +46,8 @@ defaultproperties
     nProjectileDescriptions(0)="Bomba g. a. da 81"
     nProjectileDescriptions(1)="Bomba Fumogena"
 
-    PrimaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileSmoke'
+    PrimaryProjectileClass=class'DH_M2MortarProjectileHE'
+    SecondaryProjectileClass=class'DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=2

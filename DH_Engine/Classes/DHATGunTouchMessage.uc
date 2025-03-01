@@ -8,5 +8,5 @@ class DHATGunTouchMessage extends DHVehicleTouchControlsMessage
 
 defaultproperties
 {
-    Controls(1)=(Keys=("SHOWORDERMENU | ONRELEASE HIDEORDERMENU"),Text="Rotate")
+    Controls(1)=(Keys=("SHOWORDERMENU | ONRELEASE HIDEORDERMENU"),Text="Interact")
 }

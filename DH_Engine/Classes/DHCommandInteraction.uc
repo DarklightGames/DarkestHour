@@ -47,6 +47,11 @@ var Material            CrosshairMaterial;
 
 var bool                bDebugCursor;
 
+var bool                bIsHolding;         // Whether or not the player is holding the button to select the option.
+var float               HoldTimeRemaining;  // Number of seconds remaining to hold the button to select the option.
+var Vector              HoldHitLocation;    // The location of the hit when the button was held.
+var Vector              HoldHitNormal;      // The normal of the hit when the button was held.
+
 delegate                OnHidden();
 
 event Initialized()
@@ -296,6 +301,27 @@ function Tick(float DeltaTime)
             Menu.OnHoverIn(SelectedIndex);
         }
     }
+
+    if (bIsHolding)
+    {
+        if (!CanSelectOption(SelectedIndex))
+        {
+            // The option is now disabled, so stop holding.
+            bIsHolding = false;
+        }
+        else
+        {
+            // Update the hold time remaining.
+            HoldTimeRemaining -= DeltaTime;
+
+            if (HoldTimeRemaining <= 0.0)
+            {
+                // Perform the action.
+                bIsHolding = false;
+                OnSelect(SelectedIndex, HoldHitLocation, HoldHitNormal);
+            }
+        }
+    }
 }
 
 function DrawCenteredTile(Canvas C, Material TileMaterial, float CenterX, float CenterY, float GUIScale)
@@ -494,6 +520,9 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local vector HitLocation, HitNormal;
+    local DHCommandMenu Menu;
+    
+    Menu = DHCommandMenu(Menus.Peek());
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -512,22 +541,31 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     switch (Action)
     {
         case IST_Axis:
-            switch (Key)
+            if (!bIsHolding)
             {
-                case IK_MouseX:
-                    Cursor.X += Delta;
-                    return true;
-                case IK_MouseY:
-                    Cursor.Y -= Delta;
-                    return true;
-                default:
-                    break;
+                switch (Key)
+                {
+                    case IK_MouseX:
+                        Cursor.X += Delta;
+                        return true;
+                    case IK_MouseY:
+                        Cursor.Y -= Delta;
+                        return true;
+                    default:
+                        break;
+                }
             }
             break;
         case IST_Release:
             switch (Key)
             {
                 case IK_LeftMouse:
+                    if (bIsHolding)
+                    {
+                        bIsHolding = false;
+                        return true;
+                    }
+
                     if (bShouldHideOnLeftMouseRelease)
                     {
                         if (SelectedIndex >= 0)
@@ -552,7 +590,18 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // key, so this will do for now.
                 case IK_LeftMouse:
                     PC.GetEyeTraceLocation(HitLocation, HitNormal);
-                    OnSelect(SelectedIndex, HitLocation, HitNormal);
+
+                    if (Menu != none && Menu.GetOptionHoldTime(SelectedIndex) > 0.0)
+                    {
+                        bIsHolding = true;
+                        HoldTimeRemaining = Menu.GetOptionHoldTime(SelectedIndex);
+                        HoldHitLocation = HitLocation;
+                        HoldHitNormal = HitNormal;
+                    }
+                    else
+                    {
+                        OnSelect(SelectedIndex, HitLocation, HitNormal);
+                    }
 
                     return true;
                 case IK_RightMouse:
@@ -570,13 +619,27 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function OnSelect(int OptionIndex, optional vector Location, optional vector HitNormal)
+function bool CanSelectOption(int OptionIndex)
 {
     local DHCommandMenu Menu;
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (Menu == none || OptionIndex < 0 || OptionIndex >= Menu.Options.Length || Menu.IsOptionDisabled(OptionIndex))
+    return Menu != none && OptionIndex >= 0 && OptionIndex < Menu.Options.Length && !Menu.IsOptionDisabled(OptionIndex);
+}
+
+function OnSelect(int OptionIndex, optional vector Location, optional vector HitNormal)
+{
+    local DHCommandMenu Menu;
+
+    if (!CanSelectOption(OptionIndex))
+    {
+        return;
+    }
+
+    Menu = DHCommandMenu(Menus.Peek());
+
+    if (Menu == none)
     {
         return;
     }

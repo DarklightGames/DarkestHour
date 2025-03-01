@@ -14,4 +14,5 @@ defaultproperties
     Tag="M49A2 HE"
     BlurTime=4.0
     BlurEffectScalar=2.0
+    StaticMesh=StaticMesh'DH_M2Mortar_stc.M2MORTAR_PROJECTILE_HE'
 }

@@ -87,7 +87,7 @@ defaultproperties
     Records(27)=(ClassName="DH_Weapons.DH_M1CarbineWeapon",WeaponNames=("carbine"))
     Records(28)=(ClassName="DH_Weapons.DH_M1GarandWeapon",WeaponNames=("garand"))
     Records(29)=(ClassName="DH_Weapons.DH_M1GrenadeWeapon",WeaponNames=("frag"))
-    Records(30)=(ClassName="DH_Weapons.DH_M2MortarWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("m2mortar"))
+    Records(30)=(ClassName="DH_Guns.DH_M2MortarWeapon",bShouldExcludeFromGiveAll=true,WeaponNames=("m2mortar"))
     Records(31)=(ClassName="DH_Weapons.DH_M34GrenadeWeapon",WeaponNames=("m34"))
     Records(32)=(ClassName="DH_Weapons.DH_M38Weapon",WeaponNames=("m38"))
     Records(33)=(ClassName="DH_Weapons.DH_M44Weapon",WeaponNames=("m44"))

@@ -13,8 +13,10 @@ var localized string OccupiedText;
 var localized string FatalText;
 var localized string CooldownText;
 var localized string BusyText;
+var localized string CannotBePickUpText;
 
 var DHATGun.ERotateError RotationError;
+var DHATGun.EPickUpError PickUpError;
 var int                  TeammatesInRadiusCount;
 
 function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
@@ -38,7 +40,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
         return;
     }
 
-    UpdateRotationError();
+    UpdateErrors();
 
     switch (OptionIndex)
     {
@@ -46,6 +48,15 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
             if (RotationError == ERROR_None)
             {
                 P.EnterATRotation(Gun);
+            }
+            break;
+        case 1: // Pick Up
+            if (PickUpError == ERROR_None)
+            {
+                // Give the player the stationary gun, delete the construction.
+                // Make sure to store the state of the weapon in the inventory item.
+                P.GiveWeapon(string(Gun.StationaryWeaponClass));
+                Gun.Destroy();
             }
             break;
         default:
@@ -64,99 +75,133 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     Gun = DHATGun(MenuObject);
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
-
-    if (OptionIndex != 0)
+    
+    if (Gun == none)
     {
         return;
     }
+    
+    UpdateErrors();
 
-    UpdateRotationError();
+    switch (OptionIndex)
+    {
+        case 0: // Rotate
 
-    if (RotationError != ERROR_None)
-    {
-        ORI.InfoColor = class'UColor'.default.Red;
-    }
-    else
-    {
-        ORI.InfoColor = class'UColor'.default.White;
-    }
+            if (RotationError != ERROR_None)
+            {
+                ORI.InfoColor = class'UColor'.default.Red;
+            }
+            else
+            {
+                ORI.InfoColor = class'UColor'.default.White;
+            }
 
-    switch (RotationError)
-    {
-        case ERROR_Busy:
-            ORI.InfoText[0] = default.BusyText;
+            switch (RotationError)
+            {
+                case ERROR_Busy:
+                    ORI.InfoText[0] = default.BusyText;
+                    break;
+                case ERROR_Occupied:
+                    ORI.InfoText[0] = default.OccupiedText;
+                    break;
+                case ERROR_Fatal:
+                    ORI.InfoText[0] = default.FatalText;
+                    break;
+                case ERROR_Cooldown:
+                    PC = GetPlayerController();
+                    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+                    ORI.InfoText[0] = default.CooldownText @ string(Gun.NextRotationTime - GRI.ElapsedTime) $ "s";
+                    break;
+                case ERROR_CannotBeRotated:
+                    ORI.InfoText[0] = default.CannotBeRotatedText;
+                    break;
+                case ERROR_IsBeingRotated:
+                    ORI.InfoText[0] = class'DHATCannonMessage'.default.GunIsRotating;
+                    break;
+                case ERROR_EnemyGun:
+                    ORI.InfoText[0] = default.EnemyGunText;
+                    break;
+                case ERROR_NeedMorePlayers:
+                    ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
+                    ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
+                    break;
+                default:
+                    break;
+            }
             break;
-        case ERROR_Occupied:
-            ORI.InfoText[0] = default.OccupiedText;
-            break;
-        case ERROR_Fatal:
-            ORI.InfoText[0] = default.FatalText;
-            break;
-        case ERROR_Cooldown:
-            PC = GetPlayerController();
-            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-            ORI.InfoText[0] = default.CooldownText @ string(Gun.NextRotationTime - GRI.ElapsedTime) $ "s";
-            break;
-        case ERROR_CannotBeRotated:
-            ORI.InfoText[0] = default.CannotBeRotatedText;
-            break;
-        case ERROR_IsBeingRotated:
-            ORI.InfoText[0] = class'DHATCannonMessage'.default.GunIsRotating;
-            break;
-        case ERROR_EnemyGun:
-            ORI.InfoText[0] = default.EnemyGunText;
-            break;
-        case ERROR_NeedMorePlayers:
-            ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
-            ORI.InfoText[0] = string(TeammatesInRadiusCount) $ "/" $ string(Gun.PlayersNeededToRotate);
-            break;
-        default:
+        
+        case 1: // Pick Up
+            if (PickUpError != ERROR_None)
+            {
+                ORI.InfoColor = class'UColor'.default.Red;
+            }
+            else
+            {
+                ORI.InfoColor = class'UColor'.default.White;
+            }
+
+            switch (PickUpError)
+            {
+                case ERROR_CannotBePickedUp:
+                    ORI.InfoText[0] = default.CannotBePickUpText;
+                    break;
+                case ERROR_Occupied:
+                    ORI.InfoText[0] = default.OccupiedText;
+                    break;
+                case ERROR_Fatal:
+                    ORI.InfoText[0] = default.FatalText;
+                    break;
+                case ERROR_Busy:
+                    ORI.InfoText[0] = default.BusyText;
+                    break;
+                default:
+                    break;
+            }
             break;
     }
 }
 
 function bool IsOptionDisabled(int OptionIndex)
 {
+    UpdateErrors();
+
     switch (OptionIndex)
     {
         case 0: // Rotate
-            UpdateRotationError();
             return RotationError != ERROR_None;
-            break;
+        case 1: // Pick Up
+            return PickUpError != ERROR_None;
         default:
             return false;
-            break;
     }
 }
 
-simulated function UpdateRotationError()
+simulated function UpdateErrors()
 {
     local DHPlayer PC;
-    local DHPawn Pawn;
+    local DHPawn DHP;
     local DHATGun Gun;
+
+    RotationError = ERROR_Fatal;
+    PickUpError = ERROR_Fatal;
 
     PC = GetPlayerController();
     Gun = DHATGun(MenuObject);
 
-    if (PC != none)
+    if (PC != none && Gun != none)
     {
-        Pawn = DHPawn(PC.Pawn);
-
-        if (Gun != none)
-        {
-            RotationError = Gun.GetRotationError(Pawn, TeammatesInRadiusCount);
-            return;
-        }
+        DHP = DHPawn(PC.Pawn);
+        RotationError = Gun.GetRotationError(DHP, TeammatesInRadiusCount);
+        PickUpError = Gun.GetPickUpError(DHP);
     }
-
-    RotationError = ERROR_Fatal;
-    return;
 }
 
 defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
+    Options(1)=(ActionText="Pick Up",HoldTime=3.0)
     EnemyGunText="Cannot rotate an enemy gun"
+    CannotBePickUpText="Cannot be picked up"
     CannotBeRotatedText="Cannot be rotated"
     OccupiedText="Gun is occupied"
     FatalText="Rotation unavailable"

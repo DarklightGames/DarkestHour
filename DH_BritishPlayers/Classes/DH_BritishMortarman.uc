@@ -3,9 +3,4 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_BritishMortarman extends DHCWMortarmanRoles;
-
-defaultproperties
-{
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishPawn',Weight=1.0)
-}
+class DH_BritishMortarman extends DHDeprecated;

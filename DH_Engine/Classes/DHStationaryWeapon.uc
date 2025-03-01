@@ -2,23 +2,28 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// Abstract class for all stationary weapons such as mortars, heavy machine-guns
+// that can be carried by infantry and deployed.
+//==============================================================================
 
-class DHMortarWeapon extends DHWeapon
+class DHStationaryWeapon extends DHWeapon
     abstract;
 
-var     class<DHMortarVehicle>  VehicleClass;
+var     class<DHVehicle>  VehicleClass;
+
+// Hold relevant state information for the vehicle such as health, ammo, etc.
+var struct SVehicleState
+{
+    var int Health;
+    var int Ammo[3];
+    // TODO: barrel information
+} VehicleState;
 
 // Deploying
 var     bool    bDeploying;
 var     name    DeployAnimation;
 var     float   DeployRadius;
 var     float   DeployAngleMaximum;
-
-// Ammo
-var     int     HighExplosiveMaximum;
-var     int     HighExplosiveResupplyCount;
-var     int     SmokeMaximum;
-var     int     SmokeResupplyCount;
 
 enum EDeployError
 {
@@ -207,7 +212,7 @@ simulated function bool CanDeploy(DHPawn P)
     // Display a screen message to the player saying why he can't deploy
     if (Error != DE_None)
     {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', int(Error));
+        P.ReceiveLocalizedMessage(class'DHStationaryWeaponMessage', int(Error),,, self);
 
         return false;
     }
@@ -244,9 +249,9 @@ simulated event AnimEnd(int Channel)
 // New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy this carried Weapon version of the mortar
 function ServerDeployEnd()
 {
-    local DHMortarVehicle DeployedMortar;
-    local vector          TraceStart, TraceEnd, HitLocation, HitNormal;
-    local rotator         SpawnRotation;
+    local DHVehicle DeployedVehicle;
+    local vector    TraceStart, TraceEnd, HitLocation, HitNormal;
+    local rotator   SpawnRotation;
 
     TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
     TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
@@ -254,12 +259,12 @@ function ServerDeployEnd()
     if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
     {
         SpawnRotation.Yaw = Instigator.Rotation.Yaw;
-        DeployedMortar = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
+        DeployedVehicle = Spawn(VehicleClass,,, HitLocation, SpawnRotation);
 
-        if (DeployedMortar != none)
+        if (DeployedVehicle != none)
         {
-            DeployedMortar.SetTeamNum(VehicleClass.default.VehicleTeam);
-            DeployedMortar.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
+            DeployedVehicle.SetTeamNum(VehicleClass.default.VehicleTeam);
+            DeployedVehicle.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
             Destroy(); // destroy this carried weapon version of the mortar, as it's been replaced by the deployed Vehicle version
 
             return;
@@ -267,32 +272,6 @@ function ServerDeployEnd()
     }
 
     GotoState('Idle'); // either failed to trace a location to spawn the mortar, or somehow failed to spawn it
-}
-
-// Modified to always return true so any HasAmmo() checks are effectively bypassed
-simulated function bool HasAmmo()
-{
-    return true;
-}
-
-// Implemented to check the DHPawn's ResupplyMortarAmmunition() function when another player tries to give ammo to the mortar carrier
-function bool ResupplyAmmo()
-{
-    local bool bResupplied;
-    bResupplied = (Level.TimeSeconds > (LastResupplyTimestamp + ResupplyInterval))
-        && DHPawn(Instigator) != none
-        && DHPawn(Instigator).ResupplyMortarAmmunition();
-    if (bResupplied)
-    {
-        LastResupplyTimestamp = Level.TimeSeconds;
-    }
-    return bResupplied;
-}
-
-// Emptied out as mortar uses a different system in ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with check whether the resupply area can resupply mortars
-function bool FillAmmo()
-{
-    return false;
 }
 
 // Functions emptied out as carried mortar weapons cannot be fired, ironsighted or reloaded:
@@ -348,7 +327,7 @@ function bool HandlePickupQuery(Pickup Item)
 defaultproperties
 {
     InventoryGroup=9
-    Priority=99 // super high value so mortar is always ranked as best/preferred weapon to bring up
+    Priority=99 // super high value so this weapon is always ranked as best/preferred weapon to bring up
     bCanThrow=false
     bCanSway=false
     bCanResupplyWhenEmpty=false

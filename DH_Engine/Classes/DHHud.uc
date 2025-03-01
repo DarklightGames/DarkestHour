@@ -2173,23 +2173,12 @@ function MouseInterfaceStopCapturing()
 
 function GetPlayerNamePlateIcon(Pawn P, DHPlayerReplicationInfo OtherPRI, out Material IconMaterial, out Color IconMaterialColor)
 {
-    local DHMortarVehicle Mortar;
-
     IconMaterial = none;
     IconMaterialColor = class'UColor'.default.White;
 
     if (OtherPRI == PortraitPRI)
     {
         IconMaterial = SpeakerIconMaterial;
-    }
-    else if (P.IsA('DHMortarVehicleWeaponPawn')) // a mortar is a special case to check for resupply
-    {
-        Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-
-        if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
-        {
-            IconMaterial = NeedAmmoIconMaterial;
-        }
     }
     else
     {
@@ -2227,7 +2216,6 @@ function DrawPlayerNames(Canvas C)
     local ROVehicle               OwnVehicle, VehicleBase;
     local VehicleWeaponPawn       WepPawn;
     local DHProjectileWeapon      MyProjWeapon;
-    local DHMortarVehicle         Mortar;
     local Actor                   A;
     local Pawn                    LookedAtPawn, PawnForLocation, P;
     local array<Pawn>             Pawns;
@@ -2397,12 +2385,6 @@ function DrawPlayerNames(Canvas C)
                  (PRI.IsSLorASL() && OtherPRI.IsSLorASL()))
         {
             bMayBeValid = true;
-        }
-        // Player is manning a mortar, so we do a specific check whether we can resupply the mortar
-        else if (P.IsA('DHMortarVehicleWeaponPawn'))
-        {
-            Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-            bMayBeValid = Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo;
         }
         // Check whether we can resupply the player or assist them with loading a rocket
         else if (DHPawn(P) != none)

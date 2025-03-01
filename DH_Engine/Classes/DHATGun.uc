@@ -2,6 +2,8 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// TODO: rename to DHStationaryWeaponVehicle, make a DHATGun and DHMortar class.
+//==============================================================================
 
 class DHATGun extends DHVehicle
     abstract;
@@ -16,6 +18,16 @@ enum ERotateError
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
     ERROR_Cooldown,
+    ERROR_TooFarAway,
+    ERROR_Busy,
+};
+
+enum EPickUpError
+{
+    ERROR_None,
+    ERROR_CannotBePickedUp,
+    ERROR_Occupied,
+    ERROR_Fatal,
     ERROR_TooFarAway,
     ERROR_Busy,
 };
@@ -41,8 +53,10 @@ var Rotator           OldRotator;
 var bool              bOldIsRotating;
 
 var Material          RotationProjectionTexture;
-var DynamicProjector    RotationProjector;
+var DynamicProjector  RotationProjector;
 
+// When non-null, this gun can be picked up by a player.
+var class<DHWeapon>   StationaryWeaponClass;
 
 replication
 {
@@ -225,6 +239,36 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         RotationProjector.Destroy();
     }
+}
+
+simulated function EPickUpError GetPickUpError(DHPawn Pawn)
+{
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (StationaryWeaponClass == none)
+    {
+        return ERROR_CannotBePickedUp;
+    }
+
+    if (!Pawn.CanSwitchWeapon())
+    {
+        return ERROR_Busy;
+    }
+
+    if (bVehicleDestroyed)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (NumPassengers() > 0)
+    {
+        return ERROR_Occupied;
+    }
+
+    return ERROR_None;
 }
 
 // Rotation

@@ -3,10 +3,4 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_BritishMortarmanRMCommando extends DHCWMortarmanRoles;
-
-defaultproperties
-{
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRMCommandoPawn')
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-}
+class DH_BritishMortarmanRMCommando extends DHDeprecated;

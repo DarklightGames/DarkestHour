@@ -79,7 +79,6 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
     ProxyTraceDepthMeters=3.0
-    DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
     SupplyCost=500
@@ -92,6 +91,5 @@ defaultproperties
     bShouldRefundSuppliesOnTearDown=false
     bCanBeTornDownByFriendlies=false
     GroupClass=class'DHConstructionGroup_Ammunition'
-
     CompletionPointValue=500
 }
