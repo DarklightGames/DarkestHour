@@ -7,7 +7,7 @@ class DH_DUKWSupport extends DH_DUKW;
 
 defaultproperties
 {
-    VehicleNameString="DUKW (Support)"
+    VehicleNameString="DUKW (Logistics)"
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_supply_topdown'
 
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
