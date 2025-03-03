@@ -202,6 +202,24 @@ function int CheckID(string CDHash)
     return 0;
 }
 
+// Modified to send localized strings.
+function AdminEntered(PlayerController P, string Username)
+{
+	Log(P.PlayerReplicationInfo.PlayerName @ "logged in as Administrator.");
+
+    // "<Player Name> logged in as a server administrator."
+	Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', 6, P.PlayerReplicationInfo);
+}
+
+// Modified to send localized strings.
+function AdminExited(PlayerController P)
+{
+	Log(P.PlayerReplicationInfo.PlayerName @ "logged out.");
+
+    // "<Player Name> gave up administrator abilities."
+	Level.Game.BroadcastLocalizedMessage(class'DHAdminMessage', 7, P.PlayerReplicationInfo);
+}
+
 defaultproperties
 {
     IPBanned="You cannot join this server, you have been banned."
