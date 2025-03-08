@@ -2,6 +2,11 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// [ ] Third person gunner animations
+// [ ] Destroyed mesh
+// [ ] Re-evaluate ammo loadout (add HEAT shell etc.)
+// [ ] Recalibrate sight (correct X/Y)
+//==============================================================================
 
 class DH_Pak40ATGun extends DHATGun;
 
@@ -11,13 +16,15 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body_ext'
     Skins(0)=Texture'DH_Pak40_tex.Pak40.pak40_ext_gray'
-    // TODO: replace all this crap
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_destroyed'
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.Pak40_body'
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
+
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_destroyed' // TODO: replace
+    VehicleHudImage=Texture'DH_Pak40_tex.interface.Pak40_base'
+    VehicleHudTurret=TexRotator'DH_Pak40_tex.interface.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Pak40_tex.interface.Pak40_turret_look'
+
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
+
     ExitPositions(1)=(X=-120.00,Y=-27.00,Z=35.00)
     VehicleMass=11.0
     bCanBeRotated=true

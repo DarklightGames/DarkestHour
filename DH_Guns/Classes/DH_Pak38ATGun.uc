@@ -21,7 +21,7 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-    VehicleNameString="5.0 cm Pak38 AT gun"
+    VehicleNameString="5.0 cm Pak 38"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Pak38_anm.Pak38_body'
     Skins(0)=Texture'DH_Artillery_Tex.Pak38.Pak38'
