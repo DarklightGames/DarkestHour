@@ -37,6 +37,7 @@ struct FireAnim
 };
 var private array<FireAnim> PlayerFireAnims;
 
+// TODO: replace this with the generic solution in parent class.
 struct SAnimationDriver
 {
     var int Channel;
@@ -171,9 +172,6 @@ simulated function InitializeVehicleAndWeapon()
 
 simulated function InitializeHands()
 {
-    local DHPlayer PC;
-    local DHRoleInfo RI;
-
     if (Gun == none)
     {
         Warn("No gun found for mortar cannon pawn!");
