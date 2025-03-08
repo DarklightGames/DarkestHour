@@ -3,4 +3,5 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40FactoryLate_CamoOne extends DHDeprecated;
+class DH_Pak40FactoryLate_CamoOne extends DH_Pak40Factory_CamoOne
+    notplaceable;
