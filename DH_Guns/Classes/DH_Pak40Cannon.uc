@@ -97,6 +97,4 @@ defaultproperties
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=7.0
-    
-    AnimationDrivers(0)=(BoneName="PITCH_DRIVER_ROOT",AnimationName="PITCH_DRIVER",AnimationFrameCount=22,Channel=2,RotationType=ROTATION_Pitch)
 }
