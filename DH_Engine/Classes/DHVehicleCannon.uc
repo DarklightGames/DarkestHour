@@ -44,7 +44,7 @@ var     name                ShootIntermediateAnim;   // firing animation if play
 var     name                ShootRaisedAnim;         // firing animation if player is in a raised or open animation position, i.e. unbuttoned or standing
 
 // Firing animations (new system)
-var     name                ShootAnim;
+var()   name                ShootAnim;
 var     int                 ShootAnimChannel;
 var     name                ShootAnimBoneName;
 
@@ -86,6 +86,7 @@ var     int                 ClosestLowDebugPitch;
 var     float               ClosestHighDebugHeight;    // height (in UU) above & below target from current closest recorded high & low shots during auto range calibration
 var     float               ClosestLowDebugHeight;
 
+// TODO: this can go into the top-level weapon class.
 // Gun wheels
 enum ERotationType
 {
@@ -102,6 +103,18 @@ struct SGunWheel
 };
 
 var() array<SGunWheel> GunWheels;
+
+// Animation drivers for playing animations based on the turret's rotation.
+struct SAnimationDriver
+{
+    var() name          BoneName;
+    var() name          AnimationName;
+    var() int           AnimationFrameCount;
+    var() int           Channel;
+    var() ERotationType RotationType;
+};
+
+var() array<SAnimationDriver> AnimationDrivers;
 
 // This is a value replicated to clients so that they can update
 // effects based on the amount of rounds left (e.g., ammo cache
@@ -157,6 +170,24 @@ simulated function PostBeginPlay()
     {
         AnimBlendParams(ShootAnimChannel, 1.0, 0.0, 0.0, ShootAnimBoneName);
     }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupAnimationDrivers();
+    }
+}
+
+simulated function SetupAnimationDrivers()
+{
+    local int i;
+
+    for (i = 0; i < AnimationDrivers.Length; ++i)
+    {
+        AnimBlendParams(AnimationDrivers[i].Channel, 1.0,,, AnimationDrivers[i].BoneName);
+        PlayAnim(AnimationDrivers[i].AnimationName, 1.0, 0.0, AnimationDrivers[i].Channel);
+    }
+
+    UpdateAnimationDrivers();
 }
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
@@ -2170,6 +2201,37 @@ simulated function DebugModifyOverlayCorrection(float Adjustment)
             CP.ClientMessage("New OverlayCorrectionY =" @ CP.OverlayCorrectionY @ " Original value =" @ CP.default.OverlayCorrectionY
                 @ " Adjustment =" @ CP.OverlayCorrectionY - CP.default.OverlayCorrectionY);
         }
+    }
+}
+
+simulated function UpdateAnimationDrivers()
+{
+    local int i, CurrentPitch, Frame;
+    local float Theta;
+
+    for (i = 0;  i < AnimationDrivers.Length; ++i)
+    {
+        switch (AnimationDrivers[i].RotationType)
+        {
+            case ROTATION_Yaw:
+                // Get the yaw min->max range.
+                Theta = class'UInterp'.static.MapRangeClamped(CurrentAim.Yaw, MaxNegativeYaw, MaxPositiveYaw, 0.0, 1.0);
+                break;
+            case ROTATION_Pitch:
+                if (CurrentAim.Pitch > 32768)
+                {
+                    CurrentPitch = CurrentAim.Pitch - 65536;
+                }
+                else
+                {
+                    CurrentPitch = CurrentAim.Pitch;
+                }
+
+                Theta = class'UInterp'.static.MapRangeClamped(CurrentPitch, GetGunPitchMin(), GetGunPitchMax(), 0.0, 1.0);
+                break;
+        }
+
+        FreezeAnimAt(Theta * AnimationDrivers[i].AnimationFrameCount, AnimationDrivers[i].Channel);
     }
 }
 

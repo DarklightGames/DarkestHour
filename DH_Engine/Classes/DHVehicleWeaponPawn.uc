@@ -304,23 +304,12 @@ simulated function int GetGunPitch()
 
 simulated function int GetGunPitchMin()
 {
-    local int GunPitchMin;
-
     if (VehWep == none)
     {
         return 65535;
     }
-    
-    if (VehWep.CustomPitchDownLimit >= 32768)
-    {
-        GunPitchMin = VehWep.CustomPitchDownLimit - 65535;
-    }
-    else
-    {
-        GunPitchMin = VehWep.CustomPitchDownLimit;
-    }
 
-    return GunPitchMin + GunPitchOffset;
+    return VehWep.GetGunPitchMin() + GunPitchOffset;
 }
 
 simulated function int GetGunPitchMax()

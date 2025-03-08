@@ -3,12 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40CannonLate extends DH_Pak40Cannon;
+class DH_Pak40Factory_CamoTwo extends DH_Pak40Factory;
 
 defaultproperties
 {
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=3
-    InitialTertiaryAmmo=0
-    MaxTertiaryAmmo=2
+    VehicleClass=class'DH_Guns.DH_Pak40ATGun_CamoTwo'
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_camo1'
 }

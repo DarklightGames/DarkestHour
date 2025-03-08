@@ -208,6 +208,21 @@ simulated function SpawnVehicleAttachments()
     }
 }
 
+simulated function int GetGunPitchMin()
+{
+    if (CustomPitchDownLimit >= 32768)
+    {
+        return CustomPitchDownLimit - 65535;
+    }
+    
+    return CustomPitchDownLimit;
+}
+
+simulated function int GetGunPitchMax()
+{
+    return CustomPitchUpLimit;
+}
+
 simulated function AttachCollisionMeshes()
 {
     local name AttachBone;

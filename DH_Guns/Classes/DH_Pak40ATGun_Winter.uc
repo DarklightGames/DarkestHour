@@ -3,9 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40ATGunLate_CamoOne extends DH_Pak40ATGun_CamoOne;
+class DH_Pak40ATGun_Winter extends DH_Pak40ATGun;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawnLate')
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_winter'
+    CannonSkins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_winter'
 }

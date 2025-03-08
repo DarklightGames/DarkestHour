@@ -3,9 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_Pak40CannonPawnLate extends DH_Pak40CannonPawn;
+class DH_Pak40Factory_Winter extends DH_Pak40Factory;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Pak40CannonLate'
+    VehicleClass=class'DH_Guns.DH_Pak40ATGun_Winter'
+    Skins(0)=Texture'DH_Pak40_tex.Pak40.Pak40_ext_winter'
 }
