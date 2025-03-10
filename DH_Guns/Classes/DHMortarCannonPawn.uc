@@ -422,6 +422,7 @@ simulated state Firing
     simulated function BeginState()
     {
         local DHPlayer PC;
+        local Rotator ProjectileRelativeRotation;
         
         PC = DHPlayer(Controller);
 
@@ -446,6 +447,10 @@ simulated state Firing
 
             // Update the hands projectile mesh to the round we are about to fire.
             UpdateHandsProjectileStaticMesh();
+
+            // Randomly spin the projectile so it's not always the same.
+            ProjectileRelativeRotation.Roll = Rand(65535);
+            HandsProjectile.SetRelativeRotation(ProjectileRelativeRotation);
         }
 
         FiringStartTimeSeconds = Level.TimeSeconds;
