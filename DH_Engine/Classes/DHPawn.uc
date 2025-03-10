@@ -3971,16 +3971,6 @@ function HandleResetRoot()
     SetAnimAction('ResetRoot');
 }
 
-function HandleMortarFire()
-{
-    SetAnimAction('MortarFire');
-}
-
-function HandleMortarUnflinch()
-{
-    SetAnimAction('MortarUnflinch');
-}
-
 // Mantle anims
 simulated function PlayMantle()
 {
