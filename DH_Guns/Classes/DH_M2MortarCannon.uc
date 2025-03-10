@@ -15,7 +15,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_GUN_EXT'
-    //Skins(0)=Texture'DH_M2Mortar_tex.M2.M2Mortar_ext'
+    Skins(0)=Texture'DH_M2Mortar_tex.m2mortar.M2MORTAR_BODY_EXT'
 
     WeaponFireAttachmentBone="MUZZLE"
     GunnerAttachmentBone="GUN_YAW"

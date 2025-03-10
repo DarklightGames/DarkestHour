@@ -10,7 +10,7 @@ defaultproperties
     VehicleNameString="M2 60mm Mortar"
     VehicleTeam=1
     Mesh=SkeletalMesh'DH_M2Mortar_anm.M2MORTAR_BODY_EXT'
-    //Skins(0)=Texture'DH_M2Mortar_tex.M2.M2Mortar_ext'
+    Skins(0)=Texture'DH_M2Mortar_tex.m2mortar.M2MORTAR_BODY_EXT'
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M2MortarCannonPawn',WeaponBone="TURRET_PLACEMENT")
     CollisionRadius=32.0
     CollisionHeight=8.0
