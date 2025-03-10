@@ -48,14 +48,6 @@ var bool bIsExposed;
 var int InActiveObjectivePenaltySeconds;
 var int IsExposedPenaltySeconds;
 
-// Attachments
-var class<DHResupplyAttachment>         ResupplyAttachmentClass;
-var DHResupplyAttachment                ResupplyAttachment;
-var DHResupplyStrategy.EResupplyType    ResupplyType;
-var float                               ResupplyAttachmentCollisionRadius;
-var float                               ResupplyAttachmentCollisionHeight;
-var float                               ResupplyTime;
-
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -227,23 +219,6 @@ state Active
         }
 
         OnUpdated();
-
-        ResupplyAttachment = Spawn(ResupplyAttachmentClass, self);
-
-        if (ResupplyAttachment != none)
-        {
-            ResupplyAttachment.SetResupplyType(ResupplyType);
-            ResupplyAttachment.SetTeamIndex(GetTeamIndex());
-            ResupplyAttachment.SetSquadIndex(SquadIndex);
-            ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
-            ResupplyAttachment.SetBase(self);
-            ResupplyAttachment.UpdateTime = ResupplyTime;
-            ResupplyAttachment.ResupplyStrategy.bGivesExtraAmmo = false;
-        }
-        else
-        {
-            Warn("Failed to spawn resupply attachment!");
-        }
     }
 }
 
@@ -517,11 +492,6 @@ function Destroyed()
         MetricsObject.DestroyedAt = class'DateTime'.static.Now(self);
     }
 
-    if (ResupplyAttachment != none)
-    {
-        ResupplyAttachment.Destroy();
-    }
-
     if (SRI != none)
     {
         SRI.OnSquadRallyPointDestroyed(self);
@@ -590,11 +560,4 @@ defaultproperties
     bCollideWorld=false
     bBlockActors=true
     bBlockKarma=false
-
-    // Attachments
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
-    ResupplyType=RT_Mortars
-    ResupplyAttachmentCollisionRadius=300
-    ResupplyAttachmentCollisionHeight=100
-    ResupplyTime=30
 }
