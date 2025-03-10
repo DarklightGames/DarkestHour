@@ -32,8 +32,7 @@ replication
         bBarrelSteamActive;
 }
 
-// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
-// Also to set up new NotifyParameters object, including pickup's InventoryType, which gets passed to screen messages & allows them to display weapon's name
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles.
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();

@@ -304,6 +304,8 @@ defaultproperties
     SoundArtists(13)="Ariel Hansen"
 
     LocalizationTeam(0)="-Red-(Rus)- (Russian)"
+    LocalizationTeam(1)="dirtybirdy (Ukrainian)"
+    LocalizationTeam(2)="MortarOperator (Russian/Ukrainian)"
 
     CommunityAdmins(0)="Colonel_Ironnuts"
     CommunityAdmins(1)="toaster"

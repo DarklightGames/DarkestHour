@@ -14,6 +14,8 @@ var localized string DestroyedAllSpawnsMessage;
 var localized string AdminTeleportedMessage;
 var localized string AlliedTeamNameGenitive;
 var localized string AxisTeamNameGenitive;
+var localized string AdminLoggedInMessage;
+var localized string AdminLoggedOutMessage;
 
 static function string GetSquadName(int TeamIndex, int SquadIndex, DHSquadReplicationInfo SRI)
 {
@@ -60,6 +62,10 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return Repl(Repl(default.DestroyedAllSpawnsMessage, "{0}", RelatedPRI_1.PlayerName), "{1}", static.GetTeamName(ExtraValue));
         case 5:
             return Repl(default.AdminTeleportedMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 6:
+            return Repl(default.AdminLoggedInMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 7:
+            return Repl(default.AdminLoggedOutMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -77,6 +83,8 @@ defaultproperties
     DestroyedSpawnMessage="Admin '{0}' has destroyed an admin-placed spawn on {1} team."
     DestroyedAllSpawnsMessage="Admin '{0}' destroyed all admin-placed spawns on {1} team."
     AdminTeleportedMessage="Admin '{0}' has teleported."
+    AdminLoggedInMessage="{0} logged in as a server administrator."
+    AdminLoggedOutMessage="{0} gave up administrator abilities."
     AlliedTeamNameGenitive="Allied"
     AxisTeamNameGenitive="Axis"
 

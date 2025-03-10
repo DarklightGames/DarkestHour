@@ -22,19 +22,18 @@ var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net cl
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
 var     bool    bCanPickupWeapons;
 
-// Common Sounds
-// ** We are overwriting ROPawn here to expand for our custom surface types **
-var(Sounds) sound   DHSoundFootsteps[50]; // Indexed by ESurfaceTypes (sorry about the literal).
-
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
 var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
-var     class<Inventory>    ShovelClass;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+
+var     class<DHPawnFootstepSounds> FootstepSoundsClass;
+
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
+var     class<Inventory>    ShovelClass;
 var     class<Inventory>    BinocsClass;
 var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
@@ -77,10 +76,11 @@ var     float   IronsightBobFrequencyZ;
 var     float   IronsightBobDecay;
 
 // Hit sounds
-var     array<sound>    PlayerHitSounds;
-var     array<sound>    HelmetHitSounds;
+var     array<Sound>    PlayerHitSounds;
+var     array<Sound>    HelmetHitSounds;
 
 // Mantling
+var     class<DHMantleAnimations> MantleAnimationsClass;
 var     vector  MantleEndPoint;      // player's final location after mantle
 var     bool    bCanMantle;          // used for HUD icon display
 var     bool    bSetMantleEyeHeight; // for lowering eye height during mantle
@@ -101,13 +101,6 @@ var     sound   MantleSound;
 
 // Digging
 var     bool    bCanDig;
-
-// Mantling
-var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
-                                MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
-
-var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S,
-                                MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
 
 // Burning player
 var     bool                bOnFire;                       // whether Pawn is on fire or not
@@ -4011,8 +4004,14 @@ simulated function PlayMantle()
         PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0); // was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
     }
 
-    Anim = SetMantleAnim();
-    AnimTimer = GetAnimDuration(Anim, MANTLE_ANIM_RATE) + 0.1;
+    if (MantleAnimationsClass != none)
+    {
+        Anim = MantleAnimationsClass.static.GetMantleAnimation(bCrouchMantle, MantleHeight);
+        AnimTimer = GetAnimDuration(Anim, MANTLE_ANIM_RATE) + 0.1;
+    }
+
+    // Make sure the anim timer is non-zero.
+    AnimTimer = Max(AnimTimer, 0.1);
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !bLocallyControlled))
     {
@@ -4809,124 +4808,6 @@ simulated function ClientMantleFail()
     bIsMantling = false;
     MantleRaiseWeapon();
     ResetRootBone();
-}
-
-simulated function name SetMantleAnim()
-{
-    local name MantleAnim;
-
-    if (bCrouchMantle)
-    {
-        if (MantleHeight > 84.0)
-        {
-            MantleAnim = MantleAnim_88C;
-        }
-        else if (MantleHeight > 80.0)
-        {
-            MantleAnim = MantleAnim_84C;
-        }
-        else if (MantleHeight > 76.0)
-        {
-            MantleAnim = MantleAnim_80C;
-        }
-        else if (MantleHeight > 72.0)
-        {
-            MantleAnim = MantleAnim_76C;
-        }
-        else if (MantleHeight > 68.0)
-        {
-            MantleAnim = MantleAnim_72C;
-        }
-        else if (MantleHeight > 64.0)
-        {
-            MantleAnim = MantleAnim_68C;
-        }
-        else if (MantleHeight > 60.0)
-        {
-            MantleAnim = MantleAnim_64C;
-        }
-        else if (MantleHeight > 56.0)
-        {
-            MantleAnim = MantleAnim_60C;
-        }
-        else if (MantleHeight > 52.0)
-        {
-            MantleAnim = MantleAnim_56C;
-        }
-        else if (MantleHeight > 48.0)
-        {
-            MantleAnim = MantleAnim_52C;
-        }
-        else if (MantleHeight > 44.0)
-        {
-            MantleAnim = MantleAnim_48C;
-        }
-        else if (MantleHeight > 40.0)
-        {
-            MantleAnim = MantleAnim_44C;
-        }
-        else
-        {
-            MantleAnim = MantleAnim_40C;
-        }
-    }
-    else
-    {
-        if (MantleHeight > 84.0)
-        {
-            MantleAnim = MantleAnim_88S;
-        }
-        else if (MantleHeight > 80.0)
-        {
-            MantleAnim = MantleAnim_84S;
-        }
-        else if (MantleHeight > 76.0)
-        {
-            MantleAnim = MantleAnim_80S;
-        }
-        else if (MantleHeight > 72.0)
-        {
-            MantleAnim = MantleAnim_76S;
-        }
-        else if (MantleHeight > 68.0)
-        {
-            MantleAnim = MantleAnim_72S;
-        }
-        else if (MantleHeight > 64.0)
-        {
-            MantleAnim = MantleAnim_68S;
-        }
-        else if (MantleHeight > 60.0)
-        {
-            MantleAnim = MantleAnim_64S;
-        }
-        else if (MantleHeight > 56.0)
-        {
-            MantleAnim = MantleAnim_60S;
-        }
-        else if (MantleHeight > 52.0)
-        {
-            MantleAnim = MantleAnim_56S;
-        }
-        else if (MantleHeight > 48.0)
-        {
-            MantleAnim = MantleAnim_52S;
-        }
-        else if (MantleHeight > 44.0)
-        {
-            MantleAnim = MantleAnim_48S;
-        }
-        else if (MantleHeight > 40.0)
-        {
-            MantleAnim = MantleAnim_44S;
-        }
-        else
-        {
-            MantleAnim = MantleAnim_40S;
-        }
-    }
-
-    return MantleAnim;
 }
 
 simulated state Mantling
@@ -6200,7 +6081,10 @@ simulated function FootStepping(int Side)
     }
 
     // Play footstep sound, based on surface type & volume/radius modifiers
-    PlaySound(DHSoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
+    if (FootstepSoundsClass != none)
+    {
+        PlaySound(FootstepSoundsClass.static.GetSound(SurfaceTypeID), SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
+    }
 }
 
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
@@ -7604,38 +7488,11 @@ defaultproperties
     FootStepSoundRadius=96
     FootstepVolume=0.75
     QuietFootStepVolume=0.66
-    SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
+    FootstepSoundsClass=class'DHPawnFootstepSounds'
+    SoundGroupClass=class'DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
-
-    //Footstepping - add additional slots in the array for our new material surface types
-    DHSoundFootsteps(0)=Sound'Inf_Player.FootStepDirt'
-    DHSoundFootsteps(1)=Sound'Inf_Player.FootstepGravel' // Rock
-    DHSoundFootsteps(2)=Sound'Inf_Player.FootStepDirt'
-    DHSoundFootsteps(3)=Sound'Inf_Player.FootstepMetal' // Metal
-    DHSoundFootsteps(4)=Sound'Inf_Player.FootstepWoodenfloor' // Wood
-    DHSoundFootsteps(5)=Sound'Inf_Player.FootstepGrass' // Plant
-    DHSoundFootsteps(6)=Sound'Inf_Player.FootStepDirt' // Flesh
-    DHSoundFootsteps(7)=Sound'Inf_Player.FootstepSnowRough' // Ice
-    DHSoundFootsteps(8)=Sound'Inf_Player.FootstepSnowHard'
-    DHSoundFootsteps(9)=Sound'Inf_Player.FootstepWaterShallow'
-    DHSoundFootsteps(10)=Sound'Inf_Player.FootstepGravel' // Glass- Replaceme
-    DHSoundFootsteps(11)=Sound'Inf_Player.FootstepGravel' // Gravel
-    DHSoundFootsteps(12)=Sound'Inf_Player.FootstepAsphalt' // Concrete
-    DHSoundFootsteps(13)=Sound'Inf_Player.FootstepWoodenfloor' // HollowWood
-    DHSoundFootsteps(14)=Sound'Inf_Player.FootstepMud' // Mud
-    DHSoundFootsteps(15)=Sound'Inf_Player.FootstepMetal' // MetalArmor
-    DHSoundFootsteps(16)=Sound'Inf_Player.FootstepAsphalt_P' // Paper
-    DHSoundFootsteps(17)=Sound'Inf_Player.FootStepDirt' // Cloth
-    DHSoundFootsteps(18)=Sound'Inf_Player.FootStepDirt' // Rubber
-    DHSoundFootsteps(19)=Sound'Inf_Player.FootStepDirt' // Crap
-
-    DHSoundFootsteps(20)=none // this is a test material
-    DHSoundFootsteps(21)=Sound'Inf_Player.FootstepSnowRough' // Sand
-    DHSoundFootsteps(22)=Sound'Inf_Player.FootStepDirt' //Sand Bags
-    DHSoundFootsteps(23)=Sound'Inf_Player.FootstepAsphalt' // Brick
-    DHSoundFootsteps(24)=Sound'Inf_Player.FootstepGrass' // Hedgerow
 
     // Burning player
     FireDamage=10
@@ -7677,32 +7534,7 @@ defaultproperties
 
     IdleSwimAnim="stand_idlehip_nade" // not specified in ROPawn, resulting in log spam when in water (goes with ROPawn's 'stand_jogX_nade' directional SwimAnims)
 
-    MantleAnim_40C="mantle_crouch_40"
-    MantleAnim_44C="mantle_crouch_44"
-    MantleAnim_48C="mantle_crouch_48"
-    MantleAnim_52C="mantle_crouch_52"
-    MantleAnim_56C="mantle_crouch_56"
-    MantleAnim_60C="mantle_crouch_60"
-    MantleAnim_64C="mantle_crouch_64"
-    MantleAnim_68C="mantle_crouch_68"
-    MantleAnim_72C="mantle_crouch_72"
-    MantleAnim_76C="mantle_crouch_76"
-    MantleAnim_80C="mantle_crouch_80"
-    MantleAnim_84C="mantle_crouch_84"
-    MantleAnim_88C="mantle_crouch_88"
-    MantleAnim_40S="mantle_stand_40"
-    MantleAnim_44S="mantle_stand_44"
-    MantleAnim_48S="mantle_stand_48"
-    MantleAnim_52S="mantle_stand_52"
-    MantleAnim_56S="mantle_stand_56"
-    MantleAnim_60S="mantle_stand_60"
-    MantleAnim_64S="mantle_stand_64"
-    MantleAnim_68S="mantle_stand_68"
-    MantleAnim_72S="mantle_stand_72"
-    MantleAnim_76S="mantle_stand_76"
-    MantleAnim_80S="mantle_stand_80"
-    MantleAnim_84S="mantle_stand_84"
-    MantleAnim_88S="mantle_stand_88"
+    MantleAnimationsClass=class'DHMantleAnimations'
 
     // Override binoculars WalkAnims from ROPawn that don't exist
     // Normally these are overridden by weapon-specific anims in the weapon attachment class (PA_WalkAnims), so the problem was masked in RO
