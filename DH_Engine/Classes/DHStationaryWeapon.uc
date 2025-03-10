@@ -99,7 +99,7 @@ exec simulated function Deploy()
         {
             PlayAnim(DeployAnimation);
             bDeploying = true;
-            P.bIsDeployingMortar = true;
+            P.bIsDeployingStationaryWeapon = true;
 
             LockedViewRotation = P.Rotation;
             LockedViewRotation.Pitch = 0;
@@ -238,7 +238,7 @@ simulated event AnimEnd(int Channel)
 
         if (P != none)
         {
-            P.bIsDeployingMortar = false;
+            P.bIsDeployingStationaryWeapon = false;
             P.SetLockViewRotation(false);
         }
 

@@ -1122,7 +1122,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 
             ViewRotation.Pitch = DHPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
 
-            if (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingMortar || DHPwn.bIsCuttingWire)
+            if (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingStationaryWeapon || DHPwn.bIsCuttingWire)
             {
                 DHPwn.LimitYaw(ViewRotation.Yaw);
             }
@@ -1506,7 +1506,7 @@ state PlayerWalking
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
-        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
+        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingStationaryWeapon || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
         {
             NewAccel = vect(0.0, 0.0, 0.0);
         }

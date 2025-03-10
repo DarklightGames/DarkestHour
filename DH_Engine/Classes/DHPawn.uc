@@ -38,12 +38,10 @@ var     class<Inventory>    BinocsClass;
 var     class<Inventory>    SmokeGrenadeClass;
 var     class<Inventory>    ColoredSmokeGrenadeClass;
 
-// Mortars
-var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
-var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
-var     bool    bMortarCanBeResupplied;
+// Stationary Weapons
+var     bool    bIsDeployingStationaryWeapon;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bLockViewRotation;
-var     rotator LockViewRotation;
+var     Rotator LockViewRotation;
 
 // Obstacle clearing
 var     bool    bCanCutWire;
@@ -2721,11 +2719,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     // Destroy some possible DH special carried/owned actors
     DestroyRadio();
 
-    if (OwnedMortar != none)
-    {
-        OwnedMortar.GotoState('PendingDestroy');
-    }
-
     // Notify other actors that player has died
     if (DrivenVehicle != none)
     {
@@ -5298,7 +5291,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -5320,7 +5313,7 @@ simulated function LeanRightReleased()
 
 simulated function LeanLeft()
 {
-    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingStationaryWeapon || bIsCuttingWire)
     {
         bLeanLeft = false;
     }
