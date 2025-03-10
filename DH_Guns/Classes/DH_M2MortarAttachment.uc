@@ -7,8 +7,6 @@ class DH_M2MortarAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    PA_MortarDeployAnim="deploy_M2Mortar"
-    WA_MortarDeployAnim="Deploy"
     WA_Idle="Idle"
     WA_Fire="Idle"
     PA_MovementAnims(0)="stand_jogF_M2Mortar"

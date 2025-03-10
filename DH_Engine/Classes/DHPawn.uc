@@ -3971,11 +3971,6 @@ function HandleResetRoot()
     SetAnimAction('ResetRoot');
 }
 
-function HandleMortarDeploy()
-{
-    SetAnimAction('MortarDeploy');
-}
-
 function HandleMortarFire()
 {
     SetAnimAction('MortarFire');
