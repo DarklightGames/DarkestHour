@@ -11,7 +11,7 @@ enum ESpawnPointType
 {
     ESPT_Infantry,          // Allow the spawning of infantry only.
     ESPT_Vehicles,          // Allow the spawning of vehicles and tank crewman (on foot).
-    ESPT_Mortars,           // Allow the spawning of mortar crew only.
+    ESPT_Mortars,           // DEPRECATED: This is no longer functional.
     ESPT_All,               // Anything goes.
     ESPT_VehicleCrewOnly,   // Allow the spawning of tank crewmen only.
     ESPT_VehicleOnly,       // Allow the spawning of vehicles only (no on-foot tank crewmen).
@@ -67,6 +67,13 @@ simulated function PostBeginPlay()
     local DHLocationHint   LH;
     local RONoArtyVolume   NAV;
     local DHVehicleFactory VF;
+
+    if (Type == ESPT_Mortars)
+    {
+        Warn("DHSpawnPoint: ESPT_Mortars is deprecated. Please use ESPT_Infantry instead.");
+
+        Type = ESPT_Infantry;
+    }
 
     // On net client we only need to do 1 check in this function & only if spawn point is for infantry who are allowed to spawn in infantry vehicles
     // Client doesn't build or use arrays of location hints, so we just need to verify there is at least 1 valid vehicle location hint
@@ -237,11 +244,6 @@ simulated function bool CanSpawnVehicles()
     return Type == ESPT_Vehicles || Type == ESPT_All || Type == ESPT_VehicleOnly;
 }
 
-simulated function bool CanSpawnMortars()
-{
-    return Type == ESPT_Mortars || Type == ESPT_All;
-}
-
 // Modified to check whether spawn point allows player to use it, depending on role & type of vehicle (if any)
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
@@ -258,11 +260,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     if (RI == none)
     {
         return false;
-    }
-
-    if (RI.default.bCanUseMortars && CanSpawnMortars())
-    {
-        return true;
     }
 
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));

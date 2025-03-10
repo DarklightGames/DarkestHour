@@ -2281,7 +2281,7 @@ simulated function bool IsArtilleryOperator()
 
     RI = DHRoleInfo(GetRoleInfo());
 
-    return (RI != none && RI.bCanUseMortars) || IsInArtilleryVehicle();
+    return IsInArtilleryVehicle();
 }
 
 simulated function bool IsArtillerySpotter()
@@ -2402,7 +2402,7 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
 
     // Only allow if requesting player is a leader role or if he's a machine gunner or mortar operator requesting resupply
     if (RI != none &&
-        (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars))) &&
+        (RI.bIsLeader || (RequestType == 3 && RI.bIsGunner)) &&
         ROGameReplicationInfo(GameReplicationInfo) != none &&
         PRI != none &&
         PRI.Team != none)

@@ -369,7 +369,7 @@ defaultproperties
     bSpawnWithExtraAmmo=false
     BareHandTexture=Texture'Weapons1st_tex.Arms.hands'
     GlovedHandTexture=Texture'Weapons1st_tex.Arms.hands_gergloves'
-    HandType=Hand_Bare
+    HandType=HAND_Bare
     bCanPickupWeapons=true
     bCanBeSquadLeader=true
 }

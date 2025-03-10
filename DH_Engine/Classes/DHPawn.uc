@@ -3298,7 +3298,7 @@ function CheckGiveSmoke()
     NationClass = DHG.DHLevelInfo.GetTeamNationClass(TeamIndex);
 
     // Exclude tank crewmen and mortar operators
-    if (RI == none || RI.bCanBeTankCrew || RI.bCanUseMortars)
+    if (RI == none || RI.bCanBeTankCrew)
     {
         return;
     }
