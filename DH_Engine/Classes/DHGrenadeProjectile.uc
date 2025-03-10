@@ -118,7 +118,7 @@ defaultproperties
     ImpactSoundGrass=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Grass'
     ImpactSoundConcrete=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     WaterHitSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Water'
-    ImpactSoundVolumeRange=(Min=0.0,Max=2.0)
+    ImpactSoundVolumeRange=(Min=0.5,Max=4.0)
     ImpactSoundRadius=45.0
     CollisionHeight=2.0
     CollisionRadius=4.0
