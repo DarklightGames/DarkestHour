@@ -35,28 +35,6 @@ function ServerDestroyMortar()
     Destroy();
 }
 
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (NotifyParameters != none)
-    {
-        NotifyParameters.Clear();
-    }
-}
-
-// Modified to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
-    }
-}
-
 // Modified to handle special requirements to use mortar, with custom messages
 function bool TryToDrive(Pawn P)
 {
@@ -154,7 +132,6 @@ simulated function int GetTeamNum()
     return VehicleTeam;
 }
 
-// Modified to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
     local DHPawn P;

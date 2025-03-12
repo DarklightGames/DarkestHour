@@ -31,7 +31,7 @@ defaultproperties
 
     GivenItems(0)="DH_Equipment.DH_ItalianRadioItem"
     
-    Backpack(0)=(BackpackClass=class'DH_ItalyPlayers.DH_StazioneRF1Backpack')
+    Backpacks(0)=(BackpackClass=class'DH_ItalyPlayers.DH_StazioneRF1Backpack')
 
     DetachedArmClass=class'DH_ItalyPlayers.DHSeveredArm_ItalianLivorno'
     DetachedLegClass=class'DH_ItalyPlayers.DHSeveredLeg_ItalianLivorno'

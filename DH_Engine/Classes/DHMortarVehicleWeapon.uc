@@ -105,12 +105,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         {
             P.Velocity *= 1.0 + ((FRand() - 0.5) * 0.1); // scale velocity by +/- 5%
         }
-
-        // Debug option
-        if (P.IsA('DHMortarProjectile'))
-        {
-            DHMortarProjectile(P).VehicleWeapon = self;
-        }
     }
 
     return P;

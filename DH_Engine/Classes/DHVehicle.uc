@@ -90,7 +90,6 @@ var     int         ReinforcementCost;           // reinforcement loss for losin
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-var     TreeMap_string_Object  NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     int         WeaponLockTimeForTK;         // Number of seconds a player's weapons are locked for TKing this vehicle
 var     int         PreventTeamChangeForTK;      // Number of seconds a player cannot team change after TKing this vehicle
 var     bool        bIsAmphibious;               // Vehicle can spawn at both boat and non-boat spawn points
@@ -329,8 +328,7 @@ simulated function name GetIdleAnim()
 }
 
 // Modified to create passenger pawn classes from PassengerWeapons array, to make net clients show empty rider positions on HUD vehicle icon,
-// to match position indexes to initial position, to set bDriverAlreadyEntered in single player, to avoid setting initial timer RO's 'waiting for crew' system is deprecated,
-// and to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
+// to match position indexes to initial position, to set bDriverAlreadyEntered in single player, to avoid setting initial timer RO's 'waiting for crew' system is deprecated.
 simulated function PostBeginPlay()
 {
     local byte StartIndex, Index, i;
@@ -378,13 +376,6 @@ simulated function PostBeginPlay()
     else
     {
         WeaponPawns.Length = PassengerWeapons.Length;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // Set up new NotifyParameters object
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
     }
 
     if (DriverAnimationChannelBone != '')
@@ -443,11 +434,6 @@ simulated function Destroyed()
 
     DestroyAttachments();
     DestroyVehicleComponentControllers();
-
-    if (NotifyParameters != none)
-    {
-        NotifyParameters.Clear();
-    }
 }
 
 function StartEngineFire(Pawn InstigatedBy);
