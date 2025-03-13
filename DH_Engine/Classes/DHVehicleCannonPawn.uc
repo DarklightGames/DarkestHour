@@ -1318,11 +1318,7 @@ exec function CalibrateFire(int MilsMin, int MilsMax)
 
             if (BP != none)
             {
-                BP.bIsCalibrating = true;
-                BP.LifeStart = Level.TimeSeconds;
-                BP.DebugAngleValue = Mils;
-                BP.DebugAngleUnit = AU_Milliradians;
-                BP.StartLocation = BP.Location;
+                BP.CreateCalibrationInfo(VehWep, BP.Location, Mils, AU_Milliradians);
             }
         }
     }

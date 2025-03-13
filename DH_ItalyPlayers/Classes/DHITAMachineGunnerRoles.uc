@@ -30,7 +30,7 @@ defaultproperties
     HeadgearProbabilities(2)=0.05
     HeadgearProbabilities(3)=0.05
 
-    Backpack(0)=(BackpackClass=class'DH_Equipment.DH_Breda30Backpack')
+    Backpacks(0)=(BackpackClass=class'DH_Equipment.DH_Breda30Backpack')
     
     DetachedArmClass=class'DH_ItalyPlayers.DHSeveredArm_ItalianLivorno'
     DetachedLegClass=class'DH_ItalyPlayers.DHSeveredLeg_ItalianLivorno'

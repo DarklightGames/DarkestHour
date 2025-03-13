@@ -20,10 +20,4 @@ defaultproperties
     CameraBone="US_GUNSIGHT_CAMERA"
 
     ArtillerySpottingScopeClass=class'DH_Guns.DH_Model35MortarArtillerySpottingScope'
-
-    // Spotting Scope
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.m1mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="overlay_out",ViewFOV=40.0,ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.m1mortar_tube_ext',DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=8192,ViewPitchDownLimit=55000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.m1mortar_tube_ext',DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Model35Mortar_anm.m1mortar_tube_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewFOV=12.0,ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
 }

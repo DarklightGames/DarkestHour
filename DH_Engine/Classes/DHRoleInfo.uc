@@ -54,7 +54,7 @@ struct SBackpack
     var rotator           RotationOffset;
 };
 
-var array<SBackpack> Backpack;
+var array<SBackpack> Backpacks;
 
 replication
 {
@@ -121,9 +121,9 @@ simulated function HandlePrecache()
             default.Headgear[i].static.StaticPrecache(Level);
         }
 
-        for (i = 0; i < default.Backpack.Length; ++i)
+        for (i = 0; i < default.Backpacks.Length; ++i)
         {
-            default.Backpack[i].BackpackClass.static.StaticPrecache(Level);
+            default.Backpacks[i].BackpackClass.static.StaticPrecache(Level);
         }
 
         if (default.DetachedArmClass != none)
@@ -207,30 +207,30 @@ function class<DHBackpack> GetBackpack(out vector LocationOffset, out rotator Ro
     local float R, ProbabilitySum;
     local int   i;
 
-    if (Backpack.Length == 0)
+    if (Backpacks.Length == 0)
     {
         return none;
     }
 
-    if (Backpack.Length == 1)
+    if (Backpacks.Length == 1)
     {
-        LocationOffset = Backpack[0].LocationOffset;
-        RotationOffset = Backpack[0].RotationOffset;
-        return Backpack[0].BackpackClass;
+        LocationOffset = Backpacks[0].LocationOffset;
+        RotationOffset = Backpacks[0].RotationOffset;
+        return Backpacks[0].BackpackClass;
     }
 
     R = FRand();
 
-    for (i = 0; i < Backpack.Length; ++i)
+    for (i = 0; i < Backpacks.Length; ++i)
     {
-        ProbabilitySum += Backpack[i].Probability;
+        ProbabilitySum += Backpacks[i].Probability;
 
         if (R <= ProbabilitySum)
         {
-            LocationOffset = Backpack[0].LocationOffset;
-            RotationOffset = Backpack[0].RotationOffset;
+            LocationOffset = Backpacks[0].LocationOffset;
+            RotationOffset = Backpacks[0].RotationOffset;
 
-            return Backpack[i].BackpackClass;
+            return Backpacks[i].BackpackClass;
         }
     }
 

@@ -6,14 +6,16 @@
 class DHBallisticProjectile extends ROBallisticProjectile
     abstract;
 
-var DHVehicleWeapon VehicleWeapon;
+var DHProjectileCalibrationInfo DebugCalibrationInfo;
 
-// debugging stuff
-var bool bIsCalibrating;
-var float LifeStart;
-var vector StartLocation;
-var float DebugAngleValue;
-var UUnits.EAngleUnit DebugAngleUnit;
+function DHProjectileCalibrationInfo CreateCalibrationInfo(DHVehicleWeapon VehicleWeapon, Vector StartLocation, float DebugAngleValue, UUnits.EAngleUnit DebugAngleUnit)
+{
+    DebugCalibrationInfo = new class'DHProjectileCalibrationInfo';
+    DebugCalibrationInfo.VehicleWeapon = VehicleWeapon;
+    DebugCalibrationInfo.StartLocation = StartLocation;
+    DebugCalibrationInfo.DebugAngleValue = DebugAngleValue;
+    DebugCalibrationInfo.DebugAngleUnit = DebugAngleUnit;
+}
 
 function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker_ArtilleryHit> MarkerClass)
 {
@@ -34,6 +36,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         return;
     }
 
+    // Gather a list of artillery markers within the distance threshold of the hit location.
     GRI.GetMapCoords(HitLocation, MapLocation.X, MapLocation.Y);
     GRI.GetGlobalArtilleryMapMarkers(PC, MapMarkers);
 
@@ -57,7 +60,7 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
         PC.ClientAddPersonalMapMarker(MarkerClass, HitLocation);
     }
 
-    // For each map marker we hit, mark the hit on the map for the spotter as well.
+    // For each map marker in range, mark the hit on the map for the spotter as well.
     for (i = 0; i < HitMarkerIndices.Length; ++i)
     {
         if (MapMarkers[HitMarkerIndices[i]].Author != none)
@@ -74,13 +77,8 @@ function SaveHitPosition(vector HitLocation, vector HitNormal, class<DHMapMarker
 
 simulated function BlowUp(vector HitLocation)
 {
-    local float Distance, Angle;
-
-    if (Role == ROLE_Authority && VehicleWeapon != none && bIsCalibrating)
+    if (DebugCalibrationInfo != none)
     {
-        Distance = class'DHUnits'.static.UnrealToMeters(VSize(Location - StartLocation));
-        Angle = class'UUnits'.static.ConvertAngleUnit(DebugAngleValue, AU_Unreal, DebugAngleUnit);
-
-        Log("" $ Angle $ "," $ Distance);
+        DebugCalibrationInfo.LogHit(HitLocation);
     }
 }
