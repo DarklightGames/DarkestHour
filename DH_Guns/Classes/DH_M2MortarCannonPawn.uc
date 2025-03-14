@@ -32,9 +32,9 @@ defaultproperties
 
     bLockCameraDuringTransition=false
 
-    DrivePos=(X=28.60893,Y=0.68,Z=53.0)   // setdrivepos 28.60893 0.68 53.0
-    DriveRot=(Yaw=16384)
-    DriveAnim="M2mortar_idle"
+    DrivePos=(X=0.7,Y=0,Z=57.5)
+    DriveRot=(Yaw=0)
+    DriveAnim="m2mortar_gunner_idle"
 
     OverlayCorrectionX=0
     OverlayCorrectionY=0
@@ -47,7 +47,7 @@ defaultproperties
     // AmmoShellReloadTextures(1)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_3360_ICON_RELOAD'
     // AmmoShellReloadTextures(2)=Texture'DH_M2Mortar_tex.interface.IT_SMOKE_M110_B_ICON'
 
-    ArtillerySpottingScopeClass=class'DH_Weapons.DHArtillerySpottingScope_AlliedMortar'   // TODO: rename class
+    ArtillerySpottingScopeClass=class'DH_M2MortarArtillerySpottingScope'
 
     GunPitchOffset=7280 // +40 degrees
 
@@ -60,25 +60,24 @@ defaultproperties
     HandsAttachBone="MUZZLE"
     HandsProjectileBone="PROJECTILE"
 
-    FireDelaySeconds=2.35
+    FireDelaySeconds=1.75
 
     // Player firing animations.
-    PlayerFireAnims(0)=(Angle=40,AnimName="M2mortar_fire_40")
-    PlayerFireAnims(1)=(Angle=45,AnimName="M2mortar_fire_45")
-    PlayerFireAnims(2)=(Angle=50,AnimName="M2mortar_fire_50")
-    PlayerFireAnims(3)=(Angle=55,AnimName="M2mortar_fire_55")
-    PlayerFireAnims(4)=(Angle=60,AnimName="M2mortar_fire_60")
-    PlayerFireAnims(5)=(Angle=65,AnimName="M2mortar_fire_65")
-    PlayerFireAnims(6)=(Angle=70,AnimName="M2mortar_fire_70")
-    PlayerFireAnims(7)=(Angle=75,AnimName="M2mortar_fire_75")
-    PlayerFireAnims(8)=(Angle=80,AnimName="M2mortar_fire_80")
-    PlayerFireAnims(9)=(Angle=85,AnimName="M2mortar_fire_85")
-    PlayerFireAnims(10)=(Angle=90,AnimName="M2mortar_fire_90")
+    PlayerFireAnims(0)=(Angle=40,AnimName="m2mortar_gunner_fire_40")
+    PlayerFireAnims(1)=(Angle=45,AnimName="m2mortar_gunner_fire_45")
+    PlayerFireAnims(2)=(Angle=50,AnimName="m2mortar_gunner_fire_50")
+    PlayerFireAnims(3)=(Angle=55,AnimName="m2mortar_gunner_fire_55")
+    PlayerFireAnims(4)=(Angle=60,AnimName="m2mortar_gunner_fire_60")
+    PlayerFireAnims(5)=(Angle=65,AnimName="m2mortar_gunner_fire_65")
+    PlayerFireAnims(6)=(Angle=70,AnimName="m2mortar_gunner_fire_70")
+    PlayerFireAnims(7)=(Angle=75,AnimName="m2mortar_gunner_fire_75")
+    PlayerFireAnims(8)=(Angle=80,AnimName="m2mortar_gunner_fire_80")
+    PlayerFireAnims(9)=(Angle=85,AnimName="m2mortar_gunner_fire_85")
 
     // Timed to coincide with the round disappearing into the tube.
     // Because of the wonky fake IK setup we have, the round can sometimes not align perfectly with the tube
     // so it's best to just hide it once it enters the tube.
-    ProjectileLifeSpan=2.05
+    ProjectileLifeSpan=1.525
 
     bNetNotify=true
 

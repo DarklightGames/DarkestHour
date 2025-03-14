@@ -2,6 +2,26 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
+// CODING
+//==============================================================================
+// [ ] set up name reuse on stationry weapons (use name of veh)
+// [~] re-use & re-tool the construction/proxy weapon system for placing
+//     stationary weapons
+// [ ] add a "point to" animation driver for the arm thing
+// [ ] transfer ammo state between weapon, pickup and vehicle
+// [ ] make smoke grenade actually WP
+//==============================================================================
+// ART
+//==============================================================================
+// [ ] re-export all gun animations
+// [ ] fix vis bounds
+// [ ] redo first person anims
+// [ ] add raise/lower/binoc anims for third person
+// [ ] remake collision meshes
+// [ ] destroyed mesh
+// [ ] third person attachment & animations
+// [ ] UI art
+//==============================================================================
 
 class DH_M2Mortar extends DHMortar;
 

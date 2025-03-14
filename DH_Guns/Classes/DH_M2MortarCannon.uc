@@ -24,8 +24,8 @@ defaultproperties
     CollisionStaticMeshes(0)=(CollisionStaticMesh=StaticMesh'DH_M2Mortar_stc.Collision.M2MORTAR_COLLISION_GUN',AttachBone="GUN_PITCH")
 
     // Gun Wheels
-    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-720,RotationAxis=AXIS_Y)    // [1] 0.5 degrees per turn.
-    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=533,RotationAxis=AXIS_Z) // [1] 12 mils per turn.
+    GunWheels(0)=(RotationType=ROTATION_Yaw,BoneName="YAW_WHEEL",Scale=-360,RotationAxis=AXIS_Y)
+    GunWheels(1)=(RotationType=ROTATION_Pitch,BoneName="PITCH_WHEEL",Scale=360,RotationAxis=AXIS_Z)
     GunWheels(2)=(RotationType=ROTATION_Pitch,BoneName="GUNSIGHT",Scale=1.0,RotationAxis=AXIS_Y)   // Counter-rotates the sight so it stays level.
 
     // Turret movement
@@ -43,7 +43,7 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
 
     // rename obviously
-    nProjectileDescriptions(0)="Bomba g. a. da 81"
+    nProjectileDescriptions(0)="Bomba g. a. da 81"  // TODO: real names
     nProjectileDescriptions(1)="Bomba Fumogena"
 
     PrimaryProjectileClass=class'DH_M2MortarProjectileHE'

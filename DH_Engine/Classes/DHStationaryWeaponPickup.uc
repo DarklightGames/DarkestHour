@@ -3,13 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHMortarConstruction extends DHConstruction_Vehicle
+class DHStationaryWeaponPickup extends DHWeaponPickup
     abstract;
+
+// TODO: information about how much ammo the vehicle cannons have.
+
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
-    bIsArtillery=true
-    ProxyTraceDepthMeters=2.0
-    GroundSlopeMaxInDegrees=5.0
 }

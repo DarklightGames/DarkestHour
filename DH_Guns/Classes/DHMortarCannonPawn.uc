@@ -15,11 +15,11 @@ var     float   FiringStartTimeSeconds;         // The time at which the firing 
 var     float   OverlayFiringAnimDuration;      // The duration of the firing animation on the overlay mesh. Calculated when entering the Firing state.
 var()   float   FireDelaySeconds;               // The amount of time to wait into the firing animation before actually firing the round.
 
-var()   name  HandsFiringCameraBone;    // The name of the bone to use for the camera while firing.
-var()   name  HandsFiringAnimName;      // The name of the firing animation on the hands mesh.
-var()   float FiringCameraInTime;       // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
-var()   float FiringCameraOutTime;      // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
-var()   float ProjectileLifeSpan;       // The life span of the projectile attached to the gunner's hand.
+var()   name    HandsFiringCameraBone;          // The name of the bone to use for the camera while firing.
+var()   name    HandsFiringAnimName;            // The name of the firing animation on the hands mesh.
+var()   float   FiringCameraInTime;             // How long it takes to interpolate the camera to the firing camera position at the start of the firing animation.
+var()   float   FiringCameraOutTime;            // How long it takes to interpolate the camera back to the normal position at the end of the firing animation.
+var()   float   ProjectileLifeSpan;             // The life span of the projectile attached to the gunner's hand.
 
 // First person hands.
 var     DHFirstPersonHands  HandsActor;             // The first person hands actor.
@@ -455,7 +455,7 @@ simulated state Firing
     }
 
 Begin:
-    FireDelaySeconds = FMin(OverlayFiringAnimDuration, default.FireDelaySeconds);
+    FireDelaySeconds = FMin(OverlayFiringAnimDuration, FireDelaySeconds);
     Sleep(FireDelaySeconds);
     SuperFire();
     Sleep(OverlayFiringAnimDuration - FireDelaySeconds);

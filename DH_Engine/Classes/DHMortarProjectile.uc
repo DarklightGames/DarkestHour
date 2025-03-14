@@ -6,8 +6,8 @@
 class DHMortarProjectile extends DHBallisticProjectile
     abstract;
 
-var     vector  HitLocation;
-var     vector  HitNormal;
+var     Vector  HitLocation;
+var     Vector  HitNormal;
 
 // Chance each shell is a dud & does not explode
 var     bool    bDud;
@@ -15,7 +15,7 @@ var     float   DudChance;
 
 // Effects for firing mortar & for shell descending just before it lands
 var     class<Emitter>  FireEmitterClass;
-var     sound   DescendingSound;
+var     Sound           DescendingSound;
 
 // Impact effects & sounds for a dud round
 var     class<Emitter>  HitDirtEmitterClass;
@@ -24,15 +24,15 @@ var     class<Emitter>  HitWoodEmitterClass;
 var     class<Emitter>  HitRockEmitterClass;
 var     class<Emitter>  HitWaterEmitterClass;
 
-var     sound   HitDirtSound;
-var     sound   HitRockSound;
-var     sound   HitWaterSound;
-var     sound   HitWoodSound;
+var     Sound   HitDirtSound;
+var     Sound   HitRockSound;
+var     Sound   HitWaterSound;
+var     Sound   HitWoodSound;
 
 // Debug
-var     vector  DebugForward;
-var     vector  DebugRight;
-var     vector  DebugLocation;
+var     Vector  DebugForward;
+var     Vector  DebugRight;
+var     Vector  DebugLocation;
 var     bool    bDebug;
 
 var     Texture HudTexture;

@@ -3,13 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHMortarConstruction extends DHConstruction_Vehicle
-    abstract;
+class DH_M2MortarPickup extends DHStationaryWeaponPickup;
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.mortar'
-    bIsArtillery=true
-    ProxyTraceDepthMeters=2.0
-    GroundSlopeMaxInDegrees=5.0
+    InventoryType=class'DH_M2MortarWeapon'
+    // TODO: not static mesh, use normal mesh in fun pose.
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BAR'
 }
+
