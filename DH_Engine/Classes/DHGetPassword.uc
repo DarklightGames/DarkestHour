@@ -15,7 +15,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
     
     l_Text.Caption=LabelText;
-    ed_Data.Caption=EditBoxText;
+    ed_Data.SetCaption(EditBoxText);
     b_OK.Caption=OKButtonText;
     b_Cancel.Caption=CancelButtonText;
 }
