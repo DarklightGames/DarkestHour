@@ -10,23 +10,12 @@ const BUTTON_HEIGHT=0.042773;
 const BUTTON_SPACING=0.15;
 const BUTTON_POS_TOP=0.7;
 
-var localized string LabelText;
-var localized string EditBoxText;
-var localized string OKButtonText;
-var localized string CancelButtonText;
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
 	local float ButtonRowLeft;
 
     super.InitComponent(MyController, MyOwner);
     
-    // Set captions
-    l_Text.Caption=LabelText;
-    ed_Data.SetCaption(EditBoxText);
-    b_OK.Caption=OKButtonText;
-    b_Cancel.Caption=CancelButtonText;
-
     // Set button positions
 	ButtonRowLeft = 0.5 - BUTTON_SPACING * 0.5 - BUTTON_WIDTH;
 
@@ -76,12 +65,8 @@ function RetryPassword()
 
 defaultproperties
 {
-    LabelText="A password is required to play on this server."
-    EditBoxText="Server Password"
-    OKButtonText="Submit"
-    CancelButtonText="Cancel"
-
 	Begin Object Class=GUIButton Name=GetPassFail
+        Caption="Cancel"
         StyleName="SquareButton"
 		OnClick=InternalOnClick
 		bBoundToParent=true
@@ -90,6 +75,7 @@ defaultproperties
 	b_Cancel=GetPassFail
 
 	Begin Object Class=GUIButton Name=GetPassRetry
+        Caption="Submit"
         StyleName="SquareButton"
 		OnClick=InternalOnClick
 		bBoundToParent=true
